@@ -21,6 +21,7 @@ a new vehicle for Subnautica
 - [ ] smooth acceleration
 - [ ] control panel
 - [ ] HUD ping
+- [ ] Pilot HUD
 
 ### Upgrades To Do
 - [x] Stealth Module
