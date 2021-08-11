@@ -33,3 +33,8 @@ a new vehicle for Subnautica
 - [ ] Thermal Reactor
 - [ ] Propulsion Cannon
 - [ ] Drill Arm
+
+### Compatibilities to Ensure
+- [ ] Free Look
+- [ ] Roll Control
+
