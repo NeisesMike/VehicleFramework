@@ -20,9 +20,11 @@ Only one arm may be operated at a time. Each arm has four joints. Each joint can
 
 While piloting, each arm can be activated like a Perimeter Defense System module.
 
-The arms may also be piloted from the exterior.
+While active, the arms will supercede movement controls.
 
 The arms have some automatic controls.
+
+The arms may also be piloted using the Exterior Control Panels.
 
 ### Keyboard Control Configuration A
 This configuration rests the fingers on JKL:.
