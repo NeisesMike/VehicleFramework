@@ -22,8 +22,10 @@ While piloting, each arm can be activated like a Perimeter Defense System module
 
 The arms may also be piloted from the exterior.
 
+The arms have some automatic controls.
+
 ### Keyboard Control Configuration A
-This configuration uses UIOP.
+This configuration rests the fingers on JKL:.
 
 - Joint 1 Up:   U
 - Joint 1 Down: J
@@ -33,6 +35,9 @@ This configuration uses UIOP.
 - Joint 3 Down: L
 - Joint 4 Up:   P
 - Joint 4 Down: :
+- Use tool    : N
+- Reset Arms Behind : Y
+- Reset Arms Front  : H
 
 ### Keyboard Control Configuration B
 This configuration uses the keypad.
@@ -45,6 +50,9 @@ This configuration uses the keypad.
 - Joint 3 Down: 6
 - Joint 4 Up:   1
 - Joint 4 Down: 2
+- Use tool    : 0
+- Reset Arms Behind : -
+- Reset Arms Front  : +
 
 ### Mouse Controls
 Select individual joints with the buttons, and control that joint with the wheel.
@@ -53,6 +61,7 @@ Select individual joints with the buttons, and control that joint with the wheel
 - Last Joint : Right Click
 - Joint Up   : Wheel Up    
 - Joint Down : Wheel Down  
+- Use tool   : Wheel Click
 
 ### Xbox Control Configuration A
 Choose any 8 buttons. Here's default:
@@ -65,6 +74,9 @@ Choose any 8 buttons. Here's default:
 - Joint 3 Down: DPad-Down
 - Joint 4 Up:   DPad-Left
 - Joint 4 Down: DPad-Right
+- Use tool    : Right Trigger
+- Reset Arms Behind : Left Stick Click
+- Reset Arms Front  : Right Stick Click
 
 ### Xbox Control Configuration B
 Select individual joints with two buttons, and control that joint two others. Here's default:
@@ -73,6 +85,9 @@ Select individual joints with two buttons, and control that joint two others. He
 - Last Joint : B
 - Joint Up   : X
 - Joint Down : Y
+- Use tool    : Right Trigger
+- Reset Arms Behind : Left Stick Click
+- Reset Arms Front  : Right Stick Click
 
 ## Upgrade Modules 
 The Atrama accepts both Vehicle- and Atrama-style upgrade modules.
