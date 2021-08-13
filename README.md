@@ -27,12 +27,13 @@ a new vehicle for Subnautica
 - [x] Stealth Module
 - [ ] Depth Modules
 - [ ] Solar Charger
+- [ ] Thermal Reactor
 - [ ] Perimeter Defense
 - [ ] Sonar?
 - [ ] Torpedo/Arm?
-- [ ] Thermal Reactor
-- [ ] Propulsion Cannon
+- [ ] Propulsion Cannon Arm
 - [ ] Drill Arm
+- [ ] Camera Arm
 
 ### Compatibilities to Ensure
 - [ ] Free Look
