@@ -55,7 +55,7 @@ The backup battery will **only** be used to auto-level the ship.
 
 ## Auto-leveling
 There are two types of auto-leveling:
-- **Activated Auto-leveling** is when you choose to start an auto-level as the pilot. Press the **auto-level button** to level out the pitch and roll of your ACV. 
+- **Activated Auto-leveling** is when you choose to start an auto-level as the pilot. Press the **auto-level button** to level out the pitch and roll of your ACV. If the ACV is not close to level, you can double tap the exit button to auto-level as well.
 - **Passive Auto-leveling** is when the ship starts an auto-level without your input. This will happen whenever the powered, unpiloted ship is not level. If the ACV experiences a collision while attempting to auto-level, it will cancel the auto-level and try again in 5 seconds.
 
 ## Auto-pilot
@@ -151,6 +151,7 @@ Select individual joints with two buttons, and control that joint two others. He
 
 ## Maintenance
 - Check the power levels often. An unpowered ACV cannot level itself out.
+- Replace the backup battery when necessary.
 - Parts of the ACV can become damaged and unusuable. Fix them with a repair tool.
 
 ## Upgrade Modules 
