@@ -17,10 +17,12 @@ a new vehicle for Subnautica
 - [x] vehicle upgrades
 - [ ] HUD ping
 - [ ] Pilot HUD
-- [ ] smooth roll stabilization
-- [ ] smooth acceleration
-- [ ] arm manipulation
-- [ ] grabber hand
+- [ ] Interior Control Panel
+- [ ] Exterior Control Panel
+- [ ] Power Drains
+- [ ] Damage
+- [ ] Positional Damage
+- [ ] Creature interaction
 
 ### Control Panel Buttons To Do
 - [ ] Lights
@@ -44,10 +46,18 @@ a new vehicle for Subnautica
 - [ ] Roll Control
 - [ ] Attitude Indicator
 
-
 ### Assets Required
 - [ ] external storage modules
 - [ ] atrama hud ping
 - [ ] atrama upgrade background
 - [ ] control panel
+
+### Polish To Do
+- [ ] smooth roll stabilization
+- [ ] smooth acceleration
+- [ ] arm manipulation
+- [ ] grabber hand
+- [ ] Add computer to recipe
+- [ ] Add configurable auto-level button
+- [ ] Bind auto-level to exit double-tap
 

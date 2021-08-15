@@ -1,19 +1,77 @@
 # Atrama Construction Vehicle Owner's Manual
+This manual will instruct you in the use of your Atrama Construction Vehicle (ACV).
 
-## Building your own
-Build at a Mobile Vehicle Bay. It should be quite expensive.
+## Table of Contents
+- Acquisition
+- Power
+- Vehicle Operation
+- Auto-leveling
+- Auto-pilot
+- Arm Operation
+- Maintenance
+- Upgrades
 
-### Getting inside
-The hatch is on top.
+## Acquisition
+The ACV can be unlocked by **TODO**
 
-## Powering it up
-It can hold 4 power cells.
+The ACV is built at a Mobile Vehicle Bay. It is quite expensive:
+- Titanium Ingot x 1
+- Plasteel Ingot x 1
+- Lubricant      x 1
+- Advanced Wiring kit x 1
+- Lead x 2
+- Enameled glass x 2
+- Computer ? for auto-pilot ?
 
-## Piloting 
-It controls like a seamoth.
+## Power
+The ACV supports the use of 4 distinct power cells.
 
-### Auto-leveling
-Double-tap the auto-level (change this to exit) button to automatically level out the ship. This is useful because one cannot exit the pilot seat unless the ship is level.
+### Power Drains (in order of cost)
+- Maneuvering the ship
+- Manipulating the arms
+- Exterior Lights
+- Auto-pilot
+- Interior Lights
+
+## Vehicle Operation
+There are several modes of operation.
+- At the pilot seat
+- At the interior control panel
+- At the exterior control panel
+
+### Piloting
+It controls like a seamoth, but you cannot stop piloting while the ship is not level. You can use the **Auto-level** feature either by double-tapping the exit button or tapping the auto-level button.
+
+### Interior Control Panel
+Here are found a number of controls.
+- Master Lights Toggle
+- Power Toggle
+- **Auto-pilot**
+
+### Exterior Control Panel
+Here you can find controls for the arms. 
+There is also a place for a backup battery to be installed. 
+The backup battery will **only** be used to auto-level the ship.
+
+## Auto-leveling
+There are two types of auto-leveling:
+- **Activated Auto-leveling** is when you choose to start an auto-level as the pilot. Press the **auto-level button** to level out the pitch and roll of your ACV. 
+- **Passive Auto-leveling** is when the ship starts an auto-level without your input. This will happen whenever the powered, unpiloted ship is not level. If the ACV experiences a collision while attempting to auto-level, it will cancel the auto-level and try again in 5 seconds.
+
+## Auto-pilot
+The auto-pilot screen will show you a map. You can choose a destination on that map. Your ACV should take you to that destination, near the surface of the ocean.
+
+To use auto-pilot, several conditions must be met.
+- The ACV is powered on.
+- There are no obstacles between the ACV and the ocean surface.
+- The auto-pilot can determine a path.
+
+Upon starting the auto-pilot, the ACV will rise near to the surface. 
+Once near the surface, the auto-pilot will maintain the same depth for the remainder of the trip. 
+The auto-pilot will then attempt to move directly to the destination. 
+If there is an obstacle in the way, the auto-pilot will attempt to go around it. 
+But if there are obstacles in all directions of the plane, the auto-pilot will terminate itself. 
+You can also press the auto-pilot button at any time to disengage the auto-pilot. 
 
 ## Manipulating the Arms
 Only one arm may be operated at a time. Each arm has four joints. Each joint can move in two directions.
@@ -91,13 +149,17 @@ Select individual joints with two buttons, and control that joint two others. He
 - Reset Arms Behind : Left Stick Click
 - Reset Arms Front  : Right Stick Click
 
+## Maintenance
+- Check the power levels often. An unpowered ACV cannot level itself out.
+- Parts of the ACV can become damaged and unusuable. Fix them with a repair tool.
+
 ## Upgrade Modules 
 The Atrama accepts both Vehicle- and Atrama-style upgrade modules.
 
 The vehicle modules include
 - the storage module
 - the engine efficiency module
-- and the hull armor module
+- the hull armor module
 
 Current Atrama upgrade modules include
 - the stealth module
