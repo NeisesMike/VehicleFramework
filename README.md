@@ -18,13 +18,14 @@ a new vehicle for Subnautica
 - [ ] HUD ping
 - [ ] Pilot HUD
 - [ ] Interior Control Panel
-- [ ] Exterior Control Panel
+- [ ] Auto-pilot
+- [ ] External Backup Battery
 - [ ] Power Drains
 - [ ] Damage
 - [ ] Positional Damage
 - [ ] Creature interaction
 
-### Control Panel Buttons To Do
+### Interior Control Panel Buttons To Do
 - [ ] Lights
 - [ ] Power
 - [ ] Auto-pilot
