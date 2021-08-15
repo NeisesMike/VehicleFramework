@@ -157,11 +157,11 @@ Select individual joints with two buttons, and control that joint two others. He
 ## Upgrade Modules 
 The Atrama accepts both Vehicle- and Atrama-style upgrade modules.
 
-The vehicle modules include
+There are 3 vehicle modules.
 - the storage module
 - the engine efficiency module
 - the hull armor module
 
-Current Atrama upgrade modules include
+There are several Atrama upgrade modules.
 - the stealth module
 
