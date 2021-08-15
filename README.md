@@ -1,7 +1,7 @@
 # SubnauticaAtramaVehicle
 a new vehicle for Subnautica
 
-### To Do List
+### Vehicle To Do
 - [x] start piloting
 - [x] basic piloting
 - [x] stop piloting 
@@ -15,13 +15,17 @@ a new vehicle for Subnautica
 - [x] flood lights
 - [x] oxygen control
 - [x] vehicle upgrades
-- [ ] arm manipulation
-- [ ] grabber hand
-- [ ] smooth roll stabilization
-- [ ] smooth acceleration
-- [ ] control panel
 - [ ] HUD ping
 - [ ] Pilot HUD
+- [ ] smooth roll stabilization
+- [ ] smooth acceleration
+- [ ] arm manipulation
+- [ ] grabber hand
+
+### Control Panel Buttons To Do
+- [ ] Lights
+- [ ] Power
+- [ ] Auto-pilot
 
 ### Upgrades To Do
 - [x] Stealth Module
@@ -38,4 +42,12 @@ a new vehicle for Subnautica
 ### Compatibilities to Ensure
 - [ ] Free Look
 - [ ] Roll Control
+- [ ] Attitude Indicator
+
+
+### Assets Required
+- [ ] external storage modules
+- [ ] atrama hud ping
+- [ ] atrama upgrade background
+- [ ] control panel
 
