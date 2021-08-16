@@ -15,10 +15,12 @@ a new vehicle for Subnautica
 - [x] flood lights
 - [x] oxygen control
 - [x] vehicle upgrades
-- [ ] interior trigger
+- [x] interior trigger
+- [ ] make atrama exterior walkable
 - [x] HUD ping
 - [ ] Pilot HUD
 - [ ] Interior Control Panel
+- [ ] Serializer
 - [ ] Auto-pilot
 - [ ] External Backup Battery
 - [ ] Power Drains

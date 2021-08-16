@@ -261,7 +261,22 @@ namespace AtramaVehicle
             setVolumetricLightsActive(enabled);
         }
 
+        void OnTriggerEnter(Collider other)
+        {
+            if(other.name == "Player")
+            {
+                isPlayerInside = true;
+                isPlayerPiloting = false;
+                setVolumetricLightsActive(false);
+            }
+        }
+        void OnTriggerExit(Collider other)
+        {
+            if (other.name == "Player")
+            {
 
+            }
+        }
 
     }
 }
