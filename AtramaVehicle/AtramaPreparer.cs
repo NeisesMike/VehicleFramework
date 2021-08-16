@@ -43,7 +43,6 @@ namespace AtramaVehicle
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
             foreach(System.Object obj in arr)
             {
-                Logger.Log(obj.ToString());
                 if(obj.ToString().Contains("PingSpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas) obj;

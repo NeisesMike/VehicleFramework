@@ -20,7 +20,7 @@ namespace AtramaVehicle
         // Start is called before the first frame update
         public void Start()
         {
-            Logger.Log("Engine Starting!");
+            //Logger.Log("Engine Starting!");
             atramaVehicle = this.gameObject;
             atramaRB = atramaVehicle.GetComponent<Rigidbody>();
             atramaRB.centerOfMass = Vector3.zero;

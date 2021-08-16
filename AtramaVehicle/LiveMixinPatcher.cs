@@ -20,7 +20,6 @@ namespace AtramaVehicle
                 return true;
             }
 
-            Logger.Log("Start LiveMixin!");
             __instance.player = Player.main;
 
             return true;

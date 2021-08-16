@@ -79,7 +79,6 @@ namespace AtramaVehicle
             }
             else
             {
-                Logger.Log("ping sprite size is " + SpriteManager.Get(SpriteManager.Group.Pings, PingManager.sCachedPingTypeStrings.Get(PingType.Exosuit)).size.ToString());
                 return SpriteManager.Get(SpriteManager.Group.Pings, name);
             }
         }

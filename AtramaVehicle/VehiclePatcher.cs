@@ -65,41 +65,30 @@ namespace AtramaVehicle
 
 
             Transform baseTransform = __instance.transform;
-            Logger.Log("APM1");
             if (__instance.GetPilotingMode())
             {
-                Logger.Log("APM2");
                 if (__instance.worldForces.IsAboveWater() != ___wasAboveWater)
                 {
                     __instance.PlaySplashSound();
                     ___wasAboveWater = __instance.worldForces.IsAboveWater();
                 }
-                Logger.Log("APM3");
                 bool flag = baseTransform.position.y < Ocean.main.GetOceanLevel() && baseTransform.position.y < __instance.worldForces.waterDepth && !__instance.precursorOutOfWater;
-                Logger.Log(flag.ToString());
                 if (__instance.moveOnLand || flag)
                 {
                     if (__instance.controlSheme == Vehicle.ControlSheme.Submersible)
                     {
-                        Logger.Log("APM1");
                         Vector3 vector = AvatarInputHandler.main.IsEnabled() ? GameInput.GetMoveDirection() : Vector3.zero;
                         vector.Normalize();
-                        Logger.Log("APM2");
                         float d = Mathf.Abs(vector.x) * __instance.sidewardForce + Mathf.Max(0f, vector.z) * __instance.forwardForce + Mathf.Max(0f, -vector.z) * __instance.backwardForce + Mathf.Abs(vector.y * __instance.verticalForce);
-                        Logger.Log("APM3");
                         Vector3 force = baseTransform.rotation * (d * vector) * Time.deltaTime;
-                        Logger.Log("APM4");
                         for (int i = 0; i < ___accelerationModifiers.Length; i++)
                         {
                             ___accelerationModifiers[i].ModifyAcceleration(ref force);
                         }
-                        Logger.Log("APM5");
                         __instance.useRigidbody.AddForce(force, ForceMode.VelocityChange);
-                        Logger.Log("APM6");
                         return false;
                     }
                     /*
-                    Logger.Log("APM4");
                     if (__instance.controlSheme == Vehicle.ControlSheme.Submarine || __instance.controlSheme == Vehicle.ControlSheme.Mech)
                     {
                         Vector3 vector2 = AvatarInputHandler.main.IsEnabled() ? GameInput.GetMoveDirection() : Vector3.zero;
@@ -114,7 +103,6 @@ namespace AtramaVehicle
                             vector3.y = Mathf.Clamp(vector3.y, -0.5f, 0.5f);
                             num *= __instance.onGroundForceMultiplier;
                         }
-                        Logger.Log("APM5");
                         if (Application.isEditor)
                         {
                             Debug.DrawLine(baseTransform.position, baseTransform.position + vector3 * 4f, Color.white);
@@ -129,7 +117,6 @@ namespace AtramaVehicle
                         }
                         __instance.useRigidbody.AddForce(force2, ForceMode.VelocityChange);
                     }
-                    Logger.Log("APM6");
                     */
                 }
             }
@@ -161,19 +148,19 @@ namespace AtramaVehicle
                 return true;
             }
 
+
+            ___energyInterface = __instance.gameObject.GetComponent<EnergyInterface>();
+            /*
             Logger.Log("LazyInitialize!");
-
+            Logger.Log((___energyInterface == null).ToString());
+            Logger.Log((__instance.useRigidbody == null).ToString());
             Logger.Log((__instance.upgradesInput == null).ToString());
-
             Logger.Log((__instance.modulesRoot == null).ToString());
+            */
             if (__instance.modulesRoot == null)
             {
                 __instance.modulesRoot = __instance.transform.parent.Find("ModulesRootObject").GetComponent<ChildObjectIdentifier>();
             }
-            ___energyInterface = __instance.gameObject.GetComponent<EnergyInterface>();
-            Logger.Log((___energyInterface == null).ToString());
-
-            Logger.Log((__instance.useRigidbody == null).ToString());
 
 
             return true;

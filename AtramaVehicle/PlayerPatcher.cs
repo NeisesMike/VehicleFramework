@@ -62,7 +62,6 @@ namespace AtramaVehicle
 
             if (rollDelta > 4f || pitchDelta > 4f)
             {
-                Logger.Log("too steep");
                 BasicText message = new BasicText(500, 0);
                 message.ShowMessage("Angle is too steep.", 5);
                 return false;

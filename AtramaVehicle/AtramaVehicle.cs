@@ -380,7 +380,6 @@ namespace AtramaVehicle
 				// handle storage modules
 				if (keyValuePair.Key == "AtramaModule1")
 				{
-					Logger.Log(keyValuePair.Value.item.name);
 					storageInputs[0].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
 				}
 				else if (keyValuePair.Key == "AtramaModule2")
@@ -409,7 +408,7 @@ namespace AtramaVehicle
 
 		public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
 		{
-			Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
+			//Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
 			//TODO why doesn't this disappear the chests?
 			updateModules();
 

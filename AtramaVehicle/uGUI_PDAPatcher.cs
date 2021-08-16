@@ -24,8 +24,6 @@ namespace AtramaVehicle
 
         public static void initModuleSlots()
         {
-            Logger.Log("init module slots");
-
             uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
 
             AtramaManager.atramaModule1 = GameObject.Instantiate(new GameObject("AtramaModule1"), equipment.transform);
@@ -46,7 +44,6 @@ namespace AtramaVehicle
             AtramaManager.atramaArmLeft.SetActive(false);
             AtramaManager.atramaArmRight.SetActive(false);
 
-            Logger.Log("adding slots");
             AtramaManager.atramaModuleSlot1 = AtramaManager.atramaModule1.EnsureComponent<uGUI_EquipmentSlot>();
             AtramaManager.atramaModuleSlot2 = AtramaManager.atramaModule2.EnsureComponent<uGUI_EquipmentSlot>();
             AtramaManager.atramaModuleSlot3 = AtramaManager.atramaModule3.EnsureComponent<uGUI_EquipmentSlot>();
@@ -56,7 +53,6 @@ namespace AtramaVehicle
             AtramaManager.atramaArmSlotLeft = AtramaManager.atramaArmLeft.EnsureComponent<uGUI_EquipmentSlot>();
             AtramaManager.atramaArmSlotRight = AtramaManager.atramaArmRight.EnsureComponent<uGUI_EquipmentSlot>();
 
-            Logger.Log("naming slots");
             AtramaManager.atramaModuleSlot1.slot = "AtramaModule1";
             AtramaManager.atramaModuleSlot2.slot = "AtramaModule2";
             AtramaManager.atramaModuleSlot3.slot = "AtramaModule3";
@@ -66,7 +62,6 @@ namespace AtramaVehicle
             AtramaManager.atramaArmSlotLeft.slot = "AtramaArmLeft";
             AtramaManager.atramaArmSlotRight.slot = "AtramaArmRight";
 
-            Logger.Log("setting managers");
             AtramaManager.atramaModuleSlot1.manager = equipment;
             AtramaManager.atramaModuleSlot2.manager = equipment;
             AtramaManager.atramaModuleSlot3.manager = equipment;
@@ -76,12 +71,8 @@ namespace AtramaVehicle
             AtramaManager.atramaArmSlotLeft.manager = equipment;
             AtramaManager.atramaArmSlotRight.manager = equipment;
 
-            Logger.Log("Starting coroutine");
             coroutineHelper = new GameObject("CoroutineHelper");
             coroutineHelper.EnsureComponent<CoroutineHelper>().grabComponents();
-
         }
-
-
     }
 }

@@ -81,7 +81,7 @@ namespace AtramaVehicle
 
         public override GameObject GetGameObject()
         {
-            Logger.Log("GetGameObject begin");
+            //Logger.Log("GetGameObject begin");
             if(AtramaPreparer.atramaPrefab == null)
             {
                 AtramaPreparer.buildAtramaPrefab();

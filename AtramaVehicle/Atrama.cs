@@ -53,7 +53,7 @@ namespace AtramaVehicle
 
         public void Awake()
         {
-            Logger.Log("Atrama waking...");
+            //Logger.Log("Atrama waking...");
         }
 
         public void Start()
