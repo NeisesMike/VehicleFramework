@@ -16,7 +16,7 @@ a new vehicle for Subnautica
 - [x] oxygen control
 - [x] vehicle upgrades
 - [x] interior trigger
-- [ ] make atrama exterior walkable
+- [x] make atrama exterior walkable
 - [x] HUD ping
 - [ ] Pilot HUD
 - [ ] Interior Control Panel
@@ -65,4 +65,5 @@ a new vehicle for Subnautica
 - [ ] Add computer to recipe
 - [ ] Add configurable auto-level button
 - [ ] Bind auto-level to exit double-tap
+- [ ] Optimized meshes
 
