@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace AtramaVehicle
         public bool isLightsOn = true;
 
         // Set all of these in AtramaPreparer
+        public GameObject modularStorage;
         public GameObject leftStorage = null;
         public GameObject rightStorage = null;
         public AtramaVehicle vehicle = null;
@@ -32,6 +34,7 @@ namespace AtramaVehicle
         public List<GameObject> volumetricLights = new List<GameObject>();
         public List<GameObject> lights = new List<GameObject>();
         public ChildObjectIdentifier storageRoot = null;
+        public PingInstance pingInstance = null;
 
         private float timeOfLastLevelTap = 0f;
         private const float doubleTapWindow = 1f;
@@ -44,6 +47,9 @@ namespace AtramaVehicle
 
         public FMOD_StudioEventEmitter lightsOnSound = null;
         public FMOD_StudioEventEmitter lightsOffSound = null;
+
+
+
 
         public void Awake()
         {
@@ -254,6 +260,8 @@ namespace AtramaVehicle
             }
             setVolumetricLightsActive(enabled);
         }
+
+
 
     }
 }

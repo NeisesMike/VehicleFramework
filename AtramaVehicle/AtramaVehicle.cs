@@ -117,6 +117,7 @@ namespace AtramaVehicle
 			Logger.Log("AtramaVehicle Awake!");
 			base.Awake();
 			base.modules.isAllowedToRemove = new IsAllowedToRemove(this.IsAllowedToRemove);
+			updateModules();
 			Logger.Log("End AtramaVehicle Awake!");
 		}
 
@@ -139,6 +140,9 @@ namespace AtramaVehicle
 			//TODO why does this fail?
 			//this.toggleLights.lightsCallback += this.onLightsToggled;
 			global::Utils.GetLocalPlayerComp().playerModeChanged.AddHandler(base.gameObject, new Event<Player.Mode>.HandleFunction(this.OnPlayerModeChanged));
+
+			//set upgrade panel name
+			modules.SetLabel("AtramaUpgradeModules");
 		}
 
 		// Token: 0x06002156 RID: 8534 RVA: 0x000B8007 File Offset: 0x000B6207
@@ -360,58 +364,70 @@ namespace AtramaVehicle
 			return true;
 		}
 
-		// Token: 0x06002163 RID: 8547 RVA: 0x000B853C File Offset: 0x000B673C
+		public void updateModules()
+		{
+			//UpdateModuleSlots();
+			var equipment = upgradesInput.equipment.GetEquipment();
+
+			while (equipment.MoveNext())
+			{
+				KeyValuePair<string, InventoryItem> keyValuePair = equipment.Current;
+				if (keyValuePair.Value == null)
+				{
+					continue;
+				}
+
+				// handle storage modules
+				if (keyValuePair.Key == "AtramaModule1")
+				{
+					Logger.Log(keyValuePair.Value.item.name);
+					storageInputs[0].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
+				}
+				else if (keyValuePair.Key == "AtramaModule2")
+				{
+					storageInputs[1].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
+				}
+				else if (keyValuePair.Key == "AtramaModule3")
+				{
+					storageInputs[2].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
+				}
+				else if (keyValuePair.Key == "AtramaModule4")
+				{
+					storageInputs[3].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
+				}
+				else if (keyValuePair.Key == "AtramaModule5")
+				{
+					storageInputs[4].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
+				}
+				else if (keyValuePair.Key == "AtramaModule6")
+				{
+					storageInputs[5].gameObject.SetActive(keyValuePair.Value.item.name.Contains("Storage"));
+				}
+			};
+		}
+
+
 		public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
 		{
-			if (slotID >= 0 && slotID < this.storageInputs.Length)
-			{
-				this.storageInputs[slotID].SetEnabled(added && techType == TechType.VehicleStorageModule);
-				GameObject gameObject = this.torpedoSilos[slotID];
-				if (gameObject != null)
-				{
-					gameObject.SetActive(added && techType == TechType.SeamothTorpedoModule);
-				}
-			}
-			int count = base.modules.GetCount(techType);
-			if (techType != TechType.SeamothReinforcementModule)
-			{
-				if (techType != TechType.SeamothSolarCharge)
-				{
-					if (techType - TechType.VehicleHullModule1 <= 2)
-					{
-						goto IL_7D;
-					}
-					base.OnUpgradeModuleChange(slotID, techType, added);
-				}
-				else
-				{
-					base.CancelInvoke("UpdateSolarRecharge");
-					if (count > 0)
-					{
-						base.InvokeRepeating("UpdateSolarRecharge", 1f, 1f);
-						return;
-					}
-				}
-				return;
-			}
-		IL_7D:
-			Dictionary<TechType, float> dictionary = new Dictionary<TechType, float>
+			Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
+			//TODO why doesn't this disappear the chests?
+			updateModules();
+
+
+			/*
+			Dictionary<TechType, float> depthDictionary = new Dictionary<TechType, float>
 		{
 			{
-				TechType.SeamothReinforcementModule,
-				800f
+				TechType.AtramaHullModule1,
+				600f
 			},
 			{
-				TechType.VehicleHullModule1,
-				100f
+				TechType.AtramaHullModule2,
+				1200f
 			},
 			{
-				TechType.VehicleHullModule2,
-				300f
-			},
-			{
-				TechType.VehicleHullModule3,
-				700f
+				TechType.AtramaHullModule3,
+				1800f
 			}
 		};
 			float num = 0f;
@@ -419,9 +435,9 @@ namespace AtramaVehicle
 			{
 				string slot = this.slotIDs[i];
 				TechType techTypeInSlot = base.modules.GetTechTypeInSlot(slot);
-				if (dictionary.ContainsKey(techTypeInSlot))
+				if (depthDictionary.ContainsKey(techTypeInSlot))
 				{
-					float num2 = dictionary[techTypeInSlot];
+					float num2 = depthDictionary[techTypeInSlot];
 					if (num2 > num)
 					{
 						num = num2;
@@ -429,6 +445,7 @@ namespace AtramaVehicle
 				}
 			}
 			this.crushDamage.SetExtraCrushDepth(num);
+			*/
 		}
 
 		// Token: 0x06002164 RID: 8548 RVA: 0x000B869C File Offset: 0x000B689C
@@ -639,25 +656,17 @@ namespace AtramaVehicle
 			}
 		}
 
-		// Token: 0x04001E68 RID: 7784
-		public const string slot1ID = "SeamothModule1";
-
-		// Token: 0x04001E69 RID: 7785
-		public const string slot2ID = "SeamothModule2";
-
-		// Token: 0x04001E6A RID: 7786
-		public const string slot3ID = "SeamothModule3";
-
-		// Token: 0x04001E6B RID: 7787
-		public const string slot4ID = "SeamothModule4";
-
 		// Token: 0x04001E6C RID: 7788
 		private static readonly string[] _slotIDs = new string[]
 		{
-		"SeamothModule1",
-		"SeamothModule2",
-		"SeamothModule3",
-		"SeamothModule4"
+			"AtramaModule1",
+			"AtramaModule2",
+			"AtramaModule3",
+			"AtramaModule4",
+			"AtramaModule5",
+			"AtramaModule6",
+			"AtramaArmLeft",
+			"AtramaArmRight"
 		};
 
 		// Token: 0x04001E6D RID: 7789

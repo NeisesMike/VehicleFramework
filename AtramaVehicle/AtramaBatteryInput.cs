@@ -20,6 +20,5 @@ namespace AtramaVehicle
 		{
 			mixin.InitiateReload();
 		}
-
 	}
 }

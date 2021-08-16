@@ -7,6 +7,8 @@ using UnityEngine;
 using System.IO;
 using System.Reflection;
 
+using UnityEngine.U2D;
+
 using SMLHelper;
 using SMLHelper.V2.Assets;
 using SMLHelper.V2.Crafting;
@@ -25,7 +27,9 @@ namespace AtramaVehicle
         public static TechType atramaTechType;
         public static string atramaID;
 
-        public static GameObject getAtramaPrefab()
+        public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
+
+        public static void getAtramaPrefab()
         {
             // load the asset bundle
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -33,81 +37,43 @@ namespace AtramaVehicle
             if (myLoadedAssetBundle == null)
             {
                 Logger.Log("Failed to load AssetBundle!");
-                return null;
+                return;
             }
-            return (myLoadedAssetBundle.LoadAsset<GameObject>("subnautica-atrama.prefab"));
+
+            System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
+            foreach(System.Object obj in arr)
+            {
+                Logger.Log(obj.ToString());
+                if(obj.ToString().Contains("PingSpriteAtlas"))
+                {
+                    SpriteAtlas thisAtlas = (SpriteAtlas) obj;
+                    Sprite ping = thisAtlas.GetSprite("AtramaHudPing");
+                    AtramaManager.atramaPingSprite = new Atlas.Sprite(ping);
+                }
+                else if (obj.ToString().Contains("subnautica-atrama"))
+                {
+                    atramaPrefab = (GameObject)obj;
+                }
+            }
         }
         public static void buildAtramaPrefab()
         {
             // grab the vehicle model
-            Logger.Log("Creating initial Atrama...");
-            atramaPrefab = getAtramaPrefab();
+            Logger.Log("Building Atrama Prefab");
+            
+            getAtramaPrefab();
             atramaPrefab.name = "Atrama";
 
-            // Disable the prefab so none of the Awakes fire before the whole ship is setup
-            /*
-            Logger.Log("Disabling Atrama...");
-            thisAtramaObject.SetActive(false);
-            */
-
-            // Make the model an Atrama
-            Logger.Log("Ensuring Atrama...");
-            atrama = atramaPrefab.EnsureComponent<Atrama>();
-
-
-            addCustomComponents();
+            addAtramaSubsystem();
+            addVehicleSubsystem();
+            addHealthSubsystem();
+            addPowerSubsystem();
+            addStorageSubsystem();
+            addLightsSubsystem();
+            addUpgradeSubsystem();
             addStorageModules();
-            addVehicleComponents();
-            addSeamothComponents();
-            addCyclopsComponents();
+            applyMarmosetShader();
 
-            // enable the AtramaVehicle
-            atrama.vehicle.gameObject.SetActive(true);
-
-            // Add the marmoset shader to all renderers
-            Logger.Log("Adding marmoset shader...");
-            Shader marmosetShader = Shader.Find("MarmosetUBER");
-            foreach (var renderer in atramaPrefab.GetComponentsInChildren<MeshRenderer>())
-            {
-                Logger.Log("Adding marmoset to: " + renderer.gameObject.name);
-                foreach (Material mat in renderer.materials)
-                {
-                    Logger.Log("This material is: " + mat.name);
-
-                    // skip some materials
-                    if(renderer.gameObject.name.Contains("Light"))
-                    {
-                        continue;
-                    }
-
-                    mat.shader = marmosetShader;
-
-                    // add emission to certain materials
-                    // in order to light the interior
-                    if (
-                        (renderer.gameObject.name == "Main-Body" && mat.name.Contains("Material"))
-                        || renderer.gameObject.name == "Mechanical-Panel"
-                        || renderer.gameObject.name == "AtramaPilotChair"
-                        || renderer.gameObject.name == "Hatch"
-                        )
-                    {
-                        atrama.interiorRenderers.Add(renderer);
-
-                        // TODO move this to OnPowered and OnUnpowered
-                        Logger.Log("Adding emission!");
-                        mat.EnableKeyword("MARMO_EMISSION");
-                        mat.SetFloat("_EmissionLM", 0.25f);
-                        mat.SetFloat("_EmissionLMNight", 0.25f);
-                        mat.SetFloat("_GlowStrength", 0f);
-                        mat.SetFloat("_GlowStrengthNight", 0f);
-                    }
-
-                }
-                /*
-                renderer.sharedMaterial.shader = shader;
-                renderer.material.shader = shader;
-                */
-            }
 
             #region todo
             /*
@@ -219,46 +185,55 @@ namespace AtramaVehicle
             {
                 field.SetValue(copy, field.GetValue(original));
             }
+            /* experimental
+            System.Reflection.PropertyInfo[] props = type.GetProperties();
+            foreach (System.Reflection.PropertyInfo prop in props)
+            {
+                if (prop.SetMethod == null)
+                {
+                    continue;
+                }
+                prop.SetValue(copy, prop.GetValue(original));
+            }
+            */
             return copy as T;
         }
-        public static void addCustomComponents()
+        public static void addAtramaSubsystem()
         {
-            // Make the chair an AtramaVehicle
-            Logger.Log("Add custom components");
+            Logger.Log("Add Atrama Subsystem");
 
-            // Make the chair a Vehicle (disabled for now)
-            GameObject pilotChair = atramaPrefab.transform.Find("Chair").gameObject;
-            pilotChair.name = "AtramaPilotChair";
-            pilotChair.SetActive(false);
-            atrama.vehicle = pilotChair.EnsureComponent<AtramaVehicle>();
-            atrama.vehicle.playerPosition = pilotChair;
-            atrama.vehicle.stabilizeRoll = true;
-
-            // Call the Vehicle a seamoth... sorta
-            atrama.vehicle.controlSheme = Vehicle.ControlSheme.Submersible;
+            // Make the model an Atrama
+            atrama = atramaPrefab.EnsureComponent<Atrama>();
+            atrama.enabled = false;
 
             // Add the engine (physics control)
             atramaPrefab.EnsureComponent<AtramaEngine>();
 
-            // Add the upgrade console code
-            var upInput = atramaPrefab.transform.Find("Mechanical-Panel/Control-Panel").gameObject.EnsureComponent<VehicleUpgradeConsoleInput>();
-            atrama.vehicle.upgradesInput = upInput;
-
             // Add the hatch
             atrama.hatch = atramaPrefab.transform.Find("Hatch").gameObject.EnsureComponent<AtramaHatch>();
 
-        }
-        public static void addStorageModules()
-        { 
-            // Add the storage modules to the construction pods
+            // add storage handles
+            atrama.leftStorage = atramaPrefab.transform.Find("LeftStorage").gameObject;
+            atrama.rightStorage = atramaPrefab.transform.Find("RightStorage").gameObject;
+
+            // Add the hud ping instance
+            atrama.pingInstance = atramaPrefab.EnsureComponent<PingInstance>();
+            atrama.pingInstance.origin = atramaPrefab.transform;
+            atrama.pingInstance.pingType = AtramaManager.atramaPingType;
+            atrama.pingInstance.SetLabel("Atrama");
 
             // Ensure cargo storage has a root object
             GameObject storageRootObj = new GameObject("StorageRootObject");
             storageRootObj.transform.parent = atramaPrefab.transform;
             atrama.storageRoot = storageRootObj.EnsureComponent<ChildObjectIdentifier>();
 
-            atrama.leftStorage  = atramaPrefab.transform.Find("LeftStorage").gameObject;
-            atrama.rightStorage = atramaPrefab.transform.Find("RightStorage").gameObject;
+
+            atrama.enabled = true;
+        }
+        public static void addStorageSubsystem()
+        {
+            Logger.Log("Add Storage Subsystem");
+            // Add the storage modules to the construction pods
 
             atrama.leftStorage.SetActive(false);
             atrama.rightStorage.SetActive(false);
@@ -279,66 +254,12 @@ namespace AtramaVehicle
 
             atrama.leftStorage.SetActive(true);
             atrama.rightStorage.SetActive(true);
-
         }
-        public static void addVehicleComponents()
+        public static void addPowerSubsystem()
         {
+            Logger.Log("Add Power Subsystem");
+            atrama.vehicle.enabled = false;
 
-            Logger.Log("Add vehicle components");
-            #region add_vehicle_components
-
-            atrama.vehicle.mainAnimator = atramaPrefab.EnsureComponent<Animator>();
-
-            // Ensure vehicle remains in the world always
-            atramaPrefab.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
-
-            // Ensure vehicle is a physics object
-            var rb = atramaPrefab.EnsureComponent<Rigidbody>();
-            rb.mass = 4000f;
-            rb.drag = 10f;
-            rb.angularDrag = 10f;
-            rb.useGravity = false;
-            atrama.vehicle.useRigidbody = rb;
-
-            // Ensure Atrama can die
-            // TODO read this lol
-            var liveMixin = atrama.vehicle.gameObject.EnsureComponent<LiveMixin>();
-            var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
-            lmData.canResurrect = true;
-            lmData.broadcastKillOnDeath = false;
-            lmData.destroyOnDeath = false;
-            lmData.explodeOnDestroy = false;
-            lmData.invincibleInCreative = true;
-            lmData.weldable = false;
-            lmData.minDamageForSound = 20f;
-            lmData.maxHealth = 1000;
-            liveMixin.data = lmData;
-            atrama.vehicle.liveMixin = liveMixin;
-
-            // Ensure module storage has a root object
-            GameObject modulesRootObj = new GameObject("ModulesRootObject");
-            modulesRootObj.transform.parent = atramaPrefab.transform;
-            atrama.vehicle.modulesRoot = modulesRootObj.EnsureComponent<ChildObjectIdentifier>();
-
-
-
-
-            #endregion
-        }
-        public static void addSeamothComponents()
-        {
-            Logger.Log("Add seamoth components");
-            GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
-
-            atrama.vehicle.crushDamage = CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), atrama.vehicle.gameObject);
-            //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
-            atrama.vehicle.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, atrama.vehicle.gameObject);
-            atrama.vehicle.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, atrama.vehicle.gameObject);
-            atrama.vehicle.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, atrama.vehicle.gameObject);
-
-
-            Logger.Log("Configure Atrama Power Systems");
-            GenericHandTarget seamothBatteryInput = seamoth.transform.Find("BatteryInput").GetComponent<GenericHandTarget>();
             var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
 
             List<EnergyMixin> atramaEnergyMixins = new List<EnergyMixin>();
@@ -349,7 +270,7 @@ namespace AtramaVehicle
             batterySlots.Add(atramaPrefab.transform.Find("Mechanical-Panel/BatteryInputs/2").gameObject);
             batterySlots.Add(atramaPrefab.transform.Find("Mechanical-Panel/BatteryInputs/3").gameObject);
             batterySlots.Add(atramaPrefab.transform.Find("Mechanical-Panel/BatteryInputs/4").gameObject);
-            foreach(GameObject slot in batterySlots)
+            foreach (GameObject slot in batterySlots)
             {
                 // Configure energy mixin
                 var em = slot.EnsureComponent<EnergyMixin>();
@@ -367,28 +288,53 @@ namespace AtramaVehicle
                 atramaEnergyMixins.Add(em);
 
                 slot.EnsureComponent<AtramaBatteryInput>().mixin = em;
-
-
             }
 
             // Configure energy interface
             atrama.energyInterface = atrama.vehicle.gameObject.EnsureComponent<EnergyInterface>();
             atrama.energyInterface.sources = atramaEnergyMixins.ToArray();
 
-
-
-
-
+            atrama.vehicle.enabled = true;
+        }
+        public static void addUpgradeSubsystem()
+        {
+            Logger.Log("Add Upgrade Subsystem");
+            // Add the upgrade console code
+            GameObject upgradePanel = atramaPrefab.transform.Find("Mechanical-Panel/Upgrades-Panel").gameObject;
+            VehicleUpgradeConsoleInput vuci = upgradePanel.EnsureComponent<VehicleUpgradeConsoleInput>();
+            vuci.flap = upgradePanel.transform.Find("flap");
+            vuci.anglesOpened = new Vector3(80, 0, 0);
+            atrama.vehicle.upgradesInput = vuci;
+        }
+        public static void addHealthSubsystem()
+        {
+            Logger.Log("Add Health Subsystem");
+            // Ensure Atrama can die
+            // TODO read this lol
+            var liveMixin = atrama.vehicle.gameObject.EnsureComponent<LiveMixin>();
+            var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
+            lmData.canResurrect = true;
+            lmData.broadcastKillOnDeath = false;
+            lmData.destroyOnDeath = false;
+            lmData.explodeOnDestroy = false;
+            lmData.invincibleInCreative = true;
+            lmData.weldable = false;
+            lmData.minDamageForSound = 20f;
+            lmData.maxHealth = 1000;
+            liveMixin.data = lmData;
+            atrama.vehicle.liveMixin = liveMixin;
+        }
+        public static void addLightsSubsystem()
+        {
+            Logger.Log("Add Lights Subsystem");
             // get seamoth flood lamp
-            Logger.Log("get seamoth lamp and volumetric light");
             GameObject seamothHeadLight = seamoth.transform.Find("lights_parent/light_left").gameObject;
             Transform seamothVL = seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
 
             // create left and right atrama flood lamps
-            Logger.Log("create left atrama lamp");
-            GameObject atramaLeftHeadLight  = atrama.transform.Find("LightsParent/LeftLight").gameObject;
+            GameObject atramaLeftHeadLight = atrama.transform.Find("LightsParent/LeftLight").gameObject;
             CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), atramaLeftHeadLight);
             var leftLight = atramaLeftHeadLight.EnsureComponent<Light>();
             leftLight.type = LightType.Spot;
@@ -399,7 +345,6 @@ namespace AtramaVehicle
             leftLight.range = 120;
             leftLight.shadows = LightShadows.Hard;
 
-            Logger.Log("create left atrama volumetric light");
             GameObject leftVolumetricLight = new GameObject("LeftVolumetricLight");
             leftVolumetricLight.transform.localEulerAngles = Vector3.zero;
 
@@ -424,7 +369,6 @@ namespace AtramaVehicle
             leftVFX.volumRenderer = lvlMeshRenderer;
             leftVFX.volumMeshFilter = lvlMeshFilter;
 
-            Logger.Log("create right atrama lamp");
             GameObject atramaRightHeadLight = atrama.transform.Find("LightsParent/RightLight").gameObject;
             CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), atramaRightHeadLight);
             var rightLight = atramaRightHeadLight.EnsureComponent<Light>();
@@ -436,7 +380,6 @@ namespace AtramaVehicle
             rightLight.range = 120;
             rightLight.shadows = LightShadows.Hard;
 
-            Logger.Log("create right atrama volumetric light");
             GameObject rightVolumetricLight = new GameObject("RightVolumetricLight");
 
             rightVolumetricLight.transform.parent = atramaRightHeadLight.transform;
@@ -460,32 +403,213 @@ namespace AtramaVehicle
             rightVFX.volumRenderer = rvlMeshRenderer;
             rightVFX.volumMeshFilter = rvlMeshFilter;
 
-            Logger.Log("Collecting Atrama lights");
             atrama.lights.Add(atramaLeftHeadLight);
             atrama.lights.Add(atramaRightHeadLight);
             atrama.volumetricLights.Add(leftVolumetricLight);
             atrama.volumetricLights.Add(rightVolumetricLight);
 
-            Logger.Log("Adjust lamp angles");
             atramaLeftHeadLight.transform.localEulerAngles = new Vector3(0, 350, 0);
             atramaRightHeadLight.transform.localEulerAngles = new Vector3(0, 10, 0);
 
-            Logger.Log("Add light toggle sounds");
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
-            foreach(FMOD_StudioEventEmitter fmod in fmods)
+            foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
-                if(fmod.asset.name == "seamoth_light_on")
+                if (fmod.asset.name == "seamoth_light_on")
                 {
                     atrama.lightsOnSound = CopyComponent(fmod, atrama.vehicle.gameObject);
                 }
-                else if(fmod.asset.name == "seamoth_light_off")
+                else if (fmod.asset.name == "seamoth_light_off")
                 {
                     atrama.lightsOffSound = CopyComponent(fmod, atrama.vehicle.gameObject);
                 }
             }
+        }
+        public static void addStorageModules()
+        {
+            Logger.Log("Add Storage Modules");
+            atrama.modularStorage = atramaPrefab.transform.Find("ModularStorage").gameObject;
+            atrama.modularStorage.transform.parent = atramaPrefab.transform;
 
+            FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+            FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+
+            GameObject atramaStorageModule1 = atrama.modularStorage.transform.Find("StorageModule1").gameObject;
+            var stor1 = atramaStorageModule1.EnsureComponent<AtramaStorageContainer>();
+            stor1.storageRoot = atrama.storageRoot;
+            stor1.storageLabel = "Storage Module 1";
+            stor1.height = 4;
+            stor1.width = 4;
+            var input1 = atramaStorageModule1.EnsureComponent<AtramaStorageInput>();
+            input1.atrama = atrama.vehicle;
+            input1.model = atramaStorageModule1;
+            input1.collider = atramaStorageModule1.EnsureComponent<BoxCollider>();
+            input1.openSound = storageOpenSound;
+            input1.closeSound = storageCloseSound;
+
+            GameObject atramaStorageModule2 = atrama.modularStorage.transform.Find("StorageModule2").gameObject;
+            var stor2 = atramaStorageModule2.EnsureComponent<AtramaStorageContainer>();
+            stor2.storageRoot = atrama.storageRoot;
+            stor2.storageLabel = "Storage Module 2";
+            stor2.height = 4;
+            stor2.width = 4;
+            var input2 = atramaStorageModule2.EnsureComponent<AtramaStorageInput>();
+            input2.atrama = atrama.vehicle;
+            input2.model = atramaStorageModule2;
+            input2.collider = atramaStorageModule2.EnsureComponent<BoxCollider>();
+            input2.openSound = storageOpenSound;
+            input2.closeSound = storageCloseSound;
+
+            GameObject atramaStorageModule3 = atrama.modularStorage.transform.Find("StorageModule3").gameObject;
+            var stor3 = atramaStorageModule3.EnsureComponent<AtramaStorageContainer>();
+            stor3.storageRoot = atrama.storageRoot;
+            stor3.storageLabel = "Storage Module 3";
+            stor3.height = 4;
+            stor3.width = 4;
+            var input3 = atramaStorageModule3.EnsureComponent<AtramaStorageInput>();
+            input3.atrama = atrama.vehicle;
+            input3.model = atramaStorageModule3;
+            input3.collider = atramaStorageModule3.EnsureComponent<BoxCollider>();
+            input3.openSound = storageOpenSound;
+            input3.closeSound = storageCloseSound;
+
+            GameObject atramaStorageModule4 = atrama.modularStorage.transform.Find("StorageModule4").gameObject;
+            var stor4 = atramaStorageModule4.EnsureComponent<AtramaStorageContainer>();
+            stor4.storageRoot = atrama.storageRoot;
+            stor4.storageLabel = "Storage Module 4";
+            stor4.height = 4;
+            stor4.width = 4;
+            var input4 = atramaStorageModule4.EnsureComponent<AtramaStorageInput>();
+            input4.atrama = atrama.vehicle;
+            input4.model = atramaStorageModule4;
+            input4.collider = atramaStorageModule4.EnsureComponent<BoxCollider>();
+            input4.openSound = storageOpenSound;
+            input4.closeSound = storageCloseSound;
+
+            GameObject atramaStorageModule5 = atrama.modularStorage.transform.Find("StorageModule5").gameObject;
+            var stor5 = atramaStorageModule5.EnsureComponent<AtramaStorageContainer>();
+            stor5.storageRoot = atrama.storageRoot;
+            stor5.storageLabel = "Storage Module 5";
+            stor5.height = 4;
+            stor5.width = 4;
+            var input5 = atramaStorageModule5.EnsureComponent<AtramaStorageInput>();
+            input5.atrama = atrama.vehicle;
+            input5.model = atramaStorageModule5;
+            input5.collider = atramaStorageModule5.EnsureComponent<BoxCollider>();
+            input5.openSound = storageOpenSound;
+            input5.closeSound = storageCloseSound;
+
+            GameObject atramaStorageModule6 = atrama.modularStorage.transform.Find("StorageModule6").gameObject;
+            var stor6 = atramaStorageModule6.EnsureComponent<AtramaStorageContainer>();
+            stor6.storageRoot = atrama.storageRoot;
+            stor6.storageLabel = "Storage Module 6";
+            stor6.height = 4;
+            stor6.width = 4;
+            var input6 = atramaStorageModule6.EnsureComponent<AtramaStorageInput>();
+            input6.atrama = atrama.vehicle;
+            input6.model = atramaStorageModule6;
+            input6.collider = atramaStorageModule6.EnsureComponent<BoxCollider>();
+            input6.openSound = storageOpenSound;
+            input6.closeSound = storageCloseSound;
+
+
+
+            atrama.vehicle.storageInputs = new AtramaStorageInput[6] { input1, input2, input3, input4, input5, input6 };
+
+            var lStor = atrama.leftStorage.GetComponent<AtramaStorageInput>();
+            lStor.openSound = storageOpenSound;
+            lStor.closeSound = storageCloseSound;
+            var rStor = atrama.rightStorage.GetComponent<AtramaStorageInput>();
+            rStor.openSound = storageOpenSound;
+            rStor.closeSound = storageCloseSound;
+        }
+        public static void applyMarmosetShader()
+        { 
+            Logger.Log("Apply Marmoset Shader");
+            // Add the marmoset shader to all renderers
+            Shader marmosetShader = Shader.Find("MarmosetUBER");
+            foreach (var renderer in atramaPrefab.GetComponentsInChildren<MeshRenderer>())
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    // skip some materials
+                    if (renderer.gameObject.name.Contains("Light"))
+                    {
+                        continue;
+                    }
+
+                    mat.shader = marmosetShader;
+
+                    // add emission to certain materials
+                    // in order to light the interior
+                    if (
+                        (renderer.gameObject.name == "Main-Body" && mat.name.Contains("Material"))
+                        || renderer.gameObject.name == "Mechanical-Panel"
+                        || renderer.gameObject.name == "AtramaPilotChair"
+                        || renderer.gameObject.name == "Hatch"
+                        )
+                    {
+                        atrama.interiorRenderers.Add(renderer);
+
+                        // TODO move this to OnPowered and OnUnpowered
+                        mat.EnableKeyword("MARMO_EMISSION");
+                        mat.SetFloat("_EmissionLM", 0.25f);
+                        mat.SetFloat("_EmissionLMNight", 0.25f);
+                        mat.SetFloat("_GlowStrength", 0f);
+                        mat.SetFloat("_GlowStrengthNight", 0f);
+                    }
+
+                }
+            }
+        }
+        public static void addVehicleSubsystem()
+        {
+            Logger.Log("Add Vehicle Subsystem");
+
+            // Make the chair a Vehicle
+            GameObject pilotChair = atramaPrefab.transform.Find("Chair").gameObject;
+            pilotChair.name = "AtramaPilotChair";
+            atrama.vehicle = pilotChair.EnsureComponent<AtramaVehicle>();
+            atrama.vehicle.playerPosition = pilotChair;
+            atrama.vehicle.stabilizeRoll = true;
+            atrama.vehicle.controlSheme = Vehicle.ControlSheme.Submersible;
+
+            atrama.vehicle.mainAnimator = atramaPrefab.EnsureComponent<Animator>();
+
+            // Ensure vehicle remains in the world always
+            atramaPrefab.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
+
+            // Ensure vehicle is a physics object
+            var rb = atramaPrefab.EnsureComponent<Rigidbody>();
+            rb.mass = 4000f;
+            rb.drag = 10f;
+            rb.angularDrag = 10f;
+            rb.useGravity = false;
+            atrama.vehicle.useRigidbody = rb;
+
+            // Ensure module storage has a root object
+            GameObject modulesRootObj = new GameObject("ModulesRootObject");
+            modulesRootObj.transform.parent = atramaPrefab.transform;
+            atrama.vehicle.modulesRoot = modulesRootObj.EnsureComponent<ChildObjectIdentifier>();
+
+            // borrow some things from the seamoth
+            atrama.vehicle.crushDamage = CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), atrama.vehicle.gameObject);
+            atrama.vehicle.crushDamage.kBaseCrushDepth = 300;
+            atrama.vehicle.crushDamage.damagePerCrush = 5;
+            atrama.vehicle.crushDamage.crushPeriod = 3;
+            //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
+            atrama.vehicle.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, atrama.vehicle.gameObject);
+            atrama.vehicle.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, atrama.vehicle.gameObject);
+            atrama.vehicle.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, atrama.vehicle.gameObject);
+        }
+
+
+
+        public static void addInteriorLightsSubsystem()
+        {
 
         }
+
+
         public static void addCyclopsComponents()
         {
             Logger.Log("Add cyclops components");

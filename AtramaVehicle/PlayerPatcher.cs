@@ -21,7 +21,10 @@ namespace AtramaVehicle
         [HarmonyPatch("Start")]
         public static void Postfix()
         {
-            AtramaPreparer.buildAtramaPrefab();
+            if (AtramaPreparer.atramaPrefab == null)
+            {
+                AtramaPreparer.buildAtramaPrefab();
+            }
         }
 
         [HarmonyPostfix]
@@ -88,7 +91,7 @@ namespace AtramaVehicle
         [HarmonyPatch("CanBreathe")]
         public static void CanBreathePostfix(Player __instance, ref bool __result)
         {
-            if(AtramaManager.getCurrentAtrama() != null)
+            if (AtramaManager.getCurrentAtrama() != null)
             {
                 if (AtramaManager.getCurrentAtrama().vehicle.IsPowered())
                 {
@@ -132,9 +135,6 @@ namespace AtramaVehicle
             }
             return true;
         }
-
-
-
 
 
     }

@@ -81,6 +81,9 @@
     <Reference Include="UnityEngine.AssetBundleModule">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule_publicized">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\publicized_assemblies\UnityEngine.CoreModule_publicized.dll</HintPath>
     </Reference>
@@ -99,8 +102,25 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine_publicized">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\publicized_assemblies\UnityEngine_publicized.dll</HintPath>
@@ -118,12 +138,18 @@
     <Compile Include="AtramaManager.cs" />
     <Compile Include="AtramaVehiclePatcher.cs" />
     <Compile Include="AtramaEngine.cs" />
+    <Compile Include="CoroutineHelper.cs" />
+    <Compile Include="EquipmentPatcher.cs" />
     <Compile Include="LargeWorldEntityPatcher.cs" />
     <Compile Include="GameInputPatcher.cs" />
     <Compile Include="LightmappedPrefabsPatcher.cs" />
     <Compile Include="LiveMixinPatcher.cs" />
     <Compile Include="PlayerPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="uGUI_EquipmentPatcher.cs" />
+    <Compile Include="uGUI_EquipmentSlotPatcher.cs" />
+    <Compile Include="uGUI_PDAPatcher.cs" />
+    <Compile Include="uGUI_PingsPatcher.cs" />
     <Compile Include="VehiclePatcher.cs" />
     <Compile Include="VehicleUpgradeConsoleInputPatcher.cs" />
   </ItemGroup>

@@ -52,6 +52,16 @@ namespace AtramaVehicle
             Config = OptionsPanelHandler.Main.RegisterModOptions<MyConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.atramavehicle.mod");
             harmony.PatchAll();
+
+            string[] stepsToRoot = { "" };
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "AtramaMenu", "Atrama Modules and Arms", SpriteManager.Get(TechType.Seamoth), stepsToRoot);
+            string[] stepsToModules = { "AtramaMenu" };
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "Modules", "Atrama Modules", SpriteManager.Get(TechType.Seamoth), stepsToModules);
+            string[] stepsToArms = { "AtramaMenu" };
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "Arms", "Atrama Arms", SpriteManager.Get(TechType.Seamoth), stepsToArms);
+
+            // TODO: edit the generic vehicle modules to include they may be used with the Atrama
+
         }
     }
 

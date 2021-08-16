@@ -15,7 +15,8 @@ a new vehicle for Subnautica
 - [x] flood lights
 - [x] oxygen control
 - [x] vehicle upgrades
-- [ ] HUD ping
+- [ ] interior trigger
+- [x] HUD ping
 - [ ] Pilot HUD
 - [ ] Interior Control Panel
 - [ ] Auto-pilot
@@ -46,10 +47,11 @@ a new vehicle for Subnautica
 - [ ] Free Look
 - [ ] Roll Control
 - [ ] Attitude Indicator
+- [ ] Stealth Module (soft requirement for Atrama)
 
 ### Assets Required
 - [ ] external storage modules
-- [ ] atrama hud ping
+- [x] atrama hud ping
 - [ ] atrama upgrade background
 - [ ] control panel
 

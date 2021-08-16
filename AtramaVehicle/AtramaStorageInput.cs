@@ -30,7 +30,7 @@ namespace AtramaVehicle
 
 		private void ChangeFlapState(bool open, bool pda = false)
 		{
-			//Utils.PlayFMODAsset(open ? this.openSound : this.closeSound, base.transform, 1f);
+			Utils.PlayFMODAsset(open ? this.openSound : this.closeSound, base.transform, 1f);
 			OpenPDA();
 		}
 
