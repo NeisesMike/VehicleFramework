@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E7B01366-4FE5-472B-A299-52F37E95AD79}</ProjectGuid>
+    <ProjectGuid>{E3835CD3-3673-4A62-83BE-DE8CE2513A8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VehicleFramework</RootNamespace>
-    <AssemblyName>VehicleFramework</AssemblyName>
+    <RootNamespace>Atrama</RootNamespace>
+    <AssemblyName>Atrama</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -43,8 +43,7 @@
     <Reference Include="QModInstaller">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\QModManager\QModInstaller.dll</HintPath>
     </Reference>
-    <Reference Include="SMLHelper, Version=2.9.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SMLHelper">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\QMods\Modding Helper\SMLHelper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -55,8 +54,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\VehicleFramework\VehicleFramework\bin\Debug\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
@@ -73,51 +76,15 @@
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VRModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.VRModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    <Reference Include="VehicleFramework">
+      <HintPath>..\..\VehicleFramework\VehicleFramework\bin\Debug\VehicleFramework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerControllerPatcher.cs" />
-    <Compile Include="VehicleCraftable.cs" />
-    <Compile Include="VehicleComponents\AutoPilot.cs" />
-    <Compile Include="Components\VehicleBatteryInput.cs" />
-    <Compile Include="Components\VehicleEngine.cs" />
-    <Compile Include="VehicleComponents\FuelGauge.cs" />
-    <Compile Include="VehicleComponents\VehicleLights.cs" />
-    <Compile Include="Components\VehicleHatch.cs" />
-    <Compile Include="Components\VehicleStorageContainer.cs" />
-    <Compile Include="Components\VehicleStorageInput.cs" />
-    <Compile Include="ModuleBuilder.cs" />
-    <Compile Include="OldComponents\AtramaVehicle.cs" />
-    <Compile Include="Components\VehicleHUD.cs" />
+    <Compile Include="Atrama.cs" />
     <Compile Include="MainPatcher.cs" />
-    <Compile Include="ModVehicle.cs" />
-    <Compile Include="Components\PilotingTrigger.cs" />
-    <Compile Include="Patches\EquipmentPatcher.cs" />
-    <Compile Include="Patches\GameInputPatcher.cs" />
-    <Compile Include="Patches\LiveMixinPatcher.cs" />
-    <Compile Include="Patches\PlayerPatcher.cs" />
-    <Compile Include="Patches\uGUI_EquipmentPatcher.cs" />
-    <Compile Include="Patches\uGUI_EquipmentSlotPatcher.cs" />
-    <Compile Include="Patches\uGUI_PDAPatcher.cs" />
-    <Compile Include="Patches\uGUI_PingsPatcher.cs" />
-    <Compile Include="Patches\uGUI_SeamothHUDPatcher.cs" />
-    <Compile Include="Patches\VehiclePatcher.cs" />
-    <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VehicleBuilder.cs" />
-    <Compile Include="VehicleComponent.cs" />
-    <Compile Include="VehicleManager.cs" />
+    <Compile Include="temp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

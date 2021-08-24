@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 
-namespace VehicleFramework
+namespace AtramaVehicle
 {
     [HarmonyPatch(typeof(Equipment))]
     public class EquipmentPatcher
@@ -17,13 +17,13 @@ namespace VehicleFramework
          * 2 arm slots : "AtramaArmX" where X in {Left, Right}
          */
 
-        public static List<string> vehicleModuleSlots = new List<string> { "VehicleModule1", "VehicleModule2", "VehicleModule3", "VehicleModule4", "VehicleModule5", "VehicleModule6" };
-        public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight"};
+        public static List<string> atramaModuleSlots = new List<string> { "AtramaModule1", "AtramaModule2", "AtramaModule3", "AtramaModule4", "AtramaModule5", "AtramaModule6" };
+        public static List<string> atramaArmSlots = new List<string> { "AtramaArmLeft", "AtramaArmRight"};
 
-        public static Dictionary<EquipmentType, List<string>> vehicleTypeToSlots = new Dictionary<EquipmentType, List<string>>
+        public static Dictionary<EquipmentType, List<string>> atramaTypeToSlots = new Dictionary<EquipmentType, List<string>>
                 {
-                    { VehicleBuilder.ModuleType, vehicleModuleSlots },
-                    { VehicleBuilder.ArmType, vehicleArmSlots }
+                    { AtramaManager.atramaModuleType, atramaModuleSlots },
+                    { AtramaManager.atramaArmType, atramaArmSlots }
                 };
 
 
@@ -31,11 +31,11 @@ namespace VehicleFramework
         [HarmonyPatch("SetLabel")]
         public static bool SetLabelPrefix(Equipment __instance, string l, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!l.Contains("Vehicle"))
+            if (!l.Contains("Atrama"))
             {
                 return true;
             }
-            ___typeToSlots = vehicleTypeToSlots;
+            ___typeToSlots = atramaTypeToSlots;
             return true;
         }
 
@@ -43,11 +43,11 @@ namespace VehicleFramework
         [HarmonyPatch("AddSlot")]
         public static bool AddSlotPrefix(string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!slot.Contains("Vehicle"))
+            if (!slot.Contains("Atrama"))
             {
                 return true;
             }
-            ___typeToSlots = vehicleTypeToSlots;
+            ___typeToSlots = atramaTypeToSlots;
             return true;
         }
 
@@ -55,11 +55,11 @@ namespace VehicleFramework
         [HarmonyPatch("GetCompatibleSlotDefault")]
         public static bool GetCompatibleSlotDefaultPrefix(EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
+            if ((int)itemType != 625 && (int)itemType != 626)
             {
                 return true;
             }
-            ___typeToSlots = vehicleTypeToSlots;
+            ___typeToSlots = atramaTypeToSlots;
             return true;
         }
 
@@ -67,11 +67,11 @@ namespace VehicleFramework
         [HarmonyPatch("GetFreeSlot")]
         public static bool GetFreeSlotPrefix(EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (type != VehicleBuilder.ModuleType && type != VehicleBuilder.ArmType)
+            if ((int)type != 625 && (int)type != 626)
             {
                 return true;
             }
-            ___typeToSlots = vehicleTypeToSlots;
+            ___typeToSlots = atramaTypeToSlots;
             return true;
         }
 
@@ -79,11 +79,11 @@ namespace VehicleFramework
         [HarmonyPatch("GetSlots")]
         public static bool GetSlotsPrefix(EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
+            if ((int)itemType != 625 && (int)itemType != 626)
             {
                 return true;
             }
-            ___typeToSlots = vehicleTypeToSlots;
+            ___typeToSlots = atramaTypeToSlots;
             return true;
         }
 
@@ -91,11 +91,11 @@ namespace VehicleFramework
         [HarmonyPatch("RemoveSlot")]
         public static bool RemoveSlot(string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!slot.Contains("Vehicle"))
+            if (!slot.Contains("Atrama"))
             {
                 return true;
             }
-            ___typeToSlots = vehicleTypeToSlots;
+            ___typeToSlots = atramaTypeToSlots;
             return true;
         }
 
@@ -103,14 +103,14 @@ namespace VehicleFramework
         [HarmonyPatch("GetSlotType")]
         public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result, Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (vehicleModuleSlots.Contains(slot))
+            if (atramaModuleSlots.Contains(slot))
             {
-                __result = VehicleBuilder.ModuleType;
+                __result = AtramaManager.atramaModuleType;
                 return false;
             }
-            if (vehicleArmSlots.Contains(slot))
+            if (atramaArmSlots.Contains(slot))
             {
-                __result = VehicleBuilder.ArmType;
+                __result = AtramaManager.atramaArmType;
                 return false;
             }
             return true;
@@ -120,7 +120,7 @@ namespace VehicleFramework
         [HarmonyPatch("IsCompatible")]
         public static bool IsCompatiblePrefix(EquipmentType itemType, EquipmentType slotType, ref bool __result)
         {
-            __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == VehicleBuilder.ModuleType));
+            __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == AtramaManager.atramaModuleType));
             if(__result)
             {
                 return false;

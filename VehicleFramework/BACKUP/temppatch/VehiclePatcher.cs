@@ -6,52 +6,27 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 
-namespace VehicleFramework
+namespace AtramaVehicle
 {
     [HarmonyPatch(typeof(Vehicle))]
     public class VehiclePatcher
     {
         [HarmonyPrefix]
-        [HarmonyPatch("Awake")]
-        public static bool AwakePrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
-            {
-                return true;
-            }
-            ___energyInterface = mv.GetComponent<EnergyInterface>();
-            /*
-            Logger.Log("adding equipment");
-            __instance.modules = new Equipment(mv.gameObject, mv.modulesRoot.transform);
-            __instance.modules.SetLabel("VehicleUpgradesStorageLabel");
-            __instance.upgradesInput.equipment = __instance.modules;
-            */
-            return true;
-        }
-
-        [HarmonyPrefix]
         [HarmonyPatch("Start")]
         public static bool StartPretfix(Vehicle __instance, ref EnergyInterface ___energyInterface)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
+            if (__instance.gameObject == null || __instance.gameObject.name == null || __instance.gameObject.name != "AtramaPilotChair")
             {
                 return true;
             }
+            ___energyInterface = __instance.GetComponent<EnergyInterface>();
             return true;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("OnHandHover")]
-        public static bool OnHandHoverPrefix(Vehicle __instance)
+        public static void OnHandHoverPrefix(Vehicle __instance)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
-            {
-                return false;
-            }
-            return true;
             /*
             Logger.Log("Hover!");
             Logger.Log(__instance.GetPilotingMode().ToString());
@@ -63,14 +38,8 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch("OnHandClick")]
-        public static bool OnHandClickPrefix(Vehicle __instance, EnergyInterface ___energyInterface)
+        public static void OnHandClickPrefix(Vehicle __instance, EnergyInterface ___energyInterface)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
-            {
-                return false;
-            }
-            return true;
             /*
             Logger.Log("Click!");
             Logger.Log((___energyInterface == null).ToString());
@@ -85,8 +54,7 @@ namespace VehicleFramework
         [HarmonyPatch("ApplyPhysicsMove")]
         private static bool ApplyPhysicsMovePrefix(Vehicle __instance, ref bool ___wasAboveWater, ref VehicleAccelerationModifier[] ___accelerationModifiers)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
+            if (__instance.gameObject == null || __instance.gameObject.name == null || __instance.gameObject.name != "AtramaPilotChair")
             {
                 return true;
             }
@@ -160,8 +128,7 @@ namespace VehicleFramework
         [HarmonyPatch("UpdateEnergyRecharge")]
         public static bool UpdateEnergyRechargePrefix(Vehicle __instance)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
+            if (__instance.gameObject == null || __instance.gameObject.name == null || __instance.gameObject.name != "AtramaPilotChair")
             {
                 return true;
             }
@@ -176,8 +143,7 @@ namespace VehicleFramework
         [HarmonyPatch("LazyInitialize")]
         public static bool LazyInitializePrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
+            if (__instance.gameObject == null || __instance.gameObject.name == null || __instance.gameObject.name != "AtramaPilotChair")
             {
                 return true;
             }
@@ -186,9 +152,18 @@ namespace VehicleFramework
             /*
             Logger.Log("LazyInitialize!");
             Logger.Log((___energyInterface == null).ToString());
-            Logger.Log((mv.useRigidbody == null).ToString());
-            Logger.Log((mv.upgradesInput == null).ToString());
-            Logger.Log((mv.modulesRoot == null).ToString());
+            Logger.Log((__instance.useRigidbody == null).ToString());
+            Logger.Log((__instance.upgradesInput == null).ToString());
+            Logger.Log((__instance.modulesRoot == null).ToString());
+            */
+            /*
+            if (__instance.modulesRoot == null)
+            {
+                if (__instance.transform.parent.Find("ModulesRootObject") != null)
+                {
+                    __instance.modulesRoot = __instance.transform.parent.Find("ModulesRootObject").GetComponent<ChildObjectIdentifier>();
+                }
+            }
             */
             return true;
         }
@@ -197,8 +172,7 @@ namespace VehicleFramework
         [HarmonyPatch("GetStorageInSlot")]
         public static bool GetStorageInSlotPrefix(Vehicle __instance, int slotID, TechType techType, ref ItemsContainer __result)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
+            if (__instance.gameObject == null || __instance.gameObject.name == null || __instance.gameObject.name != "AtramaPilotChair")
             {
                 return true;
             }
@@ -215,7 +189,7 @@ namespace VehicleFramework
                 __result = null;
                 return false;
             }
-            VehicleStorageContainer component = item.GetComponent<VehicleStorageContainer>();
+            AtramaStorageContainer component = item.GetComponent<AtramaStorageContainer>();
             if (component == null)
             {
                 __result = null;
@@ -225,7 +199,6 @@ namespace VehicleFramework
             return false;
         }
 
-        /*
         [HarmonyPrefix]
         [HarmonyPatch("UnlockDefaultModuleSlots")]
         public static bool UnlockDefaultModuleSlotsPrefix(Vehicle __instance)
@@ -239,19 +212,29 @@ namespace VehicleFramework
 
             return true;
         }
-        */
-        /*
+
         [HarmonyPostfix]
         [HarmonyPatch("modules", MethodType.Getter)]
         public static void modulesGetterPostfix(Vehicle __instance, ref Equipment __result)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
+            if(__instance.name.Contains("Atrama"))
             {
-                Logger.Log("shimming equipment");
-                __result = mv.upgradesEquipment;
+                if (__instance.upgradesInput == null)
+                {
+                    Logger.Log("no upgrade panel... skipping");
+                    return;
+                }
+                if(__instance.upgradesInput.equipment == null)
+                {
+                    Logger.Log("adding equipment");
+                    Equipment modules = new Equipment(__instance.transform.parent.gameObject, __instance.modulesRoot.transform);
+                    modules.SetLabel("AtramaUpgradesStorageLabel");
+                    __result = modules;
+                    __instance.upgradesInput.equipment = modules;
+                }
             }
+            return;
         }
-        */
+
     }
 }

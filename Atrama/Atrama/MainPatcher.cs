@@ -16,18 +16,18 @@ using QModManager.API.ModLoading;
 using SMLHelper.V2.Utility;
 
 
-namespace VehicleFramework
+namespace Atrama
 {
     public static class Logger
     {
         public static void Log(string message)
         {
-            UnityEngine.Debug.Log("[VehicleFramework] " + message);
+            UnityEngine.Debug.Log("[Atrama] " + message);
         }
 
         public static void Log(string format, params object[] args)
         {
-            UnityEngine.Debug.Log("[VehicleFramework] " + string.Format(format, args));
+            UnityEngine.Debug.Log("[Atrama] " + string.Format(format, args));
         }
 
         public static void Output(string msg)
@@ -36,33 +36,24 @@ namespace VehicleFramework
             message.ShowMessage(msg, 5);
         }
     }
+
     [QModCore]
     public static class MainPatcher
     {
-        internal static VehicleFrameworkConfig Config { get; private set; }
-
-        [QModPrePatch]
-        public static void PrePatch()
-        {
-        }
+        internal static AtramaConfig Config { get; private set; }
 
         [QModPatch]
         public static void Patch()
         {
-            Config = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
-            var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
+            Config = OptionsPanelHandler.Main.RegisterModOptions<AtramaConfig>();
+            var harmony = new Harmony("com.mikjaw.subnautica.atrama.mod");
             harmony.PatchAll();
-        }
-
-        [QModPostPatch]
-        public static void PostPatch()
-        {
-            VehicleBuilder.PatchCraftables();
+            Atrama.Register();
         }
     }
 
-    [Menu("Vehicle Framework Options")]
-    public class VehicleFrameworkConfig : ConfigFile
+    [Menu("Atrama Options")]
+    public class AtramaConfig : ConfigFile
     {
         [Toggle("temp")]
         public bool temp = false;

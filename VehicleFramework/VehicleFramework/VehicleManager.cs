@@ -8,19 +8,18 @@ namespace VehicleFramework
 {
     public static class VehicleManager
     {
-        public static List<ModVehicle> vehicles = new List<ModVehicle>();
-        public static List<VehicleHUD> huds = new List<VehicleHUD>();
-
+        public static List<VehicleHUD> HUDs = new List<VehicleHUD>();
+        public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
 
         public static void RegisterVehicle(ModVehicle mv)
         {
-            vehicles.Add(mv);
+            VehiclesInPlay.Add(mv);
+            Logger.Log(mv.name + " : " + mv.GetName() + " : " + mv.subName + " was registered!");
         }
         public static void DeregisterVehicle(ModVehicle mv)
         {
-            vehicles.Remove(mv);
+            VehiclesInPlay.Remove(mv);
         }
-
         public static void SaveVehicles()
         {
 
@@ -29,12 +28,11 @@ namespace VehicleFramework
         {
 
         }
-
         public static void UpdateVehicles()
         {
-            foreach(ModVehicle mv in vehicles)
+            foreach(ModVehicle mv in VehiclesInPlay)
             {
-                mv.ModUpdate();
+                //mv.Update();
             }
         }
     }

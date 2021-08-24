@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using System.Reflection.Emit;
 
-namespace VehicleFramework
+namespace AtramaVehicle
 {
     /*
     [HarmonyPatch(typeof(uGUI_SeamothHUD))]

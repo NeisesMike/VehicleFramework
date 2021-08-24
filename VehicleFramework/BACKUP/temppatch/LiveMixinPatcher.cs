@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 
-namespace VehicleFramework
+namespace AtramaVehicle
 {
     [HarmonyPatch(typeof(LiveMixin))]
     public class LiveMixinPatcher

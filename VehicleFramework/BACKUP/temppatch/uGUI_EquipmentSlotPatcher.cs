@@ -5,17 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
 
-namespace VehicleFramework
+namespace AtramaVehicle
 {
     [HarmonyPatch(typeof(uGUI_EquipmentSlot))]
     public class uGUI_EquipmentSlotPatcher
     {
+        public static bool hasInited = false;
+
         [HarmonyPrefix]
         [HarmonyPatch("SetState")]
 		public static bool SetStatePrefix(uGUI_EquipmentSlot.State newState, uGUI_EquipmentSlot __instance)
         {
-            Logger.Log(__instance.name + ": Set State");
-            if (!__instance.transform.name.Contains("Vehicle") || VehicleBuilder.areModulesReady)
+            Logger.Log(__instance.name);
+            if (!__instance.transform.name.Contains("Atrama") || hasInited)
             {
                 Logger.Log("good input");
 				return true;

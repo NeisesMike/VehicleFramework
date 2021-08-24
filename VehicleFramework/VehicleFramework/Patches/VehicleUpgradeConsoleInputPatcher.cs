@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
 
-namespace AtramaVehicle
+namespace VehicleFramework
 {
     [HarmonyPatch(typeof(VehicleUpgradeConsoleInput))]
     public class VehicleUpgradeConsoleInputPatcher
@@ -16,34 +16,11 @@ namespace AtramaVehicle
         {
             if (__instance.gameObject.name == "Upgrades-Panel" && __instance.transform.parent.parent.name.Contains("Atrama"))
             {
+                /*
                 var vehicle = __instance.transform.parent.parent.GetComponentInChildren<AtramaVehicle>();
                 vehicle.updateModules();
+                */
             }
         }
-
-        /*
-        [HarmonyPrefix]
-        [HarmonyPatch("UpdateVisuals")]
-        public static bool UpdateVisualsPrefix(VehicleUpgradeConsoleInput __instance)
-        {
-            if(__instance.gameObject.name == "Upgrades-Panel" && __instance.transform.parent.parent.name.Contains("Atrama"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("Update")]
-        public static bool UpdatePrefix(VehicleUpgradeConsoleInput __instance)
-        {
-            if (__instance.gameObject.name == "Upgrades-Panel" && __instance.transform.parent.parent.name.Contains("Atrama"))
-            {
-                return false;
-            }
-            return true;
-        }
-        */
-
     }
 }

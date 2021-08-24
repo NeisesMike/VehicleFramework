@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 
-namespace AtramaVehicle
+namespace VehicleFramework
 {
     [HarmonyPatch(typeof(uGUI_Equipment))]
     public class uGUI_EquipmentPatcher
     {
         public static bool hasInited = false;
-        public static Dictionary<string, uGUI_EquipmentSlot> atramaAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
+        public static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
 
         [HarmonyPostfix]
         [HarmonyPatch("Awake")]
@@ -21,10 +21,8 @@ namespace AtramaVehicle
             if (!hasInited)
             {
                 buildAllSlots(___allSlots);
-
                 hasInited = true;
-
-                ___allSlots = atramaAllSlots;
+                ___allSlots = vehicleAllSlots;
             }
         }
 
@@ -32,56 +30,51 @@ namespace AtramaVehicle
         {
             foreach (KeyValuePair<string, uGUI_EquipmentSlot> pair in thisAllSlots)
             {
-                atramaAllSlots.Add(pair.Key, pair.Value);
+                if (!vehicleAllSlots.ContainsKey(pair.Key))
+                {
+                    vehicleAllSlots.Add(pair.Key, pair.Value);
+                }
+                else
+                {
+                    vehicleAllSlots[pair.Key] = pair.Value;
+                }
             }
 
-            if(!atramaAllSlots.ContainsKey("AtramaModule1"))
+            if(!vehicleAllSlots.ContainsKey("ModVehicleModule0"))
             {
-                atramaAllSlots.Add("AtramaModule1", AtramaManager.atramaModuleSlot1);
+                uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
+                int max_num_modules = 0;
+                foreach (VehicleEntry ve in VehicleBuilder.vehicleTypes)
+                {
+                    if (max_num_modules < ve.modules)
+                    {
+                        max_num_modules = ve.modules;
+                    }
+                }
+                for (int i = 0; i < max_num_modules; i++)
+                {
+                    vehicleAllSlots.Add("ModVehicleModule" + i.ToString(), equipment.transform.Find("ModVehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>());
+                }
+                vehicleAllSlots.Add("VehicleArmLeft", equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>());
+                vehicleAllSlots.Add("VehicleArmRight", equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>());
             }
             else
             {
-                atramaAllSlots["AtramaModule1"] = AtramaManager.atramaModuleSlot1;
-            }
-            if (!atramaAllSlots.ContainsKey("AtramaModule2"))
-            {
-                atramaAllSlots.Add("AtramaModule2", AtramaManager.atramaModuleSlot2);
-            }
-            else
-            {
-                atramaAllSlots["AtramaModule2"] = AtramaManager.atramaModuleSlot2;
-            }
-            if (!atramaAllSlots.ContainsKey("AtramaModule3"))
-            {
-                atramaAllSlots.Add("AtramaModule3", AtramaManager.atramaModuleSlot3);
-            }
-            else
-            {
-                atramaAllSlots["AtramaModule3"] = AtramaManager.atramaModuleSlot3;
-            }
-            if (!atramaAllSlots.ContainsKey("AtramaModule4"))
-            {
-                atramaAllSlots.Add("AtramaModule4", AtramaManager.atramaModuleSlot4);
-            }
-            else
-            {
-                atramaAllSlots["AtramaModule4"] = AtramaManager.atramaModuleSlot4;
-            }
-            if (!atramaAllSlots.ContainsKey("AtramaArmLeft"))
-            {
-                atramaAllSlots.Add("AtramaArmLeft", AtramaManager.atramaArmSlotLeft);
-            }
-            else
-            {
-                atramaAllSlots["AtramaArmLeft"] = AtramaManager.atramaArmSlotLeft;
-            }
-            if (!atramaAllSlots.ContainsKey("AtramaArmRight"))
-            {
-                atramaAllSlots.Add("AtramaArmRight", AtramaManager.atramaArmSlotRight);
-            }
-            else
-            {
-                atramaAllSlots["AtramaArmRight"] = AtramaManager.atramaArmSlotRight;
+                uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
+                int max_num_modules = 0;
+                foreach (VehicleEntry ve in VehicleBuilder.vehicleTypes)
+                {
+                    if (max_num_modules < ve.modules)
+                    {
+                        max_num_modules = ve.modules;
+                    }
+                }
+                for (int i = 0; i < max_num_modules; i++)
+                {
+                    vehicleAllSlots["ModVehicleModule" + i.ToString()] = equipment.transform.Find("ModVehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>();
+                }
+                vehicleAllSlots["VehicleArmLeft"] = equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>();
+                vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
             }
         }
     }

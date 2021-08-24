@@ -8,7 +8,7 @@ using System.IO;
 using UnityEngine;
 using System.Reflection;
 
-namespace VehicleFramework
+namespace AtramaVehicle
 {
     [HarmonyPatch(typeof(GameInput))]
     [HarmonyPatch("Awake")]
