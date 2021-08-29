@@ -29,6 +29,12 @@ namespace VehicleFramework
         [HarmonyPatch("Update")]
         public static void UpdatePostfix(Player __instance)
         {
+            // TODO debug remove
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                DevConsole.SendConsoleCommand("spawn atrama");
+            }
+
             ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
             if (mv == null)
             {

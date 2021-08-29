@@ -12,17 +12,17 @@ namespace Atrama
     {
         public override GameObject VehicleModel => throw new NotImplementedException();
 
-        public override List<VehiclePilotSeat> PilotSeats => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehiclePilotSeat> PilotSeats => throw new NotImplementedException();
 
-        public override List<VehicleHatchStruct> Hatches => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches => throw new NotImplementedException();
 
-        public override List<VehicleStorage> Storages => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehicleStorage> Storages => throw new NotImplementedException();
 
-        public override List<VehicleUpgrades> Upgrades => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehicleUpgrades> Upgrades => throw new NotImplementedException();
 
-        public override List<VehicleBattery> Batteries => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehicleBattery> Batteries => throw new NotImplementedException();
 
-        public override List<VehicleLight> Lights => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehicleLight> Lights => throw new NotImplementedException();
 
         public override List<GameObject> WalkableInteriors => throw new NotImplementedException();
     }

@@ -17,16 +17,21 @@ namespace VehicleFramework
             RightArm
         }
 
+        uGUI_Equipment equipment;
+
         public GameObject genericModuleObject;
-        public Sprite genericModuleSlotSprite;
-        public Material genericModuleSlotMaterial;
-
-        public GameObject backgroundModuleObject;
-        public Sprite backgroundSprite;
-
+        public GameObject genericModuleBackground;
+        public GameObject genericModuleIconRect;
+        public GameObject genericModuleHint;
+        public GameObject modulesBackground;
         public GameObject armModuleObject;
+
+        public Sprite backgroundSprite;
+        public Sprite genericModuleSlotSprite;
         public Sprite leftArmModuleSlotSprite;
         public Sprite rightArmModuleSlotSprite;
+
+        public Material genericModuleSlotMaterial;
         public Material armModuleSlotMaterial;
 
         public Transform topLeftSlot = null;
@@ -64,13 +69,10 @@ namespace VehicleFramework
                             genericModuleObject.transform.localPosition = topLeftSlot.localPosition;
 
                             // add background child gameobject and components
-                            GameObject background = GameObject.Instantiate(new GameObject("Background"), genericModuleObject.transform);
-                            // add rt to background
-                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<RectTransform>(), background);
-                            // add cr to background
-                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<CanvasRenderer>(), background);
-                            // add image to background
-                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>(), background);
+                            genericModuleBackground = GameObject.Instantiate(new GameObject("Background"), genericModuleObject.transform);
+                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<RectTransform>(), genericModuleBackground);
+                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<CanvasRenderer>(), genericModuleBackground);
+                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>(), genericModuleBackground);
 
                             // save these I guess?
                             genericModuleSlotSprite = topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>().sprite;
@@ -83,23 +85,21 @@ namespace VehicleFramework
 
                             // add iconrect child gameobject
                             GameObject iconRect = GameObject.Instantiate(new GameObject("IconRect"), genericModuleObject.transform);
-
-                            // configure iconrect
                             genericModuleObject.GetComponent<uGUI_EquipmentSlot>().iconRect = VehicleBuilder.CopyComponent(topLeftSlot.Find("IconRect").GetComponent<RectTransform>(), iconRect);
 
                             //===============================================================================
                             // get background image components
                             //===============================================================================
 
-                            backgroundModuleObject = new GameObject("BackgroundVehicleModule");
-                            backgroundModuleObject.SetActive(false);
-                            backgroundModuleObject.transform.position = topLeftSlot.Find("Exosuit").transform.position;
-                            backgroundModuleObject.transform.localPosition = topLeftSlot.Find("Exosuit").transform.localPosition;
-                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<RectTransform>(), backgroundModuleObject);
-                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<CanvasRenderer>(), backgroundModuleObject);
-                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>(), backgroundModuleObject);
+                            modulesBackground = new GameObject("VehicleModuleBackground");
+                            modulesBackground.SetActive(false);
+                            modulesBackground.transform.position = topLeftSlot.Find("Exosuit").transform.position;
+                            modulesBackground.transform.localPosition = topLeftSlot.Find("Exosuit").transform.localPosition;
+                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<RectTransform>(), modulesBackground);
+                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<CanvasRenderer>(), modulesBackground);
+                            VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>(), modulesBackground);
                             backgroundSprite = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().sprite;
-                            backgroundModuleObject.EnsureComponent<UnityEngine.UI.Image>().material = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().material;
+                            modulesBackground.EnsureComponent<UnityEngine.UI.Image>().material = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().material;
 
                             //===============================================================================
                             //===============================================================================
@@ -152,31 +152,16 @@ namespace VehicleFramework
                             armModuleObject.transform.position = arm.position;
                             armModuleObject.transform.localPosition = arm.localPosition;
 
-                            GameObject background = GameObject.Instantiate(new GameObject("Background"), armModuleObject.transform);
-                            VehicleBuilder.CopyComponent(arm.Find("Background").GetComponent<RectTransform>(), background);
-                            VehicleBuilder.CopyComponent(arm.Find("Background").GetComponent<CanvasRenderer>(), background);
-                            armModuleObject.EnsureComponent<uGUI_EquipmentSlot>().background = VehicleBuilder.CopyComponent(arm.Find("Background").GetComponent<UnityEngine.UI.Image>(), background);
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().background.sprite = arm.Find("Background").GetComponent<UnityEngine.UI.Image>().sprite;
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().background.material = arm.Find("Background").GetComponent<UnityEngine.UI.Image>().material;
+                            leftArmModuleSlotSprite = arm.Find("Background").GetComponent<UnityEngine.UI.Image>().sprite;
+                            armModuleSlotMaterial = arm.Find("Background").GetComponent<UnityEngine.UI.Image>().material;
 
-                            GameObject iconRect = GameObject.Instantiate(new GameObject("IconRect"), armModuleObject.transform);
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().iconRect = VehicleBuilder.CopyComponent(arm.Find("IconRect").GetComponent<RectTransform>(), iconRect);
-                            GameObject armBackground = GameObject.Instantiate(new GameObject("ArmBackground"), armModuleObject.transform);
-                            VehicleBuilder.CopyComponent(arm.Find("ArmBackground").GetComponent<RectTransform>(), armBackground);
-                            VehicleBuilder.CopyComponent(arm.Find("ArmBackground").GetComponent<CanvasRenderer>(), armBackground);
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().background = VehicleBuilder.CopyComponent(arm.Find("ArmBackground").GetComponent<UnityEngine.UI.Image>(), armBackground);
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().background.sprite = arm.Find("ArmBackground").GetComponent<UnityEngine.UI.Image>().sprite;
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().background.material = arm.Find("ArmBackground").GetComponent<UnityEngine.UI.Image>().material;
-
-                            GameObject hint = GameObject.Instantiate(new GameObject("Hint"), armModuleObject.transform);
-                            hint.transform.localScale = new Vector3(.75f, .75f, .75f);
-                            hint.transform.localEulerAngles = new Vector3(0, 180, 0);
-                            VehicleBuilder.CopyComponent(arm.Find("Hint").GetComponent<RectTransform>(), hint);
-                            VehicleBuilder.CopyComponent(arm.Find("Hint").GetComponent<CanvasRenderer>(), hint);
-                            var hintImg = VehicleBuilder.CopyComponent(arm.Find("Hint").GetComponent<UnityEngine.UI.Image>(), hint);
-                            leftArmModuleSlotSprite = arm.Find("Hint").GetComponent<UnityEngine.UI.Image>().sprite;
-                            armModuleSlotMaterial = arm.Find("Hint").GetComponent<UnityEngine.UI.Image>().material;
-                            armModuleObject.GetComponent<uGUI_EquipmentSlot>().hint = hint;
+                            genericModuleHint = GameObject.Instantiate(new GameObject("Hint"), armModuleObject.transform);
+                            genericModuleHint.transform.localScale = new Vector3(.75f, .75f, .75f);
+                            genericModuleHint.transform.localEulerAngles = new Vector3(0, 180, 0);
+                            VehicleBuilder.CopyComponent(arm.Find("Hint").GetComponent<RectTransform>(), genericModuleHint);
+                            VehicleBuilder.CopyComponent(arm.Find("Hint").GetComponent<CanvasRenderer>(), genericModuleHint);
+                            var hintImg = VehicleBuilder.CopyComponent(arm.Find("Hint").GetComponent<UnityEngine.UI.Image>(), genericModuleHint);
+                            rightArmModuleSlotSprite = arm.Find("Hint").GetComponent<UnityEngine.UI.Image>().sprite;
 
                             break;
                         }
@@ -188,31 +173,84 @@ namespace VehicleFramework
                 }
             }
 
+            BuildAtramaModules(6, true);
+
             // flag as ready to go
             VehicleBuilder.areModulesReady = true;
-
-            genericModuleObject.SetActive(true);
-            backgroundModuleObject.SetActive(true);
-            armModuleObject.SetActive(true);
         }
 
-        public void CobbleNewModules(Transform slot1, Transform slot4, Transform leftArm)
+        public void BuildAtramaModules(int modules, bool arms)
         {
-            /*
-            // top module
-            AtramaManager.atramaModule5.transform.position = new Vector3((slot1.position.x + slot4.position.x) / 2, 1.5f * slot1.position.y - leftArm.position.y, 0);
-            AtramaManager.atramaModule5.transform.localPosition = new Vector3((slot1.localPosition.x + slot4.localPosition.x) / 2, 1.5f * slot1.localPosition.y - leftArm.localPosition.y, 0);
+            equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
 
-            GameObject backgroundTop = GameObject.Instantiate(new GameObject("Background"), AtramaManager.atramaModule5.transform);
-            AtramaBuilder.CopyComponent(slot1.Find("Background").GetComponent<RectTransform>(), backgroundTop);
-            AtramaBuilder.CopyComponent(slot1.Find("Background").GetComponent<CanvasRenderer>(), backgroundTop);
-            AtramaManager.atramaModule5.GetComponent<uGUI_EquipmentSlot>().background = AtramaBuilder.CopyComponent(slot1.Find("Background").GetComponent<UnityEngine.UI.Image>(), backgroundTop);
-            AtramaManager.atramaModule5.GetComponent<uGUI_EquipmentSlot>().background.sprite = slot1.Find("Background").GetComponent<UnityEngine.UI.Image>().sprite;
-            AtramaManager.atramaModule5.GetComponent<uGUI_EquipmentSlot>().background.material = slot1.Find("Background").GetComponent<UnityEngine.UI.Image>().material;
+            // build, link, and position modules
+            for (int i=0; i<modules; i++)
+            {
+                GameObject thisModule = new GameObject("VehicleModule" + i.ToString());
+                thisModule.SetActive(false);
+                thisModule.transform.parent = equipment.transform;
+                thisModule.transform.localScale = Vector3.one;
 
-            GameObject iconRectTop = GameObject.Instantiate(new GameObject("IconRect"), AtramaManager.atramaModule5.transform);
-            AtramaManager.atramaModule5.GetComponent<uGUI_EquipmentSlot>().iconRect = AtramaBuilder.CopyComponent(slot1.Find("IconRect").GetComponent<RectTransform>(), iconRectTop);
-            */
+                LinkModule(ref thisModule);
+
+                DistributeModule(ref thisModule, i, modules + 2);
+            }
+            // build, link, and position left arm
+
+            // build, link, and position right arm
+
+        }
+
+        public void DistributeModule(ref GameObject thisModule, int position, int numModules)
+        {
+            int row_size = 4;
+            int arrayX = position % row_size;
+            int arrayY = position / row_size + 1;
+
+            float centerX = (topLeftSlot.position.x + bottomRightSlot.position.x) / 2;
+            float centerY = (topLeftSlot.position.y + bottomRightSlot.position.y) / 2;
+
+            float stepX = Mathf.Abs(topLeftSlot.position.x - centerX);
+            float stepY = Mathf.Abs(topLeftSlot.position.y - centerY);
+
+            Vector3 arrayOrigin = new Vector3(centerX - stepX, centerY + stepY, 0);
+
+            float thisX = arrayOrigin.x + arrayX * stepX;
+            float thisY = arrayOrigin.y + arrayY * stepY;
+
+            thisModule.transform.position = new Vector3(thisX, thisY, 0);
+            thisModule.transform.localPosition = new Vector3((topLeftSlot.localPosition.x + bottomRightSlot.localPosition.x) / 2, 1.5f * topLeftSlot.localPosition.y - leftArmSlot.localPosition.y, 0);
+
+
+
+
+
+            GameObject backgroundTop = GameObject.Instantiate(new GameObject("Background"), thisModule.transform);
+            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<RectTransform>(), backgroundTop);
+            VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<CanvasRenderer>(), backgroundTop);
+            thisModule.GetComponent<uGUI_EquipmentSlot>().background = VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>(), backgroundTop);
+            thisModule.GetComponent<uGUI_EquipmentSlot>().background.sprite = topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>().sprite;
+            thisModule.GetComponent<uGUI_EquipmentSlot>().background.material = topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>().material;
+
+            GameObject iconRectTop = GameObject.Instantiate(new GameObject("IconRect"), thisModule.transform);
+            thisModule.GetComponent<uGUI_EquipmentSlot>().iconRect = VehicleBuilder.CopyComponent(topLeftSlot.Find("IconRect").GetComponent<RectTransform>(), iconRectTop);
+        }
+        public void LinkModule(ref GameObject thisModule)
+        {
+            // add background
+
+            // add hint
+
+            // add iconrect
+
+        }
+        public void AddBackgroundImage(ref GameObject thisModule)
+        {
+
+        }
+        public void LinkArm(ref GameObject thisModule)
+        {
+
         }
 
         public GameObject GetGenericModuleSlot()
@@ -221,7 +259,7 @@ namespace VehicleFramework
         }
         public GameObject GetBackgroundModuleSlot(int image)
         {
-            GameObject bgmSlot = GameObject.Instantiate(backgroundModuleObject);
+            GameObject bgmSlot = GameObject.Instantiate(modulesBackground);
             bgmSlot.GetComponent<UnityEngine.UI.Image>().sprite = backgroundSprite;
             return bgmSlot;
         }

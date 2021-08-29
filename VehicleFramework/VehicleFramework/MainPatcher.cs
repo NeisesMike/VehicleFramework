@@ -15,7 +15,6 @@ using SMLHelper.V2.Handlers;
 using QModManager.API.ModLoading;
 using SMLHelper.V2.Utility;
 
-
 namespace VehicleFramework
 {
     public static class Logger
@@ -24,12 +23,10 @@ namespace VehicleFramework
         {
             UnityEngine.Debug.Log("[VehicleFramework] " + message);
         }
-
         public static void Log(string format, params object[] args)
         {
             UnityEngine.Debug.Log("[VehicleFramework] " + string.Format(format, args));
         }
-
         public static void Output(string msg)
         {
             BasicText message = new BasicText(500, 0);
@@ -40,7 +37,7 @@ namespace VehicleFramework
     public static class MainPatcher
     {
         internal static VehicleFrameworkConfig Config { get; private set; }
-
+        
         [QModPrePatch]
         public static void PrePatch()
         {

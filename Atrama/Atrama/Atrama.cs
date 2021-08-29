@@ -66,25 +66,25 @@ namespace Atrama
             }
         }
 
-        public override List<VehicleBattery> Batteries
+        public override List<VehicleFramework.VehicleParts.VehicleBattery> Batteries
         {
             get
             {
-                var list = new List<VehicleBattery>();
+                var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
 
-                VehicleBattery vb1 = new VehicleBattery();
+                VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb1.BatterySlot = model.transform.Find("Mechanical-Panel/BatteryInputs/1").gameObject;
                 list.Add(vb1);
 
-                VehicleBattery vb2 = new VehicleBattery();
+                VehicleFramework.VehicleParts.VehicleBattery vb2 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb2.BatterySlot = model.transform.Find("Mechanical-Panel/BatteryInputs/2").gameObject;
                 list.Add(vb2);
 
-                VehicleBattery vb3 = new VehicleBattery();
+                VehicleFramework.VehicleParts.VehicleBattery vb3 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb3.BatterySlot = model.transform.Find("Mechanical-Panel/BatteryInputs/3").gameObject;
                 list.Add(vb3);
 
-                VehicleBattery vb4 = new VehicleBattery();
+                VehicleFramework.VehicleParts.VehicleBattery vb4 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb4.BatterySlot = model.transform.Find("Mechanical-Panel/BatteryInputs/4").gameObject;
                 list.Add(vb4);
 
@@ -115,12 +115,12 @@ namespace Atrama
         }
         public override List<GameObject> WalkableInteriors => new List<GameObject>() { model.transform.Find("Main-Body/InteriorTrigger").gameObject };
 
-        public override List<VehicleHatchStruct> Hatches
+        public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches
         {
             get
             {
-                var list = new List<VehicleHatchStruct>();
-                VehicleHatchStruct vhs = new VehicleHatchStruct();
+                var list = new List<VehicleFramework.VehicleParts.VehicleHatchStruct>();
+                VehicleFramework.VehicleParts.VehicleHatchStruct vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
                 Transform mainHatch = model.transform.Find("Hatch");
                 vhs.Hatch = mainHatch.gameObject;
                 vhs.EntryLocation = mainHatch.Find("Entry");
@@ -130,23 +130,23 @@ namespace Atrama
             }
         }
 
-        public override List<VehicleLight> Lights
+        public override List<VehicleFramework.VehicleParts.VehicleLight> Lights
         {
             get
             {
-                var list = new List<VehicleLight>();
+                var list = new List<VehicleFramework.VehicleParts.VehicleLight>();
 
-                VehicleLight leftLight = new VehicleLight();
+                VehicleFramework.VehicleParts.VehicleLight leftLight = new VehicleFramework.VehicleParts.VehicleLight();
                 leftLight.Light = model.transform.Find("LightsParent/LeftLight").gameObject;
-                leftLight.Angle = 60;
-                leftLight.Color = Color.red;
+                leftLight.Angle = 45;
+                leftLight.Color = Color.white;
                 leftLight.Strength = 150;
                 list.Add(leftLight);
 
-                VehicleLight rightLight = new VehicleLight();
+                VehicleFramework.VehicleParts.VehicleLight rightLight = new VehicleFramework.VehicleParts.VehicleLight();
                 rightLight.Light = model.transform.Find("LightsParent/RightLight").gameObject;
-                rightLight.Angle = 60;
-                rightLight.Color = Color.red;
+                rightLight.Angle = 45;
+                rightLight.Color = Color.white;
                 rightLight.Strength = 150;
                 list.Add(rightLight);
 
@@ -154,12 +154,12 @@ namespace Atrama
             }
         }
 
-        public override List<VehiclePilotSeat> PilotSeats
+        public override List<VehicleFramework.VehicleParts.VehiclePilotSeat> PilotSeats
         {
             get
             {
-                var list = new List<VehiclePilotSeat>();
-                VehiclePilotSeat vps = new VehiclePilotSeat();
+                var list = new List<VehicleFramework.VehicleParts.VehiclePilotSeat>();
+                VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
                 Transform mainSeat = model.transform.Find("Chair");
                 vps.Seat = mainSeat.gameObject;
                 vps.SitLocation = mainSeat.gameObject;
@@ -170,22 +170,22 @@ namespace Atrama
             }
         }
 
-        public override List<VehicleStorage> Storages
+        public override List<VehicleFramework.VehicleParts.VehicleStorage> Storages
 {
             get
             {
-                var list = new List<VehicleStorage>();
+                var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
 
                 Transform left = model.transform.Find("LeftStorage");
                 Transform right = model.transform.Find("RightStorage");
 
-                VehicleStorage leftVS = new VehicleStorage();
+                VehicleFramework.VehicleParts.VehicleStorage leftVS = new VehicleFramework.VehicleParts.VehicleStorage();
                 leftVS.Container = left.gameObject;
                 leftVS.Height = 8;
                 leftVS.Width = 6;
                 list.Add(leftVS);
 
-                VehicleStorage rightVS = new VehicleStorage();
+                VehicleFramework.VehicleParts.VehicleStorage rightVS = new VehicleFramework.VehicleParts.VehicleStorage();
                 rightVS.Container = right.gameObject;
                 rightVS.Height = 8;
                 rightVS.Width = 6;
@@ -195,12 +195,12 @@ namespace Atrama
             }
         }
 
-        public override List<VehicleUpgrades> Upgrades
+        public override List<VehicleFramework.VehicleParts.VehicleUpgrades> Upgrades
         {
             get
             {
-                var list = new List<VehicleUpgrades>();
-                VehicleUpgrades vu = new VehicleUpgrades();
+                var list = new List<VehicleFramework.VehicleParts.VehicleUpgrades>();
+                VehicleFramework.VehicleParts.VehicleUpgrades vu = new VehicleFramework.VehicleParts.VehicleUpgrades();
                 vu.Interface = model.transform.Find("Mechanical-Panel/Upgrades-Panel").gameObject;
                 list.Add(vu);
                 return list;

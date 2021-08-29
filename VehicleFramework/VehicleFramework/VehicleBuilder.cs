@@ -88,20 +88,20 @@ namespace VehicleFramework
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
 
-            foreach (VehiclePilotSeat ps in mv.PilotSeats)
+            foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
             {
                 mv.playerPosition = ps.SitLocation;
                 PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
                 pt.mv = mv;
             }
-            foreach (VehicleHatchStruct vhs in mv.Hatches)
+            foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
             {
                 var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
                 hatch.mv = mv;
                 hatch.EntryLocation = vhs.EntryLocation;
                 hatch.ExitLocation = vhs.ExitLocation;
             }
-            foreach (VehicleStorage vs in mv.Storages)
+            foreach (VehicleParts.VehicleStorage vs in mv.Storages)
             {
                 vs.Container.SetActive(false);
 
@@ -122,7 +122,7 @@ namespace VehicleFramework
 
                 vs.Container.SetActive(true);
             }
-            foreach (VehicleUpgrades vu in mv.Upgrades)
+            foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
             {
                 VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
                 vuci.flap = vu.Interface.transform.Find("flap");
@@ -133,7 +133,7 @@ namespace VehicleFramework
             mv.enabled = false;
             var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
-            foreach (VehicleBattery vb in mv.Batteries)
+            foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
             {
                 // Configure energy mixin for this battery slot
                 var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
@@ -174,7 +174,7 @@ namespace VehicleFramework
             Transform seamothVL = seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
-            foreach (VehicleLight pc in mv.Lights)
+            foreach (VehicleParts.VehicleLight pc in mv.Lights)
             {
                 CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
                 var leftLight = pc.Light.EnsureComponent<Light>();
@@ -182,11 +182,11 @@ namespace VehicleFramework
                 leftLight.spotAngle = pc.Angle;
                 leftLight.innerSpotAngle = pc.Angle * .75f;
                 leftLight.color = pc.Color;
-                leftLight.intensity = pc.Strength/60;
+                leftLight.intensity = pc.Strength/60f;
                 leftLight.range = pc.Strength;
                 leftLight.shadows = LightShadows.Hard;
 
-                GameObject volumetricLight = new GameObject("VolumetricLight");
+                GameObject volumetricLight = pc.Light.transform.Find("VolumetricLight").gameObject;
                 volumetricLight.transform.localPosition = Vector3.zero;
                 volumetricLight.transform.localEulerAngles = Vector3.zero;
                 volumetricLight.transform.parent = pc.Light.transform;

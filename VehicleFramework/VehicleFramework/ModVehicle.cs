@@ -7,43 +7,6 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public struct VehiclePilotSeat
-    {
-        public GameObject Seat;
-        public GameObject SitLocation;
-        public Transform LeftHandLocation;
-        public Transform RightHandLocation;
-    }
-    public struct VehicleHatchStruct
-    {
-        public GameObject Hatch;
-        public Transform EntryLocation;
-        public Transform ExitLocation;
-    }
-    public struct VehicleStorage
-    {
-        public GameObject Container;
-        public int Height;
-        public int Width;
-    }
-    public struct VehicleUpgrades
-    {
-        public GameObject Interface;
-    }
-    public struct VehicleBattery
-    {
-        public GameObject BatterySlot;
-    }
-    public struct VehicleLight
-    {
-        public GameObject Light;
-        public int Strength;
-        public Color Color;
-        public int Angle;
-    }
-
-
-
     public abstract class ModVehicle : Vehicle
     {
         public override string vehicleDefaultName
@@ -64,12 +27,12 @@ namespace VehicleFramework
         public virtual GameObject ModulesRootObject { get { return StorageRootObject; } }
 
         // lists of game object references, used later like a blueprint
-        public abstract List<VehiclePilotSeat> PilotSeats { get; }
-        public abstract List<VehicleHatchStruct> Hatches { get; }
-        public abstract List<VehicleStorage> Storages { get; }
-        public abstract List<VehicleUpgrades> Upgrades { get; }
-        public abstract List<VehicleBattery> Batteries { get; }
-        public abstract List<VehicleLight> Lights { get; }
+        public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
+        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
+        public abstract List<VehicleParts.VehicleStorage> Storages { get; }
+        public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
+        public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
+        public abstract List<VehicleParts.VehicleLight> Lights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
 
 
