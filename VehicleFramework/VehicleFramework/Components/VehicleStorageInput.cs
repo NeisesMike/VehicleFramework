@@ -12,15 +12,16 @@ namespace VehicleFramework
 		public override void Awake()
 		{
 			base.Awake();
-			this.tr = base.GetComponent<Transform>();
+			this.tr = GetComponent<Transform>();
 			this.UpdateColliderState();
 
-			mv = transform.parent.gameObject.GetComponent<ModVehicle>();
-		}
-
-		private void Update()
-		{
-
+			// go up in the transform heirarchy until we find the ModVehicle
+			Transform modVe = transform;
+			while(modVe.gameObject.GetComponent<ModVehicle>() == null)
+            {
+				modVe = modVe.parent;
+            }
+			mv = modVe.gameObject.GetComponent<ModVehicle>();
 		}
 
 		private void OnDisable()

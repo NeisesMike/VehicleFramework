@@ -94,8 +94,6 @@ namespace VehicleFramework
             // TODO
             return false;
 
-
-
             Transform baseTransform = __instance.transform;
             if (__instance.GetPilotingMode())
             {
@@ -168,9 +166,6 @@ namespace VehicleFramework
             // TODO
             return false;
         }
-
-
-
 
         [HarmonyPrefix]
         [HarmonyPatch("LazyInitialize")]

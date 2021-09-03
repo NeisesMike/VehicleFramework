@@ -101,6 +101,7 @@ namespace VehicleFramework
                 hatch.EntryLocation = vhs.EntryLocation;
                 hatch.ExitLocation = vhs.ExitLocation;
             }
+            int iter = 0;
             foreach (VehicleParts.VehicleStorage vs in mv.Storages)
             {
                 vs.Container.SetActive(false);
@@ -115,12 +116,37 @@ namespace VehicleFramework
                 FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
                 var inp = vs.Container.EnsureComponent<VehicleStorageInput>();
                 inp.mv = mv;
+                inp.slotID = iter;
+                iter++;
                 inp.model = vs.Container;
                 inp.collider = vs.Container.EnsureComponent<BoxCollider>();
                 inp.openSound = storageOpenSound;
                 inp.closeSound = storageCloseSound;
 
                 vs.Container.SetActive(true);
+            }
+
+            iter = 0;
+            foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
+            {
+                vs.Container.SetActive(false);
+
+                var cont = vs.Container.EnsureComponent<VehicleStorageContainer>();
+                cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                cont.storageLabel = "Vehicle Storage";
+                cont.height = vs.Height;
+                cont.width = vs.Width;
+
+                FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                var inp = vs.Container.EnsureComponent<VehicleStorageInput>();
+                inp.mv = mv;
+                inp.slotID = iter;
+                iter++;
+                inp.model = vs.Container;
+                inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                inp.openSound = storageOpenSound;
+                inp.closeSound = storageCloseSound;
             }
             foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
             {

@@ -30,6 +30,7 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public abstract List<VehicleParts.VehicleStorage> Storages { get; }
+        public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
         public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
         public abstract List<VehicleParts.VehicleLight> Lights { get; }
@@ -48,6 +49,11 @@ namespace VehicleFramework
 
         private bool isPilotSeated = false;
         private bool isPlayerInside = false;
+
+        // TODO
+        // These are tracked appropriately, but their values are never used for anything meaningful.
+        private int numEfficiencyModules = 0;
+        private int numArmorModules = 0;
 
         // later
         public virtual List<GameObject> ControlPanels => null;
@@ -248,6 +254,60 @@ namespace VehicleFramework
         }
 
         */
+
+        /*
+         * Upgrades
+         */
+        private void SetStorageModule(int slotID, bool activated)
+        {
+            ModularStorages[slotID].Container.SetActive(activated);
+            ModularStorages[slotID].Container.GetComponent<BoxCollider>().enabled = activated;
+        }
+        public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
+        {
+            Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
+            switch(techType)
+            {
+                case TechType.VehicleStorageModule:
+                    {
+                        SetStorageModule(slotID, added);
+                        break;
+                    }
+                case TechType.VehicleArmorPlating:
+                    {
+                        var temp = added ? numArmorModules++ : numArmorModules--;
+                        Logger.Log(numArmorModules.ToString());
+                        break;
+                    }
+                case TechType.VehiclePowerUpgradeModule:
+                    {
+                        var temp = added ? numEfficiencyModules++ : numEfficiencyModules--;
+                        Logger.Log(numEfficiencyModules.ToString());
+                        break;
+                    }
+                /*
+                case TechType.VehicleDepthModule1:
+                    break;
+                case TechType.VehicleDepthModule2:
+                    break;
+                case TechType.VehicleDepthModule3:
+                    break;
+                case TechType.VehicleStealthModule:
+                    break;
+                */
+                default:
+                    break;
+            }
+        }
+
+
+        public override void OnCollisionEnter(Collision col)
+        {
+            base.OnCollisionEnter(col);
+            Logger.Output(col.transform.name);
+        }
+
+
 
     }
 }
