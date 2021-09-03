@@ -17,8 +17,8 @@ namespace VehicleFramework
          * 2 arm slots : "AtramaArmX" where X in {Left, Right}
          */
 
-        public static List<string> vehicleModuleSlots = new List<string> { "VehicleModule1", "VehicleModule2", "VehicleModule3", "VehicleModule4", "VehicleModule5", "VehicleModule6" };
-        public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight"};
+        public static List<string> vehicleModuleSlots = new List<string> { "VehicleModule0", "VehicleModule1", "VehicleModule2", "VehicleModule3", "VehicleModule4", "VehicleModule5" };
+        public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight" };
 
         public static Dictionary<EquipmentType, List<string>> vehicleTypeToSlots = new Dictionary<EquipmentType, List<string>>
                 {
@@ -121,12 +121,55 @@ namespace VehicleFramework
         public static bool IsCompatiblePrefix(EquipmentType itemType, EquipmentType slotType, ref bool __result)
         {
             __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == VehicleBuilder.ModuleType));
-            if(__result)
+            if (__result)
             {
                 return false;
             }
             return true;
         }
 
+        /*
+        [HarmonyPrefix]
+        [HarmonyPatch("AddItem")]
+        public static bool AddItem(Equipment __instance, ref bool __result, string slot, InventoryItem newItem, bool forced = false)
+        {
+            if (newItem == null)
+            {
+                __result = false;
+                return false;
+            }
+            InventoryItem inventoryItem;
+            if (!__instance.equipment.TryGetValue(slot, out inventoryItem))
+            {
+                __result = false;
+                return false;
+            }
+            if (inventoryItem != null)
+            {
+                __result = false;
+                return false;
+            }
+            if (!forced && !__instance.AllowedToAdd(slot, newItem.item, true))
+            {
+                __result = false;
+                return false;
+            }
+            IItemsContainer container = newItem.container;
+            if (container != null && !container.RemoveItem(newItem, false, true))
+            {
+                __result = false;
+                return false;
+            }
+            newItem.container = __instance;
+            newItem.item.Reparent(__instance.tr);
+            __instance.equipment[slot] = newItem;
+            TechType techType = newItem.item.GetTechType();
+            __instance.UpdateCount(techType, true);
+            Equipment.SendEquipmentEvent(newItem.item, 0, __instance.owner, slot);
+            __instance.NotifyEquip(slot, newItem);
+            __result = true;
+            return false;
+        }
+        */
     }
 }

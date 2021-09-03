@@ -14,13 +14,21 @@ namespace VehicleFramework
         [HarmonyPatch("SetState")]
 		public static bool SetStatePrefix(uGUI_EquipmentSlot.State newState, uGUI_EquipmentSlot __instance)
         {
-            Logger.Log(__instance.name + ": Set State");
-            if (!__instance.transform.name.Contains("Vehicle") || VehicleBuilder.areModulesReady)
+            if (!__instance.transform.name.Contains("Vehicle"))
             {
-                Logger.Log("good input");
-				return true;
+                return true;
             }
-            Logger.Log("bad input");
+            if (VehicleBuilder.areModulesReady)
+            {
+                //Logger.Log(__instance.name + " : SetState() : Vehicle module");
+                if(__instance.background == null)
+                {
+                    Logger.Log("modules were ready, but background was null: " + __instance.name);
+                    return false;
+                }
+                return true;
+            }
+            Logger.Log(__instance.name + " : SetState() : Vehicle module not ready. Passing.");
 			return false;
 		}
 	}

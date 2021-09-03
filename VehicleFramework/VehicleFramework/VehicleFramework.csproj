@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -87,7 +88,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerControllerPatcher.cs" />
+    <Compile Include="Patches\InventoryPatcher.cs" />
+    <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="VehicleCraftable.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="Components\VehicleBatteryInput.cs" />

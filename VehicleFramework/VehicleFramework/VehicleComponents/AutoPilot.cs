@@ -21,7 +21,7 @@ namespace VehicleFramework
 
         public void Update()
         {
-            if (!isDead && GameInput.GetButtonDown(GameInput.Button.UISubmit))
+            if (!isDead && GameInput.GetButtonDown(GameInput.Button.Exit))
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {
@@ -46,7 +46,7 @@ namespace VehicleFramework
                 float z = transform.rotation.eulerAngles.z;
                 float pitchDelta = x >= 180 ? 360 - x : x;
                 float rollDelta = z >= 180 ? 360 - z : z;
-                if (rollDelta < 4 && pitchDelta < 4)
+                if (rollDelta < 1 && pitchDelta < 1)
                 {
                     autoLeveling = false;
                     return;

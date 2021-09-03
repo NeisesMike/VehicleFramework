@@ -18,10 +18,18 @@ namespace VehicleFramework
     public class PlayerPatcher
     {
         [HarmonyPostfix]
-        [HarmonyPatch("Awake")]
-        public static void AwakePostfix()
+        [HarmonyPatch("Start")]
+        public static void StartPostfix()
         {
-            // load any vehicles from save now
+            // load any vehicles from save now.
+
+            /*
+             * I wish this worked
+            var DC = Player.main.gameObject.AddComponent<DevConsole>();
+            DC.Submit("warp 0 -12 -3");
+            DC.Submit("item vehiclestoragemodule");
+            DC.Submit("spawn atrama");
+            */
             return;
         }
 
@@ -71,7 +79,7 @@ namespace VehicleFramework
             if (rollDelta > 4f || pitchDelta > 4f)
             {
                 BasicText message = new BasicText(500, 0);
-                message.ShowMessage("Angle is too steep.", 5);
+                message.ShowMessage("Angle is too steep.\nDouble tap " + GameInput.Button.Exit.ToString() + "\nButton to auto-level.", 5);
                 return false;
             }
 

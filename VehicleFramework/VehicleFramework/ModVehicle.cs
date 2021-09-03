@@ -71,8 +71,12 @@ namespace VehicleFramework
             var pilot = gameObject.EnsureComponent<AutoPilot>();
             pilot.mv = this;
 
+            /*
             upgradesInput.equipment = new Equipment(gameObject, modulesRoot.transform);
             upgradesInput.equipment.SetLabel("VehicleUpgradesStorageLabel");
+            */
+
+            base.LazyInitialize();
 
             VehicleManager.RegisterVehicle(this);
         }
@@ -174,12 +178,12 @@ namespace VehicleFramework
         }
         private static readonly string[] _slotIDs = new string[]
         {
+            "VehicleModule0",
             "VehicleModule1",
             "VehicleModule2",
             "VehicleModule3",
             "VehicleModule4",
             "VehicleModule5",
-            "VehicleModule6",
             "VehicleArmLeft",
             "VehicleArmRight"
         };

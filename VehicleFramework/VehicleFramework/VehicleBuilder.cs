@@ -47,8 +47,8 @@ namespace VehicleFramework
         public static GameObject coroutineHelper;
         public static bool areModulesReady = false;
 
-        public static EquipmentType ModuleType = (EquipmentType)625;
-        public static EquipmentType ArmType = (EquipmentType)626;
+        public static readonly EquipmentType ModuleType = (EquipmentType)625;
+        public static readonly EquipmentType ArmType = (EquipmentType)626;
 
         public static void PatchCraftables()
         {
