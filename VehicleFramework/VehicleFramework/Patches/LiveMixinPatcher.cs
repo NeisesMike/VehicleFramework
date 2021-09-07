@@ -15,7 +15,7 @@ namespace VehicleFramework
         [HarmonyPatch("Start")]
         public static bool StartPrefix(LiveMixin __instance, GameObject ___loopingDamageEffectObj)
         {
-            if(__instance.gameObject == null || __instance.gameObject.name == null || !__instance.gameObject.name.Contains("Atrama"))
+            if(__instance.gameObject == null || __instance.gameObject.name == null || !__instance.gameObject.name.Contains("Vehicle"))
             {
                 return true;
             }

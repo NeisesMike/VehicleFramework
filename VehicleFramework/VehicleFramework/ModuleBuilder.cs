@@ -17,7 +17,9 @@ namespace VehicleFramework
     public class ModuleBuilder : MonoBehaviour
     {
         public static ModuleBuilder main;
-        public static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
+        public Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
+        public bool isEquipmentInit = false;
+        public bool areModulesReady = false;
 
         public enum ModuleSlotType
         {
@@ -157,7 +159,7 @@ namespace VehicleFramework
         {
             equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
 
-            while (!uGUI_EquipmentPatcher.isInit)
+            while (!main.isEquipmentInit)
             {
                 yield return null;
             }
@@ -296,7 +298,7 @@ namespace VehicleFramework
 
             // flag as ready to go
             Logger.Log("components grabbed");
-            VehicleBuilder.areModulesReady = true;
+            main.areModulesReady = true;
             haveSlotsBeenInited = true;
         }
 
@@ -325,24 +327,19 @@ namespace VehicleFramework
                 }
                 thisModule.SetActive(true);
             }
-            Logger.Log("1");
             // build, link, and position left arm
             GameObject leftArm = GetLeftArmSlot();
             leftArm.name = "VehicleArmLeft";
             leftArm.SetActive(false);
-            Logger.Log("2");
             leftArm.transform.SetParent(equipment.transform, false);
             leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0); // need to flip this hand to look "left"
             leftArm.transform.localScale = Vector3.one;
-            Logger.Log("3");
             leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmLeft";
             leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
             LinkArm(ref leftArm);
-            Logger.Log("4");
             DistributeModule(ref leftArm, modules, modules + 2);
             leftArm.SetActive(true);
 
-            Logger.Log("5");
             // build, link, and position right arm
             GameObject rightArm = GetRightArmSlot();
             rightArm.name = "VehicleArmRight";
@@ -354,7 +351,6 @@ namespace VehicleFramework
             LinkArm(ref rightArm);
             DistributeModule(ref rightArm, modules + 1, modules + 2);
             rightArm.SetActive(true);
-            Logger.Log("6");
         }
         public void LinkModule(ref GameObject thisModule)
         {

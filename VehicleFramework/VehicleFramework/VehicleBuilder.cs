@@ -45,7 +45,6 @@ namespace VehicleFramework
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
         public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
         public static GameObject coroutineHelper;
-        public static bool areModulesReady = false;
 
         public static readonly EquipmentType ModuleType = (EquipmentType)625;
         public static readonly EquipmentType ArmType = (EquipmentType)626;

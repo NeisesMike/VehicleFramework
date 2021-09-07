@@ -24,6 +24,10 @@ namespace VehicleFramework
             {
                 toggleLights();
             }
+            if(isLightsOn)
+            {
+                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.01f * Time.deltaTime);
+            }
         }
 
         public void toggleLights()

@@ -36,6 +36,15 @@ namespace VehicleFramework
                     timeOfLastLevelTap = Time.time;
                 }
             }
+
+            // drain power
+            if(autoLeveling)
+            {
+                // consume energy as if we're firing thrusters along all 3 axes at max magnitude
+                float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+                mv.GetComponent<EnergyInterface>().ConsumeEnergy(3f * upgradeModifier * Time.deltaTime);
+            }
+
         }
         public void FixedUpdate()
         {
@@ -64,7 +73,6 @@ namespace VehicleFramework
                 transform.rotation = Quaternion.Euler(new Vector3(newPitch, y, newRoll));
             }
         }
-
 
         void VehicleComponent.OnAutoLevel()
         {

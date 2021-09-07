@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
+    <Compile Include="SaveManager.cs" />
     <Compile Include="VehicleCraftable.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="Components\VehicleBatteryInput.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Components\VehicleStorageContainer.cs" />
     <Compile Include="Components\VehicleStorageInput.cs" />
     <Compile Include="ModuleBuilder.cs" />
-    <Compile Include="OldComponents\AtramaVehicle.cs" />
     <Compile Include="Components\VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
     <Compile Include="ModVehicle.cs" />

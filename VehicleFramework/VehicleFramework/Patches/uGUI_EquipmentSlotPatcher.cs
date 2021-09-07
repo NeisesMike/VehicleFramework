@@ -18,7 +18,7 @@ namespace VehicleFramework
             {
                 return true;
             }
-            if (VehicleBuilder.areModulesReady)
+            if (ModuleBuilder.main.areModulesReady)
             {
                 //Logger.Log(__instance.name + " : SetState() : Vehicle module");
                 if(__instance.background == null)

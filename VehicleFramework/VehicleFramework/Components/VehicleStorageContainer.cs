@@ -9,7 +9,7 @@ using UWE;
 
 namespace VehicleFramework
 {
-	public class VehicleStorageContainer : MonoBehaviour, IProtoEventListener, IProtoTreeEventListener, ICraftTarget
+	public class VehicleStorageContainer : MonoBehaviour, ICraftTarget//, IProtoEventListener, IProtoTreeEventListener
 	{
 		public ItemsContainer container { get; private set; }
 
@@ -28,6 +28,7 @@ namespace VehicleFramework
 			this.container.SetAllowedTechTypes(this.allowedTech);
 		}
 
+		/*
 		public void OnProtoSerialize(ProtobufSerializer serializer)
 		{
 		}
@@ -35,7 +36,6 @@ namespace VehicleFramework
 		public void OnProtoDeserialize(ProtobufSerializer serializer)
 		{
 			Logger.Log(serializer.ToString());
-			/*
 			this.Init();
 			this.container.Clear(false);
 			if (this.serializedStorage != null)
@@ -43,7 +43,6 @@ namespace VehicleFramework
 				StorageHelper.RestoreItems(serializer, this.serializedStorage, this.container);
 				this.serializedStorage = null;
 			}
-			*/
 		}
 
 		public void OnProtoSerializeObjectTree(ProtobufSerializer serializer)
@@ -74,6 +73,7 @@ namespace VehicleFramework
 				CoroutineHost.StartCoroutine(this.CleanUpDuplicatedStorage());
 			}
 		}
+		*/
 
 		private IEnumerator CleanUpDuplicatedStorage()
 		{
@@ -106,7 +106,7 @@ namespace VehicleFramework
 			}
 		}
 
-		public string storageLabel = "AtramaStorageLabel";
+		public string storageLabel = "StorageLabel";
 
 		public int width = 6;
 

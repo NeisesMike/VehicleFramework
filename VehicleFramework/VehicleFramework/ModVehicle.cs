@@ -45,14 +45,12 @@ namespace VehicleFramework
         public FMOD_StudioEventEmitter ambienceSound;
         public List<Renderer> interiorRenderers = new List<Renderer>();
 
-        public Equipment upgradesEquipment;
-
         private bool isPilotSeated = false;
         private bool isPlayerInside = false;
 
         // TODO
         // These are tracked appropriately, but their values are never used for anything meaningful.
-        private int numEfficiencyModules = 0;
+        public int numEfficiencyModules = 0;
         private int numArmorModules = 0;
 
         // later
@@ -84,6 +82,19 @@ namespace VehicleFramework
 
             base.LazyInitialize();
 
+        }
+
+        public override void Start()
+        {
+            base.Start();
+
+            upgradesInput.equipment = modules;
+
+            // load upgrades from file
+
+            // load storage from file
+
+            // load modular storage from file
             VehicleManager.RegisterVehicle(this);
         }
 
@@ -265,7 +276,7 @@ namespace VehicleFramework
         }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
-            Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
+            //Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
             switch(techType)
             {
                 case TechType.VehicleStorageModule:
@@ -276,13 +287,12 @@ namespace VehicleFramework
                 case TechType.VehicleArmorPlating:
                     {
                         var temp = added ? numArmorModules++ : numArmorModules--;
-                        Logger.Log(numArmorModules.ToString());
+                        GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
                         break;
                     }
                 case TechType.VehiclePowerUpgradeModule:
                     {
                         var temp = added ? numEfficiencyModules++ : numEfficiencyModules--;
-                        Logger.Log(numEfficiencyModules.ToString());
                         break;
                     }
                 /*
@@ -307,7 +317,10 @@ namespace VehicleFramework
             Logger.Output(col.transform.name);
         }
 
-
+        public override void OnPilotModeBegin()
+        {
+            base.OnPilotModeBegin();
+        }
 
     }
 }

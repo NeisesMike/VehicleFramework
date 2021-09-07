@@ -23,13 +23,6 @@ namespace VehicleFramework
         {
             // load any vehicles from save now.
 
-            /*
-             * I wish this worked
-            var DC = Player.main.gameObject.AddComponent<DevConsole>();
-            DC.Submit("warp 0 -12 -3");
-            DC.Submit("item vehiclestoragemodule");
-            DC.Submit("spawn atrama");
-            */
             return;
         }
 

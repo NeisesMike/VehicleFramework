@@ -14,7 +14,7 @@ namespace VehicleFramework
         [HarmonyPatch("OnClosePDA")]
         public static void OnClosePDAPrefix(VehicleUpgradeConsoleInput __instance)
         {
-            if (__instance.gameObject.name == "Upgrades-Panel" && __instance.transform.parent.parent.name.Contains("Atrama"))
+            if (__instance.gameObject.name == "Upgrades-Panel" && __instance.transform.parent.parent.name.Contains("Vehicle"))
             {
                 /*
                 var vehicle = __instance.transform.parent.parent.GetComponentInChildren<AtramaVehicle>();

@@ -29,14 +29,21 @@ namespace VehicleFramework
             if (mv.transform.position.y >= Ocean.main.GetOceanLevel())
             {
                 //atramaVehicle.transform.position -= (atramaVehicle.transform.position.y + 3) * Vector3.up;
-                rb.AddForce(new Vector3(0, -100, 0), ForceMode.Acceleration);
+                rb.AddForce(new Vector3(0, -9.8f * rb.mass, 0), ForceMode.Acceleration);
             }
 
             if(mv.IsPowered())
             {
                 if (mv.IsPlayerPiloting())
                 {
-                    applyPlayerControls();
+                    // Get Input Vector
+                    Vector3 moveDirection = GameInput.GetMoveDirection();
+
+                    // Apply Movement based on Input Vector (and modifiers)
+                    applyPlayerControls(moveDirection);
+
+                    // Drain power based on Input Vector (and modifiers)
+                    DrainPower(moveDirection);
                 }
             }
         }
@@ -47,7 +54,7 @@ namespace VehicleFramework
             strafe,
             updown
         }
-        public void applyPlayerControls()
+        public void applyPlayerControls(Vector3 moveDirection)
         {
             float getForce(forceDirection dir)
             {
@@ -74,7 +81,6 @@ namespace VehicleFramework
             }
 
             // Control velocity
-            Vector3 moveDirection = GameInput.GetMoveDirection();
             float xMove = moveDirection.x;
             float yMove = moveDirection.y;
             float zMove = moveDirection.z;
@@ -99,6 +105,13 @@ namespace VehicleFramework
             return;
         }
 
-
+        private void DrainPower(Vector3 moveDirection)
+        {
+            // TODO
+            // Is 3 energy per second a lot?
+            float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
+            float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+            mv.GetComponent<EnergyInterface>().ConsumeEnergy(basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+        }
     }
 }

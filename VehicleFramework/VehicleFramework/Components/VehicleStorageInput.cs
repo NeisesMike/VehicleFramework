@@ -100,7 +100,7 @@ namespace VehicleFramework
 
 		public void OnHandHover(GUIHand hand)
 		{
-			HandReticle.main.SetInteractText("AtramaStorageOpen");
+			HandReticle.main.SetInteractText("StorageOpen");
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 
