@@ -172,8 +172,8 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
 
-                Transform left = transform.Find("LeftStorage");
-                Transform right = transform.Find("RightStorage");
+                Transform left = transform.Find("InnateStorage/LeftStorage");
+                Transform right = transform.Find("InnateStorage/RightStorage");
 
                 VehicleFramework.VehicleParts.VehicleStorage leftVS = new VehicleFramework.VehicleParts.VehicleStorage();
                 leftVS.Container = left.gameObject;
