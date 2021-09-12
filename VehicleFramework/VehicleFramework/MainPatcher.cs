@@ -33,6 +33,11 @@ namespace VehicleFramework
             BasicText message = new BasicText(500, 0);
             message.ShowMessage(msg, 5);
         }
+        public static void OutputLong(string msg)
+        {
+            BasicText message = new BasicText(0, 100);
+            message.ShowMessage(msg, 5);
+        }
     }
     [QModCore]
     public static class MainPatcher
@@ -53,13 +58,7 @@ namespace VehicleFramework
             // Update the player position before saving it
             saveData.OnStartedSaving += (object sender, JsonFileEventArgs e) =>
             {
-                List<Tuple<Vector3, Dictionary<string, TechType>>> modVehiclesUpgrades = SaveManager.SerializeUpgrades();
-
-
-
-
-                SaveData data = e.Instance as SaveData;
-                data.UpgradeLists = modVehiclesUpgrades;
+                VehicleManager.SaveVehicles(sender, e);
             };
 
             saveData.OnFinishedSaving += (object sender, JsonFileEventArgs e) =>
@@ -101,6 +100,7 @@ namespace VehicleFramework
     internal class SaveData : SaveDataCache
     {
         public List<Tuple<Vector3, Dictionary<string, TechType>>> UpgradeLists { get; set; }
-
+        public List<Tuple<Vector3,List<Tuple<Vector3, List<TechType>>>>> InnateStorages { get; set; }
+        public List<Tuple<Vector3, List<Tuple<int, List<TechType>>>>> ModularStorages { get; set; }
     }
 }

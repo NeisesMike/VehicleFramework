@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using SMLHelper.V2.Json;
 
 namespace VehicleFramework
 {
@@ -34,20 +35,25 @@ namespace VehicleFramework
             {
                 VehiclesInPlay.Add(mv);
                 Logger.Log(mv.name + " : " + mv.GetName() + " : " + mv.subName + " was registered!");
+                LoadVehicles();
             }
-            LoadVehicles();
         }
         public static void DeregisterVehicle(ModVehicle mv)
         {
             VehiclesInPlay.Remove(mv);
         }
-        public static void SaveVehicles()
+        public static void SaveVehicles(object sender, JsonFileEventArgs e)
         {
-
+            SaveData data = e.Instance as SaveData;
+            data.UpgradeLists = SaveManager.SerializeUpgrades();
+            data.InnateStorages = SaveManager.SerializeInnateStorage();
+            data.ModularStorages = SaveManager.SerializeModularStorage();
         }
         public static void LoadVehicles()
         {
             SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData);
+            SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData);
+            SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData);
         }
         public static void UpdateVehicles()
         {

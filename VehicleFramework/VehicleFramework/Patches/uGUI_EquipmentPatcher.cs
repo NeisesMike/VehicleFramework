@@ -13,7 +13,7 @@ namespace VehicleFramework
     {
         [HarmonyPostfix]
         [HarmonyPatch("Awake")]
-        public static void AwakePostfix(uGUI_Equipment __instance, ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
+        public static void AwakePostfix(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
             ModuleBuilder.main.vehicleAllSlots = ___allSlots;
             ModuleBuilder.main.BuildAllSlots();

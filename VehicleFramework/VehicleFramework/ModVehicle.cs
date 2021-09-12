@@ -26,7 +26,7 @@ namespace VehicleFramework
         public virtual GameObject StorageRootObject { get { return VehicleModel; } }
         public virtual GameObject ModulesRootObject { get { return StorageRootObject; } }
 
-        // lists of game object references, used later like a blueprint
+        // lists of game object references, used later like a 
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public abstract List<VehicleParts.VehicleStorage> Storages { get; }
@@ -35,6 +35,7 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
         public abstract List<VehicleParts.VehicleLight> Lights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
+
 
 
         public FMOD_StudioEventEmitter lightsOnSound = null;
@@ -89,6 +90,7 @@ namespace VehicleFramework
             base.Start();
 
             upgradesInput.equipment = modules;
+            modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
 
             // load upgrades from file
 
@@ -254,15 +256,7 @@ namespace VehicleFramework
             }
             return -1;
         }
-        public override InventoryItem GetSlotItem(int slotID)
-        {
-            if (slotID < 0 || slotID >= this.slotIDs.Length)
-            {
-                return null;
-            }
-            string slot = this.slotIDs[slotID];
-            return upgradesEquipment.GetItemInSlot(slot);
-        }
+
 
         */
 
@@ -271,8 +265,12 @@ namespace VehicleFramework
          */
         private void SetStorageModule(int slotID, bool activated)
         {
+            foreach(var sto in Storages)
+            {
+                sto.Container.SetActive(true);
+            }
             ModularStorages[slotID].Container.SetActive(activated);
-            ModularStorages[slotID].Container.GetComponent<BoxCollider>().enabled = activated;
+            //ModularStorages[slotID].Container.GetComponent<BoxCollider>().enabled = activated;
         }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
@@ -320,6 +318,41 @@ namespace VehicleFramework
         public override void OnPilotModeBegin()
         {
             base.OnPilotModeBegin();
+        }
+        private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
+        {
+            Logger.Log(pickupable.inventoryItem.item.name);
+            if (pickupable.GetTechType() == TechType.VehicleStorageModule)
+            {
+                // check the appropriate storage module for emptiness
+                SeamothStorageContainer component = pickupable.GetComponent<SeamothStorageContainer>();
+                if (component != null)
+                {
+                    bool flag = component.container.count == 0;
+                    if (verbose && !flag)
+                    {
+                        ErrorMessage.AddDebug(Language.main.Get("SeamothStorageNotEmpty"));
+                    }
+                    return flag;
+                }
+                Debug.LogError("No VehicleStorageContainer found on VehicleStorageModule item");
+            }
+            return true;
+        }
+        public override InventoryItem GetSlotItem(int slotID)
+        {
+            if (slotID < 0 || slotID >= this.slotIDs.Length)
+            {
+                return null;
+            }
+            string slot = this.slotIDs[slotID];
+
+            InventoryItem result;
+            if (upgradesInput.equipment.equipment.TryGetValue(slot, out result))
+            {
+                return result;
+            }
+            return null;
         }
 
     }

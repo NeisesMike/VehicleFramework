@@ -127,49 +127,5 @@ namespace VehicleFramework
             }
             return true;
         }
-
-        /*
-        [HarmonyPrefix]
-        [HarmonyPatch("AddItem")]
-        public static bool AddItem(Equipment __instance, ref bool __result, string slot, InventoryItem newItem, bool forced = false)
-        {
-            if (newItem == null)
-            {
-                __result = false;
-                return false;
-            }
-            InventoryItem inventoryItem;
-            if (!__instance.equipment.TryGetValue(slot, out inventoryItem))
-            {
-                __result = false;
-                return false;
-            }
-            if (inventoryItem != null)
-            {
-                __result = false;
-                return false;
-            }
-            if (!forced && !__instance.AllowedToAdd(slot, newItem.item, true))
-            {
-                __result = false;
-                return false;
-            }
-            IItemsContainer container = newItem.container;
-            if (container != null && !container.RemoveItem(newItem, false, true))
-            {
-                __result = false;
-                return false;
-            }
-            newItem.container = __instance;
-            newItem.item.Reparent(__instance.tr);
-            __instance.equipment[slot] = newItem;
-            TechType techType = newItem.item.GetTechType();
-            __instance.UpdateCount(techType, true);
-            Equipment.SendEquipmentEvent(newItem.item, 0, __instance.owner, slot);
-            __instance.NotifyEquip(slot, newItem);
-            __result = true;
-            return false;
-        }
-        */
     }
 }

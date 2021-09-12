@@ -107,7 +107,7 @@ namespace VehicleFramework
 
                 var cont = vs.Container.EnsureComponent<VehicleStorageContainer>();
                 cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                cont.storageLabel = "Vehicle Storage";
+                cont.storageLabel = "Vehicle Storage " + iter.ToString();
                 cont.height = vs.Height;
                 cont.width = vs.Width;
 
@@ -121,8 +121,6 @@ namespace VehicleFramework
                 inp.collider = vs.Container.EnsureComponent<BoxCollider>();
                 inp.openSound = storageOpenSound;
                 inp.closeSound = storageCloseSound;
-
-                vs.Container.SetActive(true);
             }
 
             iter = 0;
@@ -130,11 +128,13 @@ namespace VehicleFramework
             {
                 vs.Container.SetActive(false);
 
-                var cont = vs.Container.EnsureComponent<VehicleStorageContainer>();
+                /*
+                var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
                 cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                cont.storageLabel = "Vehicle Storage";
+                cont.storageLabel = "Modular Storage " + iter.ToString();
                 cont.height = vs.Height;
                 cont.width = vs.Width;
+                */
 
                 FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
                 FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;

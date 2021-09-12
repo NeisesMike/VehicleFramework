@@ -13,7 +13,7 @@ namespace VehicleFramework
 	{
 		public ItemsContainer container { get; private set; }
 
-		private void Awake()
+		public void Awake()
 		{
 			this.Init();
 		}
@@ -26,54 +26,8 @@ namespace VehicleFramework
 			}
 			this.container = new ItemsContainer(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
 			this.container.SetAllowedTechTypes(this.allowedTech);
+			this.container.isAllowedToRemove = null;
 		}
-
-		/*
-		public void OnProtoSerialize(ProtobufSerializer serializer)
-		{
-		}
-
-		public void OnProtoDeserialize(ProtobufSerializer serializer)
-		{
-			Logger.Log(serializer.ToString());
-			this.Init();
-			this.container.Clear(false);
-			if (this.serializedStorage != null)
-			{
-				StorageHelper.RestoreItems(serializer, this.serializedStorage, this.container);
-				this.serializedStorage = null;
-			}
-		}
-
-		public void OnProtoSerializeObjectTree(ProtobufSerializer serializer)
-		{
-		}
-
-		public void OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
-		{
-			Logger.Log("bingbing");
-			Init();
-			if (this.version < 2)
-			{
-				foreach (StoreInformationIdentifier storeInformationIdentifier in base.gameObject.GetComponentsInChildren<StoreInformationIdentifier>(true))
-				{
-					if (storeInformationIdentifier && storeInformationIdentifier.transform.parent == base.transform)
-					{
-						UnityEngine.Object.Destroy(storeInformationIdentifier.gameObject);
-					}
-				}
-				this.version = 2;
-			}
-			else
-			{
-				StorageHelper.TransferItems(this.storageRoot.gameObject, this.container);
-			}
-			if (this.version < 3)
-			{
-				CoroutineHost.StartCoroutine(this.CleanUpDuplicatedStorage());
-			}
-		}
-		*/
 
 		private IEnumerator CleanUpDuplicatedStorage()
 		{

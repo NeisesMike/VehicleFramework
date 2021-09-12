@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patches\InventoryPatcher.cs" />
+    <Compile Include="Patches\ItemsContainerPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="VehicleCraftable.cs" />

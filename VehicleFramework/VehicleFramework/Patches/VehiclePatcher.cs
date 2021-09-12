@@ -197,7 +197,6 @@ namespace VehicleFramework
             {
                 return true;
             }
-
             InventoryItem slotItem = __instance.GetSlotItem(slotID);
             if (slotItem == null)
             {
@@ -210,14 +209,38 @@ namespace VehicleFramework
                 __result = null;
                 return false;
             }
-            VehicleStorageContainer component = item.GetComponent<VehicleStorageContainer>();
-            if (component == null)
+            VehicleStorageContainer vsc = item.GetComponent<VehicleStorageContainer>();
+            SeamothStorageContainer ssc = item.GetComponent<SeamothStorageContainer>();
+            if (vsc == null && ssc == null)
             {
                 __result = null;
                 return false;
             }
-            __result = component.container;
+            else if(vsc != null)
+            {
+                __result = vsc.container;
+            }
+            else if(ssc != null)
+            {
+                __result = ssc.container;
+            }
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("GetAllStorages")]
+        public static void GetAllStoragesPostfix(Vehicle __instance, ref List<IItemsContainer> containers)
+        {
+            ModVehicle mv = __instance as ModVehicle;
+            if (mv == null)
+            {
+                return;
+            }
+
+            foreach(var tmp in ((ModVehicle)__instance).Storages)
+            {
+                containers.Add(tmp.Container.GetComponent<VehicleStorageContainer>().container);
+            }
         }
 
         /*

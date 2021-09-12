@@ -31,5 +31,5 @@ namespace VehicleFramework
             Logger.Log(__instance.name + " : SetState() : Vehicle module not ready. Passing.");
 			return false;
 		}
-	}
+    }
 }

@@ -22,6 +22,7 @@ namespace VehicleFramework
 				modVe = modVe.parent;
             }
 			mv = modVe.gameObject.GetComponent<ModVehicle>();
+			SetEnabled(true);
 		}
 
 		private void OnDisable()
@@ -37,7 +38,12 @@ namespace VehicleFramework
 
 		private void OpenPDA()
 		{
-			ItemsContainer storageInSlot = gameObject.GetComponent<VehicleStorageContainer>().container;
+			ItemsContainer storageInSlot = mv.GetStorageInSlot(slotID, TechType.VehicleStorageModule);
+			if (storageInSlot == null)
+			{
+				storageInSlot = gameObject.GetComponent<VehicleStorageContainer>().container;
+			}
+
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();

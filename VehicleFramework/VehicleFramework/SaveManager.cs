@@ -16,7 +16,6 @@ namespace VehicleFramework
             {
                 if (mv == null)
                 {
-                    Logger.Log("skipping null ModVehicle");
                     continue;
                 }
                 if (!mv.name.Contains("Clone"))
@@ -46,12 +45,9 @@ namespace VehicleFramework
             }
             return modVehiclesUpgrades;
         }
-
         internal static void DeserializeUpgrades(SaveData data)
         {
             List<Tuple<Vector3, Dictionary<string, TechType>>> modVehiclesUpgrades = data.UpgradeLists;
-            Logger.Log("At deserialize time, there were " + VehicleManager.VehiclesInPlay.Count.ToString() + " vehicles");
-
             foreach(ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
                 if(mv==null)
@@ -71,14 +67,152 @@ namespace VehicleFramework
                             thisUpgrade.SetActive(false);
                             InventoryItem thisItem = new InventoryItem(thisUpgrade.GetComponent<Pickupable>());
                             mv.modules.AddItem(pair.Key, thisItem, true);
-                            Logger.Log("Added " + thisUpgrade.name + " to " + pair.Key);
-
                             // try calling OnUpgradeModulesChanged now
                             mv.UpdateModuleSlots();
                         }
                     }
                 }
-                ModuleBuilder.main.equipment.Init(mv.modules);
+                //ModuleBuilder.main.equipment.Init(mv.modules);
+            }
+        }
+        internal static List<Tuple<Vector3, List<Tuple<int, List<TechType>>>>> SerializeModularStorage()
+        {
+            List<Tuple<Vector3, List<Tuple<int, List<TechType>>>>> allVehiclesStoragesContents = new List<Tuple<Vector3, List<Tuple<int, List<TechType>>>>>();
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    continue;
+                }
+                if (!mv.name.Contains("Clone"))
+                {
+                    // skip the prefabs
+                    continue;
+                }
+                List<Tuple<int, List<TechType>>> thisVehiclesStoragesContents = new List<Tuple<int, List<TechType>>>();
+
+                for(int i=0; i<mv.ModularStorages.Count; i++)
+                {
+                    var thisContainer = mv.GetStorageInSlot(i, TechType.VehicleStorageModule);
+                    if (thisContainer != null)
+                    {
+                        List<TechType> thisContents = new List<TechType>();
+                        foreach (var item in thisContainer.ToList())
+                        {
+                            thisContents.Add(item.item.GetTechType());
+                        }
+                        thisVehiclesStoragesContents.Add(new Tuple<int, List<TechType>>(i, thisContents));
+                    }
+                }
+
+
+                allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<int, List<TechType>>>>(mv.transform.position, thisVehiclesStoragesContents));
+            }
+            return allVehiclesStoragesContents;
+        }
+        internal static void DeserializeModularStorage(SaveData data)
+        {
+            List<Tuple<Vector3, List<Tuple<int, List<TechType>>>>> allVehiclesStoragesLists = data.ModularStorages;
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    continue;
+                }
+
+                // try to match against a saved vehicle in our list
+                foreach (var vehicle in allVehiclesStoragesLists)
+                {
+                    if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                    {
+                        // we've matched the vehicle
+                        foreach(var container in vehicle.Item2)
+                        {
+                            var thisContainer = mv.GetStorageInSlot(container.Item1, TechType.VehicleStorageModule);
+                            if (thisContainer != null)
+                            {
+                                foreach(var techtype in container.Item2)
+                                {
+                                    GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(techtype, true));
+                                    thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                                    thisItem.SetActive(false);
+                                    thisContainer.AddItem(thisItem.GetComponent<Pickupable>());
+                                }
+                            }
+                            else
+                            {
+                                Logger.Log("Error: tried to deserialize items into a non-existent modular container: " + container.Item1.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        internal static List<Tuple<Vector3, List<Tuple<Vector3, List<TechType>>>>> SerializeInnateStorage()
+        {
+            List<Tuple<Vector3, List<Tuple<Vector3, List<TechType>>>>> allVehiclesStoragesContents = new List<Tuple<Vector3, List<Tuple<Vector3, List<TechType>>>>>();
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    continue;
+                }
+                if (!mv.name.Contains("Clone"))
+                {
+                    // skip the prefabs
+                    continue;
+                }
+                List<Tuple<Vector3, List<TechType>>> thisVehiclesStoragesContents = new List<Tuple<Vector3, List<TechType>>>();
+                foreach (VehicleStorageContainer vsc in mv.GetComponentsInChildren<VehicleStorageContainer>())
+                {
+                    Vector3 thisLocalPos = vsc.transform.localPosition;
+                    List<TechType> thisContents = new List<TechType>();
+                    foreach (var item in vsc.container.ToList())
+                    {
+                        thisContents.Add(item.item.GetTechType());
+                    }
+                    thisVehiclesStoragesContents.Add(new Tuple<Vector3, List<TechType>>(thisLocalPos, thisContents));
+                }
+                allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<Vector3, List<TechType>>>>(mv.transform.position, thisVehiclesStoragesContents));
+            }
+            return allVehiclesStoragesContents;
+        }
+        internal static void DeserializeInnateStorage(SaveData data)
+        {
+            List<Tuple<Vector3, List<Tuple<Vector3, List<TechType>>>>> allVehiclesStoragesLists = data.InnateStorages;
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    continue;
+                }
+
+                // try to match against a saved vehicle in our list
+                foreach (var vehicle in allVehiclesStoragesLists)
+                {
+                    if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                    {
+                        Logger.Log("vehicle matched!");
+                        foreach (var thisStorage in vehicle.Item2)
+                        {
+                            // load up the storages
+                            foreach (var vsc in mv.GetComponentsInChildren<VehicleStorageContainer>())
+                            {
+                                if (vsc.transform.localPosition == thisStorage.Item1)
+                                {
+                                    Logger.Log("storage module matched! " + thisStorage.Item2.Count.ToString());
+                                    foreach (TechType thisTechType in thisStorage.Item2)
+                                    {
+                                        GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(thisTechType, true));
+                                        thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                                        thisItem.SetActive(false);
+                                        vsc.container.AddItem(thisItem.GetComponent<Pickupable>());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
