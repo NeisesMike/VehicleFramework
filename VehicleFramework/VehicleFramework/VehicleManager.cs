@@ -47,6 +47,7 @@ namespace VehicleFramework
             data.UpgradeLists = SaveManager.SerializeUpgrades();
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
+            data.Batteries = SaveManager.SerializeBatteries();
         }
         // TODO refactor this to accept a modvehicle as input
         // TODO can't call this in mv.start... so where do we call it?
@@ -56,6 +57,7 @@ namespace VehicleFramework
             SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData);
+            SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData);
         }
         public static void UpdateVehicles()
         {

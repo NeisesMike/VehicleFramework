@@ -17,7 +17,10 @@ namespace VehicleFramework
             {
                 if (!wasPowered)
                 {
-                    BroadcastMessage("OnPowerUp");
+                    foreach (var component in GetComponentsInChildren<VehicleComponent>())
+                    {
+                        component.OnPowerUp();
+                    }
                 }
                 wasPowered = true;
             }
@@ -25,7 +28,10 @@ namespace VehicleFramework
             {
                 if (wasPowered)
                 {
-                    BroadcastMessage("OnPowerDown");
+                    foreach (var component in GetComponentsInChildren<VehicleComponent>())
+                    {
+                        component.OnPowerDown();
+                    }
                 }
                 wasPowered = false;
             }

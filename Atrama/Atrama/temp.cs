@@ -27,5 +27,7 @@ namespace Atrama
         public override List<VehicleFramework.VehicleParts.VehicleLight> Lights => throw new NotImplementedException();
 
         public override List<GameObject> WalkableInteriors => throw new NotImplementedException();
+
+        public override List<Renderer> InteriorRenderers => throw new NotImplementedException();
     }
 }

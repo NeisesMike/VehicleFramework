@@ -213,5 +213,71 @@ namespace VehicleFramework
                 }
             }
         }
+
+
+
+        internal static List<Tuple<Vector3, List<TechType>>> SerializeBatteries()
+        {
+            List<Tuple<Vector3, List<TechType>>> allVehiclesBatteries = new List<Tuple<Vector3, List<TechType>>>();
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    continue;
+                }
+                if (!mv.name.Contains("Clone"))
+                {
+                    // skip the prefabs
+                    continue;
+                }
+                List<TechType> thisVehiclesBatteries = new List<TechType>();
+                foreach (EnergyMixin batt in mv.energyInterface.sources)
+                {
+                    if (batt.battery != null)
+                    {
+                        thisVehiclesBatteries.Add(batt.batterySlot.storedItem.item.GetTechType());
+                    }
+                }
+                allVehiclesBatteries.Add(new Tuple<Vector3,List<TechType>>(mv.transform.position, thisVehiclesBatteries));
+            }
+            return allVehiclesBatteries;
+        }
+        internal static void DeserializeBatteries(SaveData data)
+        {
+            List<Tuple<Vector3, List<TechType>>> allVehiclesBatteries = data.Batteries;
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    Logger.Log("battery: null vehicle");
+                    continue;
+                }
+                if (!mv.name.Contains("Clone"))
+                {
+                    // skip the prefabs
+                    Logger.Log("battery: prefab");
+                    continue;
+                }
+
+                // try to match against a saved vehicle in our list
+                foreach (var vehicle in allVehiclesBatteries)
+                {
+                    if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                    {
+                        foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
+                        {
+                            GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(battery.value, true));
+                            thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                            mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
+                            mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
+                            thisItem.SetActive(false);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
     }
 }

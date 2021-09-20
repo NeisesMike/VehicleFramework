@@ -50,7 +50,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public void checkPower()
+        public void CheckPower()
         {
             if (mv.IsPowered())
             {
@@ -58,7 +58,7 @@ namespace VehicleFramework
                 if (!wasPowered)
                 {
                     setFloodLampsActive(true);
-                    enableInteriorLighting();
+                    EnableInteriorLighting();
                 }
                 wasPowered = true;
             }
@@ -68,7 +68,7 @@ namespace VehicleFramework
                 if (wasPowered)
                 {
                     setFloodLampsActive(false);
-                    disableInteriorLighting();
+                    DisableInteriorLighting();
                 }
                 wasPowered = false;
             }
@@ -88,25 +88,31 @@ namespace VehicleFramework
                 light.SetActive(enabled && mv.IsPowered());
             }
             setVolumetricLightsActive(enabled);
+            /* Beware of infinite loop
             if (enabled)
             {
-                BroadcastMessage("OnLightsOn");
+                foreach (var component in GetComponentsInChildren<VehicleComponent>())
+                {
+                    component.OnPowerUp();
+                }
             }
+            else
             {
-                BroadcastMessage("OnLightsOff");
+                foreach (var component in GetComponentsInChildren<VehicleComponent>())
+                {
+                    component.OnPowerDown();
+                }
             }
+            */
         }
-        public void enableInteriorLighting()
+        public void EnableInteriorLighting()
         {
-            foreach (var renderer in mv.interiorRenderers)
+            foreach (var renderer in mv.InteriorRenderers)
             {
                 foreach (Material mat in renderer.materials)
                 {
                     // add emission to certain materials
-                    if (
-                        (renderer.gameObject.name == "Main-Body" && mat.name.Contains("Material"))
-                        || renderer.gameObject.name != "Main-Body"
-                        )
+                    if (mat.name.Contains("InteriorIlluminatedMaterial"))
                     {
                         mat.EnableKeyword("MARMO_EMISSION");
                         mat.SetFloat("_EmissionLM", 0.25f);
@@ -114,21 +120,17 @@ namespace VehicleFramework
                         mat.SetFloat("_GlowStrength", 0f);
                         mat.SetFloat("_GlowStrengthNight", 0f);
                     }
-
                 }
             }
         }
-        public void disableInteriorLighting()
+        public void DisableInteriorLighting()
         {
-            foreach (var renderer in mv.interiorRenderers)
+            foreach (var renderer in mv.InteriorRenderers)
             {
                 foreach (Material mat in renderer.materials)
                 {
                     // add emission to certain materials
-                    if (
-                        (renderer.gameObject.name == "Main-Body" && mat.name.Contains("Material"))
-                        || renderer.gameObject.name != "Main-Body"
-                        )
+                    if (mat.name.Contains("InteriorIlluminatedMaterial"))
                     {
                         mat.DisableKeyword("MARMO_EMISSION");
                     }
@@ -158,13 +160,13 @@ namespace VehicleFramework
         void VehicleComponent.OnPowerUp()
         {
             setFloodLampsActive(true);
-            enableInteriorLighting();
+            EnableInteriorLighting();
         }
 
         void VehicleComponent.OnPowerDown()
         {
             setFloodLampsActive(false);
-            disableInteriorLighting();
+            DisableInteriorLighting();
         }
 
         void VehicleComponent.OnLightsOn()

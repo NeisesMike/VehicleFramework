@@ -35,6 +35,7 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
         public abstract List<VehicleParts.VehicleLight> Lights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
+        public abstract List<Renderer> InteriorRenderers { get; }
 
 
 
@@ -44,7 +45,6 @@ namespace VehicleFramework
         public List<GameObject> volumetricLights = new List<GameObject>();
         public PingInstance pingInstance = null;
         public FMOD_StudioEventEmitter ambienceSound;
-        public List<Renderer> interiorRenderers = new List<Renderer>();
 
         private bool isPilotSeated = false;
         private bool isPlayerInside = false;
@@ -397,5 +397,9 @@ namespace VehicleFramework
                     }
             }
         }
+
+
+
+
     }
 }
