@@ -29,7 +29,7 @@ namespace VehicleFramework
         // lists of game object references, used later like a 
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
-        public abstract List<VehicleParts.VehicleStorage> Storages { get; }
+        public abstract List<VehicleParts.VehicleStorage> InnateStorages { get; }
         public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
         public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
@@ -265,7 +265,7 @@ namespace VehicleFramework
          */
         private void SetStorageModule(int slotID, bool activated)
         {
-            foreach(var sto in Storages)
+            foreach(var sto in InnateStorages)
             {
                 sto.Container.SetActive(true);
             }
@@ -307,21 +307,17 @@ namespace VehicleFramework
                     break;
             }
         }
-
-
         public override void OnCollisionEnter(Collision col)
         {
             base.OnCollisionEnter(col);
             Logger.Output(col.transform.name);
         }
-
         public override void OnPilotModeBegin()
         {
             base.OnPilotModeBegin();
         }
         private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
         {
-            Logger.Log(pickupable.inventoryItem.item.name);
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 // check the appropriate storage module for emptiness
@@ -354,6 +350,52 @@ namespace VehicleFramework
             }
             return null;
         }
-
+        public ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
+        {
+            switch(techType)
+            {
+                case VehicleBuilder.InnateStorage:
+                    {
+                        InnateStorageContainer vsc;
+                        if(0 <= slotID && slotID <= 1)
+                        {
+                            vsc = InnateStorages[slotID].Container.GetComponent<InnateStorageContainer>();
+                        }
+                        else
+                        {
+                            Logger.Log("Error: ModGetStorageInSlot called on invalid innate storage slotID");
+                            return null;
+                        }
+                        return vsc.container;
+                    }
+                case TechType.VehicleStorageModule:
+                    {
+                        InventoryItem slotItem = this.GetSlotItem(slotID);
+                        if (slotItem == null)
+                        {
+                            Logger.Log("Warning: failed to get item for that slotID: " + slotID.ToString());
+                            return null;
+                        }
+                        Pickupable item = slotItem.item;
+                        if (item.GetTechType() != techType)
+                        {
+                            Logger.Log("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
+                            return null;
+                        }
+                        SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
+                        if (component == null)
+                        {
+                            Logger.Log("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
+                            return null;
+                        }
+                        return component.container;
+                    }
+                default:
+                    {
+                        Logger.Log("Error: tried to get storage for unsupported TechType");
+                        return null;
+                    }
+            }
+        }
     }
 }

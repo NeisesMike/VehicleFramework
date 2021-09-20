@@ -16,7 +16,7 @@ namespace Atrama
 
         public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches => throw new NotImplementedException();
 
-        public override List<VehicleFramework.VehicleParts.VehicleStorage> Storages => throw new NotImplementedException();
+        public override List<VehicleFramework.VehicleParts.VehicleStorage> InnateStorages => throw new NotImplementedException();
 
         public override List<VehicleFramework.VehicleParts.VehicleStorage> ModularStorages => throw new NotImplementedException();
 

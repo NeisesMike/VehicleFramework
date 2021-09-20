@@ -48,15 +48,15 @@ namespace VehicleFramework
         internal static void DeserializeUpgrades(SaveData data)
         {
             List<Tuple<Vector3, Dictionary<string, TechType>>> modVehiclesUpgrades = data.UpgradeLists;
-            foreach(ModVehicle mv in VehicleManager.VehiclesInPlay)
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if(mv==null)
+                if (mv==null)
                 {
                     continue;
                 }
 
                 // try to match against a saved vehicle in our list
-                foreach(var tup in modVehiclesUpgrades)
+                foreach (var tup in modVehiclesUpgrades)
                 {
                     if (Vector3.Distance(mv.transform.position, tup.Item1) < 3)
                     {
@@ -135,8 +135,8 @@ namespace VehicleFramework
                                 {
                                     GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(techtype, true));
                                     thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                                    thisItem.SetActive(false);
                                     thisContainer.AddItem(thisItem.GetComponent<Pickupable>());
+                                    thisItem.SetActive(false);
                                 }
                             }
                             else
@@ -163,7 +163,7 @@ namespace VehicleFramework
                     continue;
                 }
                 List<Tuple<Vector3, List<TechType>>> thisVehiclesStoragesContents = new List<Tuple<Vector3, List<TechType>>>();
-                foreach (VehicleStorageContainer vsc in mv.GetComponentsInChildren<VehicleStorageContainer>())
+                foreach (InnateStorageContainer vsc in mv.GetComponentsInChildren<InnateStorageContainer>())
                 {
                     Vector3 thisLocalPos = vsc.transform.localPosition;
                     List<TechType> thisContents = new List<TechType>();
@@ -192,21 +192,19 @@ namespace VehicleFramework
                 {
                     if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
                     {
-                        Logger.Log("vehicle matched!");
                         foreach (var thisStorage in vehicle.Item2)
                         {
                             // load up the storages
-                            foreach (var vsc in mv.GetComponentsInChildren<VehicleStorageContainer>())
+                            foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
                             {
-                                if (vsc.transform.localPosition == thisStorage.Item1)
+                                if (isc.transform.localPosition == thisStorage.Item1)
                                 {
-                                    Logger.Log("storage module matched! " + thisStorage.Item2.Count.ToString());
                                     foreach (TechType thisTechType in thisStorage.Item2)
                                     {
                                         GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(thisTechType, true));
                                         thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                                        isc.container.AddItem(thisItem.GetComponent<Pickupable>());
                                         thisItem.SetActive(false);
-                                        vsc.container.AddItem(thisItem.GetComponent<Pickupable>());
                                     }
                                 }
                             }

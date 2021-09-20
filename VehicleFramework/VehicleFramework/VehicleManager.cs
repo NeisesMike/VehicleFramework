@@ -35,7 +35,6 @@ namespace VehicleFramework
             {
                 VehiclesInPlay.Add(mv);
                 Logger.Log(mv.name + " : " + mv.GetName() + " : " + mv.subName + " was registered!");
-                LoadVehicles();
             }
         }
         public static void DeregisterVehicle(ModVehicle mv)
@@ -49,6 +48,9 @@ namespace VehicleFramework
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
         }
+        // TODO refactor this to accept a modvehicle as input
+        // TODO can't call this in mv.start... so where do we call it?
+        // How about PDA Awake?
         public static void LoadVehicles()
         {
             SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData);

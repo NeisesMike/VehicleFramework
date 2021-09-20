@@ -9,9 +9,22 @@ using UWE;
 
 namespace VehicleFramework
 {
-	public class VehicleStorageContainer : MonoBehaviour, ICraftTarget//, IProtoEventListener, IProtoTreeEventListener
+	public class InnateStorageContainer : MonoBehaviour, ICraftTarget//, IProtoEventListener, IProtoTreeEventListener
 	{
-		public ItemsContainer container { get; private set; }
+		private bool hasInit = false;
+
+		private ItemsContainer _container;
+		public ItemsContainer container 
+		{ 
+			get
+            {
+				return _container;
+            }
+			private set
+			{
+				_container = value;
+            }
+		}
 
 		public void Awake()
 		{
@@ -20,20 +33,14 @@ namespace VehicleFramework
 
 		private void Init()
 		{
-			if (this.container != null)
+			if (this.container != null || hasInit)
 			{
 				return;
 			}
 			this.container = new ItemsContainer(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
 			this.container.SetAllowedTechTypes(this.allowedTech);
 			this.container.isAllowedToRemove = null;
-		}
-
-		private IEnumerator CleanUpDuplicatedStorage()
-		{
-			yield return StorageHelper.DestroyDuplicatedItems(base.gameObject);
-			this.version = Mathf.Max(this.version, 3);
-			yield break;
+			hasInit = true;
 		}
 
 		public void OnCraftEnd(TechType techType)
@@ -63,16 +70,12 @@ namespace VehicleFramework
 		public string storageLabel = "StorageLabel";
 
 		public int width = 6;
-
 		public int height = 8;
 
 		public TechType[] allowedTech = new TechType[0];
 
 		[AssertNotNull]
 		public ChildObjectIdentifier storageRoot;
-
-		private const int currentVersion = 3;
-
 
 		public int version = 3;
 

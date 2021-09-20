@@ -166,7 +166,7 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleStorage> Storages
+        public override List<VehicleFramework.VehicleParts.VehicleStorage> InnateStorages
         {
             get
             {

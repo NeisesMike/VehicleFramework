@@ -46,8 +46,9 @@ namespace VehicleFramework
         public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
         public static GameObject coroutineHelper;
 
-        public static readonly EquipmentType ModuleType = (EquipmentType)625;
-        public static readonly EquipmentType ArmType = (EquipmentType)626;
+        public const EquipmentType ModuleType = (EquipmentType)625;
+        public const EquipmentType ArmType = (EquipmentType)626;
+        public const TechType InnateStorage = (TechType)0x4100;
 
         public static void PatchCraftables()
         {
@@ -101,11 +102,11 @@ namespace VehicleFramework
                 hatch.ExitLocation = vhs.ExitLocation;
             }
             int iter = 0;
-            foreach (VehicleParts.VehicleStorage vs in mv.Storages)
+            foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
             {
                 vs.Container.SetActive(false);
 
-                var cont = vs.Container.EnsureComponent<VehicleStorageContainer>();
+                var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
                 cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
                 cont.storageLabel = "Vehicle Storage " + iter.ToString();
                 cont.height = vs.Height;
@@ -113,7 +114,7 @@ namespace VehicleFramework
 
                 FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
                 FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                var inp = vs.Container.EnsureComponent<VehicleStorageInput>();
+                var inp = vs.Container.EnsureComponent<InnateStorageInput>();
                 inp.mv = mv;
                 inp.slotID = iter;
                 iter++;
@@ -138,7 +139,7 @@ namespace VehicleFramework
 
                 FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
                 FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                var inp = vs.Container.EnsureComponent<VehicleStorageInput>();
+                var inp = vs.Container.EnsureComponent<ModularStorageInput>();
                 inp.mv = mv;
                 inp.slotID = iter;
                 iter++;

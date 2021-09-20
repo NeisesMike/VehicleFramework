@@ -32,7 +32,7 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch("Start")]
-        public static bool StartPretfix(Vehicle __instance, ref EnergyInterface ___energyInterface)
+        public static bool StartPrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
         {
             ModVehicle mv = __instance as ModVehicle;
             if (mv == null)
@@ -188,6 +188,7 @@ namespace VehicleFramework
             return true;
         }
 
+        /*
         [HarmonyPrefix]
         [HarmonyPatch("GetStorageInSlot")]
         public static bool GetStorageInSlotPrefix(Vehicle __instance, int slotID, TechType techType, ref ItemsContainer __result)
@@ -226,6 +227,7 @@ namespace VehicleFramework
             }
             return false;
         }
+        */
 
         [HarmonyPostfix]
         [HarmonyPatch("GetAllStorages")]
@@ -237,9 +239,9 @@ namespace VehicleFramework
                 return;
             }
 
-            foreach(var tmp in ((ModVehicle)__instance).Storages)
+            foreach(var tmp in ((ModVehicle)__instance).InnateStorages)
             {
-                containers.Add(tmp.Container.GetComponent<VehicleStorageContainer>().container);
+                containers.Add(tmp.Container.GetComponent<InnateStorageContainer>().container);
             }
         }
 

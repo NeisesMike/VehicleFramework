@@ -24,6 +24,10 @@ namespace VehicleFramework
             Logger.Log("grab components");
             ModuleBuilder.main.grabComponents();
 
+            // We believe this is guaranteed to execute AFTER all the Starts of the initial load,
+            // since it executes the first time the player opens the PDA
+            VehicleManager.LoadVehicles();
+
             // TODO maybe destroy self here?
 
         }

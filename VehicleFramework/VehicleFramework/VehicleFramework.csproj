@@ -88,6 +88,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\StorageInput.cs" />
+    <Compile Include="Components\InnateStorageInput.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\ItemsContainerPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
@@ -99,8 +101,8 @@
     <Compile Include="VehicleComponents\FuelGauge.cs" />
     <Compile Include="VehicleComponents\VehicleLights.cs" />
     <Compile Include="Components\VehicleHatch.cs" />
-    <Compile Include="Components\VehicleStorageContainer.cs" />
-    <Compile Include="Components\VehicleStorageInput.cs" />
+    <Compile Include="Components\InnateStorageContainer.cs" />
+    <Compile Include="Components\ModularStorageInput.cs" />
     <Compile Include="ModuleBuilder.cs" />
     <Compile Include="Components\VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
