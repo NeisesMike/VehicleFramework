@@ -60,16 +60,25 @@ namespace VehicleFramework
                     autoLeveling = false;
                     return;
                 }
+
                 float newPitch;
-                if (x >= 180)
-                {
-                    newPitch = Mathf.SmoothDamp(x, 360, ref pitchVelocity, smoothTime);
-                }
-                else
+                float newRoll;
+                if (x < 180)
                 {
                     newPitch = Mathf.SmoothDamp(x, 0, ref pitchVelocity, smoothTime);
                 }
-                float newRoll = Mathf.SmoothDamp(z, 0, ref rollVelocity, smoothTime);
+                else
+                {
+                    newPitch = Mathf.SmoothDamp(x, 360, ref pitchVelocity, smoothTime);
+                }
+                if(z < 180)
+                {
+                    newRoll = Mathf.SmoothDamp(z, 0, ref rollVelocity, smoothTime);
+                }
+                else
+                {
+                    newRoll = Mathf.SmoothDamp(z, 360, ref rollVelocity, smoothTime);
+                }
                 transform.rotation = Quaternion.Euler(new Vector3(newPitch, y, newRoll));
             }
         }
