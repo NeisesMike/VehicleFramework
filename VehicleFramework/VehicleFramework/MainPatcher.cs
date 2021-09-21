@@ -104,6 +104,7 @@ namespace VehicleFramework
     [FileName("vehicle_storage")]
     internal class SaveData : SaveDataCache
     {
+        public List<Tuple<Vector3, bool>> IsPlayerInside { get; set; }
         public List<Tuple<Vector3, upgrades>> UpgradeLists { get; set; }
         public List<Tuple<Vector3, innateStorages>> InnateStorages { get; set; }
         public List<Tuple<Vector3, modularStorages>> ModularStorages { get; set; }

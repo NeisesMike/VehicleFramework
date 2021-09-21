@@ -35,7 +35,6 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
         public abstract List<VehicleParts.VehicleLight> Lights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
-        public abstract List<Renderer> InteriorRenderers { get; }
         public abstract GameObject ControlPanel { get; }
         public ControlPanel controlPanelLogic;
 

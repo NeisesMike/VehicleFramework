@@ -223,16 +223,6 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<Renderer> InteriorRenderers
-        {
-            get
-            {
-                return new List<Renderer>
-                {
-                    transform.Find("Main-Body").gameObject.GetComponent<MeshRenderer>()
-                };
-            }
-        }
         public override GameObject ControlPanel
         {
             get

@@ -120,7 +120,7 @@ namespace VehicleFramework
         }
         public void EnableInteriorLighting()
         {
-            foreach (var renderer in mv.InteriorRenderers)
+            foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
             {
                 foreach (Material mat in renderer.materials)
                 {
@@ -139,7 +139,7 @@ namespace VehicleFramework
         }
         public void DisableInteriorLighting()
         {
-            foreach (var renderer in mv.InteriorRenderers)
+            foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
             {
                 foreach (Material mat in renderer.materials)
                 {
