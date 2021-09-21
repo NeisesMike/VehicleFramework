@@ -213,9 +213,6 @@ namespace VehicleFramework
                 }
             }
         }
-
-
-
         internal static List<Tuple<Vector3, List<TechType>>> SerializeBatteries()
         {
             List<Tuple<Vector3, List<TechType>>> allVehiclesBatteries = new List<Tuple<Vector3, List<TechType>>>();
@@ -272,6 +269,58 @@ namespace VehicleFramework
                             mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
                             thisItem.SetActive(false);
                         }
+                    }
+                }
+            }
+        }
+
+
+
+
+        internal static List<Tuple<Vector3, bool>> SerializePlayerInside()
+        {
+            List<Tuple<Vector3, bool>> allVehiclesIsPlayerInside = new List<Tuple<Vector3, bool>>();
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    continue;
+                }
+                if (!mv.name.Contains("Clone"))
+                {
+                    // skip the prefabs
+                    continue;
+                }
+
+                allVehiclesIsPlayerInside.Add(new Tuple<Vector3, bool>(mv.transform.position, mv.IsPlayerInside()));
+            }
+            return allVehiclesIsPlayerInside;
+        }
+        internal static void DeserializePlayerInside(SaveData data)
+        {
+            List<Tuple<Vector3, bool>> allVehiclesPlayerInside = data.IsPlayerInside;
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (mv == null)
+                {
+                    Logger.Log("battery: null vehicle");
+                    continue;
+                }
+                if (!mv.name.Contains("Clone"))
+                {
+                    // skip the prefabs
+                    Logger.Log("battery: prefab");
+                    continue;
+                }
+
+                Logger.Log("looking at playerinsides");
+                foreach(var vehicle in allVehiclesPlayerInside)
+                {
+                    if(Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
+                    {
+                        Logger.Log("entering");
+                        mv.PlayerEntry();
+                        return;
                     }
                 }
             }

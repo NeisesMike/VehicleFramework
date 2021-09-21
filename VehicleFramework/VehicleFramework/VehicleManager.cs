@@ -26,7 +26,6 @@ namespace VehicleFramework
     }
     public static class VehicleManager
     {
-        public static List<VehicleHUD> HUDs = new List<VehicleHUD>();
         public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
 
         public static void RegisterVehicle(ModVehicle mv)
@@ -48,6 +47,7 @@ namespace VehicleFramework
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
             data.Batteries = SaveManager.SerializeBatteries();
+            data.IsPlayerInside = SaveManager.SerializePlayerInside();
         }
         // TODO refactor this to accept a modvehicle as input
         // TODO can't call this in mv.start... so where do we call it?
@@ -58,6 +58,7 @@ namespace VehicleFramework
             SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData);
+            SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData);
         }
         public static void UpdateVehicles()
         {
