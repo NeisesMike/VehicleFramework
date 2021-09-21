@@ -39,7 +39,7 @@ namespace VehicleFramework
 
         public bool ExteriorLightsClick()
         {
-            mv.vLights.ToggleLights();
+            mv.vLights.ToggleExteriorLighting();
             return true;
         }
         public bool ExteriorLightsHover()

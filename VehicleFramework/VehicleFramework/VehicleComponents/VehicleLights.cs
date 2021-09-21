@@ -23,36 +23,36 @@ namespace VehicleFramework
         {
             if (mv.IsPlayerPiloting() && Player.main.GetRightHandDown() && !Player.main.GetPDA().isInUse)
             {
-                ToggleLights();
+                ToggleExteriorLighting();
             }
             if(isLightsOn)
             {
                 mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.001f * Time.deltaTime);
             }
         }
-        public void EnableLights()
+        public void EnableExteriorLighting()
         {
             SetFloodLampsActive(true);
             Utils.PlayEnvSound(mv.lightsOnSound, mv.lightsOnSound.gameObject.transform.position, 20f);
         }
-        public void DisableLights()
+        public void DisableExteriorLighting()
         {
             SetFloodLampsActive(false);
             Utils.PlayEnvSound(mv.lightsOffSound, mv.lightsOffSound.gameObject.transform.position, 20f);
         }
 
-        public void ToggleLights()
+        public void ToggleExteriorLighting()
         {
             if (mv.IsPowered())
             {
                 isLightsOn = !isLightsOn;
                 if (isLightsOn)
                 {
-                    EnableLights();
+                    EnableExteriorLighting();
                 }
                 else
                 {
-                    DisableLights();
+                    DisableExteriorLighting();
                 }
             }
         }

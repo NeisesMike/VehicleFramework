@@ -418,7 +418,7 @@ namespace VehicleFramework
             if(!IsDisengaged)
             {
                 gameObject.GetComponent<VehicleLights>().EnableInteriorLighting();
-                gameObject.GetComponent<VehicleLights>().EnableLights();
+                gameObject.GetComponent<VehicleLights>().EnableExteriorLighting();
             }
         }
 
