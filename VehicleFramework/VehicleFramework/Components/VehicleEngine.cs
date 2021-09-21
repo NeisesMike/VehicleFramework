@@ -107,11 +107,18 @@ namespace VehicleFramework
 
         private void DrainPower(Vector3 moveDirection)
         {
-            // TODO
-            // Is 3 energy per second a lot?
+            /* Rationale for these values
+             * Seamoth spends this on Update
+             * base.ConsumeEngineEnergy(Time.deltaTime * this.enginePowerConsumption * vector.magnitude);
+             * where vector.magnitude in [0,3];
+             * instead of enginePowerConsumption, we have upgradeModifier, but they are similar if not identical
+             * so the power consumption is similar to that of a seamoth.
+             * it should probably be higher, by maybe 2.5 times
+             */
+            float scalarFactor = 2.5f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-            mv.GetComponent<EnergyInterface>().ConsumeEnergy(basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+            mv.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
         }
     }
 }
