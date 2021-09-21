@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace VehicleFramework
 {
-	public class VehicleHUD : MonoBehaviour
+	public class uGUI_VehicleHUD : MonoBehaviour
 	{
 		public void Update()
 		{

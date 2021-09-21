@@ -23,6 +23,9 @@ namespace VehicleFramework
         {
             // load any vehicles from save now.
 
+            // prepare any HUDs
+            HUDBuilder.BuildNormalHUD();
+
             return;
         }
 

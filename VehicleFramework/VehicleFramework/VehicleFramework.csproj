@@ -92,6 +92,7 @@
     <Compile Include="Components\ControlPanelButton.cs" />
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
+    <Compile Include="HUDBuilder.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\ItemsContainerPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Components\InnateStorageContainer.cs" />
     <Compile Include="Components\ModularStorageInput.cs" />
     <Compile Include="ModuleBuilder.cs" />
-    <Compile Include="Components\VehicleHUD.cs" />
+    <Compile Include="Components\uGUI_VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
     <Compile Include="ModVehicle.cs" />
     <Compile Include="Components\PilotingTrigger.cs" />
