@@ -15,6 +15,7 @@ namespace Atrama
     public class Atrama : ModVehicle
     {
         public static GameObject model = null;
+        public static GameObject controlPanel = null;
         public static Atlas.Sprite pingSprite = null;
         public static void GetAssets()
         {
@@ -39,6 +40,10 @@ namespace Atrama
                 else if (obj.ToString().Contains("atrama"))
                 {
                     model = (GameObject)obj;
+                }
+                else if (obj.ToString().Contains("Control-Panel"))
+                {
+                    controlPanel = (GameObject)obj;
                 }
                 else
                 {
@@ -113,7 +118,7 @@ namespace Atrama
                 return transform.Find("ModulesRootObject").gameObject;
             }
         }
-        public override List<GameObject> WalkableInteriors => new List<GameObject>() { model.transform.Find("Main-Body/InteriorTrigger").gameObject };
+        public override List<GameObject> WalkableInteriors => new List<GameObject>() { transform.Find("Main-Body/InteriorTrigger").gameObject };
         public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches
         {
             get
@@ -138,14 +143,14 @@ namespace Atrama
                 leftLight.Light = transform.Find("LightsParent/LeftLight").gameObject;
                 leftLight.Angle = 45;
                 leftLight.Color = Color.white;
-                leftLight.Strength = 150;
+                leftLight.Strength = 60;
                 list.Add(leftLight);
 
                 VehicleFramework.VehicleParts.VehicleLight rightLight = new VehicleFramework.VehicleParts.VehicleLight();
                 rightLight.Light = transform.Find("LightsParent/RightLight").gameObject;
                 rightLight.Angle = 45;
                 rightLight.Color = Color.white;
-                rightLight.Strength = 150;
+                rightLight.Strength = 60;
                 list.Add(rightLight);
 
                 return list;
@@ -226,6 +231,14 @@ namespace Atrama
                 {
                     transform.Find("Main-Body").gameObject.GetComponent<MeshRenderer>()
                 };
+            }
+        }
+        public override GameObject ControlPanel
+        {
+            get
+            {
+                controlPanel.transform.SetParent(transform);
+                return controlPanel;
             }
         }
     }

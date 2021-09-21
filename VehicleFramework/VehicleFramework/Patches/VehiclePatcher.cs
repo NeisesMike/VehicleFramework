@@ -273,5 +273,21 @@ namespace VehicleFramework
             }
         }
         */
+
+
+        [HarmonyPostfix]
+        [HarmonyPatch("IsPowered")]
+        public static void IsPoweredPostfix(Vehicle __instance, ref EnergyInterface ___energyInterface, ref bool __result)
+        {
+            ModVehicle mv = __instance as ModVehicle;
+            if (mv == null)
+            {
+                return;
+            }
+            if(mv.IsDisengaged)
+            {
+                __result = false;
+            }
+        }
     }
 }

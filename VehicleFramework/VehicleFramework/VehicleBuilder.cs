@@ -123,7 +123,6 @@ namespace VehicleFramework
                 inp.openSound = storageOpenSound;
                 inp.closeSound = storageCloseSound;
             }
-
             iter = 0;
             foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
             {
@@ -291,43 +290,15 @@ namespace VehicleFramework
             mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
 
 
-            // Add the marmoset shader to all renderers
-            Shader marmosetShader = Shader.Find("MarmosetUBER");
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                foreach (Material mat in renderer.materials)
-                {
-                    // skip some materials
-                    if (renderer.gameObject.name.Contains("Light"))
-                    {
-                        continue;
-                    }
+            // Configure the Control Panel
+            mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
+            mv.controlPanelLogic.mv = mv;
+            mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
+            mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
+            GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
 
-                    mat.shader = marmosetShader;
 
-                    /*
-                    // add emission to certain materials
-                    // in order to light the interior
-                    if (
-                        (renderer.gameObject.name == "Main-Body" && mat.name.Contains("Material"))
-                        || renderer.gameObject.name == "Mechanical-Panel"
-                        || renderer.gameObject.name == "AtramaPilotChair"
-                        || renderer.gameObject.name == "Hatch"
-                        )
-                    {
-                        mv.interiorRenderers.Add(renderer);
 
-                        // TODO move this to OnPowered and OnUnpowered
-                        mat.EnableKeyword("MARMO_EMISSION");
-                        mat.SetFloat("_EmissionLM", 0.25f);
-                        mat.SetFloat("_EmissionLMNight", 0.25f);
-                        mat.SetFloat("_GlowStrength", 0f);
-                        mat.SetFloat("_GlowStrengthNight", 0f);
-                    }
-                    */
-
-                }
-            }
 
 
 
@@ -430,6 +401,24 @@ namespace VehicleFramework
             ping.origin = Helpers.FindChild(prefab, "PingOrigin").transform;
             */
             #endregion
+
+
+
+            // Add the marmoset shader to all renderers
+            Shader marmosetShader = Shader.Find("MarmosetUBER");
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    // skip some materials
+                    if (renderer.gameObject.name.Contains("Light"))
+                    {
+                        continue;
+                    }
+                    mat.shader = marmosetShader;
+                }
+            }
+
 
 
 

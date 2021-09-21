@@ -8,7 +8,7 @@ using VehicleFramework;
 
 namespace Atrama
 {
-    class temp : VehicleFramework.ModVehicle
+    class Temp : VehicleFramework.ModVehicle
     {
         public override GameObject VehicleModel => throw new NotImplementedException();
 
@@ -29,5 +29,7 @@ namespace Atrama
         public override List<GameObject> WalkableInteriors => throw new NotImplementedException();
 
         public override List<Renderer> InteriorRenderers => throw new NotImplementedException();
+
+        public override GameObject ControlPanel => throw new NotImplementedException();
     }
 }

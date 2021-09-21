@@ -27,9 +27,13 @@ namespace VehicleFramework
                 {
                     float pitch = transform.rotation.eulerAngles.x;
                     float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
+                    float roll = transform.rotation.eulerAngles.z;
+                    float rollDelta = roll >= 180 ? 360 - roll : roll;
                     BroadcastMessage("OnAutoLevel");
                     autoLeveling = true;
-                    smoothTime = 2f * pitchDelta / 90f;
+                    var smoothTime1 = 2f * pitchDelta / 90f;
+                    var smoothTime2 = 2f * rollDelta / 90f;
+                    smoothTime = Mathf.Max(smoothTime1, smoothTime2);
                 }
                 else
                 {

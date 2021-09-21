@@ -11,6 +11,7 @@ namespace VehicleFramework
 	{
 		public ModVehicle mv;
         private bool isLightsOn = true;
+        private bool isInteriorLightsOn = true;
         private bool wasPowered = false;
         
         public VehicleLights(ModVehicle inputMV)
@@ -22,31 +23,51 @@ namespace VehicleFramework
         {
             if (mv.IsPlayerPiloting() && Player.main.GetRightHandDown() && !Player.main.GetPDA().isInUse)
             {
-                toggleLights();
+                ToggleLights();
             }
             if(isLightsOn)
             {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.01f * Time.deltaTime);
+                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.001f * Time.deltaTime);
             }
         }
-
-        public void toggleLights()
+        public void EnableLights()
         {
-            isLightsOn = !isLightsOn;
-            if (isLightsOn)
+            SetFloodLampsActive(true);
+            Utils.PlayEnvSound(mv.lightsOnSound, mv.lightsOnSound.gameObject.transform.position, 20f);
+        }
+        public void DisableLights()
+        {
+            SetFloodLampsActive(false);
+            Utils.PlayEnvSound(mv.lightsOffSound, mv.lightsOffSound.gameObject.transform.position, 20f);
+        }
+
+        public void ToggleLights()
+        {
+            if (mv.IsPowered())
             {
-                setFloodLampsActive(true);
-                if (mv.IsPowered())
+                isLightsOn = !isLightsOn;
+                if (isLightsOn)
                 {
-                    Utils.PlayEnvSound(mv.lightsOnSound, mv.lightsOnSound.gameObject.transform.position, 20f);
+                    EnableLights();
+                }
+                else
+                {
+                    DisableLights();
                 }
             }
-            else
+        }
+        public void ToggleInteriorLighting()
+        {
+            if (mv.IsPowered())
             {
-                setFloodLampsActive(false);
-                if (mv.IsPowered())
+                isInteriorLightsOn = !isInteriorLightsOn;
+                if (isInteriorLightsOn)
                 {
-                    Utils.PlayEnvSound(mv.lightsOffSound, mv.lightsOffSound.gameObject.transform.position, 20f);
+                    DisableInteriorLighting();
+                }
+                else
+                {
+                    EnableInteriorLighting();
                 }
             }
         }
@@ -57,7 +78,7 @@ namespace VehicleFramework
                 // if newly powered
                 if (!wasPowered)
                 {
-                    setFloodLampsActive(true);
+                    SetFloodLampsActive(true);
                     EnableInteriorLighting();
                 }
                 wasPowered = true;
@@ -67,27 +88,27 @@ namespace VehicleFramework
                 // if newly unpowered
                 if (wasPowered)
                 {
-                    setFloodLampsActive(false);
+                    SetFloodLampsActive(false);
                     DisableInteriorLighting();
                 }
                 wasPowered = false;
             }
         }
 
-        public void setVolumetricLightsActive(bool enabled)
+        public void SetVolumetricLightsActive(bool enabled)
         {
             foreach (GameObject light in mv.volumetricLights)
             {
                 light.SetActive(!mv.IsPlayerInside() && enabled && mv.IsPowered());
             }
         }
-        public void setFloodLampsActive(bool enabled)
+        public void SetFloodLampsActive(bool enabled)
         {
             foreach (GameObject light in mv.lights)
             {
                 light.SetActive(enabled && mv.IsPowered());
             }
-            setVolumetricLightsActive(enabled);
+            SetVolumetricLightsActive(enabled);
             /* Beware of infinite loop
             if (enabled)
             {
@@ -141,12 +162,12 @@ namespace VehicleFramework
 
         void VehicleComponent.OnPlayerEntry()
         {
-            setVolumetricLightsActive(false);
+            SetVolumetricLightsActive(false);
         }
 
         void VehicleComponent.OnPlayerExit()
         {
-            setVolumetricLightsActive(true);
+            SetVolumetricLightsActive(true);
         }
 
         void VehicleComponent.OnPilotBegin()
@@ -159,13 +180,13 @@ namespace VehicleFramework
 
         void VehicleComponent.OnPowerUp()
         {
-            setFloodLampsActive(true);
+            SetFloodLampsActive(true);
             EnableInteriorLighting();
         }
 
         void VehicleComponent.OnPowerDown()
         {
-            setFloodLampsActive(false);
+            SetFloodLampsActive(false);
             DisableInteriorLighting();
         }
 

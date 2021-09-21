@@ -36,7 +36,8 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleLight> Lights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
         public abstract List<Renderer> InteriorRenderers { get; }
-
+        public abstract GameObject ControlPanel { get; }
+        public ControlPanel controlPanelLogic;
 
 
         public FMOD_StudioEventEmitter lightsOnSound = null;
@@ -54,8 +55,14 @@ namespace VehicleFramework
         public int numEfficiencyModules = 0;
         private int numArmorModules = 0;
 
+        // if the player toggles the power off,
+        // the vehicle is called "disgengaged,"
+        // because it is unusable yet the batteries are not empty
+        public bool IsDisengaged = false;
+
+        public VehicleLights vLights;
+
         // later
-        public virtual List<GameObject> ControlPanels => null;
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;
 
@@ -67,8 +74,8 @@ namespace VehicleFramework
         {
             base.Awake();
 
-            var light = gameObject.EnsureComponent<VehicleLights>();
-            light.mv = this;
+            vLights = gameObject.EnsureComponent<VehicleLights>();
+            vLights.mv = this;
 
             var gauge = gameObject.EnsureComponent<FuelGauge>();
             gauge.mv = this;
@@ -76,13 +83,9 @@ namespace VehicleFramework
             var pilot = gameObject.EnsureComponent<AutoPilot>();
             pilot.mv = this;
 
-            /*
-            upgradesInput.equipment = new Equipment(gameObject, modulesRoot.transform);
-            upgradesInput.equipment.SetLabel("VehicleUpgradesStorageLabel");
-            */
+            controlPanelLogic.Init();
 
             base.LazyInitialize();
-
         }
 
         public override void Start()
@@ -409,7 +412,15 @@ namespace VehicleFramework
             energyInterface.ConsumeEnergy(desired);
         }
 
-
+        public void TogglePower()
+        {
+            IsDisengaged = !IsDisengaged;
+            if(!IsDisengaged)
+            {
+                gameObject.GetComponent<VehicleLights>().EnableInteriorLighting();
+                gameObject.GetComponent<VehicleLights>().EnableLights();
+            }
+        }
 
     }
 }
