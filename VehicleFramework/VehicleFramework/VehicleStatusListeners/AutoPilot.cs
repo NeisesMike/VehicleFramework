@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class AutoPilot : MonoBehaviour, VehicleComponent
+    public class AutoPilot : MonoBehaviour, IVehicleStatusListener
 	{
 		public ModVehicle mv;
 
@@ -29,7 +29,7 @@ namespace VehicleFramework
                     float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
                     float roll = transform.rotation.eulerAngles.z;
                     float rollDelta = roll >= 180 ? 360 - roll : roll;
-                    BroadcastMessage("OnAutoLevel");
+                    mv.NotifyStatus(VehicleStatus.OnAutoLevel);
                     autoLeveling = true;
                     var smoothTime1 = 2f * pitchDelta / 90f;
                     var smoothTime2 = 2f * rollDelta / 90f;
@@ -46,7 +46,7 @@ namespace VehicleFramework
             {
                 // consume energy as if we're firing thrusters along all 3 axes at max magnitude
                 float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(3f * upgradeModifier * Time.deltaTime);
+                mv.GetComponent<EnergyInterface>().ConsumeEnergy(2.5f * 3f * upgradeModifier * Time.deltaTime);
             }
 
         }
@@ -87,56 +87,64 @@ namespace VehicleFramework
             }
         }
 
-        void VehicleComponent.OnAutoLevel()
+        void IVehicleStatusListener.OnAutoLevel()
         {
         }
 
-        void VehicleComponent.OnAutoPilotBegin()
+        void IVehicleStatusListener.OnAutoPilotBegin()
         {
         }
 
-        void VehicleComponent.OnAutoPilotEnd()
+        void IVehicleStatusListener.OnAutoPilotEnd()
         {
         }
 
-        void VehicleComponent.OnLightsOff()
+        void IVehicleStatusListener.OnPilotBegin()
         {
         }
 
-        void VehicleComponent.OnLightsOn()
+        void IVehicleStatusListener.OnPilotEnd()
         {
         }
 
-        void VehicleComponent.OnPilotBegin()
+        void IVehicleStatusListener.OnPlayerEntry()
         {
         }
 
-        void VehicleComponent.OnPilotEnd()
+        void IVehicleStatusListener.OnPlayerExit()
         {
         }
 
-        void VehicleComponent.OnPlayerEntry()
-        {
-        }
-
-        void VehicleComponent.OnPlayerExit()
-        {
-        }
-
-        void VehicleComponent.OnPowerDown()
+        void IVehicleStatusListener.OnPowerDown()
         {
             isDead = true;
             autoLeveling = false;
         }
 
-        void VehicleComponent.OnPowerUp()
+        void IVehicleStatusListener.OnPowerUp()
         {
             isDead = false;
         }
 
-        void VehicleComponent.OnTakeDamage()
+        void IVehicleStatusListener.OnTakeDamage()
         {
             // if current health total is too low, disable auto pilot
+        }
+
+        void IVehicleStatusListener.OnExteriorLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnExteriorLightsOff()
+        {
+        }
+
+        void IVehicleStatusListener.OnInteriorLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnInteriorLightsOff()
+        {
         }
     }
 }

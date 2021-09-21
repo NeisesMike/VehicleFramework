@@ -97,11 +97,11 @@
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="VehicleCraftable.cs" />
-    <Compile Include="VehicleComponents\AutoPilot.cs" />
+    <Compile Include="VehicleStatusListeners\AutoPilot.cs" />
     <Compile Include="Components\VehicleBatteryInput.cs" />
     <Compile Include="Components\VehicleEngine.cs" />
-    <Compile Include="VehicleComponents\FuelGauge.cs" />
-    <Compile Include="VehicleComponents\VehicleLights.cs" />
+    <Compile Include="Components\FuelGauge.cs" />
+    <Compile Include="VehicleStatusListeners\VehicleLights.cs" />
     <Compile Include="Components\VehicleHatch.cs" />
     <Compile Include="Components\InnateStorageContainer.cs" />
     <Compile Include="Components\ModularStorageInput.cs" />
@@ -123,7 +123,7 @@
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VehicleBuilder.cs" />
-    <Compile Include="VehicleComponent.cs" />
+    <Compile Include="IVehicleStatusListener.cs" />
     <Compile Include="VehicleManager.cs" />
     <Compile Include="VehicleParts.cs" />
   </ItemGroup>

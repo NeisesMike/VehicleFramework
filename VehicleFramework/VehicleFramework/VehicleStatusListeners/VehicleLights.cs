@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class VehicleLights : MonoBehaviour, VehicleComponent
+    public class VehicleLights : MonoBehaviour, IVehicleStatusListener
 	{
 		public ModVehicle mv;
         private bool isLightsOn = true;
@@ -78,7 +78,7 @@ namespace VehicleFramework
                 // if newly powered
                 if (!wasPowered)
                 {
-                    SetFloodLampsActive(true);
+                    EnableExteriorLighting();
                     EnableInteriorLighting();
                 }
                 wasPowered = true;
@@ -88,7 +88,7 @@ namespace VehicleFramework
                 // if newly unpowered
                 if (wasPowered)
                 {
-                    SetFloodLampsActive(false);
+                    DisableExteriorLighting();
                     DisableInteriorLighting();
                 }
                 wasPowered = false;
@@ -109,22 +109,14 @@ namespace VehicleFramework
                 light.SetActive(enabled && mv.IsPowered());
             }
             SetVolumetricLightsActive(enabled);
-            /* Beware of infinite loop
             if (enabled)
             {
-                foreach (var component in GetComponentsInChildren<VehicleComponent>())
-                {
-                    component.OnPowerUp();
-                }
+                mv.NotifyStatus(VehicleStatus.OnExteriorLightsOn);
             }
             else
             {
-                foreach (var component in GetComponentsInChildren<VehicleComponent>())
-                {
-                    component.OnPowerDown();
-                }
+                mv.NotifyStatus(VehicleStatus.OnExteriorLightsOff);
             }
-            */
         }
         public void EnableInteriorLighting()
         {
@@ -143,6 +135,7 @@ namespace VehicleFramework
                     }
                 }
             }
+            mv.NotifyStatus(VehicleStatus.OnInteriorLightsOn);
         }
         public void DisableInteriorLighting()
         {
@@ -158,64 +151,72 @@ namespace VehicleFramework
 
                 }
             }
+            mv.NotifyStatus(VehicleStatus.OnInteriorLightsOff);
         }
 
-        void VehicleComponent.OnPlayerEntry()
+        void IVehicleStatusListener.OnPlayerEntry()
         {
             SetVolumetricLightsActive(false);
         }
 
-        void VehicleComponent.OnPlayerExit()
+        void IVehicleStatusListener.OnPlayerExit()
         {
             SetVolumetricLightsActive(true);
         }
 
-        void VehicleComponent.OnPilotBegin()
+        void IVehicleStatusListener.OnPilotBegin()
         {
         }
 
-        void VehicleComponent.OnPilotEnd()
+        void IVehicleStatusListener.OnPilotEnd()
         {
         }
 
-        void VehicleComponent.OnPowerUp()
+        void IVehicleStatusListener.OnPowerUp()
         {
-            SetFloodLampsActive(true);
+            EnableExteriorLighting();
             EnableInteriorLighting();
         }
 
-        void VehicleComponent.OnPowerDown()
+        void IVehicleStatusListener.OnPowerDown()
         {
-            SetFloodLampsActive(false);
+            DisableExteriorLighting();
             DisableInteriorLighting();
         }
 
-        void VehicleComponent.OnLightsOn()
-        {
-        }
-
-        void VehicleComponent.OnLightsOff()
-        {
-        }
-
-        void VehicleComponent.OnTakeDamage()
+        void IVehicleStatusListener.OnTakeDamage()
         {
             throw new NotImplementedException();
         }
 
-        void VehicleComponent.OnAutoLevel()
+        void IVehicleStatusListener.OnAutoLevel()
+        {
+        }
+
+        void IVehicleStatusListener.OnAutoPilotBegin()
         {
             throw new NotImplementedException();
         }
 
-        void VehicleComponent.OnAutoPilotBegin()
+        void IVehicleStatusListener.OnAutoPilotEnd()
         {
             throw new NotImplementedException();
         }
 
-        void VehicleComponent.OnAutoPilotEnd()
+        void IVehicleStatusListener.OnExteriorLightsOn()
         {
-            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnExteriorLightsOff()
+        {
+        }
+
+        void IVehicleStatusListener.OnInteriorLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnInteriorLightsOff()
+        {
         }
     }
 }

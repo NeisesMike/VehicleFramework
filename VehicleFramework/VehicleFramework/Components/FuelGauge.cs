@@ -17,10 +17,7 @@ namespace VehicleFramework
             {
                 if (!wasPowered)
                 {
-                    foreach (var component in GetComponentsInChildren<VehicleComponent>())
-                    {
-                        component.OnPowerUp();
-                    }
+                    mv.NotifyStatus(VehicleStatus.OnPowerUp);
                 }
                 wasPowered = true;
             }
@@ -28,10 +25,7 @@ namespace VehicleFramework
             {
                 if (wasPowered)
                 {
-                    foreach (var component in GetComponentsInChildren<VehicleComponent>())
-                    {
-                        component.OnPowerDown();
-                    }
+                    mv.NotifyStatus(VehicleStatus.OnPowerDown);
                 }
                 wasPowered = false;
             }

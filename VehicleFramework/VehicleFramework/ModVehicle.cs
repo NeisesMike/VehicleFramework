@@ -126,7 +126,7 @@ namespace VehicleFramework
         {
             base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
-            BroadcastMessage("OnPilotBegin");
+            NotifyStatus(VehicleStatus.OnPilotBegin);
         }
 
         // called by Player.ExitLockedMode()
@@ -135,7 +135,7 @@ namespace VehicleFramework
         {
             isPilotSeated = false;
             Player.main.transform.position = transform.Find("Hatch").position - transform.Find("Hatch").up;
-            BroadcastMessage("OnPilotEnd");
+            NotifyStatus(VehicleStatus.OnPilotEnd);
         }
 
         public void PlayerEntry()
@@ -143,7 +143,6 @@ namespace VehicleFramework
             isPlayerInside = true;
             Player.main.currentMountedVehicle = this;
             Player.main.transform.parent = transform;
-
 
             Player.main.playerController.activeController.SetUnderWater(false);
             Player.main.isUnderwater.Update(false);
@@ -153,14 +152,13 @@ namespace VehicleFramework
             Player.main.SetScubaMaskActive(false);
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
-
-            BroadcastMessage("OnPlayerEntry");
+            NotifyStatus(VehicleStatus.OnPlayerEntry);
         }
         public void PlayerExit()
         {
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
-            BroadcastMessage("OnPlayerExit");
+            NotifyStatus(VehicleStatus.OnPlayerExit);
         }
 
         public override void SetPlayerInside(bool inside)
@@ -421,6 +419,62 @@ namespace VehicleFramework
                 gameObject.GetComponent<VehicleLights>().EnableExteriorLighting();
             }
         }
+
+        public void NotifyStatus(VehicleStatus vs)
+        {
+            foreach (var component in GetComponentsInChildren<IVehicleStatusListener>())
+            {
+                switch (vs)
+                {
+                    case VehicleStatus.OnPlayerEntry:
+                        component.OnPlayerEntry();
+                        break;
+                    case VehicleStatus.OnPlayerExit:
+                        component.OnPlayerExit();
+                        break;
+                    case VehicleStatus.OnPilotBegin:
+                        component.OnPilotBegin();
+                        break;
+                    case VehicleStatus.OnPilotEnd:
+                        component.OnPilotEnd();
+                        break;
+                    case VehicleStatus.OnPowerUp:
+                        component.OnPowerUp();
+                        break;
+                    case VehicleStatus.OnPowerDown:
+                        component.OnPowerDown();
+                        break;
+                    case VehicleStatus.OnExteriorLightsOn:
+                        component.OnExteriorLightsOn();
+                        break;
+                    case VehicleStatus.OnExteriorLightsOff:
+                        component.OnExteriorLightsOff();
+                        break;
+                    case VehicleStatus.OnInteriorLightsOn:
+                        component.OnInteriorLightsOn();
+                        break;
+                    case VehicleStatus.OnInteriorLightsOff:
+                        component.OnInteriorLightsOff();
+                        break;
+                    case VehicleStatus.OnTakeDamage:
+                        component.OnTakeDamage();
+                        break;
+                    case VehicleStatus.OnAutoLevel:
+                        component.OnAutoLevel();
+                        break;
+                    case VehicleStatus.OnAutoPilotBegin:
+                        component.OnAutoPilotBegin();
+                        break;
+                    case VehicleStatus.OnAutoPilotEnd:
+                        component.OnAutoPilotEnd();
+                        break;
+                    default:
+                        Logger.Log("Error: tried to notify using an invalid status");
+                        break;
+                }
+            }
+        }
+
 
     }
 }
