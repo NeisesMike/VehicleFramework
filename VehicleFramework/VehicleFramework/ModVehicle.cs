@@ -107,6 +107,20 @@ namespace VehicleFramework
             base.FixedUpdate();
         }
 
+        public override void Update()
+        {
+            base.Update();
+            if(liveMixin.health <= 0)
+            {
+                if(IsPlayerInside())
+                {
+                    PlayerExit();
+                }
+                GameObject.Destroy(gameObject);
+                Logger.Log("Atrama Destroyed");
+            }
+        }
+
         public bool IsPlayerInside()
         {
             // this one is correct ?
@@ -125,6 +139,7 @@ namespace VehicleFramework
         {
             base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
+            uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
             NotifyStatus(VehicleStatus.OnPilotBegin);
         }
 
@@ -134,6 +149,7 @@ namespace VehicleFramework
         {
             isPilotSeated = false;
             Player.main.transform.position = transform.Find("Hatch").position - transform.Find("Hatch").up;
+            uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
             NotifyStatus(VehicleStatus.OnPilotEnd);
         }
 
@@ -141,7 +157,7 @@ namespace VehicleFramework
         {
             isPlayerInside = true;
             Player.main.currentMountedVehicle = this;
-            Player.main.transform.parent = transform;
+            Player.main.transform.SetParent(transform);
 
             Player.main.playerController.activeController.SetUnderWater(false);
             Player.main.isUnderwater.Update(false);
@@ -151,12 +167,15 @@ namespace VehicleFramework
             Player.main.SetScubaMaskActive(false);
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
+            uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
+
             NotifyStatus(VehicleStatus.OnPlayerEntry);
         }
         public void PlayerExit()
         {
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
+            Player.main.transform.SetParent(null);
             NotifyStatus(VehicleStatus.OnPlayerExit);
         }
 

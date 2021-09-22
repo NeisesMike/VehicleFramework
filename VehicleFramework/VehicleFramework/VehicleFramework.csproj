@@ -93,13 +93,12 @@
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
     <Compile Include="HUDBuilder.cs" />
-    <Compile Include="Patches\ApplicationPatcher.cs" />
+    <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\ItemsContainerPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="VehicleCraftable.cs" />
-    <Compile Include="VehicleInitializer.cs" />
     <Compile Include="VehicleStatusListeners\AutoPilot.cs" />
     <Compile Include="Components\VehicleBatteryInput.cs" />
     <Compile Include="Components\VehicleEngine.cs" />
