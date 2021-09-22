@@ -19,7 +19,7 @@ using SMLHelper.V2.Json.Attributes;
 using upgrades = System.Collections.Generic.Dictionary<string, TechType>;
 using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<TechType>>>;
 using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<TechType>>>;
-using batteries = System.Collections.Generic.List<TechType>;
+using batteries = System.Collections.Generic.List<System.Tuple<TechType, float>>;
 
 namespace VehicleFramework
 {
@@ -110,7 +110,7 @@ namespace VehicleFramework
         public List<Tuple<Vector3, modularStorages>> ModularStorages { get; set; }
         
         // the following type assignment is hilarious, and I'm keeping it
-        public innateStorages Batteries { get; set; }
+        public List<Tuple<Vector3, batteries>> Batteries { get; set; }
 
         // todo: maybe this?
         // save a few lines in the output json?

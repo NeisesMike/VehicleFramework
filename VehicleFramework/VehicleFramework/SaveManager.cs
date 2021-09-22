@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using batteries = System.Collections.Generic.List<System.Tuple<TechType, float>>;
 
 namespace VehicleFramework
 {
@@ -213,9 +214,9 @@ namespace VehicleFramework
                 }
             }
         }
-        internal static List<Tuple<Vector3, List<TechType>>> SerializeBatteries()
+        internal static List<Tuple<Vector3, batteries>> SerializeBatteries()
         {
-            List<Tuple<Vector3, List<TechType>>> allVehiclesBatteries = new List<Tuple<Vector3, List<TechType>>>();
+            List<Tuple<Vector3, batteries>> allVehiclesBatteries = new List<Tuple<Vector3, batteries>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
                 if (mv == null)
@@ -227,21 +228,21 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-                List<TechType> thisVehiclesBatteries = new List<TechType>();
+                List<Tuple<TechType, float>> thisVehiclesBatteries = new List<Tuple<TechType, float>>();
                 foreach (EnergyMixin batt in mv.energyInterface.sources)
                 {
                     if (batt.battery != null)
                     {
-                        thisVehiclesBatteries.Add(batt.batterySlot.storedItem.item.GetTechType());
+                        thisVehiclesBatteries.Add(new Tuple<TechType,float>(batt.batterySlot.storedItem.item.GetTechType(), batt.battery.charge));
                     }
                 }
-                allVehiclesBatteries.Add(new Tuple<Vector3,List<TechType>>(mv.transform.position, thisVehiclesBatteries));
+                allVehiclesBatteries.Add(new Tuple<Vector3,batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
         }
         internal static void DeserializeBatteries(SaveData data)
         {
-            List<Tuple<Vector3, List<TechType>>> allVehiclesBatteries = data.Batteries;
+            List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.Batteries;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
                 if (mv == null)
@@ -263,7 +264,8 @@ namespace VehicleFramework
                     {
                         foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
                         {
-                            GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(battery.value, true));
+                            GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(battery.value.Item1, true));
+                            thisItem.GetComponent<Battery>().charge = battery.value.Item2;
                             thisItem.transform.SetParent(mv.StorageRootObject.transform);
                             mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
                             mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
@@ -273,10 +275,6 @@ namespace VehicleFramework
                 }
             }
         }
-
-
-
-
         internal static List<Tuple<Vector3, bool>> SerializePlayerInside()
         {
             List<Tuple<Vector3, bool>> allVehiclesIsPlayerInside = new List<Tuple<Vector3, bool>>();
