@@ -26,14 +26,7 @@ namespace VehicleFramework
         // Update is called once per frame
         public void FixedUpdate()
         {
-            /* We should have gravity from WorldForces...
-            if (mv.transform.position.y >= Ocean.main.GetOceanLevel())
-            {
-                //atramaVehicle.transform.position -= (atramaVehicle.transform.position.y + 3) * Vector3.up;
-                rb.AddForce(new Vector3(0, -9.8f * rb.mass, 0), ForceMode.Acceleration);
-            }
-            */
-            if (mv.CanPilot())
+            if (mv.CanPilot() && mv.transform.position.y < 0)
             {
                 if (mv.IsPlayerPiloting())
                 {
