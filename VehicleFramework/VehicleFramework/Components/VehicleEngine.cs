@@ -26,13 +26,14 @@ namespace VehicleFramework
         // Update is called once per frame
         public void FixedUpdate()
         {
+            /* We should have gravity from WorldForces...
             if (mv.transform.position.y >= Ocean.main.GetOceanLevel())
             {
                 //atramaVehicle.transform.position -= (atramaVehicle.transform.position.y + 3) * Vector3.up;
                 rb.AddForce(new Vector3(0, -9.8f * rb.mass, 0), ForceMode.Acceleration);
             }
-
-            if(mv.IsPowered())
+            */
+            if (mv.CanPilot())
             {
                 if (mv.IsPlayerPiloting())
                 {
@@ -77,7 +78,7 @@ namespace VehicleFramework
                         thisTopSpeed = 5f;
                         break;
                 }
-                return (thisTopSpeed + 2) * 10;
+                return thisTopSpeed;
             }
 
             // Control velocity
@@ -95,12 +96,27 @@ namespace VehicleFramework
             rb.AddForce(mv.transform.right *   xMove * getForce(forceDirection.strafe) * Time.deltaTime, ForceMode.VelocityChange);
             rb.AddForce(mv.transform.up *      yMove * getForce(forceDirection.updown) * Time.deltaTime, ForceMode.VelocityChange);
 
+            // Some rotation already happens in Vehicle.Update
+            // This is for adjusting that, if necessary
             // Control rotation
+            float pitchFactor = 0.4f;
+            float yawFactor = 0.25f;
             Vector2 mouseDir = GameInput.GetLookDelta();
             float xRot = mouseDir.x;
             float yRot = mouseDir.y;
-            rb.AddTorque(mv.transform.up    * xRot *  5 * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddTorque(mv.transform.right * yRot * -5 * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddTorque(mv.transform.up    * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+
+
+            /* TODO steering wheel animation stuff
+            base.steeringWheelYaw = Mathf.Lerp(base.steeringWheelYaw, 0f, Time.deltaTime);
+            base.steeringWheelPitch = Mathf.Lerp(base.steeringWheelPitch, 0f, Time.deltaTime);
+            if (base.mainAnimator)
+            {
+                base.mainAnimator.SetFloat("view_yaw", base.steeringWheelYaw * 70f);
+                base.mainAnimator.SetFloat("view_pitch", base.steeringWheelPitch * 45f);
+            }
+            */
 
             return;
         }

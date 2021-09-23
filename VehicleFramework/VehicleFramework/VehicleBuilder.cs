@@ -40,6 +40,8 @@ namespace VehicleFramework
 
     public static class VehicleBuilder
     {
+        public static GameObject moduleBuilder;
+
         private static int numVehicleTypes = 0;
         public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
@@ -243,9 +245,9 @@ namespace VehicleFramework
             var liveMixin = mv.gameObject.EnsureComponent<LiveMixin>();
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
             lmData.canResurrect = true;
-            lmData.broadcastKillOnDeath = false;
-            lmData.destroyOnDeath = false;
-            lmData.explodeOnDestroy = false;
+            lmData.broadcastKillOnDeath = true;
+            lmData.destroyOnDeath = true;
+            lmData.explodeOnDestroy = true;
             lmData.invincibleInCreative = true;
             lmData.weldable = false;
             lmData.minDamageForSound = 20f;
@@ -288,6 +290,7 @@ namespace VehicleFramework
             mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
             //mv.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, mv.gameObject);
             mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
+            mv.worldForces.useRigidbody = mv.useRigidbody;
 
 
             // Configure the Control Panel

@@ -104,21 +104,31 @@ namespace VehicleFramework
 
         public override void FixedUpdate()
         {
-            base.FixedUpdate();
+            if (stabilizeRoll)
+            {
+                StabilizeRoll();
+            }
+            prevVelocity = useRigidbody.velocity;
         }
 
         public override void Update()
         {
             base.Update();
-            if(liveMixin.health <= 0)
+        }
+
+        public new void OnKill()
+        {
+            if (IsPlayerInside())
             {
-                if(IsPlayerInside())
-                {
-                    PlayerExit();
-                }
-                GameObject.Destroy(gameObject);
-                Logger.Log("Atrama Destroyed");
+                PlayerExit();
             }
+            if (destructionEffect)
+            {
+                GameObject gameObject = Instantiate<GameObject>(destructionEffect);
+                gameObject.transform.position = transform.position;
+                gameObject.transform.rotation = transform.rotation;
+            }
+            Destroy(gameObject);
         }
 
         public bool IsPlayerInside()
@@ -139,7 +149,7 @@ namespace VehicleFramework
         {
             base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
-            uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
+            //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
             NotifyStatus(VehicleStatus.OnPilotBegin);
         }
 
@@ -149,7 +159,7 @@ namespace VehicleFramework
         {
             isPilotSeated = false;
             Player.main.transform.position = transform.Find("Hatch").position - transform.Find("Hatch").up;
-            uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
+            //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
             NotifyStatus(VehicleStatus.OnPilotEnd);
         }
 
@@ -167,7 +177,7 @@ namespace VehicleFramework
             Player.main.SetScubaMaskActive(false);
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
-            uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
+            //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
 
             NotifyStatus(VehicleStatus.OnPlayerEntry);
         }
@@ -196,7 +206,7 @@ namespace VehicleFramework
         }
         public override bool CanPilot()
         {
-            return !FPSInputModule.current.lockMovement && base.IsPowered();
+            return !FPSInputModule.current.lockMovement && IsPowered();
         }
         public override void GetDepth(out int depth, out int crushDepth)
         {
@@ -329,7 +339,6 @@ namespace VehicleFramework
         public override void OnCollisionEnter(Collision col)
         {
             base.OnCollisionEnter(col);
-            Logger.Output(col.transform.name);
         }
         public override void OnPilotModeBegin()
         {
