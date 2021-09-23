@@ -62,6 +62,7 @@ namespace VehicleFramework
         public bool IsDisengaged = false;
 
         public VehicleLights vLights;
+        public VehicleEngine engine;
 
         // later
         public virtual List<GameObject> Arms => null;

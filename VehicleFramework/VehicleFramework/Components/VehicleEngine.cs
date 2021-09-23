@@ -114,7 +114,7 @@ namespace VehicleFramework
             return;
         }
 
-        private void DrainPower(Vector3 moveDirection)
+        public void DrainPower(Vector3 moveDirection)
         {
             /* Rationale for these values
              * Seamoth spends this on Update

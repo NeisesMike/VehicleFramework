@@ -275,9 +275,9 @@ namespace VehicleFramework
             #endregion
             #region engine
             // Add the engine (physics control)
-            var ve = mv.gameObject.EnsureComponent<VehicleEngine>();
-            ve.mv = mv;
-            ve.rb = rb;
+            mv.engine = mv.gameObject.EnsureComponent<VehicleEngine>();
+            mv.engine.mv = mv;
+            mv.engine.rb = rb;
             #endregion
             #region world_forces
             mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
