@@ -329,42 +329,6 @@ namespace VehicleFramework
                 //You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.
                 waterClip.gameObject.layer = seamothWCP.gameObject.layer;
             }
-
-
-
-            /*
-            Logger.Log("bing");
-            var wcp = mv.gameObject.EnsureComponent<WaterClipProxy>();
-            wcp.shape = WaterClipProxy.Shape.DistanceField;
-            wcp.immovable = false;
-            Logger.Log("bing");
-            wcp.clipMaterial = seamothWCP.clipMaterial;
-            wcp.distanceField = seamothWCP.distanceField;
-            wcp.distanceFieldTexture = seamothWCP.distanceFieldTexture;
-            wcp.waterSurface = seamothWCP.waterSurface;
-            // TODO: these two Vector3 values will *only* work for the Atrama
-            // Find a way to generalize them
-            wcp.distanceFieldMin = new Vector3(-0.65f, 0.27f, -0.58f);
-            wcp.distanceFieldMax = new Vector3(0.65f, 1.57f, 4.24f);
-            wcp.clipMaterial = seamothWCP.clipMaterial;
-            wcp.gameObject.layer = seamothWCP.gameObject.layer;
-            */
-
-
-            /*
-            var wcomr = wco.EnsureComponent<MeshRenderer>();
-            var seamothWCMR = seamoth.transform.Find("DistanceFieldProxy").GetComponent<MeshRenderer>();
-            wcomr.material = seamothWCMR.material;
-            wcomr.sharedMaterial = seamothWCMR.sharedMaterial;
-            Logger.Log("bing");
-            wcomr.shadowCastingMode = seamothWCMR.shadowCastingMode;
-            wcomr.renderingLayerMask = seamothWCMR.renderingLayerMask;
-            var wcomf = wco.EnsureComponent<MeshFilter>();
-            
-            */
-
-
-
             #endregion
 
 
@@ -411,26 +375,6 @@ namespace VehicleFramework
             skyApplierInterior.renderers = interiorModels.GetComponentsInChildren<Renderer>();
             skyApplierInterior.anchorSky = Skies.BaseInterior;
             skyApplierInterior.SetSky(Skies.BaseInterior);
-
-            //Spawn a seamoth for reference.
-            var seamothRef = CraftData.GetPrefabForTechType(TechType.Seamoth);
-            //Get the seamoth's water clip proxy component. This is what displaces the water.
-            var seamothProxy = seamothRef.GetComponentInChildren<WaterClipProxy>();
-            //Find the parent of all the ship's clip proxys.
-            Transform proxyParent = Helpers.FindChild(prefab, "ClipProxys").transform;
-            //Loop through them all
-            foreach (Transform child in proxyParent)
-            {
-                var waterClip = child.gameObject.AddComponent<WaterClipProxy>();
-                waterClip.shape = WaterClipProxy.Shape.Box;
-                //Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.
-                waterClip.clipMaterial = seamothProxy.clipMaterial;
-                //You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.
-                waterClip.gameObject.layer = seamothProxy.gameObject.layer;
-            }
-            //Unload the prefab to save on resources.
-            Resources.UnloadAsset(seamothRef);
-
             */
             #endregion
 
@@ -442,6 +386,8 @@ namespace VehicleFramework
             {
                 if (renderer.gameObject.name.Contains("Canopy"))
                 {
+                    // TODO: find a way to add transparency
+                    // ZWrite set to 1 (a boolean value) makes the canopy opaque.
                     var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
                     var seamothGlassShader = seamothGlassMaterial.shader;
                     renderer.material = seamothGlassMaterial;
