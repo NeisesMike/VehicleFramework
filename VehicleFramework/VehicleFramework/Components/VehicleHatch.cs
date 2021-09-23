@@ -12,6 +12,7 @@ namespace VehicleFramework
 		public ModVehicle mv;
 		public Transform EntryLocation;
 		public Transform ExitLocation;
+		public Transform SurfaceExitLocation;
 
 		public void OnHandHover(GUIHand hand)
 		{
@@ -28,10 +29,20 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
+			Logger.Log("click");
 			if (mv.IsPlayerInside())
 			{
-				Player.main.transform.position = ExitLocation.position;
+				Logger.Log("gotta exit");
 				mv.PlayerExit();
+				if (mv.transform.position.y < -3f)
+				{
+					Player.main.transform.position = ExitLocation.position;
+				}
+				else
+				{
+					Logger.Log("go to surface");
+					Player.main.transform.position = Vector3.zero;// SurfaceExitLocation.position + SurfaceExitLocation.right * 10f;
+				}
 			}
 			else
 			{

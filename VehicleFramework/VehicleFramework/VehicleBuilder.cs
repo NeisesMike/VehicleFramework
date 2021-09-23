@@ -104,6 +104,7 @@ namespace VehicleFramework
                 hatch.mv = mv;
                 hatch.EntryLocation = vhs.EntryLocation;
                 hatch.ExitLocation = vhs.ExitLocation;
+                hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
             }
             int iter = 0;
             foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)

@@ -93,7 +93,7 @@
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
     <Compile Include="HUDBuilder.cs" />
-    <Compile Include="Patches\uGUI_PDAPatcher - Copy.cs" />
+    <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />

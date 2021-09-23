@@ -19,6 +19,7 @@ namespace VehicleFramework.VehicleParts
         public GameObject Hatch;
         public Transform EntryLocation;
         public Transform ExitLocation;
+        public Transform SurfaceExitLocation;
     }
     public struct VehicleStorage
     {

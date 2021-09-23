@@ -136,6 +136,7 @@ namespace VehicleFramework
             ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
             if (mv != null && !mv.IsPlayerPiloting())
             {
+                __instance.SetMotorMode(Player.MotorMode.Walk);
                 return false;
             }
             return true;

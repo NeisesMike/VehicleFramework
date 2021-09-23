@@ -129,6 +129,7 @@ namespace Atrama
                 vhs.Hatch = mainHatch.gameObject;
                 vhs.EntryLocation = mainHatch.Find("Entry");
                 vhs.ExitLocation = mainHatch.Find("Exit");
+                vhs.SurfaceExitLocation = mainHatch.Find("SurfaceExit");
                 list.Add(vhs);
                 return list;
             }
