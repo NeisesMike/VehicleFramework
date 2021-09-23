@@ -27,6 +27,8 @@ namespace Atrama
         public override List<VehicleFramework.VehicleParts.VehicleLight> Lights => throw new NotImplementedException();
 
         public override List<GameObject> WalkableInteriors => throw new NotImplementedException();
+        public override List<GameObject> WaterClipProxies => throw new NotImplementedException();
+        public override List<GameObject> CanopyWindows => throw new NotImplementedException();
 
         public override GameObject ControlPanel => throw new NotImplementedException();
     }

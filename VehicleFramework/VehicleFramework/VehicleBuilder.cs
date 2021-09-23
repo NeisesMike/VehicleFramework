@@ -54,6 +54,7 @@ namespace VehicleFramework
 
         public static void PatchCraftables()
         {
+            seamoth.SetActive(false);
             foreach (VehicleEntry ve in vehicleTypes)
             {
                 Logger.Log("Patching the " + ve.prefab.name + " Craftable...");
@@ -90,6 +91,7 @@ namespace VehicleFramework
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
 
+            #region setup_prefab_objects
             foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
             {
                 mv.playerPosition = ps.SitLocation;
@@ -155,9 +157,16 @@ namespace VehicleFramework
                 vuci.flap = vu.Interface.transform.Find("flap");
                 vuci.anglesOpened = new Vector3(80, 0, 0);
                 mv.upgradesInput = vuci;
-            }
-
+            }            
+            // Configure the Control Panel
+            mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
+            mv.controlPanelLogic.mv = mv;
+            mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
+            mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
+            GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+            #endregion
             mv.enabled = false;
+            #region energy_interface
             var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
@@ -182,9 +191,9 @@ namespace VehicleFramework
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
             eInterf.sources = energyMixins.ToArray();
+            #endregion
             mv.enabled = true;
-
-            // Configure Lights
+            #region configure_lights
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
@@ -239,9 +248,9 @@ namespace VehicleFramework
                 mv.lights.Add(pc.Light);
                 mv.volumetricLights.Add(volumetricLight);
             }
-
+            #endregion
+            #region live_mixin
             // Ensure Vehicle can die
-            // TODO read this lol
             var liveMixin = mv.gameObject.EnsureComponent<LiveMixin>();
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
             lmData.canResurrect = true;
@@ -254,7 +263,8 @@ namespace VehicleFramework
             lmData.maxHealth = 1000;
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
-
+            #endregion
+            #region rigidbody
             // Ensure vehicle is a physics object
             var rb = mv.gameObject.EnsureComponent<Rigidbody>();
             rb.mass = 4000f;
@@ -262,58 +272,105 @@ namespace VehicleFramework
             rb.angularDrag = 10f;
             rb.useGravity = false;
             mv.useRigidbody = rb;
+            #endregion
+            #region engine
             // Add the engine (physics control)
             var ve = mv.gameObject.EnsureComponent<VehicleEngine>();
             ve.mv = mv;
             ve.rb = rb;
-
+            #endregion
+            #region world_forces
+            mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
+            mv.worldForces.useRigidbody = mv.useRigidbody;
+            mv.worldForces.underwaterGravity = 0f;
+            mv.worldForces.aboveWaterGravity = 9.8f;
+            mv.worldForces.waterDepth = 0f;
+            #endregion
+            #region large_world_entity
             // Ensure vehicle remains in the world always
             mv.gameObject.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
-
+            #endregion
+            #region hud_ping
             // Add the hud ping instance
             mv.pingInstance = mv.gameObject.EnsureComponent<PingInstance>();
             mv.pingInstance.origin = mv.transform;
             mv.pingInstance.pingType = pingType;
             mv.pingInstance.SetLabel("Vehicle");
-
+            #endregion
+            #region vehicle_config
             // add various vehicle things
             mv.stabilizeRoll = true;
             mv.controlSheme = Vehicle.ControlSheme.Submersible;
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
-
-            // borrow some things from the seamoth
+            #endregion
+            #region crush_damage
             mv.crushDamage = CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), mv.gameObject);
             mv.crushDamage.kBaseCrushDepth = 300;
             mv.crushDamage.damagePerCrush = 3;
             mv.crushDamage.crushPeriod = 1;
+            #endregion
+
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
             mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
             //mv.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, mv.gameObject);
-            mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
-            mv.worldForces.useRigidbody = mv.useRigidbody;
-
-
-            // Configure the Control Panel
-            mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
-            mv.controlPanelLogic.mv = mv;
-            mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
-            mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
-            GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
 
 
 
+
+            #region water_clipping
+            // Enable water clipping for proper interaction with the surface of the ocean
+            WaterClipProxy seamothWCP = seamoth.GetComponentInChildren<WaterClipProxy>();
+            foreach (GameObject proxy in mv.WaterClipProxies)
+            {
+                WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
+                waterClip.shape = WaterClipProxy.Shape.Box;
+                //Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.
+                waterClip.clipMaterial = seamothWCP.clipMaterial;
+                //You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.
+                waterClip.gameObject.layer = seamothWCP.gameObject.layer;
+            }
+
+
+
+            /*
+            Logger.Log("bing");
+            var wcp = mv.gameObject.EnsureComponent<WaterClipProxy>();
+            wcp.shape = WaterClipProxy.Shape.DistanceField;
+            wcp.immovable = false;
+            Logger.Log("bing");
+            wcp.clipMaterial = seamothWCP.clipMaterial;
+            wcp.distanceField = seamothWCP.distanceField;
+            wcp.distanceFieldTexture = seamothWCP.distanceFieldTexture;
+            wcp.waterSurface = seamothWCP.waterSurface;
+            // TODO: these two Vector3 values will *only* work for the Atrama
+            // Find a way to generalize them
+            wcp.distanceFieldMin = new Vector3(-0.65f, 0.27f, -0.58f);
+            wcp.distanceFieldMax = new Vector3(0.65f, 1.57f, 4.24f);
+            wcp.clipMaterial = seamothWCP.clipMaterial;
+            wcp.gameObject.layer = seamothWCP.gameObject.layer;
+            */
+
+
+            /*
+            var wcomr = wco.EnsureComponent<MeshRenderer>();
+            var seamothWCMR = seamoth.transform.Find("DistanceFieldProxy").GetComponent<MeshRenderer>();
+            wcomr.material = seamothWCMR.material;
+            wcomr.sharedMaterial = seamothWCMR.sharedMaterial;
+            Logger.Log("bing");
+            wcomr.shadowCastingMode = seamothWCMR.shadowCastingMode;
+            wcomr.renderingLayerMask = seamothWCMR.renderingLayerMask;
+            var wcomf = wco.EnsureComponent<MeshFilter>();
+            
+            */
+
+
+
+            #endregion
 
 
 
             #region todo
             /*
-            //Basically an extension to Unity rigidbodys. Necessary for buoyancy.
-            var worldForces = prefab.AddComponent<WorldForces>();
-            worldForces.useRigidbody = rigidbody;
-            worldForces.underwaterGravity = -20f; //Despite it being negative, which would apply downward force, this actually makes it go UP on the y axis.
-            worldForces.aboveWaterGravity = 20f; //Counteract the strong upward force
-            worldForces.waterDepth = -5f;
-
             //Determines the places the little build bots point their laser beams at.
             var buildBots = prefab.AddComponent<BuildBotBeamPoints>();
 
@@ -343,26 +400,8 @@ namespace VehicleFramework
             vfxConstructing.surfaceSplashFX = rocketPlatformVfx.surfaceSplashFX;
             vfxConstructing.Regenerate();
 
-            //Some components might need this. I don't WANT it to take damage though, so I will just give it a LOT of health.
-            var liveMixin = prefab.AddComponent<LiveMixin>();
-            var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
-            lmData.canResurrect = true;
-            lmData.broadcastKillOnDeath = false;
-            lmData.destroyOnDeath = false;
-            lmData.explodeOnDestroy = false;
-            lmData.invincibleInCreative = true;
-            lmData.weldable = false;
-            lmData.minDamageForSound = 20f;
-            lmData.maxHealth = float.MaxValue;
-            liveMixin.data = lmData;
-
             //I don't know if this does anything at all as ships float above the surface, but I'm keeping it.
             var oxygenManager = prefab.AddComponent<OxygenManager>();
-
-            //I don't understand why I'm doing this, but I will anyway. The power cell is nowhere to be seen. To avoid learning how the EnergyMixin code works, I just added an external solar panel that stores all the power anyway.
-            var energyMixin = prefab.AddComponent<EnergyMixin>();
-            energyMixin.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell };
-            energyMixin.defaultBattery = TechType.PowerCell;
 
             //Allows power to connect to here.
             var powerRelay = prefab.AddComponent<PowerRelay>();
@@ -392,16 +431,6 @@ namespace VehicleFramework
             //Unload the prefab to save on resources.
             Resources.UnloadAsset(seamothRef);
 
-            //Arbitrary number. The ship doesn't have batteries anyway.
-            energyMixin.maxEnergy = 1200f;
-
-            //Add this component. It inherits from the same component that both the cyclops submarine and seabases use.
-            var shipBehaviour = prefab.AddComponent<SeaVoyager>();
-
-            //A ping so you can see it from far away
-            var ping = prefab.AddComponent<PingInstance>();
-            ping.pingType = QPatch.shipPingType;
-            ping.origin = Helpers.FindChild(prefab, "PingOrigin").transform;
             */
             #endregion
 
@@ -411,6 +440,15 @@ namespace VehicleFramework
             Shader marmosetShader = Shader.Find("MarmosetUBER");
             foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
             {
+                if (renderer.gameObject.name.Contains("Canopy"))
+                {
+                    var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
+                    var seamothGlassShader = seamothGlassMaterial.shader;
+                    renderer.material = seamothGlassMaterial;
+                    renderer.material.shader = seamothGlassShader;
+                    renderer.material.SetFloat("_ZWrite", 1f);
+
+                }
                 foreach (Material mat in renderer.materials)
                 {
                     // skip some materials
@@ -418,7 +456,14 @@ namespace VehicleFramework
                     {
                         continue;
                     }
-                    mat.shader = marmosetShader;
+                    else if (renderer.gameObject.name.Contains("Canopy"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        mat.shader = marmosetShader;
+                    }
                 }
             }
 

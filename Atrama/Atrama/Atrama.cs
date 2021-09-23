@@ -231,5 +231,26 @@ namespace Atrama
                 return controlPanel;
             }
         }
+        public override List<GameObject> WaterClipProxies
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach(Transform child in transform.Find("WaterClipProxies"))
+                {
+                    list.Add(child.gameObject);
+                }
+                return list;
+            }
+        }
+        public override List<GameObject> CanopyWindows
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                list.Add(transform.Find("Canopy").gameObject);
+                return list;
+            }
+        }
     }
 }

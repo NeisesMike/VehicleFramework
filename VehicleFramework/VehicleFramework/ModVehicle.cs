@@ -35,6 +35,8 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
         public abstract List<VehicleParts.VehicleLight> Lights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
+        public abstract List<GameObject> WaterClipProxies { get; }
+        public abstract List<GameObject> CanopyWindows { get; }
         public abstract GameObject ControlPanel { get; }
         public ControlPanel controlPanelLogic;
 
@@ -240,6 +242,12 @@ namespace VehicleFramework
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
+            
+            foreach(GameObject window in CanopyWindows)
+            {
+                window.SetActive(false);
+            }
+
 
             NotifyStatus(VehicleStatus.OnPlayerEntry);
         }
@@ -248,6 +256,10 @@ namespace VehicleFramework
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
             Player.main.transform.SetParent(null);
+            foreach (GameObject window in CanopyWindows)
+            {
+                window.SetActive(true);
+            }
             NotifyStatus(VehicleStatus.OnPlayerExit);
         }
         public override void SetPlayerInside(bool inside)
