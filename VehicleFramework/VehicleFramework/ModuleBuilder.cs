@@ -157,13 +157,16 @@ namespace VehicleFramework
         }
         private IEnumerator BuildGenericModulesASAP()
         {
+            // this function is invoked by PDA.Awake,
+            // so that we can access the same PDA here
+            // Unfortunately this means we must wait for the player to open the PDA.
+            // Maybe we can grab equipment from prefab?
             equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
 
             while (!main.isEquipmentInit)
             {
                 yield return null;
             }
-            Logger.Log("components grab start!");
 
             foreach (KeyValuePair<string, uGUI_EquipmentSlot> pair in vehicleAllSlots)
             {
@@ -293,19 +296,15 @@ namespace VehicleFramework
                 }
             }
 
-            Logger.Log("build modules start");
             BuildVehicleModuleSlots(6, true);
 
             // flag as ready to go
-            Logger.Log("components grabbed");
             main.areModulesReady = true;
             haveSlotsBeenInited = true;
         }
 
         public void BuildVehicleModuleSlots(int modules, bool arms)
         {
-            equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-
             // build, link, and position modules
             for (int i=0; i<modules; i++)
             {
