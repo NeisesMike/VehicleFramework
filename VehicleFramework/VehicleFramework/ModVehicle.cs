@@ -86,7 +86,6 @@ namespace VehicleFramework
 
             base.LazyInitialize();
         }
-
         public override void Start()
         {
             base.Start();
@@ -101,7 +100,6 @@ namespace VehicleFramework
             // load modular storage from file
             VehicleManager.RegisterVehicle(this);
         }
-
         public override void FixedUpdate()
         {
             if (stabilizeRoll)
@@ -110,7 +108,6 @@ namespace VehicleFramework
             }
             prevVelocity = useRigidbody.velocity;
         }
-
         public override void Update()
         {
             base.Update();
@@ -130,6 +127,49 @@ namespace VehicleFramework
             }
             Destroy(gameObject);
         }
+        public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
+        {
+            //Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
+            switch (techType)
+            {
+                case TechType.VehicleStorageModule:
+                    {
+                        SetStorageModule(slotID, added);
+                        break;
+                    }
+                case TechType.VehicleArmorPlating:
+                    {
+                        var temp = added ? numArmorModules++ : numArmorModules--;
+                        GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
+                        break;
+                    }
+                case TechType.VehiclePowerUpgradeModule:
+                    {
+                        var temp = added ? numEfficiencyModules++ : numEfficiencyModules--;
+                        break;
+                    }
+                /*
+                case TechType.VehicleDepthModule1:
+                    break;
+                case TechType.VehicleDepthModule2:
+                    break;
+                case TechType.VehicleDepthModule3:
+                    break;
+                case TechType.VehicleStealthModule:
+                    break;
+                */
+                default:
+                    break;
+            }
+        }
+        public override void OnCollisionEnter(Collision col)
+        {
+            base.OnCollisionEnter(col);
+        }
+        public override void OnPilotModeBegin()
+        {
+            base.OnPilotModeBegin();
+        }
 
         public bool IsPlayerInside()
         {
@@ -139,6 +179,29 @@ namespace VehicleFramework
         public bool IsPlayerPiloting()
         {
             return isPilotSeated;
+        }
+        public override bool CanPilot()
+        {
+            return !FPSInputModule.current.lockMovement && IsPowered();
+        }
+        private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
+        {
+            if (pickupable.GetTechType() == TechType.VehicleStorageModule)
+            {
+                // check the appropriate storage module for emptiness
+                SeamothStorageContainer component = pickupable.GetComponent<SeamothStorageContainer>();
+                if (component != null)
+                {
+                    bool flag = component.container.count == 0;
+                    if (verbose && !flag)
+                    {
+                        ErrorMessage.AddDebug(Language.main.Get("SeamothStorageNotEmpty"));
+                    }
+                    return flag;
+                }
+                Debug.LogError("No VehicleStorageContainer found on VehicleStorageModule item");
+            }
+            return true;
         }
 
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
@@ -152,17 +215,16 @@ namespace VehicleFramework
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
             NotifyStatus(VehicleStatus.OnPilotBegin);
         }
-
-        // called by Player.ExitLockedMode()
-        // which is triggered on button press
         public void StopPiloting()
         {
+            // this function
+            // called by Player.ExitLockedMode()
+            // which is triggered on button press
             isPilotSeated = false;
             Player.main.transform.position = transform.Find("Hatch").position - transform.Find("Hatch").up;
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
             NotifyStatus(VehicleStatus.OnPilotEnd);
         }
-
         public void PlayerEntry()
         {
             isPlayerInside = true;
@@ -188,14 +250,11 @@ namespace VehicleFramework
             Player.main.transform.SetParent(null);
             NotifyStatus(VehicleStatus.OnPlayerExit);
         }
-
         public override void SetPlayerInside(bool inside)
         {
             base.SetPlayerInside(inside);
             Player.main.inSeamoth = inside;
         }
-
-
         public void GetHUDValues(out float health, out float power)
         {
             health = this.liveMixin.GetHealthFraction();
@@ -203,10 +262,6 @@ namespace VehicleFramework
             float num2;
             base.GetEnergyValues(out num, out num2);
             power = ((num > 0f && num2 > 0f) ? (num / num2) : 0f);
-        }
-        public override bool CanPilot()
-        {
-            return !FPSInputModule.current.lockMovement && IsPowered();
         }
         public override void GetDepth(out int depth, out int crushDepth)
         {
@@ -288,10 +343,6 @@ namespace VehicleFramework
 
 
         */
-
-        /*
-         * Upgrades
-         */
         private void SetStorageModule(int slotID, bool activated)
         {
             foreach(var sto in InnateStorages)
@@ -300,68 +351,6 @@ namespace VehicleFramework
             }
             ModularStorages[slotID].Container.SetActive(activated);
             //ModularStorages[slotID].Container.GetComponent<BoxCollider>().enabled = activated;
-        }
-        public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
-        {
-            //Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
-            switch(techType)
-            {
-                case TechType.VehicleStorageModule:
-                    {
-                        SetStorageModule(slotID, added);
-                        break;
-                    }
-                case TechType.VehicleArmorPlating:
-                    {
-                        var temp = added ? numArmorModules++ : numArmorModules--;
-                        GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
-                        break;
-                    }
-                case TechType.VehiclePowerUpgradeModule:
-                    {
-                        var temp = added ? numEfficiencyModules++ : numEfficiencyModules--;
-                        break;
-                    }
-                /*
-                case TechType.VehicleDepthModule1:
-                    break;
-                case TechType.VehicleDepthModule2:
-                    break;
-                case TechType.VehicleDepthModule3:
-                    break;
-                case TechType.VehicleStealthModule:
-                    break;
-                */
-                default:
-                    break;
-            }
-        }
-        public override void OnCollisionEnter(Collision col)
-        {
-            base.OnCollisionEnter(col);
-        }
-        public override void OnPilotModeBegin()
-        {
-            base.OnPilotModeBegin();
-        }
-        private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
-        {
-            if (pickupable.GetTechType() == TechType.VehicleStorageModule)
-            {
-                // check the appropriate storage module for emptiness
-                SeamothStorageContainer component = pickupable.GetComponent<SeamothStorageContainer>();
-                if (component != null)
-                {
-                    bool flag = component.container.count == 0;
-                    if (verbose && !flag)
-                    {
-                        ErrorMessage.AddDebug(Language.main.Get("SeamothStorageNotEmpty"));
-                    }
-                    return flag;
-                }
-                Debug.LogError("No VehicleStorageContainer found on VehicleStorageModule item");
-            }
-            return true;
         }
         public override InventoryItem GetSlotItem(int slotID)
         {
@@ -425,7 +414,6 @@ namespace VehicleFramework
                     }
             }
         }
-
         public void TrySpendEnergy(float val)
         {
             float desired = val;
@@ -436,7 +424,6 @@ namespace VehicleFramework
             }
             energyInterface.ConsumeEnergy(desired);
         }
-
         public void TogglePower()
         {
             IsDisengaged = !IsDisengaged;
@@ -446,7 +433,6 @@ namespace VehicleFramework
                 gameObject.GetComponent<VehicleLights>().EnableExteriorLighting();
             }
         }
-
         public void NotifyStatus(VehicleStatus vs)
         {
             foreach (var component in GetComponentsInChildren<IVehicleStatusListener>())
