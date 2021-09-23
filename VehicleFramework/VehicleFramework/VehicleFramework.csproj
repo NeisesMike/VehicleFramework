@@ -95,7 +95,6 @@
     <Compile Include="HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
-    <Compile Include="Patches\ItemsContainerPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="VehicleCraftable.cs" />
@@ -120,7 +119,6 @@
     <Compile Include="Patches\uGUI_EquipmentSlotPatcher.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_PingsPatcher.cs" />
-    <Compile Include="Patches\uGUI_SeamothHUDPatcher.cs" />
     <Compile Include="Patches\VehiclePatcher.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
