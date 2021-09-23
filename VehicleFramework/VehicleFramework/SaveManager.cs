@@ -247,13 +247,11 @@ namespace VehicleFramework
             {
                 if (mv == null)
                 {
-                    Logger.Log("battery: null vehicle");
                     continue;
                 }
                 if (!mv.name.Contains("Clone"))
                 {
                     // skip the prefabs
-                    Logger.Log("battery: prefab");
                     continue;
                 }
 
@@ -301,22 +299,18 @@ namespace VehicleFramework
             {
                 if (mv == null)
                 {
-                    Logger.Log("battery: null vehicle");
                     continue;
                 }
                 if (!mv.name.Contains("Clone"))
                 {
                     // skip the prefabs
-                    Logger.Log("battery: prefab");
                     continue;
                 }
 
-                Logger.Log("looking at playerinsides");
                 foreach(var vehicle in allVehiclesPlayerInside)
                 {
                     if(Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
                     {
-                        Logger.Log("entering");
                         mv.PlayerEntry();
                         return;
                     }
