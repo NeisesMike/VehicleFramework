@@ -93,6 +93,7 @@
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
     <Compile Include="HUDBuilder.cs" />
+    <Compile Include="Patches\uGUI_PDAPatcher - Copy.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="Patches\PlayerPatcher.cs" />
     <Compile Include="Patches\uGUI_EquipmentPatcher.cs" />
     <Compile Include="Patches\uGUI_EquipmentSlotPatcher.cs" />
-    <Compile Include="Patches\uGUI_PDAPatcher.cs" />
+    <Compile Include="Patches\PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_PingsPatcher.cs" />
     <Compile Include="Patches\VehiclePatcher.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />

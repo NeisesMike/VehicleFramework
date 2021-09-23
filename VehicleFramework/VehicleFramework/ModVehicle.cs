@@ -216,6 +216,7 @@ namespace VehicleFramework
             base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
+            uGUI.main.quickSlots.SetTarget(this);
             NotifyStatus(VehicleStatus.OnPilotBegin);
         }
         public void StopPiloting()
@@ -226,6 +227,7 @@ namespace VehicleFramework
             isPilotSeated = false;
             Player.main.transform.position = transform.Find("Hatch").position - transform.Find("Hatch").up;
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
+            uGUI.main.quickSlots.SetTarget(null);
             NotifyStatus(VehicleStatus.OnPilotEnd);
         }
         public void PlayerEntry()
@@ -243,12 +245,11 @@ namespace VehicleFramework
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
-            
-            foreach(GameObject window in CanopyWindows)
+
+            foreach (GameObject window in CanopyWindows)
             {
                 window.SetActive(false);
             }
-
 
             NotifyStatus(VehicleStatus.OnPlayerEntry);
         }
