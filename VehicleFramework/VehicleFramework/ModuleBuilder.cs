@@ -219,7 +219,6 @@ namespace VehicleFramework
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>(), modulesBackground);
                             backgroundSprite = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().sprite;
                             modulesBackground.EnsureComponent<UnityEngine.UI.Image>().material = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().material;
-                            modulesBackground.SetActive(true);
 
                             //===============================================================================
                             //===============================================================================
@@ -324,7 +323,6 @@ namespace VehicleFramework
                 {
                     AddBackgroundImage(ref thisModule);
                 }
-                thisModule.SetActive(true);
             }
             // build, link, and position left arm
             GameObject leftArm = GetLeftArmSlot();
@@ -337,7 +335,6 @@ namespace VehicleFramework
             leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
             LinkArm(ref leftArm);
             DistributeModule(ref leftArm, modules, modules + 2);
-            leftArm.SetActive(true);
 
             // build, link, and position right arm
             GameObject rightArm = GetRightArmSlot();
@@ -349,7 +346,6 @@ namespace VehicleFramework
             rightArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
             LinkArm(ref rightArm);
             DistributeModule(ref rightArm, modules + 1, modules + 2);
-            rightArm.SetActive(true);
         }
         public void LinkModule(ref GameObject thisModule)
         {
