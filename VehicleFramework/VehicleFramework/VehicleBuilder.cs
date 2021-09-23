@@ -86,12 +86,9 @@ namespace VehicleFramework
             }
         }
 
-        public static void Instrument(ref ModVehicle mv, PingType pingType)
+        public static void SetupPrefabObjects(ref ModVehicle mv)
         {
-            mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
-            mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
-
-            #region setup_prefab_objects
+            int iter = 0;
             foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
             {
                 mv.playerPosition = ps.SitLocation;
@@ -106,7 +103,6 @@ namespace VehicleFramework
                 hatch.ExitLocation = vhs.ExitLocation;
                 hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
             }
-            int iter = 0;
             foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
             {
                 vs.Container.SetActive(false);
@@ -158,16 +154,16 @@ namespace VehicleFramework
                 vuci.flap = vu.Interface.transform.Find("flap");
                 vuci.anglesOpened = new Vector3(80, 0, 0);
                 mv.upgradesInput = vuci;
-            }            
+            }
             // Configure the Control Panel
             mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
             mv.controlPanelLogic.mv = mv;
             mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
             mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
             GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
-            #endregion
-            mv.enabled = false;
-            #region energy_interface
+        }
+        public static void SetupEnergyInterface(ref ModVehicle mv)
+        {
             var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
@@ -192,9 +188,9 @@ namespace VehicleFramework
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
             eInterf.sources = energyMixins.ToArray();
-            #endregion
-            mv.enabled = true;
-            #region configure_lights
+        }
+        public static void SetupLights(ref ModVehicle mv)
+        {
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
@@ -219,7 +215,7 @@ namespace VehicleFramework
                 leftLight.spotAngle = pc.Angle;
                 leftLight.innerSpotAngle = pc.Angle * .75f;
                 leftLight.color = pc.Color;
-                leftLight.intensity = pc.Strength/60f;
+                leftLight.intensity = pc.Strength / 60f;
                 leftLight.range = pc.Strength;
                 leftLight.shadows = LightShadows.Hard;
 
@@ -249,9 +245,9 @@ namespace VehicleFramework
                 mv.lights.Add(pc.Light);
                 mv.volumetricLights.Add(volumetricLight);
             }
-            #endregion
-            #region live_mixin
-            // Ensure Vehicle can die
+        }
+        public static void SetupLiveMixin(ref ModVehicle mv)
+        {
             var liveMixin = mv.gameObject.EnsureComponent<LiveMixin>();
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
             lmData.canResurrect = true;
@@ -264,75 +260,134 @@ namespace VehicleFramework
             lmData.maxHealth = 1000;
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
-            #endregion
-            #region rigidbody
-            // Ensure vehicle is a physics object
+        }
+        public static void SetupRigidbody(ref ModVehicle mv)
+        {
             var rb = mv.gameObject.EnsureComponent<Rigidbody>();
             rb.mass = 4000f;
             rb.drag = 10f;
             rb.angularDrag = 10f;
             rb.useGravity = false;
             mv.useRigidbody = rb;
-            #endregion
-            #region engine
+        }
+        public static void SetupEngine(ref ModVehicle mv)
+        {
             // Add the engine (physics control)
             mv.engine = mv.gameObject.EnsureComponent<VehicleEngine>();
             mv.engine.mv = mv;
-            mv.engine.rb = rb;
-            #endregion
-            #region world_forces
+            mv.engine.rb = mv.useRigidbody;
+        }
+        public static void SetupWorldForces(ref ModVehicle mv)
+        {
             mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
             mv.worldForces.useRigidbody = mv.useRigidbody;
             mv.worldForces.underwaterGravity = 0f;
             mv.worldForces.aboveWaterGravity = 9.8f;
             mv.worldForces.waterDepth = 0f;
-            #endregion
-            #region large_world_entity
+        }
+        public static void SetupLargeWorldEntity(ref ModVehicle mv)
+        {
             // Ensure vehicle remains in the world always
             mv.gameObject.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
-            #endregion
-            #region hud_ping
-            // Add the hud ping instance
+        }
+        public static void SetupHudPing(ref ModVehicle mv, PingType pingType)
+        {
             mv.pingInstance = mv.gameObject.EnsureComponent<PingInstance>();
             mv.pingInstance.origin = mv.transform;
             mv.pingInstance.pingType = pingType;
             mv.pingInstance.SetLabel("Vehicle");
-            #endregion
-            #region vehicle_config
+        }
+        public static void SetupVehicleConfig(ref ModVehicle mv)
+        {
             // add various vehicle things
             mv.stabilizeRoll = true;
             mv.controlSheme = Vehicle.ControlSheme.Submersible;
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
-            #endregion
-            #region crush_damage
+            mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
+            //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
+            //mv.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, mv.gameObject);
+        }
+        public static void SetupCrushDamage(ref ModVehicle mv)
+        {
             mv.crushDamage = CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), mv.gameObject);
             mv.crushDamage.kBaseCrushDepth = 300;
             mv.crushDamage.damagePerCrush = 3;
             mv.crushDamage.crushPeriod = 1;
-            #endregion
-
-            //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
-            mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
-            //mv.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, mv.gameObject);
-
-
-
-
-            #region water_clipping
+        }
+        public static void SetupWaterClipping(ref ModVehicle mv)
+        {
             // Enable water clipping for proper interaction with the surface of the ocean
             WaterClipProxy seamothWCP = seamoth.GetComponentInChildren<WaterClipProxy>();
             foreach (GameObject proxy in mv.WaterClipProxies)
             {
                 WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
                 waterClip.shape = WaterClipProxy.Shape.Box;
-                //Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.
+                //"""Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.""" -Lee23
                 waterClip.clipMaterial = seamothWCP.clipMaterial;
-                //You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.
+                //"""You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.""" -Lee23
                 waterClip.gameObject.layer = seamothWCP.gameObject.layer;
             }
-            #endregion
+        }
+        public static void ApplyShaders(ref ModVehicle mv)
+        {
+            // Add the marmoset shader to all renderers
+            Shader marmosetShader = Shader.Find("MarmosetUBER");
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
+            {
+                if (renderer.gameObject.name.Contains("Canopy"))
+                {
+                    // TODO: find a way to add transparency
+                    // ZWrite set to 1 (a boolean value) makes the canopy opaque.
+                    var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
+                    var seamothGlassShader = seamothGlassMaterial.shader;
+                    renderer.material = seamothGlassMaterial;
+                    renderer.material.shader = seamothGlassShader;
+                    renderer.material.SetFloat("_ZWrite", 1f);
+
+                }
+                foreach (Material mat in renderer.materials)
+                {
+                    // skip some materials
+                    if (renderer.gameObject.name.Contains("Light"))
+                    {
+                        continue;
+                    }
+                    else if (renderer.gameObject.name.Contains("Canopy"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        mat.shader = marmosetShader;
+                    }
+                }
+            }
 
 
+        }
+
+        public static void Instrument(ref ModVehicle mv, PingType pingType)
+        {
+            mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
+            mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
+            
+            SetupPrefabObjects(ref mv);
+            mv.enabled = false;
+            SetupEnergyInterface(ref mv);
+            mv.enabled = true;
+            SetupLights(ref mv);
+            SetupLiveMixin(ref mv);
+            SetupRigidbody(ref mv);
+            SetupEngine(ref mv);
+            SetupWorldForces(ref mv);
+            SetupLargeWorldEntity(ref mv);
+            SetupHudPing(ref mv, pingType);
+            SetupVehicleConfig(ref mv);
+            SetupCrushDamage(ref mv);
+            SetupWaterClipping(ref mv);
+
+            // ApplyShaders should happen last
+            ApplyShaders(ref mv);
 
             #region todo
             /*
@@ -378,46 +433,6 @@ namespace VehicleFramework
             skyApplierInterior.SetSky(Skies.BaseInterior);
             */
             #endregion
-
-
-
-            // Add the marmoset shader to all renderers
-            Shader marmosetShader = Shader.Find("MarmosetUBER");
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                if (renderer.gameObject.name.Contains("Canopy"))
-                {
-                    // TODO: find a way to add transparency
-                    // ZWrite set to 1 (a boolean value) makes the canopy opaque.
-                    var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
-                    var seamothGlassShader = seamothGlassMaterial.shader;
-                    renderer.material = seamothGlassMaterial;
-                    renderer.material.shader = seamothGlassShader;
-                    renderer.material.SetFloat("_ZWrite", 1f);
-
-                }
-                foreach (Material mat in renderer.materials)
-                {
-                    // skip some materials
-                    if (renderer.gameObject.name.Contains("Light"))
-                    {
-                        continue;
-                    }
-                    else if (renderer.gameObject.name.Contains("Canopy"))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        mat.shader = marmosetShader;
-                    }
-                }
-            }
-
-
-
-
-
         }
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
