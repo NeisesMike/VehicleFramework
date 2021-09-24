@@ -105,6 +105,13 @@ namespace VehicleFramework
         }
         public override void FixedUpdate()
         {
+            if (worldForces.IsAboveWater() != wasAboveWater)
+            {
+                //TODO
+                //PlaySplashSound();
+                Logger.Log("splash!");
+                wasAboveWater = worldForces.IsAboveWater();
+            }
             if (stabilizeRoll)
             {
                 StabilizeRoll();
