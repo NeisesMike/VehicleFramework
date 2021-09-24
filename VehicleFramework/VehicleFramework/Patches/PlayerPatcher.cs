@@ -33,13 +33,7 @@ namespace VehicleFramework
         [HarmonyPatch("Update")]
         public static void UpdatePostfix(Player __instance)
         {
-            // TODO debug remove
-            if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                DevConsole.SendConsoleCommand("spawn atrama");
-            }
-
-            ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv == null)
             {
                 return;
@@ -60,7 +54,7 @@ namespace VehicleFramework
         [HarmonyPatch("ExitLockedMode")]
         public static bool ExitLockedModePrefix(Player __instance, ref Player.Mode ___mode)
         {
-            ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv == null)
             {
                 return true;
@@ -98,30 +92,11 @@ namespace VehicleFramework
             return false;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch("CanBreathe")]
-        public static void CanBreathePostfix(Player __instance, ref bool __result)
-        {
-            ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
-            if (mv == null)
-            {
-                return;
-            }
-            if (mv.IsPowered())
-            {
-                __result = true;
-            }
-            else
-            {
-                __result = __instance.IsUnderwater();
-            }
-        }
-
         [HarmonyPrefix]
         [HarmonyPatch("UpdateIsUnderwater")]
         public static bool UpdateIsUnderwaterPrefix(Player __instance)
         {
-            ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv == null)
             {
                 return true;
@@ -133,7 +108,7 @@ namespace VehicleFramework
         [HarmonyPatch("UpdateMotorMode")]
         public static bool UpdateMotorModePrefix(Player __instance)
         {
-            ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv != null && !mv.IsPlayerPiloting())
             {
                 __instance.SetMotorMode(Player.MotorMode.Walk);
