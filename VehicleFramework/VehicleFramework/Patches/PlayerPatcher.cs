@@ -97,11 +97,13 @@ namespace VehicleFramework
         public static bool UpdateIsUnderwaterPrefix(Player __instance)
         {
             ModVehicle mv = __instance.GetVehicle() as ModVehicle;
-            if (mv == null)
+            if (mv != null)
             {
-                return true;
+                __instance.isUnderwater.Update(false);
+                __instance.isUnderwaterForSwimming.Update(false);
+                return false;
             }
-            return false;
+            return true;
         }
 
         [HarmonyPrefix]
