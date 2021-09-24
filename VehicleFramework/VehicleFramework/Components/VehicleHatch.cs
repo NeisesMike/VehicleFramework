@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace VehicleFramework
 				else
 				{
 					Logger.Log("go to surface");
-					Player.main.transform.position = Vector3.zero;// SurfaceExitLocation.position + SurfaceExitLocation.right * 10f;
+					StartCoroutine(ExitToSurface());
 				}
 			}
 			else
@@ -49,6 +50,32 @@ namespace VehicleFramework
 				Player.main.transform.position = EntryLocation.position;
 				mv.PlayerEntry();
 			}
+		}
+
+		public IEnumerator ExitToSurface()
+        {
+			// we probably don't need to do this so many times,
+			// but it works and frankly who cares?
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
+			yield return null;
+			Player.main.transform.position = SurfaceExitLocation.position;
 		}
 	}
 }
