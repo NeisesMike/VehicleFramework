@@ -30,10 +30,8 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
-			Logger.Log("click");
 			if (mv.IsPlayerInside())
 			{
-				Logger.Log("gotta exit");
 				mv.PlayerExit();
 				if (mv.transform.position.y < -3f)
 				{
@@ -41,7 +39,6 @@ namespace VehicleFramework
 				}
 				else
 				{
-					Logger.Log("go to surface");
 					StartCoroutine(ExitToSurface());
 				}
 			}
@@ -54,28 +51,19 @@ namespace VehicleFramework
 
 		public IEnumerator ExitToSurface()
         {
-			// we probably don't need to do this so many times,
-			// but it works and frankly who cares?
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
-			yield return null;
-			Player.main.transform.position = SurfaceExitLocation.position;
+			int tryCount = 0;
+			float playerHeightBefore = Player.main.transform.position.y;
+			while (Player.main.transform.position.y < 2 + playerHeightBefore)
+			{
+				if(100 < tryCount)
+                {
+					Logger.Log("Error: Failed to exit vehicle too many times. Stopping.");
+					yield break;
+                }
+				Player.main.transform.position = SurfaceExitLocation.position;
+				tryCount++;
+				yield return null;
+			}
 		}
 	}
 }
