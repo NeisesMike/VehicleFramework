@@ -12,7 +12,7 @@ namespace VehicleFramework
 		public ModVehicle mv;
         private bool isLightsOn = true;
         private bool isInteriorLightsOn = true;
-        private bool wasPowered = false;
+        private bool wasPowered = true;
         
         public VehicleLights(ModVehicle inputMV)
         {
@@ -32,27 +32,34 @@ namespace VehicleFramework
         }
         public void EnableExteriorLighting()
         {
-            SetFloodLampsActive(true);
-            Utils.PlayEnvSound(mv.lightsOnSound, mv.lightsOnSound.gameObject.transform.position, 20f);
+            if (!isLightsOn)
+            {
+                SetFloodLampsActive(true);
+                Utils.PlayEnvSound(mv.lightsOnSound, mv.PilotSeats[0].Seat.transform.position, 20f);
+                isLightsOn = !isLightsOn;
+            }
         }
         public void DisableExteriorLighting()
         {
-            SetFloodLampsActive(false);
-            Utils.PlayEnvSound(mv.lightsOffSound, mv.lightsOffSound.gameObject.transform.position, 20f);
+            if (isLightsOn)
+            {
+                SetFloodLampsActive(false);
+                Utils.PlayEnvSound(mv.lightsOffSound, mv.lightsOffSound.gameObject.transform.position, 20f);
+                isLightsOn = !isLightsOn;
+            }
         }
 
         public void ToggleExteriorLighting()
         {
             if (mv.IsPowered())
             {
-                isLightsOn = !isLightsOn;
                 if (isLightsOn)
                 {
-                    EnableExteriorLighting();
+                    DisableExteriorLighting();
                 }
                 else
                 {
-                    DisableExteriorLighting();
+                    EnableExteriorLighting();
                 }
             }
         }

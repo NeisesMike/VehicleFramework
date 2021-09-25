@@ -31,6 +31,8 @@ namespace VehicleFramework
         void OnPilotEnd();
         void OnPowerUp();
         void OnPowerDown();
+        // TODO
+        //Something is pulsing OnExteriorLightsOn every frame, but not sure what
         void OnExteriorLightsOn();
         void OnExteriorLightsOff();
         void OnInteriorLightsOn();
