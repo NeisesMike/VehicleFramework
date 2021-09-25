@@ -26,7 +26,8 @@ namespace VehicleFramework
         // Update is called once per frame
         public void FixedUpdate()
         {
-            if (mv.CanPilot() && mv.transform.position.y < 0)
+            // TODO: justify a more reasonable constant here
+            if (mv.CanPilot() && mv.transform.position.y < 0.6f)
             {
                 if (mv.IsPlayerPiloting())
                 {
