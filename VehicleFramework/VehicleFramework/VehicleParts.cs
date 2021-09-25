@@ -13,6 +13,7 @@ namespace VehicleFramework.VehicleParts
         public GameObject SitLocation;
         public Transform LeftHandLocation;
         public Transform RightHandLocation;
+        public Transform ExitLocation;
     }
     public struct VehicleHatchStruct
     {

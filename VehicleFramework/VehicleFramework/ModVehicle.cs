@@ -23,8 +23,8 @@ namespace VehicleFramework
         }
 
         public abstract GameObject VehicleModel { get; }
-        public virtual GameObject StorageRootObject { get { return VehicleModel; } }
-        public virtual GameObject ModulesRootObject { get { return StorageRootObject; } }
+        public abstract GameObject StorageRootObject { get; }
+        public abstract GameObject ModulesRootObject { get; }
 
         // lists of game object references, used later like a blueprint
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
@@ -37,6 +37,8 @@ namespace VehicleFramework
         public abstract List<GameObject> WalkableInteriors { get; }
         public abstract List<GameObject> WaterClipProxies { get; }
         public abstract List<GameObject> CanopyWindows { get; }
+        public abstract List<GameObject> NameDecals { get; }
+        public abstract List<GameObject> TetherSources { get; }
         public abstract GameObject ControlPanel { get; }
         public ControlPanel controlPanelLogic;
 
@@ -63,6 +65,7 @@ namespace VehicleFramework
 
         public VehicleLights vLights;
         public VehicleEngine engine;
+        public Transform thisStopPilotingLocation;
 
         // later
         public virtual List<GameObject> Arms => null;
@@ -96,6 +99,17 @@ namespace VehicleFramework
             upgradesInput.equipment = modules;
             modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
             gameObject.EnsureComponent<GameInfoIcon>().techType = GetComponent<TechTag>().type;
+
+            // todo fix pls
+            // Not only is the syntax gross,
+            // but the decals are inexplicably invisible in-game
+            // I'm pretty sure this is the right camera...
+            foreach (Canvas decalCanvas in NameDecals[0].transform.parent.gameObject.GetAllComponentsInChildren<Canvas>())
+            {
+                decalCanvas.worldCamera = MainCamera.camera;
+            }
+
+            gameObject.EnsureComponent<PlayerTether>();
 
             // load upgrades from file
 
@@ -233,7 +247,7 @@ namespace VehicleFramework
             // called by Player.ExitLockedMode()
             // which is triggered on button press
             isPilotSeated = false;
-            Player.main.transform.position = transform.Find("Hatch").position - transform.Find("Hatch").up;
+            Player.main.transform.position = thisStopPilotingLocation.position;
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
             uGUI.main.quickSlots.SetTarget(null);
             NotifyStatus(VehicleStatus.OnPilotEnd);

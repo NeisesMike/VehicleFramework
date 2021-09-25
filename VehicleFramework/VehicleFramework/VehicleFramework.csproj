@@ -92,6 +92,7 @@
     <Compile Include="Components\ControlPanelButton.cs" />
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
+    <Compile Include="Components\PlayerTether.cs" />
     <Compile Include="HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />

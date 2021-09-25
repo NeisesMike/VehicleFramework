@@ -232,6 +232,18 @@ namespace Atrama
                 return controlPanel;
             }
         }
+        public override List<GameObject> TetherSources
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach (Transform child in transform.Find("TetherSources"))
+                {
+                    list.Add(child.gameObject);
+                }
+                return list;
+            }
+        }
         public override List<GameObject> WaterClipProxies
         {
             get
@@ -250,6 +262,17 @@ namespace Atrama
             {
                 var list = new List<GameObject>();
                 list.Add(transform.Find("Canopy").gameObject);
+                return list;
+            }
+        }
+
+        public override List<GameObject> NameDecals
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                list.Add(transform.Find("NameDecals/Left").gameObject);
+                list.Add(transform.Find("NameDecals/Right").gameObject);
                 return list;
             }
         }

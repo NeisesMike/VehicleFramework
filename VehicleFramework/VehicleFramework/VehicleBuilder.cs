@@ -95,6 +95,7 @@ namespace VehicleFramework
                 mv.playerPosition = ps.SitLocation;
                 PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
                 pt.mv = mv;
+                pt.exit = ps.ExitLocation;
             }
             foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
             {
@@ -348,7 +349,10 @@ namespace VehicleFramework
         {
             // TODO
             var subname = mv.gameObject.EnsureComponent<SubName>();
-            subname.hullName = null;
+            subname.pingInstance = mv.pingInstance;
+            subname.colorsInitialized = 0;
+            subname.hullName = mv.NameDecals[0].GetComponent<UnityEngine.UI.Text>();
+            //mv.subName = subname;
         }
         public static void SetupCollisionSound(ref ModVehicle mv)
         {
@@ -480,18 +484,16 @@ namespace VehicleFramework
                     var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
                     var seamothGlassShader = seamothGlassMaterial.shader;
                     renderer.material = seamothGlassMaterial;
-                    renderer.material.shader = seamothGlassShader;
+                    // TODO decide which line is right:
+                    //renderer.material.shader = seamothGlassShader;
+                    renderer.material.shader = marmosetShader;
                     renderer.material.SetFloat("_ZWrite", 1f);
-
+                    continue;
                 }
                 foreach (Material mat in renderer.materials)
                 {
                     // skip some materials
                     if (renderer.gameObject.name.Contains("Light"))
-                    {
-                        continue;
-                    }
-                    else if (renderer.gameObject.name.Contains("Canopy"))
                     {
                         continue;
                     }
