@@ -26,7 +26,7 @@ namespace VehicleFramework
         public virtual GameObject StorageRootObject { get { return VehicleModel; } }
         public virtual GameObject ModulesRootObject { get { return StorageRootObject; } }
 
-        // lists of game object references, used later like a 
+        // lists of game object references, used later like a blueprint
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public abstract List<VehicleParts.VehicleStorage> InnateStorages { get; }

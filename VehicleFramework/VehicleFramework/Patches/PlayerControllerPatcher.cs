@@ -12,15 +12,47 @@ namespace VehicleFramework
     {
         [HarmonyPrefix]
         [HarmonyPatch("HandleControllerState")]
-        public static bool HandleControllerStatePrefix(ref bool ___inVehicle, ref bool ___underWater)
+        public static bool HandleControllerStatePrefix(PlayerController __instance)
         {
-            ModVehicle mv = Player.main.currentMountedVehicle as ModVehicle;
+            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
             if (mv != null && !mv.IsPlayerPiloting())
             {
-                ___inVehicle = false;
-                ___underWater = false;
+                __instance.inVehicle = false;
+                __instance.underWater = false;
             }
             return true;
         }
+        [HarmonyPrefix]
+        [HarmonyPatch("HandleUnderWaterState")]
+        public static bool HandleUnderWaterStatePrefix(PlayerController __instance)
+        {
+            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+            if (mv != null && !mv.IsPlayerPiloting())
+            {
+                __instance.inVehicle = true;
+                __instance.underWater = false;
+                __instance.groundController.SetEnabled(false);
+                __instance.underWaterController.SetEnabled(false);
+                __instance.activeController = __instance.groundController;
+                __instance.desiredControllerHeight = __instance.standheight;
+                __instance.activeController.SetControllerHeight(__instance.currentControllerHeight);
+                __instance.activeController.SetEnabled(true);
+                return false;
+            }
+            return true;
+        }
+        /*
+        [HarmonyPostfix]
+        [HarmonyPatch("HandleUnderWaterState")]
+        public static void HandleUnderWaterStatePostfix(PlayerController __instance)
+        {
+            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+            if (mv != null && !mv.IsPlayerPiloting())
+            {
+                __instance.inVehicle = false;
+                __instance.underWater = false;
+            }
+        }
+        */
     }
 }

@@ -93,7 +93,7 @@ namespace VehicleFramework
 
 
 
-        /*
+        /* TODO
 
         BuildBotPath CreateBuildBotPath(GameObject gameobjectWithComponent, Transform parent)
         {
@@ -104,26 +104,6 @@ namespace VehicleFramework
                 comp.points[i] = parent.GetChild(i);
             }
             return comp;
-        }
-
-        Material GetGlassMaterial()
-        {
-            var reference = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Aquarium));
-
-            Renderer[] renderers = reference.GetComponentsInChildren<Renderer>(true);
-
-            foreach (Renderer renderer in renderers)
-            {
-                foreach (Material material in renderer.materials)
-                {
-                    if (material.name.ToLower().Contains("glass"))
-                    {
-                        return material;
-                    }
-                }
-            }
-            Resources.UnloadAsset(reference);
-            return null;
         }
 
         //I know this is horribly messy, I don't know what half the properties here do, but it works.

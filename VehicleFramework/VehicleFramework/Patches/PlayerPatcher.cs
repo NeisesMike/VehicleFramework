@@ -47,6 +47,7 @@ namespace VehicleFramework
                 __instance.motorMode = Player.MotorMode.Walk;
                 __instance.SetScubaMaskActive(false);
                 __instance.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
+                __instance.depthLevel = -10f;
             }
         }
 
@@ -114,6 +115,23 @@ namespace VehicleFramework
             if (mv != null && !mv.IsPlayerPiloting())
             {
                 __instance.SetMotorMode(Player.MotorMode.Walk);
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("GetDepthClass")]
+        public static bool GetDepthClass(Player __instance, ref Ocean.DepthClass __result)
+        {
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+            if (mv != null && !mv.IsPlayerPiloting())
+            {
+                //var crushDamage = __instance.gameObject.GetComponentInParent<CrushDamage>();
+                //__result = crushDamage.GetDepthClass();
+                //__instance.crushDepth = crushDamage.crushDepth;
+                __result = Ocean.DepthClass.Safe;
+                __instance.crushDepth = 200f;
                 return false;
             }
             return true;
