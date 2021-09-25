@@ -95,6 +95,7 @@ namespace VehicleFramework
 
             upgradesInput.equipment = modules;
             modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
+            gameObject.EnsureComponent<GameInfoIcon>().techType = GetComponent<TechTag>().type;
 
             // load upgrades from file
 

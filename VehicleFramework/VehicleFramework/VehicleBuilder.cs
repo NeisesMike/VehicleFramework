@@ -86,6 +86,7 @@ namespace VehicleFramework
             }
         }
 
+        #region setup_funcs
         public static void SetupPrefabObjects(ref ModVehicle mv)
         {
             int iter = 0;
@@ -309,10 +310,25 @@ namespace VehicleFramework
         }
         public static void SetupCrushDamage(ref ModVehicle mv)
         {
-            mv.crushDamage = CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), mv.gameObject);
+            var ce = mv.gameObject.EnsureComponent<FMOD_CustomEmitter>();
+            ce.restartOnPlay = true;
+            foreach (var thisCE in seamoth.GetComponentsInChildren<FMOD_CustomEmitter>())
+            {
+                if (thisCE.name == "crushDamageSound")
+                {
+                    ce.asset = thisCE.asset;
+                }
+            }
+
+            mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>(); //CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), mv.gameObject);
+            mv.crushDamage.soundOnDamage = ce;
             mv.crushDamage.kBaseCrushDepth = 300;
             mv.crushDamage.damagePerCrush = 3;
             mv.crushDamage.crushPeriod = 1;
+            mv.crushDamage.vehicle = mv;
+            mv.crushDamage.liveMixin = mv.liveMixin;
+            // TODO: this is of type VoiceNotification
+            mv.crushDamage.crushDepthUpdate = null;
         }
         public static void SetupWaterClipping(ref ModVehicle mv)
         {
@@ -328,44 +344,56 @@ namespace VehicleFramework
                 waterClip.gameObject.layer = seamothWCP.gameObject.layer;
             }
         }
-        public static void ApplyShaders(ref ModVehicle mv)
+        public static void SetupSubName(ref ModVehicle mv)
         {
-            // Add the marmoset shader to all renderers
-            Shader marmosetShader = Shader.Find("MarmosetUBER");
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                if (renderer.gameObject.name.Contains("Canopy"))
-                {
-                    // TODO: find a way to add transparency
-                    // ZWrite set to 1 (a boolean value) makes the canopy opaque.
-                    var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
-                    var seamothGlassShader = seamothGlassMaterial.shader;
-                    renderer.material = seamothGlassMaterial;
-                    renderer.material.shader = seamothGlassShader;
-                    renderer.material.SetFloat("_ZWrite", 1f);
-
-                }
-                foreach (Material mat in renderer.materials)
-                {
-                    // skip some materials
-                    if (renderer.gameObject.name.Contains("Light"))
-                    {
-                        continue;
-                    }
-                    else if (renderer.gameObject.name.Contains("Canopy"))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        mat.shader = marmosetShader;
-                    }
-                }
-            }
-
-
+            // TODO
+            var subname = mv.gameObject.EnsureComponent<SubName>();
+            subname.hullName = null;
         }
-
+        public static void SetupCollisionSound(ref ModVehicle mv)
+        {
+            var colsound = mv.gameObject.EnsureComponent<CollisionSound>();
+            var seamothColSound = seamoth.GetComponent<CollisionSound>();
+            colsound.hitSoundSmall = seamothColSound.hitSoundSmall;
+            colsound.hitSoundSlow = seamothColSound.hitSoundSlow;
+            colsound.hitSoundMedium = seamothColSound.hitSoundMedium;
+            colsound.hitSoundFast = seamothColSound.hitSoundFast;
+        }
+        public static void SetupOutOfBoundsWarp(ref ModVehicle mv)
+        {
+            mv.gameObject.EnsureComponent<OutOfBoundsWarp>();
+        }
+        public static void SetupConstructionObstacle(ref ModVehicle mv)
+        {
+            var co = mv.gameObject.EnsureComponent<ConstructionObstacle>();
+            co.reason = mv.name + " is in the way.";
+        }
+        public static void SetupSoundOnDamage(ref ModVehicle mv)
+        {
+            // TODO: we could have unique sounds for each damage type
+            // TODO: this might not work, might need to put it in a VehicleStatusListener
+            var sod = mv.gameObject.EnsureComponent<SoundOnDamage>();
+            sod.damageType = DamageType.Normal;
+            sod.sound = seamoth.GetComponent<SoundOnDamage>().sound;
+        }
+        public static void SetupDealDamageOnImpact(ref ModVehicle mv)
+        {
+            var ddoi = mv.gameObject.EnsureComponent<DealDamageOnImpact>();
+            ddoi.damageTerrain = true;
+            ddoi.speedMinimumForSelfDamage = 4;
+            ddoi.speedMinimumForDamage = 2;
+            ddoi.affectsEcosystem = true;
+            ddoi.minimumMassForDamage = 5;
+            ddoi.mirroredSelfDamage = true;
+            ddoi.mirroredSelfDamageFraction = 0.5f;
+            ddoi.capMirrorDamage = -1;
+            ddoi.minDamageInterval = 0;
+            ddoi.timeLastDamage = 0;
+            ddoi.timeLastDamagedSelf = 0;
+            ddoi.prevPosition = Vector3.zero;
+            ddoi.prevPosition = Vector3.zero;
+        }
+        #endregion
         public static void Instrument(ref ModVehicle mv, PingType pingType)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
@@ -385,6 +413,11 @@ namespace VehicleFramework
             SetupVehicleConfig(ref mv);
             SetupCrushDamage(ref mv);
             SetupWaterClipping(ref mv);
+            SetupCollisionSound(ref mv);
+            SetupOutOfBoundsWarp(ref mv);
+            SetupConstructionObstacle(ref mv);
+            SetupSoundOnDamage(ref mv);
+            SetupDealDamageOnImpact(ref mv);
 
             // ApplyShaders should happen last
             ApplyShaders(ref mv);
@@ -433,6 +466,43 @@ namespace VehicleFramework
             skyApplierInterior.SetSky(Skies.BaseInterior);
             */
             #endregion
+        }
+        public static void ApplyShaders(ref ModVehicle mv)
+        {
+            // Add the marmoset shader to all renderers
+            Shader marmosetShader = Shader.Find("MarmosetUBER");
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
+            {
+                if (renderer.gameObject.name.Contains("Canopy"))
+                {
+                    // TODO: find a way to add transparency
+                    // ZWrite set to 1 (a boolean value) makes the canopy opaque.
+                    var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
+                    var seamothGlassShader = seamothGlassMaterial.shader;
+                    renderer.material = seamothGlassMaterial;
+                    renderer.material.shader = seamothGlassShader;
+                    renderer.material.SetFloat("_ZWrite", 1f);
+
+                }
+                foreach (Material mat in renderer.materials)
+                {
+                    // skip some materials
+                    if (renderer.gameObject.name.Contains("Light"))
+                    {
+                        continue;
+                    }
+                    else if (renderer.gameObject.name.Contains("Canopy"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        mat.shader = marmosetShader;
+                    }
+                }
+            }
+
+
         }
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
