@@ -92,6 +92,7 @@
     <Compile Include="Components\ControlPanelButton.cs" />
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
+    <Compile Include="VehicleStatusListeners\PowerManager.cs" />
     <Compile Include="VehicleStatusListeners\TetherSource.cs" />
     <Compile Include="VehicleStatusListeners\ModVehicleTether.cs" />
     <Compile Include="HUDBuilder.cs" />
