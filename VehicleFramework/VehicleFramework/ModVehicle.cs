@@ -89,10 +89,12 @@ namespace VehicleFramework
         public override void Awake()
         {
             base.Awake();
+            gameObject.EnsureComponent<PlayerTether>();
 
             floodlights = gameObject.EnsureComponent<FloodLightsController>();
             headlights = gameObject.EnsureComponent<HeadLightsController>();
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
+            navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
             var gauge = gameObject.EnsureComponent<FuelGauge>();
             gauge.mv = this;
@@ -120,9 +122,6 @@ namespace VehicleFramework
                 decalCanvas.worldCamera = MainCamera.camera;
             }
 
-            gameObject.EnsureComponent<PlayerTether>();
-
-            gameObject.EnsureComponent<NavigationLightsController>();
 
             // load upgrades from file
 

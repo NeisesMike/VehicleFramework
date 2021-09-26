@@ -294,6 +294,7 @@ namespace VehicleFramework
                 leftLight.intensity = pc.Intensity;
                 leftLight.range = pc.Range;
                 leftLight.shadows = LightShadows.Hard;
+                pc.Light.SetActive(false);
             }
         }
         public static void SetupLiveMixin(ref ModVehicle mv)

@@ -6,7 +6,7 @@ namespace VehicleFramework
     public class FloodLightsController : MonoBehaviour, IVehicleStatusListener
 	{
 		private ModVehicle mv;
-        private bool isFloodLightsOn = true;
+        private bool isFloodLightsOn = false;
 
         public void Awake()
         {

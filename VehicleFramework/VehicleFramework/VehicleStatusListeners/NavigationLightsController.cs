@@ -10,6 +10,9 @@ namespace VehicleFramework
 {
     public class NavigationLightsController : MonoBehaviour, IVehicleStatusListener
     {
+        private bool isNavLightsEnabled = true;
+        private bool isFlashingLightsEnabled = true;
+
         private ModVehicle mv;
         private List<Material> positionMats = new List<Material>();
         private List<Material> portMats = new List<Material>();
@@ -23,8 +26,107 @@ namespace VehicleFramework
         public const float lightBrightness = 1f;
         public const float strobeBrightness = 30f;
 
+
+        Rigidbody rb = null;
+        bool position = false;
+        Coroutine white = null;
+        Coroutine red = null;
+        Coroutine port = null;
+        Coroutine starboard = null;
+
+        private void DisableLightClass(LightClass lc)
+        {
+            switch (lc)
+            {
+                case LightClass.WhiteStrobes:
+                    if (white != null)
+                    {
+                        StopCoroutine(white);
+                        white = null;
+                    }
+                    KillStrobes(LightClass.WhiteStrobes);
+                    break;
+                case LightClass.RedStrobes:
+                    if (red != null)
+                    {
+                        StopCoroutine(red);
+                        red = null;
+                    }
+                    KillStrobes(LightClass.RedStrobes);
+                    break;
+                case LightClass.Positions:
+                    if (position)
+                    {
+                        BlinkOff(positionMats);
+                        position = false;
+                    }
+                    break;
+                case LightClass.Ports:
+                    if (port != null)
+                    {
+                        StopCoroutine(port);
+                        port = null;
+                    }
+                    BlinkOff(portMats);
+                    break;
+                case LightClass.Starboards:
+                    if (starboard != null)
+                    {
+                        StopCoroutine(starboard);
+                        starboard = null;
+                    }
+                    BlinkOff(starboardMats);
+                    break;
+            }
+        }
+        private void EnableLightClass(LightClass lc)
+        {
+            switch (lc)
+            {
+                case LightClass.WhiteStrobes:
+                    if (white == null)
+                    {
+                        white = StartCoroutine(Strobe(LightClass.WhiteStrobes));
+                    }
+                    break;
+                case LightClass.RedStrobes:
+                    if (red == null)
+                    {
+                        red = StartCoroutine(Strobe(LightClass.RedStrobes));
+                    }
+                    break;
+                case LightClass.Positions:
+                    if (!position)
+                    {
+                        BlinkOn(positionMats, Color.white);
+                        position = true;
+                    }
+                    break;
+                case LightClass.Ports:
+                    if (port == null)
+                    {
+                        port = StartCoroutine(BlinkNarySequence(2, true));
+                    }
+                    break;
+                case LightClass.Starboards:
+                    if (starboard == null)
+                    {
+                        starboard = StartCoroutine(BlinkNarySequence(2, false));
+                    }
+                    break;
+            }
+        }
+
+
+        public bool GetNavLightsEnabled()
+        {
+            return isNavLightsEnabled;
+        }
+
+
         public void Start()
         {
+            rb = GetComponent<Rigidbody>();
             mv = GetComponent<ModVehicle>();
             foreach (GameObject lightObj in mv.NavigationPositionLights)
             {
@@ -74,100 +176,46 @@ namespace VehicleFramework
             Ports,
             Starboards
         }
+        public void DisableNavLights()
+        {
+            foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+            {
+                Logger.Log("disable: " + lc.ToString());
+                DisableLightClass(lc);
+            }
+        }
+        public void EnableNavLights()
+        {
+            foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+            {
+                Logger.Log("enable: " + lc.ToString());
+                EnableLightClass(lc);
+            }
+            if(isFlashingLightsEnabled)
+            {
+                // TODO
+            }
+        }
+        public void ToggleNavLights()
+        {
+            if (mv.IsPowered())
+            {
+                isNavLightsEnabled = !isNavLightsEnabled;
+                if (isNavLightsEnabled)
+                {
+                    EnableNavLights();
+                }
+                else
+                {
+                    DisableNavLights();
+                }
+            }
+        }
         private IEnumerator ControlLights()
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            bool position = false;
-            Coroutine white = null;
-            Coroutine red = null;
-            Coroutine port = null;
-            Coroutine starboard = null;
-
-            void DisableLightClass(LightClass lc)
-            {
-                switch(lc)
-                {
-                    case LightClass.WhiteStrobes:
-                        if (white != null)
-                        {
-                            StopCoroutine(white);
-                            white = null;
-                        }
-                        KillStrobes(LightClass.WhiteStrobes);
-                        break;
-                    case LightClass.RedStrobes:
-                        if (red != null)
-                        {
-                            StopCoroutine(red);
-                            red = null;
-                        }
-                        KillStrobes(LightClass.RedStrobes);
-                        break;
-                    case LightClass.Positions:
-                        if (position)
-                        {
-                            BlinkOff(positionMats);
-                            position = false;
-                        }
-                        break;
-                    case LightClass.Ports:
-                        if (port != null)
-                        {
-                            StopCoroutine(port);
-                            port = null;
-                        }
-                        BlinkOff(portMats);
-                        break;
-                    case LightClass.Starboards:
-                        if (starboard != null)
-                        {
-                            StopCoroutine(starboard);
-                            starboard = null;
-                        }
-                        BlinkOff(starboardMats);
-                        break;
-                }
-            }
-            void EnableLightClass(LightClass lc)
-            {
-                switch (lc)
-                {
-                    case LightClass.WhiteStrobes:
-                        if (white == null)
-                        {
-                            white = StartCoroutine(Strobe(LightClass.WhiteStrobes));
-                        }
-                        break;
-                    case LightClass.RedStrobes:
-                        if (red == null)
-                        {
-                            red = StartCoroutine(Strobe(LightClass.RedStrobes));
-                        }
-                        break;
-                    case LightClass.Positions:
-                        if (!position)
-                        {
-                            BlinkOn(positionMats, Color.white);
-                            position = true;
-                        }
-                        break;
-                    case LightClass.Ports:
-                        if (port == null)
-                        {
-                            port = StartCoroutine(BlinkNarySequence(2, true));
-                        }
-                        break;
-                    case LightClass.Starboards:
-                        if (starboard == null)
-                        {
-                            starboard = StartCoroutine(BlinkNarySequence(2, false));
-                        }
-                        break;
-                }
-            }
             while(true)
             {
-                if(mv.IsPowered())
+                if(isNavLightsEnabled && mv.IsPowered())
                 {
                     EnableLightClass(LightClass.Positions);
                     EnableLightClass(LightClass.Ports);
