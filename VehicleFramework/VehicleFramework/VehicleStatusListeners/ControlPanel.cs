@@ -10,45 +10,108 @@ namespace VehicleFramework
     public class ControlPanel : MonoBehaviour, IVehicleStatusListener
     {
         public ModVehicle mv;
-        private GameObject button1;
-        private GameObject button2;
-        private GameObject button3;
-        private GameObject button4;
+        private GameObject buttonHeadLights;
+        private GameObject buttonNavLights;
+        private GameObject buttonAutoPilot;
+        private GameObject buttonInteriorLights;
+        private GameObject button5;
+        private GameObject button6;
+        private GameObject buttonFloodLights;
+        private GameObject button8;
+        private GameObject buttonPower;
 
         public void Init()
         {
             // find buttons
-            button1 = transform.Find("Button1").gameObject;
-            button2 = transform.Find("Button2").gameObject;
-            button3 = transform.Find("Button3").gameObject;
-            button4 = transform.Find("Button4").gameObject;
+            buttonHeadLights = transform.Find("1").gameObject;
+            buttonNavLights = transform.Find("2").gameObject;
+            buttonAutoPilot = transform.Find("3").gameObject;
+            buttonInteriorLights = transform.Find("4").gameObject;
+            button5 = transform.Find("5").gameObject;
+            button6 = transform.Find("6").gameObject;
+            buttonFloodLights = transform.Find("7").gameObject;
+            button8 = transform.Find("8").gameObject;
+            buttonPower = transform.Find("9").gameObject;
 
             // give buttons their colliders, for touching
-            button1.EnsureComponent<BoxCollider>();
-            button2.EnsureComponent<BoxCollider>();
-            button3.EnsureComponent<BoxCollider>();
-            button4.EnsureComponent<BoxCollider>();
+            buttonHeadLights.EnsureComponent<BoxCollider>();
+            buttonNavLights.EnsureComponent<BoxCollider>();
+            buttonAutoPilot.EnsureComponent<BoxCollider>();
+            buttonInteriorLights.EnsureComponent<BoxCollider>();
+            button5.EnsureComponent<BoxCollider>();
+            button6.EnsureComponent<BoxCollider>();
+            buttonFloodLights.EnsureComponent<BoxCollider>();
+            button8.EnsureComponent<BoxCollider>();
+            buttonPower.EnsureComponent<BoxCollider>();
 
             // give buttons their logic, for executing
-            button1.EnsureComponent<ControlPanelButton>().Init(HeadlightsClick, HeadlightsLightsHover);
-            button2.EnsureComponent<ControlPanelButton>().Init(InteriorLightsClick, InteriorLightsHover);
-            button3.EnsureComponent<ControlPanelButton>().Init(PowerClick, PowerHover);
-            button4.EnsureComponent<ControlPanelButton>().Init(AutoPilotClick, AutoPilotHover);
+            buttonHeadLights.EnsureComponent<ControlPanelButton>().Init(HeadlightsClick, HeadLightsHover);
+            buttonNavLights.EnsureComponent<ControlPanelButton>().Init(NavLightsClick, NavLightsHover);
+            buttonAutoPilot.EnsureComponent<ControlPanelButton>().Init(AutoPilotClick, AutoPilotHover);
+            buttonInteriorLights.EnsureComponent<ControlPanelButton>().Init(InteriorLightsClick, InteriorLightsHover);
+            button5.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
+            button6.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
+            buttonFloodLights.EnsureComponent<ControlPanelButton>().Init(FloodLightsClick, FloodLightsHover);
+            button8.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
+            buttonPower.EnsureComponent<ControlPanelButton>().Init(PowerClick, PowerHover);
 
-            SetButtonLightingActive(button1, false);
-            SetButtonLightingActive(button2, false);
-            SetButtonLightingActive(button3, false);
-            SetButtonLightingActive(button4, false);
+            ResetAllButtonLighting();
         }
 
+        private void ResetAllButtonLighting()
+        {
+            SetButtonLightingActive(buttonHeadLights, false);
+            SetButtonLightingActive(buttonNavLights, false);
+            SetButtonLightingActive(buttonAutoPilot, false);
+            SetButtonLightingActive(buttonInteriorLights, false);
+            SetButtonLightingActive(button5, false);
+            SetButtonLightingActive(button6, false);
+            SetButtonLightingActive(buttonFloodLights, true);
+            SetButtonLightingActive(button8, false);
+            SetButtonLightingActive(buttonPower, true);
+        }
+
+        public bool EmptyClick()
+        {
+            return true;
+        }
+        public bool EmptyHover()
+        {
+            HandReticle.main.SetInteractText("of no use");
+            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 0.1f);
+            return true;
+        }
         public bool HeadlightsClick()
         {
             mv.headlights.ToggleHeadlights();
             return true;
         }
-        public bool HeadlightsLightsHover()
+        public bool HeadLightsHover()
         {
-            HandReticle.main.SetInteractText("Toggle Exterior Lighting");
+            HandReticle.main.SetInteractText("Toggle Headlights");
+            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
+            return true;
+        }
+        public bool FloodLightsClick()
+        {
+            mv.floodlights.ToggleFloodLights();
+            return true;
+        }
+        public bool FloodLightsHover()
+        {
+            HandReticle.main.SetInteractText("Toggle Flood Lights");
+            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
+            return true;
+        }
+        public bool NavLightsClick()
+        {
+            SetButtonLightingActive(buttonNavLights, mv.navlights.GetNavLightsEnabled());
+            mv.navlights.ToggleNavLights();
+            return true;
+        }
+        public bool NavLightsHover()
+        {
+            HandReticle.main.SetInteractText("Toggle Nav Lights");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -135,38 +198,32 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnPowerUp()
         {
-            SetButtonLightingActive(button1, false);
-            SetButtonLightingActive(button2, false);
-            SetButtonLightingActive(button3, false);
-            SetButtonLightingActive(button4, false);
+            ResetAllButtonLighting();
         }
 
         void IVehicleStatusListener.OnPowerDown()
         {
-            SetButtonLightingActive(button1, false);
-            SetButtonLightingActive(button2, false);
-            SetButtonLightingActive(button3, false);
-            SetButtonLightingActive(button4, false);
+            ResetAllButtonLighting();
         }
 
         void IVehicleStatusListener.OnHeadLightsOn()
         {
-            SetButtonLightingActive(button1, false);
+            SetButtonLightingActive(buttonHeadLights, false);
         }
 
         void IVehicleStatusListener.OnHeadLightsOff()
         {
-            SetButtonLightingActive(button1, true);
+            SetButtonLightingActive(buttonHeadLights, true);
         }
 
         void IVehicleStatusListener.OnInteriorLightsOn()
         {
-            SetButtonLightingActive(button2, false);
+            SetButtonLightingActive(buttonInteriorLights, false);
         }
 
         void IVehicleStatusListener.OnInteriorLightsOff()
         {
-            SetButtonLightingActive(button2, true);
+            SetButtonLightingActive(buttonInteriorLights, true);
         }
 
         void IVehicleStatusListener.OnTakeDamage()
@@ -179,12 +236,12 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnAutoPilotBegin()
         {
-            SetButtonLightingActive(button4, false);
+            SetButtonLightingActive(buttonAutoPilot, false);
         }
 
         void IVehicleStatusListener.OnAutoPilotEnd()
         {
-            SetButtonLightingActive(button4, true);
+            SetButtonLightingActive(buttonAutoPilot, true);
         }
 
         void IVehicleStatusListener.OnBatteryLow()
@@ -199,10 +256,12 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnFloodLightsOn()
         {
+            SetButtonLightingActive(buttonFloodLights, false);
         }
 
         void IVehicleStatusListener.OnFloodLightsOff()
         {
+            SetButtonLightingActive(buttonFloodLights, true);
         }
     }
 }
