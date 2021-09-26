@@ -210,6 +210,7 @@ namespace VehicleFramework
             mat.SetFloat("_EmissionLM", lightBrightness);
             mat.SetFloat("_EmissionLMNight", lightBrightness);
             mat.SetColor("_Color", col);
+            mat.SetColor("_GlowColor", col);
         }
         private void BlinkThisStrobeOn(Material mat, Color col)
         {
@@ -217,6 +218,7 @@ namespace VehicleFramework
             mat.SetFloat("_EmissionLM", strobeBrightness);
             mat.SetFloat("_EmissionLMNight", strobeBrightness);
             mat.SetColor("_Color", col);
+            mat.SetColor("_GlowColor", col);
         }
         private void BlinkThisLightOff(Material mat)
         {

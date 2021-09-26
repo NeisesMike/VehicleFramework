@@ -10,7 +10,7 @@ namespace VehicleFramework
     public class VehicleLights : MonoBehaviour, IVehicleStatusListener
 	{
 		public ModVehicle mv;
-        private bool isLightsOn = true;
+        private bool isExteriorLightsOn = true;
         private bool isInteriorLightsOn = true;
         private bool wasPowered = true;
 
@@ -25,36 +25,36 @@ namespace VehicleFramework
             {
                 ToggleExteriorLighting();
             }
-            if(isLightsOn)
+            if(isExteriorLightsOn)
             {
                 mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.001f * Time.deltaTime);
             }
         }
         public void EnableExteriorLighting()
         {
-            if (!isLightsOn)
+            if (!isExteriorLightsOn)
             {
                 SetFloodLampsActive(true);
                 mv.lightsOnSound.Stop();
                 mv.lightsOnSound.Play();
-                isLightsOn = !isLightsOn;
+                isExteriorLightsOn = !isExteriorLightsOn;
             }
         }
         public void DisableExteriorLighting()
         {
-            if (isLightsOn)
+            if (isExteriorLightsOn)
             {
                 SetFloodLampsActive(false);
                 mv.lightsOffSound.Stop();
                 mv.lightsOffSound.Play();
-                isLightsOn = !isLightsOn;
+                isExteriorLightsOn = !isExteriorLightsOn;
             }
         }
         public void ToggleExteriorLighting()
         {
             if (mv.IsPowered())
             {
-                if (isLightsOn)
+                if (isExteriorLightsOn)
                 {
                     DisableExteriorLighting();
                 }
@@ -62,6 +62,10 @@ namespace VehicleFramework
                 {
                     EnableExteriorLighting();
                 }
+            }
+            else
+            {
+                isExteriorLightsOn = false;
             }
         }
         public void ToggleInteriorLighting()
@@ -77,6 +81,10 @@ namespace VehicleFramework
                 {
                     EnableInteriorLighting();
                 }
+            }
+            else
+            {
+                isInteriorLightsOn = false;
             }
         }
         public void CheckPower()

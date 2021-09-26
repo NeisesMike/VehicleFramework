@@ -88,7 +88,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\ControlPanel.cs" />
+    <Compile Include="VehicleStatusListeners\ControlPanel.cs" />
     <Compile Include="Components\ControlPanelButton.cs" />
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
