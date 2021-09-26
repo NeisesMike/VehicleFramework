@@ -17,7 +17,6 @@ namespace VehicleFramework
         {
             if(isFloodLightsOn)
             {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.005f * Time.deltaTime);
             }
         }
         public void EnableFloodLights()
@@ -149,6 +148,14 @@ namespace VehicleFramework
         }
 
         void IVehicleStatusListener.OnFloodLightsOff()
+        {
+        }
+
+        void IVehicleStatusListener.OnNavLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnNavLightsOff()
         {
         }
     }

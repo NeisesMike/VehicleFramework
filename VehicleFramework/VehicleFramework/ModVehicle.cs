@@ -535,6 +535,12 @@ namespace VehicleFramework
                     case VehicleStatus.OnFloodLightsOff:
                         component.OnFloodLightsOff();
                         break;
+                    case VehicleStatus.OnNavLightsOn:
+                        component.OnNavLightsOn();
+                        break;
+                    case VehicleStatus.OnNavLightsOff:
+                        component.OnNavLightsOff();
+                        break;
                     case VehicleStatus.OnTakeDamage:
                         component.OnTakeDamage();
                         break;

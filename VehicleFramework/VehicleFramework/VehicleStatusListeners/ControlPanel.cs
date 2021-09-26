@@ -263,5 +263,13 @@ namespace VehicleFramework
         {
             SetButtonLightingActive(buttonFloodLights, true);
         }
+
+        void IVehicleStatusListener.OnNavLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnNavLightsOff()
+        {
+        }
     }
 }

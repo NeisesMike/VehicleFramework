@@ -153,5 +153,13 @@ namespace VehicleFramework
         void IVehicleStatusListener.OnFloodLightsOff()
         {
         }
+
+        void IVehicleStatusListener.OnNavLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnNavLightsOff()
+        {
+        }
     }
 }

@@ -204,10 +204,12 @@ namespace VehicleFramework
                 if (isNavLightsEnabled)
                 {
                     EnableNavLights();
+                    mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
                 }
                 else
                 {
                     DisableNavLights();
+                    mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
                 }
             }
         }
@@ -562,6 +564,14 @@ namespace VehicleFramework
         }
 
         void IVehicleStatusListener.OnFloodLightsOff()
+        {
+        }
+
+        void IVehicleStatusListener.OnNavLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnNavLightsOff()
         {
         }
     }

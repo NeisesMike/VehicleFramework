@@ -20,6 +20,8 @@ namespace VehicleFramework
         OnInteriorLightsOff,
         OnFloodLightsOn,
         OnFloodLightsOff,
+        OnNavLightsOn,
+        OnNavLightsOff,
         OnTakeDamage,
         OnAutoLevel,
         OnAutoPilotBegin,
@@ -41,6 +43,8 @@ namespace VehicleFramework
         void OnHeadLightsOff();
         void OnInteriorLightsOn();
         void OnInteriorLightsOff();
+        void OnNavLightsOn();
+        void OnNavLightsOff();
         void OnFloodLightsOn();
         void OnFloodLightsOff();
         void OnTakeDamage();
