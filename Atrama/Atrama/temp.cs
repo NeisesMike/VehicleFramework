@@ -29,8 +29,6 @@ namespace Atrama
 
         public override List<VehicleBattery> Batteries => throw new NotImplementedException();
 
-        public override List<VehicleHeadLight> Lights => throw new NotImplementedException();
-
         public override List<GameObject> NavigationPortLights => throw new NotImplementedException();
 
         public override List<GameObject> NavigationStarboardLights => throw new NotImplementedException();
@@ -54,5 +52,9 @@ namespace Atrama
         public override GameObject ControlPanel => throw new NotImplementedException();
 
         public override List<VehicleBattery> BackupBatteries => throw new NotImplementedException();
+
+        public override List<VehicleFloodLight> HeadLights => throw new NotImplementedException();
+
+        public override List<VehicleFloodLight> FloodLights => throw new NotImplementedException();
     }
 }

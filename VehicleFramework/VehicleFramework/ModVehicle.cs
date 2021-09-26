@@ -34,7 +34,8 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
         public abstract List<VehicleParts.VehicleBattery> BackupBatteries { get; }
-        public abstract List<VehicleParts.VehicleHeadLight> Lights { get; }
+        public abstract List<VehicleParts.VehicleFloodLight> HeadLights { get; }
+        public abstract List<VehicleParts.VehicleFloodLight> FloodLights { get; }
         public abstract List<GameObject> NavigationPortLights { get; }
         public abstract List<GameObject> NavigationStarboardLights { get; }
         public abstract List<GameObject> NavigationPositionLights { get; }
@@ -69,9 +70,13 @@ namespace VehicleFramework
         // because it is unusable yet the batteries are not empty
         public bool IsDisengaged = false;
 
-        public VehicleLights vLights;
         public VehicleEngine engine;
         public Transform thisStopPilotingLocation;
+
+        public FloodLightsController floodlights;
+        public HeadLightsController headlights;
+        public InteriorLightsController interiorlights;
+        public NavigationLightsController navlights;
 
         // later
         public virtual List<GameObject> Arms => null;
@@ -85,12 +90,12 @@ namespace VehicleFramework
         {
             base.Awake();
 
-            vLights = gameObject.EnsureComponent<VehicleLights>();
-            vLights.mv = this;
+            floodlights = gameObject.EnsureComponent<FloodLightsController>();
+            headlights = gameObject.EnsureComponent<HeadLightsController>();
+            interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
 
             var gauge = gameObject.EnsureComponent<FuelGauge>();
             gauge.mv = this;
-
             var pilot = gameObject.EnsureComponent<AutoPilot>();
             pilot.mv = this;
 
@@ -479,10 +484,13 @@ namespace VehicleFramework
         public void TogglePower()
         {
             IsDisengaged = !IsDisengaged;
-            if(!IsDisengaged)
+            if(IsDisengaged)
             {
-                gameObject.GetComponent<VehicleLights>().EnableInteriorLighting();
-                gameObject.GetComponent<VehicleLights>().EnableExteriorLighting();
+                NotifyStatus(VehicleStatus.OnPowerDown);
+            }
+            else
+            {
+                NotifyStatus(VehicleStatus.OnPowerUp);
             }
         }
         public void NotifyStatus(VehicleStatus vs)
@@ -509,17 +517,23 @@ namespace VehicleFramework
                     case VehicleStatus.OnPowerDown:
                         component.OnPowerDown();
                         break;
-                    case VehicleStatus.OnExteriorLightsOn:
-                        component.OnExteriorLightsOn();
+                    case VehicleStatus.OnHeadLightsOn:
+                        component.OnHeadLightsOn();
                         break;
-                    case VehicleStatus.OnExteriorLightsOff:
-                        component.OnExteriorLightsOff();
+                    case VehicleStatus.OnHeadLightsOff:
+                        component.OnHeadLightsOff();
                         break;
                     case VehicleStatus.OnInteriorLightsOn:
                         component.OnInteriorLightsOn();
                         break;
                     case VehicleStatus.OnInteriorLightsOff:
                         component.OnInteriorLightsOff();
+                        break;
+                    case VehicleStatus.OnFloodLightsOn:
+                        component.OnFloodLightsOn();
+                        break;
+                    case VehicleStatus.OnFloodLightsOff:
+                        component.OnFloodLightsOff();
                         break;
                     case VehicleStatus.OnTakeDamage:
                         component.OnTakeDamage();
@@ -532,6 +546,12 @@ namespace VehicleFramework
                         break;
                     case VehicleStatus.OnAutoPilotEnd:
                         component.OnAutoPilotEnd();
+                        break;
+                    case VehicleStatus.OnBatteryLow:
+                        component.OnBatteryLow();
+                        break;
+                    case VehicleStatus.OnBatteryDepletion:
+                        component.OnBatteryDepletion();
                         break;
                     default:
                         Logger.Log("Error: tried to notify using an invalid status");

@@ -455,11 +455,11 @@ namespace VehicleFramework
         {
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOff()
+        void IVehicleStatusListener.OnHeadLightsOff()
         {
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOn()
+        void IVehicleStatusListener.OnHeadLightsOn()
         {
         }
 
@@ -496,6 +496,24 @@ namespace VehicleFramework
         }
 
         void IVehicleStatusListener.OnTakeDamage()
+        {
+        }
+
+        void IVehicleStatusListener.OnBatteryLow()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnBatteryDepletion()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOff()
         {
         }
     }

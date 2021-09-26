@@ -135,25 +135,62 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleHeadLight> Lights
+        public override List<VehicleFramework.VehicleParts.VehicleFloodLight> HeadLights
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleHeadLight>();
+                var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
 
-                VehicleFramework.VehicleParts.VehicleHeadLight leftLight = new VehicleFramework.VehicleParts.VehicleHeadLight();
+                VehicleFramework.VehicleParts.VehicleFloodLight leftLight = new VehicleFramework.VehicleParts.VehicleFloodLight();
                 leftLight.Light = transform.Find("HeadLights/LeftLight").gameObject;
-                leftLight.Angle = 45;
+                leftLight.Angle = 60;
                 leftLight.Color = Color.white;
-                leftLight.Strength = 60;
+                leftLight.Intensity = 1.5f;
+                leftLight.Range = 120f;
                 list.Add(leftLight);
 
-                VehicleFramework.VehicleParts.VehicleHeadLight rightLight = new VehicleFramework.VehicleParts.VehicleHeadLight();
+                VehicleFramework.VehicleParts.VehicleFloodLight rightLight = new VehicleFramework.VehicleParts.VehicleFloodLight();
                 rightLight.Light = transform.Find("HeadLights/RightLight").gameObject;
-                rightLight.Angle = 45;
+                rightLight.Angle = 60;
                 rightLight.Color = Color.white;
-                rightLight.Strength = 60;
+                rightLight.Intensity = 1.5f;
+                rightLight.Range = 120f;
                 list.Add(rightLight);
+
+                return list;
+            }
+        }
+        public override List<VehicleFramework.VehicleParts.VehicleFloodLight> FloodLights
+        {
+            get
+            {
+                var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
+
+                VehicleFramework.VehicleParts.VehicleFloodLight mainFlood = new VehicleFramework.VehicleParts.VehicleFloodLight();
+                mainFlood.Light = transform.Find("FloodLights/main").gameObject;
+                mainFlood.Angle = 120;
+                mainFlood.Color = Color.white;
+                mainFlood.Intensity = 1f;
+                mainFlood.Range = 40f;
+                list.Add(mainFlood);
+
+
+                VehicleFramework.VehicleParts.VehicleFloodLight portFlood = new VehicleFramework.VehicleParts.VehicleFloodLight();
+                portFlood.Light = transform.Find("FloodLights/port").gameObject;
+                portFlood.Angle = 90;
+                portFlood.Color = Color.white;
+                portFlood.Intensity = 1;
+                portFlood.Range = 30f;
+                list.Add(portFlood);
+
+
+                VehicleFramework.VehicleParts.VehicleFloodLight starboardFlood = new VehicleFramework.VehicleParts.VehicleFloodLight();
+                starboardFlood.Light = transform.Find("FloodLights/starboard").gameObject;
+                starboardFlood.Angle = 90;
+                starboardFlood.Color = Color.white;
+                starboardFlood.Intensity = 1f;
+                starboardFlood.Range = 30f;
+                list.Add(starboardFlood);
 
                 return list;
             }

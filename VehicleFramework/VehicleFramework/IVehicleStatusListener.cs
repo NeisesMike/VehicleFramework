@@ -14,14 +14,18 @@ namespace VehicleFramework
         OnPilotEnd,
         OnPowerUp,
         OnPowerDown,
-        OnExteriorLightsOn,
-        OnExteriorLightsOff,
+        OnHeadLightsOn,
+        OnHeadLightsOff,
         OnInteriorLightsOn,
         OnInteriorLightsOff,
+        OnFloodLightsOn,
+        OnFloodLightsOff,
         OnTakeDamage,
         OnAutoLevel,
         OnAutoPilotBegin,
-        OnAutoPilotEnd
+        OnAutoPilotEnd,
+        OnBatteryLow,
+        OnBatteryDepletion
     }
     public interface IVehicleStatusListener
     {
@@ -33,13 +37,17 @@ namespace VehicleFramework
         void OnPowerDown();
         // TODO
         //Something is pulsing OnExteriorLightsOn every frame, but not sure what
-        void OnExteriorLightsOn();
-        void OnExteriorLightsOff();
+        void OnHeadLightsOn();
+        void OnHeadLightsOff();
         void OnInteriorLightsOn();
         void OnInteriorLightsOff();
+        void OnFloodLightsOn();
+        void OnFloodLightsOff();
         void OnTakeDamage();
         void OnAutoLevel();
         void OnAutoPilotBegin();
         void OnAutoPilotEnd();
+        void OnBatteryLow();
+        void OnBatteryDepletion();
     }
 }

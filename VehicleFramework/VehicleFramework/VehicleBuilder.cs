@@ -218,7 +218,7 @@ namespace VehicleFramework
             var eInterf = mv.BackupBatteries[0].BatterySlot.EnsureComponent<EnergyInterface>();
             eInterf.sources = energyMixins.ToArray();
         }
-        public static void SetupLights(ref ModVehicle mv)
+        public static void SetupLightSounds(ref ModVehicle mv)
         {
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
@@ -237,11 +237,14 @@ namespace VehicleFramework
                     mv.lightsOffSound = ce;
                 }
             }
+        }
+        public static void SetupLights(ref ModVehicle mv)
+        {
             GameObject seamothHeadLight = seamoth.transform.Find("lights_parent/light_left").gameObject;
             Transform seamothVL = seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
-            foreach (VehicleParts.VehicleHeadLight pc in mv.Lights)
+            foreach (VehicleParts.VehicleFloodLight pc in mv.HeadLights)
             {
                 CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
                 var leftLight = pc.Light.EnsureComponent<Light>();
@@ -249,8 +252,8 @@ namespace VehicleFramework
                 leftLight.spotAngle = pc.Angle;
                 leftLight.innerSpotAngle = pc.Angle * .75f;
                 leftLight.color = pc.Color;
-                leftLight.intensity = pc.Strength / 60f;
-                leftLight.range = pc.Strength;
+                leftLight.intensity = pc.Intensity;
+                leftLight.range = pc.Range;
                 leftLight.shadows = LightShadows.Hard;
 
                 GameObject volumetricLight = pc.Light.transform.Find("VolumetricLight").gameObject;
@@ -275,9 +278,22 @@ namespace VehicleFramework
                 leftVFX.volumGO = volumetricLight;
                 leftVFX.volumRenderer = lvlMeshRenderer;
                 leftVFX.volumMeshFilter = lvlMeshFilter;
-
+                leftVFX.angle = (int)pc.Angle;
+                leftVFX.range = pc.Range;
                 mv.lights.Add(pc.Light);
                 mv.volumetricLights.Add(volumetricLight);
+            }
+            foreach (VehicleParts.VehicleFloodLight pc in mv.FloodLights)
+            {
+                CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
+                var leftLight = pc.Light.EnsureComponent<Light>();
+                leftLight.type = LightType.Spot;
+                leftLight.spotAngle = pc.Angle;
+                leftLight.innerSpotAngle = pc.Angle * .75f;
+                leftLight.color = pc.Color;
+                leftLight.intensity = pc.Intensity;
+                leftLight.range = pc.Range;
+                leftLight.shadows = LightShadows.Hard;
             }
         }
         public static void SetupLiveMixin(ref ModVehicle mv)
@@ -441,6 +457,7 @@ namespace VehicleFramework
             SetupAIEnergyInterface(ref mv);
             mv.enabled = true;
             SetupLights(ref mv);
+            SetupLightSounds(ref mv);
             SetupLiveMixin(ref mv);
             SetupRigidbody(ref mv);
             SetupEngine(ref mv);
@@ -455,6 +472,8 @@ namespace VehicleFramework
             SetupConstructionObstacle(ref mv);
             SetupSoundOnDamage(ref mv);
             SetupDealDamageOnImpact(ref mv);
+
+            ApplySkyAppliers(ref mv);
 
             // ApplyShaders should happen last
             ApplyShaders(ref mv);
@@ -537,6 +556,23 @@ namespace VehicleFramework
                 }
             }
 
+
+        }
+        public static void ApplySkyAppliers(ref ModVehicle mv)
+        {
+            var ska = mv.gameObject.EnsureComponent<SkyApplier>();
+            ska.anchorSky = Skies.Auto;
+            ska.customSkyPrefab = null;
+            ska.dynamic = true;
+            ska.emissiveFromPower = false;
+            ska.environmentSky = null;
+
+            var rends = mv.gameObject.GetComponentsInChildren<Renderer>();
+            ska.renderers = new Renderer[rends.Count()];
+            foreach(var rend in rends)
+            {
+                ska.renderers.Append(rend);
+            }
 
         }
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component

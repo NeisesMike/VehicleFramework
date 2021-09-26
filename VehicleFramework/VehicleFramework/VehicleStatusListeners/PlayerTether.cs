@@ -72,10 +72,12 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnPlayerEntry()
         {
+            isTetherEstablished = true;
         }
 
         void IVehicleStatusListener.OnPlayerExit()
         {
+            isTetherEstablished = false;
         }
 
         void IVehicleStatusListener.OnPilotBegin()
@@ -94,11 +96,11 @@ namespace VehicleFramework
         {
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOn()
+        void IVehicleStatusListener.OnHeadLightsOn()
         {
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOff()
+        void IVehicleStatusListener.OnHeadLightsOff()
         {
         }
 
@@ -123,6 +125,24 @@ namespace VehicleFramework
         }
 
         void IVehicleStatusListener.OnAutoPilotEnd()
+        {
+        }
+
+        void IVehicleStatusListener.OnBatteryLow()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnBatteryDepletion()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOff()
         {
         }
     }

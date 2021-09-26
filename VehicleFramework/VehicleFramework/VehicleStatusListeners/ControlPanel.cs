@@ -30,7 +30,7 @@ namespace VehicleFramework
             button4.EnsureComponent<BoxCollider>();
 
             // give buttons their logic, for executing
-            button1.EnsureComponent<ControlPanelButton>().Init(ExteriorLightsClick, ExteriorLightsHover);
+            button1.EnsureComponent<ControlPanelButton>().Init(HeadlightsClick, HeadlightsLightsHover);
             button2.EnsureComponent<ControlPanelButton>().Init(InteriorLightsClick, InteriorLightsHover);
             button3.EnsureComponent<ControlPanelButton>().Init(PowerClick, PowerHover);
             button4.EnsureComponent<ControlPanelButton>().Init(AutoPilotClick, AutoPilotHover);
@@ -41,12 +41,12 @@ namespace VehicleFramework
             SetButtonLightingActive(button4, false);
         }
 
-        public bool ExteriorLightsClick()
+        public bool HeadlightsClick()
         {
-            mv.vLights.ToggleExteriorLighting();
+            mv.headlights.ToggleHeadlights();
             return true;
         }
-        public bool ExteriorLightsHover()
+        public bool HeadlightsLightsHover()
         {
             HandReticle.main.SetInteractText("Toggle Exterior Lighting");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
@@ -54,7 +54,7 @@ namespace VehicleFramework
         }
         public bool InteriorLightsClick()
         {
-            mv.vLights.ToggleInteriorLighting();
+            mv.interiorlights.ToggleInteriorLighting();
             return true;
         }
         public bool InteriorLightsHover()
@@ -149,12 +149,12 @@ namespace VehicleFramework
             SetButtonLightingActive(button4, false);
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOn()
+        void IVehicleStatusListener.OnHeadLightsOn()
         {
             SetButtonLightingActive(button1, false);
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOff()
+        void IVehicleStatusListener.OnHeadLightsOff()
         {
             SetButtonLightingActive(button1, true);
         }
@@ -185,6 +185,24 @@ namespace VehicleFramework
         void IVehicleStatusListener.OnAutoPilotEnd()
         {
             SetButtonLightingActive(button4, true);
+        }
+
+        void IVehicleStatusListener.OnBatteryLow()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnBatteryDepletion()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOff()
+        {
         }
     }
 }

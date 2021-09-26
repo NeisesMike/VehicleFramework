@@ -135,11 +135,11 @@ namespace VehicleFramework
             // if current health total is too low, disable auto pilot
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOn()
+        void IVehicleStatusListener.OnHeadLightsOn()
         {
         }
 
-        void IVehicleStatusListener.OnExteriorLightsOff()
+        void IVehicleStatusListener.OnHeadLightsOff()
         {
         }
 
@@ -148,6 +148,24 @@ namespace VehicleFramework
         }
 
         void IVehicleStatusListener.OnInteriorLightsOff()
+        {
+        }
+
+        void IVehicleStatusListener.OnBatteryLow()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnBatteryDepletion()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOn()
+        {
+        }
+
+        void IVehicleStatusListener.OnFloodLightsOff()
         {
         }
     }

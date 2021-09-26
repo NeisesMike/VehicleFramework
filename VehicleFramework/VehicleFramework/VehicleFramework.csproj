@@ -92,7 +92,7 @@
     <Compile Include="Components\ControlPanelButton.cs" />
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
-    <Compile Include="Components\PlayerTether.cs" />
+    <Compile Include="VehicleStatusListeners\PlayerTether.cs" />
     <Compile Include="HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
@@ -104,8 +104,10 @@
     <Compile Include="Components\VehicleBatteryInput.cs" />
     <Compile Include="Components\VehicleEngine.cs" />
     <Compile Include="Components\FuelGauge.cs" />
+    <Compile Include="VehicleStatusListeners\HeadLightsController.cs" />
     <Compile Include="VehicleStatusListeners\NavigationLightsController.cs" />
-    <Compile Include="VehicleStatusListeners\VehicleLights.cs" />
+    <Compile Include="VehicleStatusListeners\FloodLightsController.cs" />
+    <Compile Include="VehicleStatusListeners\InteriorLightsController.cs" />
     <Compile Include="Components\VehicleHatch.cs" />
     <Compile Include="Components\InnateStorageContainer.cs" />
     <Compile Include="Components\ModularStorageInput.cs" />
