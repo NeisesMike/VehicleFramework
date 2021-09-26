@@ -49,7 +49,7 @@ namespace VehicleFramework
                 light.enabled = false;
                 light.color = Color.white;
                 light.type = LightType.Point;
-                light.intensity = 1f;
+                light.intensity = 0.5f;
                 light.range = 120f;
                 light.shadows = LightShadows.Hard;
                 whiteStrobeLights.Add(light);
@@ -172,16 +172,16 @@ namespace VehicleFramework
                     EnableLightClass(LightClass.Positions);
                     EnableLightClass(LightClass.Ports);
                     EnableLightClass(LightClass.Starboards);
-                    if (white == null && 8f <= rb.velocity.magnitude)
+                    if (white == null && 10f <= rb.velocity.magnitude)
                     {
                         EnableLightClass(LightClass.WhiteStrobes);
                     }
-                    else if (3f < rb.velocity.magnitude && rb.velocity.magnitude < 9f)
+                    else if (3f < rb.velocity.magnitude && rb.velocity.magnitude < 10f)
                     {
                         DisableLightClass(LightClass.WhiteStrobes);
                         DisableLightClass(LightClass.RedStrobes);
                     }
-                    else if (red == null && 0.01f < rb.velocity.magnitude && rb.velocity.magnitude < 1f)
+                    else if (red == null && 0.001f < rb.velocity.magnitude && rb.velocity.magnitude <= 3f)
                     {
                         EnableLightClass(LightClass.RedStrobes);
                     }
@@ -340,7 +340,7 @@ namespace VehicleFramework
                 BlinkOnStrobe(lc);
                 yield return new WaitForSeconds(0.01f);
                 BlinkOffStrobe(lc);
-                yield return new WaitForSeconds(0.99f);
+                yield return new WaitForSeconds(2.99f);
             }
         }
         public IEnumerator BlinkSingleSequence()
