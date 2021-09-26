@@ -16,8 +16,8 @@ namespace VehicleFramework
             if (!mv.GetPilotingMode() && mv.IsPowered())
             {
                 // TODO multiplayer?
-                mv.BeginPiloting();
                 mv.thisStopPilotingLocation = exit;
+                mv.BeginPiloting();
             }
         }
         void IHandTarget.OnHandHover(GUIHand hand)

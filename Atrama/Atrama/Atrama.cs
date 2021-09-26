@@ -134,21 +134,21 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleLight> Lights
+        public override List<VehicleFramework.VehicleParts.VehicleHeadLight> Lights
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleLight>();
+                var list = new List<VehicleFramework.VehicleParts.VehicleHeadLight>();
 
-                VehicleFramework.VehicleParts.VehicleLight leftLight = new VehicleFramework.VehicleParts.VehicleLight();
-                leftLight.Light = transform.Find("LightsParent/LeftLight").gameObject;
+                VehicleFramework.VehicleParts.VehicleHeadLight leftLight = new VehicleFramework.VehicleParts.VehicleHeadLight();
+                leftLight.Light = transform.Find("HeadLights/LeftLight").gameObject;
                 leftLight.Angle = 45;
                 leftLight.Color = Color.white;
                 leftLight.Strength = 60;
                 list.Add(leftLight);
 
-                VehicleFramework.VehicleParts.VehicleLight rightLight = new VehicleFramework.VehicleParts.VehicleLight();
-                rightLight.Light = transform.Find("LightsParent/RightLight").gameObject;
+                VehicleFramework.VehicleParts.VehicleHeadLight rightLight = new VehicleFramework.VehicleParts.VehicleHeadLight();
+                rightLight.Light = transform.Find("HeadLights/RightLight").gameObject;
                 rightLight.Angle = 45;
                 rightLight.Color = Color.white;
                 rightLight.Strength = 60;
@@ -265,7 +265,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override List<GameObject> NameDecals
         {
             get
@@ -273,6 +272,70 @@ namespace Atrama
                 var list = new List<GameObject>();
                 list.Add(transform.Find("NameDecals/Left").gameObject);
                 list.Add(transform.Find("NameDecals/Right").gameObject);
+                return list;
+            }
+        }
+
+        public override List<GameObject> NavigationPortLights
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach (Transform child in transform.Find("NavigationLights/PortLights"))
+                {
+                    list.Add(child.gameObject);
+                }
+                return list;
+            }
+        }
+        public override List<GameObject> NavigationStarboardLights
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach (Transform child in transform.Find("NavigationLights/StarboardLights"))
+                {
+                    list.Add(child.gameObject);
+                }
+                return list;
+            }
+        }
+
+        public override List<GameObject> NavigationPositionLights
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach (Transform child in transform.Find("NavigationLights/PositionLights"))
+                {
+                    list.Add(child.gameObject);
+                }
+                return list;
+            }
+        }
+
+        public override List<GameObject> NavigationWhiteStrobeLights
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach (Transform child in transform.Find("NavigationLights/WhiteStrobes"))
+                {
+                    list.Add(child.gameObject);
+                }
+                return list;
+            }
+        }
+
+        public override List<GameObject> NavigationRedStrobeLights
+        {
+            get
+            {
+                var list = new List<GameObject>();
+                foreach (Transform child in transform.Find("NavigationLights/RedStrobes"))
+                {
+                    list.Add(child.gameObject);
+                }
                 return list;
             }
         }

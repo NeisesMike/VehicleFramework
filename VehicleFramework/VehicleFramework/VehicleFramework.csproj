@@ -104,6 +104,7 @@
     <Compile Include="Components\VehicleBatteryInput.cs" />
     <Compile Include="Components\VehicleEngine.cs" />
     <Compile Include="Components\FuelGauge.cs" />
+    <Compile Include="VehicleStatusListeners\NavigationLightsController.cs" />
     <Compile Include="VehicleStatusListeners\VehicleLights.cs" />
     <Compile Include="Components\VehicleHatch.cs" />
     <Compile Include="Components\InnateStorageContainer.cs" />

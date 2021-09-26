@@ -33,7 +33,12 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
         public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
-        public abstract List<VehicleParts.VehicleLight> Lights { get; }
+        public abstract List<VehicleParts.VehicleHeadLight> Lights { get; }
+        public abstract List<GameObject> NavigationPortLights { get; }
+        public abstract List<GameObject> NavigationStarboardLights { get; }
+        public abstract List<GameObject> NavigationPositionLights { get; }
+        public abstract List<GameObject> NavigationWhiteStrobeLights { get; }
+        public abstract List<GameObject> NavigationRedStrobeLights { get; }
         public abstract List<GameObject> WalkableInteriors { get; }
         public abstract List<GameObject> WaterClipProxies { get; }
         public abstract List<GameObject> CanopyWindows { get; }
@@ -110,6 +115,8 @@ namespace VehicleFramework
             }
 
             gameObject.EnsureComponent<PlayerTether>();
+
+            gameObject.EnsureComponent<NavigationLightsController>();
 
             // load upgrades from file
 
@@ -247,7 +254,15 @@ namespace VehicleFramework
             // called by Player.ExitLockedMode()
             // which is triggered on button press
             isPilotSeated = false;
-            Player.main.transform.position = thisStopPilotingLocation.position;
+            if(thisStopPilotingLocation == null)
+            {
+                Logger.Log("Warning: pilot exit location was null. Defaulting to first tether.");
+                Player.main.transform.position = TetherSources[0].transform.position;
+            }
+            else
+            {
+                Player.main.transform.position = thisStopPilotingLocation.position;
+            }
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
             uGUI.main.quickSlots.SetTarget(null);
             NotifyStatus(VehicleStatus.OnPilotEnd);

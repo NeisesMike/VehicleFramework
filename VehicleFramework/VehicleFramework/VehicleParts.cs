@@ -36,7 +36,7 @@ namespace VehicleFramework.VehicleParts
     {
         public GameObject BatterySlot;
     }
-    public struct VehicleLight
+    public struct VehicleHeadLight
     {
         public GameObject Light;
         public int Strength;

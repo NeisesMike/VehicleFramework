@@ -13,7 +13,7 @@ namespace VehicleFramework
         private bool isLightsOn = true;
         private bool isInteriorLightsOn = true;
         private bool wasPowered = true;
-        
+
         public VehicleLights(ModVehicle inputMV)
         {
             mv = inputMV;
@@ -48,7 +48,6 @@ namespace VehicleFramework
                 isLightsOn = !isLightsOn;
             }
         }
-
         public void ToggleExteriorLighting()
         {
             if (mv.IsPowered())
@@ -101,7 +100,6 @@ namespace VehicleFramework
                 wasPowered = false;
             }
         }
-
         public void SetVolumetricLightsActive(bool enabled)
         {
             foreach (GameObject light in mv.volumetricLights)

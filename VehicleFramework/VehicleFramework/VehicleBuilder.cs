@@ -209,7 +209,7 @@ namespace VehicleFramework
             Transform seamothVL = seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
-            foreach (VehicleParts.VehicleLight pc in mv.Lights)
+            foreach (VehicleParts.VehicleHeadLight pc in mv.Lights)
             {
                 CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
                 var leftLight = pc.Light.EnsureComponent<Light>();
