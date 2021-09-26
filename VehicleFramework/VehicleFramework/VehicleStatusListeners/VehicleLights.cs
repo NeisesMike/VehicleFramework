@@ -35,7 +35,8 @@ namespace VehicleFramework
             if (!isLightsOn)
             {
                 SetFloodLampsActive(true);
-                Utils.PlayEnvSound(mv.lightsOnSound, mv.PilotSeats[0].Seat.transform.position, 20f);
+                mv.lightsOnSound.Stop();
+                mv.lightsOnSound.Play();
                 isLightsOn = !isLightsOn;
             }
         }
@@ -44,7 +45,8 @@ namespace VehicleFramework
             if (isLightsOn)
             {
                 SetFloodLampsActive(false);
-                Utils.PlayEnvSound(mv.lightsOffSound, mv.lightsOffSound.gameObject.transform.position, 20f);
+                mv.lightsOffSound.Stop();
+                mv.lightsOffSound.Play();
                 isLightsOn = !isLightsOn;
             }
         }

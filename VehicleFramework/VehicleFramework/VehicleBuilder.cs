@@ -223,13 +223,18 @@ namespace VehicleFramework
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
+                Logger.Log(fmod.name);
                 if (fmod.asset.name == "seamoth_light_on")
                 {
-                    mv.lightsOnSound = CopyComponent(fmod, mv.gameObject);
+                    var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
+                    ce.asset = fmod.asset;
+                    mv.lightsOnSound = ce;
                 }
                 else if (fmod.asset.name == "seamoth_light_off")
                 {
-                    mv.lightsOffSound = CopyComponent(fmod, mv.gameObject);
+                    var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
+                    ce.asset = fmod.asset;
+                    mv.lightsOffSound = ce;
                 }
             }
             GameObject seamothHeadLight = seamoth.transform.Find("lights_parent/light_left").gameObject;
@@ -338,7 +343,7 @@ namespace VehicleFramework
         }
         public static void SetupCrushDamage(ref ModVehicle mv)
         {
-            var ce = mv.gameObject.EnsureComponent<FMOD_CustomEmitter>();
+            var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
             foreach (var thisCE in seamoth.GetComponentsInChildren<FMOD_CustomEmitter>())
             {
@@ -503,7 +508,7 @@ namespace VehicleFramework
         {
             // Add the marmoset shader to all renderers
             Shader marmosetShader = Shader.Find("MarmosetUBER");
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>())
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>(true))
             {
                 if (renderer.gameObject.name.Contains("Canopy"))
                 {

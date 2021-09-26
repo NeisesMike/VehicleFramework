@@ -49,8 +49,8 @@ namespace VehicleFramework
         public ControlPanel controlPanelLogic;
 
 
-        public FMOD_StudioEventEmitter lightsOnSound = null;
-        public FMOD_StudioEventEmitter lightsOffSound = null;
+        public FMOD_CustomEmitter lightsOnSound = null;
+        public FMOD_CustomEmitter lightsOffSound = null;
         public List<GameObject> lights = new List<GameObject>();
         public List<GameObject> volumetricLights = new List<GameObject>();
         public PingInstance pingInstance = null;
