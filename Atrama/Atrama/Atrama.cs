@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 
 using UnityEngine.U2D;
+using VehicleFramework.VehicleParts;
 
 namespace Atrama
 {
@@ -336,6 +337,18 @@ namespace Atrama
                 {
                     list.Add(child.gameObject);
                 }
+                return list;
+            }
+        }
+
+        public override List<VehicleBattery> BackupBatteries
+        {
+            get
+            {
+                var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
+                VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
+                vb1.BatterySlot = transform.Find("Main-Body/BackupBattery").gameObject;
+                list.Add(vb1);
                 return list;
             }
         }

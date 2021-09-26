@@ -191,6 +191,33 @@ namespace VehicleFramework
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
             eInterf.sources = energyMixins.ToArray();
         }
+        public static void SetupAIEnergyInterface(ref ModVehicle mv)
+        {
+            var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
+            List<EnergyMixin> energyMixins = new List<EnergyMixin>();
+            foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
+            {
+                // Configure energy mixin for this battery slot
+                var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
+                em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                em.defaultBattery = seamothEnergyMixin.defaultBattery;
+                em.compatibleBatteries = seamothEnergyMixin.compatibleBatteries;
+                em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
+                em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
+                em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
+                em.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
+                em.batteryModels = seamothEnergyMixin.batteryModels;
+                //atramaEnergyMixin.capacity = 500; //TODO
+                //atramaEnergyMixin.batterySlot = 
+
+                energyMixins.Add(em);
+
+                vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = em;
+            }
+            // Configure energy interface
+            var eInterf = mv.BackupBatteries[0].BatterySlot.EnsureComponent<EnergyInterface>();
+            eInterf.sources = energyMixins.ToArray();
+        }
         public static void SetupLights(ref ModVehicle mv)
         {
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
@@ -406,6 +433,7 @@ namespace VehicleFramework
             SetupPrefabObjects(ref mv);
             mv.enabled = false;
             SetupEnergyInterface(ref mv);
+            SetupAIEnergyInterface(ref mv);
             mv.enabled = true;
             SetupLights(ref mv);
             SetupLiveMixin(ref mv);

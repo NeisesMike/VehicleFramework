@@ -10,6 +10,7 @@ namespace VehicleFramework
     public class AutoPilot : MonoBehaviour, IVehicleStatusListener
 	{
 		public ModVehicle mv;
+        public EnergyInterface aiEI;
 
         private float timeOfLastLevelTap = 0f;
         private const float doubleTapWindow = 1f;
@@ -18,10 +19,13 @@ namespace VehicleFramework
         private float smoothTime = 0.3f;
         private bool autoLeveling = true;
         private bool isDead = false;
-
+        public void Start()
+        {
+            aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
+        }
         public void Update()
         {
-            if (!isDead && GameInput.GetButtonDown(GameInput.Button.Exit))
+            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit))
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {
@@ -52,7 +56,7 @@ namespace VehicleFramework
         }
         public void FixedUpdate()
         {
-            if (!isDead && (autoLeveling || !mv.IsPlayerInside()))
+            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerInside()))
             {
                 float x = transform.rotation.eulerAngles.x;
                 float y = transform.rotation.eulerAngles.y;

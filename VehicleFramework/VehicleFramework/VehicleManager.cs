@@ -47,6 +47,7 @@ namespace VehicleFramework
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
             data.Batteries = SaveManager.SerializeBatteries();
+            data.BackupBatteries = SaveManager.SerializeBackupBatteries();
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
         }
         // TODO refactor this to accept a modvehicle as input
@@ -58,6 +59,7 @@ namespace VehicleFramework
             SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData);
+            SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData);
         }
         public static void UpdateVehicles()

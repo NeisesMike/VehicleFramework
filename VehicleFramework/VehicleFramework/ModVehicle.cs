@@ -33,6 +33,7 @@ namespace VehicleFramework
         public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
         public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
+        public abstract List<VehicleParts.VehicleBattery> BackupBatteries { get; }
         public abstract List<VehicleParts.VehicleHeadLight> Lights { get; }
         public abstract List<GameObject> NavigationPortLights { get; }
         public abstract List<GameObject> NavigationStarboardLights { get; }

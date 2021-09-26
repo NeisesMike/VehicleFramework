@@ -52,5 +52,7 @@ namespace Atrama
         public override List<GameObject> TetherSources => throw new NotImplementedException();
 
         public override GameObject ControlPanel => throw new NotImplementedException();
+
+        public override List<VehicleBattery> BackupBatteries => throw new NotImplementedException();
     }
 }

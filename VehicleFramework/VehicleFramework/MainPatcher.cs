@@ -109,8 +109,8 @@ namespace VehicleFramework
         public List<Tuple<Vector3, innateStorages>> InnateStorages { get; set; }
         public List<Tuple<Vector3, modularStorages>> ModularStorages { get; set; }
         
-        // the following type assignment is hilarious, and I'm keeping it
         public List<Tuple<Vector3, batteries>> Batteries { get; set; }
+        public List<Tuple<Vector3, batteries>> BackupBatteries { get; set; }
 
         // todo: maybe this?
         // save a few lines in the output json?
