@@ -154,13 +154,13 @@ namespace VehicleFramework
                     case LightClass.Ports:
                         if (port == null)
                         {
-                            port = StartCoroutine(BlinkNarySequence(3, true));
+                            port = StartCoroutine(BlinkNarySequence(2, true));
                         }
                         break;
                     case LightClass.Starboards:
                         if (starboard == null)
                         {
-                            starboard = StartCoroutine(BlinkNarySequence(3, false));
+                            starboard = StartCoroutine(BlinkNarySequence(2, false));
                         }
                         break;
                 }
