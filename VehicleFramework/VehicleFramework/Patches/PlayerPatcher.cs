@@ -19,13 +19,15 @@ namespace VehicleFramework
     {
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        public static void StartPostfix()
+        public static void StartPostfix(Player __instance)
         {
             // load any vehicles from save now.
 
             // prepare any HUDs
             HUDBuilder.BuildNormalHUD();
 
+
+            __instance.gameObject.EnsureComponent<ModVehicleTether>();
             return;
         }
 

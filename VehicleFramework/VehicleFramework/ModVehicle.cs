@@ -89,7 +89,8 @@ namespace VehicleFramework
         public override void Awake()
         {
             base.Awake();
-            gameObject.EnsureComponent<PlayerTether>();
+
+            gameObject.EnsureComponent<TetherSource>();
 
             floodlights = gameObject.EnsureComponent<FloodLightsController>();
             headlights = gameObject.EnsureComponent<HeadLightsController>();
