@@ -56,7 +56,7 @@ namespace VehicleFramework
         }
         public void FixedUpdate()
         {
-            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerInside()))
+            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerInside()) && mv.GetIsUnderwater())
             {
                 float x = transform.rotation.eulerAngles.x;
                 float y = transform.rotation.eulerAngles.y;

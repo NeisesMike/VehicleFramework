@@ -136,7 +136,7 @@ namespace VehicleFramework
             if (worldForces.IsAboveWater() != wasAboveWater)
             {
                 //TODO
-                //PlaySplashSound();
+                PlaySplashSound();
                 Logger.Log("splash!");
                 wasAboveWater = worldForces.IsAboveWater();
             }
@@ -260,7 +260,8 @@ namespace VehicleFramework
             // called by Player.ExitLockedMode()
             // which is triggered on button press
             isPilotSeated = false;
-            if(thisStopPilotingLocation == null)
+            Player.main.transform.SetParent(transform);
+            if (thisStopPilotingLocation == null)
             {
                 Logger.Log("Warning: pilot exit location was null. Defaulting to first tether.");
                 Player.main.transform.position = TetherSources[0].transform.position;
@@ -566,6 +567,11 @@ namespace VehicleFramework
             }
         }
 
+        public bool GetIsUnderwater()
+        {
+            // TODO: justify this constant
+            return transform.position.y < 0.75f;
+        }
 
     }
 }

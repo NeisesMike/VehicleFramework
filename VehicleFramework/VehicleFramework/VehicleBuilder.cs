@@ -352,11 +352,11 @@ namespace VehicleFramework
         {
             // add various vehicle things
             mv.stabilizeRoll = true;
-            mv.controlSheme = Vehicle.ControlSheme.Submersible;
+            mv.controlSheme = (Vehicle.ControlSheme)12;
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
             mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
+            mv.splashSound = seamoth.GetComponent<SeaMoth>().splashSound;
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
-            //mv.toggleLights = CopyComponent<ToggleLights>(seamoth.GetComponent<SeaMoth>().toggleLights, mv.gameObject);
         }
         public static void SetupCrushDamage(ref ModVehicle mv)
         {
