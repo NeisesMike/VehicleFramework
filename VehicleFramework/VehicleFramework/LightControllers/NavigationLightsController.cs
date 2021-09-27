@@ -84,13 +84,13 @@ namespace VehicleFramework
             switch (lc)
             {
                 case LightClass.WhiteStrobes:
-                    if (white == null)
+                    if (isFlashingLightsEnabled && white == null)
                     {
                         white = StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
-                    if (red == null)
+                    if (isFlashingLightsEnabled && red == null)
                     {
                         red = StartCoroutine(Strobe(LightClass.RedStrobes));
                     }
@@ -192,14 +192,9 @@ namespace VehicleFramework
         {
             if (!isNavLightsEnabled)
             {
-                foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
-                {
-                    EnableLightClass(lc);
-                }
-                if (isFlashingLightsEnabled)
-                {
-                    // TODO
-                }
+                EnableLightClass(LightClass.Positions);
+                EnableLightClass(LightClass.Ports);
+                EnableLightClass(LightClass.Starboards);
                 isNavLightsEnabled = true;
                 mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
             }
