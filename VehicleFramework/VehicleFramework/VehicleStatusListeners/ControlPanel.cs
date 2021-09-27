@@ -10,6 +10,8 @@ namespace VehicleFramework
     public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener
     {
         public ModVehicle mv;
+        private bool isDead = false;
+
         private GameObject buttonHeadLights;
         private GameObject buttonNavLights;
         private GameObject buttonAutoPilot;
@@ -140,7 +142,10 @@ namespace VehicleFramework
         }
         public bool PowerClick()
         {
-            mv.TogglePower();
+            if (!isDead)
+            {
+                mv.TogglePower();
+            }
             return true;
         }
         public bool PowerHover()
@@ -243,10 +248,12 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnNavLightsOn()
         {
+            SetButtonLightingActive(buttonFloodLights, false);
         }
 
         void IVehicleStatusListener.OnNavLightsOff()
         {
+            SetButtonLightingActive(buttonFloodLights, true);
         }
 
         void IPowerListener.OnPowerUp()
@@ -277,12 +284,14 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatteryDead()
         {
+            isDead = true;
             AdjustButtonLightingForPowerDown();
             SetButtonLightingActive(buttonPower, false);
         }
 
         void IPowerListener.OnBatteryRevive()
         {
+            isDead = false;
             ResetAllButtonLighting();
         }
     }
