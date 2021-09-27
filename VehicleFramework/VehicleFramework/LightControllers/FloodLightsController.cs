@@ -13,12 +13,6 @@ namespace VehicleFramework
             mv = GetComponent<ModVehicle>();
         }
 
-        public virtual void Update()
-        {
-            if(isFloodLightsOn)
-            {
-            }
-        }
         public void EnableFloodLights()
         {
             if (!isFloodLightsOn)
@@ -65,11 +59,38 @@ namespace VehicleFramework
             }
             if (enabled)
             {
+                EnableFloodLampEmission();
                 mv.NotifyStatus(VehicleStatus.OnFloodLightsOn);
             }
             else
             {
+                DisableFloodLampEmission();
                 mv.NotifyStatus(VehicleStatus.OnFloodLightsOff);
+            }
+        }
+        public void EnableFloodLampEmission()
+        {
+            foreach (var vlight in mv.FloodLights)
+            {
+                foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
+                {
+                    mat.EnableKeyword("MARMO_EMISSION");
+                    mat.SetFloat("_EmissionLM", 10f);
+                    mat.SetFloat("_EmissionLMNight", 10f);
+                    mat.SetFloat("_GlowStrength", 0f);
+                    mat.SetFloat("_GlowStrengthNight", 0f);
+                }
+            }
+        }
+
+        public void DisableFloodLampEmission()
+        {
+            foreach (var vlight in mv.FloodLights)
+            {
+                foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
+                {
+                    mat.DisableKeyword("MARMO_EMISSION");
+                }
             }
         }
 
