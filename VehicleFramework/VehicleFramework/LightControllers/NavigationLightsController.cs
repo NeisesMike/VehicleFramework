@@ -257,16 +257,16 @@ namespace VehicleFramework
         private void BlinkThisLightOn(Material mat, Color col)
         {
             mat.EnableKeyword("MARMO_EMISSION");
-            mat.SetFloat("_EmissionLM", lightBrightness);
-            mat.SetFloat("_EmissionLMNight", lightBrightness);
+            mat.SetFloat("_GlowStrength", lightBrightness);
+            mat.SetFloat("_GlowStrengthNight", lightBrightness);
             mat.SetColor("_Color", col);
             mat.SetColor("_GlowColor", col);
         }
         private void BlinkThisStrobeOn(Material mat, Color col)
         {
             mat.EnableKeyword("MARMO_EMISSION");
-            mat.SetFloat("_EmissionLM", strobeBrightness);
-            mat.SetFloat("_EmissionLMNight", strobeBrightness);
+            mat.SetFloat("_GlowStrength", strobeBrightness);
+            mat.SetFloat("_GlowStrengthNight", strobeBrightness);
             mat.SetColor("_Color", col);
             mat.SetColor("_GlowColor", col);
         }
