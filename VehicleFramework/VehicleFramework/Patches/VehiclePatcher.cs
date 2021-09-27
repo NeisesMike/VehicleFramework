@@ -86,72 +86,11 @@ namespace VehicleFramework
         private static bool ApplyPhysicsMovePrefix(Vehicle __instance, ref bool ___wasAboveWater, ref VehicleAccelerationModifier[] ___accelerationModifiers)
         {
             ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
+            if (mv != null)
             {
-                return true;
+                return false;
             }
-
-            // TODO
-            return false;
-
-            Transform baseTransform = __instance.transform;
-            if (__instance.GetPilotingMode())
-            {
-                if (__instance.worldForces.IsAboveWater() != ___wasAboveWater)
-                {
-                    __instance.PlaySplashSound();
-                    ___wasAboveWater = __instance.worldForces.IsAboveWater();
-                }
-                bool flag = baseTransform.position.y < Ocean.main.GetOceanLevel() && baseTransform.position.y < __instance.worldForces.waterDepth && !__instance.precursorOutOfWater;
-                if (__instance.moveOnLand || flag)
-                {
-                    if (__instance.controlSheme == Vehicle.ControlSheme.Submersible)
-                    {
-                        Vector3 vector = AvatarInputHandler.main.IsEnabled() ? GameInput.GetMoveDirection() : Vector3.zero;
-                        vector.Normalize();
-                        float d = Mathf.Abs(vector.x) * __instance.sidewardForce + Mathf.Max(0f, vector.z) * __instance.forwardForce + Mathf.Max(0f, -vector.z) * __instance.backwardForce + Mathf.Abs(vector.y * __instance.verticalForce);
-                        Vector3 force = baseTransform.rotation * (d * vector) * Time.deltaTime;
-                        for (int i = 0; i < ___accelerationModifiers.Length; i++)
-                        {
-                            ___accelerationModifiers[i].ModifyAcceleration(ref force);
-                        }
-                        __instance.useRigidbody.AddForce(force, ForceMode.VelocityChange);
-                        return false;
-                    }
-                    /*
-                    if (__instance.controlSheme == Vehicle.ControlSheme.Submarine || __instance.controlSheme == Vehicle.ControlSheme.Mech)
-                    {
-                        Vector3 vector2 = AvatarInputHandler.main.IsEnabled() ? GameInput.GetMoveDirection() : Vector3.zero;
-                        Vector3 vector3 = new Vector3(vector2.x, 0f, vector2.z);
-                        float num = Mathf.Abs(vector3.x) * __instance.sidewardForce + Mathf.Max(0f, vector3.z) * __instance.forwardForce + Mathf.Max(0f, -vector3.z) * __instance.backwardForce;
-                        vector3 = baseTransform.rotation * vector3;
-                        vector3.y = 0f;
-                        vector3 = Vector3.Normalize(vector3);
-                        if (__instance.onGround)
-                        {
-                            vector3 = Vector3.ProjectOnPlane(vector3, __instance.surfaceNormal);
-                            vector3.y = Mathf.Clamp(vector3.y, -0.5f, 0.5f);
-                            num *= __instance.onGroundForceMultiplier;
-                        }
-                        if (Application.isEditor)
-                        {
-                            Debug.DrawLine(baseTransform.position, baseTransform.position + vector3 * 4f, Color.white);
-                        }
-                        Vector3 b = new Vector3(0f, vector2.y, 0f);
-                        b.y *= __instance.verticalForce * Time.deltaTime;
-                        Vector3 force2 = num * vector3 * Time.deltaTime + b;
-                        __instance.OverrideAcceleration(ref force2);
-                        for (int j = 0; j < ___accelerationModifiers.Length; j++)
-                        {
-                            ___accelerationModifiers[j].ModifyAcceleration(ref force2);
-                        }
-                        __instance.useRigidbody.AddForce(force2, ForceMode.VelocityChange);
-                    }
-                    */
-                }
-            }
-
-            return false;
+            return true;
         }
 
         [HarmonyPrefix]
