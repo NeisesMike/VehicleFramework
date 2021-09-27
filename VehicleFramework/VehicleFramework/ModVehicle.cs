@@ -97,7 +97,6 @@ namespace VehicleFramework
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
-            gameObject.EnsureComponent<FuelGauge>();
             gameObject.EnsureComponent<AutoPilot>();
 
             controlPanelLogic.Init();
@@ -122,6 +121,7 @@ namespace VehicleFramework
             }
 
             gameObject.EnsureComponent<PowerManager>();
+            gameObject.EnsureComponent<FuelGauge>();
 
             // load upgrades from file
 
