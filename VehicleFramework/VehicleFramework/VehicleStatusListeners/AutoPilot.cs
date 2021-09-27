@@ -97,93 +97,115 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnHeadLightsOn()
         {
+            Logger.Log("OnHeadLightsOn");
         }
 
         void IVehicleStatusListener.OnHeadLightsOff()
         {
+            Logger.Log("OnHeadLightsOff");
         }
 
         void IVehicleStatusListener.OnInteriorLightsOn()
         {
+            Logger.Log("OnInteriorLightsOn");
         }
 
         void IVehicleStatusListener.OnInteriorLightsOff()
         {
+            Logger.Log("OnInteriorLightsOff");
         }
 
         void IVehicleStatusListener.OnNavLightsOn()
         {
+            Logger.Log("OnNavLightsOn");
         }
 
         void IVehicleStatusListener.OnNavLightsOff()
         {
+            Logger.Log("OnNavLightsOff");
         }
 
         void IVehicleStatusListener.OnFloodLightsOn()
         {
+            Logger.Log("OnFloodLightsOn");
         }
 
         void IVehicleStatusListener.OnFloodLightsOff()
         {
+            Logger.Log("OnFloodLightsOff");
         }
 
         void IVehicleStatusListener.OnTakeDamage()
         {
+            Logger.Log("OnTakeDamage");
         }
 
         void IVehicleStatusListener.OnAutoLevel()
         {
+            Logger.Log("OnAutoLevel");
         }
 
         void IVehicleStatusListener.OnAutoPilotBegin()
         {
+            Logger.Log("OnAutoPilotBegin");
         }
 
         void IVehicleStatusListener.OnAutoPilotEnd()
         {
+            Logger.Log("OnAutoPilotEnd");
         }
 
         void IPowerListener.OnPowerUp()
         {
+            Logger.Log("OnPowerUp");
             isDead = false;
         }
 
         void IPowerListener.OnPowerDown()
         {
+            Logger.Log("OnPowerDown");
             isDead = true;
             autoLeveling = false;
         }
 
         void IPowerListener.OnBatterySafe()
         {
+            Logger.Log("OnBatterySafe");
         }
 
         void IPowerListener.OnBatteryLow()
         {
+            Logger.Log("OnBatteryLow");
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
         {
+            Logger.Log("OnBatteryNearlyEmpty");
         }
 
         void IPowerListener.OnBatteryDepleted()
         {
+            Logger.Log("OnBatteryDepleted");
         }
 
         void IPlayerListener.OnPlayerEntry()
         {
+            Logger.Log("OnPlayerEntry");
         }
 
         void IPlayerListener.OnPlayerExit()
         {
+            Logger.Log("OnPlayerExit");
         }
 
         void IPlayerListener.OnPilotBegin()
         {
+            Logger.Log("OnPilotBegin");
         }
 
         void IPlayerListener.OnPilotEnd()
         {
+            Logger.Log("OnPilotEnd");
         }
     }
 }
