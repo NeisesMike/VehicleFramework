@@ -388,7 +388,6 @@ namespace VehicleFramework
         {
             while (true)
             {
-                Logger.Log("blink");
                 BlinkOnStrobe(lc);
                 yield return new WaitForSeconds(0.01f);
                 BlinkOffStrobe(lc);

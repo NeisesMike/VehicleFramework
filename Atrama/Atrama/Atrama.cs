@@ -171,7 +171,7 @@ namespace Atrama
                 mainFlood.Angle = 120;
                 mainFlood.Color = Color.white;
                 mainFlood.Intensity = 1f;
-                mainFlood.Range = 40f;
+                mainFlood.Range = 100f;
                 list.Add(mainFlood);
 
 
@@ -180,7 +180,7 @@ namespace Atrama
                 portFlood.Angle = 90;
                 portFlood.Color = Color.white;
                 portFlood.Intensity = 1;
-                portFlood.Range = 30f;
+                portFlood.Range = 100f;
                 list.Add(portFlood);
 
 
@@ -189,7 +189,7 @@ namespace Atrama
                 starboardFlood.Angle = 90;
                 starboardFlood.Color = Color.white;
                 starboardFlood.Intensity = 1f;
-                starboardFlood.Range = 30f;
+                starboardFlood.Range = 100f;
                 list.Add(starboardFlood);
 
                 return list;

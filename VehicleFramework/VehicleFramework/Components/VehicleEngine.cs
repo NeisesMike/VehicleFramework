@@ -19,81 +19,46 @@ namespace VehicleFramework
 
         private readonly float deadZoneSize = 300;
 
-        private float _upMomentum = 0;
-        private float UpMomentum
+        // a value of 0.25 here indicates that
+        // velocity will decay 25% every second
+        private readonly float waterDragDecay = 0.25f;
+        private readonly float airDragDecay = 0.025f;
+        private float DragDecay
         {
             get
             {
-                return _upMomentum;
-            }
-            set
-            {
-                if(Mathf.Abs(value) < deadZoneSize)
+                if(mv.GetIsUnderwater())
                 {
-                    if(value < _upMomentum)
-                    {
-                        _upMomentum = -deadZoneSize;
-                    }
-                    else if(_upMomentum < value)
-                    {
-                        _upMomentum = deadZoneSize;
-                    }
-                    return;
-                }
-
-                if (value < -upDownTopSpeed)
-                {
-                    _upMomentum = -upDownTopSpeed;
-                }
-                else if(upDownTopSpeed < value)
-                {
-                    _upMomentum = upDownTopSpeed;
+                    return waterDragDecay;
                 }
                 else
                 {
-                    _upMomentum = value;
-                }
-            }
-        }
-
-        private float _rightMomentum = 0;
-        private float RightMomentum
-        {
-            get
-            {
-                return _rightMomentum;
-            }
-            set
-            {
-                if (Mathf.Abs(value) < deadZoneSize)
-                {
-                    if (value < _rightMomentum)
-                    {
-                        _rightMomentum = -deadZoneSize;
-                    }
-                    else if (_rightMomentum < value)
-                    {
-                        _rightMomentum = deadZoneSize;
-                    }
-                    return;
-                }
-
-                if (value < -strafeTopSpeed)
-                {
-                    _rightMomentum = -strafeTopSpeed;
-                }
-                else if (strafeTopSpeed < value)
-                {
-                    _rightMomentum = strafeTopSpeed;
-                }
-                else
-                {
-                    _rightMomentum = value;
+                    return airDragDecay;
                 }
             }
         }
 
         private float _forwardMomentum = 0;
+        private void UpdateForwardMomentum(float move, float speed)
+        {
+            float target = ForwardMomentum + move * speed * Time.deltaTime;
+            if(0 < target && target < deadZoneSize && 0 < move)
+            {
+                ForwardMomentum = deadZoneSize;
+                return;
+            }
+            if (-deadZoneSize < target && target < 0 && move < 0)
+            {
+                ForwardMomentum = -deadZoneSize;
+                return;
+            }
+            if(Mathf.Abs(target) < deadZoneSize)
+            {
+                ForwardMomentum = 0;
+                return;
+            }
+            ForwardMomentum = target;
+        }
         private float ForwardMomentum
         {
             get
@@ -102,19 +67,6 @@ namespace VehicleFramework
             }
             set
             {
-                if (Mathf.Abs(value) < deadZoneSize)
-                {
-                    if (value < _forwardMomentum)
-                    {
-                        _forwardMomentum = -deadZoneSize;
-                    }
-                    else if (_forwardMomentum < value)
-                    {
-                        _forwardMomentum = deadZoneSize;
-                    }
-                    return;
-                }
-
                 if (value < -backwardTopSpeed)
                 {
                     _forwardMomentum = -backwardTopSpeed;
@@ -130,6 +82,94 @@ namespace VehicleFramework
             }
         }
 
+        private float _rightMomentum = 0;
+        private void UpdateRightMomentum(float move, float speed)
+        {
+            float target = RightMomentum + move * speed * Time.deltaTime;
+            if (0 < target && target < deadZoneSize && 0 < move)
+            {
+                RightMomentum = deadZoneSize;
+                return;
+            }
+            if (-deadZoneSize < target && target < 0 && move < 0)
+            {
+                RightMomentum = -deadZoneSize;
+                return;
+            }
+            if (Mathf.Abs(target) < deadZoneSize)
+            {
+                RightMomentum = 0;
+                return;
+            }
+            RightMomentum = target;
+        }
+        private float RightMomentum
+        {
+            get
+            {
+                return _rightMomentum;
+            }
+            set
+            {
+                if (value < -strafeTopSpeed)
+                {
+                    _rightMomentum = -strafeTopSpeed;
+                }
+                else if (strafeTopSpeed < value)
+                {
+                    _rightMomentum = strafeTopSpeed;
+                }
+                else
+                {
+                    _rightMomentum = value;
+                }
+            }
+        }
+
+        private float _upMomentum = 0;
+        private void UpdateUpMomentum(float move, float speed)
+        {
+            float target = UpMomentum + move * speed * Time.deltaTime;
+            if (0 < target && target < deadZoneSize && 0 < move)
+            {
+                UpMomentum = deadZoneSize;
+                return;
+            }
+            if (-deadZoneSize < target && target < 0 && move < 0)
+            {
+                UpMomentum = -deadZoneSize;
+                return;
+            }
+            if (Mathf.Abs(target) < deadZoneSize)
+            {
+                UpMomentum = 0;
+                return;
+            }
+            UpMomentum = target;
+        }
+        private float UpMomentum
+        {
+            get
+            {
+                return _upMomentum;
+            }
+            set
+            {
+                if (value < -upDownTopSpeed)
+                {
+                    _upMomentum = -upDownTopSpeed;
+                }
+                else if (upDownTopSpeed < value)
+                {
+                    _upMomentum = upDownTopSpeed;
+                }
+                else
+                {
+                    _upMomentum = value;
+                }
+            }
+        }
+
 
         // Start is called before the first frame update
         public void Start()
@@ -139,30 +179,78 @@ namespace VehicleFramework
         // Update is called once per frame
         public void FixedUpdate()
         {
-            // TODO: justify a more reasonable constant here
-            if (mv.CanPilot() && mv.transform.position.y < 0.6f)
+            Vector3 moveDirection = Vector3.zero;
+            if (mv.GetIsUnderwater())
             {
-                if (mv.IsPlayerPiloting())
+                if (mv.CanPilot() && mv.IsPlayerPiloting())
                 {
                     // Get Input Vector
-                    Vector3 moveDirection = GameInput.GetMoveDirection();
-
+                    moveDirection = GameInput.GetMoveDirection();
                     // Apply controls to the vehicle state
                     ApplyPlayerControls(moveDirection);
-
-                    // Execute a state-based physics move
-                    ExecutePhysicsMove();
-
                     // Drain power based on Input Vector (and modifiers)
+                    // TODO: DrainPower with ApplyPlayerControls...
+                    // or would it be better with ExecutePhysicsMove...?
                     DrainPower(moveDirection);
                 }
+                // Execute a state-based physics move
+                ExecutePhysicsMove();
+            }
+            ApplyDrag(moveDirection);
+        }
+        private void ApplyDrag(Vector3 move)
+        {
+            if (move.z == 0)
+            {
+                if (ForwardMomentum < 0)
+                {
+                    ForwardMomentum += DragDecay * ForwardMomentum * Time.deltaTime;
+                }
+                else
+                { 
+                    ForwardMomentum -= DragDecay * ForwardMomentum * Time.deltaTime;
+                }
+            }
+            if (move.x == 0)
+            {
+                if (RightMomentum < 0)
+                {
+                    RightMomentum += DragDecay * RightMomentum * Time.deltaTime;
+                }
+                else
+                {
+                    RightMomentum -= DragDecay * RightMomentum * Time.deltaTime;
+                }
+            }
+            if (move.y == 0)
+            {
+                if (UpMomentum < 0)
+                {
+                    UpMomentum += DragDecay * UpMomentum * Time.deltaTime;
+                }
+                else
+                {
+                    UpMomentum -= DragDecay * UpMomentum * Time.deltaTime;
+                }
+            }
+            if (Mathf.Abs(UpMomentum) < deadZoneSize)
+            {
+                UpMomentum = 0;
+            }
+            if (Mathf.Abs(RightMomentum) < deadZoneSize)
+            {
+                RightMomentum = 0;
+            }
+            if (Mathf.Abs(ForwardMomentum) < deadZoneSize)
+            {
+                ForwardMomentum = 0;
             }
         }
         public void ExecutePhysicsMove()
         {
-            rb.AddForce(mv.transform.forward * ForwardMomentum/100f * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.right * RightMomentum/100f * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.up * UpMomentum/100f * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.forward * ForwardMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.right * RightMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.up * UpMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
         }
         public enum forceDirection
         {
@@ -170,6 +258,12 @@ namespace VehicleFramework
             backward,
             strafe,
             updown
+        }
+        public float GetCurrentPercentOfTopSpeed()
+        {
+            float totalMomentumNow = Mathf.Abs(ForwardMomentum) + Mathf.Abs(RightMomentum) + Mathf.Abs(UpMomentum);
+            float topMomentum = forwardTopSpeed + strafeTopSpeed + upDownTopSpeed;
+            return totalMomentumNow / topMomentum;
         }
         public void ApplyPlayerControls(Vector3 moveDirection)
         {
@@ -198,46 +292,29 @@ namespace VehicleFramework
             }
 
             // Control velocity
-
             float xMove = moveDirection.x;
             float yMove = moveDirection.y;
             float zMove = moveDirection.z;
-            if (0 < zMove)
+            if (0.01f < zMove)
             {
-                ForwardMomentum += zMove * getForce(forceDirection.forward) * Time.deltaTime;
+                UpdateForwardMomentum(zMove, getForce(forceDirection.forward));
             }
-            else if(zMove < 0)
+            else if(zMove < -0.01f)
             {
-                ForwardMomentum += zMove * getForce(forceDirection.backward) * Time.deltaTime;
+                UpdateForwardMomentum(zMove, getForce(forceDirection.backward));
             }
-            else
+            if (0.01f < xMove)
             {
-                ForwardMomentum *= 0.995f;
+                UpdateRightMomentum(xMove, getForce(forceDirection.strafe));
             }
-
-            if (xMove != 0)
+            if (0.01f < yMove)
             {
-                RightMomentum += xMove * getForce(forceDirection.strafe) * Time.deltaTime;
-            }
-            else
-            {
-                RightMomentum *= 0.995f;
+                UpdateUpMomentum(yMove, getForce(forceDirection.updown));
             }
 
-            if (yMove != 0)
-            {
-                UpMomentum += yMove * getForce(forceDirection.updown) * Time.deltaTime;
-            }
-            else
-            {
-                UpMomentum *= 0.995f;
-            }
-
-            // Some rotation already happens in Vehicle.Update
-            // This is for adjusting that, if necessary
             // Control rotation
-            float pitchFactor = 0.4f;
-            float yawFactor = 0.25f;
+            float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
+            float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
             Vector2 mouseDir = GameInput.GetLookDelta();
             float xRot = mouseDir.x;
             float yRot = mouseDir.y;
@@ -257,7 +334,6 @@ namespace VehicleFramework
 
             return;
         }
-
         public void DrainPower(Vector3 moveDirection)
         {
             /* Rationale for these values
