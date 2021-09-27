@@ -23,7 +23,7 @@ namespace VehicleFramework
                 {
                     if (!wasPowered)
                     {
-                        mv.NotifyStatus(PowerStatus.OnPowerUp);
+                        mv.NotifyStatus(PowerStatus.OnBatteryRevive);
                     }
                     wasPowered = true;
                 }
@@ -31,7 +31,7 @@ namespace VehicleFramework
                 {
                     if (wasPowered)
                     {
-                        mv.NotifyStatus(PowerStatus.OnPowerDown);
+                        mv.NotifyStatus(PowerStatus.OnBatteryDead);
                     }
                     wasPowered = false;
                 }

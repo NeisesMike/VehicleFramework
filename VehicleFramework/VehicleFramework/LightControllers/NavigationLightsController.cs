@@ -522,5 +522,15 @@ namespace VehicleFramework
         {
             DisableNavLights();
         }
+
+        void IPowerListener.OnBatteryDead()
+        {
+            DisableNavLights();
+        }
+
+        void IPowerListener.OnBatteryRevive()
+        {
+            EnableNavLights();
+        }
     }
 }

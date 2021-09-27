@@ -10,7 +10,7 @@ namespace VehicleFramework
     public class HeadLightsController : MonoBehaviour, IPowerListener, IPlayerListener
 	{
         private ModVehicle mv;
-        private bool isHeadlightsOn = true;
+        private bool isHeadlightsOn = false;
 
         public void Awake()
         {
@@ -92,7 +92,6 @@ namespace VehicleFramework
 
         void IPowerListener.OnPowerUp()
         {
-            EnableHeadlights();
         }
 
         void IPowerListener.OnPowerDown()
@@ -102,12 +101,11 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatterySafe()
         {
-            EnableHeadlights();
         }
 
         void IPowerListener.OnBatteryLow()
         {
-            EnableHeadlights();
+            DisableHeadlights();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
@@ -138,6 +136,15 @@ namespace VehicleFramework
         void IPlayerListener.OnPilotEnd()
         {
             DisableHeadlights();
+        }
+
+        void IPowerListener.OnBatteryDead()
+        {
+            DisableHeadlights();
+        }
+
+        void IPowerListener.OnBatteryRevive()
+        {
         }
     }
 }

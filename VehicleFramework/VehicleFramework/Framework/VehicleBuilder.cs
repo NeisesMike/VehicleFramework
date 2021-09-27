@@ -247,14 +247,15 @@ namespace VehicleFramework
             foreach (VehicleParts.VehicleFloodLight pc in mv.HeadLights)
             {
                 CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
-                var leftLight = pc.Light.EnsureComponent<Light>();
-                leftLight.type = LightType.Spot;
-                leftLight.spotAngle = pc.Angle;
-                leftLight.innerSpotAngle = pc.Angle * .75f;
-                leftLight.color = pc.Color;
-                leftLight.intensity = pc.Intensity;
-                leftLight.range = pc.Range;
-                leftLight.shadows = LightShadows.Hard;
+                var thisLight = pc.Light.EnsureComponent<Light>();
+                thisLight.type = LightType.Spot;
+                thisLight.spotAngle = pc.Angle;
+                thisLight.innerSpotAngle = pc.Angle * .75f;
+                thisLight.color = pc.Color;
+                thisLight.intensity = pc.Intensity;
+                thisLight.range = pc.Range;
+                thisLight.shadows = LightShadows.Hard;
+                thisLight.gameObject.SetActive(false);
 
                 GameObject volumetricLight = pc.Light.transform.Find("VolumetricLight").gameObject;
                 volumetricLight.transform.localPosition = Vector3.zero;
@@ -273,7 +274,7 @@ namespace VehicleFramework
                 lvlMeshRenderer.renderingLayerMask = seamothVLMR.renderingLayerMask;
 
                 var leftVFX = CopyComponent(seamothHeadLight.GetComponent<VFXVolumetricLight>(), pc.Light);
-                leftVFX.lightSource = leftLight;
+                leftVFX.lightSource = thisLight;
                 leftVFX.color = pc.Color;
                 leftVFX.volumGO = volumetricLight;
                 leftVFX.volumRenderer = lvlMeshRenderer;

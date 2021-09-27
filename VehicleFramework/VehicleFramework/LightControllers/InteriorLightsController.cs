@@ -107,5 +107,15 @@ namespace VehicleFramework
         {
             DisableInteriorLighting();
         }
+
+        void IPowerListener.OnBatteryDead()
+        {
+            DisableInteriorLighting();
+        }
+
+        void IPowerListener.OnBatteryRevive()
+        {
+            EnableInteriorLighting();
+        }
     }
 }

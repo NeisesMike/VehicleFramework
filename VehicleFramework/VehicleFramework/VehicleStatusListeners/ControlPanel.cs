@@ -60,13 +60,25 @@ namespace VehicleFramework
 
         private void ResetAllButtonLighting()
         {
-            SetButtonLightingActive(buttonHeadLights, false);
+            SetButtonLightingActive(buttonHeadLights, true);
             SetButtonLightingActive(buttonNavLights, false);
             SetButtonLightingActive(buttonAutoPilot, false);
             SetButtonLightingActive(buttonInteriorLights, false);
             SetButtonLightingActive(button5, false);
             SetButtonLightingActive(button6, false);
             SetButtonLightingActive(buttonFloodLights, true);
+            SetButtonLightingActive(button8, false);
+            SetButtonLightingActive(buttonPower, false);
+        }
+        private void AdjustButtonLightingForPowerDown()
+        {
+            SetButtonLightingActive(buttonHeadLights, false);
+            SetButtonLightingActive(buttonNavLights, false);
+            SetButtonLightingActive(buttonAutoPilot, false);
+            SetButtonLightingActive(buttonInteriorLights, false);
+            SetButtonLightingActive(button5, false);
+            SetButtonLightingActive(button6, false);
+            SetButtonLightingActive(buttonFloodLights, false);
             SetButtonLightingActive(button8, false);
             SetButtonLightingActive(buttonPower, true);
         }
@@ -244,7 +256,7 @@ namespace VehicleFramework
 
         void IPowerListener.OnPowerDown()
         {
-            ResetAllButtonLighting();
+            AdjustButtonLightingForPowerDown();
         }
 
         void IPowerListener.OnBatterySafe()
@@ -261,6 +273,17 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatteryDepleted()
         {
+        }
+
+        void IPowerListener.OnBatteryDead()
+        {
+            AdjustButtonLightingForPowerDown();
+            SetButtonLightingActive(buttonPower, false);
+        }
+
+        void IPowerListener.OnBatteryRevive()
+        {
+            ResetAllButtonLighting();
         }
     }
 }

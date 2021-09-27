@@ -118,7 +118,7 @@
     <Compile Include="Framework\ModuleBuilder.cs" />
     <Compile Include="Components\uGUI_VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
-    <Compile Include="Components\ModVehicle.cs" />
+    <Compile Include="Framework\ModVehicle.cs" />
     <Compile Include="Components\PilotingTrigger.cs" />
     <Compile Include="Patches\EquipmentPatcher.cs" />
     <Compile Include="Patches\GameInputPatcher.cs" />

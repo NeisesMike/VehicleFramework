@@ -207,5 +207,15 @@ namespace VehicleFramework
         {
             Logger.Log("OnPilotEnd");
         }
+
+        void IPowerListener.OnBatteryDead()
+        {
+            Logger.Log("OnBatteryDead");
+        }
+
+        void IPowerListener.OnBatteryRevive()
+        {
+            Logger.Log("OnBatteryRevive");
+        }
     }
 }

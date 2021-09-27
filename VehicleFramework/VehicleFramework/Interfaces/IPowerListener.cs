@@ -10,6 +10,8 @@ namespace VehicleFramework
     {
         OnPowerUp,
         OnPowerDown,
+        OnBatteryDead,
+        OnBatteryRevive,
         OnBatterySafe,
         OnBatteryLow,
         OnBatteryNearlyEmpty,
@@ -19,6 +21,8 @@ namespace VehicleFramework
     {
         void OnPowerUp();
         void OnPowerDown();
+        void OnBatteryDead();
+        void OnBatteryRevive();
         void OnBatterySafe();
         void OnBatteryLow();
         void OnBatteryNearlyEmpty();

@@ -553,6 +553,12 @@ namespace VehicleFramework
                     case PowerStatus.OnPowerDown:
                         component.OnPowerDown();
                         break;
+                    case PowerStatus.OnBatteryDead:
+                        component.OnBatteryDead();
+                        break;
+                    case PowerStatus.OnBatteryRevive:
+                        component.OnBatteryRevive();
+                        break;
                     case PowerStatus.OnBatterySafe:
                         component.OnBatterySafe();
                         break;
