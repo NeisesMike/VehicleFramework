@@ -102,18 +102,22 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatterySafe()
         {
+            EnableHeadlights();
         }
 
         void IPowerListener.OnBatteryLow()
         {
+            EnableHeadlights();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
         {
+            DisableHeadlights();
         }
 
         void IPowerListener.OnBatteryDepleted()
         {
+            DisableHeadlights();
         }
 
         void IPlayerListener.OnPlayerEntry()
@@ -128,10 +132,12 @@ namespace VehicleFramework
 
         void IPlayerListener.OnPilotBegin()
         {
+            EnableHeadlights();
         }
 
         void IPlayerListener.OnPilotEnd()
         {
+            DisableHeadlights();
         }
     }
 }

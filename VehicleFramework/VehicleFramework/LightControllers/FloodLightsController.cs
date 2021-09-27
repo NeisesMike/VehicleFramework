@@ -75,6 +75,7 @@ namespace VehicleFramework
 
         void IPowerListener.OnPowerUp()
         {
+            DisableFloodLights();
         }
 
         void IPowerListener.OnPowerDown()
@@ -88,14 +89,17 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatteryLow()
         {
+            DisableFloodLights();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
         {
+            DisableFloodLights();
         }
 
         void IPowerListener.OnBatteryDepleted()
         {
+            DisableFloodLights();
         }
     }
 }
