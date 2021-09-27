@@ -96,7 +96,7 @@
     <Compile Include="Components\InnateStorageInput.cs" />
     <Compile Include="VehicleStatusListeners\PowerManager.cs" />
     <Compile Include="TetherSource.cs" />
-    <Compile Include="VehicleStatusListeners\ModVehicleTether.cs" />
+    <Compile Include="ModVehicleTether.cs" />
     <Compile Include="HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
