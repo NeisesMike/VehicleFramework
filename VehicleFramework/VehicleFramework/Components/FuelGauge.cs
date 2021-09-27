@@ -17,21 +17,24 @@ namespace VehicleFramework
         }
         public void Update()
         {
-            if (mv.IsPowered())
+            if (!mv.IsDisengaged)
             {
-                if (!wasPowered)
+                if (mv.IsPowered())
                 {
-                    mv.NotifyStatus(PowerStatus.OnPowerUp);
+                    if (!wasPowered)
+                    {
+                        mv.NotifyStatus(PowerStatus.OnPowerUp);
+                    }
+                    wasPowered = true;
                 }
-                wasPowered = true;
-            }
-            else
-            {
-                if (wasPowered)
+                else
                 {
-                    mv.NotifyStatus(PowerStatus.OnPowerDown);
+                    if (wasPowered)
+                    {
+                        mv.NotifyStatus(PowerStatus.OnPowerDown);
+                    }
+                    wasPowered = false;
                 }
-                wasPowered = false;
             }
         }
     }
