@@ -180,7 +180,6 @@ namespace VehicleFramework
         {
             foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
             {
-                Logger.Log("disable: " + lc.ToString());
                 DisableLightClass(lc);
             }
             mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
@@ -189,7 +188,6 @@ namespace VehicleFramework
         {
             foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
             {
-                Logger.Log("enable: " + lc.ToString());
                 EnableLightClass(lc);
             }
             if(isFlashingLightsEnabled)
