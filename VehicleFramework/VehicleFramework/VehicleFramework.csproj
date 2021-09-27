@@ -88,12 +88,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IPlayerListener.cs" />
+    <Compile Include="Interfaces\IPowerListener.cs" />
     <Compile Include="VehicleStatusListeners\ControlPanel.cs" />
     <Compile Include="Components\ControlPanelButton.cs" />
     <Compile Include="Components\StorageInput.cs" />
     <Compile Include="Components\InnateStorageInput.cs" />
     <Compile Include="VehicleStatusListeners\PowerManager.cs" />
-    <Compile Include="VehicleStatusListeners\TetherSource.cs" />
+    <Compile Include="TetherSource.cs" />
     <Compile Include="VehicleStatusListeners\ModVehicleTether.cs" />
     <Compile Include="HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
@@ -106,10 +108,10 @@
     <Compile Include="Components\VehicleBatteryInput.cs" />
     <Compile Include="Components\VehicleEngine.cs" />
     <Compile Include="Components\FuelGauge.cs" />
-    <Compile Include="VehicleStatusListeners\HeadLightsController.cs" />
-    <Compile Include="VehicleStatusListeners\NavigationLightsController.cs" />
-    <Compile Include="VehicleStatusListeners\FloodLightsController.cs" />
-    <Compile Include="VehicleStatusListeners\InteriorLightsController.cs" />
+    <Compile Include="PowerListeners\HeadLightsController.cs" />
+    <Compile Include="PowerListeners\NavigationLightsController.cs" />
+    <Compile Include="PowerListeners\FloodLightsController.cs" />
+    <Compile Include="PowerListeners\InteriorLightsController.cs" />
     <Compile Include="Components\VehicleHatch.cs" />
     <Compile Include="Components\InnateStorageContainer.cs" />
     <Compile Include="Components\ModularStorageInput.cs" />
@@ -130,7 +132,7 @@
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VehicleBuilder.cs" />
-    <Compile Include="IVehicleStatusListener.cs" />
+    <Compile Include="Interfaces\IVehicleStatusListener.cs" />
     <Compile Include="VehicleManager.cs" />
     <Compile Include="VehicleParts.cs" />
   </ItemGroup>

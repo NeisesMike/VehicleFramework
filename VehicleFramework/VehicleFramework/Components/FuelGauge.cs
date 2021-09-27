@@ -11,13 +11,17 @@ namespace VehicleFramework
 	{
 		public ModVehicle mv;
         private bool wasPowered = false;
+        public void Awake()
+        {
+            mv = GetComponent<ModVehicle>();
+        }
         public void Update()
         {
             if (mv.IsPowered())
             {
                 if (!wasPowered)
                 {
-                    mv.NotifyStatus(VehicleStatus.OnPowerUp);
+                    mv.NotifyStatus(PowerStatus.OnPowerUp);
                 }
                 wasPowered = true;
             }
@@ -25,7 +29,7 @@ namespace VehicleFramework
             {
                 if (wasPowered)
                 {
-                    mv.NotifyStatus(VehicleStatus.OnPowerDown);
+                    mv.NotifyStatus(PowerStatus.OnPowerDown);
                 }
                 wasPowered = false;
             }

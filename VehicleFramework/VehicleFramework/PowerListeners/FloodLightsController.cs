@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class FloodLightsController : MonoBehaviour, IVehicleStatusListener
+    public class FloodLightsController : MonoBehaviour, IPowerListener
 	{
 		private ModVehicle mv;
         private bool isFloodLightsOn = false;
@@ -73,89 +73,28 @@ namespace VehicleFramework
             }
         }
 
-        void IVehicleStatusListener.OnPlayerEntry()
+        void IPowerListener.OnPowerUp()
         {
         }
 
-        void IVehicleStatusListener.OnPlayerExit()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotBegin()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotEnd()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerUp()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerDown()
+        void IPowerListener.OnPowerDown()
         {
             DisableFloodLights();
         }
 
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnAutoLevel()
+        void IPowerListener.OnBatterySafe()
         {
         }
 
-        void IVehicleStatusListener.OnAutoPilotBegin()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnAutoPilotEnd()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnHeadLightsOn()
+        void IPowerListener.OnBatteryLow()
         {
         }
 
-        void IVehicleStatusListener.OnHeadLightsOff()
+        void IPowerListener.OnBatteryNearlyEmpty()
         {
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnInteriorLightsOff()
-        {
-        }
-
-        void IVehicleStatusListener.OnBatteryLow()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnBatteryDepletion()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnFloodLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnFloodLightsOff()
-        {
-        }
-
-        void IVehicleStatusListener.OnNavLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnNavLightsOff()
+        void IPowerListener.OnBatteryDepleted()
         {
         }
     }

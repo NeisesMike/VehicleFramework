@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class AutoPilot : MonoBehaviour, IVehicleStatusListener
+    public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener
 	{
 		public ModVehicle mv;
         public EnergyInterface aiEI;
@@ -19,6 +19,10 @@ namespace VehicleFramework
         private float smoothTime = 0.3f;
         private bool autoLeveling = true;
         private bool isDead = false;
+        public void Awake()
+        {
+            mv = GetComponent<ModVehicle>();
+        }
         public void Start()
         {
             aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
@@ -91,50 +95,6 @@ namespace VehicleFramework
             }
         }
 
-        void IVehicleStatusListener.OnAutoLevel()
-        {
-        }
-
-        void IVehicleStatusListener.OnAutoPilotBegin()
-        {
-        }
-
-        void IVehicleStatusListener.OnAutoPilotEnd()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotBegin()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotEnd()
-        {
-        }
-
-        void IVehicleStatusListener.OnPlayerEntry()
-        {
-        }
-
-        void IVehicleStatusListener.OnPlayerExit()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerDown()
-        {
-            isDead = true;
-            autoLeveling = false;
-        }
-
-        void IVehicleStatusListener.OnPowerUp()
-        {
-            isDead = false;
-        }
-
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-            // if current health total is too low, disable auto pilot
-        }
-
         void IVehicleStatusListener.OnHeadLightsOn()
         {
         }
@@ -151,14 +111,12 @@ namespace VehicleFramework
         {
         }
 
-        void IVehicleStatusListener.OnBatteryLow()
+        void IVehicleStatusListener.OnNavLightsOn()
         {
-            throw new NotImplementedException();
         }
 
-        void IVehicleStatusListener.OnBatteryDepletion()
+        void IVehicleStatusListener.OnNavLightsOff()
         {
-            throw new NotImplementedException();
         }
 
         void IVehicleStatusListener.OnFloodLightsOn()
@@ -169,11 +127,62 @@ namespace VehicleFramework
         {
         }
 
-        void IVehicleStatusListener.OnNavLightsOn()
+        void IVehicleStatusListener.OnTakeDamage()
         {
         }
 
-        void IVehicleStatusListener.OnNavLightsOff()
+        void IVehicleStatusListener.OnAutoLevel()
+        {
+        }
+
+        void IVehicleStatusListener.OnAutoPilotBegin()
+        {
+        }
+
+        void IVehicleStatusListener.OnAutoPilotEnd()
+        {
+        }
+
+        void IPowerListener.OnPowerUp()
+        {
+            isDead = false;
+        }
+
+        void IPowerListener.OnPowerDown()
+        {
+            isDead = true;
+            autoLeveling = false;
+        }
+
+        void IPowerListener.OnBatterySafe()
+        {
+        }
+
+        void IPowerListener.OnBatteryLow()
+        {
+        }
+
+        void IPowerListener.OnBatteryNearlyEmpty()
+        {
+        }
+
+        void IPowerListener.OnBatteryDepleted()
+        {
+        }
+
+        void IPlayerListener.OnPlayerEntry()
+        {
+        }
+
+        void IPlayerListener.OnPlayerExit()
+        {
+        }
+
+        void IPlayerListener.OnPilotBegin()
+        {
+        }
+
+        void IPlayerListener.OnPilotEnd()
         {
         }
     }

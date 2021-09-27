@@ -97,10 +97,8 @@ namespace VehicleFramework
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
-            var gauge = gameObject.EnsureComponent<FuelGauge>();
-            gauge.mv = this;
-            var pilot = gameObject.EnsureComponent<AutoPilot>();
-            pilot.mv = this;
+            gameObject.EnsureComponent<FuelGauge>();
+            gameObject.EnsureComponent<AutoPilot>();
 
             controlPanelLogic.Init();
 
@@ -123,6 +121,7 @@ namespace VehicleFramework
                 decalCanvas.worldCamera = MainCamera.camera;
             }
 
+            gameObject.EnsureComponent<PowerManager>();
 
             // load upgrades from file
 
@@ -252,7 +251,7 @@ namespace VehicleFramework
             isPilotSeated = true;
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
             uGUI.main.quickSlots.SetTarget(this);
-            NotifyStatus(VehicleStatus.OnPilotBegin);
+            NotifyStatus(PlayerStatus.OnPilotBegin);
         }
         public void StopPiloting()
         {
@@ -272,7 +271,7 @@ namespace VehicleFramework
             }
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
             uGUI.main.quickSlots.SetTarget(null);
-            NotifyStatus(VehicleStatus.OnPilotEnd);
+            NotifyStatus(PlayerStatus.OnPilotEnd);
         }
         public void PlayerEntry()
         {
@@ -295,7 +294,7 @@ namespace VehicleFramework
                 window.SetActive(false);
             }
 
-            NotifyStatus(VehicleStatus.OnPlayerEntry);
+            NotifyStatus(PlayerStatus.OnPlayerEntry);
         }
         public void PlayerExit()
         {
@@ -306,7 +305,7 @@ namespace VehicleFramework
             {
                 window.SetActive(true);
             }
-            NotifyStatus(VehicleStatus.OnPlayerExit);
+            NotifyStatus(PlayerStatus.OnPlayerExit);
         }
         public override void SetPlayerInside(bool inside)
         {
@@ -487,11 +486,11 @@ namespace VehicleFramework
             IsDisengaged = !IsDisengaged;
             if(IsDisengaged)
             {
-                NotifyStatus(VehicleStatus.OnPowerDown);
+                NotifyStatus(PowerStatus.OnPowerDown);
             }
             else
             {
-                NotifyStatus(VehicleStatus.OnPowerUp);
+                NotifyStatus(PowerStatus.OnPowerUp);
             }
         }
         public void NotifyStatus(VehicleStatus vs)
@@ -500,24 +499,6 @@ namespace VehicleFramework
             {
                 switch (vs)
                 {
-                    case VehicleStatus.OnPlayerEntry:
-                        component.OnPlayerEntry();
-                        break;
-                    case VehicleStatus.OnPlayerExit:
-                        component.OnPlayerExit();
-                        break;
-                    case VehicleStatus.OnPilotBegin:
-                        component.OnPilotBegin();
-                        break;
-                    case VehicleStatus.OnPilotEnd:
-                        component.OnPilotEnd();
-                        break;
-                    case VehicleStatus.OnPowerUp:
-                        component.OnPowerUp();
-                        break;
-                    case VehicleStatus.OnPowerDown:
-                        component.OnPowerDown();
-                        break;
                     case VehicleStatus.OnHeadLightsOn:
                         component.OnHeadLightsOn();
                         break;
@@ -554,11 +535,59 @@ namespace VehicleFramework
                     case VehicleStatus.OnAutoPilotEnd:
                         component.OnAutoPilotEnd();
                         break;
-                    case VehicleStatus.OnBatteryLow:
+                    default:
+                        Logger.Log("Error: tried to notify using an invalid status");
+                        break;
+                }
+            }
+        }
+        public void NotifyStatus(PowerStatus vs)
+        {
+            foreach (var component in GetComponentsInChildren<IPowerListener>())
+            {
+                switch (vs)
+                {
+                    case PowerStatus.OnPowerUp:
+                        component.OnPowerUp();
+                        break;
+                    case PowerStatus.OnPowerDown:
+                        component.OnPowerDown();
+                        break;
+                    case PowerStatus.OnBatterySafe:
+                        component.OnBatterySafe();
+                        break;
+                    case PowerStatus.OnBatteryLow:
                         component.OnBatteryLow();
                         break;
-                    case VehicleStatus.OnBatteryDepletion:
-                        component.OnBatteryDepletion();
+                    case PowerStatus.OnBatteryNearlyEmpty:
+                        component.OnBatteryNearlyEmpty();
+                        break;
+                    case PowerStatus.OnBatteryDepleted:
+                        component.OnBatteryDepleted();
+                        break;
+                    default:
+                        Logger.Log("Error: tried to notify using an invalid status");
+                        break;
+                }
+            }
+        }
+        public void NotifyStatus(PlayerStatus vs)
+        {
+            foreach (var component in GetComponentsInChildren<IPlayerListener>())
+            {
+                switch (vs)
+                {
+                    case PlayerStatus.OnPlayerEntry:
+                        component.OnPlayerEntry();
+                        break;
+                    case PlayerStatus.OnPlayerExit:
+                        component.OnPlayerExit();
+                        break;
+                    case PlayerStatus.OnPilotBegin:
+                        component.OnPilotBegin();
+                        break;
+                    case PlayerStatus.OnPilotEnd:
+                        component.OnPilotEnd();
                         break;
                     default:
                         Logger.Log("Error: tried to notify using an invalid status");

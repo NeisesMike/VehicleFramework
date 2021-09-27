@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class NavigationLightsController : MonoBehaviour, IVehicleStatusListener
+    public class NavigationLightsController : MonoBehaviour, IPowerListener
     {
         private bool isNavLightsEnabled = true;
         private bool isFlashingLightsEnabled = true;
@@ -183,6 +183,7 @@ namespace VehicleFramework
                 Logger.Log("disable: " + lc.ToString());
                 DisableLightClass(lc);
             }
+            mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
         }
         public void EnableNavLights()
         {
@@ -195,6 +196,7 @@ namespace VehicleFramework
             {
                 // TODO
             }
+            mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
         }
         public void ToggleNavLights()
         {
@@ -204,12 +206,10 @@ namespace VehicleFramework
                 if (isNavLightsEnabled)
                 {
                     EnableNavLights();
-                    mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
                 }
                 else
                 {
                     DisableNavLights();
-                    mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
                 }
             }
         }
@@ -492,85 +492,30 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(0.75f);
             }
         }
-        void IVehicleStatusListener.OnAutoLevel()
+
+        void IPowerListener.OnPowerUp()
+        {
+            EnableNavLights();
+        }
+
+        void IPowerListener.OnPowerDown()
+        {
+            DisableNavLights();
+        }
+
+        void IPowerListener.OnBatterySafe()
         {
         }
 
-        void IVehicleStatusListener.OnAutoPilotBegin()
+        void IPowerListener.OnBatteryLow()
         {
         }
 
-        void IVehicleStatusListener.OnAutoPilotEnd()
+        void IPowerListener.OnBatteryNearlyEmpty()
         {
         }
 
-        void IVehicleStatusListener.OnHeadLightsOff()
-        {
-        }
-
-        void IVehicleStatusListener.OnHeadLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnInteriorLightsOff()
-        {
-        }
-
-        void IVehicleStatusListener.OnInteriorLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotBegin()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotEnd()
-        {
-        }
-
-        void IVehicleStatusListener.OnPlayerEntry()
-        {
-        }
-
-        void IVehicleStatusListener.OnPlayerExit()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerDown()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerUp()
-        {
-        }
-
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-        }
-
-        void IVehicleStatusListener.OnBatteryLow()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnBatteryDepletion()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnFloodLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnFloodLightsOff()
-        {
-        }
-
-        void IVehicleStatusListener.OnNavLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnNavLightsOff()
+        void IPowerListener.OnBatteryDepleted()
         {
         }
     }

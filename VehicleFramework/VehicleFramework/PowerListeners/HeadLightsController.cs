@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class HeadLightsController : MonoBehaviour, IVehicleStatusListener
+    public class HeadLightsController : MonoBehaviour, IPowerListener, IPlayerListener
 	{
         private ModVehicle mv;
         private bool isHeadlightsOn = true;
@@ -90,92 +90,47 @@ namespace VehicleFramework
             }
         }
 
-        void IVehicleStatusListener.OnPlayerEntry()
-        {
-            SetVolumetricLightsActive(false);
-        }
-
-        void IVehicleStatusListener.OnPlayerExit()
-        {
-            SetVolumetricLightsActive(true);
-        }
-
-        void IVehicleStatusListener.OnPilotBegin()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotEnd()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerUp()
+        void IPowerListener.OnPowerUp()
         {
             EnableHeadlights();
         }
 
-        void IVehicleStatusListener.OnPowerDown()
+        void IPowerListener.OnPowerDown()
         {
             DisableHeadlights();
         }
 
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnAutoLevel()
+        void IPowerListener.OnBatterySafe()
         {
         }
 
-        void IVehicleStatusListener.OnAutoPilotBegin()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnAutoPilotEnd()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnHeadLightsOn()
+        void IPowerListener.OnBatteryLow()
         {
         }
 
-        void IVehicleStatusListener.OnHeadLightsOff()
+        void IPowerListener.OnBatteryNearlyEmpty()
         {
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOn()
+        void IPowerListener.OnBatteryDepleted()
         {
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOff()
+        void IPlayerListener.OnPlayerEntry()
+        {
+            SetVolumetricLightsActive(false);
+        }
+
+        void IPlayerListener.OnPlayerExit()
+        {
+            SetVolumetricLightsActive(true);
+        }
+
+        void IPlayerListener.OnPilotBegin()
         {
         }
 
-        void IVehicleStatusListener.OnBatteryLow()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnBatteryDepletion()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnFloodLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnFloodLightsOff()
-        {
-        }
-
-        void IVehicleStatusListener.OnNavLightsOn()
-        {
-        }
-
-        void IVehicleStatusListener.OnNavLightsOff()
+        void IPlayerListener.OnPilotEnd()
         {
         }
     }

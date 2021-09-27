@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class ControlPanel : MonoBehaviour, IVehicleStatusListener
+    public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener
     {
         public ModVehicle mv;
         private GameObject buttonHeadLights;
@@ -180,31 +180,6 @@ namespace VehicleFramework
             }
         }
 
-        void IVehicleStatusListener.OnPlayerEntry()
-        {
-        }
-
-        void IVehicleStatusListener.OnPlayerExit()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotBegin()
-        {
-        }
-
-        void IVehicleStatusListener.OnPilotEnd()
-        {
-        }
-
-        void IVehicleStatusListener.OnPowerUp()
-        {
-            ResetAllButtonLighting();
-        }
-
-        void IVehicleStatusListener.OnPowerDown()
-        {
-            ResetAllButtonLighting();
-        }
 
         void IVehicleStatusListener.OnHeadLightsOn()
         {
@@ -244,16 +219,6 @@ namespace VehicleFramework
             SetButtonLightingActive(buttonAutoPilot, true);
         }
 
-        void IVehicleStatusListener.OnBatteryLow()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IVehicleStatusListener.OnBatteryDepletion()
-        {
-            throw new NotImplementedException();
-        }
-
         void IVehicleStatusListener.OnFloodLightsOn()
         {
             SetButtonLightingActive(buttonFloodLights, false);
@@ -269,6 +234,32 @@ namespace VehicleFramework
         }
 
         void IVehicleStatusListener.OnNavLightsOff()
+        {
+        }
+
+        void IPowerListener.OnPowerUp()
+        {
+            ResetAllButtonLighting();
+        }
+
+        void IPowerListener.OnPowerDown()
+        {
+            ResetAllButtonLighting();
+        }
+
+        void IPowerListener.OnBatterySafe()
+        {
+        }
+
+        void IPowerListener.OnBatteryLow()
+        {
+        }
+
+        void IPowerListener.OnBatteryNearlyEmpty()
+        {
+        }
+
+        void IPowerListener.OnBatteryDepleted()
         {
         }
     }
