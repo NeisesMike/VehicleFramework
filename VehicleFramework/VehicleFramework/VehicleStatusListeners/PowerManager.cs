@@ -24,8 +24,6 @@ namespace VehicleFramework
         public void Start()
         {
             mv = GetComponent<ModVehicle>();
-            currentPowerStatus = EvaluatePowerStatus();
-            mv.NotifyStatus(currentPowerStatus);
         }
         public void Update()
         {
@@ -56,16 +54,12 @@ namespace VehicleFramework
             if(thisPS != currentPowerStatus)
             {
                 currentPowerStatus = thisPS;
-                // TODO
-                //mv.NotifyStatus()
+                mv.NotifyStatus(currentPowerStatus);
             }
         }
         private PowerStatus EvaluatePowerStatus()
         {
-            float charge;
-            float capacity;
-            mv.energyInterface.GetValues(out charge, out capacity);
-
+            mv.energyInterface.GetValues(out float charge, out _);
             if (charge < 1)
             {
                 return PowerStatus.OnBatteryDepleted;

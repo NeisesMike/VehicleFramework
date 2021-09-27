@@ -11,8 +11,7 @@ namespace VehicleFramework
 	{
 		private ModVehicle mv;
         private bool isInteriorLightsOn = true;
-
-
+        
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
@@ -22,57 +21,61 @@ namespace VehicleFramework
         {
             if (mv.IsPowered())
             {
-                isInteriorLightsOn = !isInteriorLightsOn;
                 if (isInteriorLightsOn)
                 {
-                    EnableInteriorLighting();
+                    DisableInteriorLighting();
                 }
                 else
                 {
-                    DisableInteriorLighting();
+                    EnableInteriorLighting();
                 }
             }
             else
             {
-                isInteriorLightsOn = false;
+                DisableInteriorLighting();
             }
         }
         public void EnableInteriorLighting()
         {
-            foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
+            if (!isInteriorLightsOn)
             {
-                foreach (Material mat in renderer.materials)
+                foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
                 {
-                    // add emission to certain materials
-                    if (mat.name.Contains("InteriorIlluminatedMaterial"))
+                    foreach (Material mat in renderer.materials)
                     {
-                        mat.EnableKeyword("MARMO_EMISSION");
-                        mat.SetFloat("_EmissionLM", 0.25f);
-                        mat.SetFloat("_EmissionLMNight", 0.25f);
-                        mat.SetFloat("_GlowStrength", 0f);
-                        mat.SetFloat("_GlowStrengthNight", 0f);
+                        // add emission to certain materials
+                        if (mat.name.Contains("InteriorIlluminatedMaterial"))
+                        {
+                            mat.EnableKeyword("MARMO_EMISSION");
+                            mat.SetFloat("_EmissionLM", 0.25f);
+                            mat.SetFloat("_EmissionLMNight", 0.25f);
+                            mat.SetFloat("_GlowStrength", 0f);
+                            mat.SetFloat("_GlowStrengthNight", 0f);
+                        }
                     }
                 }
+                isInteriorLightsOn = true;
+                mv.NotifyStatus(VehicleStatus.OnInteriorLightsOn);
             }
-            isInteriorLightsOn = true;
-            mv.NotifyStatus(VehicleStatus.OnInteriorLightsOn);
         }
         public void DisableInteriorLighting()
         {
-            foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
+            if (isInteriorLightsOn)
             {
-                foreach (Material mat in renderer.materials)
+                foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
                 {
-                    // add emission to certain materials
-                    if (mat.name.Contains("InteriorIlluminatedMaterial"))
+                    foreach (Material mat in renderer.materials)
                     {
-                        mat.DisableKeyword("MARMO_EMISSION");
+                        // add emission to certain materials
+                        if (mat.name.Contains("InteriorIlluminatedMaterial"))
+                        {
+                            mat.DisableKeyword("MARMO_EMISSION");
+                        }
                     }
-
                 }
+                isInteriorLightsOn = false;
+                mv.NotifyStatus(VehicleStatus.OnInteriorLightsOff);
             }
-            isInteriorLightsOn = false;
-            mv.NotifyStatus(VehicleStatus.OnInteriorLightsOff);
         }
 
         void IPowerListener.OnPowerUp()
@@ -87,18 +90,22 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatterySafe()
         {
+            EnableInteriorLighting();
         }
 
         void IPowerListener.OnBatteryLow()
         {
+            EnableInteriorLighting();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
         {
+            DisableInteriorLighting();
         }
 
         void IPowerListener.OnBatteryDepleted()
         {
+            DisableInteriorLighting();
         }
     }
 }

@@ -178,36 +178,43 @@ namespace VehicleFramework
         }
         public void DisableNavLights()
         {
-            foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+            if (isNavLightsEnabled)
             {
-                DisableLightClass(lc);
+                foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+                {
+                    DisableLightClass(lc);
+                }
+                isNavLightsEnabled = false;
+                mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
             }
-            mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
         }
         public void EnableNavLights()
         {
-            foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+            if (!isNavLightsEnabled)
             {
-                EnableLightClass(lc);
+                foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+                {
+                    EnableLightClass(lc);
+                }
+                if (isFlashingLightsEnabled)
+                {
+                    // TODO
+                }
+                isNavLightsEnabled = true;
+                mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
             }
-            if(isFlashingLightsEnabled)
-            {
-                // TODO
-            }
-            mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
         }
         public void ToggleNavLights()
         {
             if (mv.IsPowered())
             {
-                isNavLightsEnabled = !isNavLightsEnabled;
                 if (isNavLightsEnabled)
                 {
-                    EnableNavLights();
+                    DisableNavLights();
                 }
                 else
                 {
-                    DisableNavLights();
+                    EnableNavLights();
                 }
             }
         }
