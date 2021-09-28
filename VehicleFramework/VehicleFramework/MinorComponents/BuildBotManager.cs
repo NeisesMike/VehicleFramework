@@ -19,11 +19,42 @@ namespace VehicleFramework
             }
             bbbp.beamPoints = bbbpList.ToArray();
         }
+        public static void SetupVFXConstructing(ModVehicle mv)
+        {
+            VFXConstructing seamothVFXC = CraftData.GetPrefabForTechType(TechType.Seamoth, true).GetComponent<VFXConstructing>();
+            VFXConstructing vfxc = mv.gameObject.EnsureComponent<VFXConstructing>();
+            vfxc.timeToConstruct = 50f;
+            vfxc.ghostMaterial = seamothVFXC.ghostMaterial;
+            vfxc.alphaTexture = seamothVFXC.alphaTexture;
+            vfxc.alphaDetailTexture = seamothVFXC.alphaDetailTexture;
+            vfxc.wireColor = seamothVFXC.wireColor;
+            vfxc.rBody = mv.useRigidbody;
+            Logger.Log("bing");
+            foreach (VFXSplash thisSplash in GameObject.FindObjectsOfType<VFXSplash>())
+            {
+                Logger.Log(thisSplash.name);
+                // TODO make this configurable
+                if (thisSplash.name.Contains("Cyclop"))
+                {
+                    vfxc.surfaceSplashFX = thisSplash.gameObject;
+                }
+            }
+
+            vfxc.surfaceSplashSound = seamothVFXC.surfaceSplashSound;
+            vfxc.surfaceSplashVelocity = seamothVFXC.surfaceSplashVelocity;
+            vfxc.heightOffset = seamothVFXC.heightOffset;
+            vfxc.constructSound = seamothVFXC.constructSound;
+            vfxc.delay = 10f;
+            vfxc.isDone = false;
+            vfxc.informGameObject = null;
+            vfxc.transparentShaders = null; // TODO maybe we'll want to use this?
+        }
         public static void SetupBuildBotPaths()
         {
             foreach (ModVehicle mv in VehicleBuilder.prefabs)
             {
                 SetupBuildBotBeamPoints(mv);
+                SetupVFXConstructing(mv);
 
                 Bounds vbounds = mv.BoundingBox.GetComponent<MeshRenderer>().bounds;
                 GameObject bbPointsRoot = new GameObject("BuildBotPoints");
@@ -39,12 +70,12 @@ namespace VehicleFramework
                         ret += z ? vbounds.extents.z * Vector3.forward : -1 * vbounds.extents.z * Vector3.forward;
                         return ret;
                     }
-                    GameObject bing = new GameObject(name);
-                    Transform bong = bing.transform;
-                    bong.SetParent(bbPointsRoot.transform);
-                    bong.localPosition = GetThisCorner(inputx, inputy, inputz);
-                    mv.boundingPoints.Add(name, bing);
-                    return bong;
+                    GameObject pointGO = new GameObject(name);
+                    Transform pointTR = pointGO.transform;
+                    pointTR.SetParent(bbPointsRoot.transform);
+                    pointTR.localPosition = GetThisCorner(inputx, inputy, inputz);
+                    mv.boundingPoints.Add(name, pointGO);
+                    return pointTR;
                 }
                 Transform GetCentroid(string name, Vector3 cardinalDir)
                 {
@@ -55,21 +86,21 @@ namespace VehicleFramework
                                cDirection.y * vbounds.extents.y * Vector3.up +
                                cDirection.z * vbounds.extents.z * Vector3.forward;
                     }
-                    GameObject bing = new GameObject(name);
-                    Transform bong = bing.transform;
-                    bong.SetParent(bbPointsRoot.transform);
-                    bong.localPosition = GetThisCentroid(cardinalDir);
-                    mv.boundingPoints.Add(name, bing);
-                    return bong;
+                    GameObject pointGO = new GameObject(name);
+                    Transform pointTR = pointGO.transform;
+                    pointTR.SetParent(bbPointsRoot.transform);
+                    pointTR.localPosition = GetThisCentroid(cardinalDir);
+                    mv.boundingPoints.Add(name, pointGO);
+                    return pointTR;
                 }
                 Transform GetMidpoint(Transform left, Transform right)
                 {
-                    GameObject bing = new GameObject(left.name + right.name);
-                    Transform bong = bing.transform;
-                    bong.SetParent(bbPointsRoot.transform);
-                    bong.localPosition = (left.position + right.position) / 2;
-                    mv.boundingPoints.Add(bing.name, bing);
-                    return bong;
+                    GameObject pointGO = new GameObject(left.name + right.name);
+                    Transform pointTR = pointGO.transform;
+                    pointTR.SetParent(bbPointsRoot.transform);
+                    pointTR.localPosition = (left.position + right.position) / 2;
+                    mv.boundingPoints.Add(pointGO.name, pointGO);
+                    return pointTR;
                 }
 
                 #region declare_constants

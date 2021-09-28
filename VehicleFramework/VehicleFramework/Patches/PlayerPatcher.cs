@@ -15,7 +15,7 @@ using SMLHelper.V2.Utility;
 namespace VehicleFramework
 {
     [HarmonyPatch(typeof(Player))]
-    public class PlayerPatcher
+    public static class PlayerPatcher
     {
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
@@ -27,6 +27,17 @@ namespace VehicleFramework
             HUDBuilder.BuildNormalHUD();
 
             __instance.gameObject.EnsureComponent<ModVehicleTether>();
+
+
+            // setup build bot paths
+            // we have to do this at game-start time
+            // because the new objects we create are wiped on scene-change
+            // TODO
+            // knowing this, we might be able to factor out some gameobjects,
+            // that we'd been requiring in the assetbundle side of things
+            BuildBotManager.SetupBuildBotPaths();
+
+
             return;
         }
 

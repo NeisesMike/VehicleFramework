@@ -20,14 +20,6 @@ namespace VehicleFramework
             ModuleBuilder.main = VehicleBuilder.moduleBuilder.AddComponent<ModuleBuilder>();
             ModuleBuilder.main.grabComponents();
 
-            // setup build bot paths
-            // we have to do this at game-start time
-            // because the new objects we create are wiped on scene-change
-            // TODO
-            // knowing this, we might be able to factor out some gameobjects,
-            // that we'd been requiring in the assetbundle side of things
-            BuildBotManager.SetupBuildBotPaths();
-
             // TODO maybe clean up?
         }
     }

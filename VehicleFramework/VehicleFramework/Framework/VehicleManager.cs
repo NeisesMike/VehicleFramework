@@ -27,7 +27,7 @@ namespace VehicleFramework
     public static class VehicleManager
     {
         public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
-
+        public static List<PingInstance> mvPings = new List<PingInstance>();
         public static void RegisterVehicle(ModVehicle mv)
         {
             if (mv.name.Contains("Clone"))
