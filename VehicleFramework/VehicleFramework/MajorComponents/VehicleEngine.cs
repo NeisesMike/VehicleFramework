@@ -12,6 +12,8 @@ namespace VehicleFramework
         public ModVehicle mv;
         public Rigidbody rb;
 
+        public bool canControlRotation = true;
+
         private readonly float forwardTopSpeed = 1500;
         private readonly float backwardTopSpeed = 300;
         private readonly float strafeTopSpeed = 500;
@@ -312,15 +314,7 @@ namespace VehicleFramework
                 UpdateUpMomentum(yMove, getForce(forceDirection.updown));
             }
 
-            // Control rotation
-            float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
-            float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
-            Vector2 mouseDir = GameInput.GetLookDelta();
-            float xRot = mouseDir.x;
-            float yRot = mouseDir.y;
-            rb.AddTorque(mv.transform.up    * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
-
+            MaybeControlRotation();
 
             /* TODO steering wheel animation stuff
             base.steeringWheelYaw = Mathf.Lerp(base.steeringWheelYaw, 0f, Time.deltaTime);
@@ -333,6 +327,20 @@ namespace VehicleFramework
             */
 
             return;
+        }
+        public void MaybeControlRotation()
+        {
+            if (canControlRotation)
+            {
+                // Control rotation
+                float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
+                float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
+                Vector2 mouseDir = GameInput.GetLookDelta();
+                float xRot = mouseDir.x;
+                float yRot = mouseDir.y;
+                rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+                rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+            }
         }
         public void DrainPower(Vector3 moveDirection)
         {
