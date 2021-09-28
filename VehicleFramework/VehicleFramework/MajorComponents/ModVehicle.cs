@@ -81,8 +81,6 @@ namespace VehicleFramework
 
         public bool isRegistered = false;
 
-        public Dictionary<string, GameObject> boundingPoints = new Dictionary<string, GameObject>();
-
         // later
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;

@@ -50,6 +50,10 @@ namespace VehicleFramework
         {
             foreach (ModVehicle mv in VehicleBuilder.prefabs)
             {
+                if (mv.GetComponentInChildren<BuildBotPath>(true) != null)
+                {
+                    continue;
+                }
                 SetupBuildBotBeamPoints(mv);
                 SetupVFXConstructing(mv);
 
@@ -72,7 +76,6 @@ namespace VehicleFramework
                     Transform pointTR = pointGO.transform;
                     pointTR.SetParent(bbPointsRoot.transform);
                     pointTR.localPosition = GetThisCorner(inputx, inputy, inputz);
-                    mv.boundingPoints.Add(name, pointGO);
                     return pointTR;
                 }
                 Transform GetCentroid(string name, Vector3 cardinalDir)
@@ -88,7 +91,6 @@ namespace VehicleFramework
                     Transform pointTR = pointGO.transform;
                     pointTR.SetParent(bbPointsRoot.transform);
                     pointTR.localPosition = GetThisCentroid(cardinalDir);
-                    mv.boundingPoints.Add(name, pointGO);
                     return pointTR;
                 }
                 Transform GetMidpoint(Transform left, Transform right)
@@ -97,7 +99,6 @@ namespace VehicleFramework
                     Transform pointTR = pointGO.transform;
                     pointTR.SetParent(bbPointsRoot.transform);
                     pointTR.localPosition = (left.position + right.position) / 2;
-                    mv.boundingPoints.Add(pointGO.name, pointGO);
                     return pointTR;
                 }
 
