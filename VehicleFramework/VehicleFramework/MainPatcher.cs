@@ -84,6 +84,14 @@ namespace VehicleFramework
             Config = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
             harmony.PatchAll();
+
+            var type = Type.GetType("SubnauticaMap.PingMapIcon, SubnauticaMap", false, false);
+            if (type != null)
+            {
+                var pingOriginal = AccessTools.Method(type, "Refresh");
+                var pingPrefix = new HarmonyMethod(AccessTools.Method(typeof(MapModPatcher), "Prefix"));
+                harmony.Patch(pingOriginal, pingPrefix);
+            }
         }
 
         [QModPostPatch]

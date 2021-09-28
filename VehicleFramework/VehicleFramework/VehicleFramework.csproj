@@ -91,6 +91,7 @@
     <Compile Include="Interfaces\IPlayerListener.cs" />
     <Compile Include="Interfaces\IPowerListener.cs" />
     <Compile Include="MinorComponents\BuildBotManager.cs" />
+    <Compile Include="Patches\MapModPatcher.cs" />
     <Compile Include="Patches\VFXConstructingPatch.cs" />
     <Compile Include="VehicleStatusListeners\ControlPanel.cs" />
     <Compile Include="MinorComponents\ControlPanelButton.cs" />
