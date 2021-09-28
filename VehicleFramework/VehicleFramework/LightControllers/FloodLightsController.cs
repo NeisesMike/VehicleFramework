@@ -60,12 +60,12 @@ namespace VehicleFramework
             if (enabled)
             {
                 EnableFloodLampEmission();
-                mv.NotifyStatus(VehicleStatus.OnFloodLightsOn);
+                mv.NotifyStatus(LightsStatus.OnFloodLightsOn);
             }
             else
             {
                 DisableFloodLampEmission();
-                mv.NotifyStatus(VehicleStatus.OnFloodLightsOff);
+                mv.NotifyStatus(LightsStatus.OnFloodLightsOff);
             }
         }
         public void EnableFloodLampEmission()

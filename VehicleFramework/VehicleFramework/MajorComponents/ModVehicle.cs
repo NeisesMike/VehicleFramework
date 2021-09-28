@@ -151,6 +151,25 @@ namespace VehicleFramework
         }
         public override void Update()
         {
+            // TODO delete this stuff we wrote for FalseLight
+            if (Input.GetKeyDown(KeyCode.Backslash))
+            {
+                DevConsole.SendConsoleCommand("spawn reaperleviathan");
+                foreach (var rl in GameObject.FindObjectsOfType<ReaperLeviathan>())
+                { 
+                    rl.GetComponent<Rigidbody>().isKinematic = true;
+                    foreach (var reaperCol in rl.GetComponentsInChildren<SphereCollider>())
+                    {
+                        Logger.Log(reaperCol.name);
+                        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        Component.Destroy(go.GetComponent<Collider>());
+                        go.transform.SetParent(reaperCol.transform);
+                        go.GetComponent<SphereCollider>().radius = reaperCol.radius;
+                        Shader marmosetShader = Shader.Find("MarmosetUBER");
+                        go.GetComponent<Renderer>().material.shader = marmosetShader;
+                    }
+                }
+            }
             base.Update();
         }
 
@@ -497,47 +516,74 @@ namespace VehicleFramework
                 NotifyStatus(PowerStatus.OnPowerUp);
             }
         }
+        public void NotifyStatus(LightsStatus vs)
+        {
+            foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
+            {
+                switch (vs)
+                {
+                    case LightsStatus.OnHeadLightsOn:
+                        component.OnHeadLightsOn();
+                        break;
+                    case LightsStatus.OnHeadLightsOff:
+                        component.OnHeadLightsOff();
+                        break;
+                    case LightsStatus.OnInteriorLightsOn:
+                        component.OnInteriorLightsOn();
+                        break;
+                    case LightsStatus.OnInteriorLightsOff:
+                        component.OnInteriorLightsOff();
+                        break;
+                    case LightsStatus.OnFloodLightsOn:
+                        component.OnFloodLightsOn();
+                        break;
+                    case LightsStatus.OnFloodLightsOff:
+                        component.OnFloodLightsOff();
+                        break;
+                    case LightsStatus.OnNavLightsOn:
+                        component.OnNavLightsOn();
+                        break;
+                    case LightsStatus.OnNavLightsOff:
+                        component.OnNavLightsOff();
+                        break;
+                    default:
+                        Logger.Log("Error: tried to notify using an invalid status");
+                        break;
+                }
+            }
+        }
+        public void NotifyStatus(AutoPilotStatus vs)
+        {
+            foreach (var component in GetComponentsInChildren<IAutoPilotListener>())
+            {
+                switch (vs)
+                {
+                    case AutoPilotStatus.OnAutoLevelBegin:
+                        component.OnAutoLevelBegin();
+                        break;
+                    case AutoPilotStatus.OnAutoLevelEnd:
+                        component.OnAutoLevelEnd();
+                        break;
+                    case AutoPilotStatus.OnAutoPilotBegin:
+                        component.OnAutoPilotBegin();
+                        break;
+                    case AutoPilotStatus.OnAutoPilotEnd:
+                        component.OnAutoPilotEnd();
+                        break;
+                    default:
+                        Logger.Log("Error: tried to notify using an invalid status");
+                        break;
+                }
+            }
+        }
         public void NotifyStatus(VehicleStatus vs)
         {
             foreach (var component in GetComponentsInChildren<IVehicleStatusListener>())
             {
                 switch (vs)
                 {
-                    case VehicleStatus.OnHeadLightsOn:
-                        component.OnHeadLightsOn();
-                        break;
-                    case VehicleStatus.OnHeadLightsOff:
-                        component.OnHeadLightsOff();
-                        break;
-                    case VehicleStatus.OnInteriorLightsOn:
-                        component.OnInteriorLightsOn();
-                        break;
-                    case VehicleStatus.OnInteriorLightsOff:
-                        component.OnInteriorLightsOff();
-                        break;
-                    case VehicleStatus.OnFloodLightsOn:
-                        component.OnFloodLightsOn();
-                        break;
-                    case VehicleStatus.OnFloodLightsOff:
-                        component.OnFloodLightsOff();
-                        break;
-                    case VehicleStatus.OnNavLightsOn:
-                        component.OnNavLightsOn();
-                        break;
-                    case VehicleStatus.OnNavLightsOff:
-                        component.OnNavLightsOff();
-                        break;
                     case VehicleStatus.OnTakeDamage:
                         component.OnTakeDamage();
-                        break;
-                    case VehicleStatus.OnAutoLevel:
-                        component.OnAutoLevel();
-                        break;
-                    case VehicleStatus.OnAutoPilotBegin:
-                        component.OnAutoPilotBegin();
-                        break;
-                    case VehicleStatus.OnAutoPilotEnd:
-                        component.OnAutoPilotEnd();
                         break;
                     default:
                         Logger.Log("Error: tried to notify using an invalid status");

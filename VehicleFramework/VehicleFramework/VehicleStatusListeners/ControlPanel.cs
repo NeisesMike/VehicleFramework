@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener
+    public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener, ILightsStatusListener, IAutoPilotListener
     {
         public ModVehicle mv;
         private bool isDead = false;
@@ -198,22 +198,22 @@ namespace VehicleFramework
         }
 
 
-        void IVehicleStatusListener.OnHeadLightsOn()
+        void ILightsStatusListener.OnHeadLightsOn()
         {
             SetButtonLightingActive(buttonHeadLights, false);
         }
 
-        void IVehicleStatusListener.OnHeadLightsOff()
+        void ILightsStatusListener.OnHeadLightsOff()
         {
             SetButtonLightingActive(buttonHeadLights, true);
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOn()
+        void ILightsStatusListener.OnInteriorLightsOn()
         {
             SetButtonLightingActive(buttonInteriorLights, false);
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOff()
+        void ILightsStatusListener.OnInteriorLightsOff()
         {
             SetButtonLightingActive(buttonInteriorLights, true);
         }
@@ -221,37 +221,39 @@ namespace VehicleFramework
         void IVehicleStatusListener.OnTakeDamage()
         {
         }
-
-        void IVehicleStatusListener.OnAutoLevel()
+        void IAutoPilotListener.OnAutoLevelBegin()
+        {
+        }
+        void IAutoPilotListener.OnAutoLevelEnd()
         {
         }
 
-        void IVehicleStatusListener.OnAutoPilotBegin()
+        void IAutoPilotListener.OnAutoPilotBegin()
         {
             SetButtonLightingActive(buttonAutoPilot, false);
         }
 
-        void IVehicleStatusListener.OnAutoPilotEnd()
+        void IAutoPilotListener.OnAutoPilotEnd()
         {
             SetButtonLightingActive(buttonAutoPilot, true);
         }
 
-        void IVehicleStatusListener.OnFloodLightsOn()
+        void ILightsStatusListener.OnFloodLightsOn()
         {
             SetButtonLightingActive(buttonFloodLights, false);
         }
 
-        void IVehicleStatusListener.OnFloodLightsOff()
+        void ILightsStatusListener.OnFloodLightsOff()
         {
             SetButtonLightingActive(buttonFloodLights, true);
         }
 
-        void IVehicleStatusListener.OnNavLightsOn()
+        void ILightsStatusListener.OnNavLightsOn()
         {
             SetButtonLightingActive(buttonFloodLights, false);
         }
 
-        void IVehicleStatusListener.OnNavLightsOff()
+        void ILightsStatusListener.OnNavLightsOff()
         {
             SetButtonLightingActive(buttonFloodLights, true);
         }

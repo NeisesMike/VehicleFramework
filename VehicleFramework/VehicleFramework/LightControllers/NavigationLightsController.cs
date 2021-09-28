@@ -185,7 +185,7 @@ namespace VehicleFramework
                     DisableLightClass(lc);
                 }
                 isNavLightsEnabled = false;
-                mv.NotifyStatus(VehicleStatus.OnNavLightsOff);
+                mv.NotifyStatus(LightsStatus.OnNavLightsOff);
             }
         }
         public void EnableNavLights()
@@ -196,7 +196,7 @@ namespace VehicleFramework
                 EnableLightClass(LightClass.Ports);
                 EnableLightClass(LightClass.Starboards);
                 isNavLightsEnabled = true;
-                mv.NotifyStatus(VehicleStatus.OnNavLightsOn);
+                mv.NotifyStatus(LightsStatus.OnNavLightsOn);
             }
         }
         public void ToggleNavLights()

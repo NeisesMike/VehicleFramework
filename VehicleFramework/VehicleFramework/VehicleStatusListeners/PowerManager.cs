@@ -12,41 +12,85 @@ namespace VehicleFramework
      * This is trivial for lights,
      * but a bit more difficult for driving
      */
-    public class PowerManager : MonoBehaviour, IVehicleStatusListener
+    public class PowerManager : MonoBehaviour, IVehicleStatusListener, IAutoPilotListener, ILightsStatusListener
     {
         private PowerStatus currentPowerStatus = PowerStatus.OnBatterySafe;
         private bool isHeadlightsOn = false;
         private bool isFloodlightsOn = false;
         private bool isNavLightsOn = false;
         private bool isInteriorLightsOn = false;
-        private ModVehicle mv = null;
+        private bool isAutoLeveling = false;
+        private bool isAutoPiloting = false;
+
+        private ModVehicle _mv;
+        private ModVehicle mv
+        {
+            get
+            {
+                if(_mv==null)
+                {
+                    _mv = GetComponent<ModVehicle>();
+                }
+                return _mv;
+            }
+        }
+        private EnergyInterface _ei = null;
+        private EnergyInterface ei
+        {
+            get
+            {
+                if (_ei == null)
+                {
+                    _ei = GetComponent<EnergyInterface>();
+                }
+                return _ei;
+            }
+        }
 
         public void Start()
         {
-            mv = GetComponent<ModVehicle>();
         }
         public void Update()
         {
             /*
              * research suggests engines should be between 10 and 100x more draining than the lights
              * engine takes [0,3], so we're justified for either [0,0.3] or [0,0.03]
-             * we chose [0,0.1]
+             * we chose [0,0.1] for the lights
              */
             if (isHeadlightsOn)
             {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.01f * Time.deltaTime);
+                var tmp = ei.ConsumeEnergy(0.01f * Time.deltaTime);
+                Logger.Log(tmp.ToString());
             }
             if (isFloodlightsOn)
             {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.1f * Time.deltaTime);
+                ei.ConsumeEnergy(0.1f * Time.deltaTime);
             }
             if(isNavLightsOn)
             {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.001f * Time.deltaTime);
+                ei.ConsumeEnergy(0.001f * Time.deltaTime);
             }
             if(isInteriorLightsOn)
             {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.001f * Time.deltaTime);
+                ei.ConsumeEnergy(0.001f * Time.deltaTime);
+            }
+            if (isInteriorLightsOn)
+            {
+                ei.ConsumeEnergy(0.001f * Time.deltaTime);
+            }
+            if (isAutoLeveling)
+            {
+                float scalarFactor = 1.0f;
+                float basePowerConsumptionPerSecond = .15f;
+                float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+                mv.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+            }
+            if (isAutoPiloting)
+            {
+                float scalarFactor = 1.0f;
+                float basePowerConsumptionPerSecond = 3f;
+                float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+                mv.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
 
             // check battery thresholds, and make notifications as appropriate
@@ -77,54 +121,61 @@ namespace VehicleFramework
                 return PowerStatus.OnBatterySafe;
             }
         }
-        void IVehicleStatusListener.OnAutoLevel()
+        void IAutoPilotListener.OnAutoLevelBegin()
         {
+            isAutoLeveling = true;
+        }
+        void IAutoPilotListener.OnAutoLevelEnd()
+        {
+            isAutoLeveling = false;
         }
 
-        void IVehicleStatusListener.OnAutoPilotBegin()
+        void IAutoPilotListener.OnAutoPilotBegin()
         {
+            isAutoPiloting = true;
         }
 
-        void IVehicleStatusListener.OnAutoPilotEnd()
+        void IAutoPilotListener.OnAutoPilotEnd()
         {
+            isAutoPiloting = false;
         }
 
-        void IVehicleStatusListener.OnFloodLightsOff()
+        void ILightsStatusListener.OnFloodLightsOff()
         {
             isFloodlightsOn = false;
         }
 
-        void IVehicleStatusListener.OnFloodLightsOn()
+        void ILightsStatusListener.OnFloodLightsOn()
         {
             isFloodlightsOn = true;
         }
 
-        void IVehicleStatusListener.OnHeadLightsOff()
+        void ILightsStatusListener.OnHeadLightsOff()
         {
             isHeadlightsOn = false;
         }
 
-        void IVehicleStatusListener.OnHeadLightsOn()
+        void ILightsStatusListener.OnHeadLightsOn()
         {
             isHeadlightsOn = true;
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOff()
+        void ILightsStatusListener.OnInteriorLightsOff()
         {
             isInteriorLightsOn = false;
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOn()
+        void ILightsStatusListener.OnInteriorLightsOn()
         {
             isInteriorLightsOn = true;
         }
 
-        void IVehicleStatusListener.OnNavLightsOff()
+        void ILightsStatusListener.OnNavLightsOff()
         {
             isNavLightsOn = false;
         }
 
-        void IVehicleStatusListener.OnNavLightsOn()
+        void ILightsStatusListener.OnNavLightsOn()
         {
             isNavLightsOn = true;
         }

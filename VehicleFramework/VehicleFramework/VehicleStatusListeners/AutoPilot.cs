@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener
+    public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener
 	{
 		public ModVehicle mv;
         public EnergyInterface aiEI;
@@ -17,7 +17,26 @@ namespace VehicleFramework
         private float rollVelocity = 0.0f;
         private float pitchVelocity = 0.0f;
         private float smoothTime = 0.3f;
-        private bool autoLeveling = true;
+        private bool _autoLeveling = false;
+        private bool autoLeveling
+        {
+            get
+            {
+                return _autoLeveling;
+            }
+            set
+            {
+                if (value && !_autoLeveling) 
+                {
+                    mv.NotifyStatus(AutoPilotStatus.OnAutoLevelBegin);
+                }
+                if (!value && _autoLeveling)
+                {
+                    mv.NotifyStatus(AutoPilotStatus.OnAutoLevelEnd);
+                }
+                _autoLeveling = value;
+            }
+        }
         private bool isDead = false;
         public void Awake()
         {
@@ -37,10 +56,9 @@ namespace VehicleFramework
                     float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
                     float roll = transform.rotation.eulerAngles.z;
                     float rollDelta = roll >= 180 ? 360 - roll : roll;
-                    mv.NotifyStatus(VehicleStatus.OnAutoLevel);
                     autoLeveling = true;
-                    var smoothTime1 = 2f * pitchDelta / 90f;
-                    var smoothTime2 = 2f * rollDelta / 90f;
+                    var smoothTime1 = 5f * pitchDelta / 90f;
+                    var smoothTime2 = 5f * rollDelta / 90f;
                     smoothTime = Mathf.Max(smoothTime1, smoothTime2);
                 }
                 else
@@ -48,18 +66,15 @@ namespace VehicleFramework
                     timeOfLastLevelTap = Time.time;
                 }
             }
-
-            // drain power
-            if(autoLeveling)
-            {
-                //TODO rotation doesn't actually consume energy, so... ?
-                // consume energy as if we're firing thrusters along all 3 axes at max magnitude
-                //mv.engine.DrainPower(Vector3.one);
-            }
-
         }
         public void FixedUpdate()
         {
+            Vector2 lookDir = GameInput.GetLookDelta();
+            if (0.01f < lookDir.magnitude)
+            {
+                autoLeveling = false;
+                return;
+            }
             if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerInside()) && mv.GetIsUnderwater())
             {
                 float x = transform.rotation.eulerAngles.x;
@@ -95,42 +110,42 @@ namespace VehicleFramework
             }
         }
 
-        void IVehicleStatusListener.OnHeadLightsOn()
+        void ILightsStatusListener.OnHeadLightsOn()
         {
             Logger.Log("OnHeadLightsOn");
         }
 
-        void IVehicleStatusListener.OnHeadLightsOff()
+        void ILightsStatusListener.OnHeadLightsOff()
         {
             Logger.Log("OnHeadLightsOff");
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOn()
+        void ILightsStatusListener.OnInteriorLightsOn()
         {
             Logger.Log("OnInteriorLightsOn");
         }
 
-        void IVehicleStatusListener.OnInteriorLightsOff()
+        void ILightsStatusListener.OnInteriorLightsOff()
         {
             Logger.Log("OnInteriorLightsOff");
         }
 
-        void IVehicleStatusListener.OnNavLightsOn()
+        void ILightsStatusListener.OnNavLightsOn()
         {
             Logger.Log("OnNavLightsOn");
         }
 
-        void IVehicleStatusListener.OnNavLightsOff()
+        void ILightsStatusListener.OnNavLightsOff()
         {
             Logger.Log("OnNavLightsOff");
         }
 
-        void IVehicleStatusListener.OnFloodLightsOn()
+        void ILightsStatusListener.OnFloodLightsOn()
         {
             Logger.Log("OnFloodLightsOn");
         }
 
-        void IVehicleStatusListener.OnFloodLightsOff()
+        void ILightsStatusListener.OnFloodLightsOff()
         {
             Logger.Log("OnFloodLightsOff");
         }
@@ -138,21 +153,6 @@ namespace VehicleFramework
         void IVehicleStatusListener.OnTakeDamage()
         {
             Logger.Log("OnTakeDamage");
-        }
-
-        void IVehicleStatusListener.OnAutoLevel()
-        {
-            Logger.Log("OnAutoLevel");
-        }
-
-        void IVehicleStatusListener.OnAutoPilotBegin()
-        {
-            Logger.Log("OnAutoPilotBegin");
-        }
-
-        void IVehicleStatusListener.OnAutoPilotEnd()
-        {
-            Logger.Log("OnAutoPilotEnd");
         }
 
         void IPowerListener.OnPowerUp()
@@ -216,6 +216,26 @@ namespace VehicleFramework
         void IPowerListener.OnBatteryRevive()
         {
             Logger.Log("OnBatteryRevive");
+        }
+
+        void IAutoPilotListener.OnAutoLevelBegin()
+        {
+            Logger.Log("OnAutoLevelBegin");
+        }
+
+        void IAutoPilotListener.OnAutoLevelEnd()
+        {
+            Logger.Log("OnAutoLevelEnd");
+        }
+
+        void IAutoPilotListener.OnAutoPilotBegin()
+        {
+            Logger.Log("OnAutoPilotBegin");
+        }
+
+        void IAutoPilotListener.OnAutoPilotEnd()
+        {
+            Logger.Log("OnAutoPilotEnd");
         }
     }
 }

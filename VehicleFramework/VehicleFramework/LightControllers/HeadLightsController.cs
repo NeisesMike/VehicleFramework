@@ -82,11 +82,11 @@ namespace VehicleFramework
             SetVolumetricLightsActive(enabled);
             if (enabled)
             {
-                mv.NotifyStatus(VehicleStatus.OnHeadLightsOn);
+                mv.NotifyStatus(LightsStatus.OnHeadLightsOn);
             }
             else
             {
-                mv.NotifyStatus(VehicleStatus.OnHeadLightsOff);
+                mv.NotifyStatus(LightsStatus.OnHeadLightsOff);
             }
         }
 

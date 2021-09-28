@@ -88,8 +88,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
     <Compile Include="Interfaces\IPowerListener.cs" />
+    <Compile Include="Interfaces\ILightsStatusListener.cs" />
     <Compile Include="MinorComponents\BuildBotManager.cs" />
     <Compile Include="Patches\MapModPatcher.cs" />
     <Compile Include="Patches\VFXConstructingPatch.cs" />
@@ -115,7 +117,7 @@
     <Compile Include="LightControllers\NavigationLightsController.cs" />
     <Compile Include="LightControllers\FloodLightsController.cs" />
     <Compile Include="LightControllers\InteriorLightsController.cs" />
-    <Compile Include="MajorComponents\VehicleHatch.cs" />
+    <Compile Include="MinorComponents\VehicleHatch.cs" />
     <Compile Include="StorageComponents\InnateStorageContainer.cs" />
     <Compile Include="StorageComponents\ModularStorageInput.cs" />
     <Compile Include="Framework\ModuleBuilder.cs" />

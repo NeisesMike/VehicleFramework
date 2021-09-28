@@ -55,7 +55,7 @@ namespace VehicleFramework
                     }
                 }
                 isInteriorLightsOn = true;
-                mv.NotifyStatus(VehicleStatus.OnInteriorLightsOn);
+                mv.NotifyStatus(LightsStatus.OnInteriorLightsOn);
             }
         }
         public void DisableInteriorLighting()
@@ -74,7 +74,7 @@ namespace VehicleFramework
                     }
                 }
                 isInteriorLightsOn = false;
-                mv.NotifyStatus(VehicleStatus.OnInteriorLightsOff);
+                mv.NotifyStatus(LightsStatus.OnInteriorLightsOff);
             }
         }
 
