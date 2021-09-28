@@ -22,6 +22,8 @@ namespace VehicleFramework
         public static void SetupVFXConstructing(ModVehicle mv)
         {
             VFXConstructing seamothVFXC = CraftData.GetPrefabForTechType(TechType.Seamoth, true).GetComponent<VFXConstructing>();
+            VFXConstructing rocketPlatformVfx = CraftData.GetPrefabForTechType(TechType.RocketBase).GetComponentInChildren<VFXConstructing>();
+
             VFXConstructing vfxc = mv.gameObject.EnsureComponent<VFXConstructing>();
             vfxc.timeToConstruct = 50f;
             vfxc.ghostMaterial = seamothVFXC.ghostMaterial;
@@ -29,25 +31,20 @@ namespace VehicleFramework
             vfxc.alphaDetailTexture = seamothVFXC.alphaDetailTexture;
             vfxc.wireColor = seamothVFXC.wireColor;
             vfxc.rBody = mv.useRigidbody;
-            Logger.Log("bing");
-            foreach (VFXSplash thisSplash in GameObject.FindObjectsOfType<VFXSplash>())
-            {
-                Logger.Log(thisSplash.name);
-                // TODO make this configurable
-                if (thisSplash.name.Contains("Cyclop"))
-                {
-                    vfxc.surfaceSplashFX = thisSplash.gameObject;
-                }
-            }
 
+            // we'll take the seamoth sound bc the other sound is goofy
+            // we don't really like this splash, but at least the size is pretty good
+            vfxc.surfaceSplashFX = rocketPlatformVfx.surfaceSplashFX;
             vfxc.surfaceSplashSound = seamothVFXC.surfaceSplashSound;
-            vfxc.surfaceSplashVelocity = seamothVFXC.surfaceSplashVelocity;
+            vfxc.surfaceSplashVelocity = rocketPlatformVfx.surfaceSplashVelocity;
+
             vfxc.heightOffset = seamothVFXC.heightOffset;
             vfxc.constructSound = seamothVFXC.constructSound;
             vfxc.delay = 10f;
             vfxc.isDone = false;
             vfxc.informGameObject = null;
             vfxc.transparentShaders = null; // TODO maybe we'll want to use this?
+            vfxc.Regenerate();
         }
         public static void SetupBuildBotPaths()
         {
@@ -59,6 +56,7 @@ namespace VehicleFramework
                 Bounds vbounds = mv.BoundingBox.GetComponent<MeshRenderer>().bounds;
                 GameObject bbPointsRoot = new GameObject("BuildBotPoints");
                 bbPointsRoot.transform.SetParent(mv.transform);
+
                 // utility functions for visualizing locations around the bounding box
                 Transform GetCorner(string name, bool inputx, bool inputy, bool inputz)
                 {
