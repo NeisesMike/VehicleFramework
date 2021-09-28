@@ -270,6 +270,13 @@ namespace Atrama
                 return controlPanel;
             }
         }
+        public override GameObject BoundingBox
+        {
+            get
+            {
+                return transform.Find("BoundingBox").gameObject;
+            }
+        }
         public override List<GameObject> TetherSources
         {
             get

@@ -46,6 +46,7 @@ namespace VehicleFramework
         public abstract List<GameObject> CanopyWindows { get; }
         public abstract List<GameObject> NameDecals { get; }
         public abstract List<GameObject> TetherSources { get; }
+        public abstract GameObject BoundingBox { get; }
         public abstract GameObject ControlPanel { get; }
         public ControlPanel controlPanelLogic;
 
@@ -78,6 +79,10 @@ namespace VehicleFramework
         public InteriorLightsController interiorlights;
         public NavigationLightsController navlights;
 
+        public bool isRegistered = false;
+
+        public Dictionary<string, GameObject> boundingPoints = new Dictionary<string, GameObject>();
+
         // later
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;
@@ -89,7 +94,6 @@ namespace VehicleFramework
         public override void Awake()
         {
             base.Awake();
-
             gameObject.EnsureComponent<TetherSource>();
 
             floodlights = gameObject.EnsureComponent<FloodLightsController>();
@@ -128,7 +132,11 @@ namespace VehicleFramework
             // load storage from file
 
             // load modular storage from file
-            VehicleManager.RegisterVehicle(this);
+            if (!isRegistered)
+            {
+                VehicleManager.RegisterVehicle(this);
+                isRegistered = true;
+            }
         }
         public override void FixedUpdate()
         {

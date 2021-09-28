@@ -26,7 +26,6 @@ namespace VehicleFramework
             // prepare any HUDs
             HUDBuilder.BuildNormalHUD();
 
-
             __instance.gameObject.EnsureComponent<ModVehicleTether>();
             return;
         }

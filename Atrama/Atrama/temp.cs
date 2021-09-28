@@ -51,6 +51,8 @@ namespace Atrama
 
         public override GameObject ControlPanel => throw new NotImplementedException();
 
+        public override GameObject BoundingBox => throw new NotImplementedException();
+
         public override List<VehicleBattery> BackupBatteries => throw new NotImplementedException();
 
         public override List<VehicleFloodLight> HeadLights => throw new NotImplementedException();

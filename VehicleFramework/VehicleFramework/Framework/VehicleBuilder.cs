@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,6 +80,7 @@ namespace VehicleFramework
             if (isNewEntry)
             {
                 Instrument(ref mv, pt);
+                prefabs.Add(mv);
                 VehicleEntry ve = new VehicleEntry(mv.gameObject, numVehicleTypes, mv.GetDescription(), pt, sprite, modules, arms);
                 vehicleTypes.Add(ve);
                 numVehicleTypes++;
@@ -125,6 +127,7 @@ namespace VehicleFramework
                 inp.collider = vs.Container.EnsureComponent<BoxCollider>();
                 inp.openSound = storageOpenSound;
                 inp.closeSound = storageCloseSound;
+                vs.Container.SetActive(true);
             }
             iter = 0;
             foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
@@ -447,6 +450,26 @@ namespace VehicleFramework
             ddoi.prevPosition = Vector3.zero;
             ddoi.prevPosition = Vector3.zero;
         }
+        public static void SetupVFXConstructing(ref ModVehicle mv)
+        {
+            VFXConstructing seamothVFXC = seamoth.GetComponent<VFXConstructing>();
+            VFXConstructing vfxc = mv.gameObject.EnsureComponent<VFXConstructing>();
+            vfxc.timeToConstruct = 50f;
+            vfxc.ghostMaterial = seamothVFXC.ghostMaterial;
+            vfxc.alphaTexture = seamothVFXC.alphaTexture;
+            vfxc.alphaDetailTexture = seamothVFXC.alphaDetailTexture;
+            vfxc.wireColor = seamothVFXC.wireColor;
+            vfxc.rBody = mv.useRigidbody;
+            vfxc.surfaceSplashFX = seamothVFXC.surfaceSplashFX;
+            vfxc.surfaceSplashSound = seamothVFXC.surfaceSplashSound;
+            vfxc.surfaceSplashVelocity = seamothVFXC.surfaceSplashVelocity;
+            vfxc.heightOffset = seamothVFXC.heightOffset;
+            vfxc.constructSound = seamothVFXC.constructSound;
+            vfxc.delay = 10f;
+            vfxc.isDone = false;
+            vfxc.informGameObject = null;
+            vfxc.transparentShaders = null; // TODO maybe we'll want to use this?
+        }
         #endregion
         public static void Instrument(ref ModVehicle mv, PingType pingType)
         {
@@ -474,6 +497,8 @@ namespace VehicleFramework
             SetupConstructionObstacle(ref mv);
             SetupSoundOnDamage(ref mv);
             SetupDealDamageOnImpact(ref mv);
+
+            SetupVFXConstructing(ref mv);
 
             ApplySkyAppliers(ref mv);
 
