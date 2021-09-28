@@ -11,6 +11,10 @@ namespace VehicleFramework
     [HarmonyPatch(typeof(uGUI_Pings))]
     class uGUI_PingsPatcher
     {
+        /*
+         * Redirect calls conditionally,
+         * so that we display our custom ping sprites on the HUD
+         */
         [HarmonyPatch("OnAdd")]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

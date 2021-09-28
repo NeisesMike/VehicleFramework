@@ -142,9 +142,7 @@ namespace VehicleFramework
         {
             if (worldForces.IsAboveWater() != wasAboveWater)
             {
-                //TODO
                 PlaySplashSound();
-                Logger.Log("splash!");
                 wasAboveWater = worldForces.IsAboveWater();
             }
             if (stabilizeRoll)
