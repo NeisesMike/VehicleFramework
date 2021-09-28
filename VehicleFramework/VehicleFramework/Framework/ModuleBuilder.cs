@@ -28,6 +28,11 @@ namespace VehicleFramework
             RightArm
         }
 
+        public void Awake()
+        {
+            main = this;
+        }
+
         public uGUI_Equipment equipment;
 
         public GameObject genericModuleObject; // parent object of the regular module slot
