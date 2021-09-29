@@ -14,12 +14,41 @@ namespace VehicleFramework
 
         public bool canControlRotation = true;
 
-        private readonly float forwardTopSpeed = 1500;
-        private readonly float backwardTopSpeed = 300;
-        private readonly float strafeTopSpeed = 500;
-        private readonly float upDownTopSpeed = 400;
+        private const float FORWARD_TOP_SPEED = 1500;
+        private const float REVERSE_TOP_SPEED = 500;
+        private const float STRAFE_MAX_SPEED = 500;
+        private const float VERT_MAX_SPEED = 500;
 
-        private readonly float deadZoneSize = 300;
+        public const float FORWARD_ACCEL = FORWARD_TOP_SPEED / 10f;
+        public const float REVERSE_ACCEL = REVERSE_TOP_SPEED / 10f;
+        public const float STRAFE_ACCEL = STRAFE_MAX_SPEED / 10f;
+        public const float VERT_ACCEL = VERT_MAX_SPEED / 10f;
+
+        // SOAK describes how low to go before grinding to an abrupt halt.
+        // This is useful because otherwise the low-speed light are always blinking
+        private const float DEAD_ZONE_SOAK = 50;
+        // IMPULSE describes the immediate boost you get from the impulse engines when they fire
+        // the impulse engine recharges every second, so manueverability is not especially nimble
+        private const float IMPULSE_BOOST = 300;
+
+        /* TODO: RacingEngine : VehicleEngine
+        private float _timeOfLastImpulse = 0f;
+        private float ImpulseBoost
+        {
+            get
+            {
+                if(_timeOfLastImpulse + 1f < Time.time)
+                {
+                    _timeOfLastImpulse = Time.time;
+                    return IMPULSE_BOOST;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+        */
 
         // a value of 0.25 here indicates that
         // velocity will decay 25% every second
@@ -41,41 +70,25 @@ namespace VehicleFramework
         }
 
         private float _forwardMomentum = 0;
-        private void UpdateForwardMomentum(float move, float speed)
-        {
-            float target = ForwardMomentum + move * speed * Time.deltaTime;
-            if(0 < target && target < deadZoneSize && 0 < move)
-            {
-                ForwardMomentum = deadZoneSize;
-                return;
-            }
-            if (-deadZoneSize < target && target < 0 && move < 0)
-            {
-                ForwardMomentum = -deadZoneSize;
-                return;
-            }
-            if(Mathf.Abs(target) < deadZoneSize)
-            {
-                ForwardMomentum = 0;
-                return;
-            }
-            ForwardMomentum = target;
-        }
         private float ForwardMomentum
         {
             get
             {
+                if (_forwardMomentum < DEAD_ZONE_SOAK)
+                {
+                    return 0;
+                }
                 return _forwardMomentum;
             }
             set
             {
-                if (value < -backwardTopSpeed)
+                if (value < -REVERSE_TOP_SPEED)
                 {
-                    _forwardMomentum = -backwardTopSpeed;
+                    _forwardMomentum = -REVERSE_TOP_SPEED;
                 }
-                else if (forwardTopSpeed < value)
+                else if (FORWARD_TOP_SPEED < value)
                 {
-                    _forwardMomentum = forwardTopSpeed;
+                    _forwardMomentum = FORWARD_TOP_SPEED;
                 }
                 else
                 {
@@ -83,43 +96,48 @@ namespace VehicleFramework
                 }
             }
         }
+        private void UpdateForwardMomentum(float inputMagnitude)
+        {
+            if (ForwardMomentum < IMPULSE_BOOST && 0 < inputMagnitude)
+            {
+                ForwardMomentum = IMPULSE_BOOST;
+                return;
+            }
+            if (-IMPULSE_BOOST < ForwardMomentum && inputMagnitude < 0)
+            {
+                ForwardMomentum = -IMPULSE_BOOST;
+                return;
+            }
+            if (0 < inputMagnitude)
+            {
+                ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.deltaTime;
+            }
+            else
+            {
+                ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * Time.deltaTime;
+            }
+        }
 
         private float _rightMomentum = 0;
-        private void UpdateRightMomentum(float move, float speed)
-        {
-            float target = RightMomentum + move * speed * Time.deltaTime;
-            if (0 < target && target < deadZoneSize && 0 < move)
-            {
-                RightMomentum = deadZoneSize;
-                return;
-            }
-            if (-deadZoneSize < target && target < 0 && move < 0)
-            {
-                RightMomentum = -deadZoneSize;
-                return;
-            }
-            if (Mathf.Abs(target) < deadZoneSize)
-            {
-                RightMomentum = 0;
-                return;
-            }
-            RightMomentum = target;
-        }
         private float RightMomentum
         {
             get
             {
+                if (_rightMomentum < DEAD_ZONE_SOAK)
+                {
+                    return 0;
+                }
                 return _rightMomentum;
             }
             set
             {
-                if (value < -strafeTopSpeed)
+                if (value < -STRAFE_MAX_SPEED)
                 {
-                    _rightMomentum = -strafeTopSpeed;
+                    _rightMomentum = -STRAFE_MAX_SPEED;
                 }
-                else if (strafeTopSpeed < value)
+                else if (STRAFE_MAX_SPEED < value)
                 {
-                    _rightMomentum = strafeTopSpeed;
+                    _rightMomentum = STRAFE_MAX_SPEED;
                 }
                 else
                 {
@@ -127,49 +145,61 @@ namespace VehicleFramework
                 }
             }
         }
+        private void UpdateRightMomentum(float inputMagnitude)
+        {
+            if (RightMomentum < IMPULSE_BOOST && 0 < inputMagnitude)
+            {
+                RightMomentum = IMPULSE_BOOST;
+                return;
+            }
+            if (-IMPULSE_BOOST < RightMomentum && inputMagnitude < 0)
+            {
+                RightMomentum = -IMPULSE_BOOST;
+                return;
+            }
+            RightMomentum = RightMomentum + inputMagnitude * STRAFE_ACCEL * Time.deltaTime;
+        }
 
         private float _upMomentum = 0;
-        private void UpdateUpMomentum(float move, float speed)
-        {
-            float target = UpMomentum + move * speed * Time.deltaTime;
-            if (0 < target && target < deadZoneSize && 0 < move)
-            {
-                UpMomentum = deadZoneSize;
-                return;
-            }
-            if (-deadZoneSize < target && target < 0 && move < 0)
-            {
-                UpMomentum = -deadZoneSize;
-                return;
-            }
-            if (Mathf.Abs(target) < deadZoneSize)
-            {
-                UpMomentum = 0;
-                return;
-            }
-            UpMomentum = target;
-        }
         private float UpMomentum
         {
             get
             {
+                if(_upMomentum < DEAD_ZONE_SOAK)
+                {
+                    return 0;
+                }
                 return _upMomentum;
             }
             set
             {
-                if (value < -upDownTopSpeed)
+                if (value < -VERT_MAX_SPEED)
                 {
-                    _upMomentum = -upDownTopSpeed;
+                    _upMomentum = -VERT_MAX_SPEED;
                 }
-                else if (upDownTopSpeed < value)
+                else if (VERT_MAX_SPEED < value)
                 {
-                    _upMomentum = upDownTopSpeed;
+                    _upMomentum = VERT_MAX_SPEED;
                 }
                 else
                 {
                     _upMomentum = value;
                 }
             }
+        }
+        private void UpdateUpMomentum(float inputMagnitude)
+        {
+            if(UpMomentum < IMPULSE_BOOST && 0 < inputMagnitude)
+            {
+                UpMomentum = IMPULSE_BOOST;
+                return;
+            }
+            if (-IMPULSE_BOOST < UpMomentum && inputMagnitude < 0)
+            {
+                UpMomentum = -IMPULSE_BOOST;
+                return;
+            }
+            UpMomentum = UpMomentum + inputMagnitude * VERT_ACCEL * Time.deltaTime;
         }
 
 
@@ -202,50 +232,40 @@ namespace VehicleFramework
         }
         private void ApplyDrag(Vector3 move)
         {
+            // Only apply drag if we aren't applying movement in that direction.
+            // That is, if we aren't holding forward, our forward momentum should decay.
             if (move.z == 0)
             {
-                if (ForwardMomentum < 0)
+                if (1 < ForwardMomentum)
+                {
+                    ForwardMomentum -= DragDecay * ForwardMomentum * Time.deltaTime;
+                }
+                else if (ForwardMomentum < -1)
                 {
                     ForwardMomentum += DragDecay * ForwardMomentum * Time.deltaTime;
-                }
-                else
-                { 
-                    ForwardMomentum -= DragDecay * ForwardMomentum * Time.deltaTime;
                 }
             }
             if (move.x == 0)
             {
-                if (RightMomentum < 0)
-                {
-                    RightMomentum += DragDecay * RightMomentum * Time.deltaTime;
-                }
-                else
+                if (1 < RightMomentum)
                 {
                     RightMomentum -= DragDecay * RightMomentum * Time.deltaTime;
+                }
+                else if (RightMomentum < -1)
+                {
+                    RightMomentum += DragDecay * RightMomentum * Time.deltaTime;
                 }
             }
             if (move.y == 0)
             {
-                if (UpMomentum < 0)
-                {
-                    UpMomentum += DragDecay * UpMomentum * Time.deltaTime;
-                }
-                else
+                if (1 < UpMomentum)
                 {
                     UpMomentum -= DragDecay * UpMomentum * Time.deltaTime;
                 }
-            }
-            if (Mathf.Abs(UpMomentum) < deadZoneSize)
-            {
-                UpMomentum = 0;
-            }
-            if (Mathf.Abs(RightMomentum) < deadZoneSize)
-            {
-                RightMomentum = 0;
-            }
-            if (Mathf.Abs(ForwardMomentum) < deadZoneSize)
-            {
-                ForwardMomentum = 0;
+                else if (UpMomentum < -1)
+                {
+                    UpMomentum += DragDecay * UpMomentum * Time.deltaTime;
+                }
             }
         }
         public void ExecutePhysicsMove()
@@ -264,7 +284,7 @@ namespace VehicleFramework
         public float GetCurrentPercentOfTopSpeed()
         {
             float totalMomentumNow = Mathf.Abs(ForwardMomentum) + Mathf.Abs(RightMomentum) + Mathf.Abs(UpMomentum);
-            float topMomentum = forwardTopSpeed + strafeTopSpeed + upDownTopSpeed;
+            float topMomentum = FORWARD_TOP_SPEED + STRAFE_MAX_SPEED + VERT_MAX_SPEED;
             return totalMomentumNow / topMomentum;
         }
         public void ApplyPlayerControls(Vector3 moveDirection)
@@ -272,19 +292,19 @@ namespace VehicleFramework
             float getForce(forceDirection dir)
             {
                 float thisTopSpeed;
-                switch(dir)
+                switch (dir)
                 {
                     case forceDirection.forward:
-                        thisTopSpeed = forwardTopSpeed / 10f;
+                        thisTopSpeed = FORWARD_TOP_SPEED / 10f;
                         break;
                     case forceDirection.backward:
-                        thisTopSpeed = backwardTopSpeed / 10f;
+                        thisTopSpeed = REVERSE_TOP_SPEED / 10f;
                         break;
                     case forceDirection.strafe:
-                        thisTopSpeed = strafeTopSpeed / 10f;
+                        thisTopSpeed = STRAFE_MAX_SPEED / 10f;
                         break;
                     case forceDirection.updown:
-                        thisTopSpeed = upDownTopSpeed / 10f;
+                        thisTopSpeed = VERT_MAX_SPEED / 10f;
                         break;
                     default:
                         thisTopSpeed = 5f / 10f;
@@ -294,26 +314,10 @@ namespace VehicleFramework
             }
 
             // Control velocity
-            float xMove = moveDirection.x;
-            float yMove = moveDirection.y;
-            float zMove = moveDirection.z;
-            if (0.01f < zMove)
-            {
-                UpdateForwardMomentum(zMove, getForce(forceDirection.forward));
-            }
-            else if(zMove < -0.01f)
-            {
-                UpdateForwardMomentum(zMove, getForce(forceDirection.backward));
-            }
-            if (0.01f < xMove)
-            {
-                UpdateRightMomentum(xMove, getForce(forceDirection.strafe));
-            }
-            if (0.01f < yMove)
-            {
-                UpdateUpMomentum(yMove, getForce(forceDirection.updown));
-            }
-
+            UpdateRightMomentum(moveDirection.x);
+            UpdateUpMomentum(moveDirection.y);
+            UpdateForwardMomentum(moveDirection.z);
+            // Maybe control rotation
             MaybeControlRotation();
 
             /* TODO steering wheel animation stuff
@@ -354,7 +358,7 @@ namespace VehicleFramework
             float scalarFactor = 1.0f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-            mv.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+            mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
         }
     }
 }
