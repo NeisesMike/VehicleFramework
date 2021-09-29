@@ -151,25 +151,6 @@ namespace VehicleFramework
         }
         public override void Update()
         {
-            // TODO delete this stuff we wrote for FalseLight
-            if (Input.GetKeyDown(KeyCode.Backslash))
-            {
-                DevConsole.SendConsoleCommand("spawn reaperleviathan");
-                foreach (var rl in GameObject.FindObjectsOfType<ReaperLeviathan>())
-                { 
-                    rl.GetComponent<Rigidbody>().isKinematic = true;
-                    foreach (var reaperCol in rl.GetComponentsInChildren<SphereCollider>())
-                    {
-                        Logger.Log(reaperCol.name);
-                        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        Component.Destroy(go.GetComponent<Collider>());
-                        go.transform.SetParent(reaperCol.transform);
-                        go.GetComponent<SphereCollider>().radius = reaperCol.radius;
-                        Shader marmosetShader = Shader.Find("MarmosetUBER");
-                        go.GetComponent<Renderer>().material.shader = marmosetShader;
-                    }
-                }
-            }
             base.Update();
         }
 
