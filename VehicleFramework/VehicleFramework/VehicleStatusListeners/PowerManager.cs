@@ -47,6 +47,17 @@ namespace VehicleFramework
             }
         }
 
+        public void TrySpendEnergy(float val)
+        {
+            float desired = val;
+            float available = ei.TotalCanProvide(out _);
+            if (available < desired)
+            {
+                desired = available;
+            }
+            ei.ConsumeEnergy(desired);
+        }
+
         public void Start()
         {
         }
@@ -59,38 +70,33 @@ namespace VehicleFramework
              */
             if (isHeadlightsOn)
             {
-                var tmp = ei.ConsumeEnergy(0.01f * Time.deltaTime);
-                Logger.Log(tmp.ToString());
+                TrySpendEnergy(0.01f * Time.deltaTime);
             }
             if (isFloodlightsOn)
             {
-                ei.ConsumeEnergy(0.1f * Time.deltaTime);
+                TrySpendEnergy(0.1f * Time.deltaTime);
             }
             if(isNavLightsOn)
             {
-                ei.ConsumeEnergy(0.001f * Time.deltaTime);
+                TrySpendEnergy(0.001f * Time.deltaTime);
             }
             if(isInteriorLightsOn)
             {
-                ei.ConsumeEnergy(0.001f * Time.deltaTime);
-            }
-            if (isInteriorLightsOn)
-            {
-                ei.ConsumeEnergy(0.001f * Time.deltaTime);
+                TrySpendEnergy(0.001f * Time.deltaTime);
             }
             if (isAutoLeveling)
             {
                 float scalarFactor = 1.0f;
                 float basePowerConsumptionPerSecond = .15f;
                 float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-                mv.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+                TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
             if (isAutoPiloting)
             {
                 float scalarFactor = 1.0f;
                 float basePowerConsumptionPerSecond = 3f;
                 float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-                mv.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+                TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
 
             // check battery thresholds, and make notifications as appropriate

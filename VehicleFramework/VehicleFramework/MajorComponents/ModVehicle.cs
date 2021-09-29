@@ -494,16 +494,6 @@ namespace VehicleFramework
                     }
             }
         }
-        public void TrySpendEnergy(float val)
-        {
-            float desired = val;
-            float available = energyInterface.TotalCanProvide(out _);
-            if (available < desired)
-            {
-                desired = available;
-            }
-            energyInterface.ConsumeEnergy(desired);
-        }
         public void TogglePower()
         {
             IsDisengaged = !IsDisengaged;
