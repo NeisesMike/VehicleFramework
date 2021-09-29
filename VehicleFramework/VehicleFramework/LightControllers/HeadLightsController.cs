@@ -23,10 +23,6 @@ namespace VehicleFramework
             {
                 ToggleHeadlights();
             }
-            if(isHeadlightsOn)
-            {
-                mv.GetComponent<EnergyInterface>().ConsumeEnergy(0.001f * Time.deltaTime);
-            }
         }
         public void EnableHeadlights()
         {
