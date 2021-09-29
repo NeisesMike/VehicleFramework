@@ -60,6 +60,12 @@ namespace VehicleFramework
                 __instance.SetScubaMaskActive(false);
                 __instance.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
                 __instance.depthLevel = -10f;
+
+                // animator stuff to ensure we don't act like we're swimming at any point
+                __instance.playerAnimator.SetBool("is_underwater", false);
+                __instance.playerAnimator.SetBool("on_surface", false);
+                __instance.playerAnimator.SetBool("diving", false);
+                __instance.playerAnimator.SetBool("diving_land", false);
             }
         }
 
