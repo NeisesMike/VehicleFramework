@@ -19,11 +19,8 @@ namespace VehicleFramework
             {
                 return true;
             }
-
             __instance.player = Player.main;
-
             return true;
-
 		}
     }
 }

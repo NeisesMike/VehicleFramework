@@ -11,6 +11,11 @@ namespace VehicleFramework
 {
     public static class MapModPatcher
     {
+        /*
+         * This patch is specifically for the Map Mod.
+         * It ensures that our ModVehicles are displayed correctly as their Ping Sprites.
+         * Without this patch, the Map Mod dies completely.
+         */
         [HarmonyPrefix]
         public static bool Prefix(object __instance)
         {
@@ -28,7 +33,6 @@ namespace VehicleFramework
                         if (mvType.pt == ping.pingType)
                         {
                             icon.sprite = mvType.ping_sprite;
-                            //icon.color = Color.black;
                             break;
                         }
                     }

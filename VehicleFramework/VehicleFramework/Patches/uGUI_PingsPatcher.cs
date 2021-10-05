@@ -12,21 +12,19 @@ namespace VehicleFramework
     class uGUI_PingsPatcher
     {
         /*
-         * Redirect calls conditionally,
-         * so that we display our custom ping sprites on the HUD
+         * This transpiler ensure our ping sprites are used properly by the base-game systems,
+         * so that we may display our custom ping sprites on the HUD
          */
         [HarmonyPatch("OnAdd")]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
             List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count);
-
             CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
             for (int i = 0; i < codes.Count; i++)
             {
                 newCodes.Add(myNOP);
             }
-
             for (int i = 0; i < codes.Count; i++)
             {
                 if (codes[i].opcode == OpCodes.Callvirt)

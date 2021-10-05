@@ -9,6 +9,13 @@ namespace VehicleFramework
 {
     public static class HUDBuilder
     {
+        /*
+         * This class hosts HUD-building functionality.
+         * Currently it just steals the Seamoth HUD,
+         * so the class is trivial.
+         * Eventually I would like to support a new HUD,
+         * so it's okay for the class to be trivial now.
+         */
         public static void BuildNormalHUD()
         {
             // copy the seamoth hud for now

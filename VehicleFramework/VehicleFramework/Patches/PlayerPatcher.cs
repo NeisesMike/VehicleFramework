@@ -17,17 +17,17 @@ namespace VehicleFramework
     [HarmonyPatch(typeof(Player))]
     public static class PlayerPatcher
     {
+        /*
+         * This collection of patches covers many topics.
+         * Generally, it regards behavior in a ModVehicle while underwater and exiting the pilot seat.
+         * TODO: there is likely some redundancy here with PlayerControllerPatcher
+         */
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
         public static void StartPostfix(Player __instance)
         {
-            // load any vehicles from save now.
-
-            // prepare any HUDs
-            HUDBuilder.BuildNormalHUD();
-
             __instance.gameObject.EnsureComponent<ModVehicleTether>();
-
+            HUDBuilder.BuildNormalHUD();
 
             // setup build bot paths
             // we have to do this at game-start time
@@ -36,8 +36,6 @@ namespace VehicleFramework
             // knowing this, we might be able to factor out some gameobjects,
             // that we'd been requiring in the assetbundle side of things
             BuildBotManager.SetupBuildBotPaths();
-
-
             return;
         }
 

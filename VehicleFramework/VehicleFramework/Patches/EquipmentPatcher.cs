@@ -17,6 +17,10 @@ namespace VehicleFramework
          * 2 arm slots : "AtramaArmX" where X in {Left, Right}
          */
 
+        /*
+         * This collection of patches ensures our new upgrade slots interact nicely with the base game's Equipment class.
+         */
+
         public static List<string> vehicleModuleSlots = new List<string> { "VehicleModule0", "VehicleModule1", "VehicleModule2", "VehicleModule3", "VehicleModule4", "VehicleModule5" };
         public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight" };
 

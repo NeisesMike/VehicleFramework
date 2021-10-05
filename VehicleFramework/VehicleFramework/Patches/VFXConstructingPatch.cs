@@ -10,6 +10,9 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(VFXConstructing))]
     public static class VFXConstructingPatch
     {
+        /*
+         * This patches ensures it takes several seconds for the build-bots to build our vehicle.
+         */
         [HarmonyPostfix]
         [HarmonyPatch("StartConstruction")]
         public static void StartConstructionPostfix(VFXConstructing __instance)
@@ -20,6 +23,7 @@ namespace VehicleFramework.Patches
                 // Seamoth : 10 seconds
                 // Cyclops : 20
                 // Rocket Base : 25
+                // TODO : why does this even happen on `spawn atrama` ?
                 __instance.timeToConstruct = 20f;
             }
         }

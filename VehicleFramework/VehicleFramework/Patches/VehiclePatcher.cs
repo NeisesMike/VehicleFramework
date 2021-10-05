@@ -12,30 +12,10 @@ namespace VehicleFramework
     [HarmonyPatch(typeof(Vehicle))]
     public class VehiclePatcher
     {
-        [HarmonyPrefix]
-        [HarmonyPatch("Awake")]
-        public static bool AwakePrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
-            {
-                return true;
-            }
-            ___energyInterface = mv.GetComponent<EnergyInterface>();
-            return true;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("Start")]
-        public static bool StartPrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
-            {
-                return true;
-            }
-            return true;
-        }
+        /*
+         * This collection of patches generally ensures our ModVehicles behave like normal Vehicles.
+         * Each will be commented if necessary
+         */
 
         [HarmonyPrefix]
         [HarmonyPatch("OnHandHover")]
@@ -99,47 +79,6 @@ namespace VehicleFramework
             ___energyInterface = __instance.gameObject.GetComponent<EnergyInterface>();
             return true;
         }
-
-        /*
-        [HarmonyPrefix]
-        [HarmonyPatch("GetStorageInSlot")]
-        public static bool GetStorageInSlotPrefix(Vehicle __instance, int slotID, TechType techType, ref ItemsContainer __result)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
-            {
-                return true;
-            }
-            InventoryItem slotItem = __instance.GetSlotItem(slotID);
-            if (slotItem == null)
-            {
-                __result = null;
-                return false;
-            }
-            Pickupable item = slotItem.item;
-            if (item.GetTechType() != techType)
-            {
-                __result = null;
-                return false;
-            }
-            VehicleStorageContainer vsc = item.GetComponent<VehicleStorageContainer>();
-            SeamothStorageContainer ssc = item.GetComponent<SeamothStorageContainer>();
-            if (vsc == null && ssc == null)
-            {
-                __result = null;
-                return false;
-            }
-            else if(vsc != null)
-            {
-                __result = vsc.container;
-            }
-            else if(ssc != null)
-            {
-                __result = ssc.container;
-            }
-            return false;
-        }
-        */
 
         [HarmonyPostfix]
         [HarmonyPatch("GetAllStorages")]

@@ -10,6 +10,10 @@ namespace VehicleFramework
     [HarmonyPatch(typeof(uGUI_EquipmentSlot))]
     public class uGUI_EquipmentSlotPatcher
     {
+        /*
+         * This patch ensures that SetState will not be called before its dependency (the background image) is available,
+         * just so that we can dodge some errors in the log.
+         */
         [HarmonyPrefix]
         [HarmonyPatch("SetState")]
 		public static bool SetStatePrefix(uGUI_EquipmentSlot.State newState, uGUI_EquipmentSlot __instance)
@@ -22,12 +26,12 @@ namespace VehicleFramework
             {
                 if(__instance.background == null)
                 {
-                    Logger.Log("modules were ready, but background was null: " + __instance.name);
+                    Logger.Log("Warning: modules were ready, but background was null: " + __instance.name);
                     return false;
                 }
                 return true;
             }
-            Logger.Log(__instance.name + " : SetState() : Vehicle module not ready. Passing.");
+            Logger.Log("Warning: " + __instance.name + ".SetState() : Vehicle module not ready. Passing.");
 			return false;
 		}
     }

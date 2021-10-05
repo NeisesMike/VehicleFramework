@@ -61,7 +61,6 @@ namespace VehicleFramework
         {
             StartCoroutine(BuildAllSlotsInternal());
         }
-
         public IEnumerator BuildAllSlotsInternal()
         {
             while (!haveSlotsBeenInited)
@@ -106,7 +105,6 @@ namespace VehicleFramework
                 vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
             }
         }
-
         public void grabComponents()
         {
             StartCoroutine(BuildGenericModulesASAP());
@@ -219,7 +217,6 @@ namespace VehicleFramework
             main.areModulesReady = true;
             haveSlotsBeenInited = true;
         }
-
         public void BuildVehicleModuleSlots(int modules, bool arms)
         {
             // build, link, and position modules
@@ -315,7 +312,6 @@ namespace VehicleFramework
             thisModule.GetComponent<uGUI_EquipmentSlot>().background.sprite = genericModuleSlotSprite;
             thisModule.GetComponent<uGUI_EquipmentSlot>().background.material = genericModuleSlotMaterial;
         }
-
         public GameObject GetGenericModuleSlot()
         {
             return GameObject.Instantiate(genericModuleObject);
@@ -338,6 +334,5 @@ namespace VehicleFramework
             armSlot.transform.Find("Hint").GetComponent<UnityEngine.UI.Image>().sprite = rightArmModuleSlotSprite;
             return armSlot;
         }
-
     }
 }
