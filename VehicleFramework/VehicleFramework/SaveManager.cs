@@ -38,10 +38,7 @@ namespace VehicleFramework
                         equipmentStrings.Add(pair.Key, pair.Value.item.GetTechType());
                     }
                 }
-
                 Tuple<Vector3, Dictionary<string, TechType>> thisTuple = new Tuple<Vector3, Dictionary<string, TechType>>(mv.transform.position, equipmentStrings);
-
-
                 modVehiclesUpgrades.Add(thisTuple);
             }
             return modVehiclesUpgrades;
@@ -55,7 +52,6 @@ namespace VehicleFramework
                 {
                     continue;
                 }
-
                 // try to match against a saved vehicle in our list
                 foreach (var tup in modVehiclesUpgrades)
                 {
@@ -73,7 +69,6 @@ namespace VehicleFramework
                         }
                     }
                 }
-                //ModuleBuilder.main.equipment.Init(mv.modules);
             }
         }
         internal static List<Tuple<Vector3, List<Tuple<int, List<TechType>>>>> SerializeModularStorage()
@@ -105,8 +100,6 @@ namespace VehicleFramework
                         thisVehiclesStoragesContents.Add(new Tuple<int, List<TechType>>(i, thisContents));
                     }
                 }
-
-
                 allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<int, List<TechType>>>>(mv.transform.position, thisVehiclesStoragesContents));
             }
             return allVehiclesStoragesContents;
@@ -120,7 +113,6 @@ namespace VehicleFramework
                 {
                     continue;
                 }
-
                 // try to match against a saved vehicle in our list
                 foreach (var vehicle in allVehiclesStoragesLists)
                 {
@@ -187,7 +179,6 @@ namespace VehicleFramework
                 {
                     continue;
                 }
-
                 // try to match against a saved vehicle in our list
                 foreach (var vehicle in allVehiclesStoragesLists)
                 {
@@ -313,7 +304,6 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-
                 // try to match against a saved vehicle in our list
                 foreach (var vehicle in allVehiclesBatteries)
                 {
@@ -346,7 +336,6 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-
                 allVehiclesIsPlayerInside.Add(new Tuple<Vector3, bool>(mv.transform.position, mv.IsPlayerInside()));
             }
             return allVehiclesIsPlayerInside;
@@ -365,7 +354,6 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-
                 foreach(var vehicle in allVehiclesPlayerInside)
                 {
                     if(Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
@@ -376,8 +364,5 @@ namespace VehicleFramework
                 }
             }
         }
-
-
-
     }
 }
