@@ -10,7 +10,6 @@ namespace VehicleFramework
     public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener, ILightsStatusListener, IAutoPilotListener
     {
         public ModVehicle mv;
-        private bool isDead = false;
 
         private GameObject buttonHeadLights;
         private GameObject buttonNavLights;
@@ -92,7 +91,7 @@ namespace VehicleFramework
         public bool EmptyHover()
         {
             HandReticle.main.SetInteractText("of no use");
-            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 0.1f);
+            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
         public bool HeadlightsClick()
@@ -142,7 +141,8 @@ namespace VehicleFramework
         }
         public bool PowerClick()
         {
-            if (!isDead)
+            mv.energyInterface.GetValues(out float charge, out _);
+            if (0 < charge)
             {
                 mv.TogglePower();
             }
@@ -250,22 +250,12 @@ namespace VehicleFramework
 
         void ILightsStatusListener.OnNavLightsOn()
         {
-            SetButtonLightingActive(buttonFloodLights, false);
+            SetButtonLightingActive(buttonNavLights, false);
         }
 
         void ILightsStatusListener.OnNavLightsOff()
         {
-            SetButtonLightingActive(buttonFloodLights, true);
-        }
-
-        void IPowerListener.OnPowerUp()
-        {
-            ResetAllButtonLighting();
-        }
-
-        void IPowerListener.OnPowerDown()
-        {
-            AdjustButtonLightingForPowerDown();
+            SetButtonLightingActive(buttonNavLights, true);
         }
 
         void IPowerListener.OnBatterySafe()
@@ -283,17 +273,21 @@ namespace VehicleFramework
         void IPowerListener.OnBatteryDepleted()
         {
         }
-
+        void IPowerListener.OnPowerUp()
+        {
+            ResetAllButtonLighting();
+        }
+        void IPowerListener.OnPowerDown()
+        {
+            AdjustButtonLightingForPowerDown();
+        }
         void IPowerListener.OnBatteryDead()
         {
-            isDead = true;
             AdjustButtonLightingForPowerDown();
             SetButtonLightingActive(buttonPower, false);
         }
-
         void IPowerListener.OnBatteryRevive()
         {
-            isDead = false;
             ResetAllButtonLighting();
         }
     }

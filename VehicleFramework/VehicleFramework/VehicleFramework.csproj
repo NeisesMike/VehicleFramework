@@ -105,7 +105,7 @@
     <Compile Include="Interfaces\IPlayerListener.cs" />
     <Compile Include="Interfaces\IPowerListener.cs" />
     <Compile Include="Interfaces\ILightsStatusListener.cs" />
-    <Compile Include="VehicleBuilding\BuildBotManager.cs" />
+    <Compile Include="BuildBotManager.cs" />
     <Compile Include="Patches\MapModPatcher.cs" />
     <Compile Include="Patches\VFXConstructingPatch.cs" />
     <Compile Include="ControlPanel\ControlPanel.cs" />
@@ -118,7 +118,6 @@
     <Compile Include="VehicleBuilding\HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
-    <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="VehicleBuilding\VehicleCraftable.cs" />
@@ -139,7 +138,6 @@
     <Compile Include="VehicleComponents\ModVehicle.cs" />
     <Compile Include="VehicleComponents\PilotingTrigger.cs" />
     <Compile Include="Patches\EquipmentPatcher.cs" />
-    <Compile Include="Patches\GameInputPatcher.cs" />
     <Compile Include="Patches\LiveMixinPatcher.cs" />
     <Compile Include="Patches\PlayerPatcher.cs" />
     <Compile Include="Patches\uGUI_EquipmentPatcher.cs" />
@@ -147,7 +145,6 @@
     <Compile Include="Patches\PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_PingsPatcher.cs" />
     <Compile Include="Patches\VehiclePatcher.cs" />
-    <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VehicleBuilding\VehicleBuilder.cs" />
     <Compile Include="Interfaces\IVehicleStatusListener.cs" />

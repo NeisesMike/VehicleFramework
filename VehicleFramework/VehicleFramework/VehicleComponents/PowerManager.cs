@@ -8,20 +8,33 @@ using UnityEngine;
 namespace VehicleFramework
 {
     /*
+     * The PowerManager handles all power drains for the ModVehicle.
+     * It also monitors the two-bit power status of the ModVehicle.
+     * It also handles the broadcasting of all power-related notifications.
      * We would like very much do consolidate all our power drains here
      * This is trivial for lights,
      * but a bit more difficult for driving
      */
     public class PowerManager : MonoBehaviour, IVehicleStatusListener, IAutoPilotListener, ILightsStatusListener
     {
-        private PowerStatus currentPowerStatus = PowerStatus.OnBatterySafe;
+        public struct PowerStatus
+        {
+            public bool hasFuel;
+            public bool isPowered;
+            public override bool Equals(object obj) => obj is PowerStatus other && this.Equals(other);
+            public bool Equals(PowerStatus p) => hasFuel == p.hasFuel && isPowered == p.isPowered;
+            public override int GetHashCode() => (hasFuel, isPowered).GetHashCode();
+            public static bool operator ==(PowerStatus lhs, PowerStatus rhs) => lhs.Equals(rhs);
+            public static bool operator !=(PowerStatus lhs, PowerStatus rhs) => !(lhs == rhs);
+        }
+        private PowerStatus lastStatus = new PowerStatus { hasFuel = true, isPowered = true };
+        private PowerEvent latestPowerEvent = PowerEvent.OnBatterySafe;
         private bool isHeadlightsOn = false;
         private bool isFloodlightsOn = false;
         private bool isNavLightsOn = false;
         private bool isInteriorLightsOn = false;
         private bool isAutoLeveling = false;
         private bool isAutoPiloting = false;
-
         private ModVehicle _mv;
         private ModVehicle mv
         {
@@ -47,6 +60,42 @@ namespace VehicleFramework
             }
         }
 
+
+        private PowerEvent EvaluatePowerEvent()
+        {
+            mv.energyInterface.GetValues(out float charge, out _);
+            if (charge < 1)
+            {
+                return PowerEvent.OnBatteryDepleted;
+            }
+            else if (charge < 8)
+            {
+                return PowerEvent.OnBatteryNearlyEmpty;
+            }
+            else if (charge < 80)
+            {
+                return PowerEvent.OnBatteryLow;
+            }
+            else
+            {
+                return PowerEvent.OnBatterySafe;
+            }
+        }
+        public PowerStatus EvaluatePowerStatus()
+        {
+            mv.energyInterface.GetValues(out float charge, out _);
+            PowerStatus thisStatus = new PowerStatus();
+            thisStatus.isPowered = mv.isPoweredOn;
+            if(charge > 0)
+            {
+                thisStatus.hasFuel = true;
+            }
+            else
+            {
+                thisStatus.hasFuel = false;
+            }
+            return thisStatus;
+        }
         public void TrySpendEnergy(float val)
         {
             float desired = val;
@@ -57,11 +106,7 @@ namespace VehicleFramework
             }
             ei.ConsumeEnergy(desired);
         }
-
-        public void Start()
-        {
-        }
-        public void Update()
+        public void AccountForTheTypicalDrains()
         {
             /*
              * research suggests engines should be between 10 and 100x more draining than the lights
@@ -76,11 +121,11 @@ namespace VehicleFramework
             {
                 TrySpendEnergy(0.1f * Time.deltaTime);
             }
-            if(isNavLightsOn)
+            if (isNavLightsOn)
             {
                 TrySpendEnergy(0.001f * Time.deltaTime);
             }
-            if(isInteriorLightsOn)
+            if (isInteriorLightsOn)
             {
                 TrySpendEnergy(0.001f * Time.deltaTime);
             }
@@ -98,33 +143,51 @@ namespace VehicleFramework
                 float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
                 TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
+        }
+        public void Start()
+        {
+        }
+        public void Update()
+        {
+            AccountForTheTypicalDrains();
 
             // check battery thresholds, and make notifications as appropriate
-            PowerStatus thisPS = EvaluatePowerStatus();
-            if(thisPS != currentPowerStatus)
+            PowerEvent thisPS = EvaluatePowerEvent();
+            if(thisPS != latestPowerEvent)
             {
-                currentPowerStatus = thisPS;
-                mv.NotifyStatus(currentPowerStatus);
+                latestPowerEvent = thisPS;
+                mv.NotifyStatus(latestPowerEvent);
             }
-        }
-        private PowerStatus EvaluatePowerStatus()
-        {
-            mv.energyInterface.GetValues(out float charge, out _);
-            if (charge < 1)
+
+            // Update the current power status,
+            // first sending notifications if necessary
+            PowerStatus currentStatus = EvaluatePowerStatus();
+            if(currentStatus != lastStatus)
             {
-                return PowerStatus.OnBatteryDepleted;
-            }
-            else if (charge < 8)
-            {
-                return PowerStatus.OnBatteryNearlyEmpty;
-            }
-            else if(charge < 80)
-            {
-                return PowerStatus.OnBatteryLow;
-            }
-            else
-            {
-                return PowerStatus.OnBatterySafe;
+                if (lastStatus.isPowered != currentStatus.isPowered)
+                {
+                    if (currentStatus.isPowered)
+                    {
+                        mv.NotifyStatus(PowerEvent.OnPowerUp);
+                    }
+                    else
+                    {
+                        mv.NotifyStatus(PowerEvent.OnPowerDown);
+                    }
+                }
+                if (lastStatus.hasFuel != currentStatus.hasFuel)
+                {
+                    if (currentStatus.hasFuel)
+                    {
+                        mv.isPoweredOn = true;
+                        mv.NotifyStatus(PowerEvent.OnBatteryRevive);
+                    }
+                    else
+                    {
+                        mv.NotifyStatus(PowerEvent.OnBatteryDead);
+                    }
+                }
+                lastStatus = currentStatus;
             }
         }
         void IAutoPilotListener.OnAutoLevelBegin()

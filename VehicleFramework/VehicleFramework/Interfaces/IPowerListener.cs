@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VehicleFramework
 {
-    public enum PowerStatus
+    public enum PowerEvent
     {
         OnPowerUp,
         OnPowerDown,

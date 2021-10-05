@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
+    /*
     public class FuelGauge : MonoBehaviour
 	{
 		public ModVehicle mv;
@@ -23,7 +24,7 @@ namespace VehicleFramework
                 {
                     if (!wasPowered)
                     {
-                        mv.NotifyStatus(PowerStatus.OnBatteryRevive);
+                        mv.NotifyStatus(PowerEvent.OnBatteryRevive);
                     }
                     wasPowered = true;
                 }
@@ -31,11 +32,12 @@ namespace VehicleFramework
                 {
                     if (wasPowered)
                     {
-                        mv.NotifyStatus(PowerStatus.OnBatteryDead);
+                        mv.NotifyStatus(PowerEvent.OnBatteryDead);
                     }
                     wasPowered = false;
                 }
             }
         }
     }
+    */
 }

@@ -68,7 +68,7 @@ namespace VehicleFramework
         // if the player toggles the power off,
         // the vehicle is called "disgengaged,"
         // because it is unusable yet the batteries are not empty
-        public bool IsDisengaged = false;
+        public bool isPoweredOn = true;
 
         public VehicleEngine engine;
         public Transform thisStopPilotingLocation;
@@ -90,7 +90,9 @@ namespace VehicleFramework
 
         public override void Awake()
         {
+            energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
+
             gameObject.EnsureComponent<TetherSource>();
 
             floodlights = gameObject.EnsureComponent<FloodLightsController>();
@@ -124,7 +126,7 @@ namespace VehicleFramework
             }
 
             gameObject.EnsureComponent<PowerManager>();
-            gameObject.EnsureComponent<FuelGauge>();
+            //gameObject.EnsureComponent<FuelGauge>();
 
             // load upgrades from file
 
@@ -477,15 +479,7 @@ namespace VehicleFramework
         }
         public void TogglePower()
         {
-            IsDisengaged = !IsDisengaged;
-            if(IsDisengaged)
-            {
-                NotifyStatus(PowerStatus.OnPowerDown);
-            }
-            else
-            {
-                NotifyStatus(PowerStatus.OnPowerUp);
-            }
+            isPoweredOn = !isPoweredOn;
         }
         public void NotifyStatus(LightsStatus vs)
         {
@@ -562,34 +556,34 @@ namespace VehicleFramework
                 }
             }
         }
-        public void NotifyStatus(PowerStatus vs)
+        public void NotifyStatus(PowerEvent vs)
         {
             foreach (var component in GetComponentsInChildren<IPowerListener>())
             {
                 switch (vs)
                 {
-                    case PowerStatus.OnPowerUp:
+                    case PowerEvent.OnPowerUp:
                         component.OnPowerUp();
                         break;
-                    case PowerStatus.OnPowerDown:
+                    case PowerEvent.OnPowerDown:
                         component.OnPowerDown();
                         break;
-                    case PowerStatus.OnBatteryDead:
+                    case PowerEvent.OnBatteryDead:
                         component.OnBatteryDead();
                         break;
-                    case PowerStatus.OnBatteryRevive:
+                    case PowerEvent.OnBatteryRevive:
                         component.OnBatteryRevive();
                         break;
-                    case PowerStatus.OnBatterySafe:
+                    case PowerEvent.OnBatterySafe:
                         component.OnBatterySafe();
                         break;
-                    case PowerStatus.OnBatteryLow:
+                    case PowerEvent.OnBatteryLow:
                         component.OnBatteryLow();
                         break;
-                    case PowerStatus.OnBatteryNearlyEmpty:
+                    case PowerEvent.OnBatteryNearlyEmpty:
                         component.OnBatteryNearlyEmpty();
                         break;
-                    case PowerStatus.OnBatteryDepleted:
+                    case PowerEvent.OnBatteryDepleted:
                         component.OnBatteryDepleted();
                         break;
                     default:

@@ -105,12 +105,11 @@ namespace VehicleFramework
             {
                 return;
             }
-            if(mv.IsDisengaged)
+            if(!mv.isPoweredOn)
             {
                 __result = false;
             }
         }
-
 
         [HarmonyPatch("Update")]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
