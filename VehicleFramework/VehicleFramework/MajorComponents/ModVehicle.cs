@@ -8,19 +8,19 @@ using UnityEngine;
 namespace VehicleFramework
 {
     public abstract class ModVehicle : Vehicle
-    {
-        public override string vehicleDefaultName
         {
-            get
+            public override string vehicleDefaultName
             {
-                Language main = Language.main;
-                if (main == null)
+                get
                 {
-                    return "VEHICLE";
+                    Language main = Language.main;
+                    if (main == null)
+                    {
+                        return "VEHICLE";
+                    }
+                    return main.Get("VehicleDefaultName");
                 }
-                return main.Get("VehicleDefaultName");
             }
-        }
 
         public abstract GameObject VehicleModel { get; }
         public abstract GameObject StorageRootObject { get; }
@@ -170,7 +170,6 @@ namespace VehicleFramework
         }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
-            //Logger.Log(slotID.ToString() + " : " + techType.ToString() + " : " + added.ToString());
             switch (techType)
             {
                 case TechType.VehicleStorageModule:
