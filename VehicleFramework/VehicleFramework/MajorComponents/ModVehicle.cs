@@ -98,6 +98,8 @@ namespace VehicleFramework
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
+
+            gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
 
             controlPanelLogic.Init();
