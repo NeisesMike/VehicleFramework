@@ -53,7 +53,7 @@ namespace VehicleFramework
 
         public void Update()
         {
-            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit))
+            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerPiloting())
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {
@@ -80,7 +80,7 @@ namespace VehicleFramework
                 autoLeveling = false;
                 return;
             }
-            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerInside()) && mv.GetIsUnderwater())
+            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerPiloting()) && mv.GetIsUnderwater())
             {
                 float x = transform.rotation.eulerAngles.x;
                 float y = transform.rotation.eulerAngles.y;
