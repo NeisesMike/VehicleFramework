@@ -280,30 +280,6 @@ namespace VehicleFramework
         }
         public void ApplyPlayerControls(Vector3 moveDirection)
         {
-            float getForce(forceDirection dir)
-            {
-                float thisTopSpeed;
-                switch (dir)
-                {
-                    case forceDirection.forward:
-                        thisTopSpeed = FORWARD_TOP_SPEED / 10f;
-                        break;
-                    case forceDirection.backward:
-                        thisTopSpeed = REVERSE_TOP_SPEED / 10f;
-                        break;
-                    case forceDirection.strafe:
-                        thisTopSpeed = STRAFE_MAX_SPEED / 10f;
-                        break;
-                    case forceDirection.updown:
-                        thisTopSpeed = VERT_MAX_SPEED / 10f;
-                        break;
-                    default:
-                        thisTopSpeed = 5f / 10f;
-                        break;
-                }
-                return thisTopSpeed;
-            }
-
             // Control velocity
             UpdateRightMomentum(moveDirection.x);
             UpdateUpMomentum(moveDirection.y);
