@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using System.Reflection.Emit;
 using UnityEngine;
 
 namespace VehicleFramework
@@ -171,5 +172,34 @@ namespace VehicleFramework
             }
         }
 
+
+        [HarmonyPatch("Update")]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            /* This is basically a prefix for Vehicle.Update,
+             * but we choose to transpile instead,
+             * so that our code may be considered "core."
+             * That is, it will be skipped if any other Prefix returns false.
+             * This is desirable to be as "alike" normal Vehicles as possible;
+             * in particular, this ensures compatibility with FreeLook
+             * We must control our ModVehicle rotation within the core Vehicle.Update code.
+             */
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count + 2);
+            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
+            for (int i = 0; i < codes.Count + 2; i++)
+            {
+                newCodes.Add(myNOP);
+            }
+            // push reference to vehicle
+            // Call a static function which takes a vehicle and ControlsRotation if it's a ModVehicle
+            newCodes[0] = new CodeInstruction(OpCodes.Ldarg_0);
+            newCodes[1] = CodeInstruction.Call(typeof(ModVehicle), nameof(ModVehicle.MaybeControlRotation));
+            for (int i = 0; i < codes.Count; i++)
+            {
+                newCodes[i+2] = codes[i];
+            }
+            return newCodes.AsEnumerable();
+        }
     }
 }

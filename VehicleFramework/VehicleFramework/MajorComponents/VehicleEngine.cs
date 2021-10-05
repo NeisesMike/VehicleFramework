@@ -12,8 +12,6 @@ namespace VehicleFramework
         public ModVehicle mv;
         public Rigidbody rb;
 
-        public bool canControlRotation = true;
-
         private const float FORWARD_TOP_SPEED = 1500;
         private const float REVERSE_TOP_SPEED = 500;
         private const float STRAFE_MAX_SPEED = 500;
@@ -284,8 +282,6 @@ namespace VehicleFramework
             UpdateRightMomentum(moveDirection.x);
             UpdateUpMomentum(moveDirection.y);
             UpdateForwardMomentum(moveDirection.z);
-            // Maybe control rotation
-            MaybeControlRotation();
 
             /* TODO steering wheel animation stuff
             base.steeringWheelYaw = Mathf.Lerp(base.steeringWheelYaw, 0f, Time.deltaTime);
@@ -299,19 +295,16 @@ namespace VehicleFramework
 
             return;
         }
-        public void MaybeControlRotation()
+        public void ControlRotation()
         {
-            if (canControlRotation)
-            {
-                // Control rotation
-                float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
-                float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
-                Vector2 mouseDir = GameInput.GetLookDelta();
-                float xRot = mouseDir.x;
-                float yRot = mouseDir.y;
-                rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-                rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
-            }
+            // Control rotation
+            float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
+            float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
+            Vector2 mouseDir = GameInput.GetLookDelta();
+            float xRot = mouseDir.x;
+            float yRot = mouseDir.y;
+            rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
         }
         public void DrainPower(Vector3 moveDirection)
         {
