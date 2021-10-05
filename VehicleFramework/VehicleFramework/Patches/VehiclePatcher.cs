@@ -21,12 +21,6 @@ namespace VehicleFramework
                 return true;
             }
             ___energyInterface = mv.GetComponent<EnergyInterface>();
-            /*
-            Logger.Log("adding equipment");
-            __instance.modules = new Equipment(mv.gameObject, mv.modulesRoot.transform);
-            __instance.modules.SetLabel("VehicleUpgradesStorageLabel");
-            __instance.upgradesInput.equipment = __instance.modules;
-            */
             return true;
         }
 
@@ -52,13 +46,6 @@ namespace VehicleFramework
                 return false;
             }
             return true;
-            /*
-            Logger.Log("Hover!");
-            Logger.Log(__instance.GetPilotingMode().ToString());
-            Logger.Log((__instance.liveMixin == null).ToString());
-            Logger.Log((HandReticle.main == null).ToString());
-            Logger.Log((__instance.handLabel == null).ToString());
-            */
         }
 
         [HarmonyPrefix]
@@ -71,14 +58,6 @@ namespace VehicleFramework
                 return false;
             }
             return true;
-            /*
-            Logger.Log("Click!");
-            Logger.Log((___energyInterface == null).ToString());
-            Logger.Log((__instance.mainAnimator == null).ToString());
-            Logger.Log((__instance.noPowerWelcomeNotification == null).ToString());
-            Logger.Log((__instance.welcomeNotification == null).ToString());
-            Logger.Log((__instance.enterSound == null).ToString());
-            */
         }
 
         [HarmonyPrefix]
@@ -117,13 +96,6 @@ namespace VehicleFramework
             }
 
             ___energyInterface = __instance.gameObject.GetComponent<EnergyInterface>();
-            /*
-            Logger.Log("LazyInitialize!");
-            Logger.Log((___energyInterface == null).ToString());
-            Logger.Log((mv.useRigidbody == null).ToString());
-            Logger.Log((mv.upgradesInput == null).ToString());
-            Logger.Log((mv.modulesRoot == null).ToString());
-            */
             return true;
         }
 
@@ -183,36 +155,6 @@ namespace VehicleFramework
                 containers.Add(tmp.Container.GetComponent<InnateStorageContainer>().container);
             }
         }
-
-        /*
-        [HarmonyPrefix]
-        [HarmonyPatch("UnlockDefaultModuleSlots")]
-        public static bool UnlockDefaultModuleSlotsPrefix(Vehicle __instance)
-        {
-            if (__instance.modules == null)
-            {
-                Logger.Log("skip");
-                return false;
-            }
-            Logger.Log("don't skip!");
-
-            return true;
-        }
-        */
-        /*
-        [HarmonyPostfix]
-        [HarmonyPatch("modules", MethodType.Getter)]
-        public static void modulesGetterPostfix(Vehicle __instance, ref Equipment __result)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
-            {
-                Logger.Log("shimming equipment");
-                __result = mv.upgradesEquipment;
-            }
-        }
-        */
-
 
         [HarmonyPostfix]
         [HarmonyPatch("IsPowered")]
