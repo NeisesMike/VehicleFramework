@@ -41,7 +41,6 @@ namespace VehicleFramework
         public abstract List<GameObject> NavigationPositionLights { get; }
         public abstract List<GameObject> NavigationWhiteStrobeLights { get; }
         public abstract List<GameObject> NavigationRedStrobeLights { get; }
-        public abstract List<GameObject> WalkableInteriors { get; }
         public abstract List<GameObject> WaterClipProxies { get; }
         public abstract List<GameObject> CanopyWindows { get; }
         public abstract List<GameObject> NameDecals { get; }

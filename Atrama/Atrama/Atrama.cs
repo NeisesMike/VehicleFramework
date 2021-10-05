@@ -119,7 +119,6 @@ namespace Atrama
                 return transform.Find("ModulesRootObject").gameObject;
             }
         }
-        public override List<GameObject> WalkableInteriors => new List<GameObject>() { transform.Find("Main-Body/InteriorTrigger").gameObject };
         public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches
         {
             get

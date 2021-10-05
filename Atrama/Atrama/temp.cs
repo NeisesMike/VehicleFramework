@@ -39,8 +39,6 @@ namespace Atrama
 
         public override List<GameObject> NavigationRedStrobeLights => throw new NotImplementedException();
 
-        public override List<GameObject> WalkableInteriors => throw new NotImplementedException();
-
         public override List<GameObject> WaterClipProxies => throw new NotImplementedException();
 
         public override List<GameObject> CanopyWindows => throw new NotImplementedException();
