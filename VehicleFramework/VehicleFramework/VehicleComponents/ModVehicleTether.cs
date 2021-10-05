@@ -8,6 +8,12 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
+    /*
+     * The player is given a ModVehicleTether.
+     * It is what will interact with the TetherSources on the ModVehicle.
+     * A player will "leash" to the TetherSources when close enough,
+     * which ensures the player's entry is recognized no matter what (warp in).
+     */
     public class ModVehicleTether : MonoBehaviour
     {
         private ModVehicle currentMV = null;

@@ -8,6 +8,12 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
+    /*
+     * Tether Sources are meant to be placed throughout the ModVehicle.
+     * They will interact with a player's ModVehicleTether.
+     * A player will "leash" to them when close enough,
+     * which ensures the player's entry is recognized no matter what (warp in).
+     */
     public class TetherSource : MonoBehaviour
     {
         private bool isTetherEstablished = false;

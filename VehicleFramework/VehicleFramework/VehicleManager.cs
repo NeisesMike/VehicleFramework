@@ -51,8 +51,6 @@ namespace VehicleFramework
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
         }
         // TODO refactor this to accept a modvehicle as input
-        // TODO can't call this in mv.start... so where do we call it?
-        // How about PDA Awake?
         public static void LoadVehicles()
         {
             SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData);
