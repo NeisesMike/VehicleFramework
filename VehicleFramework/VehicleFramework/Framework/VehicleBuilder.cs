@@ -226,7 +226,6 @@ namespace VehicleFramework
             FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
-                Logger.Log(fmod.name);
                 if (fmod.asset.name == "seamoth_light_on")
                 {
                     var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();

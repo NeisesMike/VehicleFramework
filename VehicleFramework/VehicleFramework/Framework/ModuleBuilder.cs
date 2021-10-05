@@ -105,56 +105,7 @@ namespace VehicleFramework
                 vehicleAllSlots["VehicleArmLeft"] = equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>();
                 vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
             }
-            Logger.Log("Finished building all slots");
         }
-
-        // This function prepares all the module slots gameobjects we might need this session
-        // It creates the appropriate gameobjects and aligns their transform heirarchies to the base-game examples
-        /*
-        public void initModuleSlots()
-        {
-
-            int max_num_modules = 0;
-            foreach (VehicleEntry ve in VehicleBuilder.vehicleTypes)
-            {
-                if (max_num_modules < ve.modules)
-                {
-                    max_num_modules = ve.modules;
-                }
-            }
-
-            Logger.Log("Okay, we'll create " + max_num_modules.ToString() + " modules slots");
-
-            for (int i = 0; i < max_num_modules; i++)
-            {
-                GameObject thisModule = new GameObject("VehicleModule" + i.ToString());
-                thisModule.transform.parent = equipment.transform;
-                thisModule.transform.localScale = Vector3.one;
-                thisModule.SetActive(false);
-                uGUI_EquipmentSlot thisSlot = thisModule.EnsureComponent<uGUI_EquipmentSlot>();
-                thisSlot.slot = "VehicleModule" + i.ToString();
-                thisSlot.manager = equipment;
-            }
-
-            GameObject leftArm = new GameObject("VehicleArmLeft");
-            leftArm.transform.parent = equipment.transform;
-            leftArm.transform.localScale = Vector3.one;
-            leftArm.SetActive(false);
-            uGUI_EquipmentSlot leftSlot = leftArm.EnsureComponent<uGUI_EquipmentSlot>();
-            leftSlot.slot = "VehicleArmLeft";
-            leftSlot.manager = equipment;
-
-            GameObject rightArm = new GameObject("VehicleArmRight");
-            rightArm.transform.parent = equipment.transform;
-            rightArm.transform.localScale = Vector3.one;
-            rightArm.SetActive(false);
-            uGUI_EquipmentSlot rightSlot = rightArm.EnsureComponent<uGUI_EquipmentSlot>();
-            rightSlot.slot = "VehicleArmRight";
-            rightSlot.manager = equipment;
-
-            Logger.Log("slots inited");
-        }
-        */
 
         public void grabComponents()
         {

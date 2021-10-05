@@ -20,7 +20,6 @@ namespace VehicleFramework
             }
             if (ModuleBuilder.main.areModulesReady)
             {
-                //Logger.Log(__instance.name + " : SetState() : Vehicle module");
                 if(__instance.background == null)
                 {
                     Logger.Log("modules were ready, but background was null: " + __instance.name);

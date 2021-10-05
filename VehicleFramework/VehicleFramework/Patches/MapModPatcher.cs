@@ -16,12 +16,10 @@ namespace VehicleFramework
         {
             FieldInfo field = __instance.GetType().GetField("ping");
             PingInstance ping = field.GetValue(__instance) as PingInstance;
-            Logger.Log("bing: " + ping.name);
             foreach(var mvPIs in VehicleManager.mvPings)
             {
                 if (mvPIs.pingType == ping.pingType)
                 {
-                    Logger.Log("bong");
                     FieldInfo field2 = __instance.GetType().GetField("icon");
                     uGUI_Icon icon = field2.GetValue(__instance) as uGUI_Icon;
                     icon.sprite = SpriteManager.Get(TechType.Exosuit);
@@ -29,7 +27,6 @@ namespace VehicleFramework
                     {
                         if (mvType.pt == ping.pingType)
                         {
-                            Logger.Log("beep!");
                             icon.sprite = mvType.ping_sprite;
                             //icon.color = Color.black;
                             break;

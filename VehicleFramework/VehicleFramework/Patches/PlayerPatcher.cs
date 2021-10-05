@@ -44,14 +44,7 @@ namespace VehicleFramework
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         public static void UpdatePostfix(Player __instance)
-        {
-            if(Input.GetKeyDown(KeyCode.Backslash))
-            {
-                foreach(var tmp in __instance.playerAnimator.parameters)
-                {
-                    Logger.Log(tmp.name + __instance.playerAnimator.GetBool(tmp.name));
-                }
-            }    
+        {  
             ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv == null)
             {
