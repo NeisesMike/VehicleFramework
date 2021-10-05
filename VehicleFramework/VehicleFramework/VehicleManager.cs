@@ -61,12 +61,7 @@ namespace VehicleFramework
                 Logger.Log("Registered the " + mv.gameObject.name);
             }
         }
-
-
-
-
-        // TODO: rename to avoid intuition-collision with the above function of the same name
-        public static void RegisterVehicle(ModVehicle mv)
+        public static void EnrollVehicle(ModVehicle mv)
         {
             if (mv.name.Contains("Clone"))
             {

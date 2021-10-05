@@ -133,7 +133,7 @@ namespace VehicleFramework
             // load modular storage from file
             if (!isRegistered)
             {
-                VehicleManager.RegisterVehicle(this);
+                VehicleManager.EnrollVehicle(this);
                 isRegistered = true;
             }
         }
