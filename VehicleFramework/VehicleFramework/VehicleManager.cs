@@ -14,14 +14,9 @@ namespace VehicleFramework
         public Quaternion rotation;
         public bool headlamp_state;
         public int hp;
-
         // batteries : power level
-
         // storage
-
         // modular storage
-
-
         // upgrades
     }
     public static class VehicleManager
@@ -29,8 +24,6 @@ namespace VehicleFramework
         public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
         public static List<PingInstance> mvPings = new List<PingInstance>();
         public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
-
-
 
         public static void PatchCraftables()
         {
@@ -42,7 +35,6 @@ namespace VehicleFramework
                 Logger.Log("Patched the " + ve.prefab.name + " Craftable.");
             }
         }
-
         public static void RegisterVehicle(ref ModVehicle mv, PingType pt, Atlas.Sprite sprite, int modules, int arms)
         {
             bool isNewEntry = true;
@@ -83,22 +75,15 @@ namespace VehicleFramework
             data.BackupBatteries = SaveManager.SerializeBackupBatteries();
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
         }
-        // TODO refactor this to accept a modvehicle as input
         public static void LoadVehicles()
         {
+            // TODO refactor a new LoadVehicles to accept a modvehicle as input
             SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData);
-        }
-        public static void UpdateVehicles()
-        {
-            foreach(ModVehicle mv in VehiclesInPlay)
-            {
-                //mv.Update();
-            }
         }
     }
 }
