@@ -74,9 +74,9 @@ namespace VehicleFramework
         {
             get
             {
-                if (_forwardMomentum < DEAD_ZONE_SOAK)
+                if (Mathf.Abs(_forwardMomentum) < DEAD_ZONE_SOAK)
                 {
-                    return 0;
+                    _forwardMomentum = 0;
                 }
                 return _forwardMomentum;
             }
@@ -123,9 +123,9 @@ namespace VehicleFramework
         {
             get
             {
-                if (_rightMomentum < DEAD_ZONE_SOAK)
+                if (Mathf.Abs(_rightMomentum) < DEAD_ZONE_SOAK)
                 {
-                    return 0;
+                    _rightMomentum = 0;
                 }
                 return _rightMomentum;
             }
@@ -157,7 +157,10 @@ namespace VehicleFramework
                 RightMomentum = -IMPULSE_BOOST;
                 return;
             }
-            RightMomentum = RightMomentum + inputMagnitude * STRAFE_ACCEL * Time.deltaTime;
+            if (inputMagnitude != 0)
+            {
+                RightMomentum += inputMagnitude * STRAFE_ACCEL * Time.deltaTime;
+            }
         }
 
         private float _upMomentum = 0;
@@ -165,9 +168,9 @@ namespace VehicleFramework
         {
             get
             {
-                if(_upMomentum < DEAD_ZONE_SOAK)
+                if (Mathf.Abs(_upMomentum) < DEAD_ZONE_SOAK)
                 {
-                    return 0;
+                    _upMomentum = 0;
                 }
                 return _upMomentum;
             }
@@ -199,7 +202,7 @@ namespace VehicleFramework
                 UpMomentum = -IMPULSE_BOOST;
                 return;
             }
-            UpMomentum = UpMomentum + inputMagnitude * VERT_ACCEL * Time.deltaTime;
+            UpMomentum += inputMagnitude * VERT_ACCEL * Time.deltaTime;
         }
 
 
@@ -236,35 +239,23 @@ namespace VehicleFramework
             // That is, if we aren't holding forward, our forward momentum should decay.
             if (move.z == 0)
             {
-                if (1 < ForwardMomentum)
+                if (1 < Mathf.Abs(ForwardMomentum))
                 {
                     ForwardMomentum -= DragDecay * ForwardMomentum * Time.deltaTime;
-                }
-                else if (ForwardMomentum < -1)
-                {
-                    ForwardMomentum += DragDecay * ForwardMomentum * Time.deltaTime;
                 }
             }
             if (move.x == 0)
             {
-                if (1 < RightMomentum)
+                if (1 < Mathf.Abs(RightMomentum))
                 {
                     RightMomentum -= DragDecay * RightMomentum * Time.deltaTime;
-                }
-                else if (RightMomentum < -1)
-                {
-                    RightMomentum += DragDecay * RightMomentum * Time.deltaTime;
                 }
             }
             if (move.y == 0)
             {
-                if (1 < UpMomentum)
+                if (1 < Mathf.Abs(UpMomentum))
                 {
                     UpMomentum -= DragDecay * UpMomentum * Time.deltaTime;
-                }
-                else if (UpMomentum < -1)
-                {
-                    UpMomentum += DragDecay * UpMomentum * Time.deltaTime;
                 }
             }
         }
