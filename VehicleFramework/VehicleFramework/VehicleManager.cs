@@ -28,6 +28,44 @@ namespace VehicleFramework
     {
         public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
         public static List<PingInstance> mvPings = new List<PingInstance>();
+        public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
+
+
+
+        public static void PatchCraftables()
+        {
+            foreach (VehicleEntry ve in vehicleTypes)
+            {
+                Logger.Log("Patching the " + ve.prefab.name + " Craftable...");
+                VehicleCraftable thisCraftable = new VehicleCraftable(ve.prefab.name, ve.prefab.name, ve.description);
+                thisCraftable.Patch();
+                Logger.Log("Patched the " + ve.prefab.name + " Craftable.");
+            }
+        }
+
+        public static void RegisterVehicle(ref ModVehicle mv, PingType pt, Atlas.Sprite sprite, int modules, int arms)
+        {
+            bool isNewEntry = true;
+            foreach (VehicleEntry ve in vehicleTypes)
+            {
+                if (ve.prefab.name == ve.prefab.name)
+                {
+                    Logger.Log(mv.gameObject.name + " vehicle was already registered.");
+                    isNewEntry = false;
+                    break;
+                }
+            }
+            if (isNewEntry)
+            {
+                VehicleBuilder.Prefabricate(ref mv, pt, sprite, modules, arms);
+                Logger.Log("Registered the " + mv.gameObject.name);
+            }
+        }
+
+
+
+
+        // TODO: rename to avoid intuition-collision with the above function of the same name
         public static void RegisterVehicle(ModVehicle mv)
         {
             if (mv.name.Contains("Clone"))

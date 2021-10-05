@@ -73,7 +73,7 @@ namespace VehicleFramework
             {
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
                 int max_num_modules = 0;
-                foreach (VehicleEntry ve in VehicleBuilder.vehicleTypes)
+                foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
                     if (max_num_modules < ve.modules)
                     {
@@ -91,7 +91,7 @@ namespace VehicleFramework
             {
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
                 int max_num_modules = 0;
-                foreach (VehicleEntry ve in VehicleBuilder.vehicleTypes)
+                foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
                     if (max_num_modules < ve.modules)
                     {

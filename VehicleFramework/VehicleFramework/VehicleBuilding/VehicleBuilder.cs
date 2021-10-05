@@ -44,7 +44,6 @@ namespace VehicleFramework
         public static GameObject moduleBuilder;
 
         private static int numVehicleTypes = 0;
-        public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
         public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
         public static GameObject coroutineHelper;
@@ -53,39 +52,13 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static void PatchCraftables()
+        public static void Prefabricate(ref ModVehicle mv, PingType pingType, Atlas.Sprite sprite, int modules, int arms)
         {
-            seamoth.SetActive(false);
-            foreach (VehicleEntry ve in vehicleTypes)
-            {
-                Logger.Log("Patching the " + ve.prefab.name + " Craftable...");
-                VehicleCraftable thisCraftable = new VehicleCraftable(ve.prefab.name, ve.prefab.name, ve.description);
-                thisCraftable.Patch();
-                Logger.Log("Patched the " + ve.prefab.name + " Craftable.");
-            }
-        }
-
-        public static void RegisterVehicle(ref ModVehicle mv, PingType pt, Atlas.Sprite sprite, int modules, int arms)
-        {
-            bool isNewEntry = true;
-            foreach(VehicleEntry ve in vehicleTypes)
-            {
-                if(ve.prefab.name == ve.prefab.name)
-                {
-                    Logger.Log(mv.gameObject.name + " vehicle was already registered.");
-                    isNewEntry = false;
-                    break;
-                }
-            }
-            if (isNewEntry)
-            {
-                Instrument(ref mv, pt);
-                prefabs.Add(mv);
-                VehicleEntry ve = new VehicleEntry(mv.gameObject, numVehicleTypes, mv.GetDescription(), pt, sprite, modules, arms);
-                vehicleTypes.Add(ve);
-                numVehicleTypes++;
-                Logger.Log("Registered the " + mv.gameObject.name);
-            }
+            Instrument(ref mv, pingType);
+            prefabs.Add(mv);
+            VehicleEntry ve = new VehicleEntry(mv.gameObject, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
+            VehicleManager.vehicleTypes.Add(ve);
+            numVehicleTypes++;
         }
 
         #region setup_funcs
@@ -485,38 +458,6 @@ namespace VehicleFramework
 
             #region todo
             /*
-            //Determines the places the little build bots point their laser beams at.
-            var buildBots = prefab.AddComponent<BuildBotBeamPoints>();
-
-            Transform beamPointsParent = Helpers.FindChild(prefab, "BuildBotPoints").transform;
-
-            //These are arbitrarily placed.
-            buildBots.beamPoints = new Transform[beamPointsParent.childCount];
-            for (int i = 0; i < beamPointsParent.childCount; i++)
-            {
-                buildBots.beamPoints[i] = beamPointsParent.GetChild(i);
-            }
-
-            //The path the build bots take to get to the ship to construct it.
-            Transform pathsParent = Helpers.FindChild(prefab, "BuildBotPaths").transform;
-
-            //4 paths, one for each build bot to take.
-            CreateBuildBotPath(prefab, pathsParent.GetChild(0));
-            CreateBuildBotPath(prefab, pathsParent.GetChild(1));
-            CreateBuildBotPath(prefab, pathsParent.GetChild(2));
-            CreateBuildBotPath(prefab, pathsParent.GetChild(3));
-
-            //The effects for the constructor.
-            var vfxConstructing = prefab.AddComponent<VFXConstructing>();
-            var rocketPlatformVfx = rocketPlatformReference.GetComponentInChildren<VFXConstructing>();
-            vfxConstructing.ghostMaterial = rocketPlatformVfx.ghostMaterial;
-            vfxConstructing.surfaceSplashSound = rocketPlatformVfx.surfaceSplashSound;
-            vfxConstructing.surfaceSplashFX = rocketPlatformVfx.surfaceSplashFX;
-            vfxConstructing.Regenerate();
-
-            //I don't know if this does anything at all as ships float above the surface, but I'm keeping it.
-            var oxygenManager = prefab.AddComponent<OxygenManager>();
-
             //Allows power to connect to here.
             var powerRelay = prefab.AddComponent<PowerRelay>();
 
@@ -560,8 +501,6 @@ namespace VehicleFramework
                     }
                 }
             }
-
-
         }
         public static void ApplySkyAppliers(ref ModVehicle mv)
         {
@@ -594,7 +533,7 @@ namespace VehicleFramework
 
         public static string GetPingTypeString(CachedEnumString<PingType> cache, PingType inputType)
         {
-            foreach(VehicleEntry ve in vehicleTypes)
+            foreach(VehicleEntry ve in VehicleManager.vehicleTypes)
             {
                 if (ve.pt == inputType)
                 {
@@ -605,7 +544,7 @@ namespace VehicleFramework
         }
         public static Atlas.Sprite GetPingTypeSprite(SpriteManager.Group group, string name)
         {
-            foreach (VehicleEntry ve in vehicleTypes)
+            foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
             {
                 if (ve.prefab.name == name)
                 {

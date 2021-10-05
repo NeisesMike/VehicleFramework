@@ -23,7 +23,7 @@ namespace VehicleFramework
                     FieldInfo field2 = __instance.GetType().GetField("icon");
                     uGUI_Icon icon = field2.GetValue(__instance) as uGUI_Icon;
                     icon.sprite = SpriteManager.Get(TechType.Exosuit);
-                    foreach (var mvType in VehicleBuilder.vehicleTypes)
+                    foreach (var mvType in VehicleManager.vehicleTypes)
                     {
                         if (mvType.pt == ping.pingType)
                         {

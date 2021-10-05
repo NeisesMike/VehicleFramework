@@ -100,44 +100,44 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoPilotVoice.cs" />
+    <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
     <Compile Include="Interfaces\IPowerListener.cs" />
     <Compile Include="Interfaces\ILightsStatusListener.cs" />
-    <Compile Include="MinorComponents\BuildBotManager.cs" />
+    <Compile Include="VehicleBuilding\BuildBotManager.cs" />
     <Compile Include="Patches\MapModPatcher.cs" />
     <Compile Include="Patches\VFXConstructingPatch.cs" />
-    <Compile Include="VehicleStatusListeners\ControlPanel.cs" />
-    <Compile Include="MinorComponents\ControlPanelButton.cs" />
+    <Compile Include="ControlPanel\ControlPanel.cs" />
+    <Compile Include="ControlPanel\ControlPanelButton.cs" />
     <Compile Include="StorageComponents\StorageInput.cs" />
     <Compile Include="StorageComponents\InnateStorageInput.cs" />
-    <Compile Include="VehicleStatusListeners\PowerManager.cs" />
-    <Compile Include="MinorComponents\TetherSource.cs" />
-    <Compile Include="MinorComponents\ModVehicleTether.cs" />
-    <Compile Include="Framework\HUDBuilder.cs" />
+    <Compile Include="VehicleComponents\PowerManager.cs" />
+    <Compile Include="VehicleComponents\TetherSource.cs" />
+    <Compile Include="VehicleComponents\ModVehicleTether.cs" />
+    <Compile Include="VehicleBuilding\HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\InventoryPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
-    <Compile Include="Framework\SaveManager.cs" />
-    <Compile Include="Framework\VehicleCraftable.cs" />
-    <Compile Include="VehicleStatusListeners\AutoPilot.cs" />
+    <Compile Include="SaveManager.cs" />
+    <Compile Include="VehicleBuilding\VehicleCraftable.cs" />
+    <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
-    <Compile Include="MajorComponents\VehicleEngine.cs" />
-    <Compile Include="MinorComponents\FuelGauge.cs" />
+    <Compile Include="VehicleComponents\VehicleEngine.cs" />
+    <Compile Include="VehicleComponents\FuelGauge.cs" />
     <Compile Include="LightControllers\HeadLightsController.cs" />
     <Compile Include="LightControllers\NavigationLightsController.cs" />
     <Compile Include="LightControllers\FloodLightsController.cs" />
     <Compile Include="LightControllers\InteriorLightsController.cs" />
-    <Compile Include="MinorComponents\VehicleHatch.cs" />
+    <Compile Include="VehicleComponents\VehicleHatch.cs" />
     <Compile Include="StorageComponents\InnateStorageContainer.cs" />
     <Compile Include="StorageComponents\ModularStorageInput.cs" />
-    <Compile Include="Framework\ModuleBuilder.cs" />
+    <Compile Include="VehicleBuilding\ModuleBuilder.cs" />
     <Compile Include="StorageComponents\uGUI_VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
-    <Compile Include="MajorComponents\ModVehicle.cs" />
-    <Compile Include="MajorComponents\PilotingTrigger.cs" />
+    <Compile Include="VehicleComponents\ModVehicle.cs" />
+    <Compile Include="VehicleComponents\PilotingTrigger.cs" />
     <Compile Include="Patches\EquipmentPatcher.cs" />
     <Compile Include="Patches\GameInputPatcher.cs" />
     <Compile Include="Patches\LiveMixinPatcher.cs" />
@@ -149,10 +149,10 @@
     <Compile Include="Patches\VehiclePatcher.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Framework\VehicleBuilder.cs" />
+    <Compile Include="VehicleBuilding\VehicleBuilder.cs" />
     <Compile Include="Interfaces\IVehicleStatusListener.cs" />
-    <Compile Include="Framework\VehicleManager.cs" />
-    <Compile Include="Framework\VehicleParts.cs" />
+    <Compile Include="VehicleManager.cs" />
+    <Compile Include="VehicleBuilding\VehicleParts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

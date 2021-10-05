@@ -77,7 +77,7 @@ namespace VehicleFramework
         //===============================
         public override GameObject GetGameObject()
         {
-            foreach(VehicleEntry ve in VehicleBuilder.vehicleTypes)
+            foreach(VehicleEntry ve in VehicleManager.vehicleTypes)
             {
                 if(ve.prefab.name == ClassID)
                 {

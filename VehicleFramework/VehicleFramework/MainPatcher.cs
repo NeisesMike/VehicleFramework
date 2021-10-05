@@ -97,7 +97,7 @@ namespace VehicleFramework
         [QModPostPatch]
         public static void PostPatch()
         {
-            VehicleBuilder.PatchCraftables();
+            VehicleManager.PatchCraftables();
         }
     }
 
