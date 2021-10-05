@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace VehicleFramework
 {
@@ -11,6 +13,7 @@ namespace VehicleFramework
 	{
 		public ModVehicle mv;
         public EnergyInterface aiEI;
+        public AutoPilotVoice voice;
 
         private float timeOfLastLevelTap = 0f;
         private const float doubleTapWindow = 1f;
@@ -41,11 +44,13 @@ namespace VehicleFramework
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
+            voice = GetComponent<AutoPilotVoice>();
         }
         public void Start()
         {
             aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
         }
+
         public void Update()
         {
             if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit))
@@ -70,7 +75,7 @@ namespace VehicleFramework
         public void FixedUpdate()
         {
             Vector2 lookDir = GameInput.GetLookDelta();
-            if (0.01f < lookDir.magnitude)
+            if (30f < lookDir.magnitude)
             {
                 autoLeveling = false;
                 return;
@@ -221,6 +226,7 @@ namespace VehicleFramework
         void IAutoPilotListener.OnAutoLevelBegin()
         {
             Logger.Log("OnAutoLevelBegin");
+            voice.EnqueueClip(voice.leveling);
         }
 
         void IAutoPilotListener.OnAutoLevelEnd()
