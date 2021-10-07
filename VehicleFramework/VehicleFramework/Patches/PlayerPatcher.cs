@@ -29,48 +29,26 @@ namespace VehicleFramework
             __instance.gameObject.EnsureComponent<ModVehicleTether>();
             HUDBuilder.BuildNormalHUD();
 
-            // setup build bot paths
-            // we have to do this at game-start time
-            // because the new objects we create are wiped on scene-change
+            // Setup build bot paths.
+            // We have to do this at game-start time,
+            // because the new objects we create are wiped on scene-change.
             // TODO
-            // knowing this, we might be able to factor out some gameobjects,
-            // that we'd been requiring in the assetbundle side of things
+            // Knowing this, we might be able to factor out some gameobjects,
+            // that we'd been requiring in the assetbundle side of things.
             BuildBotManager.SetupBuildBotPaths();
             return;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch("Update")]
-        public static void UpdatePostfix(Player __instance)
-        {  
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
-            if (mv == null)
-            {
-                return;
-            }
-            if (mv.IsPlayerInside() && !mv.IsPlayerPiloting())
-            {
-                __instance.playerController.activeController.SetUnderWater(false);
-                __instance.isUnderwater.Update(false);
-                __instance.isUnderwaterForSwimming.Update(false);
-                __instance.playerController.SetMotorMode(Player.MotorMode.Walk);
-                __instance.motorMode = Player.MotorMode.Walk;
-                __instance.SetScubaMaskActive(false);
-                __instance.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
-                __instance.depthLevel = -10f;
-
-                // animator stuff to ensure we don't act like we're swimming at any point
-                __instance.playerAnimator.SetBool("is_underwater", false);
-                __instance.playerAnimator.SetBool("on_surface", false);
-                __instance.playerAnimator.SetBool("diving", false);
-                __instance.playerAnimator.SetBool("diving_land", false);
-            }
-        }
 
         [HarmonyPrefix]
         [HarmonyPatch("ExitLockedMode")]
         public static bool ExitLockedModePrefix(Player __instance, ref Player.Mode ___mode)
         {
+            /*
+             * This patch ensures we exit out of the pilot seat correctly.
+             * It also controls pilot-initiated auto-leveling.
+             */
+
             ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv == null)
             {
@@ -108,6 +86,48 @@ namespace VehicleFramework
 
             return false;
         }
+        [HarmonyPrefix]
+        [HarmonyPatch("GetDepthClass")]
+        public static bool GetDepthClass(Player __instance, ref Ocean.DepthClass __result)
+        {
+            /*
+             * TODO
+             * I believe this function relates to the PDA voice communicating depth information to you.
+             * "Passing 400 meters," that sort of thing.
+             * I'm not sure this patch is strictly necessary.
+             */
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+            if (mv != null && !mv.IsPlayerPiloting())
+            {
+                //var crushDamage = __instance.gameObject.GetComponentInParent<CrushDamage>();
+                //__result = crushDamage.GetDepthClass();
+                //__instance.crushDepth = crushDamage.crushDepth;
+                __result = Ocean.DepthClass.Safe;
+                __instance.crushDepth = 200f;
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("Update")]
+        public static void UpdatePostfix(Player __instance)
+        {  
+            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+            if (mv == null)
+            {
+                return;
+            }
+            if (mv.IsPlayerInside() && !mv.IsPlayerPiloting())
+            {
+                // animator stuff to ensure we don't act like we're swimming at any point
+                __instance.playerAnimator.SetBool("is_underwater", false);
+                __instance.playerAnimator.SetBool("on_surface", false);
+                __instance.playerAnimator.SetBool("diving", false);
+                __instance.playerAnimator.SetBool("diving_land", false);
+            }
+        }
+
 
         [HarmonyPrefix]
         [HarmonyPatch("UpdateIsUnderwater")]
@@ -116,6 +136,8 @@ namespace VehicleFramework
             ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv != null)
             {
+                // declare we aren't underwater,
+                // since we're wholly within an air bubble
                 __instance.isUnderwater.Update(false);
                 __instance.isUnderwaterForSwimming.Update(false);
                 return false;
@@ -130,27 +152,12 @@ namespace VehicleFramework
             ModVehicle mv = __instance.GetVehicle() as ModVehicle;
             if (mv != null && !mv.IsPlayerPiloting())
             {
+                // ensure: if we're in a modvehicle and we're not piloting, then we're walking.
                 __instance.SetMotorMode(Player.MotorMode.Walk);
                 return false;
             }
             return true;
         }
 
-        [HarmonyPrefix]
-        [HarmonyPatch("GetDepthClass")]
-        public static bool GetDepthClass(Player __instance, ref Ocean.DepthClass __result)
-        {
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
-            if (mv != null && !mv.IsPlayerPiloting())
-            {
-                //var crushDamage = __instance.gameObject.GetComponentInParent<CrushDamage>();
-                //__result = crushDamage.GetDepthClass();
-                //__instance.crushDepth = crushDamage.crushDepth;
-                __result = Ocean.DepthClass.Safe;
-                __instance.crushDepth = 200f;
-                return false;
-            }
-            return true;
-        }
     }
 }

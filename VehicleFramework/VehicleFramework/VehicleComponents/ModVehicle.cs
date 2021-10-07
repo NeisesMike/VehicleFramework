@@ -275,7 +275,7 @@ namespace VehicleFramework
             {
                 Player.main.transform.position = thisStopPilotingLocation.position;
             }
-            //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
+            Player.main.SetScubaMaskActive(false);
             uGUI.main.quickSlots.SetTarget(null);
             NotifyStatus(PlayerStatus.OnPilotEnd);
         }

@@ -11,22 +11,10 @@ namespace VehicleFramework
     public class PlayerControllerPatcher
     {
         /*
-         * This collection of patches ensures the Player behaves as expected inside a ModVehicle.
+         * This patch ensures the Player behaves as expected inside a ModVehicle.
          * That is, the player should always act as "normally grounded."
-         * These patches prevent the player from doing any swim-related behaviors.
+         * This patch prevents the player from doing any swim-related behaviors while inside a ModVehicle
          */
-        [HarmonyPrefix]
-        [HarmonyPatch("HandleControllerState")]
-        public static bool HandleControllerStatePrefix(PlayerController __instance)
-        {
-            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
-            if (mv != null && !mv.IsPlayerPiloting())
-            {
-                __instance.inVehicle = false;
-                __instance.underWater = false;
-            }
-            return true;
-        }
         [HarmonyPrefix]
         [HarmonyPatch("HandleUnderWaterState")]
         public static bool HandleUnderWaterStatePrefix(PlayerController __instance)
