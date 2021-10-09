@@ -53,6 +53,14 @@ namespace VehicleFramework
         [QModPrePatch]
         public static void PrePatch()
         {
+            string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            byte[] spriteBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "ModVehicleIcon.png"));
+            Texture2D SpriteTexture = new Texture2D(128, 128);
+            SpriteTexture.LoadImage(spriteBytes);
+            Sprite mySprite = Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            var ModVehicleIconSprite = new Atlas.Sprite(mySprite);
+            string[] stepsToMVTab = { "SeamothMenu" };
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIconSprite, stepsToMVTab);
         }
 
         [QModPatch]
