@@ -423,6 +423,37 @@ namespace VehicleFramework
             ddoi.prevPosition = Vector3.zero;
             ddoi.prevPosition = Vector3.zero;
         }
+        public static void SetupDamageComponents(ref ModVehicle mv)
+        {
+            // add vfxvehicledamages... or not
+
+            // add temperaturedamage
+            var tempdamg = mv.gameObject.EnsureComponent<TemperatureDamage>();
+            tempdamg.lavaDatabase = seamoth.GetComponent<TemperatureDamage>().lavaDatabase;
+            tempdamg.liveMixin = mv.liveMixin;
+            // the following configurations are the same values the seamoth takes
+            tempdamg.minDamageTemperature = 70f;
+            tempdamg.baseDamagePerSecond = 0.2f;
+            tempdamg.onlyLavaDamage = false;
+            tempdamg.timeDamageStarted = -1000;
+            tempdamg.timeLastDamage = 0;
+            tempdamg.player = null;
+
+            // add ecotarget
+            var et = mv.gameObject.EnsureComponent<EcoTarget>();
+            et.type = EcoTargetType.Shark; // same as seamoth (lol)
+            et.nextUpdateTime = 0f;
+
+            // add creatureutils
+            var cr = mv.gameObject.EnsureComponent<CreatureUtils>();
+            cr.setupEcoTarget = true;
+            cr.setupEcoBehaviours = false;
+            cr.addedComponents = new Component[1];
+            cr.addedComponents.Append(et as Component);
+
+        }
+
+
         #endregion
         public static void Instrument(ref ModVehicle mv, PingType pingType)
         {
@@ -450,6 +481,7 @@ namespace VehicleFramework
             SetupConstructionObstacle(ref mv);
             SetupSoundOnDamage(ref mv);
             SetupDealDamageOnImpact(ref mv);
+            SetupDamageComponents(ref mv);
 
             ApplySkyAppliers(ref mv);
 
