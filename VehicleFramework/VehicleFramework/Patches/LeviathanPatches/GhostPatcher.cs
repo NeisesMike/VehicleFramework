@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using HarmonyLib;
+using UnityEngine;
+
+namespace VehicleFramework.Patches.LeviathanPatches
+{
+    [HarmonyPatch(typeof(GhostLeviathanMeleeAttack))]
+    class GhostPatcher
+    {
+        /*
+         * This patch changes how much damage Ghosts will do to ModVehicles.
+         * Ghosts will do:
+         * 85 to Seamoth/Prawn
+         * 250 to Cyclops
+         * TODO: we should include this in the VehicleEntry struct, to make it configurable
+         */
+        [HarmonyPostfix]
+        [HarmonyPatch("GetBiteDamage")]
+        public static void GetBiteDamagePostfix(GhostLeviathanMeleeAttack __instance, ref float __result, GameObject target)
+        {
+            if(target.GetComponentInParent<ModVehicle>() != null)
+            {
+                __result = 150f;
+            }
+        }
+    }
+}
