@@ -35,9 +35,6 @@ namespace VehicleFramework
                 speakerPtr.spatialBlend = 1f;
                 speakers.Add(speakerPtr);
             }
-            //speakerPtr = mv.ControlPanel.AddComponent<AudioSource>();
-            //speakerPtr.spatialBlend = 1f;
-            //speakers.Add(speakerPtr);
             foreach (var ps in mv.Hatches)
             {
                 speakerPtr = ps.Hatch.AddComponent<AudioSource>();

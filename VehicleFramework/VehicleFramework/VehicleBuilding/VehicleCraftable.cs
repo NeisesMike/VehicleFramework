@@ -69,7 +69,7 @@ namespace VehicleFramework
         //===============================
         protected override Atlas.Sprite GetItemSprite()
         {
-            return null;
+            return MainPatcher.ModVehicleIcon;
         }
 
         //===============================

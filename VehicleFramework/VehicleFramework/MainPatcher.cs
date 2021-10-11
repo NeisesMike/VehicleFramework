@@ -43,12 +43,18 @@ namespace VehicleFramework
             BasicText message = new BasicText(0, 100);
             message.ShowMessage(msg, 5);
         }
+        public static void Narrate(string msg)
+        {
+            BasicText message = new BasicText(0, -100);
+            message.ShowMessage(msg, 2);
+        }
     }
     [QModCore]
     public static class MainPatcher
     {
         internal static VehicleFrameworkConfig Config { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
+        internal static Atlas.Sprite ModVehicleIcon { get; private set; }
 
         [QModPrePatch]
         public static void PrePatch()
@@ -58,9 +64,9 @@ namespace VehicleFramework
             Texture2D SpriteTexture = new Texture2D(128, 128);
             SpriteTexture.LoadImage(spriteBytes);
             Sprite mySprite = Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-            var ModVehicleIconSprite = new Atlas.Sprite(mySprite);
+            ModVehicleIcon = new Atlas.Sprite(mySprite);
             string[] stepsToMVTab = { "SeamothMenu" };
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIconSprite, stepsToMVTab);
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
         }
 
         [QModPatch]
@@ -85,9 +91,6 @@ namespace VehicleFramework
             {
                 VehicleSaveData = e.Instance as SaveData; 
             };
-
-
-
 
             Config = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
