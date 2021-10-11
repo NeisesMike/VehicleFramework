@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,17 +161,34 @@ namespace VehicleFramework
 
         public new void OnKill()
         {
-            if (IsPlayerInside())
-            {
-                PlayerExit();
-            }
             if (destructionEffect)
             {
                 GameObject gameObject = Instantiate<GameObject>(destructionEffect);
                 gameObject.transform.position = transform.position;
                 gameObject.transform.rotation = transform.rotation;
             }
+            StartCoroutine(EnqueueDestroy());
+        }
+        public IEnumerator EnqueueDestroy()
+        {
+            if (IsPlayerPiloting())
+            {
+                Player.main.playerController.SetEnabled(true);
+                Player.main.mode = Player.Mode.Normal;
+                Player.main.playerModeChanged.Trigger(Player.main.mode);
+                Player.main.sitting = false;
+                Player.main.playerController.ForceControllerSize();
+                Player.main.transform.parent = null;
+                StopPiloting();
+            }
+            //yield return new WaitForSeconds(1f);
+            if (IsPlayerInside())
+            {
+                PlayerExit();
+            }
+            //yield return new WaitForSeconds(1f);
             Destroy(gameObject);
+            yield return null;
         }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
