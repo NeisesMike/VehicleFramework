@@ -16,18 +16,39 @@ namespace VehicleFramework
         public ModVehicle mv;
         private List<AudioSource> speakers = new List<AudioSource>();
         private PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
+
         public AudioClip leveling;
+        public AudioClip welcomeAboardCASO;
+        public AudioClip poweringUp;
+
+
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
         }
         public void Start()
         {
+            AudioSource speakerPtr;
             foreach (var ps in mv.PilotSeats)
             {
-                var speaker = ps.Seat.AddComponent<AudioSource>();
-                speaker.spatialBlend = 1f;
-                speakers.Add(speaker);
+                speakerPtr = ps.Seat.AddComponent<AudioSource>();
+                speakerPtr.spatialBlend = 1f;
+                speakers.Add(speakerPtr);
+            }
+            //speakerPtr = mv.ControlPanel.AddComponent<AudioSource>();
+            //speakerPtr.spatialBlend = 1f;
+            //speakers.Add(speakerPtr);
+            foreach (var ps in mv.Hatches)
+            {
+                speakerPtr = ps.Hatch.AddComponent<AudioSource>();
+                speakerPtr.spatialBlend = 1f;
+                speakers.Add(speakerPtr);
+            }
+            foreach (var ps in mv.TetherSources)
+            {
+                speakerPtr = ps.AddComponent<AudioSource>();
+                speakerPtr.spatialBlend = 1f;
+                speakers.Add(speakerPtr);
             }
             StartCoroutine(GetAudioClip());
         }
@@ -64,8 +85,12 @@ namespace VehicleFramework
         IEnumerator GetAudioClip()
         {
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string assetPath = Path.Combine(modPath, "AutoPilotSally/Leveling.ogg");
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + assetPath, AudioType.OGGVORBIS))
+            string autoPilotSallyPath = Path.Combine(modPath, "AutoPilotSally/");
+            string levelPath = Path.Combine(autoPilotSallyPath, "Leveling.ogg");
+            string welcoPath = Path.Combine(autoPilotSallyPath, "WelcomeAboard.ogg");
+            string powerPath = Path.Combine(autoPilotSallyPath, "PoweringUp.ogg");
+
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + levelPath, AudioType.OGGVORBIS))
             {
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
@@ -75,6 +100,30 @@ namespace VehicleFramework
                 else
                 {
                     leveling = DownloadHandlerAudioClip.GetContent(www);
+                }
+            }
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + welcoPath, AudioType.OGGVORBIS))
+            {
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Debug.Log(www.error);
+                }
+                else
+                {
+                    welcomeAboardCASO = DownloadHandlerAudioClip.GetContent(www);
+                }
+            }
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + powerPath, AudioType.OGGVORBIS))
+            {
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Debug.Log(www.error);
+                }
+                else
+                {
+                    poweringUp = DownloadHandlerAudioClip.GetContent(www);
                 }
             }
         }

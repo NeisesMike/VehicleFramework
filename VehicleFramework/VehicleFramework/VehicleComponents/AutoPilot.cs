@@ -164,6 +164,7 @@ namespace VehicleFramework
         {
             Logger.Log("OnPowerUp");
             isDead = false;
+            voice.EnqueueClip(voice.poweringUp);
         }
 
         void IPowerListener.OnPowerDown()
@@ -196,6 +197,8 @@ namespace VehicleFramework
         void IPlayerListener.OnPlayerEntry()
         {
             Logger.Log("OnPlayerEntry");
+            // TODO: conditional welcome aboard lines
+            voice.EnqueueClip(voice.welcomeAboardCASO);
         }
 
         void IPlayerListener.OnPlayerExit()
