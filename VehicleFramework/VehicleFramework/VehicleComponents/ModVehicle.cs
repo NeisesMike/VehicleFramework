@@ -23,6 +23,7 @@ namespace VehicleFramework
             }
 
         public abstract GameObject VehicleModel { get; }
+        public abstract GameObject CollisionModel { get; }
         public abstract GameObject StorageRootObject { get; }
         public abstract GameObject ModulesRootObject { get; }
 

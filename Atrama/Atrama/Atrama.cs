@@ -395,5 +395,13 @@ namespace Atrama
                 return list;
             }
         }
+
+        public override GameObject CollisionModel
+        {
+            get
+            {
+                return transform.Find("CollisionModel").gameObject;
+            }
+        }
     }
 }
