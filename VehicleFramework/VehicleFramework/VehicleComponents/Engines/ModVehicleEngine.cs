@@ -5,54 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace VehicleFramework
+namespace VehicleFramework.Engines
 {
-    public class VehicleEngine : MonoBehaviour
+    public abstract class ModVehicleEngine : MonoBehaviour
     {
         public ModVehicle mv;
         public Rigidbody rb;
 
-        private const float FORWARD_TOP_SPEED = 1500;
-        private const float REVERSE_TOP_SPEED = 500;
-        private const float STRAFE_MAX_SPEED = 500;
-        private const float VERT_MAX_SPEED = 500;
-
-        public const float FORWARD_ACCEL = FORWARD_TOP_SPEED / 10f;
-        public const float REVERSE_ACCEL = REVERSE_TOP_SPEED / 10f;
-        public const float STRAFE_ACCEL = STRAFE_MAX_SPEED / 10f;
-        public const float VERT_ACCEL = VERT_MAX_SPEED / 10f;
-
-        // SOAK describes how low to go before grinding to an abrupt halt.
-        // This is useful because otherwise the low-speed light are always blinking
-        private const float DEAD_ZONE_SOAK = 50;
-        // IMPULSE describes the immediate boost you get from the impulse engines when they fire
-        // the impulse engine recharges every second, so manueverability is not especially nimble
-        private const float IMPULSE_BOOST = 300;
-
-        /* TODO: RacingEngine : VehicleEngine
-        private float _timeOfLastImpulse = 0f;
-        private float ImpulseBoost
-        {
-            get
-            {
-                if(_timeOfLastImpulse + 1f < Time.time)
-                {
-                    _timeOfLastImpulse = Time.time;
-                    return IMPULSE_BOOST;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-        */
+        protected virtual float FORWARD_TOP_SPEED => 1000;
+        protected virtual float REVERSE_TOP_SPEED => 1000;
+        protected virtual float STRAFE_MAX_SPEED => 1000;
+        protected virtual float VERT_MAX_SPEED => 1000;
+        protected virtual float FORWARD_ACCEL => FORWARD_TOP_SPEED / 10f;
+        protected virtual float REVERSE_ACCEL => REVERSE_TOP_SPEED / 10f;
+        protected virtual float STRAFE_ACCEL => STRAFE_MAX_SPEED / 10f;
+        protected virtual float VERT_ACCEL => VERT_MAX_SPEED / 10f;
 
         // a value of 0.25 here indicates that
         // velocity will decay 25% every second
-        private readonly float waterDragDecay = 0.25f;
-        private readonly float airDragDecay = 0.025f;
-        private float DragDecay
+        protected virtual float waterDragDecay => 0.25f;
+        protected virtual float airDragDecay => 0.025f;
+        protected virtual float DragDecay
         {
             get
             {
@@ -67,15 +40,11 @@ namespace VehicleFramework
             }
         }
 
-        private float _forwardMomentum = 0;
-        private float ForwardMomentum
+        protected float _forwardMomentum = 0;
+        protected virtual float ForwardMomentum
         {
             get
             {
-                if (Mathf.Abs(_forwardMomentum) < DEAD_ZONE_SOAK)
-                {
-                    _forwardMomentum = 0;
-                }
                 return _forwardMomentum;
             }
             set
@@ -94,18 +63,8 @@ namespace VehicleFramework
                 }
             }
         }
-        private void UpdateForwardMomentum(float inputMagnitude)
+        protected virtual void UpdateForwardMomentum(float inputMagnitude)
         {
-            if (ForwardMomentum < IMPULSE_BOOST && 0 < inputMagnitude)
-            {
-                ForwardMomentum = IMPULSE_BOOST;
-                return;
-            }
-            if (-IMPULSE_BOOST < ForwardMomentum && inputMagnitude < 0)
-            {
-                ForwardMomentum = -IMPULSE_BOOST;
-                return;
-            }
             if (0 < inputMagnitude)
             {
                 ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.deltaTime;
@@ -116,15 +75,11 @@ namespace VehicleFramework
             }
         }
 
-        private float _rightMomentum = 0;
-        private float RightMomentum
+        protected float _rightMomentum = 0;
+        protected virtual float RightMomentum
         {
             get
             {
-                if (Mathf.Abs(_rightMomentum) < DEAD_ZONE_SOAK)
-                {
-                    _rightMomentum = 0;
-                }
                 return _rightMomentum;
             }
             set
@@ -143,33 +98,19 @@ namespace VehicleFramework
                 }
             }
         }
-        private void UpdateRightMomentum(float inputMagnitude)
+        protected virtual void UpdateRightMomentum(float inputMagnitude)
         {
-            if (RightMomentum < IMPULSE_BOOST && 0 < inputMagnitude)
-            {
-                RightMomentum = IMPULSE_BOOST;
-                return;
-            }
-            if (-IMPULSE_BOOST < RightMomentum && inputMagnitude < 0)
-            {
-                RightMomentum = -IMPULSE_BOOST;
-                return;
-            }
             if (inputMagnitude != 0)
             {
                 RightMomentum += inputMagnitude * STRAFE_ACCEL * Time.deltaTime;
             }
         }
 
-        private float _upMomentum = 0;
-        private float UpMomentum
+        protected float _upMomentum = 0;
+        protected virtual float UpMomentum
         {
             get
             {
-                if (Mathf.Abs(_upMomentum) < DEAD_ZONE_SOAK)
-                {
-                    _upMomentum = 0;
-                }
                 return _upMomentum;
             }
             set
@@ -188,21 +129,10 @@ namespace VehicleFramework
                 }
             }
         }
-        private void UpdateUpMomentum(float inputMagnitude)
+        protected virtual void UpdateUpMomentum(float inputMagnitude)
         {
-            if(UpMomentum < IMPULSE_BOOST && 0 < inputMagnitude)
-            {
-                UpMomentum = IMPULSE_BOOST;
-                return;
-            }
-            if (-IMPULSE_BOOST < UpMomentum && inputMagnitude < 0)
-            {
-                UpMomentum = -IMPULSE_BOOST;
-                return;
-            }
             UpMomentum += inputMagnitude * VERT_ACCEL * Time.deltaTime;
         }
-
 
         // Start is called before the first frame update
         public void Start()
@@ -231,7 +161,7 @@ namespace VehicleFramework
             }
             ApplyDrag(moveDirection);
         }
-        private void ApplyDrag(Vector3 move)
+        protected void ApplyDrag(Vector3 move)
         {
             // Only apply drag if we aren't applying movement in that direction.
             // That is, if we aren't holding forward, our forward momentum should decay.
@@ -263,18 +193,12 @@ namespace VehicleFramework
             rb.AddForce(mv.transform.right * RightMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
             rb.AddForce(mv.transform.up * UpMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
         }
-        public enum forceDirection
+        public enum ForceDirection
         {
             forward,
             backward,
             strafe,
             updown
-        }
-        public float GetCurrentPercentOfTopSpeed()
-        {
-            float totalMomentumNow = Mathf.Abs(ForwardMomentum) + Mathf.Abs(RightMomentum) + Mathf.Abs(UpMomentum);
-            float topMomentum = FORWARD_TOP_SPEED + STRAFE_MAX_SPEED + VERT_MAX_SPEED;
-            return totalMomentumNow / topMomentum;
         }
         public void ApplyPlayerControls(Vector3 moveDirection)
         {
@@ -295,11 +219,11 @@ namespace VehicleFramework
 
             return;
         }
-        public void ControlRotation()
+        public virtual void ControlRotation()
         {
             // Control rotation
-            float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
-            float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
+            float pitchFactor = 1.4f;
+            float yawFactor = 1.4f;
             Vector2 mouseDir = GameInput.GetLookDelta();
             float xRot = mouseDir.x;
             float yRot = mouseDir.y;

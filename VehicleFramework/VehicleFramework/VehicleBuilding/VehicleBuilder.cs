@@ -16,13 +16,16 @@ using SMLHelper.V2.Crafting;
 using SMLHelper.V2.Handlers;
 using SMLHelper.V2.Utility;
 
+using VehicleFramework.Engines;
+
 namespace VehicleFramework
 {
     public struct VehicleEntry
     {
-        public VehicleEntry(GameObject prefabObj, Dictionary<TechType, int> in_recipe, int id, string desc, PingType pt_in, Atlas.Sprite sprite, int modules_in, int arms_in)
+        public VehicleEntry(GameObject prefabObj, ModVehicleEngine in_engine, Dictionary<TechType, int> in_recipe, int id, string desc, PingType pt_in, Atlas.Sprite sprite, int modules_in, int arms_in)
         {
             prefab = prefabObj;
+            engine = in_engine;
             recipe = in_recipe;
             unique_id = id;
             description = desc;
@@ -32,6 +35,7 @@ namespace VehicleFramework
             arms = arms_in;
         }
         public GameObject prefab;
+        public ModVehicleEngine engine;
         public Dictionary<TechType, int> recipe;
         public int unique_id;
         public string description;
@@ -54,11 +58,11 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static void Prefabricate(ref ModVehicle mv, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms)
+        public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms)
         {
-            Instrument(ref mv, pingType);
+            Instrument(ref mv, engine, pingType);
             prefabs.Add(mv);
-            VehicleEntry ve = new VehicleEntry(mv.gameObject, recipe, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
+            VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
             numVehicleTypes++;
         }
@@ -303,10 +307,10 @@ namespace VehicleFramework
             rb.useGravity = false;
             mv.useRigidbody = rb;
         }
-        public static void SetupEngine(ref ModVehicle mv)
+        public static void SetupEngine(ref ModVehicle mv, ModVehicleEngine engineType)
         {
             // Add the engine (physics control)
-            mv.engine = mv.gameObject.EnsureComponent<VehicleEngine>();
+            mv.engine = mv.gameObject.AddComponent(engineType.GetType()) as ModVehicleEngine;
             mv.engine.mv = mv;
             mv.engine.rb = mv.useRigidbody;
         }
@@ -461,7 +465,7 @@ namespace VehicleFramework
 
 
         #endregion
-        public static void Instrument(ref ModVehicle mv, PingType pingType)
+        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
@@ -475,7 +479,7 @@ namespace VehicleFramework
             SetupLightSounds(ref mv);
             SetupLiveMixin(ref mv);
             SetupRigidbody(ref mv);
-            SetupEngine(ref mv);
+            SetupEngine(ref mv, engine);
             SetupWorldForces(ref mv);
             SetupLargeWorldEntity(ref mv);
             SetupHudPing(ref mv, pingType);

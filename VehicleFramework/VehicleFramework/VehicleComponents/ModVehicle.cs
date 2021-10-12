@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.Engines;
 
 namespace VehicleFramework
 {
@@ -72,7 +73,7 @@ namespace VehicleFramework
         // because it is unusable yet the batteries are not empty
         public bool isPoweredOn = true;
 
-        public VehicleEngine engine;
+        public ModVehicleEngine engine;
         public Transform thisStopPilotingLocation;
 
         public FloodLightsController floodlights;
@@ -680,14 +681,8 @@ namespace VehicleFramework
             ModVehicle mv = veh as ModVehicle;
             if (mv != null && Player.main.GetVehicle() == veh && Player.main.mode == Player.Mode.LockedPiloting)
             {
-                // Control rotation
-                float pitchFactor = 1.2f * (1 - mv.engine.GetCurrentPercentOfTopSpeed());
-                float yawFactor = 1f * (1 - mv.engine.GetCurrentPercentOfTopSpeed());
-                Vector2 mouseDir = GameInput.GetLookDelta();
-                float xRot = mouseDir.x;
-                float yRot = mouseDir.y;
-                mv.useRigidbody.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-                mv.useRigidbody.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+                ModVehicleEngine mve = mv.GetComponent<ModVehicleEngine>();
+                mve.ControlRotation();
             }
         }
     }

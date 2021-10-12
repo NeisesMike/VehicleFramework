@@ -107,6 +107,9 @@
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
+    <Compile Include="UpgradeModules\ModVehicleDepthMk1.cs" />
+    <Compile Include="UpgradeModules\ModVehicleDepthMk2.cs" />
+    <Compile Include="UpgradeModules\ModVehicleDepthMk3.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="ControlPanel\ControlPanelButton.cs" />
     <Compile Include="StorageComponents\StorageInput.cs" />
     <Compile Include="StorageComponents\InnateStorageInput.cs" />
+    <Compile Include="VehicleComponents\Engines\ModVehicleEngine.cs" />
     <Compile Include="VehicleComponents\PowerManager.cs" />
     <Compile Include="VehicleComponents\TetherSource.cs" />
     <Compile Include="VehicleComponents\ModVehicleTether.cs" />
@@ -130,7 +134,8 @@
     <Compile Include="VehicleBuilding\VehicleCraftable.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
-    <Compile Include="VehicleComponents\VehicleEngine.cs" />
+    <Compile Include="VehicleComponents\Engines\Cricket.cs" />
+    <Compile Include="VehicleComponents\Engines\Atrama.cs" />
     <Compile Include="VehicleComponents\FuelGauge.cs" />
     <Compile Include="LightControllers\HeadLightsController.cs" />
     <Compile Include="LightControllers\NavigationLightsController.cs" />
