@@ -52,11 +52,22 @@ namespace Atrama
                 }
             }
         }
+        public static Dictionary<TechType, int> GetRecipe()
+        {
+            Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
+            recipe.Add(TechType.TitaniumIngot, 1);
+            recipe.Add(TechType.PlasteelIngot, 1);
+            recipe.Add(TechType.Lubricant, 1);
+            recipe.Add(TechType.AdvancedWiringKit, 1);
+            recipe.Add(TechType.Lead, 2);
+            recipe.Add(TechType.EnameledGlass, 2);
+            return recipe;
+        }
         public static void Register()
         {
             GetAssets();
             ModVehicle atrama = model.EnsureComponent<Atrama>() as ModVehicle;
-            VehicleManager.RegisterVehicle(ref atrama, (PingType)121, pingSprite, 6, 2);
+            VehicleManager.RegisterVehicle(ref atrama, GetRecipe(), (PingType)121, pingSprite, 6, 2);
         }
 
         public override string vehicleDefaultName

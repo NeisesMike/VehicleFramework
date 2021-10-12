@@ -30,12 +30,12 @@ namespace VehicleFramework
             foreach (VehicleEntry ve in vehicleTypes)
             {
                 Logger.Log("Patching the " + ve.prefab.name + " Craftable...");
-                VehicleCraftable thisCraftable = new VehicleCraftable(ve.prefab.name, ve.prefab.name, ve.description);
+                VehicleCraftable thisCraftable = new VehicleCraftable(ve.prefab.name, ve.prefab.name, ve.description, ve.recipe);
                 thisCraftable.Patch();
                 Logger.Log("Patched the " + ve.prefab.name + " Craftable.");
             }
         }
-        public static void RegisterVehicle(ref ModVehicle mv, PingType pt, Atlas.Sprite sprite, int modules, int arms)
+        public static void RegisterVehicle(ref ModVehicle mv, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms)
         {
             bool isNewEntry = true;
             foreach (VehicleEntry ve in vehicleTypes)
@@ -49,7 +49,7 @@ namespace VehicleFramework
             }
             if (isNewEntry)
             {
-                VehicleBuilder.Prefabricate(ref mv, pt, sprite, modules, arms);
+                VehicleBuilder.Prefabricate(ref mv, recipe, pt, sprite, modules, arms);
                 Logger.Log("Registered the " + mv.gameObject.name);
             }
         }

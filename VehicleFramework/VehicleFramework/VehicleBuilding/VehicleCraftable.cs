@@ -15,8 +15,10 @@ namespace VehicleFramework
 {
     public class VehicleCraftable : Craftable
     {
-        public VehicleCraftable(string classId, string friendlyName, string description) : base(classId, friendlyName, description)
+        public Dictionary<TechType, int> recipe;
+        public VehicleCraftable(string classId, string friendlyName, string description, Dictionary<TechType, int> input_recipe) : base(classId, friendlyName, description)
         {
+            recipe = input_recipe;
         }
 
         //===============================
@@ -49,17 +51,14 @@ namespace VehicleFramework
 
         protected override TechData GetBlueprintRecipe()
         {
+            List<Ingredient> ingredients = new List<Ingredient>();
+            foreach(KeyValuePair<TechType,int> pair in recipe)
+            {
+                ingredients.Add(new Ingredient(pair.Key, pair.Value));
+            }
             return new TechData
             {
-                Ingredients = new List<Ingredient>()
-                {
-                    new Ingredient(TechType.TitaniumIngot, 1),
-                    new Ingredient(TechType.PlasteelIngot, 1),
-                    new Ingredient(TechType.Lubricant, 1),
-                    new Ingredient(TechType.AdvancedWiringKit, 1),
-                    new Ingredient(TechType.Lead, 2),
-                    new Ingredient(TechType.EnameledGlass, 2)
-                },
+                Ingredients = ingredients,
                 craftAmount = 1
             };
         }
