@@ -11,7 +11,6 @@ namespace VehicleFramework
     public class NavigationLightsController : MonoBehaviour, IPowerListener
     {
         private bool isNavLightsEnabled = true;
-        private bool isFlashingLightsEnabled = true;
 
         private ModVehicle mv;
         private List<Material> positionMats = new List<Material>();
@@ -84,13 +83,13 @@ namespace VehicleFramework
             switch (lc)
             {
                 case LightClass.WhiteStrobes:
-                    if (isFlashingLightsEnabled && white == null)
+                    if (MainPatcher.Config.isFlashingLightsEnabled && white == null)
                     {
                         white = StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
-                    if (isFlashingLightsEnabled && red == null)
+                    if (MainPatcher.Config.isFlashingLightsEnabled && red == null)
                     {
                         red = StartCoroutine(Strobe(LightClass.RedStrobes));
                     }
@@ -140,7 +139,7 @@ namespace VehicleFramework
                 light.color = Color.red;
                 light.type = LightType.Point;
                 light.intensity = 1f;
-                light.range = 120f;
+                light.range = 80f;
                 light.shadows = LightShadows.Hard;
                 redStrobeLights.Add(light);
             }
@@ -152,7 +151,7 @@ namespace VehicleFramework
                 light.color = Color.white;
                 light.type = LightType.Point;
                 light.intensity = 0.5f;
-                light.range = 120f;
+                light.range = 80f;
                 light.shadows = LightShadows.Hard;
                 whiteStrobeLights.Add(light);
             }

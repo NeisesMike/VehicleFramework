@@ -126,8 +126,8 @@ namespace VehicleFramework
     [Menu("Vehicle Framework Options")]
     public class VehicleFrameworkConfig : ConfigFile
     {
-        [Toggle("temp")]
-        public bool temp = false;
+        [Toggle("Flashing Lights")]
+        public bool isFlashingLightsEnabled = false;
     }
 
 
