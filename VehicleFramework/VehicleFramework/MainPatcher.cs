@@ -15,6 +15,7 @@ using SMLHelper.V2.Handlers;
 using QModManager.API.ModLoading;
 using SMLHelper.V2.Utility;
 using SMLHelper.V2.Json.Attributes;
+using VehicleFramework.UpgradeModules;
 
 using upgrades = System.Collections.Generic.Dictionary<string, TechType>;
 using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<TechType>>>;
@@ -56,9 +57,14 @@ namespace VehicleFramework
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
 
+        internal static ModVehicleDepthMk1 modVehicleDepthModule1 = new ModVehicleDepthMk1();
+        internal static ModVehicleDepthMk2 modVehicleDepthModule2 = new ModVehicleDepthMk2();
+        internal static ModVehicleDepthMk3 modVehicleDepthModule3 = new ModVehicleDepthMk3();
+
         [QModPrePatch]
         public static void PrePatch()
         {
+            // patch in the crafting node for the Workbench menu (modification station)
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             byte[] spriteBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "ModVehicleIcon.png"));
             Texture2D SpriteTexture = new Texture2D(128, 128);
@@ -67,6 +73,11 @@ namespace VehicleFramework
             ModVehicleIcon = new Atlas.Sprite(mySprite);
             string[] stepsToMVTab = { "SeamothMenu" };
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
+
+            // patch in the depth module upgrades
+            modVehicleDepthModule1.Patch();
+            modVehicleDepthModule2.Patch();
+            modVehicleDepthModule3.Patch();
         }
 
         [QModPatch]

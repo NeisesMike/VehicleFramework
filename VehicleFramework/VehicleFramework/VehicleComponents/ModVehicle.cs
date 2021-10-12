@@ -201,28 +201,61 @@ namespace VehicleFramework
                     }
                 case TechType.VehicleArmorPlating:
                     {
-                        var temp = added ? numArmorModules++ : numArmorModules--;
+                        _ = added ? numArmorModules++ : numArmorModules--;
                         GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
                         break;
                     }
                 case TechType.VehiclePowerUpgradeModule:
                     {
-                        var temp = added ? numEfficiencyModules++ : numEfficiencyModules--;
+                        _ = added ? numEfficiencyModules++ : numEfficiencyModules--;
                         break;
                     }
-                /*
-                case TechType.VehicleDepthModule1:
-                    break;
-                case TechType.VehicleDepthModule2:
-                    break;
-                case TechType.VehicleDepthModule3:
-                    break;
-                case TechType.VehicleStealthModule:
-                    break;
-                */
                 default:
                     break;
             }
+            StartCoroutine(EvaluateDepthModuleLevel());
+        }
+        public IEnumerator EvaluateDepthModuleLevel()
+        {
+            // honestly I just do this to ensure the module is well-and-gone if we just removed one,
+            // since this gets called on module-remove and on module-add
+            yield return new WaitForSeconds(1);
+
+            // Iterate over all upgrade modules,
+            // in order to determine our max depth module level
+            int maxDepthModuleLevel = 0;
+            List<string> upgradeSlots = new List<string>();
+            upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
+            foreach (String slot in upgradeSlots)
+            {
+                InventoryItem upgrade = upgradesInput.equipment.GetItemInSlot(slot);
+                if (upgrade != null)
+                {
+                    //Logger.Log(slot + " : " + upgrade.item.name);
+                    if (upgrade.item.name == "ModVehicleDepthModule1(Clone)")
+                    {
+                        if (maxDepthModuleLevel < 1)
+                        {
+                            maxDepthModuleLevel = 1;
+                        }
+                    }
+                    else if (upgrade.item.name == "ModVehicleDepthModule2(Clone)")
+                    {
+                        if (maxDepthModuleLevel < 2)
+                        {
+                            maxDepthModuleLevel = 2;
+                        }
+                    }
+                    else if (upgrade.item.name == "ModVehicleDepthModule3(Clone)")
+                    {
+                        if (maxDepthModuleLevel < 3)
+                        {
+                            maxDepthModuleLevel = 3;
+                        }
+                    }
+                }
+            }
+            GetComponent<CrushDamage>().SetExtraCrushDepth(maxDepthModuleLevel * 400);
         }
         public override void OnCollisionEnter(Collision col)
         {

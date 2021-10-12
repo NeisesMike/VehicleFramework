@@ -353,9 +353,9 @@ namespace VehicleFramework
                 }
             }
 
-            mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>(); //CopyComponent<CrushDamage>(seamoth.GetComponent<CrushDamage>(), mv.gameObject);
+            mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>();
             mv.crushDamage.soundOnDamage = ce;
-            mv.crushDamage.kBaseCrushDepth = 300;
+            mv.crushDamage.kBaseCrushDepth = 900;
             mv.crushDamage.damagePerCrush = 3;
             mv.crushDamage.crushPeriod = 1;
             mv.crushDamage.vehicle = mv;
