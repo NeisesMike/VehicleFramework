@@ -147,21 +147,19 @@ namespace VehicleFramework
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
             {
                 // Configure energy mixin for this battery slot
-                var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
-                em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                em.defaultBattery = seamothEnergyMixin.defaultBattery;
-                em.compatibleBatteries = seamothEnergyMixin.compatibleBatteries;
-                em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
-                em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
-                em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
-                em.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
-                em.batteryModels = seamothEnergyMixin.batteryModels;
-                //atramaEnergyMixin.capacity = 500; //TODO
-                //atramaEnergyMixin.batterySlot = 
+                var energyMixin = vb.BatterySlot.EnsureComponent<EnergyMixin>();
+                energyMixin.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                energyMixin.defaultBattery = seamothEnergyMixin.defaultBattery;
+                energyMixin.compatibleBatteries = seamothEnergyMixin.compatibleBatteries;
+                energyMixin.soundPowerUp = seamothEnergyMixin.soundPowerUp;
+                energyMixin.soundPowerDown = seamothEnergyMixin.soundPowerDown;
+                energyMixin.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
+                energyMixin.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
+                energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
 
-                energyMixins.Add(em);
+                energyMixins.Add(energyMixin);
 
-                vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = em;
+                vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = energyMixin;
             }
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
@@ -258,19 +256,25 @@ namespace VehicleFramework
                 leftVFX.range = pc.Range;
                 mv.lights.Add(pc.Light);
                 mv.volumetricLights.Add(volumetricLight);
+
+                var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
+                RLS.hostLight = thisLight;
             }
             foreach (VehicleParts.VehicleFloodLight pc in mv.FloodLights)
             {
                 CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
-                var leftLight = pc.Light.EnsureComponent<Light>();
-                leftLight.type = LightType.Spot;
-                leftLight.spotAngle = pc.Angle;
-                leftLight.innerSpotAngle = pc.Angle * .75f;
-                leftLight.color = pc.Color;
-                leftLight.intensity = pc.Intensity;
-                leftLight.range = pc.Range;
-                leftLight.shadows = LightShadows.Hard;
+                var thisLight = pc.Light.EnsureComponent<Light>();
+                thisLight.type = LightType.Spot;
+                thisLight.spotAngle = pc.Angle;
+                thisLight.innerSpotAngle = pc.Angle * .75f;
+                thisLight.color = pc.Color;
+                thisLight.intensity = pc.Intensity;
+                thisLight.range = pc.Range;
+                thisLight.shadows = LightShadows.Hard;
                 pc.Light.SetActive(false);
+
+                var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
+                RLS.hostLight = thisLight;
             }
         }
         public static void SetupLiveMixin(ref ModVehicle mv)

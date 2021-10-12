@@ -104,8 +104,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Patches\LeviathanPatches\GhostPatcher.cs" />
-    <Compile Include="Patches\LeviathanPatches\ReaperPatcher.cs" />
+    <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
+    <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
+    <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
