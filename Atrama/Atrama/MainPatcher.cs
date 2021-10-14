@@ -40,22 +40,23 @@ namespace Atrama
     [QModCore]
     public static class MainPatcher
     {
-        internal static AtramaConfig Config { get; private set; }
+        //internal static AtramaConfig Config { get; private set; }
 
         [QModPatch]
         public static void Patch()
         {
-            Config = OptionsPanelHandler.Main.RegisterModOptions<AtramaConfig>();
+            //Config = OptionsPanelHandler.Main.RegisterModOptions<AtramaConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.atrama.mod");
             harmony.PatchAll();
             Atrama.Register();
         }
     }
-
+    /*
     [Menu("Atrama Options")]
     public class AtramaConfig : ConfigFile
     {
         [Toggle("temp")]
         public bool temp = false;
     }
+    */
 }
