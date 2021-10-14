@@ -213,7 +213,7 @@ namespace Atrama
                 VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
                 Transform mainSeat = transform.Find("Chair");
                 vps.Seat = mainSeat.gameObject;
-                vps.SitLocation = mainSeat.gameObject;
+                vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
                 vps.LeftHandLocation = mainSeat;
                 vps.RightHandLocation = mainSeat;
                 list.Add(vps);

@@ -304,8 +304,22 @@ namespace VehicleFramework
         {
             base.EnterVehicle(player, teleport, playEnterAnimation);
         }
+        private IEnumerator SitDownInChair()
+        {
+            Player.main.playerAnimator.SetBool("chair_sit", true);
+            yield return null;
+            Player.main.playerAnimator.SetBool("chair_sit", false);
+        }
+        private IEnumerator StandUpFromChair()
+        {
+            Player.main.playerAnimator.SetBool("chair_stand_up", true);
+            yield return null;
+            Player.main.playerAnimator.SetBool("chair_stand_up", false);
+        }
         public void BeginPiloting()
         {
+            Player.main.EnterSittingMode();
+            StartCoroutine(SitDownInChair());
             base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
             //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
@@ -317,6 +331,7 @@ namespace VehicleFramework
             // this function
             // called by Player.ExitLockedMode()
             // which is triggered on button press
+            StartCoroutine(StandUpFromChair());
             isPilotSeated = false;
             Player.main.transform.SetParent(transform);
             if (thisStopPilotingLocation == null)
