@@ -23,8 +23,12 @@ namespace VehicleFramework.Engines
         // This is useful because otherwise the low-speed light are always blinking
         private const float DEAD_ZONE_SOAK = 50;
         // IMPULSE describes the immediate boost you get from the impulse engines when they fire
-        // the impulse engine recharges every second, so manueverability is not especially nimble
-        private const float IMPULSE_BOOST = 300;
+        // TODO:
+        // I've turned this to (basically) zero because it makes handling a bit awkward.
+        // It works as intended, but I'm not sure what's the right way to trigger it.
+        // Perhaps I can add an Impulse Upgrade Module later on.
+        // NOT TRUE: the impulse engine recharges every second, so manueverability is not especially nimble
+        private const float IMPULSE_BOOST = DEAD_ZONE_SOAK+1;
 
         /* TODO: RacingEngine : VehicleEngine
         private float _timeOfLastImpulse = 0f;
