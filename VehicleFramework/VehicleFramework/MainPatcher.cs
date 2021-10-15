@@ -128,6 +128,9 @@ namespace VehicleFramework
     {
         [Toggle("Flashing Lights")]
         public bool isFlashingLightsEnabled = false;
+
+        [Slider("AI Voice Volume", Step = 1f, DefaultValue = 100, Min = 0, Max = 100)]
+        public float aiVoiceVolume = 100f;
     }
 
 

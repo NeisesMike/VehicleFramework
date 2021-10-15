@@ -51,33 +51,59 @@ namespace VehicleFramework
         }
         public void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Backslash))
+            if (aiEI.hasCharge)
             {
-                EnqueueClip(leveling);
-            }
-            if(speechQueue.Count > 0)
-            {
-                TryPlayNextClipInQueue();
+                if (speechQueue.Count > 0)
+                {
+                    bool tmp = false;
+                    foreach(var but in speakers)
+                    {
+                        if(but.isPlaying)
+                        {
+                            tmp = true;
+                            break;
+                        }
+                    }
+                    if (!tmp)
+                    {
+                        TryPlayNextClipInQueue();
+                    }
+                }
             }
         }
         public void TryPlayNextClipInQueue()
         {
             if (speechQueue.TryDequeue(out AudioClip clip))
             {
+                var nearestSpeaker = speakers.First();
+                float nearestSpeakerDist = Vector3.Distance(Player.main.transform.position, nearestSpeaker.transform.position);
                 foreach(var speaker in speakers)
                 {
-                    speaker.clip = clip;
-                    speaker.Play();
+                    var thisDist = Vector3.Distance(Player.main.transform.position, speaker.transform.position);
+                    if (thisDist < nearestSpeakerDist)
+                    {
+                        nearestSpeaker = speaker;
+                        nearestSpeakerDist = thisDist;
+                    }
                 }
+                nearestSpeaker.volume = MainPatcher.Config.aiVoiceVolume / 100f;
+                nearestSpeaker.clip = clip;
+                nearestSpeaker.Play();
             }
         }
         public void EnqueueClipWithPriority(AudioClip clip, int priority)
         {
-            speechQueue.Enqueue(clip, priority);
+            if (mv && aiEI.hasCharge)
+            {
+                speechQueue.Enqueue(clip, priority);
+            }
         }
         public void EnqueueClip(AudioClip clip)
         {
-            speechQueue.Enqueue(clip, 0);
+            if (mv && aiEI.hasCharge && clip)
+            {
+                speechQueue.Enqueue(clip, 0);
+            }
         }
         IEnumerator GetAudioClip()
         {
