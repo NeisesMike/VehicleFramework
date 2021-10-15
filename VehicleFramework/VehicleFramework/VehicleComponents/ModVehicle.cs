@@ -310,12 +310,22 @@ namespace VehicleFramework
             Player.main.playerAnimator.SetBool("chair_sit", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_sit", false);
+            foreach(var seat in PilotSeats)
+            {
+                // disappear the chair
+                seat.Seat.GetComponent<MeshRenderer>().enabled = false;
+            }
         }
         private IEnumerator StandUpFromChair()
         {
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_stand_up", false);
+            foreach (var seat in PilotSeats)
+            {
+                // re-appear the chair
+                seat.Seat.GetComponent<MeshRenderer>().enabled = true;
+            }
         }
         public void BeginPiloting()
         {
