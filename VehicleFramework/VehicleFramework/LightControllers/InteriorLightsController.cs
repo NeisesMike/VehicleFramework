@@ -10,7 +10,7 @@ namespace VehicleFramework
     public class InteriorLightsController : MonoBehaviour, IPowerListener
 	{
 		private ModVehicle mv;
-        private bool isInteriorLightsOn = true;
+        private bool isInteriorLightsOn = false;
         
         public void Awake()
         {

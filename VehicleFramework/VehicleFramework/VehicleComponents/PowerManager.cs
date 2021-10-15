@@ -27,7 +27,7 @@ namespace VehicleFramework
             public static bool operator ==(PowerStatus lhs, PowerStatus rhs) => lhs.Equals(rhs);
             public static bool operator !=(PowerStatus lhs, PowerStatus rhs) => !(lhs == rhs);
         }
-        private PowerStatus lastStatus = new PowerStatus { hasFuel = true, isPowered = true };
+        private PowerStatus lastStatus = new PowerStatus { hasFuel = false, isPowered = false };
         private PowerEvent latestPowerEvent = PowerEvent.OnBatterySafe;
         private bool isHeadlightsOn = false;
         private bool isFloodlightsOn = false;
