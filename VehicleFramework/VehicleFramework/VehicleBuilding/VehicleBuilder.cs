@@ -181,22 +181,20 @@ namespace VehicleFramework
                 var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
                 em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
                 em.defaultBattery = seamothEnergyMixin.defaultBattery;
-                em.compatibleBatteries = seamothEnergyMixin.compatibleBatteries;
+                em.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell, TechType.Battery, TechType.LithiumIonBattery, TechType.PrecursorIonBattery, TechType.PrecursorIonCrystal };
                 em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
                 em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
                 em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
                 em.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
                 em.batteryModels = seamothEnergyMixin.batteryModels;
-                //atramaEnergyMixin.capacity = 500; //TODO
-                //atramaEnergyMixin.batterySlot = 
 
                 energyMixins.Add(em);
 
                 vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = em;
             }
             // Configure energy interface
-            var eInterf = mv.BackupBatteries[0].BatterySlot.EnsureComponent<EnergyInterface>();
-            eInterf.sources = energyMixins.ToArray();
+            mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();
+            mv.AIEnergyInterface.sources = energyMixins.ToArray();
         }
         public static void SetupLightSounds(ref ModVehicle mv)
         {

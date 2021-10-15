@@ -9,7 +9,7 @@ using VehicleFramework.Engines;
 
 namespace VehicleFramework
 {
-    public abstract class ModVehicle : Vehicle
+    public abstract class ModVehicle : Vehicle, ICraftTarget
         {
             public override string vehicleDefaultName
             {
@@ -83,6 +83,8 @@ namespace VehicleFramework
 
         public bool isRegistered = false;
 
+        public EnergyInterface AIEnergyInterface;
+
         // later
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;
@@ -102,7 +104,6 @@ namespace VehicleFramework
             headlights = gameObject.EnsureComponent<HeadLightsController>();
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
-
 
             gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
@@ -684,13 +685,11 @@ namespace VehicleFramework
                 }
             }
         }
-
         public bool GetIsUnderwater()
         {
             // TODO: justify this constant
             return transform.position.y < 0.75f;
         }
-
         public static void MaybeControlRotation(Vehicle veh)
         {
             ModVehicle mv = veh as ModVehicle;
@@ -699,6 +698,24 @@ namespace VehicleFramework
                 ModVehicleEngine mve = mv.GetComponent<ModVehicleEngine>();
                 mve.ControlRotation();
             }
+        }
+        public void OnCraftEnd(TechType techType)
+        {
+            StartCoroutine(GiveUsABatteryOrGiveUsDeath());
+        }
+        private IEnumerator GiveUsABatteryOrGiveUsDeath()
+        {
+            yield return new WaitForSeconds(2.5f);
+
+            // give us an AI battery please
+            GameObject newBattery = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Battery, true));
+            newBattery.GetComponent<Battery>().charge = 100;
+            newBattery.transform.SetParent(StorageRootObject.transform);
+            AIEnergyInterface.sources.First().battery = newBattery.GetComponent<Battery>();
+            AIEnergyInterface.sources.First().batterySlot.AddItem(newBattery.GetComponent<Pickupable>());
+            newBattery.SetActive(false);
+
+            //GetComponent<InteriorLightsController>().EnableInteriorLighting();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace VehicleFramework
     public class AutoPilotVoice : MonoBehaviour
     {
         public ModVehicle mv;
+        public EnergyInterface aiEI;
         private List<AudioSource> speakers = new List<AudioSource>();
         private PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
 
@@ -25,6 +26,7 @@ namespace VehicleFramework
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
+            aiEI = mv.AIEnergyInterface;
         }
         public void Start()
         {
