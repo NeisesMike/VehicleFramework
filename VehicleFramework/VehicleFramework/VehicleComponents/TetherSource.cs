@@ -40,7 +40,10 @@ namespace VehicleFramework
                         var tmp = Vector3.Distance(Player.main.transform.position, tethersrc.transform.position);
                         if (tmp < 0.75f)
                         {
-                            mv.PlayerEntry();
+                            if (!mv.IsPlayerInside())
+                            {
+                                mv.PlayerEntry();
+                            }
                             isTetherEstablished = true;
                             Player.main.GetComponent<ModVehicleTether>().CatchTether(mv);
                             break;
