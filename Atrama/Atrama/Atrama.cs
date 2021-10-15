@@ -330,7 +330,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override List<GameObject> NavigationPortLights
         {
             get
@@ -355,7 +354,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override List<GameObject> NavigationPositionLights
         {
             get
@@ -368,7 +366,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override List<GameObject> NavigationWhiteStrobeLights
         {
             get
@@ -381,7 +378,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override List<GameObject> NavigationRedStrobeLights
         {
             get
@@ -394,7 +390,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override List<VehicleBattery> BackupBatteries
         {
             get
@@ -406,7 +401,6 @@ namespace Atrama
                 return list;
             }
         }
-
         public override GameObject CollisionModel
         {
             get
