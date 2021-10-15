@@ -140,7 +140,7 @@ namespace VehicleFramework.Engines
             rb.centerOfMass = Vector3.zero;
         }
         // Update is called once per frame
-        public void FixedUpdate()
+        public virtual void FixedUpdate()
         {
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater())
@@ -200,7 +200,7 @@ namespace VehicleFramework.Engines
             strafe,
             updown
         }
-        public void ApplyPlayerControls(Vector3 moveDirection)
+        public virtual void ApplyPlayerControls(Vector3 moveDirection)
         {
             // Control velocity
             UpdateRightMomentum(moveDirection.x);
