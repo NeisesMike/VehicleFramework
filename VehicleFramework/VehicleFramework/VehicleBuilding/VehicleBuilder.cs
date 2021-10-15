@@ -292,6 +292,12 @@ namespace VehicleFramework
             lmData.invincibleInCreative = true;
             lmData.weldable = false;
             lmData.minDamageForSound = 20f;
+            /*
+             * Other Max Health Values
+             * Seamoth: 200
+             * Prawn: 600
+             * Cyclops: 1500
+             */
             lmData.maxHealth = 1000;
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
@@ -439,9 +445,9 @@ namespace VehicleFramework
             var tempdamg = mv.gameObject.EnsureComponent<TemperatureDamage>();
             tempdamg.lavaDatabase = seamoth.GetComponent<TemperatureDamage>().lavaDatabase;
             tempdamg.liveMixin = mv.liveMixin;
+            tempdamg.baseDamagePerSecond = 2.0f; // 10 times what the seamoth takes, since the Atrama 
             // the following configurations are the same values the seamoth takes
             tempdamg.minDamageTemperature = 70f;
-            tempdamg.baseDamagePerSecond = 0.2f;
             tempdamg.onlyLavaDamage = false;
             tempdamg.timeDamageStarted = -1000;
             tempdamg.timeLastDamage = 0;
