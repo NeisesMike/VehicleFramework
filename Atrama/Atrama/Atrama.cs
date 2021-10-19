@@ -151,20 +151,24 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
 
-                VehicleFramework.VehicleParts.VehicleFloodLight leftLight = new VehicleFramework.VehicleParts.VehicleFloodLight();
-                leftLight.Light = transform.Find("HeadLights/LeftLight").gameObject;
-                leftLight.Angle = 60;
-                leftLight.Color = Color.white;
-                leftLight.Intensity = 1.5f;
-                leftLight.Range = 120f;
+                VehicleFramework.VehicleParts.VehicleFloodLight leftLight = new VehicleFramework.VehicleParts.VehicleFloodLight
+                {
+                    Light = transform.Find("lights_parent/HeadLights/LeftLight").gameObject,
+                    Angle = 60,
+                    Color = Color.white,
+                    Intensity = 1.5f,
+                    Range = 120f
+                };
                 list.Add(leftLight);
 
-                VehicleFramework.VehicleParts.VehicleFloodLight rightLight = new VehicleFramework.VehicleParts.VehicleFloodLight();
-                rightLight.Light = transform.Find("HeadLights/RightLight").gameObject;
-                rightLight.Angle = 60;
-                rightLight.Color = Color.white;
-                rightLight.Intensity = 1.5f;
-                rightLight.Range = 120f;
+                VehicleFramework.VehicleParts.VehicleFloodLight rightLight = new VehicleFramework.VehicleParts.VehicleFloodLight
+                {
+                    Light = transform.Find("lights_parent/HeadLights/RightLight").gameObject,
+                    Angle = 60,
+                    Color = Color.white,
+                    Intensity = 1.5f,
+                    Range = 120f
+                };
                 list.Add(rightLight);
 
                 return list;
@@ -176,30 +180,36 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
 
-                VehicleFramework.VehicleParts.VehicleFloodLight mainFlood = new VehicleFramework.VehicleParts.VehicleFloodLight();
-                mainFlood.Light = transform.Find("FloodLights/main").gameObject;
-                mainFlood.Angle = 120;
-                mainFlood.Color = Color.white;
-                mainFlood.Intensity = 1f;
-                mainFlood.Range = 100f;
+                VehicleFramework.VehicleParts.VehicleFloodLight mainFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
+                {
+                    Light = transform.Find("lights_parent/FloodLights/main").gameObject,
+                    Angle = 120,
+                    Color = Color.white,
+                    Intensity = 1f,
+                    Range = 100f
+                };
                 list.Add(mainFlood);
 
 
-                VehicleFramework.VehicleParts.VehicleFloodLight portFlood = new VehicleFramework.VehicleParts.VehicleFloodLight();
-                portFlood.Light = transform.Find("FloodLights/port").gameObject;
-                portFlood.Angle = 90;
-                portFlood.Color = Color.white;
-                portFlood.Intensity = 1;
-                portFlood.Range = 100f;
+                VehicleFramework.VehicleParts.VehicleFloodLight portFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
+                {
+                    Light = transform.Find("lights_parent/FloodLights/port").gameObject,
+                    Angle = 90,
+                    Color = Color.white,
+                    Intensity = 1,
+                    Range = 100f
+                };
                 list.Add(portFlood);
 
 
-                VehicleFramework.VehicleParts.VehicleFloodLight starboardFlood = new VehicleFramework.VehicleParts.VehicleFloodLight();
-                starboardFlood.Light = transform.Find("FloodLights/starboard").gameObject;
-                starboardFlood.Angle = 90;
-                starboardFlood.Color = Color.white;
-                starboardFlood.Intensity = 1f;
-                starboardFlood.Range = 100f;
+                VehicleFramework.VehicleParts.VehicleFloodLight starboardFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
+                {
+                    Light = transform.Find("lights_parent/FloodLights/starboard").gameObject,
+                    Angle = 90,
+                    Color = Color.white,
+                    Intensity = 1f,
+                    Range = 100f
+                };
                 list.Add(starboardFlood);
 
                 return list;
@@ -335,7 +345,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("NavigationLights/PortLights"))
+                foreach (Transform child in transform.Find("lights_parent/NavigationLights/PortLights"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -347,7 +357,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("NavigationLights/StarboardLights"))
+                foreach (Transform child in transform.Find("lights_parent/NavigationLights/StarboardLights"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -359,7 +369,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("NavigationLights/PositionLights"))
+                foreach (Transform child in transform.Find("lights_parent/NavigationLights/PositionLights"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -371,7 +381,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("NavigationLights/WhiteStrobes"))
+                foreach (Transform child in transform.Find("lights_parent/NavigationLights/WhiteStrobes"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -383,7 +393,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("NavigationLights/RedStrobes"))
+                foreach (Transform child in transform.Find("lights_parent/NavigationLights/RedStrobes"))
                 {
                     list.Add(child.gameObject);
                 }
