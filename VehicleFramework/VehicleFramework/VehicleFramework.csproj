@@ -107,6 +107,7 @@
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
+    <Compile Include="Patches\CreaturePatches\WarperPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk1.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk2.cs" />

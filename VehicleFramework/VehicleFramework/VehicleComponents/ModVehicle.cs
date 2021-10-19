@@ -318,6 +318,17 @@ namespace VehicleFramework
         }
         private IEnumerator StandUpFromChair()
         {
+            /* TODO: if we get hit with a WarpBall *while* we're still animating our sit-down,
+             * (That is, if a WarpBall hits us after we click the chair but before our bottom touches the seat)
+             * we'll get stuck in the sit-down position while we swim or walk around,
+             * but this is fixed the next time we sit down.
+             * The bug seems to be cosmetic only.
+            while (Player.main.playerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
+            {  //If normalizedTime is 0 to 1 means animation is playing, if greater than 1 means finished
+                Debug.Log("playing");
+                yield return null;
+            }
+            */
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_stand_up", false);
@@ -726,6 +737,17 @@ namespace VehicleFramework
             newBattery.SetActive(false);
 
             //GetComponent<InteriorLightsController>().EnableInteriorLighting();
+        }
+        public void ForceExitLockedMode()
+        {
+            GameInput.ClearInput();
+            Player.main.playerController.SetEnabled(true);
+            Player.main.mode = Player.Mode.Normal;
+            Player.main.playerModeChanged.Trigger(Player.main.mode);
+            Player.main.sitting = false;
+            Player.main.playerController.ForceControllerSize();
+            Player.main.transform.parent = null;
+            StopPiloting();
         }
     }
 }
