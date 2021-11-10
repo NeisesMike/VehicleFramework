@@ -213,12 +213,15 @@ namespace VehicleFramework
                         break;
                 }
             }
-            BuildVehicleModuleSlots(6, true);
+            // TODO: fix this constant value somehow
+            BuildVehicleModuleSlots(12, true);
             main.areModulesReady = true;
             haveSlotsBeenInited = true;
         }
         public void BuildVehicleModuleSlots(int modules, bool arms)
         {
+            int numModules = arms ? modules + 2 : modules;
+
             // build, link, and position modules
             for (int i=0; i<modules; i++)
             {
@@ -232,35 +235,42 @@ namespace VehicleFramework
 
                 LinkModule(ref thisModule);
 
-                DistributeModule(ref thisModule, i, modules + 2);
+                DistributeModule(ref thisModule, i, numModules);
 
                 if (i == 0)
                 {
                     AddBackgroundImage(ref thisModule);
                 }
             }
+
             // build, link, and position left arm
             GameObject leftArm = GetLeftArmSlot();
-            leftArm.name = "VehicleArmLeft";
-            leftArm.SetActive(false);
-            leftArm.transform.SetParent(equipment.transform, false);
-            leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0); // need to flip this hand to look "left"
-            leftArm.transform.localScale = Vector3.one;
-            leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmLeft";
-            leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
-            LinkArm(ref leftArm);
-            DistributeModule(ref leftArm, modules, modules + 2);
+            if (arms)
+            {
+                leftArm.name = "VehicleArmLeft";
+                leftArm.SetActive(false);
+                leftArm.transform.SetParent(equipment.transform, false);
+                leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0); // need to flip this hand to look "left"
+                leftArm.transform.localScale = Vector3.one;
+                leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmLeft";
+                leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
+                LinkArm(ref leftArm);
+                DistributeModule(ref leftArm, modules, numModules);
+            }
 
             // build, link, and position right arm
             GameObject rightArm = GetRightArmSlot();
-            rightArm.name = "VehicleArmRight";
-            rightArm.SetActive(false);
-            rightArm.transform.SetParent(equipment.transform, false);
-            rightArm.transform.localScale = Vector3.one;
-            rightArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmRight";
-            rightArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
-            LinkArm(ref rightArm);
-            DistributeModule(ref rightArm, modules + 1, modules + 2);
+            if (arms)
+            {
+                rightArm.name = "VehicleArmRight";
+                rightArm.SetActive(false);
+                rightArm.transform.SetParent(equipment.transform, false);
+                rightArm.transform.localScale = Vector3.one;
+                rightArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmRight";
+                rightArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
+                LinkArm(ref rightArm);
+                DistributeModule(ref rightArm, modules + 1, numModules);
+            }
         }
         public void LinkModule(ref GameObject thisModule)
         {

@@ -21,7 +21,10 @@ namespace VehicleFramework
          * This collection of patches ensures our new upgrade slots interact nicely with the base game's Equipment class.
          */
 
-        public static List<string> vehicleModuleSlots = new List<string> { "VehicleModule0", "VehicleModule1", "VehicleModule2", "VehicleModule3", "VehicleModule4", "VehicleModule5" };
+        public static List<string> vehicleModuleSlots = new List<string> { "VehicleModule0", "VehicleModule1", "VehicleModule2",
+                                                                           "VehicleModule3", "VehicleModule4", "VehicleModule5",
+                                                                           "VehicleModule6", "VehicleModule7", "VehicleModule8",
+                                                                           "VehicleModule9", "VehicleModule10", "VehicleModule11"};
         public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight" };
 
         public static Dictionary<EquipmentType, List<string>> vehicleTypeToSlots = new Dictionary<EquipmentType, List<string>>

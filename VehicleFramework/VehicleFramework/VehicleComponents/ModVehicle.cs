@@ -85,6 +85,9 @@ namespace VehicleFramework
 
         public EnergyInterface AIEnergyInterface;
 
+        public int numVehicleModules;
+        public bool hasArms;
+
         // later
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;
@@ -124,10 +127,12 @@ namespace VehicleFramework
             // Not only is the syntax gross,
             // but the decals are inexplicably invisible in-game
             // I'm pretty sure this is the right camera...
+            /*
             foreach (Canvas decalCanvas in NameDecals[0].transform.parent.gameObject.GetAllComponentsInChildren<Canvas>())
             {
                 decalCanvas.worldCamera = MainCamera.camera;
             }
+            */
 
             gameObject.EnsureComponent<PowerManager>();
             //gameObject.EnsureComponent<FuelGauge>();
@@ -425,24 +430,33 @@ namespace VehicleFramework
         {
             return "";
         }
+        private string[] _slotIDs = null;
 		public override string[] slotIDs
 		{
 			get
 			{
+                if (_slotIDs == null)
+                {
+                    _slotIDs = GenerateSlotIDs(numVehicleModules, hasArms);
+                }
 				return _slotIDs;
 			}
         }
-        private static readonly string[] _slotIDs = new string[]
+        private static string[] GenerateSlotIDs(int modules, bool arms)
         {
-            "VehicleModule0",
-            "VehicleModule1",
-            "VehicleModule2",
-            "VehicleModule3",
-            "VehicleModule4",
-            "VehicleModule5",
-            "VehicleArmLeft",
-            "VehicleArmRight"
-        };
+            int numModules = arms ? modules + 2 : modules;
+            string[] retIDs = new string[numModules];
+            for(int i=0; i<modules; i++)
+            {
+                retIDs[i] = "VehicleModule" + i.ToString();
+            }
+            if(arms)
+            {
+                retIDs[modules] = "VehicleArmLeft";
+                retIDs[modules + 1] = "VehicleArmRight";
+            }
+            return retIDs;
+        }
         /*
         public override QuickSlotType GetQuickSlotType(int slotID, out TechType techType)
         {
@@ -527,7 +541,7 @@ namespace VehicleFramework
                 case VehicleBuilder.InnateStorage:
                     {
                         InnateStorageContainer vsc;
-                        if(0 <= slotID && slotID <= 1)
+                        if(0 <= slotID && slotID < InnateStorages.Count)
                         {
                             vsc = InnateStorages[slotID].Container.GetComponent<InnateStorageContainer>();
                         }

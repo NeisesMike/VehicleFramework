@@ -60,6 +60,9 @@ namespace VehicleFramework
 
         public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms)
         {
+            mv.numVehicleModules = modules;
+            mv.hasArms = arms > 0;
+
             Instrument(ref mv, engine, pingType);
             prefabs.Add(mv);
             VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
