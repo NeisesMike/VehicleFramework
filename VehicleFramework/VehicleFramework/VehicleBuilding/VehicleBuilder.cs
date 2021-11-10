@@ -303,7 +303,7 @@ namespace VehicleFramework
             lmData.destroyOnDeath = true;
             lmData.explodeOnDestroy = true;
             lmData.invincibleInCreative = true;
-            lmData.weldable = false;
+            lmData.weldable = true;
             lmData.minDamageForSound = 20f;
             /*
              * Other Max Health Values
