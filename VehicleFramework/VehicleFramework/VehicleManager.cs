@@ -42,7 +42,7 @@ namespace VehicleFramework
             }
             return craftables;
         }
-        public static void RegisterVehicle(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms)
+        public static void RegisterVehicle(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth)
         {
             bool isNewEntry = true;
             foreach (VehicleEntry ve in vehicleTypes)
@@ -56,7 +56,7 @@ namespace VehicleFramework
             }
             if (isNewEntry)
             {
-                VehicleBuilder.Prefabricate(ref mv, engine, recipe, pt, sprite, modules, arms);
+                VehicleBuilder.Prefabricate(ref mv, engine, recipe, pt, sprite, modules, arms, baseCrushDepth);
                 Logger.Log("Registered the " + mv.gameObject.name);
             }
         }
