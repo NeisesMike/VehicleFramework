@@ -613,5 +613,61 @@ namespace VehicleFramework
             return SpriteManager.Get(SpriteManager.Group.Pings, name);
         }
 
+
+        /*
+        //https://github.com/Metious/MetiousSubnauticaMods/blob/master/CustomDataboxes/API/Databox.cs
+        public static void VehicleDataboxPatch(CustomDataboxes.API.Databox databox)
+        {
+            string result = "";
+
+            if (string.IsNullOrEmpty(databox.DataboxID))
+                result += "Missing required Info 'DataboxID'\n";
+            if (string.IsNullOrEmpty(databox.PrimaryDescription))
+                result += "Missing required Info 'PrimaryDescription'\n";
+            if (!string.IsNullOrEmpty(result))
+            {
+                string msg = "Unable to patch\n" + result;
+                Logger.Log(msg);
+                throw new InvalidOperationException(msg);
+            }
+
+            var dataBox = new CustomDataboxes.Databoxes.CustomDatabox(DataboxID)
+            {
+                PrimaryDescription = this.PrimaryDescription,
+                SecondaryDescription = this.SecondaryDescription,
+                TechTypeToUnlock = this.TechTypeToUnlock,
+                BiomesToSpawn = BiomesToSpawnIn,
+                coordinatedSpawns = CoordinatedSpawns,
+                ModifyGameObject = this.ModifyGameObject
+            };
+            dataBox.Patch();
+
+            TechType = dataBox.TechType;
+        }
+        */
+        public static void ScatterDataBoxes(List<VehicleCraftable> craftables)
+        {
+            List<Spawnable.SpawnLocation> spawnLocations = new List<Spawnable.SpawnLocation>
+            {
+                new Spawnable.SpawnLocation(Vector3.zero, Vector3.zero),
+                new Spawnable.SpawnLocation(new Vector3(50,0,0), Vector3.zero),
+                new Spawnable.SpawnLocation(new Vector3(100,0,0), Vector3.zero),
+                new Spawnable.SpawnLocation(new Vector3(200,0,0), Vector3.zero),
+                new Spawnable.SpawnLocation(new Vector3(400,0,0), Vector3.zero),
+            };
+
+            foreach (var craftable in craftables)
+            {
+                CustomDataboxes.API.Databox myDatabox = new CustomDataboxes.API.Databox()
+                {
+                    DataboxID = craftable.ClassID + "_databox",
+                    PrimaryDescription = craftable.FriendlyName + "_databox",
+                    SecondaryDescription = "wow so cool",
+                    CoordinatedSpawns = spawnLocations,
+                    TechTypeToUnlock = craftable.TechType
+                };
+                myDatabox.Patch();
+            }
+        }
     }
 }
