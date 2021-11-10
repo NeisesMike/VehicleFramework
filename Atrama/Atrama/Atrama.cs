@@ -67,7 +67,7 @@ namespace Atrama
         {
             GetAssets();
             ModVehicle atrama = model.EnsureComponent<Atrama>() as ModVehicle;
-            VehicleManager.RegisterVehicle(ref atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2);
+            VehicleManager.RegisterVehicle(ref atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2, 900);
         }
 
         public override string vehicleDefaultName

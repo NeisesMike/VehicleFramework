@@ -58,12 +58,12 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms)
+        public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth)
         {
             mv.numVehicleModules = modules;
             mv.hasArms = arms > 0;
 
-            Instrument(ref mv, engine, pingType);
+            Instrument(ref mv, engine, pingType, baseCrushDepth);
             prefabs.Add(mv);
             VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
@@ -351,7 +351,7 @@ namespace VehicleFramework
             mv.splashSound = seamoth.GetComponent<SeaMoth>().splashSound;
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
-        public static void SetupCrushDamage(ref ModVehicle mv)
+        public static void SetupCrushDamage(ref ModVehicle mv, int baseCrushDepth)
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
@@ -365,7 +365,7 @@ namespace VehicleFramework
 
             mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>();
             mv.crushDamage.soundOnDamage = ce;
-            mv.crushDamage.kBaseCrushDepth = 900;
+            mv.crushDamage.kBaseCrushDepth = baseCrushDepth;
             mv.crushDamage.damagePerCrush = 3;
             mv.crushDamage.crushPeriod = 1;
             mv.crushDamage.vehicle = mv;
@@ -471,7 +471,7 @@ namespace VehicleFramework
 
 
         #endregion
-        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType)
+        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
@@ -490,7 +490,7 @@ namespace VehicleFramework
             SetupLargeWorldEntity(ref mv);
             SetupHudPing(ref mv, pingType);
             SetupVehicleConfig(ref mv);
-            SetupCrushDamage(ref mv);
+            SetupCrushDamage(ref mv, baseCrushDepth);
             SetupWaterClipping(ref mv);
             SetupCollisionSound(ref mv);
             SetupOutOfBoundsWarp(ref mv);
