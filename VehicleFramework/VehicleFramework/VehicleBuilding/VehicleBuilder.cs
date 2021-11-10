@@ -58,12 +58,12 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth)
+        public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
         {
             mv.numVehicleModules = modules;
             mv.hasArms = arms > 0;
 
-            Instrument(ref mv, engine, pingType, baseCrushDepth);
+            Instrument(ref mv, engine, pingType, baseCrushDepth, maxHealth);
             prefabs.Add(mv);
             VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
@@ -294,7 +294,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public static void SetupLiveMixin(ref ModVehicle mv)
+        public static void SetupLiveMixin(ref ModVehicle mv, int maxHealth)
         {
             var liveMixin = mv.gameObject.EnsureComponent<LiveMixin>();
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
@@ -309,9 +309,12 @@ namespace VehicleFramework
              * Other Max Health Values
              * Seamoth: 200
              * Prawn: 600
+             * Odyssey: 667
+             * Atrama: 1000
              * Cyclops: 1500
              */
-            lmData.maxHealth = 1000;
+            lmData.maxHealth = maxHealth;
+            liveMixin.health = maxHealth;
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
         }
@@ -482,7 +485,7 @@ namespace VehicleFramework
 
 
         #endregion
-        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth)
+        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
@@ -494,7 +497,7 @@ namespace VehicleFramework
             mv.enabled = true;
             SetupLights(ref mv);
             SetupLightSounds(ref mv);
-            SetupLiveMixin(ref mv);
+            SetupLiveMixin(ref mv, maxHealth);
             SetupRigidbody(ref mv);
             SetupEngine(ref mv, engine);
             SetupWorldForces(ref mv);
