@@ -16,6 +16,7 @@ using QModManager.API.ModLoading;
 using SMLHelper.V2.Utility;
 using SMLHelper.V2.Json.Attributes;
 using VehicleFramework.UpgradeModules;
+using SMLHelper.V2.Assets;
 
 using upgrades = System.Collections.Generic.Dictionary<string, TechType>;
 using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<TechType>>>;
@@ -107,19 +108,33 @@ namespace VehicleFramework
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
             harmony.PatchAll();
 
+            // Patch SubnauticaMap with appropriate ping sprites, lest it crash.
             var type = Type.GetType("SubnauticaMap.PingMapIcon, SubnauticaMap", false, false);
             if (type != null)
             {
                 var pingOriginal = AccessTools.Method(type, "Refresh");
-                var pingPrefix = new HarmonyMethod(AccessTools.Method(typeof(MapModPatcher), "Prefix"));
+                var pingPrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.MapModPatcher), "Prefix"));
                 harmony.Patch(pingOriginal, pingPrefix);
             }
+
+            // Patch SlotExtender, lest it break or break us
+            /*
+            var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
+            if (type2 != null)
+            {
+                var awakeOriginal = AccessTools.Method(type2, "Prefix");
+                var awakePrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePrefix"));
+                harmony.Patch(awakeOriginal, awakePrefix);
+            }
+            */
         }
 
         [QModPostPatch]
         public static void PostPatch()
         {
-            VehicleManager.PatchCraftables();
+            List<VehicleCraftable> craftables = VehicleManager.PatchCraftables();
+
+            //VehicleBuilder.ScatterDataBoxes(craftables);
         }
     }
 
