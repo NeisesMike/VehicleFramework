@@ -195,5 +195,13 @@ namespace VehicleFramework.Engines
             rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
             rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
         }
+
+        public override void DrainPower(Vector3 moveDirection)
+        {
+            float scalarFactor = 0.75f;
+            float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
+            float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+            mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+        }
     }
 }

@@ -230,7 +230,7 @@ namespace VehicleFramework.Engines
             rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
             rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
         }
-        public void DrainPower(Vector3 moveDirection)
+        public virtual void DrainPower(Vector3 moveDirection)
         {
             /* Rationale for these values
              * Seamoth spends this on Update
