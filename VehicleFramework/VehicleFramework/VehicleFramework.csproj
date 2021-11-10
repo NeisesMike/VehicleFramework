@@ -41,6 +41,12 @@
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="CustomDataboxes">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\QMods\CustomDataboxes\CustomDataboxes.dll</HintPath>
+    </Reference>
+    <Reference Include="GroundedItems">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\QMods\GroundedItems\GroundedItems.dll</HintPath>
+    </Reference>
     <Reference Include="QModInstaller">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\QModManager\QModInstaller.dll</HintPath>
     </Reference>
@@ -104,11 +110,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\WarperPatcher.cs" />
+    <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
+    <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk1.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk2.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk3.cs" />
@@ -118,12 +127,13 @@
     <Compile Include="Interfaces\IPowerListener.cs" />
     <Compile Include="Interfaces\ILightsStatusListener.cs" />
     <Compile Include="BuildBotManager.cs" />
-    <Compile Include="Patches\MapModPatcher.cs" />
+    <Compile Include="Patches\CompatibilityPatches\MapModPatcher.cs" />
     <Compile Include="Patches\VFXConstructingPatch.cs" />
     <Compile Include="ControlPanel\ControlPanel.cs" />
     <Compile Include="ControlPanel\ControlPanelButton.cs" />
     <Compile Include="StorageComponents\StorageInput.cs" />
     <Compile Include="StorageComponents\InnateStorageInput.cs" />
+    <Compile Include="VehicleComponents\Engines\Odyssey.cs" />
     <Compile Include="VehicleComponents\Engines\ModVehicleEngine.cs" />
     <Compile Include="VehicleComponents\PowerManager.cs" />
     <Compile Include="VehicleComponents\TetherSource.cs" />
