@@ -509,6 +509,7 @@ namespace VehicleFramework
             SetupSoundOnDamage(ref mv);
             SetupDealDamageOnImpact(ref mv);
             SetupDamageComponents(ref mv);
+            mv.collisionModel = mv.CollisionModel;
 
             ApplySkyAppliers(ref mv);
 
