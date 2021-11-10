@@ -56,7 +56,5 @@ namespace Atrama
         public override List<VehicleFloodLight> HeadLights => throw new NotImplementedException();
 
         public override List<VehicleFloodLight> FloodLights => throw new NotImplementedException();
-
-        public override GameObject CollisionModel => throw new NotImplementedException();
     }
 }
