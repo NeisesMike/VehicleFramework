@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Reflection;
+using HarmonyLib;
 
 /*
  * DEPENDS:
@@ -18,6 +20,7 @@ namespace VehicleFramework
     {
         public static ModuleBuilder main;
         public Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
+        public Dictionary<string, uGUI_EquipmentSlot> baseVehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
         public bool isEquipmentInit = false;
         public bool areModulesReady = false;
 
@@ -103,6 +106,17 @@ namespace VehicleFramework
                 }
                 vehicleAllSlots["VehicleArmLeft"] = equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>();
                 vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
+            }
+
+            var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
+            if (type2 != null)
+            {
+                var awakeOriginal = AccessTools.Method(type2, "Prefix");
+                uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
+                object dummyInstance = null;
+                Patches.CompatibilityPatches.SlotExtenderPatcher.hasGreenLight = true;
+                awakeOriginal.Invoke(dummyInstance, new object[] { equipment });
+                Patches.CompatibilityPatches.SlotExtenderPatcher.hasGreenLight = false;
             }
         }
         public void grabComponents()
