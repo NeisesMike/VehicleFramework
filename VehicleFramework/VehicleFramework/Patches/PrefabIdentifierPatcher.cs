@@ -13,6 +13,7 @@ namespace VehicleFramework.Patches
      * allowing me to scatter databoxes somewhat randomly,
      * and allowing them to settle to the floor naturally.
      */
+    /*
     [HarmonyPatch(typeof(UniqueIdentifier))]
     class UniqueIdentifierPatcher
     {
@@ -29,4 +30,5 @@ namespace VehicleFramework.Patches
             }
         }
     }
+    */
 }

@@ -648,7 +648,6 @@ namespace VehicleFramework
 
             TechType = dataBox.TechType;
         }
-        */
         public static void ScatterDataBoxes(List<VehicleCraftable> craftables)
         {
             List<Spawnable.SpawnLocation> spawnLocations = new List<Spawnable.SpawnLocation>
@@ -673,5 +672,6 @@ namespace VehicleFramework
                 myDatabox.Patch();
             }
         }
+        */
     }
 }
