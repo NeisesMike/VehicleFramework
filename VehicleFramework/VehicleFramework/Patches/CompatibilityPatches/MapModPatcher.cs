@@ -7,7 +7,7 @@ using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches.CompatibilityPatches
 {
     public static class MapModPatcher
     {
