@@ -31,6 +31,13 @@ namespace VehicleFramework
         {
             UnityEngine.Debug.Log("[VehicleFramework] " + message);
         }
+        public static void DebugLog(string message)
+        {
+            if (MainPatcher.Config.isDebugLogging)
+            {
+                UnityEngine.Debug.Log("[VehicleFramework] " + message);
+            }
+        }
         public static void Log(string format, params object[] args)
         {
             UnityEngine.Debug.Log("[VehicleFramework] " + string.Format(format, args));
@@ -146,6 +153,9 @@ namespace VehicleFramework
 
         [Slider("AI Voice Volume", Step = 1f, DefaultValue = 100, Min = 0, Max = 100)]
         public float aiVoiceVolume = 100f;
+
+        [Toggle("Enable Debug Logs")]
+        public bool isDebugLogging = false;
     }
 
 

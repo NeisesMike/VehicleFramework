@@ -117,134 +117,134 @@ namespace VehicleFramework
 
         void ILightsStatusListener.OnHeadLightsOn()
         {
-            Logger.Log("OnHeadLightsOn");
+            Logger.DebugLog("OnHeadLightsOn");
         }
 
         void ILightsStatusListener.OnHeadLightsOff()
         {
-            Logger.Log("OnHeadLightsOff");
+            Logger.DebugLog("OnHeadLightsOff");
         }
 
         void ILightsStatusListener.OnInteriorLightsOn()
         {
-            Logger.Log("OnInteriorLightsOn");
+            Logger.DebugLog("OnInteriorLightsOn");
         }
 
         void ILightsStatusListener.OnInteriorLightsOff()
         {
-            Logger.Log("OnInteriorLightsOff");
+            Logger.DebugLog("OnInteriorLightsOff");
         }
 
         void ILightsStatusListener.OnNavLightsOn()
         {
-            Logger.Log("OnNavLightsOn");
+            Logger.DebugLog("OnNavLightsOn");
         }
 
         void ILightsStatusListener.OnNavLightsOff()
         {
-            Logger.Log("OnNavLightsOff");
+            Logger.DebugLog("OnNavLightsOff");
         }
 
         void ILightsStatusListener.OnFloodLightsOn()
         {
-            Logger.Log("OnFloodLightsOn");
+            Logger.DebugLog("OnFloodLightsOn");
         }
 
         void ILightsStatusListener.OnFloodLightsOff()
         {
-            Logger.Log("OnFloodLightsOff");
+            Logger.DebugLog("OnFloodLightsOff");
         }
 
         void IVehicleStatusListener.OnTakeDamage()
         {
-            Logger.Log("OnTakeDamage");
+            Logger.DebugLog("OnTakeDamage");
         }
 
         void IPowerListener.OnPowerUp()
         {
-            Logger.Log("OnPowerUp");
+            Logger.DebugLog("OnPowerUp");
             isDead = false;
             voice.EnqueueClip(voice.poweringUp);
         }
 
         void IPowerListener.OnPowerDown()
         {
-            Logger.Log("OnPowerDown");
+            Logger.DebugLog("OnPowerDown");
             isDead = true;
             autoLeveling = false;
         }
 
         void IPowerListener.OnBatterySafe()
         {
-            Logger.Log("OnBatterySafe");
+            Logger.DebugLog("OnBatterySafe");
         }
 
         void IPowerListener.OnBatteryLow()
         {
-            Logger.Log("OnBatteryLow");
+            Logger.DebugLog("OnBatteryLow");
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
         {
-            Logger.Log("OnBatteryNearlyEmpty");
+            Logger.DebugLog("OnBatteryNearlyEmpty");
         }
 
         void IPowerListener.OnBatteryDepleted()
         {
-            Logger.Log("OnBatteryDepleted");
+            Logger.DebugLog("OnBatteryDepleted");
         }
 
         void IPlayerListener.OnPlayerEntry()
         {
-            Logger.Log("OnPlayerEntry");
+            Logger.DebugLog("OnPlayerEntry");
             // TODO: conditional welcome aboard lines
             voice.EnqueueClip(voice.welcomeAboardCASO);
         }
 
         void IPlayerListener.OnPlayerExit()
         {
-            Logger.Log("OnPlayerExit");
+            Logger.DebugLog("OnPlayerExit");
         }
 
         void IPlayerListener.OnPilotBegin()
         {
-            Logger.Log("OnPilotBegin");
+            Logger.DebugLog("OnPilotBegin");
         }
 
         void IPlayerListener.OnPilotEnd()
         {
-            Logger.Log("OnPilotEnd");
+            Logger.DebugLog("OnPilotEnd");
         }
 
         void IPowerListener.OnBatteryDead()
         {
-            Logger.Log("OnBatteryDead");
+            Logger.DebugLog("OnBatteryDead");
         }
 
         void IPowerListener.OnBatteryRevive()
         {
-            Logger.Log("OnBatteryRevive");
+            Logger.DebugLog("OnBatteryRevive");
         }
 
         void IAutoPilotListener.OnAutoLevelBegin()
         {
-            Logger.Log("OnAutoLevelBegin");
+            Logger.DebugLog("OnAutoLevelBegin");
             voice.EnqueueClip(voice.leveling);
         }
 
         void IAutoPilotListener.OnAutoLevelEnd()
         {
-            Logger.Log("OnAutoLevelEnd");
+            Logger.DebugLog("OnAutoLevelEnd");
         }
 
         void IAutoPilotListener.OnAutoPilotBegin()
         {
-            Logger.Log("OnAutoPilotBegin");
+            Logger.DebugLog("OnAutoPilotBegin");
         }
 
         void IAutoPilotListener.OnAutoPilotEnd()
         {
-            Logger.Log("OnAutoPilotEnd");
+            Logger.DebugLog("OnAutoPilotEnd");
         }
     }
 }
