@@ -147,6 +147,17 @@ namespace VehicleFramework
                 VehicleManager.EnrollVehicle(this);
                 isRegistered = true;
             }
+
+            // ensure we've got at least one power cell
+            if(!energyInterface.hasCharge)
+            {
+                GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
+                thisItem.GetComponent<Battery>().charge = 200;
+                thisItem.transform.SetParent(StorageRootObject.transform);
+                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
+                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
+                thisItem.SetActive(false);
+            }
         }
         public override void FixedUpdate()
         {

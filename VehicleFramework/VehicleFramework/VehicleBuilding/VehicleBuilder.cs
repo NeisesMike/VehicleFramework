@@ -165,14 +165,13 @@ namespace VehicleFramework
                 energyMixin.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
                 energyMixin.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
                 energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
-
                 energyMixins.Add(energyMixin);
-
                 vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = energyMixin;
             }
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
             eInterf.sources = energyMixins.ToArray();
+            mv.energyInterface = eInterf;
         }
         public static void SetupAIEnergyInterface(ref ModVehicle mv)
         {
