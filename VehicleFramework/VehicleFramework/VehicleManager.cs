@@ -26,22 +26,28 @@ namespace VehicleFramework
         public static List<PingInstance> mvPings = new List<PingInstance>();
         public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
 
-        public static void PatchCraftables()
+        public static List<VehicleCraftable> PatchCraftables()
         {
-            foreach (VehicleEntry ve in vehicleTypes)
+            List<VehicleCraftable> craftables = new List<VehicleCraftable>();
+            for(int i=0; i<vehicleTypes.Count; i++)
             {
-                Logger.Log("Patching the " + ve.prefab.name + " Craftable...");
-                VehicleCraftable thisCraftable = new VehicleCraftable(ve.prefab.name, ve.prefab.name, ve.description, ve.recipe);
+                VehicleEntry vehicle = vehicleTypes[i];
+                Logger.Log("Patching the " + vehicle.prefab.name + " Craftable...");
+                VehicleCraftable thisCraftable = new VehicleCraftable(vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe);
                 thisCraftable.Patch();
-                Logger.Log("Patched the " + ve.prefab.name + " Craftable.");
+                Logger.Log("Patched the " + vehicle.prefab.name + " Craftable.");
+                vehicleTypes[i] = vehicle;
+
+                craftables.Add(thisCraftable);
             }
+            return craftables;
         }
         public static void RegisterVehicle(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms)
         {
             bool isNewEntry = true;
             foreach (VehicleEntry ve in vehicleTypes)
             {
-                if (ve.prefab.name == ve.prefab.name)
+                if (ve.prefab.name == mv.gameObject.name)
                 {
                     Logger.Log(mv.gameObject.name + " vehicle was already registered.");
                     isNewEntry = false;
