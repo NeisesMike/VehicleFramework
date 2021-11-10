@@ -175,6 +175,11 @@ namespace VehicleFramework
         }
         public static void SetupAIEnergyInterface(ref ModVehicle mv)
         {
+            if (mv.BackupBatteries == null)
+            {
+                Logger.Log("ERROR: Could not find AI battery gameobject(s) for vehicle: " + mv.name);
+                return;
+            }
             var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
             foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
