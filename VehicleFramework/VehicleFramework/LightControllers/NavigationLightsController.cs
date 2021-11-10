@@ -127,43 +127,58 @@ namespace VehicleFramework
         {
             rb = GetComponent<Rigidbody>();
             mv = GetComponent<ModVehicle>();
-            foreach (GameObject lightObj in mv.NavigationPositionLights)
+            if (mv.NavigationPositionLights != null)
             {
-                positionMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                foreach (GameObject lightObj in mv.NavigationPositionLights)
+                {
+                    positionMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                }
+                BlinkOn(positionMats, Color.white);
             }
-            foreach (GameObject lightObj in mv.NavigationRedStrobeLights)
+            if (mv.NavigationRedStrobeLights != null)
             {
-                redStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                Light light = lightObj.EnsureComponent<Light>();
-                light.enabled = false;
-                light.color = Color.red;
-                light.type = LightType.Point;
-                light.intensity = 1f;
-                light.range = 80f;
-                light.shadows = LightShadows.Hard;
-                redStrobeLights.Add(light);
+                foreach (GameObject lightObj in mv.NavigationRedStrobeLights)
+                {
+                    redStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                    Light light = lightObj.EnsureComponent<Light>();
+                    light.enabled = false;
+                    light.color = Color.red;
+                    light.type = LightType.Point;
+                    light.intensity = 1f;
+                    light.range = 80f;
+                    light.shadows = LightShadows.Hard;
+                    redStrobeLights.Add(light);
+                }
             }
-            foreach (GameObject lightObj in mv.NavigationWhiteStrobeLights)
+            if (mv.NavigationWhiteStrobeLights != null)
             {
-                whiteStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                Light light = lightObj.EnsureComponent<Light>();
-                light.enabled = false;
-                light.color = Color.white;
-                light.type = LightType.Point;
-                light.intensity = 0.5f;
-                light.range = 80f;
-                light.shadows = LightShadows.Hard;
-                whiteStrobeLights.Add(light);
+                foreach (GameObject lightObj in mv.NavigationWhiteStrobeLights)
+                {
+                    whiteStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                    Light light = lightObj.EnsureComponent<Light>();
+                    light.enabled = false;
+                    light.color = Color.white;
+                    light.type = LightType.Point;
+                    light.intensity = 0.5f;
+                    light.range = 80f;
+                    light.shadows = LightShadows.Hard;
+                    whiteStrobeLights.Add(light);
+                }
             }
-            foreach (GameObject lightObj in mv.NavigationPortLights)
+            if (mv.NavigationPortLights != null)
             {
-                portMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                foreach (GameObject lightObj in mv.NavigationPortLights)
+                {
+                    portMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                }
             }
-            foreach (GameObject lightObj in mv.NavigationStarboardLights)
+            if (mv.NavigationStarboardLights != null)
             {
-                starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                foreach (GameObject lightObj in mv.NavigationStarboardLights)
+                {
+                    starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                }
             }
-            BlinkOn(positionMats, Color.white);
             StartCoroutine(ControlLights());
         }
 
@@ -451,7 +466,11 @@ namespace VehicleFramework
             {
                 m = starboardMats.Count;
             }
-            int sequenceLength = m + 2*n;
+            if (m == 0)
+            {
+                yield break;
+            }
+            int sequenceLength = m == 0 ? 0 : m + 2 * n;
             while (true)
             {
                 for (int i = 0; i < sequenceLength-n; i++)

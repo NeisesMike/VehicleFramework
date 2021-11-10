@@ -72,13 +72,16 @@ namespace VehicleFramework
         {
             foreach (var vlight in mv.FloodLights)
             {
-                foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
+                if (vlight.Light.GetComponent<MeshRenderer>() != null)
                 {
-                    mat.EnableKeyword("MARMO_EMISSION");
-                    mat.SetFloat("_EmissionLM", 10f);
-                    mat.SetFloat("_EmissionLMNight", 10f);
-                    mat.SetFloat("_GlowStrength", 0f);
-                    mat.SetFloat("_GlowStrengthNight", 0f);
+                    foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
+                    {
+                        mat.EnableKeyword("MARMO_EMISSION");
+                        mat.SetFloat("_EmissionLM", 10f);
+                        mat.SetFloat("_EmissionLMNight", 10f);
+                        mat.SetFloat("_GlowStrength", 0f);
+                        mat.SetFloat("_GlowStrengthNight", 0f);
+                    }
                 }
             }
         }
@@ -87,9 +90,12 @@ namespace VehicleFramework
         {
             foreach (var vlight in mv.FloodLights)
             {
-                foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
+                if (vlight.Light.GetComponent<MeshRenderer>() != null)
                 {
-                    mat.DisableKeyword("MARMO_EMISSION");
+                    foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
+                    {
+                        mat.DisableKeyword("MARMO_EMISSION");
+                    }
                 }
             }
         }
