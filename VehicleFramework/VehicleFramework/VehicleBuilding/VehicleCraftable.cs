@@ -40,11 +40,13 @@ namespace VehicleFramework
         {
             get
             {
-                PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData();
-                entry.key = ClassID;
-                entry.path = "Tech/Vehicles";
-                entry.nodes = new[] { "Tech", "Vehicles" };
-                entry.unlocked = false;
+                PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
+                {
+                    key = ClassID,
+                    path = "Tech/Vehicles",
+                    nodes = new[] { "Tech", "Vehicles" },
+                    unlocked = false
+                };
                 return entry;
             }
         }
