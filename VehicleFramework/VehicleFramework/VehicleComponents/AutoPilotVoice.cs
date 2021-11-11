@@ -18,15 +18,31 @@ namespace VehicleFramework
         private List<AudioSource> speakers = new List<AudioSource>();
         private PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
 
-        public AudioClip leveling;
-        public AudioClip welcomeAboardCASO;
-        public AudioClip poweringUp;
-
-
+        public AudioClip Silence;
+        public AudioClip BatteriesDepleted;
+        public AudioClip BatteriesNearlyEmpty;
+        public AudioClip PowerLow;
+        public AudioClip EnginePoweringDown;
+        public AudioClip EnginePoweringUp;
+        public AudioClip Goodbye;
+        public AudioClip HullFailureImminent;
+        public AudioClip HullIntegrityCritical;
+        public AudioClip HullIntegrityLow;
+        public AudioClip Leveling;
+        public AudioClip WelcomeAboard;
+        public AudioClip OxygenProductionOffline;
+        public AudioClip WelcomeAboardAllSystemsOnline;
+        public AudioClip MaximumDepthReached;
+        public AudioClip PassingSafeDepth;
+        public AudioClip LeviathanDetected;
+        public AudioClip UhOh;
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
             aiEI = mv.AIEnergyInterface;
+
+            // register self with mainpatcher, for on-the-fly voice selection updating
+            MainPatcher.voices.Add(this);
         }
         public void Start()
         {
@@ -49,7 +65,8 @@ namespace VehicleFramework
                 speakerPtr.spatialBlend = 1f;
                 speakers.Add(speakerPtr);
             }
-            StartCoroutine(GetAudioClip());
+            //StartCoroutine(GetAudioClips());
+            TryGetAllAudioClips(MainPatcher.Config.voiceChoice);
         }
         public void Update()
         {
@@ -107,50 +124,238 @@ namespace VehicleFramework
                 speechQueue.Enqueue(clip, 0);
             }
         }
-        IEnumerator GetAudioClip()
+        public void TryGetAllAudioClips(string voiceChoice)
         {
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string autoPilotSallyPath = Path.Combine(modPath, "AutoPilotSally/");
-            string levelPath = Path.Combine(autoPilotSallyPath, "Leveling.ogg");
-            string welcoPath = Path.Combine(autoPilotSallyPath, "WelcomeAboard.ogg");
-            string powerPath = Path.Combine(autoPilotSallyPath, "PoweringUp.ogg");
+            string autoPilotVoicesFolder = Path.Combine(modPath, "AutoPilotVoices");
+            string autoPilotVoicePath = Path.Combine(autoPilotVoicesFolder, voiceChoice) + "/";
 
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + levelPath, AudioType.OGGVORBIS))
+            IEnumerator GrabSilence()
             {
+                UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicesFolder + "/Silence.ogg", AudioType.OGGVORBIS);
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Debug.Log(www.error);
+                    Logger.Log("ERROR: Silence.ogg not found. Directory error.");
                 }
                 else
                 {
-                    leveling = DownloadHandlerAudioClip.GetContent(www);
+                    Silence = DownloadHandlerAudioClip.GetContent(www);
                 }
+                yield break;
             }
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + welcoPath, AudioType.OGGVORBIS))
+            // I loathe that there is no genericity here, but, for the life of me, I can't figure it out
+            IEnumerator GrabAllClipsForCryingOutLoud()
             {
+                UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "BatteriesDepleted.ogg", AudioType.OGGVORBIS);
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Debug.Log(www.error);
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: BatteriesDepleted.ogg");
+                    BatteriesDepleted = Silence;
                 }
                 else
                 {
-                    welcomeAboardCASO = DownloadHandlerAudioClip.GetContent(www);
+                    BatteriesDepleted = DownloadHandlerAudioClip.GetContent(www);
                 }
-            }
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + powerPath, AudioType.OGGVORBIS))
-            {
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "BatteriesNearlyEmpty.ogg", AudioType.OGGVORBIS);
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Debug.Log(www.error);
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: BatteriesNearlyEmpty.ogg");
+                    BatteriesNearlyEmpty = Silence;
                 }
                 else
                 {
-                    poweringUp = DownloadHandlerAudioClip.GetContent(www);
+                    BatteriesNearlyEmpty = DownloadHandlerAudioClip.GetContent(www);
                 }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "EnginePoweringDown.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: EnginePoweringDown.ogg");
+                    EnginePoweringDown = Silence;
+                }
+                else
+                {
+                    EnginePoweringDown = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "EnginePoweringUp.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: EnginePoweringUp.ogg");
+                    EnginePoweringUp = Silence;
+                }
+                else
+                {
+                    EnginePoweringUp = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "Goodbye.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: Goodbye.ogg");
+                    Goodbye = Silence;
+                }
+                else
+                {
+                    Goodbye = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "HullFailureImminent.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: HullFailureImminent.ogg");
+                    HullFailureImminent = Silence;
+                }
+                else
+                {
+                    HullFailureImminent = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "HullIntegrityCritical.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: HullIntegrityCritical.ogg");
+                    HullIntegrityCritical = Silence;
+                }
+                else
+                {
+                    HullIntegrityCritical = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "HullIntegrityLow.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: HullIntegrityLow.ogg");
+                    HullIntegrityLow = Silence;
+                }
+                else
+                {
+                    HullIntegrityLow = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "Leveling.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: Leveling.ogg");
+                    Leveling = Silence;
+                }
+                else
+                {
+                    Leveling = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "LeviathanDetected.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: LeviathanDetected.ogg");
+                    LeviathanDetected = Silence;
+                }
+                else
+                {
+                    LeviathanDetected = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "MaximumDepthReached.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: MaximumDepthReached.ogg");
+                    MaximumDepthReached = Silence;
+                }
+                else
+                {
+                    MaximumDepthReached = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "OxygenProductionOffline.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: OxygenProductionOffline.ogg");
+                    OxygenProductionOffline = Silence;
+                }
+                else
+                {
+                    OxygenProductionOffline = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "PassingSafeDepth.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: PassingSafeDepth.ogg");
+                    PassingSafeDepth = Silence;
+                }
+                else
+                {
+                    PassingSafeDepth = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "PowerLow.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: PowerLow.ogg");
+                    PowerLow = Silence;
+                }
+                else
+                {
+                    PowerLow = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "UhOh.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: UhOh.ogg");
+                    UhOh = Silence;
+                }
+                else
+                {
+                    UhOh = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "WelcomeAboard.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: WelcomeAboard.ogg");
+                    WelcomeAboard = Silence;
+                }
+                else
+                {
+                    WelcomeAboard = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicePath + "WelcomeAboardAllSystemsOnline.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: WelcomeAboardAllSystemsOnline.ogg");
+                    WelcomeAboardAllSystemsOnline = Silence;
+                }
+                else
+                {
+                    WelcomeAboardAllSystemsOnline = DownloadHandlerAudioClip.GetContent(www);
+                }
+
+                yield break;
             }
+
+            StartCoroutine(GrabSilence());
+            StartCoroutine(GrabAllClipsForCryingOutLoud());
         }
     }
 }

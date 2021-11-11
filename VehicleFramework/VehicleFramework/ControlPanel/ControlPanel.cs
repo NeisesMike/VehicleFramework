@@ -58,7 +58,6 @@ namespace VehicleFramework
 
             ResetAllButtonLighting();
         }
-
         private void ResetAllButtonLighting()
         {
             SetButtonLightingActive(buttonHeadLights, true);
@@ -83,7 +82,6 @@ namespace VehicleFramework
             SetButtonLightingActive(button8, false);
             SetButtonLightingActive(buttonPower, true);
         }
-
         public bool EmptyClick()
         {
             return true;
@@ -165,7 +163,6 @@ namespace VehicleFramework
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
-
         public void SetButtonLightingActive(GameObject button, bool active)
         {
             if (active)
@@ -196,7 +193,6 @@ namespace VehicleFramework
                 }
             }
         }
-
 
         void ILightsStatusListener.OnHeadLightsOn()
         {
@@ -289,6 +285,12 @@ namespace VehicleFramework
         void IPowerListener.OnBatteryRevive()
         {
             ResetAllButtonLighting();
+        }
+
+        void IVehicleStatusListener.OnNearbyLeviathan()
+        {
+            SetButtonLightingActive(buttonHeadLights, false);
+            SetButtonLightingActive(buttonFloodLights, false);
         }
     }
 }

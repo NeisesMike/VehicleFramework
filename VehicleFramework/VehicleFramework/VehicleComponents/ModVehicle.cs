@@ -665,6 +665,9 @@ namespace VehicleFramework
                     case VehicleStatus.OnTakeDamage:
                         component.OnTakeDamage();
                         break;
+                    case VehicleStatus.OnNearbyLeviathan:
+                        component.OnNearbyLeviathan();
+                        break;
                     default:
                         Logger.Log("Error: tried to notify using an invalid status");
                         break;

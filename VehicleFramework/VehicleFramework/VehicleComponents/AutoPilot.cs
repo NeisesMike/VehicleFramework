@@ -14,6 +14,39 @@ namespace VehicleFramework
 		public ModVehicle mv;
         public EnergyInterface aiEI;
         public AutoPilotVoice voice;
+        public LiveMixin liveMixin;
+        public EnergyInterface eInterf;
+
+        public enum HealthState
+        {
+            Safe,
+            Low,
+            Critical,
+            DoomImminent
+        }
+        public HealthState healthStatus;
+        public enum PowerState
+        {
+            Safe,
+            Low,
+            NearMT,
+            Depleted,
+            OxygenOffline
+        }
+        public PowerState powerStatus;
+        public enum DepthState
+        {
+            Safe,
+            Perilous,
+            Lethal
+        }
+        public DepthState depthStatus;
+        public enum DangerState
+        {
+            Safe,
+            LeviathanNearby,
+        }
+        public DangerState dangerStatus;
 
         private float timeOfLastLevelTap = 0f;
         private const float doubleTapWindow = 1f;
@@ -45,6 +78,12 @@ namespace VehicleFramework
         {
             mv = GetComponent<ModVehicle>();
             voice = GetComponent<AutoPilotVoice>();
+            liveMixin = mv.liveMixin;
+            eInterf = mv.energyInterface;
+            healthStatus = HealthState.Safe;
+            powerStatus = PowerState.Safe;
+            depthStatus = DepthState.Safe;
+            dangerStatus = DangerState.Safe;
         }
         public void Start()
         {
@@ -53,24 +92,10 @@ namespace VehicleFramework
 
         public void Update()
         {
-            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerPiloting())
-            {
-                if (Time.time - timeOfLastLevelTap < doubleTapWindow)
-                {
-                    float pitch = transform.rotation.eulerAngles.x;
-                    float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
-                    float roll = transform.rotation.eulerAngles.z;
-                    float rollDelta = roll >= 180 ? 360 - roll : roll;
-                    autoLeveling = true;
-                    var smoothTime1 = 5f * pitchDelta / 90f;
-                    var smoothTime2 = 5f * rollDelta / 90f;
-                    smoothTime = Mathf.Max(smoothTime1, smoothTime2);
-                }
-                else
-                {
-                    timeOfLastLevelTap = Time.time;
-                }
-            }
+            CheckForDoubleTap();
+            UpdateHealthState();
+            UpdatePowerState();
+            UpdateDepthState();
         }
         public void FixedUpdate()
         {
@@ -112,6 +137,126 @@ namespace VehicleFramework
                     newRoll = Mathf.SmoothDamp(z, 360, ref rollVelocity, smoothTime);
                 }
                 transform.rotation = Quaternion.Euler(new Vector3(newPitch, y, newRoll));
+            }
+        }
+
+        private void CheckForDoubleTap()
+        {
+            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerPiloting())
+            {
+                if (Time.time - timeOfLastLevelTap < doubleTapWindow)
+                {
+                    float pitch = transform.rotation.eulerAngles.x;
+                    float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
+                    float roll = transform.rotation.eulerAngles.z;
+                    float rollDelta = roll >= 180 ? 360 - roll : roll;
+                    autoLeveling = true;
+                    var smoothTime1 = 5f * pitchDelta / 90f;
+                    var smoothTime2 = 5f * rollDelta / 90f;
+                    smoothTime = Mathf.Max(smoothTime1, smoothTime2);
+                }
+                else
+                {
+                    timeOfLastLevelTap = Time.time;
+                }
+            }
+        }
+        private void UpdateHealthState()
+        {
+            float percentHealth = (liveMixin.health / liveMixin.maxHealth);
+            if (percentHealth < .05f)
+            {
+                if (healthStatus < HealthState.DoomImminent)
+                {
+                    voice.EnqueueClip(voice.HullFailureImminent);
+                }
+                healthStatus = HealthState.DoomImminent;
+            }
+            else if (percentHealth < .25f)
+            {
+                if (healthStatus < HealthState.Critical)
+                {
+                    voice.EnqueueClip(voice.HullIntegrityCritical);
+                }
+                healthStatus = HealthState.Critical;
+            }
+            else if (percentHealth < .40f)
+            {
+                if (healthStatus < HealthState.Low)
+                {
+                    voice.EnqueueClip(voice.HullIntegrityLow);
+                }
+                healthStatus = HealthState.Low;
+            }
+            else
+            {
+                healthStatus = HealthState.Safe;
+            }
+        }
+        private void UpdatePowerState()
+        {
+            float totalPower = eInterf.TotalCanProvide(out _);
+            if (totalPower < 0.1)
+            {
+                if (powerStatus < PowerState.OxygenOffline)
+                {
+                    voice.EnqueueClip(voice.OxygenProductionOffline);
+                }
+                powerStatus = PowerState.OxygenOffline;
+            }
+            else if (totalPower < 5)
+            {
+                if (powerStatus < PowerState.Depleted)
+                {
+                    voice.EnqueueClip(voice.BatteriesDepleted);
+                }
+                powerStatus = PowerState.Depleted;
+            }
+            else if (totalPower < 100)
+            {
+                if (powerStatus < PowerState.NearMT)
+                {
+                    voice.EnqueueClip(voice.BatteriesNearlyEmpty);
+                }
+                powerStatus = PowerState.NearMT;
+            }
+            else if (totalPower < 320)
+            {
+                if (powerStatus < PowerState.Low)
+                {
+                    voice.EnqueueClip(voice.PowerLow);
+                }
+                powerStatus = PowerState.Low;
+            }
+            else
+            {
+                powerStatus = PowerState.Safe;
+            }
+        }
+        private void UpdateDepthState()
+        {
+            float crushDepth = GetComponent<CrushDamage>().crushDepth * -1;
+            float perilousDepth = crushDepth + 100;
+            float depth = transform.position.y;
+            if (depth < crushDepth)
+            {
+                if (depthStatus < DepthState.Lethal)
+                {
+                    voice.EnqueueClip(voice.MaximumDepthReached);
+                }
+                depthStatus = DepthState.Lethal;
+            }
+            else if (depth < perilousDepth)
+            {
+                if (depthStatus < DepthState.Perilous)
+                {
+                    voice.EnqueueClip(voice.PassingSafeDepth);
+                }
+                depthStatus = DepthState.Perilous;
+            }
+            else
+            {
+                depthStatus = DepthState.Safe;
             }
         }
 
@@ -164,7 +309,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("OnPowerUp");
             isDead = false;
-            voice.EnqueueClip(voice.poweringUp);
+            voice.EnqueueClip(voice.EnginePoweringUp);
         }
 
         void IPowerListener.OnPowerDown()
@@ -172,6 +317,7 @@ namespace VehicleFramework
             Logger.DebugLog("OnPowerDown");
             isDead = true;
             autoLeveling = false;
+            voice.EnqueueClip(voice.EnginePoweringDown);
         }
 
         void IPowerListener.OnBatterySafe()
@@ -197,13 +343,20 @@ namespace VehicleFramework
         void IPlayerListener.OnPlayerEntry()
         {
             Logger.DebugLog("OnPlayerEntry");
-            // TODO: conditional welcome aboard lines
-            voice.EnqueueClip(voice.welcomeAboardCASO);
+            if (powerStatus < PowerState.NearMT)
+            {
+                voice.EnqueueClip(voice.WelcomeAboardAllSystemsOnline);
+            }
+            else
+            {
+                voice.EnqueueClip(voice.WelcomeAboard);
+            }
         }
 
         void IPlayerListener.OnPlayerExit()
         {
             Logger.DebugLog("OnPlayerExit");
+            voice.EnqueueClip(voice.Goodbye);
         }
 
         void IPlayerListener.OnPilotBegin()
@@ -229,7 +382,7 @@ namespace VehicleFramework
         void IAutoPilotListener.OnAutoLevelBegin()
         {
             Logger.DebugLog("OnAutoLevelBegin");
-            voice.EnqueueClip(voice.leveling);
+            voice.EnqueueClip(voice.Leveling);
         }
 
         void IAutoPilotListener.OnAutoLevelEnd()
@@ -245,6 +398,36 @@ namespace VehicleFramework
         void IAutoPilotListener.OnAutoPilotEnd()
         {
             Logger.DebugLog("OnAutoPilotEnd");
+        }
+
+        readonly float MAX_TIME_TO_WAIT = 3f;
+        float timeWeStartedWaiting = 0f;
+        void IVehicleStatusListener.OnNearbyLeviathan()
+        {
+            Logger.DebugLog("OnNearbyLeviathan");
+            IEnumerator ResetDangerStatusEventually()
+            {
+                while (Mathf.Abs(Time.time - timeWeStartedWaiting) < MAX_TIME_TO_WAIT)
+                {
+                    yield return null;
+                }
+                dangerStatus = DangerState.Safe;
+            }
+            StopAllCoroutines();
+            timeWeStartedWaiting = Time.time;
+            StartCoroutine(ResetDangerStatusEventually());
+            if (dangerStatus == DangerState.Safe)
+            {
+                dangerStatus = DangerState.LeviathanNearby;
+                if ((new System.Random()).NextDouble() < 0.5)
+                {
+                    voice.EnqueueClip(voice.LeviathanDetected);
+                }
+                else
+                {
+                    voice.EnqueueClip(voice.UhOh);
+                }
+            }
         }
     }
 }

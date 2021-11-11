@@ -9,9 +9,11 @@ namespace VehicleFramework
     public enum VehicleStatus
     {
         OnTakeDamage,
+        OnNearbyLeviathan
     }
     public interface IVehicleStatusListener
     {
         void OnTakeDamage();
+        void OnNearbyLeviathan();
     }
 }

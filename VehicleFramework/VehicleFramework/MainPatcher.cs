@@ -69,6 +69,8 @@ namespace VehicleFramework
         internal static ModVehicleDepthMk2 modVehicleDepthModule2 = new ModVehicleDepthMk2();
         internal static ModVehicleDepthMk3 modVehicleDepthModule3 = new ModVehicleDepthMk3();
 
+        internal static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
+
         [QModPrePatch]
         public static void PrePatch()
         {
@@ -145,6 +147,7 @@ namespace VehicleFramework
         }
     }
 
+
     [Menu("Vehicle Framework Options")]
     public class VehicleFrameworkConfig : ConfigFile
     {
@@ -156,6 +159,17 @@ namespace VehicleFramework
 
         [Toggle("Enable Debug Logs")]
         public bool isDebugLogging = false;
+
+        [Choice("Autopilot Voice", "Mikjaw", "Salli"), OnChange(nameof(GrabNewVoiceLines))]
+        public string voiceChoice = "Mikjaw";
+
+        public void GrabNewVoiceLines()
+        {
+            foreach(var tmp in MainPatcher.voices)
+            {
+                tmp.TryGetAllAudioClips(voiceChoice);
+            }
+        }
     }
 
 

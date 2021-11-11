@@ -15,7 +15,7 @@ namespace VehicleFramework
      * This is trivial for lights,
      * but a bit more difficult for driving
      */
-    public class PowerManager : MonoBehaviour, IVehicleStatusListener, IAutoPilotListener, ILightsStatusListener
+    public class PowerManager : MonoBehaviour, IAutoPilotListener, ILightsStatusListener
     {
         public struct PowerStatus
         {
@@ -64,15 +64,15 @@ namespace VehicleFramework
         private PowerEvent EvaluatePowerEvent()
         {
             mv.energyInterface.GetValues(out float charge, out _);
-            if (charge < 1)
+            if (charge < 5)
             {
                 return PowerEvent.OnBatteryDepleted;
             }
-            else if (charge < 8)
+            else if (charge < 100)
             {
                 return PowerEvent.OnBatteryNearlyEmpty;
             }
-            else if (charge < 80)
+            else if (charge < 320)
             {
                 return PowerEvent.OnBatteryLow;
             }
@@ -247,10 +247,6 @@ namespace VehicleFramework
         void ILightsStatusListener.OnNavLightsOn()
         {
             isNavLightsOn = true;
-        }
-
-        void IVehicleStatusListener.OnTakeDamage()
-        {
         }
     }
 }

@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
+    <Compile Include="Patches\CompatibilityPatches\StealthModulePatcher.cs" />
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
