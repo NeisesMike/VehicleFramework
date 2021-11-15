@@ -142,7 +142,6 @@ namespace VehicleFramework
         public static void PostPatch()
         {
             List<VehicleCraftable> craftables = VehicleManager.PatchCraftables();
-
             //VehicleBuilder.ScatterDataBoxes(craftables);
         }
     }

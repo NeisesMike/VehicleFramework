@@ -269,7 +269,7 @@ namespace OdysseyVehicle
 
                 VehicleFramework.VehicleParts.VehicleFloodLight leftLight = new VehicleFramework.VehicleParts.VehicleFloodLight
                 {
-                    Light = transform.Find("LightsParent/HeadLights/Left").gameObject,
+                    Light = transform.Find("lights_parent/HeadLights/Left").gameObject,
                     Angle = 70,
                     Color = Color.white,
                     Intensity = 1.3f,
@@ -279,7 +279,7 @@ namespace OdysseyVehicle
 
                 VehicleFramework.VehicleParts.VehicleFloodLight rightLight = new VehicleFramework.VehicleParts.VehicleFloodLight
                 {
-                    Light = transform.Find("LightsParent/HeadLights/Right").gameObject,
+                    Light = transform.Find("lights_parent/HeadLights/Right").gameObject,
                     Angle = 70,
                     Color = Color.white,
                     Intensity = 1.3f,
@@ -299,7 +299,7 @@ namespace OdysseyVehicle
 
                 VehicleFramework.VehicleParts.VehicleFloodLight mainFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
                 {
-                    Light = transform.Find("LightsParent/FloodLights/FrontCenter").gameObject,
+                    Light = transform.Find("lights_parent/FloodLights/FrontCenter").gameObject,
                     Angle = 120,
                     Color = Color.white,
                     Intensity = 1f,
@@ -307,7 +307,7 @@ namespace OdysseyVehicle
                 };
                 list.Add(mainFlood);
 
-                foreach (Transform floodlight in transform.Find("LightsParent/FloodLights/LateralLights"))
+                foreach (Transform floodlight in transform.Find("lights_parent/FloodLights/LateralLights"))
                 {
                     VehicleFramework.VehicleParts.VehicleFloodLight thisFloodLight = new VehicleFramework.VehicleParts.VehicleFloodLight
                     {
