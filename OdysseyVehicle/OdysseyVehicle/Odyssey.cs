@@ -82,6 +82,10 @@ namespace OdysseyVehicle
                 return main.Get("OdysseyDefaultName");
             }
         }
+        public override string GetDescription()
+        {
+            return "A submarine built for exploration. It is nimble for its size, it fits into small corridors, and its floodlights are extremely powerful.";
+        }
 
         public override GameObject VehicleModel
         {

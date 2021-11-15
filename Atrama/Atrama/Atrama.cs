@@ -82,7 +82,10 @@ namespace Atrama
                 return main.Get("AtramaDefaultName");
             }
         }
-
+        public override string GetDescription()
+        {
+            return "A submarine built for construction. It is quite sluggish, but has an enormous storage capacity.";
+        }
         public override List<VehicleFramework.VehicleParts.VehicleBattery> Batteries
         {
             get
