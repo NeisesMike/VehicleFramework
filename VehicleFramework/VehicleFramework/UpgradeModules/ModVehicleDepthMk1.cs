@@ -20,8 +20,11 @@ namespace VehicleFramework.UpgradeModules
             friendlyName: "Vehicle Depth Module MK1",
             description: "Increases Crush Depth to 400m over Base. Does Not Stack.")
         {
-            string[] stepsToDepthTab = { "SeamothMenu", "ModVehicle" };
-            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "Depth", "Depth Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
+            //OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "Depth", "Depth Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
+            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVUM", "ModVehicle Upgrade Modules", MainPatcher.ModVehicleIcon);
+            string[] stepsToDepthTab = { "MVUM" };
+            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVDM", "ModVehicle Depth Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
+            
         }
 
         public override EquipmentType EquipmentType => VehicleBuilder.ModuleType;
@@ -34,7 +37,8 @@ namespace VehicleFramework.UpgradeModules
 
         public override CraftTree.Type FabricatorType => CraftTree.Type.Workbench;
 
-        public override string[] StepsToFabricatorTab => new string[] { "SeamothMenu", "ModVehicle", "Depth" };
+        //public override string[] StepsToFabricatorTab => new string[] { "SeamothMenu", "ModVehicle", "Depth" };
+        public override string[] StepsToFabricatorTab => new string[] { "MVUM", "MVDM" };
         public override QuickSlotType QuickSlotType => QuickSlotType.Passive;
 
         public override GameObject GetGameObject()

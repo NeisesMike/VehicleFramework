@@ -32,7 +32,8 @@ namespace VehicleFramework.UpgradeModules
 
         public override CraftTree.Type FabricatorType => CraftTree.Type.Workbench;
 
-        public override string[] StepsToFabricatorTab => new string[] { "SeamothMenu", "ModVehicle", "Depth" };
+        //public override string[] StepsToFabricatorTab => new string[] { "SeamothMenu", "ModVehicle", "Depth" };
+        public override string[] StepsToFabricatorTab => new string[] { "MVUM", "MVDM" };
         public override QuickSlotType QuickSlotType => QuickSlotType.Passive;
 
         public override GameObject GetGameObject()
