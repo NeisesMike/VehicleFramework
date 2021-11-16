@@ -86,8 +86,6 @@ namespace VehicleFramework
                 {
                     vehicleAllSlots.Add("VehicleModule" + i.ToString(), equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>());
                 }
-                vehicleAllSlots.Add("VehicleArmLeft", equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>());
-                vehicleAllSlots.Add("VehicleArmRight", equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>());
             }
             else
             {
@@ -104,8 +102,6 @@ namespace VehicleFramework
                 {
                     vehicleAllSlots["VehicleModule" + i.ToString()] = equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>();
                 }
-                vehicleAllSlots["VehicleArmLeft"] = equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>();
-                vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
             }
 
             var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
@@ -258,6 +254,7 @@ namespace VehicleFramework
             }
 
             // build, link, and position left arm
+            /*
             GameObject leftArm = GetLeftArmSlot();
             if (arms)
             {
@@ -285,6 +282,7 @@ namespace VehicleFramework
                 LinkArm(ref rightArm);
                 DistributeModule(ref rightArm, modules + 1, numModules);
             }
+            */
         }
         public void LinkModule(ref GameObject thisModule)
         {

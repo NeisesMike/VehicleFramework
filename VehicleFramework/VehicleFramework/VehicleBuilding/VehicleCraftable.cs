@@ -43,8 +43,8 @@ namespace VehicleFramework
                 PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
                 {
                     key = ClassID,
-                    path = "Tech/Vehicles",
-                    nodes = new[] { "Tech", "Vehicles" },
+                    path = "Tech/Vehicles/ModVehicles",
+                    nodes = new[] { "Tech", "Vehicles", "ModVehicles" },
                     unlocked = false
                 };
                 return entry;

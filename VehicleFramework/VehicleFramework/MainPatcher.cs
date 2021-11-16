@@ -65,11 +65,14 @@ namespace VehicleFramework
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
 
-        internal static ModVehicleDepthMk1 modVehicleDepthModule1 = new ModVehicleDepthMk1();
-        internal static ModVehicleDepthMk2 modVehicleDepthModule2 = new ModVehicleDepthMk2();
-        internal static ModVehicleDepthMk3 modVehicleDepthModule3 = new ModVehicleDepthMk3();
+        internal static ModVehicleDepthMk1 modVehicleDepthModule1;
+        internal static ModVehicleDepthMk2 modVehicleDepthModule2;
+        internal static ModVehicleDepthMk3 modVehicleDepthModule3;
 
         internal static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
+
+        internal static EquipmentType ModVehicleUpgradeModuleType;
+        internal static TechType ModVehicleInnateStorageType;
 
         [QModPrePatch]
         public static void PrePatch()
@@ -83,6 +86,14 @@ namespace VehicleFramework
             ModVehicleIcon = new Atlas.Sprite(mySprite);
             string[] stepsToMVTab = { "SeamothMenu" };
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
+
+
+            ModVehicleUpgradeModuleType = SMLHelper.V2.Handlers.EquipmentHandler.Main.RegisterNewEquipmentType("ModVehicleModule", "ModVehicle Equipment Type");
+            ModVehicleInnateStorageType = SMLHelper.V2.Handlers.TechTypeHandler.Main.AddTechType("ModVehicleInnateStorage", "ModVehicle Innate Storage Type", "This TechType refers to storage which comes gratis with ModVehicles.");
+
+            modVehicleDepthModule1 = new ModVehicleDepthMk1();
+            modVehicleDepthModule2 = new ModVehicleDepthMk2();
+            modVehicleDepthModule3 = new ModVehicleDepthMk3();
 
             // patch in the depth module upgrades
             modVehicleDepthModule1.Patch();

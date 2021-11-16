@@ -12,12 +12,6 @@ namespace VehicleFramework
     public class EquipmentPatcher
     {
         /*
-         * Atrama has 8 total upgrade slots
-         * 6 module slots : "AtramaModuleX" where X int in [0,5]
-         * 2 arm slots : "AtramaArmX" where X in {Left, Right}
-         */
-
-        /*
          * This collection of patches ensures our new upgrade slots interact nicely with the base game's Equipment class.
          */
 
@@ -25,13 +19,11 @@ namespace VehicleFramework
                                                                            "VehicleModule3", "VehicleModule4", "VehicleModule5",
                                                                            "VehicleModule6", "VehicleModule7", "VehicleModule8",
                                                                            "VehicleModule9", "VehicleModule10", "VehicleModule11"};
-        public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight" };
 
         public static Dictionary<EquipmentType, List<string>> vehicleTypeToSlots = new Dictionary<EquipmentType, List<string>>
-                {
-                    { VehicleBuilder.ModuleType, vehicleModuleSlots },
-                    { VehicleBuilder.ArmType, vehicleArmSlots }
-                };
+        {
+            { MainPatcher.ModVehicleUpgradeModuleType, vehicleModuleSlots },
+        };
 
 
         [HarmonyPrefix]
@@ -62,7 +54,7 @@ namespace VehicleFramework
         [HarmonyPatch("GetCompatibleSlotDefault")]
         public static bool GetCompatibleSlotDefaultPrefix(EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
+            if (itemType != MainPatcher.ModVehicleUpgradeModuleType)
             {
                 return true;
             }
@@ -74,7 +66,7 @@ namespace VehicleFramework
         [HarmonyPatch("GetFreeSlot")]
         public static bool GetFreeSlotPrefix(EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (type != VehicleBuilder.ModuleType && type != VehicleBuilder.ArmType)
+            if (type != MainPatcher.ModVehicleUpgradeModuleType)
             {
                 return true;
             }
@@ -86,7 +78,7 @@ namespace VehicleFramework
         [HarmonyPatch("GetSlots")]
         public static bool GetSlotsPrefix(EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
+            if (itemType != MainPatcher.ModVehicleUpgradeModuleType)
             {
                 return true;
             }
@@ -108,16 +100,11 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch("GetSlotType")]
-        public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result, Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result)
         {
             if (vehicleModuleSlots.Contains(slot))
             {
-                __result = VehicleBuilder.ModuleType;
-                return false;
-            }
-            if (vehicleArmSlots.Contains(slot))
-            {
-                __result = VehicleBuilder.ArmType;
+                __result = MainPatcher.ModVehicleUpgradeModuleType;
                 return false;
             }
             return true;
@@ -127,7 +114,14 @@ namespace VehicleFramework
         [HarmonyPatch("IsCompatible")]
         public static bool IsCompatiblePrefix(EquipmentType itemType, EquipmentType slotType, ref bool __result)
         {
-            __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == VehicleBuilder.ModuleType));
+            __result = itemType == slotType ||
+                        (itemType == EquipmentType.VehicleModule && 
+                            (
+                            slotType == EquipmentType.SeamothModule ||
+                            slotType == EquipmentType.ExosuitModule ||
+                            slotType == MainPatcher.ModVehicleUpgradeModuleType
+                            )
+                        );
             if (__result)
             {
                 return false;

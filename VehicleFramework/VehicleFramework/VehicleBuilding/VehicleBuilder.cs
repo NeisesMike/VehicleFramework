@@ -54,9 +54,7 @@ namespace VehicleFramework
         public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
         public static GameObject coroutineHelper;
 
-        public const EquipmentType ModuleType = (EquipmentType)625;
         public const EquipmentType ArmType = (EquipmentType)626;
-        public const TechType InnateStorage = (TechType)0x4100;
 
         public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
         {

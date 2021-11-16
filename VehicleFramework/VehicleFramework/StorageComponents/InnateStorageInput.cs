@@ -11,7 +11,7 @@ namespace VehicleFramework
     {
 		public override void OpenFromExternal()
 		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, VehicleBuilder.InnateStorage);
+			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, MainPatcher.ModVehicleInnateStorageType);
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
@@ -21,7 +21,7 @@ namespace VehicleFramework
 		}
 		protected override void OpenPDA()
 		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, VehicleBuilder.InnateStorage);
+			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, MainPatcher.ModVehicleInnateStorageType);
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();

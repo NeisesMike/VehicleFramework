@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using SMLHelper.V2.Json;
 using VehicleFramework.Engines;
+using SMLHelper.V2.Handlers;
 
 namespace VehicleFramework
 {
@@ -29,7 +30,7 @@ namespace VehicleFramework
         public static List<VehicleCraftable> PatchCraftables()
         {
             List<VehicleCraftable> craftables = new List<VehicleCraftable>();
-            for(int i=0; i<vehicleTypes.Count; i++)
+            for (int i = 0; i < vehicleTypes.Count; i++)
             {
                 VehicleEntry vehicle = vehicleTypes[i];
                 Logger.Log("Patching the " + vehicle.prefab.name + " Craftable...");
@@ -39,10 +40,12 @@ namespace VehicleFramework
                 vehicleTypes[i] = vehicle;
 
                 craftables.Add(thisCraftable);
+
+                AddEncyclopediaEntryPlease(vehicle.prefab.name, vehicle.description);
             }
             return craftables;
         }
-        public static void RegisterVehicle(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
+        public static void RegisterVehicle(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
         {
             bool isNewEntry = true;
             foreach (VehicleEntry ve in vehicleTypes)
@@ -91,6 +94,18 @@ namespace VehicleFramework
             SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData);
+        }
+        public static void AddEncyclopediaEntryPlease(string name, string description)
+        {
+            PDAEncyclopedia.EntryData EncyclopediaEntryData = new PDAEncyclopedia.EntryData
+            {
+                key = name,
+                path = "Tech/Vehicles/ModVehicles",
+                nodes = new[] { "Tech", "Vehicles", "ModVehicles" },
+                unlocked = false
+            };
+
+            PDAEncyclopediaHandler.AddCustomEntry(EncyclopediaEntryData);
         }
     }
 }

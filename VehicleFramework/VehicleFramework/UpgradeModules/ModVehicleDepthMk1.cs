@@ -27,7 +27,7 @@ namespace VehicleFramework.UpgradeModules
             
         }
 
-        public override EquipmentType EquipmentType => VehicleBuilder.ModuleType;
+        public override EquipmentType EquipmentType => MainPatcher.ModVehicleUpgradeModuleType;
 
         public override TechType RequiredForUnlock => TechType.BaseUpgradeConsole;
 

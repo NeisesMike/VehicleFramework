@@ -96,6 +96,8 @@ namespace VehicleFramework
         public virtual List<GameObject> SoundEffects => null;
         public virtual List<GameObject> TwoDeeAssets => null;
 
+
+        EquipmentType MVUpgradeType;
         public override void Awake()
         {
             energyInterface = GetComponent<EnergyInterface>();
@@ -243,7 +245,8 @@ namespace VehicleFramework
             // in order to determine our max depth module level
             int maxDepthModuleLevel = 0;
             List<string> upgradeSlots = new List<string>();
-            upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
+            
+            upgradesInput.equipment.GetSlots(MainPatcher.ModVehicleUpgradeModuleType, upgradeSlots);
             foreach (String slot in upgradeSlots)
             {
                 InventoryItem upgrade = upgradesInput.equipment.GetItemInSlot(slot);
@@ -448,24 +451,20 @@ namespace VehicleFramework
 			{
                 if (_slotIDs == null)
                 {
-                    _slotIDs = GenerateSlotIDs(numVehicleModules, hasArms);
+                    _slotIDs = GenerateSlotIDs(numVehicleModules);
                 }
 				return _slotIDs;
 			}
         }
-        private static string[] GenerateSlotIDs(int modules, bool arms)
+        private static string[] GenerateSlotIDs(int modules)
         {
-            int numModules = arms ? modules + 2 : modules;
+            int numModules = false ? modules + 2 : modules;
             string[] retIDs = new string[numModules];
             for(int i=0; i<modules; i++)
             {
                 retIDs[i] = "VehicleModule" + i.ToString();
             }
-            if(arms)
-            {
-                retIDs[modules] = "VehicleArmLeft";
-                retIDs[modules + 1] = "VehicleArmRight";
-            }
+
             return retIDs;
         }
         /*
@@ -547,49 +546,46 @@ namespace VehicleFramework
         }
         public ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
         {
-            switch(techType)
+            if (techType == MainPatcher.ModVehicleInnateStorageType)
             {
-                case VehicleBuilder.InnateStorage:
-                    {
-                        InnateStorageContainer vsc;
-                        if(0 <= slotID && slotID < InnateStorages.Count)
-                        {
-                            vsc = InnateStorages[slotID].Container.GetComponent<InnateStorageContainer>();
-                        }
-                        else
-                        {
-                            Logger.Log("Error: ModGetStorageInSlot called on invalid innate storage slotID");
-                            return null;
-                        }
-                        return vsc.container;
-                    }
-                case TechType.VehicleStorageModule:
-                    {
-                        InventoryItem slotItem = this.GetSlotItem(slotID);
-                        if (slotItem == null)
-                        {
-                            Logger.Log("Warning: failed to get item for that slotID: " + slotID.ToString());
-                            return null;
-                        }
-                        Pickupable item = slotItem.item;
-                        if (item.GetTechType() != techType)
-                        {
-                            Logger.Log("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
-                            return null;
-                        }
-                        SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
-                        if (component == null)
-                        {
-                            Logger.Log("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
-                            return null;
-                        }
-                        return component.container;
-                    }
-                default:
-                    {
-                        Logger.Log("Error: tried to get storage for unsupported TechType");
-                        return null;
-                    }
+                InnateStorageContainer vsc;
+                if (0 <= slotID && slotID < InnateStorages.Count)
+                {
+                    vsc = InnateStorages[slotID].Container.GetComponent<InnateStorageContainer>();
+                }
+                else
+                {
+                    Logger.Log("Error: ModGetStorageInSlot called on invalid innate storage slotID");
+                    return null;
+                }
+                return vsc.container;
+            }
+            else if (techType == TechType.VehicleStorageModule)
+            {
+                InventoryItem slotItem = this.GetSlotItem(slotID);
+                if (slotItem == null)
+                {
+                    Logger.Log("Warning: failed to get item for that slotID: " + slotID.ToString());
+                    return null;
+                }
+                Pickupable item = slotItem.item;
+                if (item.GetTechType() != techType)
+                {
+                    Logger.Log("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
+                    return null;
+                }
+                SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
+                if (component == null)
+                {
+                    Logger.Log("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
+                    return null;
+                }
+                return component.container;
+            }
+            else
+            {
+                Logger.Log("Error: tried to get storage for unsupported TechType");
+                return null;
             }
         }
         public void TogglePower()
