@@ -81,7 +81,7 @@ namespace VehicleFramework
 		}
 		public void OnHandHover(GUIHand hand)
 		{
-			HandReticle.main.SetInteractText("StorageOpen");
+			HandReticle.main.SetInteractText("Open Storage");
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 		public void OnHandClick(GUIHand hand)

@@ -166,7 +166,9 @@ namespace VehicleFramework
                 energyMixin.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
                 energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
                 energyMixins.Add(energyMixin);
-                vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = energyMixin;
+                var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
+                tmp.mixin = energyMixin;
+                tmp.tooltip = "Vehicle Battery";
             }
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
@@ -197,7 +199,9 @@ namespace VehicleFramework
 
                 energyMixins.Add(em);
 
-                vb.BatterySlot.EnsureComponent<VehicleBatteryInput>().mixin = em;
+                var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
+                tmp.mixin = em;
+                tmp.tooltip = "Autopilot Battery";
             }
             // Configure energy interface
             mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();

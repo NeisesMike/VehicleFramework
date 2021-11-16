@@ -9,10 +9,11 @@ namespace VehicleFramework
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{
 		public EnergyMixin mixin;
+		public string tooltip;
 
 		public void OnHandHover(GUIHand hand)
 		{
-			HandReticle.main.SetInteractText("VehicleBatteryReplace");
+			HandReticle.main.SetInteractText(tooltip);
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 
