@@ -185,6 +185,17 @@ namespace VehicleFramework
                 gameObject.transform.position = transform.position;
                 gameObject.transform.rotation = transform.rotation;
             }
+            // spill out some scrap metal, lmao
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 loc = transform.position + 3 * UnityEngine.Random.onUnitSphere;
+                Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
+                GameObject go = UnityEngine.GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.ScrapMetal, true));
+                go.transform.position = loc;
+                go.transform.eulerAngles = rot;
+                var rb = go.EnsureComponent<Rigidbody>();
+                rb.isKinematic = false;
+            }
             StartCoroutine(EnqueueDestroy());
         }
         public IEnumerator EnqueueDestroy()
