@@ -369,7 +369,7 @@ namespace VehicleFramework
             mv.splashSound = seamoth.GetComponent<SeaMoth>().splashSound;
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
-        public static void SetupCrushDamage(ref ModVehicle mv, int baseCrushDepth)
+        public static void SetupCrushDamage(ref ModVehicle mv, int baseCrushDepth, int maxHealth)
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
@@ -380,12 +380,17 @@ namespace VehicleFramework
                     ce.asset = thisCE.asset;
                 }
             }
-
+            /* For reference,
+             * Prawn dies from max health in 3:00 minutes.
+             * Seamoth in 0:30
+             * Cyclops in 3:45
+             * So ModVehicles can die in 3:00 as well
+             */
             mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>();
             mv.crushDamage.soundOnDamage = ce;
             mv.crushDamage.kBaseCrushDepth = baseCrushDepth;
-            mv.crushDamage.damagePerCrush = 3;
-            mv.crushDamage.crushPeriod = 1;
+            mv.crushDamage.damagePerCrush = ((float)maxHealth)/60f;
+            mv.crushDamage.crushPeriod = 3;
             mv.crushDamage.vehicle = mv;
             mv.crushDamage.liveMixin = mv.liveMixin;
             // TODO: this is of type VoiceNotification
@@ -513,7 +518,7 @@ namespace VehicleFramework
             SetupLargeWorldEntity(ref mv);
             SetupHudPing(ref mv, pingType);
             SetupVehicleConfig(ref mv);
-            SetupCrushDamage(ref mv, baseCrushDepth);
+            SetupCrushDamage(ref mv, baseCrushDepth, maxHealth);
             SetupWaterClipping(ref mv);
             SetupCollisionSound(ref mv);
             SetupOutOfBoundsWarp(ref mv);
