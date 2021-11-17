@@ -19,9 +19,9 @@ using VehicleFramework.UpgradeModules;
 using SMLHelper.V2.Assets;
 
 using upgrades = System.Collections.Generic.Dictionary<string, TechType>;
-using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<TechType>>>;
-using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<TechType>>>;
 using batteries = System.Collections.Generic.List<System.Tuple<TechType, float>>;
+using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<System.Tuple<TechType, float>>>>;
+using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<System.Tuple<TechType, float>>>>;
 
 namespace VehicleFramework
 {
