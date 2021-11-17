@@ -100,7 +100,7 @@ namespace VehicleFramework
         public void FixedUpdate()
         {
             Vector2 lookDir = GameInput.GetLookDelta();
-            if (30f < lookDir.magnitude)
+            if (10f < lookDir.magnitude)
             {
                 autoLeveling = false;
                 return;
