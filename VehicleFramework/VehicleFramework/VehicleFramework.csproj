@@ -111,6 +111,7 @@
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\WarperPatcher.cs" />
     <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
+    <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk1.cs" />

@@ -25,7 +25,7 @@ namespace VehicleFramework
         public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
         public static List<PingInstance> mvPings = new List<PingInstance>();
         public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
-
+        
         public static List<VehicleCraftable> PatchCraftables()
         {
             List<VehicleCraftable> craftables = new List<VehicleCraftable>();

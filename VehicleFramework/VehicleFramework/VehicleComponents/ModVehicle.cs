@@ -387,6 +387,7 @@ namespace VehicleFramework
         }
         public void PlayerEntry()
         {
+            Player.main.currentSub = null;
             isPlayerInside = true;
             Player.main.currentMountedVehicle = this;
             Player.main.transform.SetParent(transform);
@@ -399,17 +400,18 @@ namespace VehicleFramework
             Player.main.SetScubaMaskActive(false);
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
-            //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(false);
-
             foreach (GameObject window in CanopyWindows)
             {
                 window.SetActive(false);
             }
 
+            Player.main.lastValidSub = GetComponent<SubRoot>();
+
             NotifyStatus(PlayerStatus.OnPlayerEntry);
         }
         public void PlayerExit()
         {
+            Player.main.currentSub = null;
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
             Player.main.transform.SetParent(null);

@@ -486,7 +486,12 @@ namespace VehicleFramework
             cr.addedComponents.Append(et as Component);
 
         }
-
+        public static void SetupRespawnPoint(ref ModVehicle mv)
+        {
+            mv.gameObject.EnsureComponent<SubRoot>();
+            var tmp = mv.TetherSources.First();
+            tmp.EnsureComponent<RespawnPoint>();
+        }
 
         #endregion
         public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth)
@@ -516,6 +521,7 @@ namespace VehicleFramework
             SetupSoundOnDamage(ref mv);
             SetupDealDamageOnImpact(ref mv);
             SetupDamageComponents(ref mv);
+            SetupRespawnPoint(ref mv);
             mv.collisionModel = mv.CollisionModel;
 
             ApplySkyAppliers(ref mv);
