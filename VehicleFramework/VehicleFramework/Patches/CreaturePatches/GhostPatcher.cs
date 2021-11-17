@@ -24,7 +24,20 @@ namespace VehicleFramework.Patches.LeviathanPatches
         {
             if(target.GetComponentInParent<ModVehicle>() != null)
             {
-                __result = 150f;
+                TechType techType = CraftData.GetTechType(__instance.gameObject);
+                string myTechType = techType.AsString(true);
+                if (myTechType == "ghostleviathan")
+                {
+                    __result = 150f;
+                }
+                else if (myTechType == "ghostleviathanjuvenile")
+                {
+                    __result = 100f;
+                }
+                else
+                {
+                    Logger.Log("ERROR: Unrecognized ghost leviathan");
+                }
             }
         }
     }
