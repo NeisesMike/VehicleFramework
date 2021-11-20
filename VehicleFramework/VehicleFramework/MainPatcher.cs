@@ -159,8 +159,8 @@ namespace VehicleFramework
         [Toggle("Enable Debug Logs")]
         public bool isDebugLogging = false;
 
-        [Choice("Autopilot Voice", "Mikjaw", "Salli"), OnChange(nameof(GrabNewVoiceLines))]
-        public string voiceChoice = "Mikjaw";
+        [Choice("Autopilot Voice", "Mikjaw", "Salli", "ShirubaFoxy"), OnChange(nameof(GrabNewVoiceLines))]
+        public string voiceChoice = "ShirubaFoxy";
 
         public void GrabNewVoiceLines()
         {

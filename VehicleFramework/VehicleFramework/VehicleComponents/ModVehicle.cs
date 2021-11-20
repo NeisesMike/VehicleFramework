@@ -356,12 +356,12 @@ namespace VehicleFramework
         }
         private IEnumerator TryStandUpFromChair()
         {
-            while(IsPlayerPiloting())
+            while (IsPlayerPiloting())
             {
                 yield return new WaitForSeconds(1);
             }
             yield return new WaitForSeconds(2);
-            StartCoroutine(StandUpFromChair());
+            Player.main.playerAnimator.SetBool("chair_stand_up", true);
         }
         public void BeginPiloting()
         {
@@ -370,7 +370,6 @@ namespace VehicleFramework
             StartCoroutine(TryStandUpFromChair());
             base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
-            //uGUI.main.transform.Find("ScreenCanvas/HUD/Content/QuickSlots").gameObject.SetActive(true);
             uGUI.main.quickSlots.SetTarget(this);
             NotifyStatus(PlayerStatus.OnPilotBegin);
         }

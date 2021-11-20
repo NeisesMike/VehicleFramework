@@ -325,6 +325,12 @@ namespace VehicleFramework
         public static void SetupRigidbody(ref ModVehicle mv)
         {
             var rb = mv.gameObject.EnsureComponent<Rigidbody>();
+            /* 
+             * For reference,
+             * Cyclop: 12000
+             * Prawn: 1250
+             * Seamoth: 800
+             */
             rb.mass = 4000f;
             rb.drag = 10f;
             rb.angularDrag = 10f;
