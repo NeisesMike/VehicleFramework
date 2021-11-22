@@ -88,6 +88,8 @@ namespace VehicleFramework
         public int numVehicleModules;
         public bool hasArms;
 
+        public AutoPilotVoice voice;
+
         // later
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;

@@ -36,6 +36,24 @@ namespace VehicleFramework
         public AudioClip PassingSafeDepth;
         public AudioClip LeviathanDetected;
         public AudioClip UhOh;
+
+        public void PauseSpeakers(bool pause)
+        {
+            foreach (var sp in speakers)
+            {
+                if(sp != null)
+                {
+                    if (pause)
+                    {
+                        sp.Pause();
+                    }
+                    else
+                    {
+                        sp.UnPause();
+                    }
+                }
+            }
+        }
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
@@ -65,6 +83,11 @@ namespace VehicleFramework
                 speakerPtr.spatialBlend = 1f;
                 speakers.Add(speakerPtr);
             }
+            foreach(var sp in speakers)
+            {
+                sp.gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency = 1500;
+            }
+
             //StartCoroutine(GetAudioClips());
             TryGetAllAudioClips(MainPatcher.Config.voiceChoice);
         }
@@ -89,6 +112,18 @@ namespace VehicleFramework
                     }
                 }
             }
+            foreach (var speaker in speakers)
+            {
+                if (mv.IsPlayerInside())
+                {
+                    speaker.GetComponent<AudioLowPassFilter>().enabled = false;
+                }
+                else
+                {
+                    speaker.GetComponent<AudioLowPassFilter>().enabled = true;
+                }
+            }
+            
         }
         public void TryPlayNextClipInQueue()
         {

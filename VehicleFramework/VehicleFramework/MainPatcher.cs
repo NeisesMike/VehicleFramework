@@ -154,7 +154,7 @@ namespace VehicleFramework
         public bool isFlashingLightsEnabled = false;
 
         [Slider("AI Voice Volume", Step = 1f, DefaultValue = 100, Min = 0, Max = 100)]
-        public float aiVoiceVolume = 100f;
+        public float aiVoiceVolume = 50f;
 
         [Toggle("Enable Debug Logs")]
         public bool isDebugLogging = false;
