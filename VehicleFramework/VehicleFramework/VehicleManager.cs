@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using SMLHelper.V2.Json;
 using VehicleFramework.Engines;
+using UnityEngine.SceneManagement;
 
 namespace VehicleFramework
 {
@@ -40,6 +41,14 @@ namespace VehicleFramework
 
                 craftables.Add(thisCraftable);
             }
+            void ResetVehiclesInPlay(Scene scene)
+            {
+                // Ensure this list is cleaned up before we load another scene
+                // otherwise, unpredictability ensues
+                VehiclesInPlay.Clear();
+            }
+            // do this here because it happens only once
+            SceneManager.sceneUnloaded += ResetVehiclesInPlay;
             return craftables;
         }
         public static void RegisterVehicle(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
@@ -57,8 +66,11 @@ namespace VehicleFramework
             if (isNewEntry)
             {
                 VehicleBuilder.Prefabricate(ref mv, engine, recipe, pt, sprite, modules, arms, baseCrushDepth, maxHealth);
+                mv.gameObject.SetActive(false);
                 Logger.Log("Registered the " + mv.gameObject.name);
             }
+
+
         }
         public static void EnrollVehicle(ModVehicle mv)
         {
