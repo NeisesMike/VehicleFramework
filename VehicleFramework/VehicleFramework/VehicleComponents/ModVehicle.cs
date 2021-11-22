@@ -260,7 +260,7 @@ namespace VehicleFramework
                     }
                 }
             }
-            GetComponent<CrushDamage>().SetExtraCrushDepth(maxDepthModuleLevel * 400);
+            GetComponent<CrushDamage>().SetExtraCrushDepth(maxDepthModuleLevel * 300);
         }
         public override void OnCollisionEnter(Collision col)
         {

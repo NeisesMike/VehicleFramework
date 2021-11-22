@@ -309,7 +309,7 @@ namespace VehicleFramework
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
         }
-        public static void SetupRigidbody(ref ModVehicle mv)
+        public static void SetupRigidbody(ref ModVehicle mv, int mass)
         {
             var rb = mv.gameObject.EnsureComponent<Rigidbody>();
             /* 
@@ -318,7 +318,7 @@ namespace VehicleFramework
              * Prawn: 1250
              * Seamoth: 800
              */
-            rb.mass = 4000f;
+            rb.mass = mass;
             rb.drag = 10f;
             rb.angularDrag = 10f;
             rb.useGravity = false;
@@ -360,9 +360,10 @@ namespace VehicleFramework
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
             mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
             mv.splashSound = seamoth.GetComponent<SeaMoth>().splashSound;
+            // TODO
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
-        public static void SetupCrushDamage(ref ModVehicle mv, int baseCrushDepth, int maxHealth)
+        public static void SetupCrushDamage(ref ModVehicle mv, int baseCrushDepth, int maxHealth, int secondsCanLiveAtCrushDepth, int crushPeriod)
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
@@ -382,8 +383,8 @@ namespace VehicleFramework
             mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>();
             mv.crushDamage.soundOnDamage = ce;
             mv.crushDamage.kBaseCrushDepth = baseCrushDepth;
-            mv.crushDamage.damagePerCrush = ((float)maxHealth)/60f;
-            mv.crushDamage.crushPeriod = 3;
+            mv.crushDamage.damagePerCrush = ((float)maxHealth)/(secondsCanLiveAtCrushDepth/ crushPeriod);
+            mv.crushDamage.crushPeriod = crushPeriod;
             mv.crushDamage.vehicle = mv;
             mv.crushDamage.liveMixin = mv.liveMixin;
             // TODO: this is of type VoiceNotification
@@ -505,13 +506,13 @@ namespace VehicleFramework
             SetupLights(ref mv);
             SetupLightSounds(ref mv);
             SetupLiveMixin(ref mv, maxHealth);
-            SetupRigidbody(ref mv);
+            SetupRigidbody(ref mv, 500);
             SetupEngine(ref mv, engine);
             SetupWorldForces(ref mv);
             SetupLargeWorldEntity(ref mv);
             SetupHudPing(ref mv, pingType);
             SetupVehicleConfig(ref mv);
-            SetupCrushDamage(ref mv, baseCrushDepth, maxHealth);
+            SetupCrushDamage(ref mv, baseCrushDepth, maxHealth, 15, 1);
             SetupWaterClipping(ref mv);
             SetupCollisionSound(ref mv);
             SetupOutOfBoundsWarp(ref mv);
