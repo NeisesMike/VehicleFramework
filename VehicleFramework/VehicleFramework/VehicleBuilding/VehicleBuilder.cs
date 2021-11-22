@@ -135,13 +135,10 @@ namespace VehicleFramework
                 inp.openSound = storageOpenSound;
                 inp.closeSound = storageCloseSound;
             }
-            foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
-            {
-                VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                vuci.flap = vu.Interface.transform.Find("flap");
-                vuci.anglesOpened = new Vector3(80, 0, 0);
-                mv.upgradesInput = vuci;
-            }
+            VehicleUpgradeConsoleInput vuci = mv.Upgrades.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
+            vuci.flap = mv.Upgrades.Interface.transform.Find("flap");
+            vuci.anglesOpened = new Vector3(80, 0, 0);
+            mv.upgradesInput = vuci;
             // Configure the Control Panel
             mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
             mv.controlPanelLogic.mv = mv;
@@ -177,34 +174,25 @@ namespace VehicleFramework
         }
         public static void SetupAIEnergyInterface(ref ModVehicle mv)
         {
-            if (mv.BackupBatteries == null)
-            {
-                Logger.Log("ERROR: Could not find AI battery gameobject(s) for vehicle: " + mv.name);
-                return;
-            }
             var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
-            foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
-            {
-                // Configure energy mixin for this battery slot
-                var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
-                em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                em.defaultBattery = seamothEnergyMixin.defaultBattery;
-                em.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell, TechType.Battery, TechType.LithiumIonBattery, TechType.PrecursorIonBattery, TechType.PrecursorIonCrystal };
-                em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
-                em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
-                em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
-                em.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
-                em.batteryModels = seamothEnergyMixin.batteryModels;
-
-                energyMixins.Add(em);
-
-                var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
-                tmp.mixin = em;
-                tmp.tooltip = "Autopilot Battery";
-            }
+            VehicleParts.VehicleBattery vb = mv.AutopilotBattery;
+            // Configure energy mixin for this battery slot
+            var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
+            em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+            em.defaultBattery = seamothEnergyMixin.defaultBattery;
+            em.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell, TechType.Battery, TechType.LithiumIonBattery, TechType.PrecursorIonBattery, TechType.PrecursorIonCrystal };
+            em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
+            em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
+            em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
+            em.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
+            em.batteryModels = seamothEnergyMixin.batteryModels;
+            energyMixins.Add(em);
+            var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
+            tmp.mixin = em;
+            tmp.tooltip = "Autopilot Battery";
             // Configure energy interface
-            mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();
+            mv.AIEnergyInterface = mv.AutopilotBattery.BatterySlot.EnsureComponent<EnergyInterface>();
             mv.AIEnergyInterface.sources = energyMixins.ToArray();
         }
         public static void SetupLightSounds(ref ModVehicle mv)
@@ -292,7 +280,6 @@ namespace VehicleFramework
                     thisLight.range = pc.Range;
                     thisLight.shadows = LightShadows.Hard;
                     pc.Light.SetActive(false);
-
                     var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
                     RLS.hostLight = thisLight;
                 }
