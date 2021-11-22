@@ -85,6 +85,7 @@ namespace VehicleFramework
                     GameObject thisVehicle = GameObject.Instantiate(ve.prefab);
                     thisVehicle.EnsureComponent<TechTag>().type = TechType;
                     thisVehicle.EnsureComponent<PrefabIdentifier>().ClassId = ClassID;
+                    thisVehicle.SetActive(true);
                     return thisVehicle;
                 }
             }
