@@ -87,7 +87,7 @@ namespace VehicleFramework
         }
         public void Start()
         {
-            aiEI = mv.AutopilotBattery.BatterySlot.GetComponent<EnergyInterface>();
+            aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
         }
 
         public void Update()

@@ -368,8 +368,8 @@ namespace VehicleFramework
                             GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(battery.value.Item1, true));
                             thisItem.GetComponent<Battery>().charge = battery.value.Item2;
                             thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                            mv.AutopilotBattery.BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
-                            mv.AutopilotBattery.BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
+                            mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
+                            mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
                             thisItem.SetActive(false);
                         }
                     }

@@ -24,18 +24,19 @@ namespace VehicleFramework
                 }
             }
 
-        // lists of game object references, used like a blueprint by VehicleBuilder
         public abstract GameObject VehicleModel { get; }
         public abstract GameObject CollisionModel { get; }
         public abstract GameObject StorageRootObject { get; }
         public abstract GameObject ModulesRootObject { get; }
+
+        // lists of game object references, used later like a blueprint
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
-        public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
         public abstract List<VehicleParts.VehicleStorage> InnateStorages { get; }
-        public abstract VehicleParts.VehicleUpgrades Upgrades { get; }
+        public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
+        public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
-        public abstract VehicleParts.VehicleBattery AutopilotBattery { get; }
+        public abstract List<VehicleParts.VehicleBattery> BackupBatteries { get; }
         public abstract List<VehicleParts.VehicleFloodLight> HeadLights { get; }
         public abstract List<VehicleParts.VehicleFloodLight> FloodLights { get; }
         public abstract List<GameObject> NavigationPortLights { get; }
@@ -45,46 +46,67 @@ namespace VehicleFramework
         public abstract List<GameObject> NavigationRedStrobeLights { get; }
         public abstract List<GameObject> WaterClipProxies { get; }
         public abstract List<GameObject> CanopyWindows { get; }
-        public abstract GameObject BoundingBox { get; }
         public abstract List<GameObject> NameDecals { get; }
         public abstract List<GameObject> TetherSources { get; }
+        public abstract GameObject BoundingBox { get; }
         public abstract GameObject ControlPanel { get; }
         public ControlPanel controlPanelLogic;
-        public Transform thisStopPilotingLocation;
-        public FloodLightsController floodlights;
-        public InteriorLightsController interiorlights;
-        public NavigationLightsController navlights;
 
-        internal FMOD_CustomEmitter lightsOnSound = null;
-        internal FMOD_CustomEmitter lightsOffSound = null;
-        internal List<GameObject> lights = new List<GameObject>();
-        internal List<GameObject> volumetricLights = new List<GameObject>();
-        internal PingInstance pingInstance = null;
-        internal FMOD_StudioEventEmitter ambienceSound;
-        protected bool isPilotSeated = false;
-        protected bool isPlayerInside = false;
-        internal int numEfficiencyModules = 0;
-        internal int numArmorModules = 0;
-        internal ModVehicleEngine engine;
-        internal HeadLightsController headlights;
+
+        public FMOD_CustomEmitter lightsOnSound = null;
+        public FMOD_CustomEmitter lightsOffSound = null;
+        public List<GameObject> lights = new List<GameObject>();
+        public List<GameObject> volumetricLights = new List<GameObject>();
+        public PingInstance pingInstance = null;
+        public FMOD_StudioEventEmitter ambienceSound;
+
+        private bool isPilotSeated = false;
+        private bool isPlayerInside = false;
+
+        // TODO
+        // These are tracked appropriately, but their values are never used for anything meaningful.
+        public int numEfficiencyModules = 0;
+        private int numArmorModules = 0;
+
         // if the player toggles the power off,
         // the vehicle is called "disgengaged,"
         // because it is unusable yet the batteries are not empty
-        internal bool isPoweredOn = true;
-        internal bool isRegistered = false;
-        internal EnergyInterface AIEnergyInterface;
-        internal int numVehicleModules;
-        internal bool hasArms;
-        internal AutoPilotVoice voice;
-        internal PowerManager powerMan;
-        internal GameObject fabricator = null;
+        public bool isPoweredOn = true;
+
+        public ModVehicleEngine engine;
+        public Transform thisStopPilotingLocation;
+
+        public FloodLightsController floodlights;
+        public HeadLightsController headlights;
+        public InteriorLightsController interiorlights;
+        public NavigationLightsController navlights;
+
+        public bool isRegistered = false;
+
+        public EnergyInterface AIEnergyInterface;
+
+        public int numVehicleModules;
+        public bool hasArms;
+
+        public AutoPilotVoice voice;
+
+        // later
+        public virtual List<GameObject> Arms => null;
+        public virtual List<GameObject> Legs => null;
+
+        // not sure what types these should be
+        public virtual List<GameObject> SoundEffects => null;
+        public virtual List<GameObject> TwoDeeAssets => null;
+
+        internal GameObject fab = null; //fabricator
+        internal PowerManager powerMan = null;
 
         public override void Awake()
         {
             void MaybeSetupUniqueFabricator()
             {
                 Transform fabLoc = transform.Find("Fabricator-Location");
-                if (fabLoc == null)
+                if(fabLoc == null)
                 {
                     Logger.Log("Warning: " + name + " does not have a Fabricator-Location.");
                     return;
@@ -93,29 +115,36 @@ namespace VehicleFramework
                 {
                     UnityEngine.GameObject.Destroy(thisOldFab.gameObject);
                 }
-                fabricator = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Fabricator, true));
-                fabricator.transform.SetParent(transform);
-                fabricator.transform.localPosition = fabLoc.localPosition;
-                fabricator.transform.localRotation = fabLoc.localRotation;
-                fabricator.transform.localScale = 0.85f * Vector3.one;
+                fab = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Fabricator, true));
+                fab.transform.SetParent(transform);
+                fab.transform.localPosition = fabLoc.localPosition;
+                fab.transform.localRotation = fabLoc.localRotation;
+                fab.transform.localScale = 0.85f * Vector3.one;
             }
+
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
+
             gameObject.EnsureComponent<TetherSource>();
+
             floodlights = gameObject.EnsureComponent<FloodLightsController>();
             headlights = gameObject.EnsureComponent<HeadLightsController>();
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
+
             voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
 
             controlPanelLogic.Init();
+
             base.LazyInitialize();
+
             MaybeSetupUniqueFabricator();
         }
         public override void Start()
         {
             base.Start();
+
             upgradesInput.equipment = modules;
             modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
             gameObject.EnsureComponent<GameInfoIcon>().techType = GetComponent<TechTag>().type;
@@ -132,10 +161,28 @@ namespace VehicleFramework
             */
 
             powerMan = gameObject.EnsureComponent<PowerManager>();
+            //gameObject.EnsureComponent<FuelGauge>();
+
+            // load upgrades from file
+
+            // load storage from file
+
+            // load modular storage from file
             if (!isRegistered)
             {
                 VehicleManager.EnrollVehicle(this);
                 isRegistered = true;
+            }
+
+            // ensure we've got at least one power cell
+            if(!energyInterface.hasCharge)
+            {
+                GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
+                thisItem.GetComponent<Battery>().charge = 200;
+                thisItem.transform.SetParent(StorageRootObject.transform);
+                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
+                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
+                thisItem.SetActive(false);
             }
         }
         public override void FixedUpdate()
@@ -155,6 +202,7 @@ namespace VehicleFramework
         {
             base.Update();
         }
+
         public new void OnKill()
         {
             if (destructionEffect)
@@ -188,10 +236,12 @@ namespace VehicleFramework
                 Player.main.transform.parent = null;
                 StopPiloting();
             }
+            //yield return new WaitForSeconds(1f);
             if (IsPlayerInside())
             {
                 PlayerExit();
             }
+            //yield return new WaitForSeconds(1f);
             Destroy(gameObject);
             yield return null;
         }
@@ -220,7 +270,7 @@ namespace VehicleFramework
             }
             StartCoroutine(EvaluateDepthModuleLevel());
         }
-        public virtual IEnumerator EvaluateDepthModuleLevel()
+        public IEnumerator EvaluateDepthModuleLevel()
         {
             // honestly I just do this to ensure the module is well-and-gone if we just removed one,
             // since this gets called on module-remove and on module-add
@@ -270,8 +320,10 @@ namespace VehicleFramework
         {
             base.OnPilotModeBegin();
         }
+
         public bool IsPlayerInside()
         {
+            // this one is correct ?
             return isPlayerInside;
         }
         public bool IsPlayerPiloting()
@@ -347,7 +399,7 @@ namespace VehicleFramework
             uGUI.main.quickSlots.SetTarget(this);
             NotifyStatus(PlayerStatus.OnPilotBegin);
         }
-        public virtual void StopPiloting()
+        public void StopPiloting()
         {
             // this function
             // called by Player.ExitLockedMode()
@@ -368,12 +420,13 @@ namespace VehicleFramework
             uGUI.main.quickSlots.SetTarget(null);
             NotifyStatus(PlayerStatus.OnPilotEnd);
         }
-        public virtual void PlayerEntry()
+        public void PlayerEntry()
         {
             Player.main.currentSub = null;
             isPlayerInside = true;
             Player.main.currentMountedVehicle = this;
             Player.main.transform.SetParent(transform);
+
             Player.main.playerController.activeController.SetUnderWater(false);
             Player.main.isUnderwater.Update(false);
             Player.main.isUnderwaterForSwimming.Update(false);
@@ -381,11 +434,14 @@ namespace VehicleFramework
             Player.main.motorMode = Player.MotorMode.Walk;
             Player.main.SetScubaMaskActive(false);
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
+
             foreach (GameObject window in CanopyWindows)
             {
                 window.SetActive(false);
             }
+
             Player.main.lastValidSub = GetComponent<SubRoot>();
+
             NotifyStatus(PlayerStatus.OnPlayerEntry);
         }
         public void PlayerExit()
@@ -745,16 +801,6 @@ namespace VehicleFramework
             AIEnergyInterface.sources.First().batterySlot.AddItem(newBattery.GetComponent<Pickupable>());
             newBattery.SetActive(false);
 
-            // ensure we've got at least one power cell
-            if (!energyInterface.hasCharge)
-            {
-                GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
-                thisItem.GetComponent<Battery>().charge = 200;
-                thisItem.transform.SetParent(StorageRootObject.transform);
-                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
-                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
-                thisItem.SetActive(false);
-            }
             //GetComponent<InteriorLightsController>().EnableInteriorLighting();
         }
         public void ForceExitLockedMode()
