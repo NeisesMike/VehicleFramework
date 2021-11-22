@@ -98,8 +98,30 @@ namespace VehicleFramework
         public virtual List<GameObject> SoundEffects => null;
         public virtual List<GameObject> TwoDeeAssets => null;
 
+        internal GameObject fab = null; //fabricator
+        internal PowerManager powerMan = null;
+
         public override void Awake()
         {
+            void MaybeSetupUniqueFabricator()
+            {
+                Transform fabLoc = transform.Find("Fabricator-Location");
+                if(fabLoc == null)
+                {
+                    Logger.Log("Warning: " + name + " does not have a Fabricator-Location.");
+                    return;
+                }
+                foreach (var thisOldFab in GetComponentsInChildren<Fabricator>())
+                {
+                    UnityEngine.GameObject.Destroy(thisOldFab.gameObject);
+                }
+                fab = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Fabricator, true));
+                fab.transform.SetParent(transform);
+                fab.transform.localPosition = fabLoc.localPosition;
+                fab.transform.localRotation = fabLoc.localRotation;
+                fab.transform.localScale = 0.85f * Vector3.one;
+            }
+
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
 
@@ -110,12 +132,14 @@ namespace VehicleFramework
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
-            gameObject.EnsureComponent<AutoPilotVoice>();
+            voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
 
             controlPanelLogic.Init();
 
             base.LazyInitialize();
+
+            MaybeSetupUniqueFabricator();
         }
         public override void Start()
         {
@@ -136,7 +160,7 @@ namespace VehicleFramework
             }
             */
 
-            gameObject.EnsureComponent<PowerManager>();
+            powerMan = gameObject.EnsureComponent<PowerManager>();
             //gameObject.EnsureComponent<FuelGauge>();
 
             // load upgrades from file

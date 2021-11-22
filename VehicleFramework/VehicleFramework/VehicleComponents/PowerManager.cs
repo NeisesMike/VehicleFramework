@@ -19,6 +19,11 @@ namespace VehicleFramework
     {
         public struct PowerStatus
         {
+            public PowerStatus(bool fuel, bool power)
+            {
+                hasFuel = fuel;
+                isPowered = power;
+            }
             public bool hasFuel;
             public bool isPowered;
             public override bool Equals(object obj) => obj is PowerStatus other && this.Equals(other);
@@ -96,7 +101,7 @@ namespace VehicleFramework
             }
             return thisStatus;
         }
-        public void TrySpendEnergy(float val)
+        public float TrySpendEnergy(float val)
         {
             float desired = val;
             float available = ei.TotalCanProvide(out _);
@@ -104,7 +109,7 @@ namespace VehicleFramework
             {
                 desired = available;
             }
-            ei.ConsumeEnergy(desired);
+            return ei.ConsumeEnergy(desired);
         }
         public void AccountForTheTypicalDrains()
         {

@@ -110,6 +110,8 @@
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\WarperPatcher.cs" />
+    <Compile Include="Patches\FreezeTimePatcher.cs" />
+    <Compile Include="Patches\FabricatorPatcher.cs" />
     <Compile Include="Patches\InGameMenuPatcher.cs" />
     <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
