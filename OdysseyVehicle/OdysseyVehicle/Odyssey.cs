@@ -215,15 +215,13 @@ namespace OdysseyVehicle
             }
         }
 
-        public override List<VehicleUpgrades> Upgrades
+        public override VehicleUpgrades Upgrades
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleUpgrades>();
                 VehicleFramework.VehicleParts.VehicleUpgrades vu = new VehicleFramework.VehicleParts.VehicleUpgrades();
                 vu.Interface = transform.Find("Mechanical-Panel/Upgrades-Panel").gameObject;
-                list.Add(vu);
-                return list;
+                return vu;
             }
         }
 
@@ -253,15 +251,13 @@ namespace OdysseyVehicle
             }
         }
 
-        public override List<VehicleBattery> BackupBatteries
+        public override VehicleBattery AutopilotBattery
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
                 VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb1.BatterySlot = transform.Find("Mechanical-Panel/BatteryInputs/BackupBattery").gameObject;
-                list.Add(vb1);
-                return list;
+                return vb1;
             }
         }
 
