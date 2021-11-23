@@ -136,12 +136,13 @@ namespace VehicleFramework
                 harmony.Patch(awakeOriginal, awakePrefix);
             }
             */
+
+            List<VehicleCraftable> craftables = VehicleManager.PatchCraftables();
         }
 
         [QModPostPatch]
         public static void PostPatch()
         {
-            List<VehicleCraftable> craftables = VehicleManager.PatchCraftables();
             //VehicleBuilder.ScatterDataBoxes(craftables);
         }
     }
@@ -160,7 +161,7 @@ namespace VehicleFramework
         public bool isDebugLogging = false;
 
         [Choice("Autopilot Voice", "Mikjaw", "Salli", "ShirubaFoxy"), OnChange(nameof(GrabNewVoiceLines))]
-        public string voiceChoice = "ShirubaFoxy";
+        public string voiceChoice = "Mikjaw";
 
         public void GrabNewVoiceLines()
         {

@@ -33,8 +33,8 @@ namespace OdysseyVehicle
     [QModCore]
     public static class MainPatcher
     {
-        [QModPatch]
-        public static void Patch()
+        [QModPrePatch]
+        public static void PrePatch()
         {
             var harmony = new Harmony("com.mikjaw.subnautica.odyssey.mod");
             harmony.PatchAll();

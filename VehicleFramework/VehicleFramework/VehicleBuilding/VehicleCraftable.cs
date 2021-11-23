@@ -45,8 +45,12 @@ namespace VehicleFramework
                     key = ClassID,
                     path = "Tech/Vehicles",
                     nodes = new[] { "Tech", "Vehicles" },
-                    unlocked = false
+                    unlocked = true,
+                    popup = null,
+                    image = null
                 };
+                LanguageHandler.SetLanguageLine("Ency_" + ClassID, ClassID);
+                LanguageHandler.SetLanguageLine("EncyDesc_" + ClassID, "here be a description");
                 return entry;
             }
         }
