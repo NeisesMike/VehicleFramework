@@ -67,7 +67,7 @@ namespace OdysseyVehicle
         {
             GetAssets();
             ModVehicle odyssey = model.EnsureComponent<Odyssey>() as ModVehicle;
-            VehicleManager.RegisterVehicle(ref odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 700, 667);
+            VehicleManager.RegisterVehicle(ref odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 600, 667);
         }
 
         public override string vehicleDefaultName
