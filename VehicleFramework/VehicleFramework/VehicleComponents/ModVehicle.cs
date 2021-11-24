@@ -474,10 +474,8 @@ namespace VehicleFramework
             depth = Mathf.FloorToInt(GetComponent<CrushDamage>().GetDepth());
             crushDepth = Mathf.FloorToInt(GetComponent<CrushDamage>().crushDepth);
         }
-        public virtual string GetDescription()
-        {
-            return "";
-        }
+        public abstract string GetDescription();
+        public abstract string GetEncyEntry();
         private string[] _slotIDs = null;
 		public override string[] slotIDs
 		{

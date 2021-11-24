@@ -113,6 +113,7 @@
     <Compile Include="Patches\FreezeTimePatcher.cs" />
     <Compile Include="Patches\FabricatorPatcher.cs" />
     <Compile Include="Patches\InGameMenuPatcher.cs" />
+    <Compile Include="Patches\EncyUnlocksPatcher.cs" />
     <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />

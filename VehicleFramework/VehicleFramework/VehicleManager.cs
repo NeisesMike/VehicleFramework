@@ -34,7 +34,7 @@ namespace VehicleFramework
             {
                 VehicleEntry vehicle = vehicleTypes[i];
                 Logger.Log("Patching the " + vehicle.prefab.name + " Craftable...");
-                VehicleCraftable thisCraftable = new VehicleCraftable(vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe);
+                VehicleCraftable thisCraftable = new VehicleCraftable(vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe, vehicle.encyEntry);
                 thisCraftable.Patch();
                 Logger.Log("Patched the " + vehicle.prefab.name + " Craftable.");
                 vehicleTypes[i] = vehicle;

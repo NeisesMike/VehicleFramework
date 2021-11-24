@@ -16,9 +16,11 @@ namespace VehicleFramework
     public class VehicleCraftable : Craftable
     {
         public Dictionary<TechType, int> recipe;
-        public VehicleCraftable(string classId, string friendlyName, string description, Dictionary<TechType, int> input_recipe) : base(classId, friendlyName, description)
+        public string encyEntry;
+        public VehicleCraftable(string classId, string friendlyName, string description, Dictionary<TechType, int> input_recipe, string inputEncyEntry) : base(classId, friendlyName, description)
         {
             recipe = input_recipe;
+            encyEntry = inputEncyEntry;
         }
 
         //===============================
@@ -32,8 +34,7 @@ namespace VehicleFramework
         //===============================
         // PDAItem overrides
         //===============================
-        //public override TechType RequiredForUnlock => TechType.Constructor;
-        public override bool UnlockedAtStart => true;
+        public override TechType RequiredForUnlock => TechType.Constructor;
         public override TechGroup GroupForPDA => TechGroup.Constructor;
         public override TechCategory CategoryForPDA => TechCategory.Constructor;
         public override PDAEncyclopedia.EntryData EncyclopediaEntryData
@@ -50,7 +51,7 @@ namespace VehicleFramework
                     image = null
                 };
                 LanguageHandler.SetLanguageLine("Ency_" + ClassID, ClassID);
-                LanguageHandler.SetLanguageLine("EncyDesc_" + ClassID, "here be a description");
+                LanguageHandler.SetLanguageLine("EncyDesc_" + ClassID, encyEntry);
                 return entry;
             }
         }

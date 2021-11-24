@@ -22,13 +22,14 @@ namespace VehicleFramework
 {
     public struct VehicleEntry
     {
-        public VehicleEntry(GameObject prefabObj, ModVehicleEngine in_engine, Dictionary<TechType, int> in_recipe, int id, string desc, PingType pt_in, Atlas.Sprite sprite, int modules_in, int arms_in)
+        public VehicleEntry(GameObject prefabObj, ModVehicleEngine in_engine, Dictionary<TechType, int> in_recipe, int id, string desc, string in_encyEntry, PingType pt_in, Atlas.Sprite sprite, int modules_in, int arms_in)
         {
             prefab = prefabObj;
             engine = in_engine;
             recipe = in_recipe;
             unique_id = id;
             description = desc;
+            encyEntry = in_encyEntry;
             pt = pt_in;
             ping_sprite = sprite;
             modules = modules_in;
@@ -39,6 +40,7 @@ namespace VehicleFramework
         public Dictionary<TechType, int> recipe;
         public int unique_id;
         public string description;
+        public string encyEntry;
         public PingType pt;
         public Atlas.Sprite ping_sprite;
         public int modules;
@@ -65,7 +67,7 @@ namespace VehicleFramework
 
             Instrument(ref mv, engine, pingType, baseCrushDepth, maxHealth);
             prefabs.Add(mv);
-            VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), pingType, sprite, modules, arms);
+            VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), mv.GetEncyEntry(), pingType, sprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
             numVehicleTypes++;
         }
