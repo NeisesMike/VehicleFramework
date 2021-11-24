@@ -38,7 +38,7 @@ namespace Atrama
                     Sprite ping = thisAtlas.GetSprite("AtramaHudPing");
                     pingSprite = new Atlas.Sprite(ping);
                 }
-                else if (obj.ToString().Contains("atrama"))
+                else if (obj.ToString().Contains("Atrama"))
                 {
                     model = (GameObject)obj;
                 }
@@ -85,6 +85,34 @@ namespace Atrama
         public override string GetDescription()
         {
             return "A submarine built for construction. It is quite sluggish, but has an enormous storage capacity.";
+        }
+
+        public override string GetEncyEntry()
+        {
+            /*
+             * The Formula:
+             * 2 or 3 sentence blurb
+             * Features
+             * Advice
+             * Ratings
+             * Kek
+             */
+            string ency = "The Atrama is a submarine purpose built for Construction. ";
+            ency += "Its signature arms (in development) are what earned it its Lithuanian name. \n";
+            ency += "\nIt features:\n";
+            ency += "- Two arms which have several different attachments (in development). \n";
+            ency += "- Ample storage capacity, which can be further expanded by upgrades. \n";
+            ency += "- A signature autopilot which can automatically level out the vessel. \n";
+            ency += "\nRatings:\n";
+            ency += "- Top Speed: 15m/s \n";
+            ency += "- Acceleration: 3m/s/s \n";
+            ency += "- Distance per Power Cell: 7.5km \n";
+            ency += "- Crush Depth: 900 \n";
+            ency += "- Upgrade Slots: 6 \n";
+            ency += "- Dimensions: 7.5m x 4m x 14.5m \n";
+            ency += "- Persons: 1-2 \n";
+            ency += "\n\"Pass on the drama- just build the Atrama.\" ";
+            return ency;
         }
         public override List<VehicleFramework.VehicleParts.VehicleBattery> Batteries
         {

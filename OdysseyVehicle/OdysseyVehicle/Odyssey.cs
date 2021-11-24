@@ -87,6 +87,34 @@ namespace OdysseyVehicle
             return "A submarine built for exploration. It is nimble for its size, it fits into small corridors, and its floodlights are extremely powerful.";
         }
 
+        public override string GetEncyEntry()
+        {
+            /*
+             * The Formula:
+             * 2 or 3 sentence blurb
+             * Features
+             * Advice
+             * Ratings
+             * Kek
+             */
+            string ency = "The Odyssey is a submarine purpose built for exploration. ";
+            ency += "Its manueverability and illumination capabilities are what earned it the name. \n";
+            ency += "\nIt features:\n";
+            ency += "- Modest storage capacity, which can be further expanded with upgrades. \n";
+            ency += "- Extremely high power flood lights. \n";
+            ency += "- A signature autopilot which can automatically level out the vessel. \n";
+            ency += "\nRatings:\n";
+            ency += "- Top Speed: 12.5m/s \n";
+            ency += "- Acceleration: 5m/s/s \n";
+            ency += "- Distance per Power Cell: 7km \n";
+            ency += "- Crush Depth: 600 \n";
+            ency += "- Upgrade Slots: 8 \n";
+            ency += "- Dimensions: 3.7m x 5m x 10.6m \n";
+            ency += "- Persons: 1-2\n";
+            ency += "\n\"Don't like it? That's odd; I see.\" ";
+            return ency;
+        }
+
         public override GameObject VehicleModel
         {
             get
