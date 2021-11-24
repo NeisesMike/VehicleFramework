@@ -14,7 +14,7 @@ namespace VehicleFramework.Engines
         protected override float STRAFE_MAX_SPEED => 500;
         protected override float VERT_MAX_SPEED => 500;
 
-        protected override float FORWARD_ACCEL => FORWARD_TOP_SPEED / 10f;
+        protected override float FORWARD_ACCEL => FORWARD_TOP_SPEED / 5f;
         protected override float REVERSE_ACCEL => REVERSE_TOP_SPEED / 10f;
         protected override float STRAFE_ACCEL => STRAFE_MAX_SPEED / 10f;
         protected override float VERT_ACCEL => VERT_MAX_SPEED / 10f;
@@ -187,8 +187,8 @@ namespace VehicleFramework.Engines
         public override void ControlRotation()
         {
             // Control rotation
-            float pitchFactor = 1.2f * (1 - GetCurrentPercentOfTopSpeed());
-            float yawFactor = 1f * (1 - GetCurrentPercentOfTopSpeed());
+            float pitchFactor = 1.2f * (1.5f - GetCurrentPercentOfTopSpeed());
+            float yawFactor = 1f * (1.5f - GetCurrentPercentOfTopSpeed());
             Vector2 mouseDir = GameInput.GetLookDelta();
             float xRot = mouseDir.x;
             float yRot = mouseDir.y;
@@ -198,7 +198,7 @@ namespace VehicleFramework.Engines
 
         public override void DrainPower(Vector3 moveDirection)
         {
-            float scalarFactor = 0.75f;
+            float scalarFactor = 0.4f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
             mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
