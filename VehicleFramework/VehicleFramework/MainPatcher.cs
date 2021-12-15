@@ -160,14 +160,17 @@ namespace VehicleFramework
         [Toggle("Enable Debug Logs")]
         public bool isDebugLogging = false;
 
-        [Choice("Autopilot Voice", "Mikjaw", "Salli", "ShirubaFoxy"), OnChange(nameof(GrabNewVoiceLines))]
-        public string voiceChoice = "Mikjaw";
+        [Choice("Autopilot Voice", "ShirubaFoxy", "Chels-E", "Mikjaw", "Turtle", "Salli"), OnChange(nameof(GrabNewVoiceLines))]
+        public string voiceChoice = "ShirubaFoxy";
 
         public void GrabNewVoiceLines()
         {
-            foreach(var tmp in MainPatcher.voices)
+            if (Player.main != null)
             {
-                tmp.TryGetAllAudioClips(voiceChoice);
+                foreach (var tmp in MainPatcher.voices)
+                {
+                    tmp.TryGetAllAudioClips(voiceChoice);
+                }
             }
         }
     }

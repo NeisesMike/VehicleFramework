@@ -77,7 +77,7 @@ namespace VehicleFramework
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
-            voice = GetComponent<AutoPilotVoice>();
+            voice = gameObject.EnsureComponent<AutoPilotVoice>();
             liveMixin = mv.liveMixin;
             eInterf = mv.energyInterface;
             healthStatus = HealthState.Safe;
