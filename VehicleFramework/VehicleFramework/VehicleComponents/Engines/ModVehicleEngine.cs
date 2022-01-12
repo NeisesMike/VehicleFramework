@@ -1,9 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
+using System.Reflection;
+using System.IO;
 
 namespace VehicleFramework.Engines
 {
@@ -29,7 +32,7 @@ namespace VehicleFramework.Engines
         {
             get
             {
-                if(mv.GetIsUnderwater())
+                if (mv.GetIsUnderwater())
                 {
                     return waterDragDecay;
                 }
@@ -134,12 +137,85 @@ namespace VehicleFramework.Engines
             UpMomentum += inputMagnitude * VERT_ACCEL * Time.deltaTime;
         }
 
+        protected float _engineWhir = 0;
+        protected virtual float EngineWhir
+        {
+            get
+            {
+                return _engineWhir;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    _engineWhir = 0;
+                }
+                else if (10 < value)
+                {
+                    _engineWhir = 10;
+                }
+                else
+                {
+                    _engineWhir = value;
+                }
+            }
+        }
+        protected virtual void UpdateEngineWhir(float inputMagnitude)
+        {
+            if (inputMagnitude == 0)
+            {
+                inputMagnitude = -1;
+            }
+            EngineWhir += inputMagnitude * Time.deltaTime;
+        }
+        protected bool isReadyToWhistle = true;
+        public AudioClip EngineWhirClip;
+        public AudioClip EngineWhistleClip;
+        private AudioSource EngineSource1;
+        private AudioSource EngineSource2;
+
         // Start is called before the first frame update
         public void Start()
         {
             rb.centerOfMass = Vector3.zero;
+
+            IEnumerator GrabEngineSounds()
+            {
+                string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string engineSoundsFolder = Path.Combine(modPath, "EngineSounds");
+
+                UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + engineSoundsFolder + "/engine1_high.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: could not find engine1_high.ogg");
+                    EngineWhistleClip = null;
+                }
+                else
+                {
+                    EngineWhistleClip = DownloadHandlerAudioClip.GetContent(www);
+                }
+                EngineSource2.clip = EngineWhistleClip;
+
+                www = UnityWebRequestMultimedia.GetAudioClip("file://" + engineSoundsFolder + "/engine1_low.ogg", AudioType.OGGVORBIS);
+                yield return www.SendWebRequest();
+                if (www.isHttpError || www.isNetworkError)
+                {
+                    Logger.Log("WARNING: could not find engine1_low.ogg");
+                    EngineWhirClip = null;
+                }
+                else
+                {
+                    EngineWhirClip = DownloadHandlerAudioClip.GetContent(www);
+                }
+                EngineSource1.clip = EngineWhirClip;
+            }
+            EngineSource1 = mv.gameObject.AddComponent<AudioSource>();
+            EngineSource1.loop = true;
+            StartCoroutine(GrabEngineSounds());
+            EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
+
         }
-        // Update is called once per frame
         public virtual void FixedUpdate()
         {
             Vector3 moveDirection = Vector3.zero;
@@ -156,8 +232,23 @@ namespace VehicleFramework.Engines
                     // or would it be better with ExecutePhysicsMove...?
                     DrainPower(moveDirection);
                 }
+                if (moveDirection == Vector3.zero)
+                {
+                    UpdateEngineWhir(-3);
+                }
+                else
+                {
+                    UpdateEngineWhir(moveDirection.magnitude);
+                }
+                PlayEngineWhir();
+                PlayEngineWhistle(moveDirection);
+
                 // Execute a state-based physics move
                 ExecutePhysicsMove();
+            }
+            else
+            {
+                UpdateEngineWhir(-3);
             }
             ApplyDrag(moveDirection);
         }
@@ -244,5 +335,48 @@ namespace VehicleFramework.Engines
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
             mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
         }
+        public virtual void PlayEngineWhir()
+        {
+            EngineSource1.volume = EngineWhir / 10f * (MainPatcher.Config.engineVolume / 100);
+            if (mv.IsPowered())
+            {
+                if (!EngineSource1.isPlaying)
+                {
+                    EngineSource1.Play();
+                }
+            }
+            else
+            {
+                EngineSource1.Stop();
+            }
+        }
+        public virtual void PlayEngineWhistle(Vector3 moveDirection)
+        {
+            if (EngineSource2.isPlaying)
+            {
+                if (moveDirection.magnitude == 0)
+                {
+                    EngineSource2.Stop();
+                }
+            }
+            else
+            {
+                if (isReadyToWhistle && moveDirection.magnitude > 0)
+                {
+                    EngineSource2.volume = (MainPatcher.Config.engineVolume / 100);
+                    EngineSource2.Play();
+                }
+            }
+            if(gameObject.GetComponent<Rigidbody>().velocity.magnitude < 1)
+            {
+                isReadyToWhistle = true;
+            }
+            else
+            {
+                isReadyToWhistle = false;
+            }
+        }
     }
 }
+        
+

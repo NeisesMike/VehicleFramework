@@ -173,6 +173,9 @@ namespace VehicleFramework
                 }
             }
         }
+
+        [Slider("Engine Volume", Step = 1f, DefaultValue = 100, Min = 0, Max = 100)]
+        public float engineVolume = 50f;
     }
 
 
