@@ -86,7 +86,14 @@ namespace Atrama
         {
             return "A submarine built for construction. It is quite sluggish, but has an enormous storage capacity.";
         }
-
+        public override void Awake()
+        {
+            // Give the Odyssey a new name and make sure we track it well.
+            OGVehicleName = "ATR-" + Mathf.RoundToInt(UnityEngine.Random.value * 10000).ToString();
+            vehicleName = OGVehicleName;
+            NowVehicleName = OGVehicleName;
+            base.Awake();
+        }
         public override string GetEncyEntry()
         {
             /*
@@ -309,6 +316,9 @@ namespace Atrama
                 var list = new List<VehicleFramework.VehicleParts.VehicleUpgrades>();
                 VehicleFramework.VehicleParts.VehicleUpgrades vu = new VehicleFramework.VehicleParts.VehicleUpgrades();
                 vu.Interface = transform.Find("Mechanical-Panel/Upgrades-Panel").gameObject;
+                vu.Flap = vu.Interface;
+                vu.AnglesClosed = Vector3.zero;
+                vu.AnglesOpened = Vector3.zero;
                 list.Add(vu);
                 return list;
             }
@@ -319,6 +329,20 @@ namespace Atrama
             {
                 controlPanel.transform.SetParent(transform);
                 return controlPanel;
+            }
+        }
+        public override GameObject ColorPicker
+        {
+            get
+            {
+                return null;
+            }
+        }
+        public override GameObject Fabricator
+        {
+            get
+            {
+                return transform.Find("Fabricator-Location").gameObject;
             }
         }
         public override GameObject BoundingBox
