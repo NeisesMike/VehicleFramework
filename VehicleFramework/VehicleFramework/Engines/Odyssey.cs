@@ -194,6 +194,14 @@ namespace VehicleFramework.Engines
             float yRot = mouseDir.y;
             rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
             rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+
+            //  steering wheel animation stuff
+            float currentEulerAngleY = mv.SteeringWheel.transform.localEulerAngles.y;
+            if(currentEulerAngleY > 180)
+            {
+                currentEulerAngleY -= 360;
+            }
+            mv.SteeringWheel.transform.localEulerAngles = new Vector3(0, (currentEulerAngleY + 20 * rb.angularVelocity.y) / 2f, 0);
         }
 
         public override void DrainPower(Vector3 moveDirection)

@@ -22,6 +22,7 @@ using upgrades = System.Collections.Generic.Dictionary<string, TechType>;
 using batteries = System.Collections.Generic.List<System.Tuple<TechType, float>>;
 using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<System.Tuple<TechType, float>>>>;
 using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<System.Tuple<TechType, float>>>>;
+using color = System.Tuple<float, float, float, float>;
 
 namespace VehicleFramework
 {
@@ -127,13 +128,32 @@ namespace VehicleFramework
             }
 
             // Patch SlotExtender, lest it break or break us
+            var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
+            if (type2 != null)
+            {
+                var awakePreOriginal = AccessTools.Method(type2, "Prefix");
+                var awakePrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePrefix"));
+                harmony.Patch(awakePreOriginal, awakePrefix);
+
+                var awakePostOriginal = AccessTools.Method(type2, "Postfix");
+                var awakePostfix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePostfix"));
+                harmony.Patch(awakePostOriginal, awakePostfix);
+            }
+
             /*
             var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
             if (type2 != null)
             {
+                // Example of assigning a static field in another mod
+                var type3 = Type.GetType("SlotExtender.Main, SlotExtender", false, false);
+                var but = AccessTools.StaticFieldRefAccess<bool>(type3, "uGUI_PostfixComplete");
+                Logger.Log("but was " + but.ToString());
+                but = false;
+                // example of calling another mod's function
                 var awakeOriginal = AccessTools.Method(type2, "Prefix");
-                var awakePrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePrefix"));
-                harmony.Patch(awakeOriginal, awakePrefix);
+                object dummyInstance = null;
+                awakeOriginal.Invoke(dummyInstance, new object[] { equipment });
+                //Patches.CompatibilityPatches.SlotExtenderPatcher.hasGreenLight = false;
             }
             */
 
@@ -193,5 +213,7 @@ namespace VehicleFramework
         // todo: maybe this?
         // save a few lines in the output json?
         public List<Tuple<Vector3, Tuple<upgrades, innateStorages, modularStorages, batteries>>> AllVehiclesStorages { get; set; }
+        
+        public List<Tuple<Vector3, string, color, color, color, color, bool>> AllVehiclesAesthetics { get; set; }
     }
 }

@@ -45,13 +45,16 @@ namespace VehicleFramework
 		{
 
 		}
-		protected void ChangeFlapState(bool open, bool pda = false)
+		protected void ChangeFlapState()
 		{
-			Utils.PlayFMODAsset(open ? this.openSound : this.closeSound, base.transform, 1f);
+			//Utils.PlayFMODAsset(open ? this.openSound : this.closeSound, base.transform, 1f);
+			Utils.PlayFMODAsset(this.openSound, base.transform, 1f);
 			OpenPDA();
 		}
 		protected void OnClosePDA(PDA pda)
 		{
+			seq.Set(0, false, null);
+			gameObject.GetComponentInParent<ModVehicle>().OnStorageOpen(transform.name, false);
 			Utils.PlayFMODAsset(this.closeSound, base.transform, 1f);
 		}
 		protected void UpdateColliderState()
@@ -84,9 +87,16 @@ namespace VehicleFramework
 			HandReticle.main.SetInteractText("Open Storage");
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
+
+		public Sequence seq = new Sequence();
+		public void Update()
+        {
+			seq.Update();
+        }
 		public void OnHandClick(GUIHand hand)
 		{
-			this.ChangeFlapState(true, true);
+			float timeToWait = gameObject.GetComponentInParent<ModVehicle>().OnStorageOpen(transform.name, true);
+			seq.Set(timeToWait, true, new SequenceCallback(ChangeFlapState));
 		}
 	}
 }

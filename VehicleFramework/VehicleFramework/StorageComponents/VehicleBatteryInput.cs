@@ -19,7 +19,8 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
-			mixin.InitiateReload();
+			gameObject.GetComponentInParent<ModVehicle>().OnAIBatteryReload();
+			mixin.InitiateReload(); // this brings up the battery-changing gui
 		}
 	}
 }

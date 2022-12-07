@@ -93,9 +93,14 @@ namespace VehicleFramework
             data.Batteries = SaveManager.SerializeBatteries();
             data.BackupBatteries = SaveManager.SerializeBackupBatteries();
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
+            data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
         }
         public static void LoadVehicles()
         {
+            foreach(var mv in VehiclesInPlay)
+            {
+                mv.ModVehicleReset();
+            }
             // TODO refactor a new LoadVehicles to accept a modvehicle as input
             SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData);
@@ -103,6 +108,7 @@ namespace VehicleFramework
             SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData);
             SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData);
+            SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData);
         }
     }
 }

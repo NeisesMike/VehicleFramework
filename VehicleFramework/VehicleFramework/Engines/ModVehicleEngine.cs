@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -297,17 +298,6 @@ namespace VehicleFramework.Engines
             UpdateRightMomentum(moveDirection.x);
             UpdateUpMomentum(moveDirection.y);
             UpdateForwardMomentum(moveDirection.z);
-
-            /* TODO steering wheel animation stuff
-            base.steeringWheelYaw = Mathf.Lerp(base.steeringWheelYaw, 0f, Time.deltaTime);
-            base.steeringWheelPitch = Mathf.Lerp(base.steeringWheelPitch, 0f, Time.deltaTime);
-            if (base.mainAnimator)
-            {
-                base.mainAnimator.SetFloat("view_yaw", base.steeringWheelYaw * 70f);
-                base.mainAnimator.SetFloat("view_pitch", base.steeringWheelPitch * 45f);
-            }
-            */
-
             return;
         }
         public virtual void ControlRotation()

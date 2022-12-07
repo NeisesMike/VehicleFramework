@@ -87,7 +87,14 @@ namespace VehicleFramework
         }
         public void Start()
         {
-            aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
+            if (mv.BackupBatteries.Count > 0)
+            {
+                aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
+            }
+            else
+            {
+                aiEI = mv.energyInterface;
+            }
         }
 
         public void Update()

@@ -11,8 +11,6 @@ namespace VehicleFramework.Patches.CompatibilityPatches
 {
     class SlotExtenderPatcher
     {
-        public static bool isPatched = false;
-        public static bool hasGreenLight = false;
         /*
          * This patch is specifically for the Slot Extender mod.
          * It ensures that our ModVehicle upgrades UI is displayed correctly.
@@ -20,33 +18,30 @@ namespace VehicleFramework.Patches.CompatibilityPatches
         [HarmonyPrefix]
         public static bool PrePrefix(object __instance)
         {
-            if (isPatched)
+            if (ModuleBuilder.main.slotExtenderIsPatched)
             {
-                Logger.Log("skipping since already patched");
                 return true;
             }
-            else if(hasGreenLight)
+            else if(ModuleBuilder.main.slotExtenderHasGreenLight)
             {
-                Logger.Log("got the green light");
-                isPatched = true;
+                ModuleBuilder.main.slotExtenderIsPatched = true;
                 return true;
             }
+            return false;
+        }
 
-            // need to postpone this function until ModuleBuilder is done
-            /*
-            IEnumerator DoThisAfterSomeTime()
+        [HarmonyPrefix]
+        public static bool PrePostfix(object __instance)
+        {
+            if (ModuleBuilder.main.slotExtenderIsPatched)
             {
-                Logger.Log("wait for it...");
-                yield return new WaitForSeconds(5);
-                Logger.Log("okay go!");
-                var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
-                var awakeOriginal = AccessTools.Method(type2, "Prefix");
-                uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                object dummyInstance = null;
-                awakeOriginal.Invoke(dummyInstance, new object[]{equipment});
+                return true;
             }
-            ModuleBuilder.main.StartCoroutine(DoThisAfterSomeTime());
-            */
+            else if (ModuleBuilder.main.slotExtenderHasGreenLight)
+            {
+                ModuleBuilder.main.slotExtenderIsPatched = true;
+                return true;
+            }
             return false;
         }
     }

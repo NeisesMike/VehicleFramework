@@ -25,6 +25,8 @@ namespace VehicleFramework.Patches
                 // Rocket Base : 25
                 // TODO : why does this even happen on `spawn atrama` ?
                 __instance.timeToConstruct = 20f;
+                __instance.BroadcastMessage("SubConstructionBeginning", null, (UnityEngine.SendMessageOptions)1);
+                __instance.SendMessageUpwards("SubConstructionBeginning", null, (UnityEngine.SendMessageOptions)1);
             }
         }
     }

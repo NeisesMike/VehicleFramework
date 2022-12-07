@@ -118,6 +118,9 @@
     <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
+    <Compile Include="StorageComponents\BatteryProxy.cs" />
+    <Compile Include="UpgradeModules\UpgradeProxy.cs" />
+    <Compile Include="VehicleComponents\Submersible.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk1.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk2.cs" />
     <Compile Include="UpgradeModules\ModVehicleDepthMk3.cs" />
@@ -133,8 +136,8 @@
     <Compile Include="ControlPanel\ControlPanelButton.cs" />
     <Compile Include="StorageComponents\StorageInput.cs" />
     <Compile Include="StorageComponents\InnateStorageInput.cs" />
-    <Compile Include="VehicleComponents\Engines\Odyssey.cs" />
-    <Compile Include="VehicleComponents\Engines\ModVehicleEngine.cs" />
+    <Compile Include="Engines\Odyssey.cs" />
+    <Compile Include="Engines\ModVehicleEngine.cs" />
     <Compile Include="VehicleComponents\PowerManager.cs" />
     <Compile Include="VehicleComponents\TetherSource.cs" />
     <Compile Include="VehicleComponents\ModVehicleTether.cs" />
@@ -146,8 +149,8 @@
     <Compile Include="VehicleBuilding\VehicleCraftable.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
-    <Compile Include="VehicleComponents\Engines\Cricket.cs" />
-    <Compile Include="VehicleComponents\Engines\Atrama.cs" />
+    <Compile Include="Engines\Cricket.cs" />
+    <Compile Include="Engines\Atrama.cs" />
     <Compile Include="VehicleComponents\FuelGauge.cs" />
     <Compile Include="LightControllers\HeadLightsController.cs" />
     <Compile Include="LightControllers\NavigationLightsController.cs" />
@@ -175,6 +178,7 @@
     <Compile Include="VehicleManager.cs" />
     <Compile Include="VehicleBuilding\VehicleParts.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\QMods\$(SolutionName)\" /y</PostBuildEvent>

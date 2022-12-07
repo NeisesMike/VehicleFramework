@@ -5,13 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 using VehicleFramework.Engines;
 
 namespace VehicleFramework
 {
+    /*
+     * ModVehicle is the class of self-leveling, walkable submarines
+     */
     public abstract class ModVehicle : Vehicle, ICraftTarget
-        {
-            public override string vehicleDefaultName
+    {
+        public override string vehicleDefaultName
             {
                 get
                 {
@@ -22,7 +27,8 @@ namespace VehicleFramework
                     }
                     return main.Get("VehicleDefaultName");
                 }
-            }
+        }
+        public new SubName subName = new SubName();
 
         public abstract GameObject VehicleModel { get; }
         public abstract GameObject CollisionModel { get; }
@@ -50,6 +56,11 @@ namespace VehicleFramework
         public abstract List<GameObject> TetherSources { get; }
         public abstract GameObject BoundingBox { get; }
         public abstract GameObject ControlPanel { get; }
+        public virtual GameObject Fabricator { get; }
+        public virtual GameObject ColorPicker { get; }
+        public virtual GameObject SteeringWheel { get; }
+        public virtual GameObject SteeringWheelLeftHandTarget { get; }
+        public virtual GameObject SteeringWheelRightHandTarget { get; }
         public ControlPanel controlPanelLogic;
 
 
@@ -60,8 +71,8 @@ namespace VehicleFramework
         public PingInstance pingInstance = null;
         public FMOD_StudioEventEmitter ambienceSound;
 
-        private bool isPilotSeated = false;
-        private bool isPlayerInside = false;
+        protected bool isPilotSeated = false;
+        protected bool isPlayerInside = false;
 
         // TODO
         // These are tracked appropriately, but their values are never used for anything meaningful.
@@ -105,8 +116,8 @@ namespace VehicleFramework
         {
             void MaybeSetupUniqueFabricator()
             {
-                Transform fabLoc = transform.Find("Fabricator-Location");
-                if(fabLoc == null)
+                Transform fabLoc = Fabricator.transform;
+                if(fabLoc is null)
                 {
                     Logger.Log("Warning: " + name + " does not have a Fabricator-Location.");
                     return;
@@ -125,25 +136,30 @@ namespace VehicleFramework
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
 
-            gameObject.EnsureComponent<TetherSource>();
-
             floodlights = gameObject.EnsureComponent<FloodLightsController>();
             headlights = gameObject.EnsureComponent<HeadLightsController>();
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
-            voice = gameObject.EnsureComponent<AutoPilotVoice>();
-            gameObject.EnsureComponent<AutoPilot>();
-
-            controlPanelLogic.Init();
-
+            if(!(this is Submersible))
+            {
+                gameObject.EnsureComponent<TetherSource>();
+                voice = gameObject.EnsureComponent<AutoPilotVoice>();
+                gameObject.EnsureComponent<AutoPilot>();
+                controlPanelLogic.Init();
+                MaybeSetupUniqueFabricator();
+            }
+                        
+            // perform normal vehicle lazyinitializing
             base.LazyInitialize();
-
-            MaybeSetupUniqueFabricator();
         }
         public override void Start()
         {
             base.Start();
+
+            // setup SubName
+            //subName.SetName("Odyssey" + Mathf.RoundToInt(UnityEngine.Random.value*1000).ToString());
+            //subName.SetColor(0, Vector3.one, Color.red);
 
             upgradesInput.equipment = modules;
             modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
@@ -161,28 +177,32 @@ namespace VehicleFramework
             */
 
             powerMan = gameObject.EnsureComponent<PowerManager>();
-            //gameObject.EnsureComponent<FuelGauge>();
 
-            // load upgrades from file
 
-            // load storage from file
+            // now that we're in-game, load the color picker
+            // we can't do this before we're in-game because not all assets are ready before the game is started
+            if (!(ColorPicker is null))
+            {
+                if (ColorPicker.transform.Find("EditScreen") is null)
+                {
+                    SetupColorPicker();
+                }
+                else
+                {
+                    ActualEditScreen = ColorPicker.transform.Find("EditScreen").gameObject;
+                }
+            }
 
-            // load modular storage from file
+            // Ensure our name is still good
+            vehicleName = OGVehicleName;
+            NowVehicleName = OGVehicleName;
+
+
+            // Register our new vehicle with Vehicle Framework
             if (!isRegistered)
             {
                 VehicleManager.EnrollVehicle(this);
                 isRegistered = true;
-            }
-
-            // ensure we've got at least one power cell
-            if(!energyInterface.hasCharge)
-            {
-                GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
-                thisItem.GetComponent<Battery>().charge = 200;
-                thisItem.transform.SetParent(StorageRootObject.transform);
-                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
-                Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
-                thisItem.SetActive(false);
             }
         }
         public override void FixedUpdate()
@@ -358,29 +378,19 @@ namespace VehicleFramework
         {
             base.EnterVehicle(player, teleport, playEnterAnimation);
         }
-        private IEnumerator SitDownInChair()
+        protected IEnumerator SitDownInChair()
         {
             Player.main.playerAnimator.SetBool("chair_sit", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_sit", false);
-            foreach(var seat in PilotSeats)
-            {
-                // disappear the chair
-                seat.Seat.GetComponent<MeshRenderer>().enabled = false;
-            }
         }
-        private IEnumerator StandUpFromChair()
+        protected IEnumerator StandUpFromChair()
         {
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_stand_up", false);
-            foreach (var seat in PilotSeats)
-            {
-                // re-appear the chair
-                seat.Seat.GetComponent<MeshRenderer>().enabled = true;
-            }
         }
-        private IEnumerator TryStandUpFromChair()
+        protected IEnumerator TryStandUpFromChair()
         {
             while (IsPlayerPiloting())
             {
@@ -391,12 +401,14 @@ namespace VehicleFramework
         }
         public void BeginPiloting()
         {
+            base.EnterVehicle(Player.main, true);
             Player.main.EnterSittingMode();
             StartCoroutine(SitDownInChair());
             StartCoroutine(TryStandUpFromChair());
-            base.EnterVehicle(Player.main, true);
             isPilotSeated = true;
             uGUI.main.quickSlots.SetTarget(this);
+            Player.main.armsController.ikToggleTime = 0;
+            Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
             NotifyStatus(PlayerStatus.OnPilotBegin);
         }
         public void StopPiloting()
@@ -418,6 +430,8 @@ namespace VehicleFramework
             }
             Player.main.SetScubaMaskActive(false);
             uGUI.main.quickSlots.SetTarget(null);
+            Player.main.armsController.ikToggleTime = 0.5f;
+            Player.main.armsController.SetWorldIKTarget(null, null);
             NotifyStatus(PlayerStatus.OnPilotEnd);
         }
         public void PlayerEntry()
@@ -785,21 +799,46 @@ namespace VehicleFramework
         }
         public void OnCraftEnd(TechType techType)
         {
+            IEnumerator GiveUsABatteryOrGiveUsDeath()
+            {
+                yield return new WaitForSeconds(2.5f);
+
+                // give us an AI battery please
+                GameObject newAIBattery = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
+                newAIBattery.GetComponent<Battery>().charge = 200;
+                newAIBattery.transform.SetParent(StorageRootObject.transform);
+                AIEnergyInterface.sources.First().battery = newAIBattery.GetComponent<Battery>();
+                AIEnergyInterface.sources.First().batterySlot.AddItem(newAIBattery.GetComponent<Pickupable>());
+                newAIBattery.SetActive(false);
+
+                if (!energyInterface.hasCharge)
+                {
+                    GameObject newPowerCell = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
+                    newPowerCell.GetComponent<Battery>().charge = 200;
+                    newPowerCell.transform.SetParent(StorageRootObject.transform);
+                    Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = newPowerCell.GetComponent<Battery>();
+                    Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(newPowerCell.GetComponent<Pickupable>());
+                    newPowerCell.SetActive(false);
+                }
+                //GetComponent<InteriorLightsController>().EnableInteriorLighting();
+            }
             StartCoroutine(GiveUsABatteryOrGiveUsDeath());
         }
-        private IEnumerator GiveUsABatteryOrGiveUsDeath()
+        public virtual void SubConstructionBeginning()
         {
-            yield return new WaitForSeconds(2.5f);
+            PaintVehicleDefaultStyle(OGVehicleName);
+        }
+        public virtual void SubConstructionComplete()
+        {
+            PaintNameDefaultStyle(OGVehicleName);
+            // Setup the color picker with the odyssey's name
+            var active = transform.Find("ColorPicker/EditScreen/Active");
+            if (active)
+            {
+                active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = NowVehicleName;
+                active.transform.Find("InputField/Text").GetComponent<Text>().text = NowVehicleName;
+            }
 
-            // give us an AI battery please
-            GameObject newBattery = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Battery, true));
-            newBattery.GetComponent<Battery>().charge = 100;
-            newBattery.transform.SetParent(StorageRootObject.transform);
-            AIEnergyInterface.sources.First().battery = newBattery.GetComponent<Battery>();
-            AIEnergyInterface.sources.First().batterySlot.AddItem(newBattery.GetComponent<Pickupable>());
-            newBattery.SetActive(false);
-
-            //GetComponent<InteriorLightsController>().EnableInteriorLighting();
         }
         public void ForceExitLockedMode()
         {
@@ -811,6 +850,216 @@ namespace VehicleFramework
             Player.main.playerController.ForceControllerSize();
             Player.main.transform.parent = null;
             StopPiloting();
+        }
+
+
+        public virtual void PaintNameDefaultStyle(string name)
+        {
+            OnNameChangeMaybe(name);
+        }
+        public virtual void PaintVehicleDefaultStyle(string name)
+        {
+            ExteriorMainColor = Color.white;
+            OldExteriorMainColor = Color.white;
+            ExteriorPrimaryAccent = Color.blue;
+            OldExteriorPrimaryAccent = Color.blue;
+            ExteriorSecondaryAccent = Color.grey;
+            OldExteriorSecondaryAccent = Color.grey;
+            PaintNameDefaultStyle(name);
+        }
+        public enum TextureDefinition : int
+        {
+            twice = 4096,
+            full = 2048,
+            half = 1024
+        }
+        public virtual void PaintVehicleSection(string materialName, Color col)
+        {
+        }
+        public virtual void PaintVehicleName(string name, Color nameColor, Color hullColor)
+        {
+            OnNameChangeMaybe(name);
+        }
+
+
+
+
+
+        public Color ExteriorMainColor;
+        public Color ExteriorPrimaryAccent;
+        public Color ExteriorSecondaryAccent;
+        public Color ExteriorNameLabel;
+        protected Color OldExteriorMainColor;
+        protected Color OldExteriorPrimaryAccent;
+        protected Color OldExteriorSecondaryAccent;
+        protected Color OldExteriorNameLabel;
+        protected string OGVehicleName;
+        public string NowVehicleName;
+        protected string OldVehicleName;
+        public bool IsDefaultTexture = true;
+        public virtual void SetColorPickerUIColor(string name, Color col)
+        {
+            ActualEditScreen.transform.Find("Active/"+ name +"/SelectedColor").GetComponent<Image>().color = col;
+        }
+        public virtual void OnColorChange(ColorChangeEventData eventData)
+        {
+            // determine which tab is selected
+            // call the desired function
+            List<string> tabnames = new List<string>() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
+            string selectedTab = "";
+            foreach(string tab in tabnames)
+            {
+                if (ActualEditScreen.transform.Find("Active/" + tab + "/Background").gameObject.activeSelf)
+                {
+                    selectedTab = tab;
+                    break;
+                }
+            }
+
+            SetColorPickerUIColor(selectedTab, eventData.color);
+            switch (selectedTab)
+            {
+                case "MainExterior":
+                    IsDefaultTexture = false;
+                    OldExteriorMainColor = ExteriorMainColor;
+                    ExteriorMainColor = eventData.color;
+                    break;
+                case "PrimaryAccent":
+                    IsDefaultTexture = false;
+                    OldExteriorPrimaryAccent = ExteriorPrimaryAccent;
+                    ExteriorPrimaryAccent = eventData.color;
+                    break;
+                case "SecondaryAccent":
+                    IsDefaultTexture = false;
+                    OldExteriorSecondaryAccent = ExteriorSecondaryAccent;
+                    ExteriorSecondaryAccent = eventData.color;
+                    break;
+                case "NameLabel":
+                    //IsDefaultTexture = false;
+                    OldExteriorNameLabel = ExteriorNameLabel;
+                    ExteriorNameLabel = eventData.color;
+                    break;
+                default:
+                    break;
+            }
+            ActualEditScreen.transform.Find("Active/MainExterior/SelectedColor").GetComponent<Image>().color = ExteriorMainColor;
+        }
+        public virtual void OnNameChangeMaybe(string e)
+        {
+            if(NowVehicleName != e)
+            {
+                OldVehicleName = NowVehicleName;
+                NowVehicleName = e;
+                vehicleName = e;
+            }
+        }
+        public virtual void OnNameChange(string e)
+        {
+            OldVehicleName = NowVehicleName;
+            NowVehicleName = e;
+            vehicleName = e;
+        }
+        public virtual void OnColorSubmit()
+        {
+            if (ExteriorMainColor != OldExteriorMainColor)
+            {
+                PaintVehicleSection("ExteriorMainColor", ExteriorMainColor);
+            }
+            if (ExteriorPrimaryAccent != OldExteriorPrimaryAccent)
+            {
+                PaintVehicleSection("ExteriorPrimaryAccent", ExteriorPrimaryAccent);
+            }
+            if (ExteriorSecondaryAccent != OldExteriorSecondaryAccent)
+            {
+                PaintVehicleSection("ExteriorSecondaryAccent", ExteriorSecondaryAccent);
+            }
+            if (IsDefaultTexture)
+            {
+                PaintVehicleDefaultStyle(NowVehicleName);
+            }
+            else
+            {
+                PaintVehicleName(NowVehicleName, ExteriorNameLabel, ExteriorMainColor);
+            }
+            return;
+        }
+
+        public GameObject ActualEditScreen = null;
+
+        public void SetupColorPicker()
+        {
+            UnityAction CreateAction(string name)
+            {
+                void Action()
+                {
+                    List<string> tabnames = new List<string>() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
+                    foreach (string tab in tabnames.FindAll(x => x != name))
+                    {
+                        ActualEditScreen.transform.Find("Active/" + tab + "/Background").gameObject.SetActive(false);
+                    }
+                    ActualEditScreen.transform.Find("Active/" + name + "/Background").gameObject.SetActive(true);
+                }
+                return Action;
+            }
+
+            Builder.Begin(CraftData.GetBuildPrefab(TechType.BaseUpgradeConsole));
+            Builder.ghostModel.GetComponentInChildren<BaseGhost>().OnPlace();
+            GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
+            Builder.End();
+            ActualEditScreen = GameObject.Instantiate(console.transform.Find("EditScreen").gameObject);
+            ActualEditScreen.GetComponentInChildren<SubNameInput>().enabled = false;
+            ActualEditScreen.name = "EditScreen";
+            ActualEditScreen.SetActive(true);
+            ActualEditScreen.transform.Find("Inactive").gameObject.SetActive(false);
+
+
+            GameObject frame = ColorPicker;
+            ActualEditScreen.transform.SetParent(frame.transform);
+            ActualEditScreen.transform.localPosition = new Vector3(.15f, .33f, 0f);
+            ActualEditScreen.transform.localEulerAngles = new Vector3(0, 180, 0);
+
+            var but = ActualEditScreen.transform.Find("Active/BaseTab");
+            but.name = "MainExterior";
+            but.GetComponentInChildren<Text>().text = "Main Exterior";
+            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("MainExterior"));
+
+            but = ActualEditScreen.transform.Find("Active/NameTab");
+            but.name = "PrimaryAccent";
+            but.GetComponentInChildren<Text>().text = "Primary Accent";
+            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("PrimaryAccent"));
+
+            but = ActualEditScreen.transform.Find("Active/InteriorTab");
+            but.name = "SecondaryAccent";
+            but.GetComponentInChildren<Text>().text = "Secondary Accent";
+            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("SecondaryAccent"));
+
+            but = ActualEditScreen.transform.Find("Active/Stripe1Tab");
+            but.name = "NameLabel";
+            but.GetComponentInChildren<Text>().text = "Name Label";
+            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("NameLabel"));
+
+            GameObject colorPicker = ActualEditScreen.transform.Find("Active/ColorPicker").gameObject;
+            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.RemoveAllListeners();
+            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.AddListener(new UnityAction<ColorChangeEventData>(OnColorChange));
+            ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.RemoveAllListeners();
+            ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.AddListener(new UnityAction(OnColorSubmit));
+            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.RemoveAllListeners();
+            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new UnityAction<string>(OnNameChange));
+        }
+
+        public virtual void OnAIBatteryReload()
+        {
+        }
+
+        // this function returns the number of seconds to wait before opening the PDF,
+        // to show off the cool animations~
+        public virtual float OnStorageOpen(string name, bool open)
+        {
+            return 0;
+        }
+
+        public virtual void ModVehicleReset()
+        {
         }
     }
 }

@@ -31,10 +31,15 @@ namespace VehicleFramework.VehicleParts
     public struct VehicleUpgrades
     {
         public GameObject Interface;
+        public GameObject Flap;
+        public Vector3 AnglesOpened;
+        public Vector3 AnglesClosed;
+        public List<Transform> ModuleProxies;
     }
     public struct VehicleBattery
     {
         public GameObject BatterySlot;
+        public Transform BatteryProxy;
     }
     public struct VehicleFloodLight
     {

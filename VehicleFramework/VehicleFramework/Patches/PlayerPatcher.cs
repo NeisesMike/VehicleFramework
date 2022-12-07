@@ -27,7 +27,7 @@ namespace VehicleFramework
         public static void StartPostfix(Player __instance)
         {
             __instance.gameObject.EnsureComponent<ModVehicleTether>();
-            HUDBuilder.BuildNormalHUD();
+            HUDBuilder.DecideBuildHUD();
 
             // Setup build bot paths.
             // We have to do this at game-start time,
@@ -36,6 +36,7 @@ namespace VehicleFramework
             // Knowing this, we might be able to factor out some gameobjects,
             // that we'd been requiring in the assetbundle side of things.
             BuildBotManager.SetupBuildBotPaths();
+
             return;
         }
 
@@ -63,7 +64,15 @@ namespace VehicleFramework
 
             if (rollDelta > 4f || pitchDelta > 4f)
             {
-                BasicText message = new BasicText(500, 0);
+                BasicText message;
+                if(HUDBuilder.IsVR)
+                {
+                    message = new BasicText(250, 250);
+                }
+                else
+                {
+                    message = new BasicText(500, 0);
+                }
                 message.ShowMessage("Angle is too steep.\nDouble tap " + GameInput.Button.Exit.ToString() + "\nButton to auto-level.", 5);
                 return false;
             }

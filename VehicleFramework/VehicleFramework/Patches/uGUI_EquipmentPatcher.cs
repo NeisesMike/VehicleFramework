@@ -20,10 +20,14 @@ namespace VehicleFramework
         [HarmonyPatch("Awake")]
         public static void AwakePostfix(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ModuleBuilder.main.vehicleAllSlots = ___allSlots;
-            ModuleBuilder.main.BuildAllSlots();
-            ModuleBuilder.main.isEquipmentInit = true;
-            ___allSlots = ModuleBuilder.main.vehicleAllSlots;
+            if (!ModuleBuilder.main.haveWeCalledBuildAllSlots)
+            {
+                ModuleBuilder.main.haveWeCalledBuildAllSlots = true;
+                ModuleBuilder.main.isEquipmentInit = true;
+                ModuleBuilder.main.vehicleAllSlots = ___allSlots;
+                ModuleBuilder.main.BuildAllSlots();
+                ___allSlots = ModuleBuilder.main.vehicleAllSlots;
+            }
         }
         [HarmonyPrefix]
         [HarmonyPatch("OnDragHoverEnter")]

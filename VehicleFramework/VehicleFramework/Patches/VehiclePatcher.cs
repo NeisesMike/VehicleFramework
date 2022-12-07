@@ -21,8 +21,9 @@ namespace VehicleFramework
         [HarmonyPatch("OnHandHover")]
         public static bool OnHandHoverPrefix(Vehicle __instance)
         {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
+            // What the hell is this?
+            // Just testing something, I guess?
+            if (__instance is ModVehicle mv)
             {
                 return false;
             }

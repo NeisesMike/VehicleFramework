@@ -57,7 +57,15 @@ namespace VehicleFramework
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
-            aiEI = mv.AIEnergyInterface;
+            if (mv.BackupBatteries.Count > 0)
+            {
+                aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
+            }
+            else
+            {
+                aiEI = mv.energyInterface;
+            }
+            //aiEI = mv.AIEnergyInterface;
 
             // register self with mainpatcher, for on-the-fly voice selection updating
             MainPatcher.voices.Add(this);
@@ -93,6 +101,17 @@ namespace VehicleFramework
         }
         public void Update()
         {
+            foreach (var speaker in speakers)
+            {
+                if (mv.IsPlayerInside())
+                {
+                    speaker.GetComponent<AudioLowPassFilter>().enabled = false;
+                }
+                else
+                {
+                    speaker.GetComponent<AudioLowPassFilter>().enabled = true;
+                }
+            }
             if (aiEI.hasCharge)
             {
                 if (speechQueue.Count > 0)
@@ -112,18 +131,6 @@ namespace VehicleFramework
                     }
                 }
             }
-            foreach (var speaker in speakers)
-            {
-                if (mv.IsPlayerInside())
-                {
-                    speaker.GetComponent<AudioLowPassFilter>().enabled = false;
-                }
-                else
-                {
-                    speaker.GetComponent<AudioLowPassFilter>().enabled = true;
-                }
-            }
-            
         }
         public void TryPlayNextClipInQueue()
         {

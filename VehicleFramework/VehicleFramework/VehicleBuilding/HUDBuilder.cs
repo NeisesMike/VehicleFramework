@@ -7,21 +7,136 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
+    /*
+     * This class controls building and configuring the mod vehicle HUD
+     * We have to work differently for VR
+     */
     public static class HUDBuilder
     {
-        /*
-         * This class hosts HUD-building functionality.
-         * Currently it just steals the Seamoth HUD,
-         * so the class is trivial.
-         * Eventually I would like to support a new HUD,
-         * so it's okay for the class to be trivial now.
-         */
+        public static bool IsVR = false;
+        static List<GameObject> GetAllObjectsInScene()
+        {
+            List<GameObject> objectsInScene = new List<GameObject>();
+
+            foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+            {
+                if (go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)
+                    continue;
+
+                objectsInScene.Add(go);
+            }
+
+            return objectsInScene;
+        }
+        public static GameObject TryGetVRVehicleCanvas()
+        {
+            // Here we ensure we have a reference to the freshest copy of VRVehicleCanvas
+            // The base game has a memory leak, in which VRVehicleCanvas is not cleaned up across exit-reload
+            // so we fix that here
+            GameObject VRVehicleCanvas = null;
+            foreach (GameObject go in GetAllObjectsInScene())
+            {
+                if (go.name == "VRVehicleCanvas")
+                {
+                    if (go.transform.Find("ModVehicle") is null)
+                    {
+                        VRVehicleCanvas = go;
+                    }
+                    else
+                    {
+                        UnityEngine.Object.Destroy(go);
+                    }
+                }
+            }
+            if (VRVehicleCanvas)
+            {
+                GameObject seenTag = GameObject.Instantiate(new GameObject(), VRVehicleCanvas.transform);
+                seenTag.name = "ModVehicle";
+            }
+            return VRVehicleCanvas;
+        }
+        public static void DecideBuildHUD()
+        {
+            GameObject VRVehicleCanvas = TryGetVRVehicleCanvas();
+            if(VRVehicleCanvas)
+            {
+                IsVR = true;
+                BuildVRHUD(VRVehicleCanvas);
+            }
+            else
+            {
+                BuildNormalHUD();
+            }
+        }
         public static void BuildNormalHUD()
         {
             // copy the seamoth hud for now
             GameObject seamothHUDElementsRoot= uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Seamoth").gameObject;
-
             GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
+            mvHUDElementsRoot.name = "ModVehicle";
+
+            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
+            ret.root = mvHUDElementsRoot;
+            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<UnityEngine.UI.Text>();
+            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<UnityEngine.UI.Text>();
+            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<UnityEngine.UI.Text>();
+            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<UnityEngine.UI.Text>();
+        }
+        public static void BuildVRHUD(GameObject VRVehicleCanvas)
+        {
+            // Now we want to add our ModVehicle HUD to the standard HUD.
+            // We don't want to use the actual "vr vehicle hud"
+            // but we're going to grab the copy of the seamoth HUD from the "vr vehicle hud"
+            GameObject seamothHUDElementsRoot = VRVehicleCanvas.transform.Find("Seamoth").gameObject;
+            GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
+            mvHUDElementsRoot.name = "ModVehicle";
+            mvHUDElementsRoot.transform.localPosition = new Vector3(245.2f, -163.5f, 0);
+            mvHUDElementsRoot.transform.localScale = 0.8f * Vector3.one;
+
+            // Finally we need to add and configure a controller for our new HUD object
+            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
+            ret.root = mvHUDElementsRoot;
+            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<UnityEngine.UI.Text>();
+            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<UnityEngine.UI.Text>();
+            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<UnityEngine.UI.Text>();
+            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<UnityEngine.UI.Text>();
+        }
+        public static void BuildVRHUD_OLD()
+        {
+
+            List<GameObject> GetAllObjectsInScene()
+            {
+                List<GameObject> objectsInScene = new List<GameObject>();
+
+                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                {
+                    if (go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)
+                        continue;
+
+                    objectsInScene.Add(go);
+                }
+
+                return objectsInScene;
+            }
+
+
+            Debug.Log("top");
+            GameObject VRVehicleCanvas = null;
+
+
+            foreach (GameObject go in GetAllObjectsInScene())
+            {
+                if(go.name == "VRVehicleCanvas")
+                {
+                    if(go.transform.Find("ModVehicle") is null)
+                    {
+                        VRVehicleCanvas = go;
+                    }
+                }
+            }
+
+            GameObject seamothHUDElementsRoot = VRVehicleCanvas.transform.Find("Seamoth").gameObject;
+            GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, VRVehicleCanvas.transform);
             mvHUDElementsRoot.name = "ModVehicle";
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();

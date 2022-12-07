@@ -18,14 +18,14 @@ namespace VehicleFramework
          */
         [HarmonyPrefix]
         [HarmonyPatch("End")]
-        public static void End(uGUI_SceneLoading __instance, bool fade, ref bool __state)
+        public static void EndPrefix(uGUI_SceneLoading __instance, bool fade, ref bool __state)
         {
             __state = __instance.isLoading;
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("End")]
-        public static void End(uGUI_SceneLoading __instance, bool fade, bool __state)
+        public static void EndPostfix(uGUI_SceneLoading __instance, bool fade, bool __state)
         {
             if(__state && !__instance.isLoading)
             {

@@ -23,6 +23,9 @@ namespace VehicleFramework
         public Dictionary<string, uGUI_EquipmentSlot> baseVehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
         public bool isEquipmentInit = false;
         public bool areModulesReady = false;
+        public bool haveWeCalledBuildAllSlots = false;
+        public bool slotExtenderIsPatched = false;
+        public bool slotExtenderHasGreenLight = false;
 
         public enum ModuleSlotType
         {
@@ -108,15 +111,14 @@ namespace VehicleFramework
                 vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
             }
 
+            // Now that we've gotten the data we need,
+            // we can let slot extender mangle it
             var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
             if (type2 != null)
             {
-                var awakeOriginal = AccessTools.Method(type2, "Prefix");
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                object dummyInstance = null;
-                Patches.CompatibilityPatches.SlotExtenderPatcher.hasGreenLight = true;
-                awakeOriginal.Invoke(dummyInstance, new object[] { equipment });
-                Patches.CompatibilityPatches.SlotExtenderPatcher.hasGreenLight = false;
+                ModuleBuilder.main.slotExtenderHasGreenLight = true;
+                equipment.Awake();
             }
         }
         public void grabComponents()

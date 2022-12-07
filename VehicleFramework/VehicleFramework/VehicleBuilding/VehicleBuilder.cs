@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 using System.IO;
 using System.Reflection;
 
@@ -54,7 +56,9 @@ namespace VehicleFramework
         private static int numVehicleTypes = 0;
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
         public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
+        public static GameObject upgradeconsole = CraftData.GetPrefabForTechType(TechType.BaseUpgradeConsole, true);
         public static GameObject coroutineHelper;
+        public static GameObject powercell = GameObject.CreatePrimitive(PrimitiveType.Capsule);//CraftData.GetPrefabForTechType(TechType.PowerCell, true); // TODO is this right?
 
         public const EquipmentType ModuleType = (EquipmentType)625;
         public const EquipmentType ArmType = (EquipmentType)626;
@@ -140,16 +144,22 @@ namespace VehicleFramework
             foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
             {
                 VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                vuci.flap = vu.Interface.transform.Find("flap");
-                vuci.anglesOpened = new Vector3(80, 0, 0);
+                vuci.flap = vu.Flap.transform;
+                vuci.anglesOpened = vu.AnglesOpened;
+                vuci.anglesClosed = vu.AnglesClosed;
                 mv.upgradesInput = vuci;
+                var up = vu.Interface.EnsureComponent<UpgradeProxy>();
+                up.proxies = vu.ModuleProxies;
             }
             // Configure the Control Panel
-            mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
-            mv.controlPanelLogic.mv = mv;
-            mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
-            mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
-            GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+            if (mv.ControlPanel)
+            {
+                mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
+                mv.controlPanelLogic.mv = mv;
+                mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
+                mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
+                GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+            }
         }
         public static void SetupEnergyInterface(ref ModVehicle mv)
         {
@@ -171,6 +181,10 @@ namespace VehicleFramework
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = energyMixin;
                 tmp.tooltip = "Vehicle Battery";
+
+                var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
+                model.proxy = vb.BatteryProxy;
+                model.mixin = energyMixin;
             }
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
@@ -192,7 +206,7 @@ namespace VehicleFramework
                 var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
                 em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
                 em.defaultBattery = seamothEnergyMixin.defaultBattery;
-                em.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell, TechType.Battery, TechType.LithiumIonBattery, TechType.PrecursorIonBattery, TechType.PrecursorIonCrystal };
+                em.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell };
                 em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
                 em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
                 em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
@@ -204,6 +218,10 @@ namespace VehicleFramework
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = em;
                 tmp.tooltip = "Autopilot Battery";
+
+                var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
+                model.proxy = vb.BatteryProxy;
+                model.mixin = em;
             }
             // Configure energy interface
             mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();
@@ -502,9 +520,12 @@ namespace VehicleFramework
         }
         public static void SetupRespawnPoint(ref ModVehicle mv)
         {
-            mv.gameObject.EnsureComponent<SubRoot>();
-            var tmp = mv.TetherSources.First();
-            tmp.EnsureComponent<RespawnPoint>();
+            if (mv.TetherSources.Count > 0)
+            {
+                mv.gameObject.EnsureComponent<SubRoot>();
+                var tmp = mv.TetherSources.First();
+                tmp.EnsureComponent<RespawnPoint>();
+            }
         }
 
         #endregion
@@ -556,6 +577,7 @@ namespace VehicleFramework
             */
             #endregion
         }
+
         public static void ApplyShaders(ref ModVehicle mv)
         {
             // Add the marmoset shader to all renderers
@@ -570,21 +592,44 @@ namespace VehicleFramework
                     var seamothGlassShader = seamothGlassMaterial.shader;
                     renderer.material = seamothGlassMaterial;
                     // TODO decide which line is right:
+                    renderer.material = seamothGlassMaterial; // this is the right line
                     //renderer.material.shader = seamothGlassShader;
-                    renderer.material.shader = marmosetShader;
-                    renderer.material.SetFloat("_ZWrite", 1f);
+                    //renderer.material.shader = marmosetShader;
+                    //renderer.material.SetFloat("_ZWrite", 1f);
+                    //renderer.material.SetFloat("_MyCullVariable", 1f);
                     continue;
                 }
                 foreach (Material mat in renderer.materials)
                 {
+                    mat.shader = marmosetShader;
                     // skip some materials
-                    if (renderer.gameObject.name.Contains("Light"))
+                    if (renderer.gameObject.name.ToLower().Contains("light"))
                     {
                         continue;
                     }
                     else
                     {
+                        // give it the marmo shader, no matter what
                         mat.shader = marmosetShader;
+
+                        // if this is a piece of interior geometry, enable the lightmap
+                        Transform itInterior = renderer.gameObject.transform;
+                        bool isthisinterior = itInterior.name == "Interior_Main";
+                        while (itInterior.parent != null)
+                        {
+                            if (itInterior.parent.name == "Interior_Main")
+                            {
+                                isthisinterior = true;
+                                break;
+                            }
+                            itInterior = itInterior.parent;
+                        }
+                        if (isthisinterior)
+                        {
+                            mat.EnableKeyword("MARMO_SPECMAP");
+                            mat.EnableKeyword("UWE_LIGHTMAP");
+                            mat.SetFloat("_LightmapStrength", 7.5f);
+                        }
                     }
                 }
             }
@@ -640,7 +685,6 @@ namespace VehicleFramework
             }
             return SpriteManager.Get(SpriteManager.Group.Pings, name);
         }
-
 
         /*
         //https://github.com/Metious/MetiousSubnauticaMods/blob/master/CustomDataboxes/API/Databox.cs
