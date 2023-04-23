@@ -12,36 +12,49 @@ using SMLHelper.V2.Options.Attributes;
 using SMLHelper.V2.Options;
 using SMLHelper.V2.Json;
 using SMLHelper.V2.Handlers;
-using QModManager.API.ModLoading;
 using SMLHelper.V2.Utility;
 using SMLHelper.V2.Json.Attributes;
 using VehicleFramework.UpgradeModules;
 using SMLHelper.V2.Assets;
+using BepInEx;
+using BepInEx.Logging;
+using BepInEx.Bootstrap;
+using UnityEngine.SceneManagement;
 
-using upgrades = System.Collections.Generic.Dictionary<string, TechType>;
-using batteries = System.Collections.Generic.List<System.Tuple<TechType, float>>;
-using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<System.Tuple<TechType, float>>>>;
-using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<System.Tuple<TechType, float>>>>;
+using techtype = System.String;
+using upgrades = System.Collections.Generic.Dictionary<string, System.String>;
+using batteries = System.Collections.Generic.List<System.Tuple<System.String, float>>;
+using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<System.Tuple<System.String, float>>>>;
+using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<System.Tuple<System.String, float>>>>;
 using color = System.Tuple<float, float, float, float>;
 
 namespace VehicleFramework
 {
     public static class Logger
     {
+        internal static ManualLogSource MyLog { get; set; }
         public static void Log(string message)
         {
-            UnityEngine.Debug.Log("[VehicleFramework] " + message);
+            MyLog.LogInfo("[VehicleFramework] " + message);
+        }
+        public static void Warn(string message)
+        {
+            MyLog.LogWarning("[VehicleFramework] " + message);
+        }
+        public static void Error(string message)
+        {
+            MyLog.LogError("[VehicleFramework] " + message);
         }
         public static void DebugLog(string message)
         {
-            if (MainPatcher.Config.isDebugLogging)
+            if (MainPatcher.VFConfig.isDebugLogging)
             {
-                UnityEngine.Debug.Log("[VehicleFramework] " + message);
+                MyLog.LogInfo("[VehicleFramework] " + message);
             }
         }
         public static void Log(string format, params object[] args)
         {
-            UnityEngine.Debug.Log("[VehicleFramework] " + string.Format(format, args));
+            MyLog.LogInfo("[VehicleFramework] " + string.Format(format, args));
         }
         public static void Output(string msg)
         {
@@ -59,10 +72,12 @@ namespace VehicleFramework
             message.ShowMessage(msg, 2);
         }
     }
-    [QModCore]
-    public static class MainPatcher
+
+    [BepInPlugin("com.mikjaw.subnautica.vehicleframework.mod", "VehicleFramework", "1.0")]
+    public class MainPatcher : BaseUnityPlugin
     {
-        internal static VehicleFrameworkConfig Config { get; private set; }
+
+        internal static VehicleFrameworkConfig VFConfig { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
 
@@ -72,9 +87,29 @@ namespace VehicleFramework
 
         internal static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
 
-        [QModPrePatch]
-        public static void PrePatch()
+        public void Awake()
         {
+            VehicleFramework.Logger.MyLog = base.Logger;
+            PrePatch();
+        }
+
+        public void Start()
+        {
+            Patch();
+            PostPatch();
+        }
+        public void PrePatch()
+        {
+            IEnumerator CollectPrefabsForBuilderReference()
+            {
+                CoroutineTask<GameObject> request = CraftData.GetPrefabForTechTypeAsync(TechType.BaseUpgradeConsole, true);
+                yield return request;
+                VehicleBuilder.upgradeconsole = request.GetResult();
+
+                yield break;
+            }
+            StartCoroutine(CollectPrefabsForBuilderReference());
+
             // patch in the crafting node for the Workbench menu (modification station)
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             byte[] spriteBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "ModVehicleIcon.png"));
@@ -90,9 +125,8 @@ namespace VehicleFramework
             modVehicleDepthModule2.Patch();
             modVehicleDepthModule3.Patch();
         }
-
-        [QModPatch]
-        public static void Patch()
+        
+        public void Patch()
         {
             SaveData saveData = SaveDataHandler.Main.RegisterSaveDataCache<SaveData>();
 
@@ -111,10 +145,11 @@ namespace VehicleFramework
 
             saveData.OnFinishedLoading += (object sender, JsonFileEventArgs e) =>
             {
-                VehicleSaveData = e.Instance as SaveData; 
+                VehicleSaveData = e.Instance as SaveData;
+                CoroutineHelper.Starto(VehicleManager.LoadVehicles());
             };
 
-            Config = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
+            VFConfig = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
             harmony.PatchAll();
 
@@ -157,11 +192,17 @@ namespace VehicleFramework
             }
             */
 
-            List<VehicleCraftable> craftables = VehicleManager.PatchCraftables();
+            void ResetVehiclesInPlay(Scene scene)
+            {
+                // Ensure this list is cleaned up before we load another scene
+                // otherwise, unpredictability ensues
+                VehicleManager.VehiclesInPlay.Clear();
+            }
+            // do this here because it happens only once
+            SceneManager.sceneUnloaded += ResetVehiclesInPlay;
         }
 
-        [QModPostPatch]
-        public static void PostPatch()
+        public void PostPatch()
         {
             //VehicleBuilder.ScatterDataBoxes(craftables);
         }
@@ -203,6 +244,7 @@ namespace VehicleFramework
     internal class SaveData : SaveDataCache
     {
         public List<Tuple<Vector3, bool>> IsPlayerInside { get; set; }
+
         public List<Tuple<Vector3, upgrades>> UpgradeLists { get; set; }
         public List<Tuple<Vector3, innateStorages>> InnateStorages { get; set; }
         public List<Tuple<Vector3, modularStorages>> ModularStorages { get; set; }

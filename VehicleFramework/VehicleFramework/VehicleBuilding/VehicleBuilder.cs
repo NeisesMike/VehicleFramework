@@ -49,14 +49,50 @@ namespace VehicleFramework
         public int arms;
     }
 
+    public static class SeamothHelper
+    {
+        internal static TaskResult<GameObject> request = new TaskResult<GameObject>();
+        private static Coroutine cor = null;
+        public static GameObject Seamoth
+        {
+            get
+            {
+                GameObject thisSeamoth = request.Get();
+                if (thisSeamoth is null)
+                {
+                    Logger.Error("Couldn't get Seamoth...");
+                    return null;
+                }
+                UnityEngine.Object.DontDestroyOnLoad(thisSeamoth);
+                thisSeamoth.SetActive(false);
+                return thisSeamoth;
+            }
+        }
+        public static IEnumerator EnsureSeamoth()
+        {
+            if (request.Get()) // if we have seamoth
+            {
+            }
+            else if(cor is null) // if we need to get seamoth
+            {
+                cor = CoroutineHelper.Starto(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
+                yield return cor;
+                cor = null;
+            }
+            else // if someone else is getting seamoth
+            {
+            }
+        }
+    }
+
     public static class VehicleBuilder
     {
+        public static GameObject upgradeconsole { get; internal set; }
+
         public static GameObject moduleBuilder;
 
         private static int numVehicleTypes = 0;
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
-        public static GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
-        public static GameObject upgradeconsole = CraftData.GetPrefabForTechType(TechType.BaseUpgradeConsole, true);
         public static GameObject coroutineHelper;
         public static GameObject powercell = GameObject.CreatePrimitive(PrimitiveType.Capsule);//CraftData.GetPrefabForTechType(TechType.PowerCell, true); // TODO is this right?
 
@@ -64,16 +100,21 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static void Prefabricate(ref ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
+        public static IEnumerator Prefabricate(VehicleMemory mem, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
         {
-            mv.numVehicleModules = modules;
-            mv.hasArms = arms > 0;
+            mem.mv.numVehicleModules = modules;
+            mem.mv.hasArms = arms > 0;
 
-            Instrument(ref mv, engine, pingType, baseCrushDepth, maxHealth);
-            prefabs.Add(mv);
-            VehicleEntry ve = new VehicleEntry(mv.gameObject, engine, recipe, numVehicleTypes, mv.GetDescription(), mv.GetEncyEntry(), pingType, sprite, modules, arms);
+            // wait for a seamoth to be ready
+            yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
+
+            Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth);
+            prefabs.Add(mem.mv);
+            VehicleEntry ve = new VehicleEntry(mem.mv.gameObject, engine, recipe, numVehicleTypes, mem.mv.GetDescription(), mem.mv.GetEncyEntry(), pingType, sprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
+            VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
+            VehicleManager.PatchCraftable(ref ve);
         }
 
         #region setup_funcs
@@ -105,8 +146,8 @@ namespace VehicleFramework
                 cont.height = vs.Height;
                 cont.width = vs.Width;
 
-                FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
                 var inp = vs.Container.EnsureComponent<InnateStorageInput>();
                 inp.mv = mv;
                 inp.slotID = iter;
@@ -130,8 +171,8 @@ namespace VehicleFramework
                 cont.width = vs.Width;
                 */
 
-                FMODAsset storageCloseSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                FMODAsset storageOpenSound = seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
                 var inp = vs.Container.EnsureComponent<ModularStorageInput>();
                 inp.mv = mv;
                 inp.slotID = iter;
@@ -163,7 +204,7 @@ namespace VehicleFramework
         }
         public static void SetupEnergyInterface(ref ModVehicle mv)
         {
-            var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
+            var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
             {
@@ -195,10 +236,10 @@ namespace VehicleFramework
         {
             if (mv.BackupBatteries == null)
             {
-                Logger.Log("ERROR: Could not find AI battery gameobject(s) for vehicle: " + mv.name);
+                Logger.Error("ERROR: Could not find AI battery gameobject(s) for vehicle: " + mv.name);
                 return;
             }
-            var seamothEnergyMixin = seamoth.GetComponent<EnergyMixin>();
+            var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
             foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
             {
@@ -229,7 +270,7 @@ namespace VehicleFramework
         }
         public static void SetupLightSounds(ref ModVehicle mv)
         {
-            FMOD_StudioEventEmitter[] fmods = seamoth.GetComponents<FMOD_StudioEventEmitter>();
+            FMOD_StudioEventEmitter[] fmods = SeamothHelper.Seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
                 if (fmod.asset.name == "seamoth_light_on")
@@ -248,8 +289,8 @@ namespace VehicleFramework
         }
         public static void SetupLights(ref ModVehicle mv)
         {
-            GameObject seamothHeadLight = seamoth.transform.Find("lights_parent/light_left").gameObject;
-            Transform seamothVL = seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
+            GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
+            Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
             if (mv.HeadLights != null)
@@ -325,7 +366,9 @@ namespace VehicleFramework
             lmData.canResurrect = true;
             lmData.broadcastKillOnDeath = true;
             lmData.destroyOnDeath = true;
-            lmData.explodeOnDestroy = true;
+            // NEWNEW
+            // What's going to happen when a vdehicle dies now?
+            //lmData.explodeOnDestroy = true;
             lmData.invincibleInCreative = true;
             lmData.weldable = true;
             lmData.minDamageForSound = 20f;
@@ -366,7 +409,7 @@ namespace VehicleFramework
         }
         public static void SetupWorldForces(ref ModVehicle mv)
         {
-            mv.worldForces = CopyComponent<WorldForces>(seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
+            mv.worldForces = CopyComponent<WorldForces>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
             mv.worldForces.useRigidbody = mv.useRigidbody;
             mv.worldForces.underwaterGravity = 0f;
             mv.worldForces.aboveWaterGravity = 9.8f;
@@ -391,8 +434,8 @@ namespace VehicleFramework
             mv.stabilizeRoll = true;
             mv.controlSheme = (Vehicle.ControlSheme)12;
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
-            mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
-            mv.splashSound = seamoth.GetComponent<SeaMoth>().splashSound;
+            mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
+            mv.splashSound = SeamothHelper.Seamoth.GetComponent<SeaMoth>().splashSound;
             // TODO
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
@@ -400,7 +443,7 @@ namespace VehicleFramework
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
-            foreach (var thisCE in seamoth.GetComponentsInChildren<FMOD_CustomEmitter>())
+            foreach (var thisCE in SeamothHelper.Seamoth.GetComponentsInChildren<FMOD_CustomEmitter>())
             {
                 if (thisCE.name == "crushDamageSound")
                 {
@@ -426,7 +469,7 @@ namespace VehicleFramework
         public static void SetupWaterClipping(ref ModVehicle mv)
         {
             // Enable water clipping for proper interaction with the surface of the ocean
-            WaterClipProxy seamothWCP = seamoth.GetComponentInChildren<WaterClipProxy>();
+            WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
             foreach (GameObject proxy in mv.WaterClipProxies)
             {
                 WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
@@ -443,13 +486,13 @@ namespace VehicleFramework
             var subname = mv.gameObject.EnsureComponent<SubName>();
             subname.pingInstance = mv.pingInstance;
             subname.colorsInitialized = 0;
-            subname.hullName = mv.NameDecals[0].GetComponent<UnityEngine.UI.Text>();
+            subname.hullName = mv.NameDecals[0].GetComponent<TMPro.TextMeshProUGUI>();
             //mv.subName = subname;
         }
         public static void SetupCollisionSound(ref ModVehicle mv)
         {
             var colsound = mv.gameObject.EnsureComponent<CollisionSound>();
-            var seamothColSound = seamoth.GetComponent<CollisionSound>();
+            var seamothColSound = SeamothHelper.Seamoth.GetComponent<CollisionSound>();
             colsound.hitSoundSmall = seamothColSound.hitSoundSmall;
             colsound.hitSoundSlow = seamothColSound.hitSoundSlow;
             colsound.hitSoundMedium = seamothColSound.hitSoundMedium;
@@ -470,12 +513,13 @@ namespace VehicleFramework
             // TODO: this might not work, might need to put it in a VehicleStatusListener
             var sod = mv.gameObject.EnsureComponent<SoundOnDamage>();
             sod.damageType = DamageType.Normal;
-            sod.sound = seamoth.GetComponent<SoundOnDamage>().sound;
+            sod.sound = SeamothHelper.Seamoth.GetComponent<SoundOnDamage>().sound;
         }
         public static void SetupDealDamageOnImpact(ref ModVehicle mv)
         {
             var ddoi = mv.gameObject.EnsureComponent<DealDamageOnImpact>();
-            ddoi.damageTerrain = true;
+            // NEWNEW
+            // ddoi.damageTerrain = true;
             ddoi.speedMinimumForSelfDamage = 4;
             ddoi.speedMinimumForDamage = 2;
             ddoi.affectsEcosystem = true;
@@ -495,7 +539,7 @@ namespace VehicleFramework
 
             // add temperaturedamage
             var tempdamg = mv.gameObject.EnsureComponent<TemperatureDamage>();
-            tempdamg.lavaDatabase = seamoth.GetComponent<TemperatureDamage>().lavaDatabase;
+            tempdamg.lavaDatabase = SeamothHelper.Seamoth.GetComponent<TemperatureDamage>().lavaDatabase;
             tempdamg.liveMixin = mv.liveMixin;
             tempdamg.baseDamagePerSecond = 2.0f; // 10 times what the seamoth takes, since the Atrama 
             // the following configurations are the same values the seamoth takes
@@ -584,11 +628,16 @@ namespace VehicleFramework
             Shader marmosetShader = Shader.Find("MarmosetUBER");
             foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>(true))
             {
+                // skip some materials
+                if (renderer.gameObject.name.ToLower().Contains("light"))
+                {
+                    continue;
+                }
                 if (renderer.gameObject.name.Contains("Canopy"))
                 {
                     // TODO: find a way to add transparency
                     // ZWrite set to 1 (a boolean value) makes the canopy opaque.
-                    var seamothGlassMaterial = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
+                    var seamothGlassMaterial = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
                     var seamothGlassShader = seamothGlassMaterial.shader;
                     renderer.material = seamothGlassMaterial;
                     // TODO decide which line is right:
@@ -601,35 +650,26 @@ namespace VehicleFramework
                 }
                 foreach (Material mat in renderer.materials)
                 {
+                    // give it the marmo shader, no matter what
                     mat.shader = marmosetShader;
-                    // skip some materials
-                    if (renderer.gameObject.name.ToLower().Contains("light"))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        // give it the marmo shader, no matter what
-                        mat.shader = marmosetShader;
 
-                        // if this is a piece of interior geometry, enable the lightmap
-                        Transform itInterior = renderer.gameObject.transform;
-                        bool isthisinterior = itInterior.name == "Interior_Main";
-                        while (itInterior.parent != null)
+                    // if this is a piece of interior geometry, enable the lightmap
+                    Transform itInterior = renderer.gameObject.transform;
+                    bool isthisinterior = itInterior.name == "Interior_Main";
+                    while (itInterior.parent != null)
+                    {
+                        if (itInterior.parent.name == "Interior_Main")
                         {
-                            if (itInterior.parent.name == "Interior_Main")
-                            {
-                                isthisinterior = true;
-                                break;
-                            }
-                            itInterior = itInterior.parent;
+                            isthisinterior = true;
+                            break;
                         }
-                        if (isthisinterior)
-                        {
-                            mat.EnableKeyword("MARMO_SPECMAP");
-                            mat.EnableKeyword("UWE_LIGHTMAP");
-                            mat.SetFloat("_LightmapStrength", 7.5f);
-                        }
+                        itInterior = itInterior.parent;
+                    }
+                    if (isthisinterior)
+                    {
+                        mat.EnableKeyword("MARMO_SPECMAP");
+                        mat.EnableKeyword("UWE_LIGHTMAP");
+                        mat.SetFloat("_LightmapStrength", 7.5f);
                     }
                 }
             }

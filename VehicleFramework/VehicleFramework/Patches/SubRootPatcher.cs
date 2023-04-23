@@ -253,7 +253,7 @@ namespace VehicleFramework.Patches
 		{
 			if (__instance.GetComponent<ModVehicle>())
 			{
-				Logger.Log("skipping enter");
+				Logger.DebugLog("skipping enter");
 				return false;
 			}
 			return true;
@@ -264,7 +264,7 @@ namespace VehicleFramework.Patches
 		{
 			if (__instance.GetComponent<ModVehicle>())
 			{
-				Logger.Log("skipping exit");
+				Logger.DebugLog("skipping exit");
 				return false;
 			}
 			return true;

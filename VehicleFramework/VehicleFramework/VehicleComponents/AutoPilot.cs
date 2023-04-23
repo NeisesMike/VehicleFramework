@@ -103,13 +103,18 @@ namespace VehicleFramework
             UpdateHealthState();
             UpdatePowerState();
             UpdateDepthState();
+            MaybeAutoLevel();
         }
-        public void FixedUpdate()
+        public void MaybeAutoLevel()
         {
             Vector2 lookDir = GameInput.GetLookDelta();
-            if (10f < lookDir.magnitude)
+            if (autoLeveling && (10f < lookDir.magnitude || !mv.GetIsUnderwater()))
             {
                 autoLeveling = false;
+                mv.useRigidbody.isKinematic = false;
+                //mv.GetComponent<Engines.ModVehicleEngine>().KillMomentum();
+                mv.useRigidbody.velocity = prevVelocity;
+                prevVelocity = Vector3.zero;
                 return;
             }
             if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerPiloting()) && mv.GetIsUnderwater())
@@ -119,9 +124,12 @@ namespace VehicleFramework
                 float z = transform.rotation.eulerAngles.z;
                 float pitchDelta = x >= 180 ? 360 - x : x;
                 float rollDelta = z >= 180 ? 360 - z : z;
-                if (rollDelta < 1 && pitchDelta < 1)
+                if (rollDelta < 1 && pitchDelta < 1 && mv.useRigidbody.velocity.magnitude < 1f && prevVelocity.magnitude < 1f)
                 {
                     autoLeveling = false;
+                    mv.useRigidbody.isKinematic = false;
+                    mv.GetComponent<Engines.ModVehicleEngine>().KillMomentum();
+                    prevVelocity = Vector3.zero;
                     return;
                 }
 
@@ -129,24 +137,28 @@ namespace VehicleFramework
                 float newRoll;
                 if (x < 180)
                 {
-                    newPitch = Mathf.SmoothDamp(x, 0, ref pitchVelocity, smoothTime);
+                    newPitch = Mathf.SmoothDamp(x, 0, ref pitchVelocity, smoothTime, 10f, Time.deltaTime);
                 }
                 else
                 {
-                    newPitch = Mathf.SmoothDamp(x, 360, ref pitchVelocity, smoothTime);
+                    newPitch = Mathf.SmoothDamp(x, 360, ref pitchVelocity, smoothTime, 10f, Time.deltaTime);
                 }
                 if(z < 180)
                 {
-                    newRoll = Mathf.SmoothDamp(z, 0, ref rollVelocity, smoothTime);
+                    newRoll = Mathf.SmoothDamp(z, 0, ref rollVelocity, smoothTime, 10f, Time.deltaTime);
                 }
                 else
                 {
-                    newRoll = Mathf.SmoothDamp(z, 360, ref rollVelocity, smoothTime);
+                    newRoll = Mathf.SmoothDamp(z, 360, ref rollVelocity, smoothTime, 10f, Time.deltaTime);
                 }
                 transform.rotation = Quaternion.Euler(new Vector3(newPitch, y, newRoll));
+                transform.position += prevVelocity * Time.deltaTime;
+                prevVelocity = Vector3.SmoothDamp(prevVelocity, Vector3.zero, ref currentVelocity, smoothTime * 0.75f, 100f, Time.deltaTime);
             }
         }
 
+        private Vector3 prevVelocity;
+        private Vector3 currentVelocity;
         private void CheckForDoubleTap()
         {
             if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerPiloting())
@@ -158,9 +170,12 @@ namespace VehicleFramework
                     float roll = transform.rotation.eulerAngles.z;
                     float rollDelta = roll >= 180 ? 360 - roll : roll;
                     autoLeveling = true;
+                    prevVelocity = mv.useRigidbody.velocity;
+                    mv.useRigidbody.isKinematic = true;
                     var smoothTime1 = 5f * pitchDelta / 90f;
                     var smoothTime2 = 5f * rollDelta / 90f;
-                    smoothTime = Mathf.Max(smoothTime1, smoothTime2);
+                    var smoothTime3 = mv.GetComponent<VehicleFramework.Engines.ModVehicleEngine>().GetTimeToStop();
+                    smoothTime = Mathf.Max(smoothTime1, smoothTime2, smoothTime3);
                 }
                 else
                 {

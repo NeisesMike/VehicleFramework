@@ -94,7 +94,7 @@ namespace VehicleFramework
                     return thisVehicle;
                 }
             }
-            Logger.Log("Craftable failed to find the prefab for: " + ClassID);
+            Logger.Error("Craftable failed to find the prefab for: " + ClassID);
             return null;
         }
     }

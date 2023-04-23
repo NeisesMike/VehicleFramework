@@ -71,11 +71,11 @@ namespace VehicleFramework.Engines
         {
             if (0 < inputMagnitude)
             {
-                ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.deltaTime;
+                ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.fixedDeltaTime;
             }
             else
             {
-                ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * Time.deltaTime;
+                ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * Time.fixedDeltaTime;
             }
         }
 
@@ -106,7 +106,7 @@ namespace VehicleFramework.Engines
         {
             if (inputMagnitude != 0)
             {
-                RightMomentum += inputMagnitude * STRAFE_ACCEL * Time.deltaTime;
+                RightMomentum += inputMagnitude * STRAFE_ACCEL * Time.fixedDeltaTime;
             }
         }
 
@@ -135,7 +135,7 @@ namespace VehicleFramework.Engines
         }
         protected virtual void UpdateUpMomentum(float inputMagnitude)
         {
-            UpMomentum += inputMagnitude * VERT_ACCEL * Time.deltaTime;
+            UpMomentum += inputMagnitude * VERT_ACCEL * Time.fixedDeltaTime;
         }
 
         protected float _engineWhir = 0;
@@ -179,7 +179,7 @@ namespace VehicleFramework.Engines
         public void Start()
         {
             rb.centerOfMass = Vector3.zero;
-
+            rb.angularDrag = 5f;
             IEnumerator GrabEngineSounds()
             {
                 string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -189,7 +189,7 @@ namespace VehicleFramework.Engines
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: could not find engine1_high.ogg");
+                    Logger.Warn("WARNING: could not find engine1_high.ogg");
                     EngineWhistleClip = null;
                 }
                 else
@@ -202,7 +202,7 @@ namespace VehicleFramework.Engines
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: could not find engine1_low.ogg");
+                    Logger.Warn("WARNING: could not find engine1_low.ogg");
                     EngineWhirClip = null;
                 }
                 else
@@ -281,9 +281,9 @@ namespace VehicleFramework.Engines
         }
         public void ExecutePhysicsMove()
         {
-            rb.AddForce(mv.transform.forward * ForwardMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.right * RightMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.up * UpMomentum / 100f * Time.deltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.forward * ForwardMomentum / 100f * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.right * RightMomentum / 100f * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.up * UpMomentum / 100f * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
         public enum ForceDirection
         {
@@ -327,7 +327,7 @@ namespace VehicleFramework.Engines
         }
         public virtual void PlayEngineWhir()
         {
-            EngineSource1.volume = EngineWhir / 10f * (MainPatcher.Config.engineVolume / 100);
+            EngineSource1.volume = EngineWhir / 10f * (MainPatcher.VFConfig.engineVolume / 100);
             if (mv.IsPowered())
             {
                 if (!EngineSource1.isPlaying)
@@ -353,7 +353,7 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    EngineSource2.volume = (MainPatcher.Config.engineVolume / 100);
+                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100);
                     EngineSource2.Play();
                 }
             }
@@ -365,6 +365,45 @@ namespace VehicleFramework.Engines
             {
                 isReadyToWhistle = false;
             }
+        }
+
+        public float GetTimeToStop()
+        {
+            double LambertW(double x)
+            {
+                // LambertW is not defined in this section
+                if (x < -Math.Exp(-1))
+                    throw new Exception("The LambertW-function is not defined for " + x + ".");
+
+                // computes the first branch for real values only
+
+                // amount of iterations (empirically found)
+                int amountOfIterations = Math.Max(4, (int)Math.Ceiling(Math.Log10(x) / 3));
+
+                // initial guess is based on 0 < ln(a) < 3
+                double w = 3 * Math.Log(x + 1) / 4;
+
+                // Halley's method via eqn (5.9) in Corless et al (1996)
+                for (int i = 0; i < amountOfIterations; i++)
+                    w = w - (w * Math.Exp(w) - x) / (Math.Exp(w) * (w + 1) - (w + 2) * (w * Math.Exp(w) - x) / (2 * w + 2));
+
+                return w;
+            }
+            //float timeToXStop = ((float)LambertW(RightMomentum * Mathf.Log(1f-DragDecay)/ (-1f * STRAFE_ACCEL)))/Mathf.Log(1f-DragDecay);
+            //float timeToYStop = ((float)LambertW(RightMomentum * Mathf.Log(1f - DragDecay) / (-1f * VERT_ACCEL))) / Mathf.Log(1f - DragDecay);
+            //float timeToZStop = ((float)LambertW(RightMomentum * Mathf.Log(1f - DragDecay) / (-1f * REVERSE_ACCEL))) / Mathf.Log(1f - DragDecay);
+
+            float timeToXStop = Mathf.Log(0.05f * STRAFE_MAX_SPEED / RightMomentum) / (Mathf.Log(.25f));
+            float timeToYStop = Mathf.Log(0.05f * VERT_MAX_SPEED / UpMomentum) / (Mathf.Log(.25f));
+            float timeToZStop = Mathf.Log(0.05f * FORWARD_TOP_SPEED / ForwardMomentum) / (Mathf.Log(.25f));
+
+            return Mathf.Max(timeToXStop,timeToYStop,timeToZStop);
+        }
+        public void KillMomentum()
+        {
+            ForwardMomentum = 0f;
+            RightMomentum = 0f;
+            UpMomentum = 0f;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace VehicleFramework
 
 		public void OnHandHover(GUIHand hand)
 		{
-			HandReticle.main.SetInteractText(tooltip);
+			HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, tooltip);
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 

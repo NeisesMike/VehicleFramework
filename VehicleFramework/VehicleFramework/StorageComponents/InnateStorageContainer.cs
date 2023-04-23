@@ -45,26 +45,36 @@ namespace VehicleFramework
 
 		public void OnCraftEnd(TechType techType)
 		{
-			this.Init();
-			if (techType == TechType.SeamothTorpedoModule || techType == TechType.ExosuitTorpedoArmModule)
+			// NEWNEW
+			IEnumerator GetAndSetTorpedoSlots()
 			{
-				for (int i = 0; i < 2; i++)
+				if (techType == TechType.SeamothTorpedoModule || techType == TechType.ExosuitTorpedoArmModule)
 				{
-					GameObject gameObject = CraftData.InstantiateFromPrefab(TechType.WhirlpoolTorpedo, false);
-					if (gameObject != null)
+					for (int i = 0; i < 2; i++)
 					{
-						Pickupable pickupable = gameObject.GetComponent<Pickupable>();
-						if (pickupable != null)
+						TaskResult<GameObject> result = new TaskResult<GameObject>();
+						yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
+						GameObject gameObject = result.Get();
+						if (gameObject != null)
 						{
-							pickupable = pickupable.Pickup(false);
-							if (this.container.AddItem(pickupable) == null)
+							Pickupable pickupable = gameObject.GetComponent<Pickupable>();
+							if (pickupable != null)
 							{
-								UnityEngine.Object.Destroy(pickupable.gameObject);
+								// NEWNEW
+								// Why did we use to have this line?
+								//pickupable = pickupable.Pickup(false);
+								if (this.container.AddItem(pickupable) == null)
+								{
+									UnityEngine.Object.Destroy(pickupable.gameObject);
+								}
 							}
 						}
 					}
 				}
+				yield break;
 			}
+			this.Init();
+			StartCoroutine(GetAndSetTorpedoSlots());
 		}
 
 		public string storageLabel = "StorageLabel";

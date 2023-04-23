@@ -36,7 +36,7 @@ namespace VehicleFramework.Patches.LeviathanPatches
                 }
                 else
                 {
-                    Logger.Log("ERROR: Unrecognized ghost leviathan");
+                    Logger.Error("ERROR: Unrecognized ghost leviathan");
                 }
             }
         }

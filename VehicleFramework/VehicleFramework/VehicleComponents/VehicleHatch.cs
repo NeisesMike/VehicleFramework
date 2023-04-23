@@ -20,11 +20,11 @@ namespace VehicleFramework
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 			if (mv.IsPlayerInside())
 			{
-				HandReticle.main.SetInteractText("Exit Vehicle");
+				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Exit Vehicle");
 			}
 			else
 			{
-				HandReticle.main.SetInteractText("Enter Vehicle");
+				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Enter Vehicle");
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace VehicleFramework
 			{
 				if(100 < tryCount)
                 {
-					Logger.Log("Error: Failed to exit vehicle too many times. Stopping.");
+					Logger.Error("Error: Failed to exit vehicle too many times. Stopping.");
 					yield break;
                 }
 				Player.main.transform.position = SurfaceExitLocation.position;

@@ -6,16 +6,35 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using batteries = System.Collections.Generic.List<System.Tuple<TechType, float>>;
+using batteries = System.Collections.Generic.List<System.Tuple<System.String, float>>;
 using color = System.Tuple<float, float, float, float>;
+using techtype = System.String;
 
 namespace VehicleFramework
 {
     public static class SaveManager
     {
-        internal static List<Tuple<Vector3, Dictionary<string, TechType>>> SerializeUpgrades()
+        /* Things what we can serialize
+         * List<Tuple<Vector,Vector>>
+         * List<Dictionary<Vector3, Vector3>>
+         * List<Tuple<Dictionary<Vector3, Vector3>, Vector3>>
+         */
+        /* Things what we cannot get away with
+         * List<Tuple<Dictionary<Vector3, Vector3>, TechType>>
+         * List<TechType>
+         */
+        internal static List<techtype> SerializeTesto()
         {
-            List<Tuple<Vector3, Dictionary<string, TechType>>> modVehiclesUpgrades = new List<Tuple<Vector3, Dictionary<string, TechType>>>();
+            List<techtype> ret = new List<techtype>();
+            //var dic = new Dictionary<Vector3, Vector3>();
+            //var tup = new Tuple<Dictionary<Vector3, Vector3>, TechType>(dic, TechType.Seamoth);
+            ret.Add(TechType.Seamoth.AsString());
+            Logger.Warn(TechType.Seamoth.AsString());
+            return ret;
+        }
+        internal static List<Tuple<Vector3, Dictionary<string, techtype>>> SerializeUpgrades()
+        {
+            List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = new List<Tuple<Vector3, Dictionary<string, techtype>>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
                 if (mv == null)
@@ -27,7 +46,7 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-                Dictionary<string, TechType> equipmentStrings = new Dictionary<string, TechType>();
+                Dictionary<string, techtype> equipmentStrings = new Dictionary<string, techtype>();
                 foreach (KeyValuePair<string, InventoryItem> pair in mv.modules.equipment)
                 {
                     if (pair.Value != null && pair.Value.item != null && pair.Value.item.name != null)
@@ -36,19 +55,20 @@ namespace VehicleFramework
                         int cloneIndex = thisName.IndexOf("(Clone)");
                         if (cloneIndex != -1)
                         {
-                            thisName = thisName.Remove(cloneIndex, 7);
+                            pair.Value.item.name = thisName.Remove(cloneIndex, 7);
                         }
-                        equipmentStrings.Add(pair.Key, pair.Value.item.GetTechType());
+                        equipmentStrings.Add(pair.Key, pair.Value.item.GetTechType().AsString());
                     }
                 }
-                Tuple<Vector3, Dictionary<string, TechType>> thisTuple = new Tuple<Vector3, Dictionary<string, TechType>>(mv.transform.position, equipmentStrings);
+                Tuple<Vector3, Dictionary<string, techtype>> thisTuple = new Tuple<Vector3, Dictionary<string, techtype>>(mv.transform.position, equipmentStrings);
+                // this is the problematic line
                 modVehiclesUpgrades.Add(thisTuple);
             }
             return modVehiclesUpgrades;
         }
-        internal static void DeserializeUpgrades(SaveData data)
+        internal static IEnumerator DeserializeUpgrades(SaveData data)
         {
-            List<Tuple<Vector3, Dictionary<string, TechType>>> modVehiclesUpgrades = data.UpgradeLists;
+            List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = data.UpgradeLists;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
                 if (mv==null)
@@ -60,9 +80,12 @@ namespace VehicleFramework
                 {
                     if (Vector3.Distance(mv.transform.position, tup.Item1) < 3)
                     {
-                        foreach(KeyValuePair<string, TechType> pair in tup.Item2)
+                        foreach(KeyValuePair<string, techtype> pair in tup.Item2)
                         {
-                            GameObject thisUpgrade = GameObject.Instantiate(CraftData.GetPrefabForTechType(pair.Value, true));
+                            TaskResult<GameObject> result = new TaskResult<GameObject>();
+                            bool resulty = TechTypeExtensions.FromString(pair.Value, out TechType thisTT, true);
+                            yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                            GameObject thisUpgrade = result.Get();
                             thisUpgrade.transform.SetParent(mv.modulesRoot.transform);
                             thisUpgrade.SetActive(false);
                             InventoryItem thisItem = new InventoryItem(thisUpgrade.GetComponent<Pickupable>());
@@ -73,6 +96,7 @@ namespace VehicleFramework
                     }
                 }
             }
+            yield break;
         }
         internal static List<Tuple<Vector3, List<Tuple<int, batteries>>>> SerializeModularStorage()
         {
@@ -105,7 +129,7 @@ namespace VehicleFramework
                             {
                                 batteryChargeIfApplicable = bat.charge;
                             }
-                            thisContents.Add(new Tuple<TechType, float>(thisItemType, batteryChargeIfApplicable));
+                            thisContents.Add(new Tuple<techtype, float>(thisItemType.AsString(), batteryChargeIfApplicable));
                         }
                         thisVehiclesStoragesContents.Add(new Tuple<int, batteries>(i, thisContents));
                     }
@@ -114,7 +138,7 @@ namespace VehicleFramework
             }
             return allVehiclesStoragesContents;
         }
-        internal static void DeserializeModularStorage(SaveData data)
+        internal static IEnumerator DeserializeModularStorage(SaveData data)
         {
             List<Tuple<Vector3, List<Tuple<int, batteries>>>> allVehiclesStoragesLists = data.ModularStorages;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
@@ -123,6 +147,7 @@ namespace VehicleFramework
                 {
                     continue;
                 }
+                
                 // try to match against a saved vehicle in our list
                 foreach (var vehicle in allVehiclesStoragesLists)
                 {
@@ -131,12 +156,15 @@ namespace VehicleFramework
                         // we've matched the vehicle
                         foreach(var container in vehicle.Item2)
                         {
-                            var thisContainer = mv.GetStorageInSlot(container.Item1, TechType.VehicleStorageModule);
+                            var thisContainer = mv.ModGetStorageInSlot(container.Item1, TechType.VehicleStorageModule);
                             if (thisContainer != null)
                             {
                                 foreach(var techtype in container.Item2)
                                 {
-                                    GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(techtype.Item1, true));
+                                    TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                    bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
+                                    yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                                    GameObject thisItem = result.Get();
                                     if (techtype.Item2 >= 0)
                                     {
                                         // check whether we *are* a battery xor we *have* a battery
@@ -151,7 +179,9 @@ namespace VehicleFramework
                                             // we have a battery (we are a tool)
                                             // Thankfully we have this naming convention
                                             Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                            GameObject newBat = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Battery, true));
+                                            result = new TaskResult<GameObject>();
+                                            yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
+                                            GameObject newBat = result.Get();
                                             newBat.GetComponent<Battery>().charge = techtype.Item2;
                                             newBat.transform.SetParent(batSlot);
                                             newBat.SetActive(false);
@@ -164,12 +194,13 @@ namespace VehicleFramework
                             }
                             else
                             {
-                                Logger.Log("Error: tried to deserialize items into a non-existent modular container: " + container.Item1.ToString());
+                                Logger.Warn("Tried to deserialize items into a non-existent modular container: " + container.Item1.ToString());
                             }
                         }
                     }
                 }
             }
+            yield break;
         }
         internal static List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> SerializeInnateStorage()
         {
@@ -199,7 +230,7 @@ namespace VehicleFramework
                         {
                             batteryChargeIfApplicable = bat.charge;
                         }
-                        thisContents.Add(new Tuple<TechType, float>(thisItemType, batteryChargeIfApplicable));
+                        thisContents.Add(new Tuple<techtype, float>(thisItemType.AsString(), batteryChargeIfApplicable));
                     }
                     thisVehiclesStoragesContents.Add(new Tuple<Vector3, batteries>(thisLocalPos, thisContents));
                 }
@@ -207,7 +238,7 @@ namespace VehicleFramework
             }
             return allVehiclesStoragesContents;
         }
-        internal static void DeserializeInnateStorage(SaveData data)
+        internal static IEnumerator DeserializeInnateStorage(SaveData data)
         {
             List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> allVehiclesStoragesLists = data.InnateStorages;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
@@ -233,7 +264,10 @@ namespace VehicleFramework
                                     isStorageMatched = true;
                                     foreach (var techtype in thisStorage.Item2)
                                     {
-                                        GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(techtype.Item1, true));
+                                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                        bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
+                                        yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                                        GameObject thisItem = result.Get();
                                         if (techtype.Item2 >= 0)
                                         {
                                             // check whether we *are* a battery xor we *have* a battery
@@ -248,7 +282,9 @@ namespace VehicleFramework
                                                 // we have a battery (we are a tool)
                                                 // Thankfully we have this naming convention
                                                 Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                                GameObject newBat = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Battery, true));
+                                                result = new TaskResult<GameObject>();
+                                                yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
+                                                GameObject newBat = result.Get();
                                                 newBat.GetComponent<Battery>().charge = techtype.Item2;
                                                 newBat.transform.SetParent(batSlot);
                                                 newBat.SetActive(false);
@@ -266,13 +302,15 @@ namespace VehicleFramework
                                 // shit out the contents of the missing container, marked with a beacon
                                 IEnumerator MarkWithBeacon(Vector3 position)
                                 {
-                                    GameObject thisBeacon = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Beacon));
+                                    TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                    yield return CraftData.InstantiateFromPrefabAsync(TechType.Beacon, result, false);
+                                    GameObject thisBeacon = result.Get();
                                     thisBeacon.transform.position = position;
                                     yield return null; // let the stray entity be registered by the game
                                     thisBeacon.GetComponentInChildren<BeaconLabel>().SetLabel("Thanks! -Mikjaw");
                                     yield break;
                                 }
-                                Player.main.StartCoroutine(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
+                                CoroutineHelper.Starto(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
 
                                 GameObject thisFloatingContainer = null;
                                 int numContainersSoFar = 0;
@@ -280,14 +318,19 @@ namespace VehicleFramework
                                 {
                                     if (i % 16 == 0)
                                     {
-                                        thisFloatingContainer = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.SmallStorage));
+                                        TaskResult<GameObject> resultthisFloatingContainer = new TaskResult<GameObject>();
+                                        yield return CraftData.InstantiateFromPrefabAsync(TechType.SmallStorage, resultthisFloatingContainer, false);
+                                        thisFloatingContainer = resultthisFloatingContainer.Get();
                                         Vector3 randomDirection = Vector3.Normalize(new Vector3(UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1));
                                         thisFloatingContainer.transform.position = mv.transform.position + mv.transform.forward * 5f + randomDirection * 2f;
                                         thisFloatingContainer.GetComponentInChildren<uGUI_InputField>().text = "Overflow " + numContainersSoFar++.ToString();
                                     }
 
-                                    Tuple<TechType, float> techtype = thisStorage.Item2[i];
-                                    GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(techtype.Item1, true));
+                                    Tuple<techtype, float> techtype = thisStorage.Item2[i];
+                                    TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                    bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
+                                    yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                                    GameObject thisItem = result.Get();
                                     if (techtype.Item2 >= 0)
                                     {
                                         // check whether we *are* a battery xor we *have* a battery
@@ -302,7 +345,9 @@ namespace VehicleFramework
                                             // we have a battery (we are a tool)
                                             // Thankfully we have this naming convention
                                             Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                            GameObject newBat = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Battery, true));
+                                            result = new TaskResult<GameObject>();
+                                            yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
+                                            GameObject newBat = result.Get();
                                             newBat.GetComponent<Battery>().charge = techtype.Item2;
                                             newBat.transform.SetParent(batSlot);
                                             newBat.SetActive(false);
@@ -317,6 +362,7 @@ namespace VehicleFramework
                     }
                 }
             }
+            yield break;
         }
         internal static List<Tuple<Vector3, batteries>> SerializeBatteries()
         {
@@ -332,19 +378,19 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-                List<Tuple<TechType, float>> thisVehiclesBatteries = new List<Tuple<TechType, float>>();
+                List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
                 foreach (EnergyMixin batt in mv.energyInterface.sources)
                 {
                     if (batt.battery != null)
                     {
-                        thisVehiclesBatteries.Add(new Tuple<TechType,float>(batt.batterySlot.storedItem.item.GetTechType(), batt.battery.charge));
+                        thisVehiclesBatteries.Add(new Tuple<techtype, float>(batt.batterySlot.storedItem.item.GetTechType().AsString(), batt.battery.charge));
                     }
                 }
                 allVehiclesBatteries.Add(new Tuple<Vector3,batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
         }
-        internal static void DeserializeBatteries(SaveData data)
+        internal static IEnumerator DeserializeBatteries(SaveData data)
         {
             List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.Batteries;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
@@ -366,7 +412,10 @@ namespace VehicleFramework
                     {
                         foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
                         {
-                            GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(battery.value.Item1, true));
+                            TaskResult<GameObject> result = new TaskResult<GameObject>();
+                            bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
+                            yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                            GameObject thisItem = result.Get();
                             thisItem.GetComponent<Battery>().charge = battery.value.Item2;
                             thisItem.transform.SetParent(mv.StorageRootObject.transform);
                             mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
@@ -376,6 +425,7 @@ namespace VehicleFramework
                     }
                 }
             }
+            yield break;
         }
         internal static List<Tuple<Vector3, batteries>> SerializeBackupBatteries()
         {
@@ -391,19 +441,19 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
-                List<Tuple<TechType, float>> thisVehiclesBatteries = new List<Tuple<TechType, float>>();
+                List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
                 foreach (EnergyMixin batt in mv.GetComponent<AutoPilot>().aiEI.sources)
                 {
                     if (batt.battery != null)
                     {
-                        thisVehiclesBatteries.Add(new Tuple<TechType, float>(batt.batterySlot.storedItem.item.GetTechType(), batt.battery.charge));
+                        thisVehiclesBatteries.Add(new Tuple<techtype, float>(batt.batterySlot.storedItem.item.GetTechType().AsString(), batt.battery.charge));
                     }
                 }
                 allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
         }
-        internal static void DeserializeBackupBatteries(SaveData data)
+        internal static IEnumerator DeserializeBackupBatteries(SaveData data)
         {
             List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.BackupBatteries;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
@@ -426,7 +476,10 @@ namespace VehicleFramework
                     {
                         foreach (var battery in slot.Item2.Select((value, i) => (value, i)))
                         {
-                            GameObject thisItem = GameObject.Instantiate(CraftData.GetPrefabForTechType(battery.value.Item1, true));
+                            TaskResult<GameObject> result = new TaskResult<GameObject>();
+                            bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
+                            yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                            GameObject thisItem = result.Get();
                             thisItem.GetComponent<Battery>().charge = battery.value.Item2;
                             thisItem.transform.SetParent(mv.StorageRootObject.transform);
                             mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
@@ -436,6 +489,7 @@ namespace VehicleFramework
                     }
                 }
             }
+            yield break;
         }
         internal static List<Tuple<Vector3, bool>> SerializePlayerInside()
         {
@@ -455,7 +509,7 @@ namespace VehicleFramework
             }
             return allVehiclesIsPlayerInside;
         }
-        internal static void DeserializePlayerInside(SaveData data)
+        internal static IEnumerator DeserializePlayerInside(SaveData data)
         {
             List<Tuple<Vector3, bool>> allVehiclesPlayerInside = data.IsPlayerInside;
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
@@ -474,7 +528,7 @@ namespace VehicleFramework
                     if(Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
                     {
                         mv.PlayerEntry();
-                        return;
+                        yield break;
                     }
                 }
             }
@@ -501,7 +555,7 @@ namespace VehicleFramework
             }
             return allVehiclesAesthetics;
         }
-        internal static void DeserializeAesthetics(SaveData data)
+        internal static IEnumerator DeserializeAesthetics(SaveData data)
         {
             Color SynthesizeColor(color col)
             {
@@ -529,7 +583,7 @@ namespace VehicleFramework
                             continue;
                         }
                         active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = vehicle.Item2;
-                        active.transform.Find("InputField/Text").GetComponent<Text>().text = vehicle.Item2;
+                        active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = vehicle.Item2;
                         mv.NowVehicleName = vehicle.Item2;
                         mv.vehicleName = vehicle.Item2;
                         if (vehicle.Item7)
@@ -562,6 +616,7 @@ namespace VehicleFramework
                     }
                 }
             }
+            yield break;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,12 +37,28 @@ namespace VehicleFramework.UpgradeModules
         public override string[] StepsToFabricatorTab => new string[] { "MVUM", "MVDM" };
         public override QuickSlotType QuickSlotType => QuickSlotType.Passive;
 
-        public override GameObject GetGameObject()
+        private GameObject _internalGameObject;
+        public GameObject InternalGameObject
         {
+            get
+            {
+                return _internalGameObject;
+            }
+            private set
+            {
+                _internalGameObject = value;
+            }
+        }
+        public IEnumerator ExtractGameObject()
+        {
+            while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
+            {
+                yield return new WaitForSecondsRealtime(1f);
+            }
             // Get the ElectricalDefense module prefab and instantiate it
-            string path = "WorldEntities/Tools/SeamothElectricalDefense";
-            GameObject prefab = Resources.Load<GameObject>(path);
-            GameObject obj = GameObject.Instantiate(prefab);
+            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            yield return CraftData.InstantiateFromPrefabAsync(TechType.SeamothElectricalDefense, result, false);
+            GameObject obj = result.Get();
 
             // Get the TechTags and PrefabIdentifiers
             TechTag techTag = obj.GetComponent<TechTag>();
@@ -51,7 +68,12 @@ namespace VehicleFramework.UpgradeModules
             techTag.type = TechType;
             prefabIdentifier.ClassId = ClassID;
 
-            return obj;
+            InternalGameObject = obj;
+            yield break;
+        }
+        public override GameObject GetGameObject()
+        {
+            return InternalGameObject;
         }
         protected override TechData GetBlueprintRecipe()
         {

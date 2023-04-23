@@ -58,7 +58,7 @@ namespace VehicleFramework.Patches
                 }
 				if(mv is null)
                 {
-					Logger.Log("ConsumeEnergyPrefix ERROR: PowerRelay was null, but we weren't in a ModVehicle.");
+					Logger.Error("ConsumeEnergyPrefix ERROR: PowerRelay was null, but we weren't in a ModVehicle.");
 					return true;
                 }
 				else

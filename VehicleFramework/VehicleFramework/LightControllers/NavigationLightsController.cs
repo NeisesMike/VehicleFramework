@@ -83,13 +83,13 @@ namespace VehicleFramework
             switch (lc)
             {
                 case LightClass.WhiteStrobes:
-                    if (MainPatcher.Config.isFlashingLightsEnabled && white == null)
+                    if (MainPatcher.VFConfig.isFlashingLightsEnabled && white == null)
                     {
                         white = StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
-                    if (MainPatcher.Config.isFlashingLightsEnabled && red == null)
+                    if (MainPatcher.VFConfig.isFlashingLightsEnabled && red == null)
                     {
                         red = StartCoroutine(Strobe(LightClass.RedStrobes));
                     }
@@ -335,7 +335,7 @@ namespace VehicleFramework
                     }
                     break;
                 default:
-                    Logger.Log("Warning: passed bad arg to KillStrobe");
+                    Logger.Warn("Warning: passed bad arg to KillStrobe");
                     break;
             }
         }
@@ -356,7 +356,7 @@ namespace VehicleFramework
                     }
                     break;
                 default:
-                    Logger.Log("Warning: passed bad arg to Strobe");
+                    Logger.Warn("Warning: passed bad arg to Strobe");
                     break;
             }
         }
@@ -377,7 +377,7 @@ namespace VehicleFramework
                     }
                     break;
                 default:
-                    Logger.Log("Warning: passed bad arg to BlinkOnStrobe");
+                    Logger.Warn("Warning: passed bad arg to BlinkOnStrobe");
                     break;
             }
             PowerStrobes(lc);
@@ -394,7 +394,7 @@ namespace VehicleFramework
                     BlinkOff(whiteStrobeMats);
                     break;
                 default:
-                    Logger.Log("Warning: passed bad arg to BlinkOffStrobe");
+                    Logger.Warn("Warning: passed bad arg to BlinkOffStrobe");
                     break;
             }
         }

@@ -77,10 +77,10 @@ namespace VehicleFramework
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
-            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<UnityEngine.UI.Text>();
-            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<UnityEngine.UI.Text>();
-            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<UnityEngine.UI.Text>();
-            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<UnityEngine.UI.Text>();
+            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
         }
         public static void BuildVRHUD(GameObject VRVehicleCanvas)
         {
@@ -96,10 +96,10 @@ namespace VehicleFramework
             // Finally we need to add and configure a controller for our new HUD object
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
-            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<UnityEngine.UI.Text>();
-            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<UnityEngine.UI.Text>();
-            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<UnityEngine.UI.Text>();
-            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<UnityEngine.UI.Text>();
+            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
         }
         public static void BuildVRHUD_OLD()
         {
@@ -120,7 +120,6 @@ namespace VehicleFramework
             }
 
 
-            Debug.Log("top");
             GameObject VRVehicleCanvas = null;
 
 
@@ -141,10 +140,10 @@ namespace VehicleFramework
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
-            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<UnityEngine.UI.Text>();
-            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<UnityEngine.UI.Text>();
-            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<UnityEngine.UI.Text>();
-            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<UnityEngine.UI.Text>();
+            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
         }
     }
 }

@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
+    /*
     [HarmonyPatch(typeof(uGUI_SceneLoading))]
     public static class uGUI_SceneLoadingPatcher
     {
-        /*
-         * This system of patches ensures that our ModVehicles load into the game correctly.
-         * This call to VehicleManager.LoadVehicles() was a very difficult one to place.
-         * The end of Scene-Load is the appropriate time to load the vehicles.
-         */
+         // This system of patches ensures that our ModVehicles load into the game correctly.
+         // This call to VehicleManager.LoadVehicles() was a very difficult one to place.
+         // The end of Scene-Load is the appropriate time to load the vehicles.
+
         [HarmonyPrefix]
         [HarmonyPatch("End")]
         public static void EndPrefix(uGUI_SceneLoading __instance, bool fade, ref bool __state)
@@ -33,4 +33,5 @@ namespace VehicleFramework
             }
         }
     }
+*/
 }

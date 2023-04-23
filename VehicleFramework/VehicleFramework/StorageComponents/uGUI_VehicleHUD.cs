@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 namespace VehicleFramework
@@ -9,15 +10,15 @@ namespace VehicleFramework
 	{
 		public void Update()
 		{
-			ModVehicle vehicle = null;
+			ModVehicle mv = null;
 			PDA pda = null;
 			Player main = Player.main;
 			if (main != null)
 			{
-				vehicle = main.GetVehicle() as ModVehicle;
+				mv = (main.GetVehicle() as ModVehicle);
 				pda = main.GetPDA();
 			}
-			bool flag = vehicle != null && (pda == null || !pda.isInUse);
+			bool flag = mv != null && (pda == null || !pda.isInUse);
 			if (this.root.activeSelf != flag)
 			{
 				this.root.SetActive(flag);
@@ -26,8 +27,8 @@ namespace VehicleFramework
 			{
 				float num;
 				float num2;
-				vehicle.GetHUDValues(out num, out num2);
-				float temperature = vehicle.GetTemperature();
+				mv.GetHUDValues(out num, out num2);
+				float temperature = mv.GetTemperature();
 				int num3 = Mathf.CeilToInt(num * 100f);
 				if (this.lastHealth != num3)
 				{
@@ -52,25 +53,22 @@ namespace VehicleFramework
 		}
 
 		public const float temperatureSmoothTime = 1f;
-
+		[AssertNotNull]
 		public GameObject root;
-
-		public Text textHealth;
-
-		public Text textPower;
-
-		public Text textTemperature;
-
-		public Text textTemperatureSuffix;
-
-		private int lastHealth = int.MinValue;
-
-		private int lastPower = int.MinValue;
-
-		private int lastTemperature = int.MinValue;
-
-		private float temperatureSmoothValue = float.MinValue;
-
-		private float temperatureVelocity;
+		[AssertNotNull]
+		public TextMeshProUGUI textHealth;
+		[AssertNotNull]
+		public TextMeshProUGUI textPower;
+		[AssertNotNull]
+		public TextMeshProUGUI textTemperature;
+		[AssertNotNull]
+		public TextMeshProUGUI textTemperatureSuffix;
+		public int lastHealth = int.MinValue;
+		public int lastPower = int.MinValue;
+		public int lastTemperature = int.MinValue;
+		public float temperatureSmoothValue = float.MinValue;
+		public float temperatureVelocity;
+		[AssertLocalization]
+		public const string thermometerFormatKey = "ThermometerFormat";
 	}
 }

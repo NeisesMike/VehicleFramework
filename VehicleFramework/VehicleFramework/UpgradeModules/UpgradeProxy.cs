@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,18 @@ namespace VehicleFramework
 
         public void Awake()
         {
+            StartCoroutine(GetSeamothBitsASAP());
+        }
+
+        public IEnumerator GetSeamothBitsASAP()
+        {
+            if (SeamothHelper.request.Get() is null)
+            {
+                yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
+            }
+
             slots = new List<VehicleUpgradeConsoleInput.Slot>();
-            GameObject seamoth = CraftData.GetPrefabForTechType(TechType.Seamoth, true);
-            GameObject module = seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;
+            GameObject module = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;
             for (int i = 0; i < proxies.Count; i++)
             {
                 foreach (Transform tran in proxies[i])
@@ -36,5 +46,6 @@ namespace VehicleFramework
             }
             GetComponentInParent<ModVehicle>().GetComponentInChildren<VehicleUpgradeConsoleInput>().slots = slots.ToArray();
         }
+
     }
 }

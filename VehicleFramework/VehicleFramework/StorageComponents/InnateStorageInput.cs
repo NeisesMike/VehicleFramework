@@ -16,7 +16,7 @@ namespace VehicleFramework
 			{
 				PDA pda = Player.main.GetPDA();
 				Inventory.main.SetUsedStorage(storageInSlot, false);
-				pda.Open(PDATab.Inventory, null, null, -1f);
+				pda.Open(PDATab.Inventory, null, null);
 			}
 		}
 		protected override void OpenPDA()
@@ -26,7 +26,7 @@ namespace VehicleFramework
 			{
 				PDA pda = Player.main.GetPDA();
 				Inventory.main.SetUsedStorage(storageInSlot, false);
-				if (!pda.Open(PDATab.Inventory, this.tr, new PDA.OnClose(this.OnClosePDA), -1f))
+				if (!pda.Open(PDATab.Inventory, this.tr, new PDA.OnClose(this.OnClosePDA)))
 				{
 					this.OnClosePDA(pda);
 					return;

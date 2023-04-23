@@ -97,7 +97,7 @@ namespace VehicleFramework
             }
 
             //StartCoroutine(GetAudioClips());
-            TryGetAllAudioClips(MainPatcher.Config.voiceChoice);
+            TryGetAllAudioClips(MainPatcher.VFConfig.voiceChoice);
         }
         public void Update()
         {
@@ -147,7 +147,7 @@ namespace VehicleFramework
                         nearestSpeakerDist = thisDist;
                     }
                 }
-                nearestSpeaker.volume = MainPatcher.Config.aiVoiceVolume / 100f;
+                nearestSpeaker.volume = MainPatcher.VFConfig.aiVoiceVolume / 100f;
                 nearestSpeaker.clip = clip;
                 nearestSpeaker.Play();
             }
@@ -178,7 +178,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("ERROR: Silence.ogg not found. Directory error.");
+                    Logger.Error("ERROR: Silence.ogg not found. Directory error.");
                 }
                 else
                 {
@@ -193,7 +193,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: BatteriesDepleted.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: BatteriesDepleted.ogg");
                     BatteriesDepleted = Silence;
                 }
                 else
@@ -205,7 +205,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: BatteriesNearlyEmpty.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: BatteriesNearlyEmpty.ogg");
                     BatteriesNearlyEmpty = Silence;
                 }
                 else
@@ -217,7 +217,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: EnginePoweringDown.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: EnginePoweringDown.ogg");
                     EnginePoweringDown = Silence;
                 }
                 else
@@ -229,7 +229,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: EnginePoweringUp.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: EnginePoweringUp.ogg");
                     EnginePoweringUp = Silence;
                 }
                 else
@@ -241,7 +241,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: Goodbye.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: Goodbye.ogg");
                     Goodbye = Silence;
                 }
                 else
@@ -253,7 +253,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: HullFailureImminent.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: HullFailureImminent.ogg");
                     HullFailureImminent = Silence;
                 }
                 else
@@ -265,7 +265,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: HullIntegrityCritical.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: HullIntegrityCritical.ogg");
                     HullIntegrityCritical = Silence;
                 }
                 else
@@ -277,7 +277,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: HullIntegrityLow.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: HullIntegrityLow.ogg");
                     HullIntegrityLow = Silence;
                 }
                 else
@@ -289,7 +289,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: Leveling.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: Leveling.ogg");
                     Leveling = Silence;
                 }
                 else
@@ -301,7 +301,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: LeviathanDetected.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: LeviathanDetected.ogg");
                     LeviathanDetected = Silence;
                 }
                 else
@@ -313,7 +313,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: MaximumDepthReached.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: MaximumDepthReached.ogg");
                     MaximumDepthReached = Silence;
                 }
                 else
@@ -325,7 +325,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: OxygenProductionOffline.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: OxygenProductionOffline.ogg");
                     OxygenProductionOffline = Silence;
                 }
                 else
@@ -337,7 +337,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: PassingSafeDepth.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: PassingSafeDepth.ogg");
                     PassingSafeDepth = Silence;
                 }
                 else
@@ -349,7 +349,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: PowerLow.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: PowerLow.ogg");
                     PowerLow = Silence;
                 }
                 else
@@ -361,7 +361,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: UhOh.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: UhOh.ogg");
                     UhOh = Silence;
                 }
                 else
@@ -373,7 +373,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: WelcomeAboard.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: WelcomeAboard.ogg");
                     WelcomeAboard = Silence;
                 }
                 else
@@ -385,7 +385,7 @@ namespace VehicleFramework
                 yield return www.SendWebRequest();
                 if (www.isHttpError || www.isNetworkError)
                 {
-                    Logger.Log("WARNING: " + MainPatcher.Config.voiceChoice + " does not have the voice clip: WelcomeAboardAllSystemsOnline.ogg");
+                    Logger.Warn("WARNING: " + MainPatcher.VFConfig.voiceChoice + " does not have the voice clip: WelcomeAboardAllSystemsOnline.ogg");
                     WelcomeAboardAllSystemsOnline = Silence;
                 }
                 else

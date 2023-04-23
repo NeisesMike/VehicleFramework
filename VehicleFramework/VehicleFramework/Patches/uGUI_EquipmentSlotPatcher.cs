@@ -26,12 +26,12 @@ namespace VehicleFramework
             {
                 if(__instance.background == null)
                 {
-                    Logger.Log("Warning: modules were ready, but background was null: " + __instance.name);
+                    Logger.Warn("Warning: modules were ready, but background was null: " + __instance.name);
                     return false;
                 }
                 return true;
             }
-            Logger.Log("Warning: " + __instance.name + ".SetState() : Vehicle module not ready. Passing.");
+            Logger.Warn("Warning: " + __instance.name + ".SetState() : Vehicle module not ready. Passing.");
 			return false;
 		}
     }

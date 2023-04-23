@@ -101,6 +101,8 @@ namespace VehicleFramework
 
         public AutoPilotVoice voice;
 
+        public bool isInited = false;
+
         // later
         public virtual List<GameObject> Arms => null;
         public virtual List<GameObject> Legs => null;
@@ -114,19 +116,25 @@ namespace VehicleFramework
 
         public override void Awake()
         {
-            void MaybeSetupUniqueFabricator()
+            IEnumerator MaybeSetupUniqueFabricator()
             {
                 Transform fabLoc = Fabricator.transform;
-                if(fabLoc is null)
+                if (fabLoc is null)
                 {
-                    Logger.Log("Warning: " + name + " does not have a Fabricator-Location.");
-                    return;
+                    fabLoc = transform.Find("Fabricator-Location");
+                    if (fabLoc is null)
+                    {
+                        Logger.Warn("Warning: " + name + " does not have a Fabricator-Location.");
+                        yield break;
+                    }
                 }
                 foreach (var thisOldFab in GetComponentsInChildren<Fabricator>())
                 {
                     UnityEngine.GameObject.Destroy(thisOldFab.gameObject);
                 }
-                fab = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.Fabricator, true));
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                yield return StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
+                fab = result.Get();
                 fab.transform.SetParent(transform);
                 fab.transform.localPosition = fabLoc.localPosition;
                 fab.transform.localRotation = fabLoc.localRotation;
@@ -147,7 +155,7 @@ namespace VehicleFramework
                 voice = gameObject.EnsureComponent<AutoPilotVoice>();
                 gameObject.EnsureComponent<AutoPilot>();
                 controlPanelLogic.Init();
-                MaybeSetupUniqueFabricator();
+                StartCoroutine(MaybeSetupUniqueFabricator());
             }
                         
             // perform normal vehicle lazyinitializing
@@ -185,7 +193,7 @@ namespace VehicleFramework
             {
                 if (ColorPicker.transform.Find("EditScreen") is null)
                 {
-                    SetupColorPicker();
+                    StartCoroutine(SetupColorPicker());
                 }
                 else
                 {
@@ -204,6 +212,7 @@ namespace VehicleFramework
                 VehicleManager.EnrollVehicle(this);
                 isRegistered = true;
             }
+            isInited = true;
         }
         public override void FixedUpdate()
         {
@@ -225,23 +234,32 @@ namespace VehicleFramework
 
         public new void OnKill()
         {
+            IEnumerator SpillScrapMetal()
+            {
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                yield return CraftData.InstantiateFromPrefabAsync(TechType.ScrapMetal, result, false);
+                GameObject go = result.Get();
+                // spill out some scrap metal, lmao
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector3 loc = transform.position + 3 * UnityEngine.Random.onUnitSphere;
+                    Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
+                    go.transform.position = loc;
+                    go.transform.eulerAngles = rot;
+                    var rb = go.EnsureComponent<Rigidbody>();
+                    rb.isKinematic = false;
+                }
+                yield break;
+            }
+
             if (destructionEffect)
             {
                 GameObject gameObject = Instantiate<GameObject>(destructionEffect);
                 gameObject.transform.position = transform.position;
                 gameObject.transform.rotation = transform.rotation;
             }
-            // spill out some scrap metal, lmao
-            for (int i = 0; i < 4; i++)
-            {
-                Vector3 loc = transform.position + 3 * UnityEngine.Random.onUnitSphere;
-                Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
-                GameObject go = UnityEngine.GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.ScrapMetal, true));
-                go.transform.position = loc;
-                go.transform.eulerAngles = rot;
-                var rb = go.EnsureComponent<Rigidbody>();
-                rb.isKinematic = false;
-            }
+
+            StartCoroutine(SpillScrapMetal());
             StartCoroutine(EnqueueDestroy());
         }
         public IEnumerator EnqueueDestroy()
@@ -421,7 +439,7 @@ namespace VehicleFramework
             Player.main.transform.SetParent(transform);
             if (thisStopPilotingLocation == null)
             {
-                Logger.Log("Warning: pilot exit location was null. Defaulting to first tether.");
+                Logger.Warn("Warning: pilot exit location was null. Defaulting to first tether.");
                 Player.main.transform.position = TetherSources[0].transform.position;
             }
             else
@@ -586,7 +604,6 @@ namespace VehicleFramework
                 return null;
             }
             string slot = this.slotIDs[slotID];
-
             InventoryItem result;
             if (upgradesInput.equipment.equipment.TryGetValue(slot, out result))
             {
@@ -607,7 +624,7 @@ namespace VehicleFramework
                         }
                         else
                         {
-                            Logger.Log("Error: ModGetStorageInSlot called on invalid innate storage slotID");
+                            Logger.Error("Error: ModGetStorageInSlot called on invalid innate storage slotID");
                             return null;
                         }
                         return vsc.container;
@@ -617,26 +634,26 @@ namespace VehicleFramework
                         InventoryItem slotItem = this.GetSlotItem(slotID);
                         if (slotItem == null)
                         {
-                            Logger.Log("Warning: failed to get item for that slotID: " + slotID.ToString());
+                            Logger.Warn("Warning: failed to get item for that slotID: " + slotID.ToString());
                             return null;
                         }
                         Pickupable item = slotItem.item;
                         if (item.GetTechType() != techType)
                         {
-                            Logger.Log("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
+                            Logger.Warn("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
                             return null;
                         }
                         SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
                         if (component == null)
                         {
-                            Logger.Log("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
+                            Logger.Warn("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
                             return null;
                         }
                         return component.container;
                     }
                 default:
                     {
-                        Logger.Log("Error: tried to get storage for unsupported TechType");
+                        Logger.Error("Error: tried to get storage for unsupported TechType");
                         return null;
                     }
             }
@@ -676,7 +693,7 @@ namespace VehicleFramework
                         component.OnNavLightsOff();
                         break;
                     default:
-                        Logger.Log("Error: tried to notify using an invalid status");
+                        Logger.Error("Error: tried to notify using an invalid status");
                         break;
                 }
             }
@@ -700,7 +717,7 @@ namespace VehicleFramework
                         component.OnAutoPilotEnd();
                         break;
                     default:
-                        Logger.Log("Error: tried to notify using an invalid status");
+                        Logger.Error("Error: tried to notify using an invalid status");
                         break;
                 }
             }
@@ -718,7 +735,7 @@ namespace VehicleFramework
                         component.OnNearbyLeviathan();
                         break;
                     default:
-                        Logger.Log("Error: tried to notify using an invalid status");
+                        Logger.Error("Error: tried to notify using an invalid status");
                         break;
                 }
             }
@@ -754,7 +771,7 @@ namespace VehicleFramework
                         component.OnBatteryDepleted();
                         break;
                     default:
-                        Logger.Log("Error: tried to notify using an invalid status");
+                        Logger.Error("Error: tried to notify using an invalid status");
                         break;
                 }
             }
@@ -778,7 +795,7 @@ namespace VehicleFramework
                         component.OnPilotEnd();
                         break;
                     default:
-                        Logger.Log("Error: tried to notify using an invalid status");
+                        Logger.Error("Error: tried to notify using an invalid status");
                         break;
                 }
             }
@@ -791,7 +808,7 @@ namespace VehicleFramework
         public static void MaybeControlRotation(Vehicle veh)
         {
             ModVehicle mv = veh as ModVehicle;
-            if (mv != null && Player.main.GetVehicle() == veh && Player.main.mode == Player.Mode.LockedPiloting)
+            if (mv != null && Player.main.GetVehicle() == veh && Player.main.mode == Player.Mode.LockedPiloting && mv.GetIsUnderwater())
             {
                 ModVehicleEngine mve = mv.GetComponent<ModVehicleEngine>();
                 mve.ControlRotation();
@@ -799,12 +816,15 @@ namespace VehicleFramework
         }
         public void OnCraftEnd(TechType techType)
         {
+            Logger.DebugLog("ModVehicle OnCraftEnd");
             IEnumerator GiveUsABatteryOrGiveUsDeath()
             {
                 yield return new WaitForSeconds(2.5f);
 
                 // give us an AI battery please
-                GameObject newAIBattery = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
+                GameObject newAIBattery = result.Get();
                 newAIBattery.GetComponent<Battery>().charge = 200;
                 newAIBattery.transform.SetParent(StorageRootObject.transform);
                 AIEnergyInterface.sources.First().battery = newAIBattery.GetComponent<Battery>();
@@ -813,7 +833,8 @@ namespace VehicleFramework
 
                 if (!energyInterface.hasCharge)
                 {
-                    GameObject newPowerCell = GameObject.Instantiate(CraftData.GetPrefabForTechType(TechType.PowerCell, true));
+                    yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
+                    GameObject newPowerCell = result.Get();
                     newPowerCell.GetComponent<Battery>().charge = 200;
                     newPowerCell.transform.SetParent(StorageRootObject.transform);
                     Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = newPowerCell.GetComponent<Battery>();
@@ -828,17 +849,17 @@ namespace VehicleFramework
         {
             PaintVehicleDefaultStyle(OGVehicleName);
         }
-        public virtual void SubConstructionComplete()
+        public override void SubConstructionComplete()
         {
+            Logger.DebugLog("ModVehicle SubConstructionComplete");
             PaintNameDefaultStyle(OGVehicleName);
             // Setup the color picker with the odyssey's name
             var active = transform.Find("ColorPicker/EditScreen/Active");
             if (active)
             {
                 active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = NowVehicleName;
-                active.transform.Find("InputField/Text").GetComponent<Text>().text = NowVehicleName;
+                active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = NowVehicleName;
             }
-
         }
         public void ForceExitLockedMode()
         {
@@ -986,7 +1007,7 @@ namespace VehicleFramework
 
         public GameObject ActualEditScreen = null;
 
-        public void SetupColorPicker()
+        public IEnumerator SetupColorPicker()
         {
             UnityAction CreateAction(string name)
             {
@@ -1002,10 +1023,15 @@ namespace VehicleFramework
                 return Action;
             }
 
-            Builder.Begin(CraftData.GetBuildPrefab(TechType.BaseUpgradeConsole));
-            Builder.ghostModel.GetComponentInChildren<BaseGhost>().OnPlace();
-            GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
-            Builder.End();
+            GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>()?.ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
+
+            if (console is null)
+            {
+                yield return StartCoroutine(Builder.BeginAsync(TechType.BaseUpgradeConsole));
+                Builder.ghostModel.GetComponentInChildren<BaseGhost>().OnPlace();
+                console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
+                Builder.End();
+            }
             ActualEditScreen = GameObject.Instantiate(console.transform.Find("EditScreen").gameObject);
             ActualEditScreen.GetComponentInChildren<SubNameInput>().enabled = false;
             ActualEditScreen.name = "EditScreen";
@@ -1020,22 +1046,22 @@ namespace VehicleFramework
 
             var but = ActualEditScreen.transform.Find("Active/BaseTab");
             but.name = "MainExterior";
-            but.GetComponentInChildren<Text>().text = "Main Exterior";
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Main Exterior";
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("MainExterior"));
 
             but = ActualEditScreen.transform.Find("Active/NameTab");
             but.name = "PrimaryAccent";
-            but.GetComponentInChildren<Text>().text = "Primary Accent";
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Primary Accent";
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("PrimaryAccent"));
 
             but = ActualEditScreen.transform.Find("Active/InteriorTab");
             but.name = "SecondaryAccent";
-            but.GetComponentInChildren<Text>().text = "Secondary Accent";
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Secondary Accent";
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("SecondaryAccent"));
 
             but = ActualEditScreen.transform.Find("Active/Stripe1Tab");
             but.name = "NameLabel";
-            but.GetComponentInChildren<Text>().text = "Name Label";
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Name Label";
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("NameLabel"));
 
             GameObject colorPicker = ActualEditScreen.transform.Find("Active/ColorPicker").gameObject;
@@ -1045,6 +1071,7 @@ namespace VehicleFramework
             ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.AddListener(new UnityAction(OnColorSubmit));
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.RemoveAllListeners();
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new UnityAction<string>(OnNameChange));
+            yield break;
         }
 
         public virtual void OnAIBatteryReload()

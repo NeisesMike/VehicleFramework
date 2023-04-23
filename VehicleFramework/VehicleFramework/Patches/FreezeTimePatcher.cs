@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace VehicleFramework.Patches
 {
+	// I think this no longer necessary
+	// all sound stuff handled by FMOD now ?
+	/*
 	[HarmonyPatch(typeof(FreezeTime))]
 	public static class FreezeTimePatcher
 	{
@@ -22,4 +25,5 @@ namespace VehicleFramework.Patches
 			}
 		}
 	}
+	*/
 }

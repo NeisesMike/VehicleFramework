@@ -28,7 +28,7 @@ namespace VehicleFramework
                 __instance.underWaterController.SetEnabled(false);
                 __instance.activeController = __instance.groundController;
                 __instance.desiredControllerHeight = __instance.standheight;
-                __instance.activeController.SetControllerHeight(__instance.currentControllerHeight);
+                __instance.activeController.SetControllerHeight(__instance.currentControllerHeight, __instance.cameraOffset);
                 __instance.activeController.SetEnabled(true);
                 return false;
             }

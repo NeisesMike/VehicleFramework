@@ -88,7 +88,7 @@ namespace VehicleFramework
         }
         public bool EmptyHover()
         {
-            HandReticle.main.SetInteractText("of no use");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "of no use");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -99,7 +99,7 @@ namespace VehicleFramework
         }
         public bool HeadLightsHover()
         {
-            HandReticle.main.SetInteractText("Toggle Headlights");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Toggle Headlights");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -110,7 +110,7 @@ namespace VehicleFramework
         }
         public bool FloodLightsHover()
         {
-            HandReticle.main.SetInteractText("Toggle Flood Lights");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Toggle Flood Lights");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -122,7 +122,7 @@ namespace VehicleFramework
         }
         public bool NavLightsHover()
         {
-            HandReticle.main.SetInteractText("Toggle Nav Lights");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Toggle Nav Lights");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -133,7 +133,7 @@ namespace VehicleFramework
         }
         public bool InteriorLightsHover()
         {
-            HandReticle.main.SetInteractText("Toggle Interior Lighting");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Toggle Interior Lighting");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -145,7 +145,7 @@ namespace VehicleFramework
         }
         public bool DefaultColorHover()
         {
-            HandReticle.main.SetInteractText("Revert to Default Colors");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Revert to Default Colors");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -160,7 +160,7 @@ namespace VehicleFramework
         }
         public bool PowerHover()
         {
-            HandReticle.main.SetInteractText("Toggle Power");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Toggle Power");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }
@@ -171,7 +171,7 @@ namespace VehicleFramework
         }
         public bool AutoPilotHover()
         {
-            HandReticle.main.SetInteractText("Open Auto-Pilot (to do)");
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Open Auto-Pilot (to do)");
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
             return true;
         }

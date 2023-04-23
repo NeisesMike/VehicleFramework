@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,10 +20,12 @@ namespace VehicleFramework
             }
             bbbp.beamPoints = bbbpList.ToArray();
         }
-        public static void SetupVFXConstructing(ModVehicle mv)
+        public static IEnumerator SetupVFXConstructing(ModVehicle mv)
         {
-            VFXConstructing seamothVFXC = CraftData.GetPrefabForTechType(TechType.Seamoth, true).GetComponent<VFXConstructing>();
-            VFXConstructing rocketPlatformVfx = CraftData.GetPrefabForTechType(TechType.RocketBase).GetComponentInChildren<VFXConstructing>();
+            yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
+            GameObject seamoth = SeamothHelper.Seamoth;
+            VFXConstructing seamothVFXC = seamoth.GetComponent<VFXConstructing>();
+            VFXConstructing rocketPlatformVfx = seamoth.GetComponentInChildren<VFXConstructing>();
 
             VFXConstructing vfxc = mv.gameObject.EnsureComponent<VFXConstructing>();
             vfxc.timeToConstruct = 50f;
@@ -45,8 +48,10 @@ namespace VehicleFramework
             vfxc.informGameObject = null;
             vfxc.transparentShaders = null; // TODO maybe we'll want to use this?
             vfxc.Regenerate();
+
+            yield break;
         }
-        public static void SetupBuildBotPaths()
+        public static IEnumerator SetupBuildBotPaths()
         {
             foreach (ModVehicle mv in VehicleBuilder.prefabs)
             {
@@ -55,7 +60,7 @@ namespace VehicleFramework
                     continue;
                 }
                 SetupBuildBotBeamPoints(mv);
-                SetupVFXConstructing(mv);
+                yield return CoroutineHelper.Starto(SetupVFXConstructing(mv));
 
                 Bounds vbounds = mv.BoundingBox.GetComponent<MeshRenderer>().bounds;
                 GameObject bbPointsRoot = new GameObject("BuildBotPoints");
