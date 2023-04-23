@@ -149,8 +149,7 @@ namespace OdysseyVehicle
             name_details = new Texture2D(1024, 256, TextureFormat.ARGB32, false);
             byte[] nameDetailsBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/name_details.png"));
             name_details.LoadImage(nameDetailsBytes);
-
-
+            
             main_lightmap = new Texture2D(1024, 256, TextureFormat.ARGB32, false);
             byte[] mainBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/Interior_Main_Lightmap.png"));
             main_lightmap.LoadImage(mainBytes);
@@ -174,12 +173,12 @@ namespace OdysseyVehicle
             recipe.Add(TechType.EnameledGlass, 2);
             return recipe;
         }
-        public static void Register()
+        public static IEnumerator Register()
         {
             GetAssets();
             ModVehicle odyssey = model.EnsureComponent<Odyssey>() as ModVehicle;
             odyssey.gameObject.GetComponent<Animator>().runtimeAnimatorController = animatorController;
-            VehicleManager.RegisterVehicle(ref odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 600, 667);
+            yield return CoroutineHelper.Starto(VehicleManager.RegisterVehicle(odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 600, 667));
         }
 
         public override string vehicleDefaultName
@@ -804,7 +803,6 @@ namespace OdysseyVehicle
             NowVehicleName = OGVehicleName;
 
             // Apply the lightmap textures
-            /* 
             foreach (Renderer thisRend in GetComponentsInChildren<Renderer>())
             {
                 for (int j = 0; j < thisRend.materials.Length; j++)
@@ -812,29 +810,42 @@ namespace OdysseyVehicle
                     Material thisMat = thisRend.materials[j];
                     if (thisMat.name.Contains("Odyssey_Interior_Main"))
                     {
-                        Logger.Log("adding main lightmap...");
+                        //Logger.Log("adding main lightmap...");
                         Material[] deseMats = thisRend.materials;
-                        deseMats[j].SetTexture("_LightMap", main_lightmap);
+                        deseMats[j].SetTexture("_EmissiveTex", main_lightmap);
+                        deseMats[j].EnableKeyword("MARMO_EMISSION");
+                        deseMats[j].SetFloat("_GlowStrength", 0);
+                        deseMats[j].SetFloat("_GlowStrengthNight", 0);
+                        deseMats[j].SetFloat("_EmissionLM", 0);
+                        deseMats[j].SetFloat("_EmissionLMNight", 0.1f);
                         thisRend.materials = deseMats;
                     }
                     else if (thisMat.name.Contains("Odyssey_Interior_Storage"))
                     {
-                        Logger.Log("adding storage lightmap...");
+                        //Logger.Log("adding storage lightmap...");
                         Material[] deseMats = thisRend.materials;
-                        deseMats[j].SetTexture("_LightMap", storage_lightmap);
-                        deseMats[j].SetTexture("_Lightmap", storage_lightmap);
+                        deseMats[j].SetTexture("_EmissiveTex", storage_lightmap);
+                        deseMats[j].EnableKeyword("MARMO_EMISSION");
+                        deseMats[j].SetFloat("_GlowStrength", 0);
+                        deseMats[j].SetFloat("_GlowStrengthNight", 0);
+                        deseMats[j].SetFloat("_EmissionLM", 0);
+                        deseMats[j].SetFloat("_EmissionLMNight", 0.1f);
                         thisRend.materials = deseMats;
                     }
                     else if (thisMat.name.Contains("Odyssey_Interior_Steering"))
                     {
-                        Logger.Log("adding steering lightmap...");  
+                        //Logger.Log("adding steering lightmap...");  
                         Material[] deseMats = thisRend.materials;
-                        deseMats[j].SetTexture("_LightMap", steering_lightmap);
+                        deseMats[j].SetTexture("_EmissiveTex", steering_lightmap);
+                        deseMats[j].EnableKeyword("MARMO_EMISSION");
+                        deseMats[j].SetFloat("_GlowStrength", 0);
+                        deseMats[j].SetFloat("_GlowStrengthNight", 0);
+                        deseMats[j].SetFloat("_EmissionLM", 0);
+                        deseMats[j].SetFloat("_EmissionLMNight", 0.1f);
                         thisRend.materials = deseMats;
                     }
                 }
             }
-            */
 
             // ModVehicle.Awake
             base.Awake();

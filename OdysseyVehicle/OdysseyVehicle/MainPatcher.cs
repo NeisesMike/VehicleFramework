@@ -12,16 +12,23 @@ using SMLHelper.V2.Options.Attributes;
 using SMLHelper.V2.Options;
 using SMLHelper.V2.Json;
 using SMLHelper.V2.Handlers;
-using QModManager.API.ModLoading;
 using SMLHelper.V2.Utility;
+using BepInEx;
+using BepInEx.Logging;
+using BepInEx.Bootstrap;
 
 namespace OdysseyVehicle
 {
     public static class Logger
     {
+        public static ManualLogSource MyLog { get; set; }
+        public static void Warn(string message)
+        {
+            MyLog.LogWarning("[OdysseyVehicle] " + message);
+        }
         public static void Log(string message)
         {
-            UnityEngine.Debug.Log("[OdysseyVehicle] " + message);
+            MyLog.LogInfo("[OdysseyVehicle] " + message);
         }
         public static void Output(string msg)
         {
@@ -30,15 +37,26 @@ namespace OdysseyVehicle
         }
     }
 
-    [QModCore]
-    public static class MainPatcher
+    public class CoroutineHelper : MonoBehaviour
     {
-        [QModPrePatch]
-        public static void PrePatch()
+        public static CoroutineHelper main { get; set; }
+        public static Coroutine Starto(IEnumerator func)
         {
+            return main.StartCoroutine(func);
+        }
+    }
+
+    [BepInPlugin("com.mikjaw.subnautica.odyssey.mod", "Odyssey", "1.0")]
+    [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod", BepInDependency.DependencyFlags.HardDependency)]
+    public class MainPatcher : BaseUnityPlugin
+    {
+        public void Start()
+        {
+            CoroutineHelper.main = (new GameObject()).EnsureComponent<CoroutineHelper>();
+            OdysseyVehicle.Logger.MyLog = base.Logger;
             var harmony = new Harmony("com.mikjaw.subnautica.odyssey.mod");
             harmony.PatchAll();
-            Odyssey.Register();
+            CoroutineHelper.Starto(Odyssey.Register());
         }
     }
 }

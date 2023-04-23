@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Atrama
             var myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(modPath, "assets/atrama"));
             if (myLoadedAssetBundle == null)
             {
-                Logger.Log("Failed to load AssetBundle!");
+                //Logger.Log("Failed to load AssetBundle!");
                 return;
             }
 
@@ -48,7 +49,7 @@ namespace Atrama
                 }
                 else
                 {
-                    Logger.Log(obj.ToString());
+                    //Logger.Log(obj.ToString());
                 }
             }
         }
@@ -63,11 +64,11 @@ namespace Atrama
             recipe.Add(TechType.EnameledGlass, 2);
             return recipe;
         }
-        public static void Register()
+        public static IEnumerator Register()
         {
             GetAssets();
             ModVehicle atrama = model.EnsureComponent<Atrama>() as ModVehicle;
-            VehicleManager.RegisterVehicle(ref atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2, 900, 1000);
+            yield return CoroutineHelper.Starto(VehicleManager.RegisterVehicle(atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2, 900, 1000));
         }
 
         public override string vehicleDefaultName
