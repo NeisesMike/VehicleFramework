@@ -42,19 +42,7 @@ namespace VehicleFramework.UpgradeModules
         public override string[] StepsToFabricatorTab => new string[] { "MVUM", "MVDM" };
         public override QuickSlotType QuickSlotType => QuickSlotType.Passive;
 
-        private static GameObject _internalGameObject;
-        public static GameObject InternalGameObject
-        {
-            get
-            {
-                return _internalGameObject;
-            }
-            private set
-            {
-                _internalGameObject = value;
-            }
-        }
-        public IEnumerator ExtractGameObject()
+        public override IEnumerator GetGameObjectAsync(IOut<GameObject> gameObject)
         {
             while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {
@@ -73,13 +61,10 @@ namespace VehicleFramework.UpgradeModules
             techTag.type = TechType;
             prefabIdentifier.ClassId = ClassID;
 
-            InternalGameObject = obj;
+            gameObject.Set(obj);
             yield break;
         }
-        public override GameObject GetGameObject()
-        {
-            return InternalGameObject;
-        }
+
         protected override TechData GetBlueprintRecipe()
         {
             return new TechData()

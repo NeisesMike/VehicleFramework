@@ -37,19 +37,7 @@ namespace VehicleFramework.UpgradeModules
         public override string[] StepsToFabricatorTab => new string[] { "MVUM", "MVDM" };
         public override QuickSlotType QuickSlotType => QuickSlotType.Passive;
 
-        private GameObject _internalGameObject;
-        public GameObject InternalGameObject
-        {
-            get
-            {
-                return _internalGameObject;
-            }
-            private set
-            {
-                _internalGameObject = value;
-            }
-        }
-        public IEnumerator ExtractGameObject()
+        public override IEnumerator GetGameObjectAsync(IOut<GameObject> gameObject)
         {
             while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {
@@ -57,7 +45,7 @@ namespace VehicleFramework.UpgradeModules
             }
             // Get the ElectricalDefense module prefab and instantiate it
             TaskResult<GameObject> result = new TaskResult<GameObject>();
-            yield return CraftData.InstantiateFromPrefabAsync(TechType.SeamothElectricalDefense, result, false);
+            yield return CoroutineHelper.Starto(CraftData.InstantiateFromPrefabAsync(TechType.SeamothElectricalDefense, result, false));
             GameObject obj = result.Get();
 
             // Get the TechTags and PrefabIdentifiers
@@ -68,12 +56,8 @@ namespace VehicleFramework.UpgradeModules
             techTag.type = TechType;
             prefabIdentifier.ClassId = ClassID;
 
-            InternalGameObject = obj;
+            gameObject.Set(obj);
             yield break;
-        }
-        public override GameObject GetGameObject()
-        {
-            return InternalGameObject;
         }
         protected override TechData GetBlueprintRecipe()
         {

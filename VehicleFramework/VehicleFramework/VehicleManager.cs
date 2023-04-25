@@ -158,10 +158,6 @@ namespace VehicleFramework
              * Maybe it would be okay if I push this, with big disclaimer about reloading
              */
 
-            yield return CoroutineHelper.Starto(MainPatcher.modVehicleDepthModule1.ExtractGameObject());
-            yield return CoroutineHelper.Starto(MainPatcher.modVehicleDepthModule2.ExtractGameObject());
-            yield return CoroutineHelper.Starto(MainPatcher.modVehicleDepthModule3.ExtractGameObject());
-
             foreach (var mv in VehiclesInPlay)
             {
                 mv.ModVehicleReset();
