@@ -18,13 +18,13 @@ namespace VehicleFramework.UpgradeModules
     {
         public ModVehicleDepthMk1() : base(
             classId: "ModVehicleDepthModule1",
-            friendlyName: "Vehicle Depth Module MK1",
-            description: "Increases Crush Depth to 400m over Base. Does Not Stack.")
+            friendlyName: LocalizationManager.GetString(EnglishString.Depth1FriendlyString),
+            description: LocalizationManager.GetString(EnglishString.Depth1Description))
         {
             //OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "Depth", "Depth Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
-            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVUM", "ModVehicle Upgrade Modules", MainPatcher.ModVehicleIcon);
+            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVUM", LocalizationManager.GetString(EnglishString.MVModules), MainPatcher.ModVehicleIcon);
             string[] stepsToDepthTab = { "MVUM" };
-            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVDM", "ModVehicle Depth Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
+            OnStartedPatching += () => CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVDM", LocalizationManager.GetString(EnglishString.MVDepthModules), MainPatcher.ModVehicleIcon, stepsToDepthTab);
             
         }
 

@@ -25,7 +25,7 @@ namespace VehicleFramework
             if (!mv.GetPilotingMode() && mv.IsPowered())
             {
                 HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Start Piloting");
+                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.StartPiloting));
             }
         }
     }

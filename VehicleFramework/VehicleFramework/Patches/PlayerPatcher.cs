@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 
 using SMLHelper.V2.Utility;
+using UWE;
 
 namespace VehicleFramework
-{
+{ 
     [HarmonyPatch(typeof(Player))]
     public static class PlayerPatcher
-    {
+    { 
         /*
          * This collection of patches covers many topics.
          * Generally, it regards behavior in a ModVehicle while underwater and exiting the pilot seat.
@@ -73,7 +75,7 @@ namespace VehicleFramework
                 {
                     message = new BasicText(500, 0);
                 }
-                message.ShowMessage("Angle is too steep.\nDouble tap " + GameInput.Button.Exit.ToString() + "\nButton to auto-level.", 5);
+                message.ShowMessage(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3);
                 return false;
             }
             else if (mv.useRigidbody.velocity.magnitude > 2f)
@@ -87,7 +89,7 @@ namespace VehicleFramework
                 {
                     message = new BasicText(500, 0);
                 }
-                message.ShowMessage("Velocity is too great.\nDouble tap " + GameInput.Button.Exit.ToString() + "\nButton to auto-brake.", 5);
+                message.ShowMessage(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3);
                 return false;
             }
 

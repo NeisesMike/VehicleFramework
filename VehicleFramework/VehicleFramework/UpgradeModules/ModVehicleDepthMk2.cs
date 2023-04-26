@@ -18,8 +18,8 @@ namespace VehicleFramework.UpgradeModules
     {
         public ModVehicleDepthMk2() : base(
             classId: "ModVehicleDepthModule2",
-            friendlyName: "Vehicle Depth Module MK2",
-            description: "Increases Crush Depth to 800m over Base. Does Not Stack.")
+            friendlyName: LocalizationManager.GetString(EnglishString.Depth3FriendlyString),
+            description: LocalizationManager.GetString(EnglishString.Depth3Description))
         {
         }
 

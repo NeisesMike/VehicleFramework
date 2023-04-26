@@ -20,11 +20,11 @@ namespace VehicleFramework
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 			if (mv.IsPlayerInside())
 			{
-				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Exit Vehicle");
+				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.ExitVehicle));
 			}
 			else
 			{
-				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Enter Vehicle");
+				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EnterVehicle));
 			}
 		}
 

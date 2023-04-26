@@ -221,7 +221,7 @@ namespace VehicleFramework
                 energyMixins.Add(energyMixin);
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = energyMixin;
-                tmp.tooltip = "Vehicle Battery";
+                tmp.tooltip = EnglishString.VehicleBattery;
 
                 var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
                 model.proxy = vb.BatteryProxy;
@@ -258,7 +258,7 @@ namespace VehicleFramework
 
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = em;
-                tmp.tooltip = "Autopilot Battery";
+                tmp.tooltip = EnglishString.AutoPilotBattery;
 
                 var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
                 model.proxy = vb.BatteryProxy;

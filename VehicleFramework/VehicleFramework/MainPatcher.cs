@@ -81,9 +81,9 @@ namespace VehicleFramework
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
 
-        internal static ModVehicleDepthMk1 modVehicleDepthModule1 = new ModVehicleDepthMk1();
-        internal static ModVehicleDepthMk2 modVehicleDepthModule2 = new ModVehicleDepthMk2();
-        internal static ModVehicleDepthMk3 modVehicleDepthModule3 = new ModVehicleDepthMk3();
+        internal static ModVehicleDepthMk1 modVehicleDepthModule1;
+        internal static ModVehicleDepthMk2 modVehicleDepthModule2;
+        internal static ModVehicleDepthMk3 modVehicleDepthModule3;
 
         internal static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
 
@@ -100,6 +100,8 @@ namespace VehicleFramework
         }
         public void PrePatch()
         {
+            VFConfig = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
+
             IEnumerator CollectPrefabsForBuilderReference()
             {
                 CoroutineTask<GameObject> request = CraftData.GetPrefabForTechTypeAsync(TechType.BaseUpgradeConsole, true);
@@ -109,6 +111,11 @@ namespace VehicleFramework
                 yield break;
             }
             StartCoroutine(CollectPrefabsForBuilderReference());
+
+            // Gotta do this here, so that the depth module setup can access the configured language
+            modVehicleDepthModule1 = new ModVehicleDepthMk1();
+            modVehicleDepthModule2 = new ModVehicleDepthMk2();
+            modVehicleDepthModule3 = new ModVehicleDepthMk3();
 
             // patch in the crafting node for the Workbench menu (modification station)
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -125,7 +132,7 @@ namespace VehicleFramework
             modVehicleDepthModule2.Patch();
             modVehicleDepthModule3.Patch();
         }
-        
+
         public void Patch()
         {
             SaveData saveData = SaveDataHandler.Main.RegisterSaveDataCache<SaveData>();
@@ -149,10 +156,9 @@ namespace VehicleFramework
                 CoroutineHelper.Starto(VehicleManager.LoadVehicles());
             };
 
-            VFConfig = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
             harmony.PatchAll();
-
+        
             // Patch SubnauticaMap with appropriate ping sprites, lest it crash.
             var type = Type.GetType("SubnauticaMap.PingMapIcon, SubnauticaMap", false, false);
             if (type != null)
