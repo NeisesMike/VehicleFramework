@@ -83,10 +83,14 @@ namespace VehicleFramework
         }
         public static void EnrollVehicle(ModVehicle mv)
         {
-            if (mv.name.Contains("Clone"))
+            if (mv.name.Contains("Clone") && !VehiclesInPlay.Contains(mv))
             {
                 VehiclesInPlay.Add(mv);
                 Logger.Log("Enrolled the " + mv.name + " : " + mv.GetName() + " : " + mv.subName);
+                if(mv.GetComponent<VFXConstructing>().constructed > 3f)
+                {
+                    mv.StartCoroutine(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
+                }
             }
         }
         public static void DeregisterVehicle(ModVehicle mv)
@@ -114,80 +118,16 @@ namespace VehicleFramework
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
         }
-        public static IEnumerator LoadVehicles()
+        public static IEnumerator LoadVehicle(ModVehicle mv)
         {
-            /* Something is the matter. We're not loading in correctly.
-             * On first load after boot, the batteries and upgrade models are good, but the color picker is dead and the largeworldstreamer has an error.
-             * On subsequent loads, the color picker words and the LWS is okay, but the battery and upgrade models are gone.
-             * The batteries and upgrades are still loaded and functional, but the visible models are not preserved.
-             * For some reason, getseamothbits does not finish the second time.
-             * 
-             * Bizarrely, by fixing a bug in CoroutineHelper, I've reversed the problem.
-             * Now on first load only the models are gone,
-             * and on subsequent loads there is a strange World Streamer error
-             * 
-             * Okay, now batteries are always good.
-             * Modules are good at load 2+
-             * And it's actually CellManager.RegisterGlobalEntity that errors at 2+ (not world streamer),
-             * ostensibly because this.streamer.globalRoot is null somewhere
-             * the LargeWorldStreamer is not assigned anywhere... so
-             * globalRoot is set in LargeWorldStreamer.OnGlobalRootLoaded
-             * 
-             * Yuck, the CellManager error only happens sometimes.
-             * Sometimes, the MV Starts too early (apparently)
-             * Anyways, when it errors, MV Starts before GetSeamothBits finishes
-             * 
-             * Wronga. We fixed GetSeamothBits, and now the batteries/modules
-             * are correct on every load.
-             * However, on load 2+ we are still having the CellManager error.
-             * Not sure why.
-             * 
-             * Well the error goes away with this patch: RegisterGlobalEntityPrefix
-             * But the engine sound still plays during load, which indicates the error happens,
-             * and the color picker is still not loading,
-             * but there are no logged errors.
-             * 
-             * I think the problem is that something isn't being cleaned up at Quit-time.
-             * 
-             * I think something about BepInEx plugins means reload is bad.
-             * There's a bunch of advice on the modding discord,
-             * "don't reload after quitting to menu; quit then reboot the game"
-             * but I can't substantiate any claims about it
-             * 
-             * Maybe it would be okay if I push this, with big disclaimer about reloading
-             */
-
-            foreach (var mv in VehiclesInPlay)
-            {
-                mv.ModVehicleReset();
-            }
-            IEnumerator WaitForVehiclesToStart()
-            {
-                bool AreAllVehiclesStarted = false;
-                while (!AreAllVehiclesStarted)
-                {
-                    foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-                    {
-                        if (!mv.isInited)
-                        {
-                            yield return new WaitForSecondsRealtime(1f);
-                        }
-                    }
-                    AreAllVehiclesStarted = true;
-                }
-            }
-            yield return CoroutineHelper.Starto(WaitForVehiclesToStart());
-
-
-            // TODO refactor a new LoadVehicles to accept a modvehicle as input
-            Coroutine ModuleGetter = CoroutineHelper.Starto(SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData));
-            CoroutineHelper.Starto(SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData));
-            CoroutineHelper.Starto(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData));
-            CoroutineHelper.Starto(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData));
-            CoroutineHelper.Starto(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData));
-            CoroutineHelper.Starto(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData));
+            Coroutine ModuleGetter = mv.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData, mv));
+            mv.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData, mv));
+            mv.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData, mv));
+            mv.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv));
+            mv.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
-            CoroutineHelper.Starto(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData));
+            mv.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData, mv));
+            mv.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv));
         }
     }
 }

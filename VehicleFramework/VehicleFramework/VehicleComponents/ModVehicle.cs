@@ -205,13 +205,8 @@ namespace VehicleFramework
             vehicleName = OGVehicleName;
             NowVehicleName = OGVehicleName;
 
-
             // Register our new vehicle with Vehicle Framework
-            if (!isRegistered)
-            {
-                VehicleManager.EnrollVehicle(this);
-                isRegistered = true;
-            }
+            VehicleManager.EnrollVehicle(this);
             isInited = true;
             voice.NotifyReadyToSpeak();
         }

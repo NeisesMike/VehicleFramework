@@ -149,7 +149,6 @@ namespace VehicleFramework
             saveData.OnFinishedLoading += (object sender, JsonFileEventArgs e) =>
             {
                 VehicleSaveData = e.Instance as SaveData;
-                CoroutineHelper.Starto(VehicleManager.LoadVehicles());
             };
 
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");

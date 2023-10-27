@@ -66,33 +66,27 @@ namespace VehicleFramework
             }
             return modVehiclesUpgrades;
         }
-        internal static IEnumerator DeserializeUpgrades(SaveData data)
+        internal static IEnumerator DeserializeUpgrades(SaveData data, ModVehicle mv)
         {
             List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = data.UpgradeLists;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+
+            // try to match against a saved vehicle in our list
+            foreach (var tup in modVehiclesUpgrades)
             {
-                if (mv==null)
+                if (Vector3.Distance(mv.transform.position, tup.Item1) < 3)
                 {
-                    continue;
-                }
-                // try to match against a saved vehicle in our list
-                foreach (var tup in modVehiclesUpgrades)
-                {
-                    if (Vector3.Distance(mv.transform.position, tup.Item1) < 3)
+                    foreach (KeyValuePair<string, techtype> pair in tup.Item2)
                     {
-                        foreach(KeyValuePair<string, techtype> pair in tup.Item2)
-                        {
-                            TaskResult<GameObject> result = new TaskResult<GameObject>();
-                            bool resulty = TechTypeExtensions.FromString(pair.Value, out TechType thisTT, true);
-                            yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                            GameObject thisUpgrade = result.Get();
-                            thisUpgrade.transform.SetParent(mv.modulesRoot.transform);
-                            thisUpgrade.SetActive(false);
-                            InventoryItem thisItem = new InventoryItem(thisUpgrade.GetComponent<Pickupable>());
-                            mv.modules.AddItem(pair.Key, thisItem, true);
-                            // try calling OnUpgradeModulesChanged now
-                            mv.UpdateModuleSlots();
-                        }
+                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                        bool resulty = TechTypeExtensions.FromString(pair.Value, out TechType thisTT, true);
+                        yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                        GameObject thisUpgrade = result.Get();
+                        thisUpgrade.transform.SetParent(mv.modulesRoot.transform);
+                        thisUpgrade.SetActive(false);
+                        InventoryItem thisItem = new InventoryItem(thisUpgrade.GetComponent<Pickupable>());
+                        mv.modules.AddItem(pair.Key, thisItem, true);
+                        // try calling OnUpgradeModulesChanged now
+                        mv.UpdateModuleSlots();
                     }
                 }
             }
@@ -114,7 +108,7 @@ namespace VehicleFramework
                 }
                 List<Tuple<int, batteries>> thisVehiclesStoragesContents = new List<Tuple<int, batteries>>();
 
-                for(int i=0; i<mv.ModularStorages.Count; i++)
+                for (int i = 0; i < mv.ModularStorages.Count; i++)
                 {
                     var thisContainer = mv.GetStorageInSlot(i, TechType.VehicleStorageModule);
                     if (thisContainer != null)
@@ -125,7 +119,7 @@ namespace VehicleFramework
                             TechType thisItemType = item.item.GetTechType();
                             float batteryChargeIfApplicable = -1;
                             var bat = item.item.GetComponentInChildren<Battery>(true);
-                            if(bat != null)
+                            if (bat != null)
                             {
                                 batteryChargeIfApplicable = bat.charge;
                             }
@@ -138,64 +132,56 @@ namespace VehicleFramework
             }
             return allVehiclesStoragesContents;
         }
-        internal static IEnumerator DeserializeModularStorage(SaveData data)
+        internal static IEnumerator DeserializeModularStorage(SaveData data, ModVehicle mv)
         {
             List<Tuple<Vector3, List<Tuple<int, batteries>>>> allVehiclesStoragesLists = data.ModularStorages;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            // try to match against a saved vehicle in our list
+            foreach (var vehicle in allVehiclesStoragesLists)
             {
-                if (mv == null)
+                if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
                 {
-                    continue;
-                }
-                
-                // try to match against a saved vehicle in our list
-                foreach (var vehicle in allVehiclesStoragesLists)
-                {
-                    if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                    // we've matched the vehicle
+                    foreach (var container in vehicle.Item2)
                     {
-                        // we've matched the vehicle
-                        foreach(var container in vehicle.Item2)
+                        var thisContainer = mv.ModGetStorageInSlot(container.Item1, TechType.VehicleStorageModule);
+                        if (thisContainer != null)
                         {
-                            var thisContainer = mv.ModGetStorageInSlot(container.Item1, TechType.VehicleStorageModule);
-                            if (thisContainer != null)
+                            foreach (var techtype in container.Item2)
                             {
-                                foreach(var techtype in container.Item2)
+                                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
+                                yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                                GameObject thisItem = result.Get();
+                                if (techtype.Item2 >= 0)
                                 {
-                                    TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                    bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
-                                    yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                                    GameObject thisItem = result.Get();
-                                    if (techtype.Item2 >= 0)
+                                    // check whether we *are* a battery xor we *have* a battery
+                                    if (thisItem.GetComponent<Battery>() != null)
                                     {
-                                        // check whether we *are* a battery xor we *have* a battery
-                                        if (thisItem.GetComponent<Battery>() != null)
-                                        {
-                                            // we are a battery
-                                            var bat = thisItem.GetComponentInChildren<Battery>();
-                                            bat.charge = techtype.Item2;
-                                        }
-                                        else
-                                        {
-                                            // we have a battery (we are a tool)
-                                            // Thankfully we have this naming convention
-                                            Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                            result = new TaskResult<GameObject>();
-                                            yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
-                                            GameObject newBat = result.Get();
-                                            newBat.GetComponent<Battery>().charge = techtype.Item2;
-                                            newBat.transform.SetParent(batSlot);
-                                            newBat.SetActive(false);
-                                        }
+                                        // we are a battery
+                                        var bat = thisItem.GetComponentInChildren<Battery>();
+                                        bat.charge = techtype.Item2;
                                     }
-                                    thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                                    thisContainer.AddItem(thisItem.GetComponent<Pickupable>());
-                                    thisItem.SetActive(false);
+                                    else
+                                    {
+                                        // we have a battery (we are a tool)
+                                        // Thankfully we have this naming convention
+                                        Transform batSlot = thisItem.transform.Find("BatterySlot");
+                                        result = new TaskResult<GameObject>();
+                                        yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
+                                        GameObject newBat = result.Get();
+                                        newBat.GetComponent<Battery>().charge = techtype.Item2;
+                                        newBat.transform.SetParent(batSlot);
+                                        newBat.SetActive(false);
+                                    }
                                 }
+                                thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                                thisContainer.AddItem(thisItem.GetComponent<Pickupable>());
+                                thisItem.SetActive(false);
                             }
-                            else
-                            {
-                                Logger.Warn("Tried to deserialize items into a non-existent modular container: " + container.Item1.ToString());
-                            }
+                        }
+                        else
+                        {
+                            Logger.Warn("Tried to deserialize items into a non-existent modular container: " + container.Item1.ToString());
                         }
                     }
                 }
@@ -238,95 +224,26 @@ namespace VehicleFramework
             }
             return allVehiclesStoragesContents;
         }
-        internal static IEnumerator DeserializeInnateStorage(SaveData data)
+        internal static IEnumerator DeserializeInnateStorage(SaveData data, ModVehicle mv)
         {
             List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> allVehiclesStoragesLists = data.InnateStorages;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            // try to match against a saved vehicle in our list
+            foreach (var vehicle in allVehiclesStoragesLists)
             {
-                if (mv == null)
+                if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
                 {
-                    continue;
-                }
-                // try to match against a saved vehicle in our list
-                foreach (var vehicle in allVehiclesStoragesLists)
-                {
-                    if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                    foreach (var thisStorage in vehicle.Item2)
                     {
-                        foreach (var thisStorage in vehicle.Item2)
+                        bool isStorageMatched = false;
+                        // load up the storages
+                        foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
                         {
-                            bool isStorageMatched = false;
-                            // load up the storages
-                            foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
+                            isStorageMatched = false;
+                            if (Vector3.Distance(isc.transform.position, thisStorage.Item1) < 0.05f) // this is a weird amount of drift, but I'm afraid to use ==
                             {
-                                isStorageMatched = false;
-                                if (Vector3.Distance(isc.transform.position, thisStorage.Item1) < 0.05f) // this is a weird amount of drift, but I'm afraid to use ==
+                                isStorageMatched = true;
+                                foreach (var techtype in thisStorage.Item2)
                                 {
-                                    isStorageMatched = true;
-                                    foreach (var techtype in thisStorage.Item2)
-                                    {
-                                        TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                        bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
-                                        yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                                        GameObject thisItem = result.Get();
-                                        if (techtype.Item2 >= 0)
-                                        {
-                                            // check whether we *are* a battery xor we *have* a battery
-                                            if (thisItem.GetComponent<Battery>() != null)
-                                            {
-                                                // we are a battery
-                                                var bat = thisItem.GetComponentInChildren<Battery>();
-                                                bat.charge = techtype.Item2;
-                                            }
-                                            else
-                                            {
-                                                // we have a battery (we are a tool)
-                                                // Thankfully we have this naming convention
-                                                Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                                result = new TaskResult<GameObject>();
-                                                yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
-                                                GameObject newBat = result.Get();
-                                                newBat.GetComponent<Battery>().charge = techtype.Item2;
-                                                newBat.transform.SetParent(batSlot);
-                                                newBat.SetActive(false);
-                                            }
-                                        }
-                                        thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                                        isc.container.AddItem(thisItem.GetComponent<Pickupable>());
-                                        thisItem.SetActive(false);
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!isStorageMatched)
-                            {
-                                // shit out the contents of the missing container, marked with a beacon
-                                IEnumerator MarkWithBeacon(Vector3 position)
-                                {
-                                    TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                    yield return CraftData.InstantiateFromPrefabAsync(TechType.Beacon, result, false);
-                                    GameObject thisBeacon = result.Get();
-                                    thisBeacon.transform.position = position;
-                                    yield return null; // let the stray entity be registered by the game
-                                    thisBeacon.GetComponentInChildren<BeaconLabel>().SetLabel("Thanks! -Mikjaw");
-                                    yield break;
-                                }
-                                CoroutineHelper.Starto(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
-
-                                GameObject thisFloatingContainer = null;
-                                int numContainersSoFar = 0;
-                                for (int i = 0; i < thisStorage.Item2.Count; i++)
-                                {
-                                    if (i % 16 == 0)
-                                    {
-                                        TaskResult<GameObject> resultthisFloatingContainer = new TaskResult<GameObject>();
-                                        yield return CraftData.InstantiateFromPrefabAsync(TechType.SmallStorage, resultthisFloatingContainer, false);
-                                        thisFloatingContainer = resultthisFloatingContainer.Get();
-                                        Vector3 randomDirection = Vector3.Normalize(new Vector3(UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1));
-                                        thisFloatingContainer.transform.position = mv.transform.position + mv.transform.forward * 5f + randomDirection * 2f;
-                                        thisFloatingContainer.GetComponentInChildren<uGUI_InputField>().text = "Overflow " + numContainersSoFar++.ToString();
-                                    }
-
-                                    Tuple<techtype, float> techtype = thisStorage.Item2[i];
                                     TaskResult<GameObject> result = new TaskResult<GameObject>();
                                     bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
                                     yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
@@ -353,10 +270,72 @@ namespace VehicleFramework
                                             newBat.SetActive(false);
                                         }
                                     }
-                                    thisItem.transform.SetParent(thisFloatingContainer.GetComponentInChildren<StorageContainer>().transform);
-                                    thisFloatingContainer.GetComponentInChildren<StorageContainer>().container.AddItem(thisItem.GetComponent<Pickupable>());
+                                    thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                                    isc.container.AddItem(thisItem.GetComponent<Pickupable>());
                                     thisItem.SetActive(false);
                                 }
+                                break;
+                            }
+                        }
+                        if (!isStorageMatched)
+                        {
+                            // shit out the contents of the missing container, marked with a beacon
+                            IEnumerator MarkWithBeacon(Vector3 position)
+                            {
+                                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                yield return CraftData.InstantiateFromPrefabAsync(TechType.Beacon, result, false);
+                                GameObject thisBeacon = result.Get();
+                                thisBeacon.transform.position = position;
+                                yield return null; // let the stray entity be registered by the game
+                                thisBeacon.GetComponentInChildren<BeaconLabel>().SetLabel("Thanks! -Mikjaw");
+                                yield break;
+                            }
+                            CoroutineHelper.Starto(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
+
+                            GameObject thisFloatingContainer = null;
+                            int numContainersSoFar = 0;
+                            for (int i = 0; i < thisStorage.Item2.Count; i++)
+                            {
+                                if (i % 16 == 0)
+                                {
+                                    TaskResult<GameObject> resultthisFloatingContainer = new TaskResult<GameObject>();
+                                    yield return CraftData.InstantiateFromPrefabAsync(TechType.SmallStorage, resultthisFloatingContainer, false);
+                                    thisFloatingContainer = resultthisFloatingContainer.Get();
+                                    Vector3 randomDirection = Vector3.Normalize(new Vector3(UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1));
+                                    thisFloatingContainer.transform.position = mv.transform.position + mv.transform.forward * 5f + randomDirection * 2f;
+                                    thisFloatingContainer.GetComponentInChildren<uGUI_InputField>().text = "Overflow " + numContainersSoFar++.ToString();
+                                }
+
+                                Tuple<techtype, float> techtype = thisStorage.Item2[i];
+                                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
+                                yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                                GameObject thisItem = result.Get();
+                                if (techtype.Item2 >= 0)
+                                {
+                                    // check whether we *are* a battery xor we *have* a battery
+                                    if (thisItem.GetComponent<Battery>() != null)
+                                    {
+                                        // we are a battery
+                                        var bat = thisItem.GetComponentInChildren<Battery>();
+                                        bat.charge = techtype.Item2;
+                                    }
+                                    else
+                                    {
+                                        // we have a battery (we are a tool)
+                                        // Thankfully we have this naming convention
+                                        Transform batSlot = thisItem.transform.Find("BatterySlot");
+                                        result = new TaskResult<GameObject>();
+                                        yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
+                                        GameObject newBat = result.Get();
+                                        newBat.GetComponent<Battery>().charge = techtype.Item2;
+                                        newBat.transform.SetParent(batSlot);
+                                        newBat.SetActive(false);
+                                    }
+                                }
+                                thisItem.transform.SetParent(thisFloatingContainer.GetComponentInChildren<StorageContainer>().transform);
+                                thisFloatingContainer.GetComponentInChildren<StorageContainer>().container.AddItem(thisItem.GetComponent<Pickupable>());
+                                thisItem.SetActive(false);
                             }
                         }
                     }
@@ -386,42 +365,29 @@ namespace VehicleFramework
                         thisVehiclesBatteries.Add(new Tuple<techtype, float>(batt.batterySlot.storedItem.item.GetTechType().AsString(), batt.battery.charge));
                     }
                 }
-                allVehiclesBatteries.Add(new Tuple<Vector3,batteries>(mv.transform.position, thisVehiclesBatteries));
+                allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
         }
-        internal static IEnumerator DeserializeBatteries(SaveData data)
+        internal static IEnumerator DeserializeBatteries(SaveData data, ModVehicle mv)
         {
             List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.Batteries;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            // try to match against a saved vehicle in our list
+            foreach (var vehicle in allVehiclesBatteries)
             {
-                if (mv == null)
+                if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
-                    continue;
-                }
-
-                // try to match against a saved vehicle in our list
-                foreach (var vehicle in allVehiclesBatteries)
-                {
-                    if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                    foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
                     {
-                        foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
-                        {
-                            TaskResult<GameObject> result = new TaskResult<GameObject>();
-                            bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
-                            yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                            GameObject thisItem = result.Get();
-                            thisItem.GetComponent<Battery>().charge = battery.value.Item2;
-                            thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                            mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
-                            mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
-                            thisItem.SetActive(false);
-                        }
+                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                        bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
+                        yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                        GameObject thisItem = result.Get();
+                        thisItem.GetComponent<Battery>().charge = battery.value.Item2;
+                        thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                        mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
+                        mv.Batteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
+                        thisItem.SetActive(false);
                     }
                 }
             }
@@ -453,39 +419,27 @@ namespace VehicleFramework
             }
             return allVehiclesBatteries;
         }
-        internal static IEnumerator DeserializeBackupBatteries(SaveData data)
+        internal static IEnumerator DeserializeBackupBatteries(SaveData data, ModVehicle mv)
         {
             List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.BackupBatteries;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            // try to match against a saved vehicle in our list
+            foreach (var slot in allVehiclesBatteries)
             {
-                if (mv == null)
+                // the following floats we compare should in reality be the same
+                // but anyways there's probably no closer mod vehicle than 1 meter
+                if (Vector3.Distance(mv.transform.position, slot.Item1) < 1)
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
-                    continue;
-                }
-                // try to match against a saved vehicle in our list
-                foreach (var slot in allVehiclesBatteries)
-                {
-                    // the following floats we compare should in reality be the same
-                    // but anyways there's probably no closer mod vehicle than 1 meter
-                    if (Vector3.Distance(mv.transform.position, slot.Item1) < 1)
+                    foreach (var battery in slot.Item2.Select((value, i) => (value, i)))
                     {
-                        foreach (var battery in slot.Item2.Select((value, i) => (value, i)))
-                        {
-                            TaskResult<GameObject> result = new TaskResult<GameObject>();
-                            bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
-                            yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                            GameObject thisItem = result.Get();
-                            thisItem.GetComponent<Battery>().charge = battery.value.Item2;
-                            thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                            mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
-                            mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
-                            thisItem.SetActive(false);
-                        }
+                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                        bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
+                        yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                        GameObject thisItem = result.Get();
+                        thisItem.GetComponent<Battery>().charge = battery.value.Item2;
+                        thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                        mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
+                        mv.BackupBatteries[battery.i].BatterySlot.gameObject.GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
+                        thisItem.SetActive(false);
                     }
                 }
             }
@@ -509,27 +463,15 @@ namespace VehicleFramework
             }
             return allVehiclesIsPlayerInside;
         }
-        internal static IEnumerator DeserializePlayerInside(SaveData data)
+        internal static IEnumerator DeserializePlayerInside(SaveData data, ModVehicle mv)
         {
             List<Tuple<Vector3, bool>> allVehiclesPlayerInside = data.IsPlayerInside;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            foreach (var vehicle in allVehiclesPlayerInside)
             {
-                if (mv == null)
+                if (Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
-                    continue;
-                }
-                foreach(var vehicle in allVehiclesPlayerInside)
-                {
-                    if(Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
-                    {
-                        mv.PlayerEntry();
-                        yield break;
-                    }
+                    mv.PlayerEntry();
+                    yield break;
                 }
             }
         }
@@ -555,65 +497,53 @@ namespace VehicleFramework
             }
             return allVehiclesAesthetics;
         }
-        internal static IEnumerator DeserializeAesthetics(SaveData data)
+        internal static IEnumerator DeserializeAesthetics(SaveData data, ModVehicle mv)
         {
             Color SynthesizeColor(color col)
             {
                 return new Color(col.Item1, col.Item2, col.Item3, col.Item4);
             }
             List<Tuple<Vector3, string, color, color, color, color, bool>> allVehiclesAesthetics = data.AllVehiclesAesthetics;
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            foreach (var vehicle in allVehiclesAesthetics)
             {
-                if (mv == null)
+                if (Vector3.Distance(vehicle.Item1, mv.transform.position) < 3)
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
-                    continue;
-                }
-                foreach (var vehicle in allVehiclesAesthetics)
-                {
-                    if (Vector3.Distance(vehicle.Item1, mv.transform.position) < 3)
+                    var active = mv.ColorPicker?.transform.Find("EditScreen/Active");
+                    if (active is null)
                     {
-                        var active = mv.ColorPicker?.transform.Find("EditScreen/Active");
-                        if(active is null)
-                        {
-                            continue;
-                        }
-                        active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = vehicle.Item2;
-                        active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = vehicle.Item2;
-                        mv.NowVehicleName = vehicle.Item2;
-                        mv.vehicleName = vehicle.Item2;
-                        if (vehicle.Item7)
-                        {
-                            mv.PaintVehicleDefaultStyle(vehicle.Item2);
-                            mv.OnNameChangeMaybe(vehicle.Item2);
-                        }
-                        else
-                        {
-                            mv.ExteriorMainColor = SynthesizeColor(vehicle.Item3);
-                            mv.ExteriorPrimaryAccent = SynthesizeColor(vehicle.Item4);
-                            mv.ExteriorSecondaryAccent = SynthesizeColor(vehicle.Item5);
-                            mv.ExteriorNameLabel = SynthesizeColor(vehicle.Item6);
-                            mv.PaintVehicleSection("ExteriorMainColor", mv.ExteriorMainColor);
-                            mv.PaintVehicleSection("ExteriorPrimaryAccent", mv.ExteriorPrimaryAccent);
-                            mv.PaintVehicleSection("ExteriorSecondaryAccent", mv.ExteriorSecondaryAccent);
-                            mv.PaintVehicleName(vehicle.Item2, mv.ExteriorNameLabel, mv.ExteriorMainColor);
-
-                            mv.IsDefaultTexture = false;
-
-                            //var colorPicker = mv.transform.Find("ColorPicker/EditScreen/Active/ColorPicker").GetComponentInChildren<uGUI_ColorPicker>();
-                            //Color.RGBToHSV(mv.ExteriorMainColor, out colorPicker._hue, out colorPicker._saturation, out colorPicker._brightness);
-
-                            active.transform.Find("MainExterior/SelectedColor").GetComponent<Image>().color = mv.ExteriorMainColor;
-                            active.transform.Find("PrimaryAccent/SelectedColor").GetComponent<Image>().color = mv.ExteriorPrimaryAccent;
-                            active.transform.Find("SecondaryAccent/SelectedColor").GetComponent<Image>().color = mv.ExteriorSecondaryAccent;
-                            active.transform.Find("NameLabel/SelectedColor").GetComponent<Image>().color = mv.ExteriorNameLabel;
-                        }
-                        break;
+                        continue;
                     }
+                    active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = vehicle.Item2;
+                    active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = vehicle.Item2;
+                    mv.NowVehicleName = vehicle.Item2;
+                    mv.vehicleName = vehicle.Item2;
+                    if (vehicle.Item7)
+                    {
+                        mv.PaintVehicleDefaultStyle(vehicle.Item2);
+                        mv.OnNameChangeMaybe(vehicle.Item2);
+                    }
+                    else
+                    {
+                        mv.ExteriorMainColor = SynthesizeColor(vehicle.Item3);
+                        mv.ExteriorPrimaryAccent = SynthesizeColor(vehicle.Item4);
+                        mv.ExteriorSecondaryAccent = SynthesizeColor(vehicle.Item5);
+                        mv.ExteriorNameLabel = SynthesizeColor(vehicle.Item6);
+                        mv.PaintVehicleSection("ExteriorMainColor", mv.ExteriorMainColor);
+                        mv.PaintVehicleSection("ExteriorPrimaryAccent", mv.ExteriorPrimaryAccent);
+                        mv.PaintVehicleSection("ExteriorSecondaryAccent", mv.ExteriorSecondaryAccent);
+                        mv.PaintVehicleName(vehicle.Item2, mv.ExteriorNameLabel, mv.ExteriorMainColor);
+
+                        mv.IsDefaultTexture = false;
+
+                        //var colorPicker = mv.transform.Find("ColorPicker/EditScreen/Active/ColorPicker").GetComponentInChildren<uGUI_ColorPicker>();
+                        //Color.RGBToHSV(mv.ExteriorMainColor, out colorPicker._hue, out colorPicker._saturation, out colorPicker._brightness);
+
+                        active.transform.Find("MainExterior/SelectedColor").GetComponent<Image>().color = mv.ExteriorMainColor;
+                        active.transform.Find("PrimaryAccent/SelectedColor").GetComponent<Image>().color = mv.ExteriorPrimaryAccent;
+                        active.transform.Find("SecondaryAccent/SelectedColor").GetComponent<Image>().color = mv.ExteriorSecondaryAccent;
+                        active.transform.Find("NameLabel/SelectedColor").GetComponent<Image>().color = mv.ExteriorNameLabel;
+                    }
+                    break;
                 }
             }
             yield break;
