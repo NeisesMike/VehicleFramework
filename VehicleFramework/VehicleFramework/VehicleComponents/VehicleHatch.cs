@@ -30,6 +30,8 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
+			Player.main.rigidBody.velocity = Vector3.zero;
+			Player.main.rigidBody.angularVelocity = Vector3.zero;
 			if (mv.IsPlayerInside())
 			{
 				mv.PlayerExit();

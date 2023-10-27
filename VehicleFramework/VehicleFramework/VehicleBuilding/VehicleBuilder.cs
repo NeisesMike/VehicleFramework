@@ -486,7 +486,7 @@ namespace VehicleFramework
             subname.pingInstance = mv.pingInstance;
             subname.colorsInitialized = 0;
             subname.hullName = mv.NameDecals[0].GetComponent<TMPro.TextMeshProUGUI>();
-            //mv.subName = subname;
+            mv.subName = subname;
         }
         public static void SetupCollisionSound(ref ModVehicle mv)
         {

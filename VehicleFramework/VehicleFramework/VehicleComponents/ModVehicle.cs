@@ -149,15 +149,15 @@ namespace VehicleFramework
             interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
             navlights = gameObject.EnsureComponent<NavigationLightsController>();
 
-            if(!(this is Submersible))
-            {
-                gameObject.EnsureComponent<TetherSource>();
-                voice = gameObject.EnsureComponent<AutoPilotVoice>();
-                gameObject.EnsureComponent<AutoPilot>();
-                controlPanelLogic.Init();
-                StartCoroutine(MaybeSetupUniqueFabricator());
-            }
-                        
+            //if(!(this is Submersible))
+            //{
+            gameObject.EnsureComponent<TetherSource>();
+            voice = gameObject.EnsureComponent<AutoPilotVoice>();
+            gameObject.EnsureComponent<AutoPilot>();
+            controlPanelLogic.Init();
+            StartCoroutine(MaybeSetupUniqueFabricator());
+            //}
+            
             // perform normal vehicle lazyinitializing
             base.LazyInitialize();
         }
@@ -165,12 +165,12 @@ namespace VehicleFramework
         {
             base.Start();
 
-            // setup SubName
-            //subName.SetName("Odyssey" + Mathf.RoundToInt(UnityEngine.Random.value*1000).ToString());
-            //subName.SetColor(0, Vector3.one, Color.red);
 
             upgradesInput.equipment = modules;
             modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
+
+            // lost this in the update to Nautilus. We're no longer tracking our own tech type IDs or anything,
+            // so I'm not able to provide the value easily here. Not even sure what a GameInfoIcon is :shrug:
             gameObject.EnsureComponent<GameInfoIcon>().techType = GetComponent<TechTag>().type;
 
             // todo fix pls
@@ -185,7 +185,6 @@ namespace VehicleFramework
             */
 
             powerMan = gameObject.EnsureComponent<PowerManager>();
-
 
             // now that we're in-game, load the color picker
             // we can't do this before we're in-game because not all assets are ready before the game is started
