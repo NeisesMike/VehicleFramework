@@ -100,7 +100,7 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static IEnumerator Prefabricate(VehicleMemory mem, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
+        public static IEnumerator Prefabricate(VehicleMemory mem, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth, int mass)
         {
             mem.mv.numVehicleModules = modules;
             mem.mv.hasArms = arms > 0;
@@ -108,7 +108,7 @@ namespace VehicleFramework
             // wait for a seamoth to be ready
             yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
 
-            Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth);
+            Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth, mass);
             prefabs.Add(mem.mv);
             VehicleEntry ve = new VehicleEntry(mem.mv.gameObject, engine, recipe, numVehicleTypes, mem.mv.GetDescription(), mem.mv.GetEncyEntry(), pingType, sprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
@@ -573,7 +573,7 @@ namespace VehicleFramework
         }
 
         #endregion
-        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth)
+        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth, int mass)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
@@ -586,7 +586,7 @@ namespace VehicleFramework
             SetupLights(ref mv);
             SetupLightSounds(ref mv);
             SetupLiveMixin(ref mv, maxHealth);
-            SetupRigidbody(ref mv, 500);
+            SetupRigidbody(ref mv, mass);
             SetupEngine(ref mv, engine);
             SetupWorldForces(ref mv);
             SetupLargeWorldEntity(ref mv);

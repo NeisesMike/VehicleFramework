@@ -178,7 +178,7 @@ namespace OdysseyVehicle
             GetAssets();
             ModVehicle odyssey = model.EnsureComponent<Odyssey>() as ModVehicle;
             odyssey.gameObject.GetComponent<Animator>().runtimeAnimatorController = animatorController;
-            yield return CoroutineHelper.Starto(VehicleManager.RegisterVehicle(odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 600, 667));
+            yield return CoroutineHelper.Starto(VehicleManager.RegisterVehicle(odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 600, 667, 3500));
         }
 
         public override string vehicleDefaultName

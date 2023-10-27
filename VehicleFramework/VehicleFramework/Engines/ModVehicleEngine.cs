@@ -28,7 +28,7 @@ namespace VehicleFramework.Engines
         // a value of 0.25 here indicates that
         // velocity will decay 25% every second
         protected virtual float waterDragDecay => 0.25f;
-        protected virtual float airDragDecay => 0.025f;
+        protected virtual float airDragDecay => 0.15f;
         protected virtual float DragDecay
         {
             get
@@ -281,9 +281,9 @@ namespace VehicleFramework.Engines
         }
         public void ExecutePhysicsMove()
         {
-            rb.AddForce(mv.transform.forward * ForwardMomentum / 100f * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.right * RightMomentum / 100f * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.up * UpMomentum / 100f * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.right * (RightMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(mv.transform.up * (UpMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
         public enum ForceDirection
         {

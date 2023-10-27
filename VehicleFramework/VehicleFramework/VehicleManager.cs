@@ -50,7 +50,7 @@ namespace VehicleFramework
         }
 
         private static bool RegistrySemaphore = false;
-        public static IEnumerator RegisterVehicle(ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth)
+        public static IEnumerator RegisterVehicle(ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType,int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth, int mass)
         {
             bool isNewEntry = true;
             foreach (VehicleEntry ve in vehicleTypes)
@@ -75,7 +75,7 @@ namespace VehicleFramework
                     yield return new WaitForSecondsRealtime(1f);
                 }
                 RegistrySemaphore = true;
-                yield return CoroutineHelper.Starto(VehicleBuilder.Prefabricate(mem, engine, recipe, pt, sprite, modules, arms, baseCrushDepth, maxHealth));
+                yield return CoroutineHelper.Starto(VehicleBuilder.Prefabricate(mem, engine, recipe, pt, sprite, modules, arms, baseCrushDepth, maxHealth, mass));
                 RegistrySemaphore = false;
                 mem.mv.gameObject.SetActive(false);
                 Logger.Log("Registered the " + mem.mv.gameObject.name);
