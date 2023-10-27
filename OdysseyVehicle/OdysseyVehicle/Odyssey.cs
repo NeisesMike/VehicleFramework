@@ -42,6 +42,7 @@ namespace OdysseyVehicle
 
         private static GameObject generator = null;
         private static Queue<Tuple<ModVehicle, string, Color, Color>> innerNameLabelsToGenerate = null;
+        private static Coroutine manageNameLabelQueue = null;
         public static Queue<Tuple<ModVehicle, string, Color, Color>> NameLabelsToGenerate
         {
             get
@@ -49,7 +50,6 @@ namespace OdysseyVehicle
                 if (innerNameLabelsToGenerate is null)
                 {
                     innerNameLabelsToGenerate = new Queue<Tuple<ModVehicle, string, Color, Color>>();
-                    Player.main.StartCoroutine(ManageLabelQueue());
                 }
                 return innerNameLabelsToGenerate;
             }
@@ -846,6 +846,8 @@ namespace OdysseyVehicle
                     }
                 }
             }
+            
+            manageNameLabelQueue = Player.main.StartCoroutine(ManageLabelQueue());
 
             // ModVehicle.Awake
             base.Awake();
