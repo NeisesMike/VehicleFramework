@@ -213,6 +213,7 @@ namespace VehicleFramework
                 isRegistered = true;
             }
             isInited = true;
+            voice.NotifyReadyToSpeak();
         }
         public override void FixedUpdate()
         {

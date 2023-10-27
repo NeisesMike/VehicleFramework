@@ -17,6 +17,7 @@ namespace VehicleFramework
         public EnergyInterface aiEI;
         private List<AudioSource> speakers = new List<AudioSource>();
         private PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
+        private bool isReadyToSpeak = false; // we let this be set to true only in ModVehicle.start
 
         public AudioClip Silence;
         public AudioClip BatteriesDepleted;
@@ -56,6 +57,7 @@ namespace VehicleFramework
         }
         public void Awake()
         {
+            isReadyToSpeak = false;
             mv = GetComponent<ModVehicle>();
             if (mv.BackupBatteries.Count > 0)
             {
@@ -76,19 +78,25 @@ namespace VehicleFramework
             foreach (var ps in mv.PilotSeats)
             {
                 speakerPtr = ps.Seat.AddComponent<AudioSource>();
+                speakerPtr.playOnAwake = false;
                 speakerPtr.spatialBlend = 1f;
+                speakerPtr.clip = Silence;
                 speakers.Add(speakerPtr);
             }
             foreach (var ps in mv.Hatches)
             {
                 speakerPtr = ps.Hatch.AddComponent<AudioSource>();
+                speakerPtr.playOnAwake = false;
                 speakerPtr.spatialBlend = 1f;
+                speakerPtr.clip = Silence;
                 speakers.Add(speakerPtr);
             }
             foreach (var ps in mv.TetherSources)
             {
                 speakerPtr = ps.AddComponent<AudioSource>();
+                speakerPtr.playOnAwake = false;
                 speakerPtr.spatialBlend = 1f;
+                speakerPtr.clip = Silence;
                 speakers.Add(speakerPtr);
             }
             foreach(var sp in speakers)
@@ -112,7 +120,7 @@ namespace VehicleFramework
                     speaker.GetComponent<AudioLowPassFilter>().enabled = true;
                 }
             }
-            if (aiEI.hasCharge)
+            if (aiEI.hasCharge && isReadyToSpeak)
             {
                 if (speechQueue.Count > 0)
                 {
@@ -398,6 +406,11 @@ namespace VehicleFramework
 
             StartCoroutine(GrabSilence());
             StartCoroutine(GrabAllClipsForCryingOutLoud());
+        }
+
+        public void NotifyReadyToSpeak()
+        {
+            isReadyToSpeak = true;
         }
     }
 }

@@ -196,6 +196,7 @@ namespace VehicleFramework.Engines
                 {
                     EngineWhistleClip = DownloadHandlerAudioClip.GetContent(www);
                 }
+                EngineSource2.playOnAwake = false;
                 EngineSource2.clip = EngineWhistleClip;
 
                 www = UnityWebRequestMultimedia.GetAudioClip("file://" + engineSoundsFolder + "/engine1_low.ogg", AudioType.OGGVORBIS);
@@ -209,12 +210,13 @@ namespace VehicleFramework.Engines
                 {
                     EngineWhirClip = DownloadHandlerAudioClip.GetContent(www);
                 }
+                EngineSource1.playOnAwake = false;
                 EngineSource1.clip = EngineWhirClip;
             }
             EngineSource1 = mv.gameObject.AddComponent<AudioSource>();
+            EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
             EngineSource1.loop = true;
             StartCoroutine(GrabEngineSounds());
-            EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
 
         }
         public virtual void FixedUpdate()
