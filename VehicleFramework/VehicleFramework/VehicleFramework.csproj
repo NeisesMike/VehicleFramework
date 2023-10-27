@@ -47,9 +47,8 @@
     <Reference Include="FMODUnity">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\FMODUnity.dll</HintPath>
     </Reference>
-    <Reference Include="SMLHelper, Version=2.9.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\QMods\Modding Helper\SMLHelper.dll</HintPath>
+    <Reference Include="Nautilus">
+      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\plugins\Nautilus\Nautilus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -132,11 +131,9 @@
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
+    <Compile Include="UpgradeModules\ModulePrepper.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
-    <Compile Include="VehicleComponents\Submersible.cs" />
-    <Compile Include="UpgradeModules\ModVehicleDepthMk1.cs" />
-    <Compile Include="UpgradeModules\ModVehicleDepthMk2.cs" />
-    <Compile Include="UpgradeModules\ModVehicleDepthMk3.cs" />
+    <Compile Include="VehicleBuilding\VehiclePrepper.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
@@ -159,7 +156,6 @@
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="SaveManager.cs" />
-    <Compile Include="VehicleBuilding\VehicleCraftable.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
     <Compile Include="Engines\Cricket.cs" />

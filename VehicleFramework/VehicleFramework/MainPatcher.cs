@@ -8,14 +8,14 @@ using UnityEngine;
 using HarmonyLib;
 using System.Runtime.CompilerServices;
 using System.Collections;
-using SMLHelper.V2.Options.Attributes;
-using SMLHelper.V2.Options;
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Handlers;
-using SMLHelper.V2.Utility;
-using SMLHelper.V2.Json.Attributes;
+using Nautilus.Options.Attributes;
+using Nautilus.Options;
+using Nautilus.Json;
+using Nautilus.Handlers;
+using Nautilus.Utility;
+using Nautilus.Json.Attributes;
 using VehicleFramework.UpgradeModules;
-using SMLHelper.V2.Assets;
+using Nautilus.Assets;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Bootstrap;
@@ -73,17 +73,14 @@ namespace VehicleFramework
         }
     }
 
-    [BepInPlugin("com.mikjaw.subnautica.vehicleframework.mod", "VehicleFramework", "1.0")]
+    [BepInPlugin("com.mikjaw.subnautica.vehicleframework.mod", "VehicleFramework", "0.9.5.4")]
+    [BepInDependency("com.snmodding.nautilus")]
     public class MainPatcher : BaseUnityPlugin
     {
 
         internal static VehicleFrameworkConfig VFConfig { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
-
-        internal static ModVehicleDepthMk1 modVehicleDepthModule1;
-        internal static ModVehicleDepthMk2 modVehicleDepthModule2;
-        internal static ModVehicleDepthMk3 modVehicleDepthModule3;
 
         internal static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
 
@@ -100,8 +97,7 @@ namespace VehicleFramework
         }
         public void PrePatch()
         {
-            VFConfig = OptionsPanelHandler.Main.RegisterModOptions<VehicleFrameworkConfig>();
-
+            VFConfig = OptionsPanelHandler.RegisterModOptions<VehicleFrameworkConfig>();
             IEnumerator CollectPrefabsForBuilderReference()
             {
                 CoroutineTask<GameObject> request = CraftData.GetPrefabForTechTypeAsync(TechType.BaseUpgradeConsole, true);
@@ -112,30 +108,30 @@ namespace VehicleFramework
             }
             StartCoroutine(CollectPrefabsForBuilderReference());
 
-            // Gotta do this here, so that the depth module setup can access the configured language
-            modVehicleDepthModule1 = new ModVehicleDepthMk1();
-            modVehicleDepthModule2 = new ModVehicleDepthMk2();
-            modVehicleDepthModule3 = new ModVehicleDepthMk3();
-
-            // patch in the crafting node for the Workbench menu (modification station)
+            // grab the icon image
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             byte[] spriteBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "ModVehicleIcon.png"));
             Texture2D SpriteTexture = new Texture2D(128, 128);
             SpriteTexture.LoadImage(spriteBytes);
             Sprite mySprite = Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             ModVehicleIcon = new Atlas.Sprite(mySprite);
-            string[] stepsToMVTab = { "SeamothMenu" };
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
+
+            // patch in the crafting node for the vehicle upgrade menu
+            string[] stepsToDepthTab = { "MVUM" };
+            CraftTreeHandler.AddTabNode(CraftTree.Type.SeamothUpgrades, stepsToDepthTab[0], LocalizationManager.GetString(EnglishString.MVModules), MainPatcher.ModVehicleIcon);
+            CraftTreeHandler.AddTabNode(CraftTree.Type.SeamothUpgrades, "MVDM", LocalizationManager.GetString(EnglishString.MVDepthModules), MainPatcher.ModVehicleIcon, stepsToDepthTab);
+
+            
+            //string[] stepsToMVTab = { "SeamothMenu" };
+            //CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
 
             // patch in the depth module upgrades
-            modVehicleDepthModule1.Patch();
-            modVehicleDepthModule2.Patch();
-            modVehicleDepthModule3.Patch();
+            ModulePrepper.RegisterModVehicleDepthModules();
         }
 
         public void Patch()
         {
-            SaveData saveData = SaveDataHandler.Main.RegisterSaveDataCache<SaveData>();
+            SaveData saveData = SaveDataHandler.RegisterSaveDataCache<SaveData>();
 
             // Update the player position before saving it
             saveData.OnStartedSaving += (object sender, JsonFileEventArgs e) =>

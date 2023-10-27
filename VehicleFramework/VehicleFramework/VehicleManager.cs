@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using SMLHelper.V2.Json;
+using Nautilus.Json;
 using VehicleFramework.Engines;
 using UnityEngine.SceneManagement;
 
@@ -43,8 +43,7 @@ namespace VehicleFramework
         public static void PatchCraftable(ref VehicleEntry ve)
         {
             VehicleEntry vehicle = ve;
-            VehicleCraftable thisCraftable = new VehicleCraftable(vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe, vehicle.encyEntry);
-            thisCraftable.Patch();
+            VehiclePrepper.RegisterVehicle(vehicle);// vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe, vehicle.encyEntry);
             Logger.Log("Patched the " + vehicle.prefab.name + " Craftable.");
             ve = vehicle;
         }

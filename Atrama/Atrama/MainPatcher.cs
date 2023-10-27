@@ -8,11 +8,11 @@ using UnityEngine;
 using HarmonyLib;
 using System.Runtime.CompilerServices;
 using System.Collections;
-using SMLHelper.V2.Options.Attributes;
-using SMLHelper.V2.Options;
-using SMLHelper.V2.Json;
-using SMLHelper.V2.Handlers;
-using SMLHelper.V2.Utility;
+using Nautilus.Options.Attributes;
+using Nautilus.Options;
+using Nautilus.Json;
+using Nautilus.Handlers;
+using Nautilus.Utility;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Bootstrap;
@@ -37,8 +37,10 @@ namespace Atrama
             return main.StartCoroutine(func);
         }
     }
-    [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "1.0")]
-    [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "1.3.2")]
+    [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
+    [BepInDependency("com.snmodding.nautilus")]
+
     public class MainPatcher : BaseUnityPlugin
     {
         //internal static AtramaConfig Config { get; private set; }

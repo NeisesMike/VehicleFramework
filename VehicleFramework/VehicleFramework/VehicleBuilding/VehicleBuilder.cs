@@ -12,11 +12,10 @@ using System.Reflection;
 
 using UnityEngine.U2D;
 
-using SMLHelper;
-using SMLHelper.V2.Assets;
-using SMLHelper.V2.Crafting;
-using SMLHelper.V2.Handlers;
-using SMLHelper.V2.Utility;
+using Nautilus.Assets;
+using Nautilus.Crafting;
+using Nautilus.Handlers;
+using Nautilus.Utility;
 
 using VehicleFramework.Engines;
 
