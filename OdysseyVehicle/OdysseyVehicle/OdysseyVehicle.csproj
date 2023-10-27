@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4047A0E5-54C5-42E9-B4B7-95E019DFD17A}</ProjectGuid>
+    <ProjectGuid>{BB76E484-C9D3-4FFD-9FB7-2D83660A0FE8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OdysseyVehicle</RootNamespace>
@@ -54,6 +54,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -78,7 +82,7 @@
     </Reference>
     <Reference Include="VehicleFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\VehicleFramework\VehicleFramework.dll</HintPath>
+      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\plugins\VehicleFramework\VehicleFramework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +94,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\$(SolutionName)\" /y
-xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\$(SolutionName)\BepInEx\plugins\$(SolutionName)\" /y</PostBuildEvent>
+    <PostBuildEvent>xcopy  $(TargetPath) "S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\plugins\$(ProjectName)\" /y
+xcopy  $(TargetPath) "S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\$(ProjectName)\BepInEx\plugins\$(ProjectName)\" /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

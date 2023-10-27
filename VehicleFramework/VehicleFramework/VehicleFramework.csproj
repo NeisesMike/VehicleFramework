@@ -117,11 +117,11 @@
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\StealthModulePatcher.cs" />
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
+    <Compile Include="Patches\CreaturePatches\BleederPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\WarperPatcher.cs" />
     <Compile Include="Patches\CellManagerPatcher.cs" />
-    <Compile Include="Patches\EnergyMixinPatcher.cs" />
     <Compile Include="Patches\FreezeTimePatcher.cs" />
     <Compile Include="Patches\FabricatorPatcher.cs" />
     <Compile Include="Patches\InGameMenuPatcher.cs" />
@@ -190,7 +190,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\$(SolutionName)\" /y
-xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\$(SolutionName)\BepInEx\plugins\$(SolutionName)\" /y</PostBuildEvent>
+    <PostBuildEvent>xcopy  $(TargetPath) "S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\plugins\$(ProjectName)\" /y
+xcopy  $(TargetPath) "S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\$(ProjectName)\BepInEx\plugins\$(ProjectName)\" /y</PostBuildEvent>
   </PropertyGroup>
 </Project>
