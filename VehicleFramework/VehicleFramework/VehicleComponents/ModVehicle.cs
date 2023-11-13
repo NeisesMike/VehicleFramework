@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using VehicleFramework.Engines;
+using UnityEngine.SceneManagement;
 
 namespace VehicleFramework
 {
@@ -157,7 +158,11 @@ namespace VehicleFramework
             controlPanelLogic.Init();
             StartCoroutine(MaybeSetupUniqueFabricator());
             //}
-            
+
+            upgradeOnAddedActions.Add(storageModuleAction);
+            upgradeOnAddedActions.Add(armorPlatingModuleAction);
+            upgradeOnAddedActions.Add(powerUpgradeModuleAction);
+
             // perform normal vehicle lazyinitializing
             base.LazyInitialize();
         }
@@ -225,6 +230,7 @@ namespace VehicleFramework
         public override void Update()
         {
             base.Update();
+            HandleExtraQuickSlotInputs();
         }
 
         public new void OnKill()
@@ -278,30 +284,101 @@ namespace VehicleFramework
             Destroy(gameObject);
             yield return null;
         }
+        public void storageModuleAction(int slotID, TechType techType, bool added)
+        {
+            if (techType == TechType.VehicleStorageModule)
+            {
+                SetStorageModule(slotID, added);
+            }
+        }
+        public void armorPlatingModuleAction(int slotID, TechType techType, bool added)
+        {
+            if (techType == TechType.VehicleArmorPlating)
+            {
+                _ = added ? numArmorModules++ : numArmorModules--;
+                GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
+            }
+        }
+        public void powerUpgradeModuleAction(int slotID, TechType techType, bool added)
+        {
+            if (techType == TechType.VehiclePowerUpgradeModule)
+            {
+                _ = added ? numEfficiencyModules++ : numEfficiencyModules--;
+            }
+        }
+        public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
+        List<string> GetCurrentUpgrades()
+        {
+            List<string> upgradeSlots = new List<string>();
+            upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
+            return upgradeSlots.GroupBy(x => x).Select(y => y.First()).Where(x => upgradesInput.equipment.GetItemInSlot(x) != null).Select(x => upgradesInput.equipment.GetItemInSlot(x).item.name).ToList();
+        }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
-            switch (techType)
-            {
-                case TechType.VehicleStorageModule:
-                    {
-                        SetStorageModule(slotID, added);
-                        break;
-                    }
-                case TechType.VehicleArmorPlating:
-                    {
-                        _ = added ? numArmorModules++ : numArmorModules--;
-                        GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
-                        break;
-                    }
-                case TechType.VehiclePowerUpgradeModule:
-                    {
-                        _ = added ? numEfficiencyModules++ : numEfficiencyModules--;
-                        break;
-                    }
-                default:
-                    break;
-            }
+            upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
+            UpgradeModules.ModulePrepper.upgradeOnAddedActions.ForEach(x => x(this, GetCurrentUpgrades(), slotID, techType, added));
             StartCoroutine(EvaluateDepthModuleLevel());
+        }
+
+        private List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
+        public override void OnUpgradeModuleToggle(int slotID, bool active)
+        {
+            if (active)
+            {
+                TechType techType = modules.GetTechTypeInSlot(slotIDs[slotID]);
+                var moduleToggleAction = UpgradeModules.ModulePrepper.upgradeToggleActions.Where(x => x.Item2 == techType).FirstOrDefault();
+                if (moduleToggleAction is null)
+                {
+                    return;
+                }
+                IEnumerator DoToggleAction(ModVehicle thisMV, int thisSlotID, TechType tt, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
+                {
+                    yield return new WaitForSeconds(timeToFirstActivation);
+                    while (true)
+                    {
+                        if (!thisMV.IsPlayerInside())
+                        {
+                            ToggleSlot(thisSlotID, false);
+                            yield break;
+                        }
+                        moduleToggleAction.Item1(thisMV, thisSlotID);
+                        int whatWeGot = 0;
+                        energyInterface.TotalCanProvide(out whatWeGot);
+                        if (whatWeGot < energyCostPerActivation)
+                        {
+                            ToggleSlot(thisSlotID, false);
+                            yield break;
+                        }
+                        energyInterface.ConsumeEnergy(energyCostPerActivation);
+                        yield return new WaitForSeconds(repeatRate);
+                    }
+                }
+                toggledActions.Add(new Tuple<int, Coroutine>(slotID, StartCoroutine(DoToggleAction(this, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
+            }
+            else
+            {
+                toggledActions.Where(x => x.Item1 == slotID).Where(x => x.Item2 != null).ToList().ForEach(x => StopCoroutine(x.Item2));
+            }
+        }
+        public override void OnUpgradeModuleUse(TechType techType, int slotID)
+        {
+            foreach (var moduleUseAction in UpgradeModules.ModulePrepper.upgradeOnUseActions)
+            {
+                bool result = moduleUseAction.Item1(this, slotID, techType);
+                if (result)
+                {
+                    this.quickSlotTimeUsed[slotID] = Time.time;
+                    this.quickSlotCooldown[slotID] = moduleUseAction.Item2;
+                    energyInterface.ConsumeEnergy(moduleUseAction.Item3);
+                }
+            }
+            foreach (var moduleUseAction in UpgradeModules.ModulePrepper.upgradeOnUseChargeableActions)
+            {
+                float charge = quickSlotCharge[slotID];
+                float slotCharge = GetSlotCharge(slotID);
+                moduleUseAction.Item1(this, slotID, techType, charge, slotCharge);
+                energyInterface.ConsumeEnergy(moduleUseAction.Item3);
+            }
         }
         public IEnumerator EvaluateDepthModuleLevel()
         {
@@ -529,6 +606,29 @@ namespace VehicleFramework
                 retIDs[modules + 1] = "VehicleArmRight";
             }
             return retIDs;
+        }
+        void HandleExtraQuickSlotInputs()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                SlotKeyDown(5);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                SlotKeyDown(6);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                SlotKeyDown(7);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                SlotKeyDown(8);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                SlotKeyDown(9);
+            }
         }
         /*
         public override QuickSlotType GetQuickSlotType(int slotID, out TechType techType)

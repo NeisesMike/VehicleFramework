@@ -38,7 +38,7 @@ namespace VehicleFramework
         [HarmonyPatch("SetLabel")]
         public static bool SetLabelPrefix(Equipment __instance, string l, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!l.Contains("Vehicle"))
+            if (!l.Contains("VehicleModule") && !l.Contains("VehicleArm"))
             {
                 return true;
             }
@@ -50,7 +50,7 @@ namespace VehicleFramework
         [HarmonyPatch("AddSlot")]
         public static bool AddSlotPrefix(string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!slot.Contains("Vehicle"))
+            if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
             {
                 return true;
             }
@@ -98,7 +98,7 @@ namespace VehicleFramework
         [HarmonyPatch("RemoveSlot")]
         public static bool RemoveSlot(string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!slot.Contains("Vehicle"))
+            if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
             {
                 return true;
             }

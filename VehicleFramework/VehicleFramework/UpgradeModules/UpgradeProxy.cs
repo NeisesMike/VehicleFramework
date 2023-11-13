@@ -40,7 +40,7 @@ namespace VehicleFramework
                 model.transform.localScale = Vector3.one;
 
                 VehicleUpgradeConsoleInput.Slot slot;
-                slot.id = "VehicleModule" + i;
+                slot.id = "ModVehicleModule" + i;
                 slot.model = model;
                 slots.Add(slot);
             }

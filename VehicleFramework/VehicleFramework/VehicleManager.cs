@@ -89,7 +89,7 @@ namespace VehicleFramework
                 Logger.Log("Enrolled the " + mv.name + " : " + mv.GetName() + " : " + mv.subName);
                 if(mv.GetComponent<VFXConstructing>().constructed > 3f)
                 {
-                    mv.StartCoroutine(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
+                    CoroutineHelper.Starto(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
                 }
             }
         }
@@ -120,14 +120,23 @@ namespace VehicleFramework
         }
         public static IEnumerator LoadVehicle(ModVehicle mv)
         {
+            while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
+            {
+                yield return null;
+            }
+            while (WaitScreen.IsWaiting)
+            {
+                yield return null;
+            }
+            Logger.Log("Loading: " + mv.GetName());
             Coroutine ModuleGetter = mv.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData, mv));
             mv.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData, mv));
             mv.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData, mv));
             mv.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv));
             mv.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv));
+            mv.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
             mv.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData, mv));
-            mv.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv));
         }
     }
 }

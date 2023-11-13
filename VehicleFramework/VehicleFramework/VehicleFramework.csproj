@@ -58,6 +58,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.Addressables, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.Addressables.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -131,7 +135,11 @@
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
+    <Compile Include="UpgradeModules\PassiveModule.cs" />
     <Compile Include="UpgradeModules\ModulePrepper.cs" />
+    <Compile Include="UpgradeModules\SelectableChargeableModule.cs" />
+    <Compile Include="UpgradeModules\SelectableModule.cs" />
+    <Compile Include="UpgradeModules\ToggleModule.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
     <Compile Include="VehicleBuilding\VehiclePrepper.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
