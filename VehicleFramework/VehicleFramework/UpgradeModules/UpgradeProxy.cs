@@ -22,7 +22,7 @@ namespace VehicleFramework
         {
             if (SeamothHelper.request.Get() is null)
             {
-                yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
+                yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
             }
 
             slots = new List<VehicleUpgradeConsoleInput.Slot>();

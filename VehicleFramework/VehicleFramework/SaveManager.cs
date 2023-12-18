@@ -290,7 +290,7 @@ namespace VehicleFramework
                                 thisBeacon.GetComponentInChildren<BeaconLabel>().SetLabel("Thanks! -Mikjaw");
                                 yield break;
                             }
-                            CoroutineHelper.Starto(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
+                            UWE.CoroutineHost.StartCoroutine(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
 
                             GameObject thisFloatingContainer = null;
                             int numContainersSoFar = 0;

@@ -22,7 +22,7 @@ namespace VehicleFramework
         }
         public static IEnumerator SetupVFXConstructing(ModVehicle mv)
         {
-            yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
+            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
             GameObject seamoth = SeamothHelper.Seamoth;
             VFXConstructing seamothVFXC = seamoth.GetComponent<VFXConstructing>();
             VFXConstructing rocketPlatformVfx = seamoth.GetComponentInChildren<VFXConstructing>();
@@ -60,7 +60,7 @@ namespace VehicleFramework
                     continue;
                 }
                 SetupBuildBotBeamPoints(mv);
-                yield return CoroutineHelper.Starto(SetupVFXConstructing(mv));
+                yield return UWE.CoroutineHost.StartCoroutine(SetupVFXConstructing(mv));
 
                 Bounds vbounds = mv.BoundingBox.GetComponent<MeshRenderer>().bounds;
                 GameObject bbPointsRoot = new GameObject("BuildBotPoints");

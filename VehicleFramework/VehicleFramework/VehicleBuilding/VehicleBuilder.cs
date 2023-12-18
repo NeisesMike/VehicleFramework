@@ -74,7 +74,7 @@ namespace VehicleFramework
             }
             else if(cor is null) // if we need to get seamoth
             {
-                cor = CoroutineHelper.Starto(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
+                cor = UWE.CoroutineHost.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
                 yield return cor;
                 cor = null;
             }
@@ -101,11 +101,12 @@ namespace VehicleFramework
 
         public static IEnumerator Prefabricate(VehicleMemory mem, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth, int mass)
         {
+            Logger.Log("prefabbing now: " + mem.mv.gameObject.name);
             mem.mv.numVehicleModules = modules;
             mem.mv.hasArms = arms > 0;
 
             // wait for a seamoth to be ready
-            yield return CoroutineHelper.Starto(SeamothHelper.EnsureSeamoth());
+            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
 
             Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth, mass);
             prefabs.Add(mem.mv);

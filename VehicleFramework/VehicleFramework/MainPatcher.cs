@@ -73,7 +73,7 @@ namespace VehicleFramework
         }
     }
 
-    [BepInPlugin("com.mikjaw.subnautica.vehicleframework.mod", "VehicleFramework", "0.9.5.4")]
+    [BepInPlugin("com.mikjaw.subnautica.vehicleframework.mod", "VehicleFramework", "0.9.6.3")]
     [BepInDependency("com.snmodding.nautilus")]
     public class MainPatcher : BaseUnityPlugin
     {

@@ -11,22 +11,6 @@ using UnityEngine.SceneManagement;
 
 namespace VehicleFramework
 {
-    public class CoroutineHelper : MonoBehaviour
-    {
-        public GameObject go { get; set; }
-        public static Coroutine Starto(IEnumerator func)
-        {
-            GameObject gob = new GameObject();
-            DontDestroyOnLoad(gob);
-            return gob.EnsureComponent<CoroutineHelper>().StartCoroutine(gob.EnsureComponent<CoroutineHelper>().DoAndDie(func));
-        }
-        public IEnumerator DoAndDie(IEnumerator func)
-        {
-            go = gameObject;
-            yield return StartCoroutine(func);
-            Destroy(gameObject);
-        }
-    }
     public class VehicleMemory
     {
         public ModVehicle mv;
@@ -71,12 +55,14 @@ namespace VehicleFramework
                 Logger.Log("Prefabricating the " + mem.mv.gameObject.name);
                 while(RegistrySemaphore)
                 {
+                    Logger.Log("waiting: " + mem.mv.gameObject.name);
                     yield return new WaitForSecondsRealtime(1f);
                 }
                 RegistrySemaphore = true;
-                yield return CoroutineHelper.Starto(VehicleBuilder.Prefabricate(mem, engine, recipe, pt, sprite, modules, arms, baseCrushDepth, maxHealth, mass));
+                yield return UWE.CoroutineHost.StartCoroutine(VehicleBuilder.Prefabricate(mem, engine, recipe, pt, sprite, modules, arms, baseCrushDepth, maxHealth, mass));
                 RegistrySemaphore = false;
                 mem.mv.gameObject.SetActive(false);
+
                 Logger.Log("Registered the " + mem.mv.gameObject.name);
             }
             yield break;
@@ -89,7 +75,7 @@ namespace VehicleFramework
                 Logger.Log("Enrolled the " + mv.name + " : " + mv.GetName() + " : " + mv.subName);
                 if(mv.GetComponent<VFXConstructing>().constructed > 3f)
                 {
-                    CoroutineHelper.Starto(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
+                    UWE.CoroutineHost.StartCoroutine(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
                 }
             }
         }
