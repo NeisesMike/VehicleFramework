@@ -30,19 +30,22 @@ namespace VehicleFramework
             {
                 if (currentMV != null)
                 {
-                    bool shouldDropLeash = false;
+                    bool shouldDropLeash = true;
                     foreach (var tethersrc in currentMV.TetherSources)
                     {
                         // TODO make this constant depend on the vehicle somehow
-                        if (5f < Vector3.Distance(Player.main.transform.position, tethersrc.transform.position))
+                        if (Vector3.Distance(Player.main.transform.position, tethersrc.transform.position) < 5f)
                         {
-                            shouldDropLeash = true;
+                            shouldDropLeash = false;
                             break;
                         }
                     }
                     if (shouldDropLeash)
                     {
-                        currentMV.PlayerExit();
+                        if (currentMV.IsPlayerInside())
+                        {
+                            currentMV.PlayerExit();
+                        }
                         currentMV.GetComponent<TetherSource>().BreakTether();
                         yield break;
                     }
