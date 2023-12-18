@@ -335,7 +335,8 @@ namespace VehicleFramework
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
-            UpgradeModules.ModulePrepper.upgradeOnAddedActions.ForEach(x => x(this, GetCurrentUpgrades(), slotID, techType, added));
+            var upgradeList = GetCurrentUpgrades();
+            UpgradeModules.ModulePrepper.upgradeOnAddedActions.ForEach(x => x(this, upgradeList, slotID, techType, added));
             StartCoroutine(EvaluateDepthModuleLevel());
         }
 
@@ -508,7 +509,7 @@ namespace VehicleFramework
             yield return new WaitForSeconds(2);
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
         }
-        public void BeginPiloting()
+        public virtual void BeginPiloting()
         {
             base.EnterVehicle(Player.main, true);
             Player.main.EnterSittingMode();
@@ -520,7 +521,7 @@ namespace VehicleFramework
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
             NotifyStatus(PlayerStatus.OnPilotBegin);
         }
-        public void StopPiloting()
+        public virtual void StopPiloting()
         {
             // this function
             // called by Player.ExitLockedMode()
@@ -543,7 +544,7 @@ namespace VehicleFramework
             Player.main.armsController.SetWorldIKTarget(null, null);
             NotifyStatus(PlayerStatus.OnPilotEnd);
         }
-        public void PlayerEntry()
+        public virtual void PlayerEntry()
         {
             Player.main.currentSub = null;
             isPlayerInside = true;
@@ -569,7 +570,7 @@ namespace VehicleFramework
 
             TryRemoveDuplicateFabricator();
         }
-        public void PlayerExit()
+        public virtual void PlayerExit()
         {
             Player.main.currentSub = null;
             isPlayerInside = false;

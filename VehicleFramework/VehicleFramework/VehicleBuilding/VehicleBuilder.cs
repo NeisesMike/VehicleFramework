@@ -379,6 +379,7 @@ namespace VehicleFramework
              * Prawn: 600
              * Odyssey: 667
              * Atrama: 1000
+             * Abyss: 1250
              * Cyclops: 1500
              */
             lmData.maxHealth = maxHealth;
@@ -392,6 +393,9 @@ namespace VehicleFramework
             /* 
              * For reference,
              * Cyclop: 12000
+             * Abyss: 5000
+             * Atrama: 4250
+             * Odyssey: 3500
              * Prawn: 1250
              * Seamoth: 800
              */
@@ -533,6 +537,7 @@ namespace VehicleFramework
             ddoi.timeLastDamagedSelf = 0;
             ddoi.prevPosition = Vector3.zero;
             ddoi.prevPosition = Vector3.zero;
+            ddoi.allowDamageToPlayer = false;
         }
         public static void SetupDamageComponents(ref ModVehicle mv)
         {
