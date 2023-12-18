@@ -37,15 +37,6 @@ namespace OdysseyVehicle
         }
     }
 
-    public class CoroutineHelper : MonoBehaviour
-    {
-        public static CoroutineHelper main { get; set; }
-        public static Coroutine Starto(IEnumerator func)
-        {
-            return main.StartCoroutine(func);
-        }
-    }
-
     [BepInPlugin("com.mikjaw.subnautica.odyssey.mod", "Odyssey", "1.3.2")]
     [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
     [BepInDependency("com.snmodding.nautilus")]
@@ -53,11 +44,10 @@ namespace OdysseyVehicle
     {
         public void Start()
         {
-            CoroutineHelper.main = (new GameObject()).EnsureComponent<CoroutineHelper>();
             OdysseyVehicle.Logger.MyLog = base.Logger;
             var harmony = new Harmony("com.mikjaw.subnautica.odyssey.mod");
             harmony.PatchAll();
-            CoroutineHelper.Starto(Odyssey.Register());
+            UWE.CoroutineHost.StartCoroutine(Odyssey.Register());
         }
     }
 }
