@@ -29,14 +29,6 @@ namespace Atrama
         }
     }
 
-    public class CoroutineHelper : MonoBehaviour
-    {
-        public static CoroutineHelper main { get; set; }
-        public static Coroutine Starto(IEnumerator func)
-        {
-            return main.StartCoroutine(func);
-        }
-    }
     [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "1.3.2")]
     [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
     [BepInDependency("com.snmodding.nautilus")]
@@ -49,8 +41,7 @@ namespace Atrama
         {
             var harmony = new Harmony("com.mikjaw.subnautica.atrama.mod");
             harmony.PatchAll();
-            CoroutineHelper.main = (new GameObject()).EnsureComponent<CoroutineHelper>();
-            CoroutineHelper.Starto(Atrama.Register());
+            UWE.CoroutineHost.StartCoroutine(Atrama.Register());
         }
     }
     /*

@@ -68,7 +68,7 @@ namespace Atrama
         {
             GetAssets();
             ModVehicle atrama = model.EnsureComponent<Atrama>() as ModVehicle;
-            yield return CoroutineHelper.Starto(VehicleManager.RegisterVehicle(atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2, 900, 1000, 4250));
+            yield return UWE.CoroutineHost.StartCoroutine(VehicleManager.RegisterVehicle(atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2, 900, 1000, 4250));
         }
 
         public override string vehicleDefaultName
