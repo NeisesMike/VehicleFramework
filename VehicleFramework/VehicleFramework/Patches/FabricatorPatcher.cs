@@ -83,5 +83,19 @@ namespace VehicleFramework.Patches
 			// we should never make it here... so let the base game throw an error :shrug:
 			return true;
 		}
+		[HarmonyPatch(typeof(ConstructorInput))]
+		public static class ConstructorInputPatcher
+		{
+			[HarmonyPrefix]
+			[HarmonyPatch("OnHandClick")]
+			public static bool OnHandClickPrefix(ConstructorInput __instance, GUIHand hand)
+			{
+				if(__instance.constructor.building && __instance.constructor.buildTarget?.GetComponent<ModVehicle>() != null)
+                {
+					return false;
+                }
+				return true;
+			}
+		}
 	}
 }
