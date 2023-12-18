@@ -236,7 +236,8 @@ namespace VehicleFramework
         {
             if (mv.BackupBatteries == null)
             {
-                Logger.Error("ERROR: Could not find AI battery gameobject(s) for vehicle: " + mv.name);
+                Logger.Warn("WARNING: Could not find AI battery gameobject(s) for vehicle: " + mv.name + ". Using the normal batteries instead.");
+                mv.AIEnergyInterface = mv.energyInterface;
                 return;
             }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();

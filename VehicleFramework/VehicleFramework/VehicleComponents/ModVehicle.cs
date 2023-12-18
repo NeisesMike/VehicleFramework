@@ -710,6 +710,15 @@ namespace VehicleFramework
             {
                 sto.Container.SetActive(true);
             }
+            if(ModularStorages is null)
+            {
+                return;
+            }
+            if(ModularStorages.Count <= slotID)
+            {
+                Logger.Output("There is no storage expansion for slot ID: " + slotID.ToString());
+                return;
+            }
             ModularStorages[slotID].Container.SetActive(activated);
             //ModularStorages[slotID].Container.GetComponent<BoxCollider>().enabled = activated;
         }
@@ -956,10 +965,12 @@ namespace VehicleFramework
                 GameObject newAIBattery = result.Get();
                 newAIBattery.GetComponent<Battery>().charge = 200;
                 newAIBattery.transform.SetParent(StorageRootObject.transform);
-                AIEnergyInterface.sources.First().battery = newAIBattery.GetComponent<Battery>();
-                AIEnergyInterface.sources.First().batterySlot.AddItem(newAIBattery.GetComponent<Pickupable>());
-                newAIBattery.SetActive(false);
-
+                if (AIEnergyInterface)
+                {
+                    AIEnergyInterface.sources.First().battery = newAIBattery.GetComponent<Battery>();
+                    AIEnergyInterface.sources.First().batterySlot.AddItem(newAIBattery.GetComponent<Pickupable>());
+                    newAIBattery.SetActive(false);
+                }
                 if (!energyInterface.hasCharge)
                 {
                     yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);

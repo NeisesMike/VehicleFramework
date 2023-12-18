@@ -87,7 +87,7 @@ namespace VehicleFramework
         }
         public void Start()
         {
-            if (mv.BackupBatteries.Count > 0)
+            if (mv.BackupBatteries != null && mv.BackupBatteries.Count > 0)
             {
                 aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
             }

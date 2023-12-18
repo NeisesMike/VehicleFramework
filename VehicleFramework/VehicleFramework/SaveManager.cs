@@ -429,6 +429,10 @@ namespace VehicleFramework
                 // but anyways there's probably no closer mod vehicle than 1 meter
                 if (Vector3.Distance(mv.transform.position, slot.Item1) < 1)
                 {
+                    if(mv.BackupBatteries is null)
+                    {
+                        continue;
+                    }
                     foreach (var battery in slot.Item2.Select((value, i) => (value, i)))
                     {
                         TaskResult<GameObject> result = new TaskResult<GameObject>();

@@ -59,7 +59,7 @@ namespace VehicleFramework
         {
             isReadyToSpeak = false;
             mv = GetComponent<ModVehicle>();
-            if (mv.BackupBatteries.Count > 0)
+            if (mv.BackupBatteries != null && mv.BackupBatteries.Count > 0)
             {
                 aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
             }
@@ -67,7 +67,6 @@ namespace VehicleFramework
             {
                 aiEI = mv.energyInterface;
             }
-            //aiEI = mv.AIEnergyInterface;
 
             // register self with mainpatcher, for on-the-fly voice selection updating
             MainPatcher.voices.Add(this);
