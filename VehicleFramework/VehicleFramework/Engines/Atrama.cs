@@ -90,7 +90,7 @@ namespace VehicleFramework.Engines
             {
                 ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.deltaTime;
             }
-            else
+            else if (inputMagnitude < 0)
             {
                 ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * Time.deltaTime;
             }
@@ -176,7 +176,10 @@ namespace VehicleFramework.Engines
                 UpMomentum = -IMPULSE_BOOST;
                 return;
             }
-            UpMomentum += inputMagnitude * VERT_ACCEL * Time.deltaTime;
+            if (inputMagnitude != 0)
+            {
+                UpMomentum += inputMagnitude * VERT_ACCEL * Time.deltaTime;
+            }
         }
         public float GetCurrentPercentOfTopSpeed()
         {

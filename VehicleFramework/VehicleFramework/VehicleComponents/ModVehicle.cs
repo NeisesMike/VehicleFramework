@@ -902,12 +902,25 @@ namespace VehicleFramework
         }
         public static void MaybeControlRotation(Vehicle veh)
         {
-            ModVehicle mv = veh as ModVehicle;
-            if (mv != null && Player.main.GetVehicle() == veh && Player.main.mode == Player.Mode.LockedPiloting && mv.GetIsUnderwater())
+            if(Player.main.GetVehicle() != veh)
             {
-                ModVehicleEngine mve = mv.GetComponent<ModVehicleEngine>();
-                mve.ControlRotation();
+                return;
             }
+            ModVehicle mv = veh as ModVehicle;
+            if (mv is null)
+            {
+                return;
+            }
+            if (Player.main.mode != Player.Mode.LockedPiloting)
+            {
+                return;
+            }
+            if (!mv.GetIsUnderwater())
+            {
+                return;
+            }
+            ModVehicleEngine mve = mv.GetComponent<ModVehicleEngine>();
+            mve.ControlRotation();
         }
         public void OnCraftEnd(TechType techType)
         {
