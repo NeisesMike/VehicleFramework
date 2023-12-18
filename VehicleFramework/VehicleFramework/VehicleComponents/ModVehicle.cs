@@ -115,9 +115,25 @@ namespace VehicleFramework
         internal GameObject fab = null; //fabricator
         internal PowerManager powerMan = null;
 
+        private void TryRemoveDuplicateFabricator()
+        {
+            bool foundOne = false;
+            foreach (Transform tran in transform)
+            {
+                if (tran.gameObject.name == "Fabricator(Clone)")
+                {
+                    if(foundOne)
+                    {
+                        UnityEngine.Object.Destroy(tran.gameObject);
+                        continue;
+                    }
+                    foundOne = true;
+                }
+            }
+        }
         public override void Awake()
         {
-            IEnumerator MaybeSetupUniqueFabricator()
+            IEnumerator TrySpawnFabricator()
             {
                 Transform fabLoc = Fabricator.transform;
                 if (fabLoc is null)
@@ -129,17 +145,20 @@ namespace VehicleFramework
                         yield break;
                     }
                 }
-                foreach (var thisOldFab in GetComponentsInChildren<Fabricator>())
-                {
-                    UnityEngine.GameObject.Destroy(thisOldFab.gameObject);
-                }
+
                 TaskResult<GameObject> result = new TaskResult<GameObject>();
                 yield return StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
                 fab = result.Get();
+                fab.GetComponent<SkyApplier>().enabled = true;
                 fab.transform.SetParent(transform);
                 fab.transform.localPosition = fabLoc.localPosition;
                 fab.transform.localRotation = fabLoc.localRotation;
-                fab.transform.localScale = 0.85f * Vector3.one;
+                if(fabLoc.transform.localScale.x == 0 || fabLoc.transform.localScale.y == 0 || fabLoc.transform.localScale.z == 0)
+                {
+                    fabLoc.transform.localScale = Vector3.one;
+                }
+                fab.transform.localScale = 0.85f * fabLoc.localScale;
+                yield break;
             }
 
             energyInterface = GetComponent<EnergyInterface>();
@@ -156,7 +175,7 @@ namespace VehicleFramework
             voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
             controlPanelLogic.Init();
-            StartCoroutine(MaybeSetupUniqueFabricator());
+            StartCoroutine(TrySpawnFabricator());
             //}
 
             upgradeOnAddedActions.Add(storageModuleAction);
@@ -547,6 +566,8 @@ namespace VehicleFramework
             Player.main.lastValidSub = GetComponent<SubRoot>();
 
             NotifyStatus(PlayerStatus.OnPlayerEntry);
+
+            TryRemoveDuplicateFabricator();
         }
         public void PlayerExit()
         {
