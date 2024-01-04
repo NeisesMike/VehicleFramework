@@ -83,6 +83,8 @@ namespace VehicleFramework
         public void Awake()
         {
             VehicleFramework.Logger.MyLog = base.Logger;
+            GetAssets();
+            SetupDefaultAssets();
             PrePatch();
         }
 
@@ -203,6 +205,45 @@ namespace VehicleFramework
         public void PostPatch()
         {
             //VehicleBuilder.ScatterDataBoxes(craftables);
+        }
+
+        public static void GetAssets()
+        {
+            // load the asset bundle
+            string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(modPath, "modvehiclepingsprite"));
+            if (myLoadedAssetBundle == null)
+            {
+                VehicleFramework.Logger.Error("Failed to load AssetBundle.");
+                return;
+            }
+            System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
+            foreach (System.Object obj in arr)
+            {
+                if (obj.ToString().Contains("ModVehicleSpriteAtlas"))
+                {
+                    UnityEngine.U2D.SpriteAtlas thisAtlas = (UnityEngine.U2D.SpriteAtlas)obj;
+                    Sprite ping = thisAtlas.GetSprite("ModVehiclePingSprite");
+                    VehicleManager.defaultPingSprite = new Atlas.Sprite(ping);
+                    return;
+                }
+                else
+                {
+                    //Logger.Log(obj.ToString());
+                }
+            }
+            VehicleFramework.Logger.Error("Failed to retrieve PingSprite from asset bundle.");
+        }
+        public static void SetupDefaultAssets()
+        {
+            VehicleManager.defaultRecipe.Add(TechType.PlasteelIngot, 1);
+            VehicleManager.defaultRecipe.Add(TechType.Lubricant, 1);
+            VehicleManager.defaultRecipe.Add(TechType.ComputerChip, 1);
+            VehicleManager.defaultRecipe.Add(TechType.AdvancedWiringKit, 1);
+            VehicleManager.defaultRecipe.Add(TechType.Lead, 2);
+            VehicleManager.defaultRecipe.Add(TechType.EnameledGlass, 2);
+
+            VehicleManager.defaultEngine = new Engines.AtramaEngine();
         }
     }
 
