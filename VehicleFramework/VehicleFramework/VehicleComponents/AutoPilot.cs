@@ -104,6 +104,7 @@ namespace VehicleFramework
             UpdatePowerState();
             UpdateDepthState();
             MaybeAutoLevel();
+            MaybeRefillOxygen();
         }
         public void MaybeAutoLevel()
         {
@@ -280,6 +281,22 @@ namespace VehicleFramework
             else
             {
                 depthStatus = DepthState.Safe;
+            }
+        }
+        private void MaybeRefillOxygen()
+        {
+            float totalPower = eInterf.TotalCanProvide(out _);
+            float totalAIPower = eInterf.TotalCanProvide(out _);
+            if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsPlayerInside())
+            {
+                // The main batteries are out, so the AI will take over life support.
+                OxygenManager oxygenMgr = Player.main.oxygenMgr;
+                float num;
+                float num2;
+                oxygenMgr.GetTotal(out num, out num2);
+                float amount = Mathf.Min(num2 - num, mv.oxygenPerSecond * Time.deltaTime) * mv.oxygenEnergyCost;
+                float secondsToAdd = mv.AIEnergyInterface.ConsumeEnergy(amount) / mv.oxygenEnergyCost;
+                oxygenMgr.AddOxygen(secondsToAdd);
             }
         }
 
