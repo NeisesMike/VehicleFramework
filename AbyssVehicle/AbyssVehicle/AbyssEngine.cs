@@ -44,13 +44,13 @@ namespace AbyssVehicle
             }
             set
             {
-                if (value < -REVERSE_TOP_SPEED)
+                if (value < -REVERSE_TOP_SPEED * backforth.GetWheelPowerOutput())
                 {
-                    _forwardMomentum = -REVERSE_TOP_SPEED;
+                    _forwardMomentum = -REVERSE_TOP_SPEED * backforth.GetWheelPowerOutput();
                 }
-                else if (FORWARD_TOP_SPEED < value)
+                else if (FORWARD_TOP_SPEED * backforth.GetWheelPowerOutput() < value)
                 {
-                    _forwardMomentum = FORWARD_TOP_SPEED;
+                    _forwardMomentum = FORWARD_TOP_SPEED * backforth.GetWheelPowerOutput();
                 }
                 else
                 {
@@ -70,13 +70,13 @@ namespace AbyssVehicle
             }
             set
             {
-                if (value < -STRAFE_MAX_SPEED)
+                if (value < -STRAFE_MAX_SPEED * leftright.GetWheelPowerOutput())
                 {
-                    _rightMomentum = -STRAFE_MAX_SPEED;
+                    _rightMomentum = -STRAFE_MAX_SPEED * leftright.GetWheelPowerOutput();
                 }
-                else if (STRAFE_MAX_SPEED < value)
+                else if (STRAFE_MAX_SPEED * leftright.GetWheelPowerOutput() < value)
                 {
-                    _rightMomentum = STRAFE_MAX_SPEED;
+                    _rightMomentum = STRAFE_MAX_SPEED * leftright.GetWheelPowerOutput();
                 }
                 else
                 {
@@ -96,19 +96,41 @@ namespace AbyssVehicle
             }
             set
             {
-                if (value < -VERT_MAX_SPEED)
+                if (value < -VERT_MAX_SPEED * downup.GetWheelPowerOutput())
                 {
-                    _upMomentum = -VERT_MAX_SPEED;
+                    _upMomentum = -VERT_MAX_SPEED * downup.GetWheelPowerOutput();
                 }
-                else if (VERT_MAX_SPEED < value)
+                else if (VERT_MAX_SPEED * downup.GetWheelPowerOutput() < value)
                 {
-                    _upMomentum = VERT_MAX_SPEED;
+                    _upMomentum = VERT_MAX_SPEED * downup.GetWheelPowerOutput();
                 }
                 else
                 {
                     _upMomentum = value;
                 }
             }
+        }
+        protected override void UpdateForwardMomentum(float inputMagnitude)
+        {
+            if (0 < inputMagnitude)
+            {
+                ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * backforth.GetWheelPowerOutput() * Time.fixedDeltaTime;
+            }
+            else
+            {
+                ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * backforth.GetWheelPowerOutput() * Time.fixedDeltaTime;
+            }
+        }
+        protected override void UpdateRightMomentum(float inputMagnitude)
+        {
+            if (inputMagnitude != 0)
+            {
+                RightMomentum += inputMagnitude * STRAFE_ACCEL * leftright.GetWheelPowerOutput() * Time.fixedDeltaTime;
+            }
+        }
+        protected override void UpdateUpMomentum(float inputMagnitude)
+        {
+            UpMomentum += inputMagnitude * VERT_ACCEL * downup.GetWheelPowerOutput() * Time.fixedDeltaTime;
         }
         public float GetCurrentPercentOfTopSpeed()
         {
@@ -130,7 +152,7 @@ namespace AbyssVehicle
         public override void DrainPower(Vector3 moveDirection)
         {
             float scalarFactor = 0.36f;
-            float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
+            float basePowerConsumptionPerSecond = (moveDirection.x * leftright.GetWheelPowerConsumption()) + (moveDirection.y * downup.GetWheelPowerConsumption()) + (moveDirection.z * backforth.GetWheelPowerConsumption());
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
             mv.GetComponent<VehicleFramework.PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
         }

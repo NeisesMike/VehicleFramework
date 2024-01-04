@@ -459,14 +459,6 @@ namespace AbyssVehicle
             }
         }
 
-        public override List<GameObject> NameDecals
-        {
-            get
-            {
-                return new List<GameObject>();
-            }
-        }
-
         public override List<GameObject> TetherSources
         {
             get
@@ -520,14 +512,6 @@ namespace AbyssVehicle
             }
         }
 
-        public override GameObject SteeringWheel
-        {
-            get
-            {
-                //return transform.Find("Geometry/Interior_Main/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1").gameObject;
-                return null;
-            }
-        }
         public override GameObject SteeringWheelLeftHandTarget
         {
             get
