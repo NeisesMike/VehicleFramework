@@ -547,14 +547,6 @@ namespace OdysseyVehicle
             }
         }
 
-        public override List<GameObject> NameDecals
-        {
-            get
-            {
-                return new List<GameObject>();
-            }
-        }
-
         public override List<GameObject> TetherSources
         {
             get
@@ -607,13 +599,6 @@ namespace OdysseyVehicle
             }
         }
 
-        public override GameObject SteeringWheel
-        {
-            get
-            {
-                return transform.Find("Geometry/Interior_Main/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1").gameObject;
-            }
-        }
         public override GameObject SteeringWheelLeftHandTarget
         {
             get
