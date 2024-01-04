@@ -61,8 +61,7 @@ namespace VehicleFramework
                 }
                 SetupBuildBotBeamPoints(mv);
                 yield return UWE.CoroutineHost.StartCoroutine(SetupVFXConstructing(mv));
-
-                Bounds vbounds = mv.BoundingBox.GetComponent<MeshRenderer>().bounds;
+                Bounds vbounds = mv.BoundingBox.EnsureComponent<MeshRenderer>().bounds;
                 GameObject bbPointsRoot = new GameObject("BuildBotPoints");
                 bbPointsRoot.transform.SetParent(mv.transform);
 

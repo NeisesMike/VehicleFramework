@@ -218,7 +218,8 @@ namespace VehicleFramework
         private void UpdatePowerState()
         {
             float totalPower = eInterf.TotalCanProvide(out _);
-            if (totalPower < 0.1)
+            float totalAIPower = eInterf.TotalCanProvide(out _);
+            if (totalPower < 0.1 && totalAIPower < 0.1)
             {
                 if (powerStatus < PowerState.OxygenOffline)
                 {

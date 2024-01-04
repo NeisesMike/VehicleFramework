@@ -101,16 +101,28 @@ namespace VehicleFramework
 
         public static IEnumerator Prefabricate(VehicleMemory mem, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth, int mass)
         {
-            Logger.Log("prefabbing now: " + mem.mv.gameObject.name);
+            Logger.Log("Prefabricating the " + mem.mv.gameObject.name);
             mem.mv.numVehicleModules = modules;
             mem.mv.hasArms = arms > 0;
 
             // wait for a seamoth to be ready
             yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
 
-            Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth, mass);
+            bool instrumentSuccessful = Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth, mass);
+            if(!instrumentSuccessful)
+            {
+                Logger.Error("Failed to instrument the vehicle: " + mem.mv.gameObject.name);
+                yield break;
+            }
+
+
             prefabs.Add(mem.mv);
-            VehicleEntry ve = new VehicleEntry(mem.mv.gameObject, engine, recipe, numVehicleTypes, mem.mv.GetDescription(), mem.mv.GetEncyEntry(), pingType, sprite, modules, arms);
+            Atlas.Sprite usedPingSprite = sprite;
+            if(sprite is null)
+            {
+                usedPingSprite = VehicleManager.defaultPingSprite;
+            }
+            VehicleEntry ve = new VehicleEntry(mem.mv.gameObject, engine, recipe, numVehicleTypes, mem.mv.GetDescription(), mem.mv.GetEncyEntry(), pingType, usedPingSprite, modules, arms);
             VehicleManager.vehicleTypes.Add(ve);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
@@ -118,89 +130,144 @@ namespace VehicleFramework
         }
 
         #region setup_funcs
-        public static void SetupPrefabObjects(ref ModVehicle mv)
+        public static bool SetupPrefabObjects(ref ModVehicle mv)
         {
             int iter = 0;
-            foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
+            try
             {
-                mv.playerPosition = ps.SitLocation;
-                PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
-                pt.mv = mv;
-                pt.exit = ps.ExitLocation;
+                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
+                {
+                    mv.playerPosition = ps.SitLocation;
+                    PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
+                    pt.mv = mv;
+                    pt.exit = ps.ExitLocation;
+                }
             }
-            foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
+            catch (Exception e)
             {
-                var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
-                hatch.mv = mv;
-                hatch.EntryLocation = vhs.EntryLocation;
-                hatch.ExitLocation = vhs.ExitLocation;
-                hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+                Logger.Error("There was a problem setting up the PilotSeats. Check VehiclePilotSeat.Seat");
+                Logger.Error(e.ToString());
+                return false;
             }
-            foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
+            try
             {
-                vs.Container.SetActive(false);
+                foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
+                {
+                    var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
+                    hatch.mv = mv;
+                    hatch.EntryLocation = vhs.EntryLocation;
+                    hatch.ExitLocation = vhs.ExitLocation;
+                    hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Hatches. Check VehicleHatchStruct.Hatch");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            try
+            {
+                foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
+                {
+                    vs.Container.SetActive(false);
 
-                var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
-                cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                cont.storageLabel = "Vehicle Storage " + iter.ToString();
-                cont.height = vs.Height;
-                cont.width = vs.Width;
+                    var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
+                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                    cont.storageLabel = "Vehicle Storage " + iter.ToString();
+                    cont.height = vs.Height;
+                    cont.width = vs.Width;
 
-                FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                var inp = vs.Container.EnsureComponent<InnateStorageInput>();
-                inp.mv = mv;
-                inp.slotID = iter;
-                iter++;
-                inp.model = vs.Container;
-                inp.collider = vs.Container.EnsureComponent<BoxCollider>();
-                inp.openSound = storageOpenSound;
-                inp.closeSound = storageCloseSound;
-                vs.Container.SetActive(true);
+                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                    var inp = vs.Container.EnsureComponent<InnateStorageInput>();
+                    inp.mv = mv;
+                    inp.slotID = iter;
+                    iter++;
+                    inp.model = vs.Container;
+                    inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                    inp.openSound = storageOpenSound;
+                    inp.closeSound = storageCloseSound;
+                    vs.Container.SetActive(true);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Innate Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
+                Logger.Error(e.ToString());
+                return false;
             }
             iter = 0;
-            foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
+            try
             {
-                vs.Container.SetActive(false);
+                foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
+                {
+                    vs.Container.SetActive(false);
 
-                /*
-                var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
-                cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                cont.storageLabel = "Modular Storage " + iter.ToString();
-                cont.height = vs.Height;
-                cont.width = vs.Width;
-                */
+                    /*
+                    var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
+                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                    cont.storageLabel = "Modular Storage " + iter.ToString();
+                    cont.height = vs.Height;
+                    cont.width = vs.Width;
+                    */
 
-                FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                var inp = vs.Container.EnsureComponent<ModularStorageInput>();
-                inp.mv = mv;
-                inp.slotID = iter;
-                iter++;
-                inp.model = vs.Container;
-                inp.collider = vs.Container.EnsureComponent<BoxCollider>();
-                inp.openSound = storageOpenSound;
-                inp.closeSound = storageCloseSound;
+                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                    var inp = vs.Container.EnsureComponent<ModularStorageInput>();
+                    inp.mv = mv;
+                    inp.slotID = iter;
+                    iter++;
+                    inp.model = vs.Container;
+                    inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                    inp.openSound = storageOpenSound;
+                    inp.closeSound = storageCloseSound;
+                }
             }
-            foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+            catch (Exception e)
             {
-                VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                vuci.flap = vu.Flap.transform;
-                vuci.anglesOpened = vu.AnglesOpened;
-                vuci.anglesClosed = vu.AnglesClosed;
-                mv.upgradesInput = vuci;
-                var up = vu.Interface.EnsureComponent<UpgradeProxy>();
-                up.proxies = vu.ModuleProxies;
+                Logger.Error("There was a problem setting up the Modular Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            try
+            {
+                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                {
+                    VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
+                    vuci.flap = vu.Flap.transform;
+                    vuci.anglesOpened = vu.AnglesOpened;
+                    vuci.anglesClosed = vu.AnglesClosed;
+                    mv.upgradesInput = vuci;
+                    var up = vu.Interface.EnsureComponent<UpgradeProxy>();
+                    up.proxies = vu.ModuleProxies;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Upgrades Interface. Check VehicleUpgrades.Interface and .Flap");
+                Logger.Error(e.ToString());
+                return false;
             }
             // Configure the Control Panel
-            if (mv.ControlPanel)
+            try
             {
-                mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
-                mv.controlPanelLogic.mv = mv;
-                mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
-                mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
-                GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+                if (mv.ControlPanel)
+                {
+                    mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
+                    mv.controlPanelLogic.mv = mv;
+                    mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
+                    mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
+                    GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+                }
             }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Control Panel. Check ModVehicle.ControlPanel and ensure \"Control-Panel-Location\" exists at the top level of your model. While you're at it, check that \"Fabricator-Location\" is at the top level of your model too.");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            return true;
         }
         public static void SetupEnergyInterface(ref ModVehicle mv)
         {
@@ -234,9 +301,8 @@ namespace VehicleFramework
         }
         public static void SetupAIEnergyInterface(ref ModVehicle mv)
         {
-            if (mv.BackupBatteries == null)
+            if (mv.BackupBatteries == null || mv.BackupBatteries.Count == 0)
             {
-                Logger.Warn("WARNING: Could not find AI battery gameobject(s) for vehicle: " + mv.name + ". Using the normal batteries instead.");
                 mv.AIEnergyInterface = mv.energyInterface;
                 return;
             }
@@ -487,11 +553,11 @@ namespace VehicleFramework
         }
         public static void SetupSubName(ref ModVehicle mv)
         {
-            // TODO
+            // TODO. What's the point of this?
             var subname = mv.gameObject.EnsureComponent<SubName>();
             subname.pingInstance = mv.pingInstance;
             subname.colorsInitialized = 0;
-            subname.hullName = mv.NameDecals[0].GetComponent<TMPro.TextMeshProUGUI>();
+            subname.hullName = null;
             mv.subName = subname;
         }
         public static void SetupCollisionSound(ref ModVehicle mv)
@@ -579,12 +645,16 @@ namespace VehicleFramework
         }
 
         #endregion
-        public static void Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth, int mass)
+        public static bool Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth, int mass)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
             
-            SetupPrefabObjects(ref mv);
+            if(!SetupPrefabObjects(ref mv))
+            {
+                Logger.Error("Failed to SetupPrefabObjects.");
+                return false;
+            }
             mv.enabled = false;
             SetupEnergyInterface(ref mv);
             SetupAIEnergyInterface(ref mv);
@@ -626,6 +696,8 @@ namespace VehicleFramework
             skyApplierInterior.SetSky(Skies.BaseInterior);
             */
             #endregion
+
+            return true;
         }
 
         public static void ApplyShaders(ref ModVehicle mv)

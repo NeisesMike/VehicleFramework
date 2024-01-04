@@ -53,13 +53,11 @@ namespace VehicleFramework
         public abstract List<GameObject> NavigationRedStrobeLights { get; }
         public abstract List<GameObject> WaterClipProxies { get; }
         public abstract List<GameObject> CanopyWindows { get; }
-        public abstract List<GameObject> NameDecals { get; }
         public abstract List<GameObject> TetherSources { get; }
         public abstract GameObject BoundingBox { get; }
         public abstract GameObject ControlPanel { get; }
         public virtual GameObject Fabricator { get; }
         public virtual GameObject ColorPicker { get; }
-        public virtual GameObject SteeringWheel { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
         public ControlPanel controlPanelLogic;
@@ -133,33 +131,6 @@ namespace VehicleFramework
         }
         public override void Awake()
         {
-            IEnumerator TrySpawnFabricator()
-            {
-                Transform fabLoc = Fabricator.transform;
-                if (fabLoc is null)
-                {
-                    fabLoc = transform.Find("Fabricator-Location");
-                    if (fabLoc is null)
-                    {
-                        Logger.Warn("Warning: " + name + " does not have a Fabricator-Location.");
-                        yield break;
-                    }
-                }
-
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                yield return StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
-                fab = result.Get();
-                fab.GetComponent<SkyApplier>().enabled = true;
-                fab.transform.SetParent(transform);
-                fab.transform.localPosition = fabLoc.localPosition;
-                fab.transform.localRotation = fabLoc.localRotation;
-                if(fabLoc.transform.localScale.x == 0 || fabLoc.transform.localScale.y == 0 || fabLoc.transform.localScale.z == 0)
-                {
-                    fabLoc.transform.localScale = Vector3.one;
-                }
-                fab.transform.localScale = 0.85f * fabLoc.localScale;
-                yield break;
-            }
 
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
@@ -174,8 +145,7 @@ namespace VehicleFramework
             gameObject.EnsureComponent<TetherSource>();
             voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
-            controlPanelLogic.Init();
-            StartCoroutine(TrySpawnFabricator());
+            controlPanelLogic?.Init();
             //}
 
             upgradeOnAddedActions.Add(storageModuleAction);
@@ -196,17 +166,6 @@ namespace VehicleFramework
             // lost this in the update to Nautilus. We're no longer tracking our own tech type IDs or anything,
             // so I'm not able to provide the value easily here. Not even sure what a GameInfoIcon is :shrug:
             gameObject.EnsureComponent<GameInfoIcon>().techType = GetComponent<TechTag>().type;
-
-            // todo fix pls
-            // Not only is the syntax gross,
-            // but the decals are inexplicably invisible in-game
-            // I'm pretty sure this is the right camera...
-            /*
-            foreach (Canvas decalCanvas in NameDecals[0].transform.parent.gameObject.GetAllComponentsInChildren<Canvas>())
-            {
-                decalCanvas.worldCamera = MainCamera.camera;
-            }
-            */
 
             powerMan = gameObject.EnsureComponent<PowerManager>();
 
@@ -559,9 +518,16 @@ namespace VehicleFramework
             Player.main.SetScubaMaskActive(false);
             Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
 
-            foreach (GameObject window in CanopyWindows)
+            try
             {
-                window.SetActive(false);
+                foreach (GameObject window in CanopyWindows)
+                {
+                    window?.SetActive(false);
+                }
+            }
+            catch(Exception e)
+            {
+                //It's okay if the vehicle doesn't have a canopy
             }
 
             Player.main.lastValidSub = GetComponent<SubRoot>();
@@ -576,9 +542,16 @@ namespace VehicleFramework
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
             Player.main.transform.SetParent(null);
-            foreach (GameObject window in CanopyWindows)
+            try
             {
-                window.SetActive(true);
+                foreach (GameObject window in CanopyWindows)
+                {
+                    window?.SetActive(true);
+                }
+            }
+            catch (Exception e)
+            {
+                //It's okay if the vehicle doesn't have a canopy
             }
             NotifyStatus(PlayerStatus.OnPlayerExit);
         }
@@ -1001,6 +974,35 @@ namespace VehicleFramework
                 active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = NowVehicleName;
                 active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = NowVehicleName;
             }
+
+            IEnumerator TrySpawnFabricator()
+            {
+                Transform fabLoc = Fabricator.transform;
+                if (fabLoc is null)
+                {
+                    fabLoc = transform.Find("Fabricator-Location");
+                    if (fabLoc is null)
+                    {
+                        Logger.Warn("Warning: " + name + " does not have a Fabricator-Location.");
+                        yield break;
+                    }
+                }
+
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                yield return StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
+                fab = result.Get();
+                fab.GetComponent<SkyApplier>().enabled = true;
+                fab.transform.SetParent(transform);
+                fab.transform.localPosition = fabLoc.localPosition;
+                fab.transform.localRotation = fabLoc.localRotation;
+                fab.transform.localScale = fabLoc.transform.localScale;
+                if (fabLoc.transform.localScale.x == 0 || fabLoc.transform.localScale.y == 0 || fabLoc.transform.localScale.z == 0)
+                {
+                    fab.transform.localScale = Vector3.one;
+                }
+                yield break;
+            }
+            StartCoroutine(TrySpawnFabricator());
         }
         public void ForceExitLockedMode()
         {

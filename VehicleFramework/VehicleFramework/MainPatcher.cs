@@ -35,15 +35,15 @@ namespace VehicleFramework
         internal static ManualLogSource MyLog { get; set; }
         public static void Log(string message)
         {
-            MyLog.LogInfo("[VehicleFramework] " + message);
+            MyLog.LogInfo(message);
         }
         public static void Warn(string message)
         {
-            MyLog.LogWarning("[VehicleFramework] " + message);
+            MyLog.LogWarning(message);
         }
         public static void Error(string message)
         {
-            MyLog.LogError("[VehicleFramework] " + message);
+            MyLog.LogError(message);
         }
         public static void DebugLog(string message)
         {
@@ -51,10 +51,6 @@ namespace VehicleFramework
             {
                 MyLog.LogInfo("[VehicleFramework] " + message);
             }
-        }
-        public static void Log(string format, params object[] args)
-        {
-            MyLog.LogInfo("[VehicleFramework] " + string.Format(format, args));
         }
         public static void Output(string msg)
         {
