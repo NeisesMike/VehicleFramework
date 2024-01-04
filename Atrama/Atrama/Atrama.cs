@@ -129,19 +129,19 @@ namespace Atrama
                 var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
 
                 VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb1.BatterySlot = transform.Find("Mechanical-Panel/BatteryInputs/1").gameObject;
+                vb1.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/1").gameObject;
                 list.Add(vb1);
 
                 VehicleFramework.VehicleParts.VehicleBattery vb2 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb2.BatterySlot = transform.Find("Mechanical-Panel/BatteryInputs/2").gameObject;
+                vb2.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/2").gameObject;
                 list.Add(vb2);
 
                 VehicleFramework.VehicleParts.VehicleBattery vb3 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb3.BatterySlot = transform.Find("Mechanical-Panel/BatteryInputs/3").gameObject;
+                vb3.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/3").gameObject;
                 list.Add(vb3);
 
                 VehicleFramework.VehicleParts.VehicleBattery vb4 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb4.BatterySlot = transform.Find("Mechanical-Panel/BatteryInputs/4").gameObject;
+                vb4.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/4").gameObject;
                 list.Add(vb4);
 
                 return list;
@@ -175,7 +175,7 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleHatchStruct>();
                 VehicleFramework.VehicleParts.VehicleHatchStruct vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
-                Transform mainHatch = transform.Find("Hatch");
+                Transform mainHatch = transform.Find("model/Hatch");
                 vhs.Hatch = mainHatch.gameObject;
                 vhs.EntryLocation = mainHatch.Find("Entry");
                 vhs.ExitLocation = mainHatch.Find("Exit");
@@ -260,9 +260,10 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehiclePilotSeat>();
                 VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
-                Transform mainSeat = transform.Find("Chair");
+                Transform mainSeat = transform.Find("model/PilotSeat");
                 vps.Seat = mainSeat.gameObject;
                 vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
+                vps.ExitLocation = mainSeat.Find("ExitLocation");
                 vps.LeftHandLocation = mainSeat;
                 vps.RightHandLocation = mainSeat;
                 list.Add(vps);
@@ -275,8 +276,8 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
 
-                Transform left = transform.Find("InnateStorage/LeftStorage");
-                Transform right = transform.Find("InnateStorage/RightStorage");
+                Transform left = transform.Find("model/InnateStorage/LeftStorage");
+                Transform right = transform.Find("model/InnateStorage/RightStorage");
 
                 VehicleFramework.VehicleParts.VehicleStorage leftVS = new VehicleFramework.VehicleParts.VehicleStorage();
                 leftVS.Container = left.gameObject;
@@ -301,7 +302,7 @@ namespace Atrama
                 for(int i=1; i<7; i++)
                 {
                     VehicleFramework.VehicleParts.VehicleStorage thisVS = new VehicleFramework.VehicleParts.VehicleStorage();
-                    Transform thisStorage = transform.Find("ModularStorage/StorageModule" + i.ToString());
+                    Transform thisStorage = transform.Find("model/ModularStorage/StorageModule" + i.ToString());
                     thisVS.Container = thisStorage.gameObject;
                     thisVS.Height = 4;
                     thisVS.Width = 4;
@@ -316,7 +317,7 @@ namespace Atrama
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleUpgrades>();
                 VehicleFramework.VehicleParts.VehicleUpgrades vu = new VehicleFramework.VehicleParts.VehicleUpgrades();
-                vu.Interface = transform.Find("Mechanical-Panel/Upgrades-Panel").gameObject;
+                vu.Interface = transform.Find("model/Mechanical-Panel/Upgrades-Panel").gameObject;
                 vu.Flap = vu.Interface;
                 vu.AnglesClosed = Vector3.zero;
                 vu.AnglesOpened = Vector3.zero;
@@ -350,7 +351,7 @@ namespace Atrama
         {
             get
             {
-                return transform.Find("BoundingBox").gameObject;
+                return transform.Find("model/BoundingBox").gameObject;
             }
         }
         public override List<GameObject> TetherSources
@@ -358,7 +359,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("TetherSources"))
+                foreach (Transform child in transform.Find("model/TetherSources"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -370,7 +371,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach(Transform child in transform.Find("WaterClipProxies"))
+                foreach(Transform child in transform.Find("model/WaterClipProxies"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -382,17 +383,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                list.Add(transform.Find("Canopy").gameObject);
-                return list;
-            }
-        }
-        public override List<GameObject> NameDecals
-        {
-            get
-            {
-                var list = new List<GameObject>();
-                list.Add(transform.Find("NameDecals/Left").gameObject);
-                list.Add(transform.Find("NameDecals/Right").gameObject);
+                list.Add(transform.Find("model/Canopy").gameObject);
                 return list;
             }
         }
@@ -460,18 +451,20 @@ namespace Atrama
         {
             get
             {
+                /*
                 var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
                 VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb1.BatterySlot = transform.Find("Main-Body/BackupBattery").gameObject;
                 list.Add(vb1);
-                return list;
+                */
+                return new List<VehicleFramework.VehicleParts.VehicleBattery>();
             }
         }
         public override GameObject CollisionModel
         {
             get
             {
-                return transform.Find("CollisionModel").gameObject;
+                return transform.Find("model/CollisionModel").gameObject;
             }
         }
     }
