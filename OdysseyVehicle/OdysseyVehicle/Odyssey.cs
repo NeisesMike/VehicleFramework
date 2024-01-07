@@ -11,10 +11,12 @@ using System.Reflection;
 
 using UnityEngine.U2D;
 using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Engines;
 
 namespace OdysseyVehicle
 {
-    public class Odyssey : ModVehicle
+    public class Odyssey : Submarine
     {
         public static GameObject model = null;
         public static RuntimeAnimatorController animatorController = null;
@@ -162,23 +164,26 @@ namespace OdysseyVehicle
             byte[] storageBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/Interior_Storage_Lightmap.png"));
             storage_lightmap.LoadImage(storageBytes);
         }
-        public static Dictionary<TechType, int> GetRecipe()
+        public override Dictionary<TechType, int> Recipe
         {
-            Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
-            recipe.Add(TechType.TitaniumIngot, 1);
-            recipe.Add(TechType.PlasteelIngot, 1);
-            recipe.Add(TechType.Lubricant, 1);
-            recipe.Add(TechType.AdvancedWiringKit, 1);
-            recipe.Add(TechType.Lead, 2);
-            recipe.Add(TechType.EnameledGlass, 2);
-            return recipe;
+            get
+            {
+                Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
+                recipe.Add(TechType.TitaniumIngot, 1);
+                recipe.Add(TechType.PlasteelIngot, 1);
+                recipe.Add(TechType.Lubricant, 1);
+                recipe.Add(TechType.AdvancedWiringKit, 1);
+                recipe.Add(TechType.Lead, 2);
+                recipe.Add(TechType.EnameledGlass, 2);
+                return recipe;
+            }
         }
         public static IEnumerator Register()
         {
             GetAssets();
-            ModVehicle odyssey = model.EnsureComponent<Odyssey>() as ModVehicle;
+            Submarine odyssey = model.EnsureComponent<Odyssey>() as Submarine;
             odyssey.gameObject.GetComponent<Animator>().runtimeAnimatorController = animatorController;
-            yield return UWE.CoroutineHost.StartCoroutine(VehicleManager.RegisterVehicle(odyssey, new VehicleFramework.Engines.OdysseyEngine(), GetRecipe(), (PingType)122, pingSprite, 8, 0, 600, 667, 3500));
+            yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(odyssey));
         }
 
         public override string vehicleDefaultName
@@ -193,37 +198,43 @@ namespace OdysseyVehicle
                 return main.Get("OdysseyDefaultName");
             }
         }
-        public override string GetDescription()
+        public override string Description
         {
-            return "A submarine built for exploration. It is nimble for its size, it fits into small corridors, and its floodlights are extremely powerful.";
+            get
+            {
+                return "A submarine built for exploration. It is nimble for its size, it fits into small corridors, and its floodlights are extremely powerful.";
+            }
         }
 
-        public override string GetEncyEntry()
+        public override string EncyclopediaEntry
         {
-            /*
-             * The Formula:
-             * 2 or 3 sentence blurb
-             * Features
-             * Advice
-             * Ratings
-             * Kek
-             */
-            string ency = "The Odyssey is a submarine purpose-built for exploration. ";
-            ency += "Its manueverability and illumination capabilities are what earned it the name. \n";
-            ency += "\nIt features:\n";
-            ency += "- Modest storage capacity, which can be further expanded with upgrades. \n";
-            ency += "- Extremely high power flood lights. \n";
-            ency += "- A signature autopilot which can automatically level out the vessel. \n";
-            ency += "\nRatings:\n";
-            ency += "- Top Speed: 12.5m/s \n";
-            ency += "- Acceleration: 5m/s/s \n";
-            ency += "- Distance per Power Cell: 7km \n";
-            ency += "- Crush Depth: 600 \n";
-            ency += "- Upgrade Slots: 8 \n";
-            ency += "- Dimensions: 3.7m x 5m x 10.6m \n";
-            ency += "- Persons: 1-2\n";
-            ency += "\n\"Don't like it? That's odd; I see.\" ";
-            return ency;
+            get
+            {
+                /*
+                 * The Formula:
+                 * 2 or 3 sentence blurb
+                 * Features
+                 * Advice
+                 * Ratings
+                 * Kek
+                 */
+                string ency = "The Odyssey is a submarine purpose-built for exploration. ";
+                ency += "Its manueverability and illumination capabilities are what earned it the name. \n";
+                ency += "\nIt features:\n";
+                ency += "- Modest storage capacity, which can be further expanded with upgrades. \n";
+                ency += "- Extremely high power flood lights. \n";
+                ency += "- A signature autopilot which can automatically level out the vessel. \n";
+                ency += "\nRatings:\n";
+                ency += "- Top Speed: 12.5m/s \n";
+                ency += "- Acceleration: 5m/s/s \n";
+                ency += "- Distance per Power Cell: 7km \n";
+                ency += "- Crush Depth: 600 \n";
+                ency += "- Upgrade Slots: 8 \n";
+                ency += "- Dimensions: 3.7m x 5m x 10.6m \n";
+                ency += "- Persons: 1-2\n";
+                ency += "\n\"Don't like it? That's odd; I see.\" ";
+                return ency;
+            }
         }
 
         public override GameObject VehicleModel
@@ -613,6 +624,62 @@ namespace OdysseyVehicle
             {
                 //return transform.Find("Geometry/Interior_Main/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1/RightHandPlug").gameObject;
                 return null;
+            }
+        }
+
+        public override ModVehicleEngine Engine
+        {
+            get
+            {
+                return gameObject.EnsureComponent<OdysseyEngine>();
+            }
+        }
+
+        public override Atlas.Sprite PingSprite
+        {
+            get
+            {
+                return pingSprite;
+            }
+        }
+
+        public override int BaseCrushDepth
+        {
+            get
+            {
+                return 600;
+            }
+        }
+
+        public override int MaxHealth
+        {
+            get
+            {
+                return 667;
+            }
+        }
+
+        public override int Mass
+        {
+            get
+            {
+                return 3500;
+            }
+        }
+
+        public override int NumModules
+        {
+            get
+            {
+                return 8;
+            }
+        }
+
+        public override bool HasArms
+        {
+            get
+            {
+                return false;
             }
         }
 
