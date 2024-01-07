@@ -11,10 +11,12 @@ using System.Reflection;
 
 using UnityEngine.U2D;
 using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Engines;
 
 namespace Atrama
 {
-    public class Atrama : ModVehicle
+    public class Atrama : Submarine
     {
         public static GameObject model = null;
         public static GameObject controlPanel = null;
@@ -53,22 +55,25 @@ namespace Atrama
                 }
             }
         }
-        public static Dictionary<TechType, int> GetRecipe()
+        public override Dictionary<TechType, int> Recipe
         {
-            Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
-            recipe.Add(TechType.TitaniumIngot, 1);
-            recipe.Add(TechType.PlasteelIngot, 1);
-            recipe.Add(TechType.Lubricant, 1);
-            recipe.Add(TechType.AdvancedWiringKit, 1);
-            recipe.Add(TechType.Lead, 2);
-            recipe.Add(TechType.EnameledGlass, 2);
-            return recipe;
+            get
+            {
+                Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
+                recipe.Add(TechType.TitaniumIngot, 1);
+                recipe.Add(TechType.PlasteelIngot, 1);
+                recipe.Add(TechType.Lubricant, 1);
+                recipe.Add(TechType.AdvancedWiringKit, 1);
+                recipe.Add(TechType.Lead, 2);
+                recipe.Add(TechType.EnameledGlass, 2);
+                return recipe;
+            }
         }
         public static IEnumerator Register()
         {
             GetAssets();
-            ModVehicle atrama = model.EnsureComponent<Atrama>() as ModVehicle;
-            yield return UWE.CoroutineHost.StartCoroutine(VehicleManager.RegisterVehicle(atrama, new VehicleFramework.Engines.AtramaEngine(), GetRecipe(), (PingType)121, pingSprite, 6, 2, 900, 1000, 4250));
+            Submarine atrama = model.EnsureComponent<Atrama>() as Submarine;
+            yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(atrama));
         }
 
         public override string vehicleDefaultName
@@ -83,9 +88,12 @@ namespace Atrama
                 return main.Get("AtramaDefaultName");
             }
         }
-        public override string GetDescription()
+        public override string Description
         {
-            return "A submarine built for construction. It is quite sluggish, but has an enormous storage capacity.";
+            get
+            {
+                return "A submarine built for construction. It is quite sluggish, but has an enormous storage capacity.";
+            }
         }
         public override void Awake()
         {
@@ -95,32 +103,35 @@ namespace Atrama
             NowVehicleName = OGVehicleName;
             base.Awake();
         }
-        public override string GetEncyEntry()
+        public override string EncyclopediaEntry
         {
-            /*
-             * The Formula:
-             * 2 or 3 sentence blurb
-             * Features
-             * Advice
-             * Ratings
-             * Kek
-             */
-            string ency = "The Atrama is a submarine purpose built for Construction. ";
-            ency += "Its signature arms (in development) are what earned it its Lithuanian name. \n";
-            ency += "\nIt features:\n";
-            ency += "- Two arms which have several different attachments (in development). \n";
-            ency += "- Ample storage capacity, which can be further expanded by upgrades. \n";
-            ency += "- A signature autopilot which can automatically level out the vessel. \n";
-            ency += "\nRatings:\n";
-            ency += "- Top Speed: 15m/s \n";
-            ency += "- Acceleration: 3m/s/s \n";
-            ency += "- Distance per Power Cell: 7.5km \n";
-            ency += "- Crush Depth: 900 \n";
-            ency += "- Upgrade Slots: 6 \n";
-            ency += "- Dimensions: 7.5m x 4m x 14.5m \n";
-            ency += "- Persons: 1-2 \n";
-            ency += "\n\"Pass on the drama- just build the Atrama.\" ";
-            return ency;
+            get
+            {
+                /*
+                 * The Formula:
+                 * 2 or 3 sentence blurb
+                 * Features
+                 * Advice
+                 * Ratings
+                 * Kek
+                 */
+                string ency = "The Atrama is a submarine purpose built for Construction. ";
+                ency += "Its signature arms (in development) are what earned it its Lithuanian name. \n";
+                ency += "\nIt features:\n";
+                ency += "- Two arms which have several different attachments (in development). \n";
+                ency += "- Ample storage capacity, which can be further expanded by upgrades. \n";
+                ency += "- A signature autopilot which can automatically level out the vessel. \n";
+                ency += "\nRatings:\n";
+                ency += "- Top Speed: 15m/s \n";
+                ency += "- Acceleration: 3m/s/s \n";
+                ency += "- Distance per Power Cell: 7.5km \n";
+                ency += "- Crush Depth: 900 \n";
+                ency += "- Upgrade Slots: 6 \n";
+                ency += "- Dimensions: 7.5m x 4m x 14.5m \n";
+                ency += "- Persons: 1-2 \n";
+                ency += "\n\"Pass on the drama- just build the Atrama.\" ";
+                return ency;
+            }
         }
         public override List<VehicleFramework.VehicleParts.VehicleBattery> Batteries
         {
@@ -465,6 +476,62 @@ namespace Atrama
             get
             {
                 return transform.Find("model/CollisionModel").gameObject;
+            }
+        }
+
+
+        public override ModVehicleEngine Engine
+        {
+            get
+            {
+                return gameObject.EnsureComponent<AtramaEngine>();
+            }
+        }
+        public override Atlas.Sprite PingSprite
+        {
+            get
+            {
+                return pingSprite;
+            }
+        }
+
+        public override int BaseCrushDepth
+        {
+            get
+            {
+                return 900;
+            }
+        }
+
+        public override int MaxHealth
+        {
+            get
+            {
+                return 1000;
+            }
+        }
+
+        public override int Mass
+        {
+            get
+            {
+                return 4250;
+            }
+        }
+
+        public override int NumModules
+        {
+            get
+            {
+                return 8;
+            }
+        }
+
+        public override bool HasArms
+        {
+            get
+            {
+                return true;
             }
         }
     }
