@@ -21,7 +21,7 @@ namespace VehicleFramework
         [HarmonyPatch("Close")]
         public static void ClosePostfix()
         {
-            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+            VehicleTypes.Submarine mv = Player.main.GetVehicle() as VehicleTypes.Submarine;
             if (mv != null && !mv.IsPlayerPiloting())
             {
                 uGUI.main.quickSlots.SetTarget(null);

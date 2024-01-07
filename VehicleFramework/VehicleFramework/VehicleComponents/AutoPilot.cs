@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -99,14 +100,20 @@ namespace VehicleFramework
 
         public void Update()
         {
-            CheckForDoubleTap();
             UpdateHealthState();
             UpdatePowerState();
             UpdateDepthState();
-            MaybeAutoLevel();
-            MaybeRefillOxygen();
+            if(mv as Drone is null)
+            {
+                MaybeRefillOxygen();
+            }
+            if (mv as Submarine != null)
+            {
+                MaybeAutoLevel(mv as Submarine);
+                CheckForDoubleTap(mv as Submarine);
+            }
         }
-        public void MaybeAutoLevel()
+        public void MaybeAutoLevel(Submarine mv)
         {
             Vector2 lookDir = GameInput.GetLookDelta();
             if (autoLeveling && (10f < lookDir.magnitude || !mv.GetIsUnderwater()))
@@ -160,7 +167,7 @@ namespace VehicleFramework
 
         private Vector3 prevVelocity;
         private Vector3 currentVelocity;
-        private void CheckForDoubleTap()
+        private void CheckForDoubleTap(Submarine mv)
         {
             if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerPiloting())
             {
@@ -287,7 +294,7 @@ namespace VehicleFramework
         {
             float totalPower = eInterf.TotalCanProvide(out _);
             float totalAIPower = eInterf.TotalCanProvide(out _);
-            if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsPlayerInside())
+            if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsPlayerDry)
             {
                 // The main batteries are out, so the AI will take over life support.
                 OxygenManager oxygenMgr = Player.main.oxygenMgr;

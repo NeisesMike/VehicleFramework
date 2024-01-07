@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -16,9 +17,9 @@ namespace VehicleFramework
      */
     public class ModVehicleTether : MonoBehaviour
     {
-        private ModVehicle currentMV = null;
+        private Submarine currentMV = null;
 
-        public void CatchTether(ModVehicle mv)
+        public void CatchTether(Submarine mv)
         {
             currentMV = mv;
             StartCoroutine(CheckTether());

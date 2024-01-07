@@ -19,7 +19,7 @@ namespace VehicleFramework.Patches
                 // ensure we unlock our encyclopedia pages
                 foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
-                    PDAEncyclopedia.Add(ve.prefab.name, true);
+                    PDAEncyclopedia.Add(ve.name, true);
                 }
             }
         }
@@ -37,9 +37,9 @@ namespace VehicleFramework.Patches
                 string text = (string)n.data[0];
                 foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
-                    if (text == ve.prefab.name)
+                    if (text == ve.mv.name)
                     {
-                        PDAEncyclopedia.Add(ve.prefab.name, true);
+                        PDAEncyclopedia.Add(ve.name, true);
                     }
                 }
 
@@ -47,7 +47,7 @@ namespace VehicleFramework.Patches
                 {
                     foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                     {
-                        PDAEncyclopedia.Add(ve.prefab.name, true);
+                        PDAEncyclopedia.Add(ve.name, true);
                     }
                 }
             }

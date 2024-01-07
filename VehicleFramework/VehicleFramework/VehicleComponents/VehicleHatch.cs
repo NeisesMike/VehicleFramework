@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -18,11 +19,18 @@ namespace VehicleFramework
 		public void OnHandHover(GUIHand hand)
 		{
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-			if (mv.IsPlayerInside())
+			if ((mv as Submarine != null))
 			{
-				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.ExitVehicle));
+				if ((mv as Submarine).IsPlayerInside())
+				{
+					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.ExitVehicle));
+				}
+				else
+				{
+					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EnterVehicle));
+				}
 			}
-			else
+			if ((mv as Submersible != null) || (mv as Walker != null) || (mv as Skimmer != null))
 			{
 				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EnterVehicle));
 			}
@@ -32,23 +40,46 @@ namespace VehicleFramework
 		{
 			Player.main.rigidBody.velocity = Vector3.zero;
 			Player.main.rigidBody.angularVelocity = Vector3.zero;
-			if (mv.IsPlayerInside())
+			if ((mv as Submarine != null))
 			{
-				mv.PlayerExit();
-				if (mv.transform.position.y < -3f)
+				if ((mv as Submarine).IsPlayerInside())
 				{
-					Player.main.transform.position = ExitLocation.position;
+					mv.PlayerExit();
+					if (mv.transform.position.y < -3f)
+					{
+						Player.main.transform.position = ExitLocation.position;
+					}
+					else
+					{
+						StartCoroutine(ExitToSurface());
+					}
 				}
 				else
 				{
-					StartCoroutine(ExitToSurface());
+					Player.main.transform.position = EntryLocation.position;
+					(mv as Submarine).PlayerEntry();
 				}
 			}
-			else
+			else if (mv as Submersible != null) 
 			{
-				Player.main.transform.position = EntryLocation.position;
+				Player.main.transform.position = (mv as Submersible).PilotSeats.First().SitLocation.transform.position;
+				Player.main.transform.rotation = (mv as Submersible).PilotSeats.First().SitLocation.transform.rotation;
+				(mv as Submersible).PlayerEntry();
+			}
+			/*
+			if (mv as Walker != null)
+			{
+				Player.main.transform.position = (mv as Walker).PilotSeats.First().SitLocation.transform.position;
+				Player.main.transform.rotation = (mv as Walker).PilotSeats.First().SitLocation.transform.rotation;
 				mv.PlayerEntry();
 			}
+			if (mv as Skimmer != null)
+			{
+				Player.main.transform.position = (mv as Skimmer).PilotSeats.First().SitLocation.transform.position;
+				Player.main.transform.rotation = (mv as Skimmer).PilotSeats.First().SitLocation.transform.rotation;
+				mv.PlayerEntry();
+			}
+			*/
 		}
 
 		public IEnumerator ExitToSurface()

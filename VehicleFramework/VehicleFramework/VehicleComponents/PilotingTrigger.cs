@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -16,7 +17,10 @@ namespace VehicleFramework
             if (!mv.GetPilotingMode() && mv.IsPowered())
             {
                 // TODO multiplayer?
-                mv.thisStopPilotingLocation = exit;
+                if(mv as Submarine != null)
+                {
+                    (mv as Submarine).thisStopPilotingLocation = exit;
+                }
                 mv.BeginPiloting();
             }
         }

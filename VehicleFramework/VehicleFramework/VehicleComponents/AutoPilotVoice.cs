@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Reflection;
 using System.IO;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -74,33 +75,62 @@ namespace VehicleFramework
         public void Start()
         {
             AudioSource speakerPtr;
-            foreach (var ps in mv.PilotSeats)
+
+            speakerPtr = mv.VehicleModel.EnsureComponent<AudioSource>();
+            speakerPtr.playOnAwake = false;
+            speakerPtr.spatialBlend = 1f;
+            speakerPtr.clip = Silence;
+            speakers.Add(speakerPtr);
+
+            if (mv as Submarine != null)
             {
-                speakerPtr = ps.Seat.AddComponent<AudioSource>();
-                speakerPtr.playOnAwake = false;
-                speakerPtr.spatialBlend = 1f;
-                speakerPtr.clip = Silence;
-                speakers.Add(speakerPtr);
+                foreach (var ps in (mv as Submarine).PilotSeats)
+                {
+                    speakerPtr = ps.Seat.EnsureComponent<AudioSource>();
+                    speakerPtr.playOnAwake = false;
+                    speakerPtr.spatialBlend = 1f;
+                    speakerPtr.clip = Silence;
+                    speakers.Add(speakerPtr);
+                }
+                foreach (var ps in (mv as Submarine).Hatches)
+                {
+                    speakerPtr = ps.Hatch.EnsureComponent<AudioSource>();
+                    speakerPtr.playOnAwake = false;
+                    speakerPtr.spatialBlend = 1f;
+                    speakerPtr.clip = Silence;
+                    speakers.Add(speakerPtr);
+                }
+                foreach (var ps in (mv as Submarine).TetherSources)
+                {
+                    speakerPtr = ps.EnsureComponent<AudioSource>();
+                    speakerPtr.playOnAwake = false;
+                    speakerPtr.spatialBlend = 1f;
+                    speakerPtr.clip = Silence;
+                    speakers.Add(speakerPtr);
+                }
             }
-            foreach (var ps in mv.Hatches)
+            if (mv as Submersible != null)
             {
-                speakerPtr = ps.Hatch.AddComponent<AudioSource>();
-                speakerPtr.playOnAwake = false;
-                speakerPtr.spatialBlend = 1f;
-                speakerPtr.clip = Silence;
-                speakers.Add(speakerPtr);
-            }
-            foreach (var ps in mv.TetherSources)
-            {
-                speakerPtr = ps.AddComponent<AudioSource>();
-                speakerPtr.playOnAwake = false;
-                speakerPtr.spatialBlend = 1f;
-                speakerPtr.clip = Silence;
-                speakers.Add(speakerPtr);
+                foreach (var ps in (mv as Submersible).PilotSeats)
+                {
+                    speakerPtr = ps.Seat.EnsureComponent<AudioSource>();
+                    speakerPtr.playOnAwake = false;
+                    speakerPtr.spatialBlend = 1f;
+                    speakerPtr.clip = Silence;
+                    speakers.Add(speakerPtr);
+                }
+                foreach (var ps in (mv as Submersible).Hatches)
+                {
+                    speakerPtr = ps.Hatch.EnsureComponent<AudioSource>();
+                    speakerPtr.playOnAwake = false;
+                    speakerPtr.spatialBlend = 1f;
+                    speakerPtr.clip = Silence;
+                    speakers.Add(speakerPtr);
+                }
             }
             foreach(var sp in speakers)
             {
-                sp.gameObject.AddComponent<AudioLowPassFilter>().cutoffFrequency = 1500;
+                sp.gameObject.EnsureComponent<AudioLowPassFilter>().cutoffFrequency = 1500;
             }
 
             //StartCoroutine(GetAudioClips());
@@ -110,7 +140,7 @@ namespace VehicleFramework
         {
             foreach (var speaker in speakers)
             {
-                if (mv.IsPlayerInside())
+                if (mv.IsPlayerDry)
                 {
                     speaker.GetComponent<AudioLowPassFilter>().enabled = false;
                 }

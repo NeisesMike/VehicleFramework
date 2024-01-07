@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -33,7 +34,7 @@ namespace VehicleFramework
                 }
                 else
                 {
-                    var mv = GetComponent<ModVehicle>();
+                    var mv = GetComponent<Submarine>();
                     foreach (var tethersrc in mv.TetherSources)
                     {
                         // TODO: make this constant depend on the vehicle model somehow

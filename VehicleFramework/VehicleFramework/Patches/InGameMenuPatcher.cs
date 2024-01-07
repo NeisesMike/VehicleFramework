@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.Patches
 {
@@ -17,13 +18,22 @@ namespace VehicleFramework.Patches
 			bool isPilotingMV = false;
 			foreach(ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-				if(mv.IsPlayerPiloting())
-                {
+				if (mv as Submarine != null)
+				{
+					if ((mv as Submarine).IsPlayerPiloting())
+					{
+						isPilotingMV = true;
+						break;
+					}
+					continue;
+				}
+				if (mv.IsPlayerDry)
+				{
 					isPilotingMV = true;
 					break;
-                }
-            }
-			if(isPilotingMV)
+				}
+			}
+			if (isPilotingMV)
             {
 				__result = false;
 				return false;

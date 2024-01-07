@@ -32,7 +32,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
                     {
                         if (mvType.pt == ping.pingType)
                         {
-                            icon.sprite = mvType.ping_sprite;
+                            icon.sprite = mvType.mv.PingSprite;
                             break;
                         }
                     }

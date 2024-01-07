@@ -5,12 +5,12 @@ namespace VehicleFramework
 {
     public class FloodLightsController : MonoBehaviour, IPowerListener
 	{
-		private ModVehicle mv;
+		private VehicleTypes.Submarine mv;
         private bool isFloodLightsOn = false;
 
         public void Awake()
         {
-            mv = GetComponent<ModVehicle>();
+            mv = GetComponent<VehicleTypes.Submarine>();
         }
 
         public void EnableFloodLights()

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Reflection;
 using System.IO;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.Engines
 {
@@ -213,27 +214,42 @@ namespace VehicleFramework.Engines
                 EngineSource1.playOnAwake = false;
                 EngineSource1.clip = EngineWhirClip;
             }
-            EngineSource1 = mv.gameObject.AddComponent<AudioSource>();
-            EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
+            EngineSource1 = mv.gameObject.EnsureComponent<AudioSource>();
+            EngineSource2 = mv.gameObject.EnsureComponent<AudioSource>();
             EngineSource1.loop = true;
             StartCoroutine(GrabEngineSounds());
 
         }
         public virtual void FixedUpdate()
         {
+            Vector3 DoMoveAction()
+            {
+                // Get Input Vector
+                Vector3 innerMoveDirection = GameInput.GetMoveDirection();
+                // Apply controls to the vehicle state
+                ApplyPlayerControls(innerMoveDirection);
+                // Drain power based on Input Vector (and modifiers)
+                // TODO: DrainPower with ApplyPlayerControls...
+                // or would it be better with ExecutePhysicsMove...?
+                DrainPower(innerMoveDirection);
+                return innerMoveDirection;
+            }
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater())
             {
-                if (mv.CanPilot() && mv.IsPlayerPiloting())
+                if (mv.CanPilot() && mv.IsPlayerDry)
                 {
-                    // Get Input Vector
-                    moveDirection = GameInput.GetMoveDirection();
-                    // Apply controls to the vehicle state
-                    ApplyPlayerControls(moveDirection);
-                    // Drain power based on Input Vector (and modifiers)
-                    // TODO: DrainPower with ApplyPlayerControls...
-                    // or would it be better with ExecutePhysicsMove...?
-                    DrainPower(moveDirection);
+                    if (mv as Submarine != null)
+                    {
+                        if((mv as Submarine).IsPlayerPiloting())
+                        {
+                            moveDirection = DoMoveAction();
+                        }
+                    }
+                    else
+                    {
+                        moveDirection = DoMoveAction();
+                    }
                 }
                 if (moveDirection == Vector3.zero)
                 {

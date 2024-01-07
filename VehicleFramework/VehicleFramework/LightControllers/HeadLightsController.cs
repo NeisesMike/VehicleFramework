@@ -19,7 +19,11 @@ namespace VehicleFramework
 
         public virtual void Update()
         {
-            if (mv.IsPlayerPiloting() && Player.main.GetRightHandDown() && !Player.main.GetPDA().isInUse)
+            if(mv as VehicleTypes.Submarine != null && !(mv as VehicleTypes.Submarine).IsPlayerPiloting())
+            {
+                return;
+            }
+            if (mv.IsPlayerDry && Player.main.GetRightHandDown() && !Player.main.GetPDA().isInUse)
             {
                 ToggleHeadlights();
             }
@@ -66,7 +70,14 @@ namespace VehicleFramework
         {
             foreach (GameObject light in mv.volumetricLights)
             {
-                light.SetActive(!mv.IsPlayerInside() && enabled && mv.IsPowered());
+                bool result = enabled;
+                result &= mv.IsPowered();
+                if (mv as VehicleTypes.Submarine != null)
+                {
+                    result &= !(mv as VehicleTypes.Submarine).IsPlayerInside();
+                }
+                result &= !mv.IsPlayerDry;
+                light.SetActive(result);
             }
         }
         public void SetHeadLightsActive(bool enabled)

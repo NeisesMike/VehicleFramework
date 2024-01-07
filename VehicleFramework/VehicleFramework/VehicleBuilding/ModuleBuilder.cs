@@ -80,9 +80,13 @@ namespace VehicleFramework
                 int max_num_modules = 0;
                 foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
-                    if (max_num_modules < ve.modules)
+                    if(ve.mv is null)
                     {
-                        max_num_modules = ve.modules;
+                        continue;
+                    }
+                    if (max_num_modules < ve.mv.NumModules)
+                    {
+                        max_num_modules = ve.mv.NumModules;
                     }
                 }
                 for (int i = 0; i < max_num_modules; i++)
@@ -98,9 +102,13 @@ namespace VehicleFramework
                 int max_num_modules = 0;
                 foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
-                    if (max_num_modules < ve.modules)
+                    if (ve.mv is null)
                     {
-                        max_num_modules = ve.modules;
+                        continue;
+                    }
+                    if (max_num_modules < ve.mv.NumModules)
+                    {
+                        max_num_modules = ve.mv.NumModules;
                     }
                 }
                 for (int i = 0; i < max_num_modules; i++)

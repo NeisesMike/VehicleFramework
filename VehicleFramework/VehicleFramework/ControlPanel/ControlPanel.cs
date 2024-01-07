@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
     public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener, ILightsStatusListener, IAutoPilotListener
     {
-        public ModVehicle mv;
+        public Submarine mv;
 
         private GameObject buttonHeadLights;
         private GameObject buttonNavLights;

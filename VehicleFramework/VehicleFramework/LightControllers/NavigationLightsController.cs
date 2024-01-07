@@ -12,7 +12,7 @@ namespace VehicleFramework
     {
         private bool isNavLightsEnabled = true;
 
-        private ModVehicle mv;
+        private VehicleTypes.Submarine mv;
         private List<Material> positionMats = new List<Material>();
         private List<Material> portMats = new List<Material>();
         private List<Material> starboardMats = new List<Material>();
@@ -126,7 +126,7 @@ namespace VehicleFramework
         public void Start()
         {
             rb = GetComponent<Rigidbody>();
-            mv = GetComponent<ModVehicle>();
+            mv = GetComponent<VehicleTypes.Submarine>();
             if (mv.NavigationPositionLights != null)
             {
                 foreach (GameObject lightObj in mv.NavigationPositionLights)

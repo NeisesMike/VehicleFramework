@@ -19,7 +19,7 @@ namespace VehicleFramework
         [HarmonyPatch("HandleUnderWaterState")]
         public static bool HandleUnderWaterStatePrefix(PlayerController __instance)
         {
-            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+            VehicleTypes.Submarine mv = Player.main.GetVehicle() as VehicleTypes.Submarine;
             if (mv != null && !mv.IsPlayerPiloting())
             {
                 __instance.inVehicle = true;

@@ -53,5 +53,20 @@ namespace VehicleFramework.Patches.LeviathanPatches
 				}
 			}
         }
-    }
+	}
+
+	[HarmonyPatch(typeof(ReaperLeviathan))]
+	class ReaperPatcher
+	{
+		[HarmonyPostfix]
+		[HarmonyPatch("Update")]
+		public static void UpdatePostfix(ReaperLeviathan __instance)
+		{
+			if ((__instance.holdingVehicle as ModVehicle) != null)
+			{
+				Vector3 diff = (__instance.holdingVehicle as ModVehicle).LeviathanGrabPoint.transform.position - (__instance.holdingVehicle as ModVehicle).transform.position;
+				__instance.holdingVehicle.transform.position -= diff;
+			}
+		}
+	}
 }

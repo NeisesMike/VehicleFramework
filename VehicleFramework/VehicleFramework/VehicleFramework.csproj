@@ -121,6 +121,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\VehicleRegistrar.cs" />
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\StealthModulePatcher.cs" />
@@ -139,19 +140,24 @@
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
+    <Compile Include="VehicleTypes\Drone.cs" />
+    <Compile Include="VehicleTypes\Skimmer.cs" />
+    <Compile Include="VehicleTypes\Submarine.cs" />
+    <Compile Include="VehicleTypes\Submersible.cs" />
     <Compile Include="UpgradeModules\PassiveModule.cs" />
     <Compile Include="UpgradeModules\ModulePrepper.cs" />
     <Compile Include="UpgradeModules\SelectableChargeableModule.cs" />
     <Compile Include="UpgradeModules\SelectableModule.cs" />
     <Compile Include="UpgradeModules\ToggleModule.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
+    <Compile Include="Admin\VehicleBlueprint.cs" />
     <Compile Include="VehicleBuilding\VehiclePrepper.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
     <Compile Include="Interfaces\IPowerListener.cs" />
     <Compile Include="Interfaces\ILightsStatusListener.cs" />
-    <Compile Include="BuildBotManager.cs" />
+    <Compile Include="VehicleBuilding\BuildBotManager.cs" />
     <Compile Include="Patches\CompatibilityPatches\MapModPatcher.cs" />
     <Compile Include="Patches\VFXConstructingPatch.cs" />
     <Compile Include="ControlPanel\ControlPanel.cs" />
@@ -167,7 +173,7 @@
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
-    <Compile Include="SaveManager.cs" />
+    <Compile Include="Admin\SaveManager.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
     <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
     <Compile Include="Engines\Cricket.cs" />
@@ -183,7 +189,7 @@
     <Compile Include="VehicleBuilding\ModuleBuilder.cs" />
     <Compile Include="StorageComponents\uGUI_VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
-    <Compile Include="VehicleComponents\ModVehicle.cs" />
+    <Compile Include="VehicleTypes\ModVehicle.cs" />
     <Compile Include="VehicleComponents\PilotingTrigger.cs" />
     <Compile Include="Patches\EquipmentPatcher.cs" />
     <Compile Include="Patches\LiveMixinPatcher.cs" />
@@ -196,8 +202,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VehicleBuilding\VehicleBuilder.cs" />
     <Compile Include="Interfaces\IVehicleStatusListener.cs" />
-    <Compile Include="VehicleManager.cs" />
+    <Compile Include="Admin\VehicleManager.cs" />
     <Compile Include="VehicleBuilding\VehicleParts.cs" />
+    <Compile Include="VehicleTypes\Walker.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

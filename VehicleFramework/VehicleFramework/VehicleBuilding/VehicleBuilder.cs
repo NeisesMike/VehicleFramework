@@ -18,34 +18,36 @@ using Nautilus.Handlers;
 using Nautilus.Utility;
 
 using VehicleFramework.Engines;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
     public struct VehicleEntry
     {
-        public VehicleEntry(GameObject prefabObj, ModVehicleEngine in_engine, Dictionary<TechType, int> in_recipe, int id, string desc, string in_encyEntry, PingType pt_in, Atlas.Sprite sprite, int modules_in, int arms_in)
+        public VehicleEntry(GameObject inputGO, int id, PingType pt_in, Atlas.Sprite sprite, TechType tt)
         {
-            prefab = prefabObj;
-            engine = in_engine;
-            recipe = in_recipe;
+            mv = null;
             unique_id = id;
-            description = desc;
-            encyEntry = in_encyEntry;
             pt = pt_in;
+            name = inputGO.name;
+            techType = tt;
             ping_sprite = sprite;
-            modules = modules_in;
-            arms = arms_in;
         }
-        public GameObject prefab;
-        public ModVehicleEngine engine;
-        public Dictionary<TechType, int> recipe;
+        public VehicleEntry(ModVehicle inputMv, int id, PingType pt_in, Atlas.Sprite sprite)
+        {
+            mv = inputMv;
+            unique_id = id;
+            pt = pt_in;
+            name = mv.name;
+            techType = (TechType)0;
+            ping_sprite = sprite;
+        }
+        public ModVehicle mv;
+        public string name;
         public int unique_id;
-        public string description;
-        public string encyEntry;
         public PingType pt;
         public Atlas.Sprite ping_sprite;
-        public int modules;
-        public int arms;
+        public TechType techType;
     }
 
     public static class SeamothHelper
@@ -99,30 +101,29 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static IEnumerator Prefabricate(VehicleMemory mem, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pingType, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth, int mass)
+        public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType)
         {
-            Logger.Log("Prefabricating the " + mem.mv.gameObject.name);
-            mem.mv.numVehicleModules = modules;
-            mem.mv.hasArms = arms > 0;
+            Logger.Log("Prefabricating the " + mv.gameObject.name);
+            mv.numVehicleModules = mv.HasArms ? mv.NumModules + 2 : mv.NumModules;
 
             // wait for a seamoth to be ready
             yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
 
-            bool instrumentSuccessful = Instrument(ref mem.mv, engine, pingType, baseCrushDepth, maxHealth, mass);
+            bool instrumentSuccessful = Instrument(mv, pingType);
             if(!instrumentSuccessful)
             {
-                Logger.Error("Failed to instrument the vehicle: " + mem.mv.gameObject.name);
+                Logger.Error("Failed to instrument the vehicle: " + mv.gameObject.name);
                 yield break;
             }
 
 
-            prefabs.Add(mem.mv);
-            Atlas.Sprite usedPingSprite = sprite;
-            if(sprite is null)
+            prefabs.Add(mv);
+            Atlas.Sprite usedPingSprite = mv.PingSprite;
+            if(usedPingSprite is null)
             {
                 usedPingSprite = VehicleManager.defaultPingSprite;
             }
-            VehicleEntry ve = new VehicleEntry(mem.mv.gameObject, engine, recipe, numVehicleTypes, mem.mv.GetDescription(), mem.mv.GetEncyEntry(), pingType, usedPingSprite, modules, arms);
+            VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, usedPingSprite);
             VehicleManager.vehicleTypes.Add(ve);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
@@ -130,7 +131,99 @@ namespace VehicleFramework
         }
 
         #region setup_funcs
-        public static bool SetupPrefabObjects(ref ModVehicle mv)
+        public static bool SetupObjects(ModVehicle mv)
+        {
+            int iter = 0;
+            try
+            {
+                foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
+                {
+                    vs.Container.SetActive(false);
+
+                    var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
+                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                    cont.storageLabel = "Vehicle Storage " + iter.ToString();
+                    cont.height = vs.Height;
+                    cont.width = vs.Width;
+
+                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                    var inp = vs.Container.EnsureComponent<InnateStorageInput>();
+                    inp.mv = mv;
+                    inp.slotID = iter;
+                    iter++;
+                    inp.model = vs.Container;
+                    if(vs.Container.GetComponentInChildren<Collider>() is null)
+                    {
+                        inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                    }
+                    inp.openSound = storageOpenSound;
+                    inp.closeSound = storageCloseSound;
+                    vs.Container.SetActive(true);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Innate Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            iter = 0;
+            try
+            {
+                foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
+                {
+                    vs.Container.SetActive(false);
+
+                    var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
+                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                    cont.storageLabel = "Modular Storage " + iter.ToString();
+                    cont.height = vs.Height;
+                    cont.width = vs.Width;
+
+                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                    var inp = vs.Container.EnsureComponent<ModularStorageInput>();
+                    inp.mv = mv;
+                    inp.slotID = iter;
+                    iter++;
+                    inp.model = vs.Container;
+                    if (vs.Container.GetComponentInChildren<Collider>() is null)
+                    {
+                        inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                    }
+                    inp.openSound = storageOpenSound;
+                    inp.closeSound = storageCloseSound;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Modular Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            try
+            {
+                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                {
+                    VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
+                    vuci.flap = vu.Flap.transform;
+                    vuci.anglesOpened = vu.AnglesOpened;
+                    vuci.anglesClosed = vu.AnglesClosed;
+                    mv.upgradesInput = vuci;
+                    var up = vu.Interface.EnsureComponent<UpgradeProxy>();
+                    up.proxies = vu.ModuleProxies;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Upgrades Interface. Check VehicleUpgrades.Interface and .Flap");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            return true;
+        }
+        public static bool SetupObjects(Submarine mv)
         {
             int iter = 0;
             try
@@ -166,89 +259,7 @@ namespace VehicleFramework
                 Logger.Error(e.ToString());
                 return false;
             }
-            try
-            {
-                foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
-                {
-                    vs.Container.SetActive(false);
-
-                    var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
-                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                    cont.storageLabel = "Vehicle Storage " + iter.ToString();
-                    cont.height = vs.Height;
-                    cont.width = vs.Width;
-
-                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                    var inp = vs.Container.EnsureComponent<InnateStorageInput>();
-                    inp.mv = mv;
-                    inp.slotID = iter;
-                    iter++;
-                    inp.model = vs.Container;
-                    inp.collider = vs.Container.EnsureComponent<BoxCollider>();
-                    inp.openSound = storageOpenSound;
-                    inp.closeSound = storageCloseSound;
-                    vs.Container.SetActive(true);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the Innate Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
-                Logger.Error(e.ToString());
-                return false;
-            }
             iter = 0;
-            try
-            {
-                foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
-                {
-                    vs.Container.SetActive(false);
-
-                    /*
-                    var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
-                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                    cont.storageLabel = "Modular Storage " + iter.ToString();
-                    cont.height = vs.Height;
-                    cont.width = vs.Width;
-                    */
-
-                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                    var inp = vs.Container.EnsureComponent<ModularStorageInput>();
-                    inp.mv = mv;
-                    inp.slotID = iter;
-                    iter++;
-                    inp.model = vs.Container;
-                    inp.collider = vs.Container.EnsureComponent<BoxCollider>();
-                    inp.openSound = storageOpenSound;
-                    inp.closeSound = storageCloseSound;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the Modular Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
-                Logger.Error(e.ToString());
-                return false;
-            }
-            try
-            {
-                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
-                {
-                    VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                    vuci.flap = vu.Flap.transform;
-                    vuci.anglesOpened = vu.AnglesOpened;
-                    vuci.anglesClosed = vu.AnglesClosed;
-                    mv.upgradesInput = vuci;
-                    var up = vu.Interface.EnsureComponent<UpgradeProxy>();
-                    up.proxies = vu.ModuleProxies;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the Upgrades Interface. Check VehicleUpgrades.Interface and .Flap");
-                Logger.Error(e.ToString());
-                return false;
-            }
             // Configure the Control Panel
             try
             {
@@ -269,7 +280,47 @@ namespace VehicleFramework
             }
             return true;
         }
-        public static void SetupEnergyInterface(ref ModVehicle mv)
+        public static bool SetupObjects(Submersible mv)
+        {
+            int iter = 0;
+            try
+            {
+                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
+                {
+                    mv.playerPosition = ps.SitLocation;
+                    PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
+                    pt.mv = mv;
+                    pt.exit = ps.ExitLocation;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the PilotSeats. Check VehiclePilotSeat.Seat");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            try
+            {
+                foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
+                {
+                    var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
+                    hatch.mv = mv;
+                    hatch.EntryLocation = vhs.EntryLocation;
+                    hatch.ExitLocation = vhs.ExitLocation;
+                    hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("There was a problem setting up the Hatches. Check VehicleHatchStruct.Hatch");
+                Logger.Error(e.ToString());
+                return false;
+            }
+            iter = 0;
+            // Configure the Control Panel
+            return true;
+        }
+        public static void SetupEnergyInterface(ModVehicle mv)
         {
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
@@ -299,7 +350,7 @@ namespace VehicleFramework
             eInterf.sources = energyMixins.ToArray();
             mv.energyInterface = eInterf;
         }
-        public static void SetupAIEnergyInterface(ref ModVehicle mv)
+        public static void SetupAIEnergyInterface(ModVehicle mv)
         {
             if (mv.BackupBatteries == null || mv.BackupBatteries.Count == 0)
             {
@@ -335,7 +386,7 @@ namespace VehicleFramework
             mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();
             mv.AIEnergyInterface.sources = energyMixins.ToArray();
         }
-        public static void SetupLightSounds(ref ModVehicle mv)
+        public static void SetupLightSounds(ModVehicle mv)
         {
             FMOD_StudioEventEmitter[] fmods = SeamothHelper.Seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
@@ -354,7 +405,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public static void SetupLights(ref ModVehicle mv)
+        public static void SetupHeadLights(ModVehicle mv)
         {
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
             Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
@@ -406,6 +457,13 @@ namespace VehicleFramework
                     RLS.hostLight = thisLight;
                 }
             }
+        }
+        public static void SetupFloodLights(Submarine mv)
+        {
+            GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
+            Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
+            MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
+            MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
             if (mv.FloodLights != null)
             {
                 foreach (VehicleParts.VehicleFloodLight pc in mv.FloodLights)
@@ -426,7 +484,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public static void SetupLiveMixin(ref ModVehicle mv, int maxHealth)
+        public static void SetupLiveMixin(ModVehicle mv)
         {
             var liveMixin = mv.gameObject.EnsureComponent<LiveMixin>();
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
@@ -448,12 +506,12 @@ namespace VehicleFramework
              * Abyss: 1250
              * Cyclops: 1500
              */
-            lmData.maxHealth = maxHealth;
-            liveMixin.health = maxHealth;
+            lmData.maxHealth = mv.MaxHealth;
+            liveMixin.health = mv.MaxHealth;
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
         }
-        public static void SetupRigidbody(ref ModVehicle mv, int mass)
+        public static void SetupRigidbody(ModVehicle mv)
         {
             var rb = mv.gameObject.EnsureComponent<Rigidbody>();
             /* 
@@ -465,20 +523,25 @@ namespace VehicleFramework
              * Prawn: 1250
              * Seamoth: 800
              */
-            rb.mass = mass;
+            rb.mass = mv.Mass;
             rb.drag = 10f;
             rb.angularDrag = 10f;
             rb.useGravity = false;
             mv.useRigidbody = rb;
         }
-        public static void SetupEngine(ref ModVehicle mv, ModVehicleEngine engineType)
+        public static void SetupEngine(Submarine mv)
         {
             // Add the engine (physics control)
-            mv.engine = mv.gameObject.AddComponent(engineType.GetType()) as ModVehicleEngine;
-            mv.engine.mv = mv;
-            mv.engine.rb = mv.useRigidbody;
+            mv.Engine.mv = mv;
+            mv.Engine.rb = mv.useRigidbody;
         }
-        public static void SetupWorldForces(ref ModVehicle mv)
+        public static void SetupEngine(Submersible mv)
+        {
+            // Add the engine (physics control)
+            mv.Engine.mv = mv;
+            mv.Engine.rb = mv.useRigidbody;
+        }
+        public static void SetupWorldForces(ModVehicle mv)
         {
             mv.worldForces = CopyComponent<WorldForces>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
             mv.worldForces.useRigidbody = mv.useRigidbody;
@@ -486,12 +549,12 @@ namespace VehicleFramework
             mv.worldForces.aboveWaterGravity = 9.8f;
             mv.worldForces.waterDepth = 0f;
         }
-        public static void SetupLargeWorldEntity(ref ModVehicle mv)
+        public static void SetupLargeWorldEntity(ModVehicle mv)
         {
             // Ensure vehicle remains in the world always
             mv.gameObject.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
         }
-        public static void SetupHudPing(ref ModVehicle mv, PingType pingType)
+        public static void SetupHudPing(ModVehicle mv, PingType pingType)
         {
             mv.pingInstance = mv.gameObject.EnsureComponent<PingInstance>();
             mv.pingInstance.origin = mv.transform;
@@ -499,7 +562,7 @@ namespace VehicleFramework
             mv.pingInstance.SetLabel("Vehicle");
             VehicleManager.mvPings.Add(mv.pingInstance);
         }
-        public static void SetupVehicleConfig(ref ModVehicle mv)
+        public static void SetupVehicleConfig(ModVehicle mv)
         {
             // add various vehicle things
             mv.stabilizeRoll = true;
@@ -510,7 +573,7 @@ namespace VehicleFramework
             // TODO
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
-        public static void SetupCrushDamage(ref ModVehicle mv, int baseCrushDepth, int maxHealth, int secondsCanLiveAtCrushDepth, int crushPeriod)
+        public static void SetupCrushDamage(ModVehicle mv, int secondsCanLiveAtCrushDepth, int crushPeriod)
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
@@ -529,15 +592,15 @@ namespace VehicleFramework
              */
             mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>();
             mv.crushDamage.soundOnDamage = ce;
-            mv.crushDamage.kBaseCrushDepth = baseCrushDepth;
-            mv.crushDamage.damagePerCrush = ((float)maxHealth)/(secondsCanLiveAtCrushDepth/ crushPeriod);
+            mv.crushDamage.kBaseCrushDepth = mv.BaseCrushDepth;
+            mv.crushDamage.damagePerCrush = ((float)mv.MaxHealth) /(secondsCanLiveAtCrushDepth/ crushPeriod);
             mv.crushDamage.crushPeriod = crushPeriod;
             mv.crushDamage.vehicle = mv;
             mv.crushDamage.liveMixin = mv.liveMixin;
             // TODO: this is of type VoiceNotification
             mv.crushDamage.crushDepthUpdate = null;
         }
-        public static void SetupWaterClipping(ref ModVehicle mv)
+        public static void SetupWaterClipping(ModVehicle mv)
         {
             // Enable water clipping for proper interaction with the surface of the ocean
             WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
@@ -551,7 +614,7 @@ namespace VehicleFramework
                 waterClip.gameObject.layer = seamothWCP.gameObject.layer;
             }
         }
-        public static void SetupSubName(ref ModVehicle mv)
+        public static void SetupSubName(ModVehicle mv)
         {
             // TODO. What's the point of this?
             var subname = mv.gameObject.EnsureComponent<SubName>();
@@ -560,7 +623,7 @@ namespace VehicleFramework
             subname.hullName = null;
             mv.subName = subname;
         }
-        public static void SetupCollisionSound(ref ModVehicle mv)
+        public static void SetupCollisionSound(ModVehicle mv)
         {
             var colsound = mv.gameObject.EnsureComponent<CollisionSound>();
             var seamothColSound = SeamothHelper.Seamoth.GetComponent<CollisionSound>();
@@ -569,16 +632,16 @@ namespace VehicleFramework
             colsound.hitSoundMedium = seamothColSound.hitSoundMedium;
             colsound.hitSoundFast = seamothColSound.hitSoundFast;
         }
-        public static void SetupOutOfBoundsWarp(ref ModVehicle mv)
+        public static void SetupOutOfBoundsWarp(ModVehicle mv)
         {
             mv.gameObject.EnsureComponent<OutOfBoundsWarp>();
         }
-        public static void SetupConstructionObstacle(ref ModVehicle mv)
+        public static void SetupConstructionObstacle(ModVehicle mv)
         {
             var co = mv.gameObject.EnsureComponent<ConstructionObstacle>();
             co.reason = mv.name + " is in the way.";
         }
-        public static void SetupSoundOnDamage(ref ModVehicle mv)
+        public static void SetupSoundOnDamage(ModVehicle mv)
         {
             // TODO: we could have unique sounds for each damage type
             // TODO: this might not work, might need to put it in a VehicleStatusListener
@@ -586,7 +649,7 @@ namespace VehicleFramework
             sod.damageType = DamageType.Normal;
             sod.sound = SeamothHelper.Seamoth.GetComponent<SoundOnDamage>().sound;
         }
-        public static void SetupDealDamageOnImpact(ref ModVehicle mv)
+        public static void SetupDealDamageOnImpact(ModVehicle mv)
         {
             var ddoi = mv.gameObject.EnsureComponent<DealDamageOnImpact>();
             // NEWNEW
@@ -605,7 +668,7 @@ namespace VehicleFramework
             ddoi.prevPosition = Vector3.zero;
             ddoi.allowDamageToPlayer = false;
         }
-        public static void SetupDamageComponents(ref ModVehicle mv)
+        public static void SetupDamageComponents(ModVehicle mv)
         {
             // add vfxvehicledamages... or not
 
@@ -634,7 +697,7 @@ namespace VehicleFramework
             cr.addedComponents.Append(et as Component);
 
         }
-        public static void SetupRespawnPoint(ref ModVehicle mv)
+        public static void SetupRespawnPoint(Submarine mv)
         {
             if (mv.TetherSources.Count > 0)
             {
@@ -645,44 +708,62 @@ namespace VehicleFramework
         }
 
         #endregion
-        public static bool Instrument(ref ModVehicle mv, ModVehicleEngine engine, PingType pingType, int baseCrushDepth, int maxHealth, int mass)
+        public static bool Instrument(ModVehicle mv, PingType pingType)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
             
-            if(!SetupPrefabObjects(ref mv))
+            if(!SetupObjects(mv as ModVehicle))
             {
-                Logger.Error("Failed to SetupPrefabObjects.");
+                Logger.Error("Failed to SetupObjects for ModVehicle.");
+                return false;
+            }
+            if ((mv as Submarine != null) && !SetupObjects(mv as Submarine))
+            {
+                Logger.Error("Failed to SetupObjects for Submarine.");
+                return false;
+            }
+            if ((mv as Submersible != null) && !SetupObjects(mv as Submersible))
+            {
+                Logger.Error("Failed to SetupObjects for Submersible.");
                 return false;
             }
             mv.enabled = false;
-            SetupEnergyInterface(ref mv);
-            SetupAIEnergyInterface(ref mv);
+            SetupEnergyInterface(mv);
+            SetupAIEnergyInterface(mv);
             mv.enabled = true;
-            SetupLights(ref mv);
-            SetupLightSounds(ref mv);
-            SetupLiveMixin(ref mv, maxHealth);
-            SetupRigidbody(ref mv, mass);
-            SetupEngine(ref mv, engine);
-            SetupWorldForces(ref mv);
-            SetupLargeWorldEntity(ref mv);
-            SetupHudPing(ref mv, pingType);
-            SetupVehicleConfig(ref mv);
-            SetupCrushDamage(ref mv, baseCrushDepth, maxHealth, 15, 1);
-            SetupWaterClipping(ref mv);
-            SetupCollisionSound(ref mv);
-            SetupOutOfBoundsWarp(ref mv);
-            SetupConstructionObstacle(ref mv);
-            SetupSoundOnDamage(ref mv);
-            SetupDealDamageOnImpact(ref mv);
-            SetupDamageComponents(ref mv);
-            SetupRespawnPoint(ref mv);
+            SetupHeadLights(mv);
+            SetupLightSounds(mv);
+            SetupLiveMixin(mv);
+            SetupRigidbody(mv);
+            SetupWorldForces(mv);
+            SetupLargeWorldEntity(mv);
+            SetupHudPing(mv, pingType);
+            SetupVehicleConfig(mv);
+            SetupCrushDamage(mv, 15, 1);
+            SetupWaterClipping(mv);
+            SetupCollisionSound(mv);
+            SetupOutOfBoundsWarp(mv);
+            SetupConstructionObstacle(mv);
+            SetupSoundOnDamage(mv);
+            SetupDealDamageOnImpact(mv);
+            SetupDamageComponents(mv);
             mv.collisionModel = mv.CollisionModel;
 
-            ApplySkyAppliers(ref mv);
+            if (mv as Submarine != null)
+            {
+                SetupEngine(mv as Submarine);
+                SetupFloodLights(mv as Submarine);
+                SetupRespawnPoint(mv as Submarine);
+            }
+            if (mv as Submersible != null)
+            {
+                SetupEngine(mv as Submersible);
+            }
+            ApplySkyAppliers(mv);
 
             // ApplyShaders should happen last
-            ApplyShaders(ref mv);
+            ApplyShaders(mv);
 
             #region todo
             /*
@@ -700,7 +781,7 @@ namespace VehicleFramework
             return true;
         }
 
-        public static void ApplyShaders(ref ModVehicle mv)
+        public static void ApplyShaders(ModVehicle mv)
         {
             // Add the marmoset shader to all renderers
             Shader marmosetShader = Shader.Find("MarmosetUBER");
@@ -711,7 +792,7 @@ namespace VehicleFramework
                 {
                     continue;
                 }
-                if (renderer.gameObject.name.Contains("Canopy"))
+                if(mv.CanopyWindows.Contains(renderer.gameObject))
                 {
                     // TODO: find a way to add transparency
                     // ZWrite set to 1 (a boolean value) makes the canopy opaque.
@@ -752,7 +833,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public static void ApplySkyAppliers(ref ModVehicle mv)
+        public static void ApplySkyAppliers(ModVehicle mv)
         {
             var ska = mv.gameObject.EnsureComponent<SkyApplier>();
             ska.anchorSky = Skies.Auto;
@@ -787,7 +868,7 @@ namespace VehicleFramework
             {
                 if (ve.pt == inputType)
                 {
-                    return ve.prefab.name;
+                    return ve.name;
                 }
             }
             return PingManager.sCachedPingTypeStrings.Get(inputType);
@@ -796,7 +877,7 @@ namespace VehicleFramework
         {
             foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
             {
-                if (ve.prefab.name == name)
+                if (ve.name == name)
                 {
                     return ve.ping_sprite;
                 }

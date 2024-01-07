@@ -13,7 +13,7 @@ namespace VehicleFramework
 	{
 		private bool hasInit = false;
 
-		private ItemsContainer _container;
+		private ItemsContainer _container = null;
 		public ItemsContainer container 
 		{ 
 			get

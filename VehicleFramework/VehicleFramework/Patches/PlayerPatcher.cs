@@ -51,65 +51,93 @@ namespace VehicleFramework
              * This patch ensures we exit out of the pilot seat correctly.
              * It also controls pilot-initiated auto-leveling.
              */
-
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
-            if (mv == null)
+            void DoExitActions(ref Player.Mode mode)
             {
-                return true;
+                GameInput.ClearInput();
+                __instance.playerController.SetEnabled(true);
+                mode = Player.Mode.Normal;
+                __instance.playerModeChanged.Trigger(mode);
+                __instance.sitting = false;
+                __instance.playerController.ForceControllerSize();
+                __instance.transform.parent = null;
             }
-
-            // check if we're level by comparing pitch and roll
-            float roll = mv.transform.rotation.eulerAngles.z;
-            float rollDelta = roll >= 180 ? 360 - roll : roll;
-            float pitch = mv.transform.rotation.eulerAngles.x;
-            float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
-
-            if (rollDelta > 4f || pitchDelta > 4f)
+            VehicleTypes.Submersible mvSubmersible = __instance.GetVehicle() as VehicleTypes.Submersible;
+            VehicleTypes.Walker mvWalker = __instance.GetVehicle() as VehicleTypes.Walker;
+            VehicleTypes.Skimmer mvSkimmer = __instance.GetVehicle() as VehicleTypes.Skimmer;
+            VehicleTypes.Drone mvDrone = __instance.GetVehicle() as VehicleTypes.Drone;
+            VehicleTypes.Submarine mvSubmarine = __instance.GetVehicle() as VehicleTypes.Submarine;
+            if (mvSubmersible != null)
             {
-                BasicText message;
-                if(HUDBuilder.IsVR)
-                {
-                    message = new BasicText(250, 250);
-                }
-                else
-                {
-                    message = new BasicText(500, 0);
-                }
-                message.ShowMessage(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3);
+                // exit locked mode
+                DoExitActions(ref ___mode);
+                mvSubmersible.StopPiloting();
                 return false;
             }
-            else if (mv.useRigidbody.velocity.magnitude > 2f)
+            if (mvWalker != null)
             {
-                BasicText message;
-                if (HUDBuilder.IsVR)
+                DoExitActions(ref ___mode);
+                mvWalker.StopPiloting();
+                return false;
+            }
+            if (mvSkimmer != null)
+            {
+                DoExitActions(ref ___mode);
+                mvSkimmer.StopPiloting();
+                return false;
+            }
+            if (mvDrone != null)
+            {
+                DoExitActions(ref ___mode);
+                mvDrone.StopPiloting();
+                return false;
+            }
+            if (mvSubmarine != null)
+            {
+                // check if we're level by comparing pitch and roll
+                float roll = mvSubmarine.transform.rotation.eulerAngles.z;
+                float rollDelta = roll >= 180 ? 360 - roll : roll;
+                float pitch = mvSubmarine.transform.rotation.eulerAngles.x;
+                float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
+
+                if (rollDelta > 4f || pitchDelta > 4f)
                 {
-                    message = new BasicText(250, 250);
+                    BasicText message;
+                    if (HUDBuilder.IsVR)
+                    {
+                        message = new BasicText(250, 250);
+                    }
+                    else
+                    {
+                        message = new BasicText(500, 0);
+                    }
+                    message.ShowMessage(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3);
+                    return false;
                 }
-                else
+                else if (mvSubmarine.useRigidbody.velocity.magnitude > 2f)
                 {
-                    message = new BasicText(500, 0);
+                    BasicText message;
+                    if (HUDBuilder.IsVR)
+                    {
+                        message = new BasicText(250, 250);
+                    }
+                    else
+                    {
+                        message = new BasicText(500, 0);
+                    }
+                    message.ShowMessage(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3);
+                    return false;
                 }
-                message.ShowMessage(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3);
+
+                // teleport the player to a walking position, just behind the chair
+                Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
+
+                DoExitActions(ref ___mode);
+                mvSubmarine.StopPiloting();
                 return false;
             }
 
-            // exit locked mode
-            GameInput.ClearInput();
+            return true;
 
-            // teleport the player to a walking position, just behind the chair
-            Player.main.transform.position = mv.PilotSeats[0].Seat.transform.position - mv.PilotSeats[0].Seat.transform.forward * 1 + mv.PilotSeats[0].Seat.transform.up * 1f;
-
-            __instance.playerController.SetEnabled(true);
-            ___mode = Player.Mode.Normal;
-            __instance.playerModeChanged.Trigger(___mode);
-            __instance.sitting = false;
-            __instance.playerController.ForceControllerSize();
-
-            __instance.transform.parent = null;
-
-            mv.StopPiloting();
-
-            return false;
         }
         [HarmonyPrefix]
         [HarmonyPatch("GetDepthClass")]
@@ -121,7 +149,7 @@ namespace VehicleFramework
              * "Passing 400 meters," that sort of thing.
              * I'm not sure this patch is strictly necessary.
              */
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+            VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
             if (mv != null && !mv.IsPlayerPiloting())
             {
                 //var crushDamage = __instance.gameObject.GetComponentInParent<CrushDamage>();
@@ -137,8 +165,8 @@ namespace VehicleFramework
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         public static void UpdatePostfix(Player __instance)
-        {  
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+        {
+            VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
             if (mv == null)
             {
                 return;
@@ -158,7 +186,7 @@ namespace VehicleFramework
         [HarmonyPatch("UpdateIsUnderwater")]
         public static bool UpdateIsUnderwaterPrefix(Player __instance)
         {
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+            VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
             if (mv != null)
             {
                 // declare we aren't underwater,
@@ -174,7 +202,7 @@ namespace VehicleFramework
         [HarmonyPatch("UpdateMotorMode")]
         public static bool UpdateMotorModePrefix(Player __instance)
         {
-            ModVehicle mv = __instance.GetVehicle() as ModVehicle;
+            VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
             if (mv != null && !mv.IsPlayerPiloting())
             {
                 // ensure: if we're in a modvehicle and we're not piloting, then we're walking.
