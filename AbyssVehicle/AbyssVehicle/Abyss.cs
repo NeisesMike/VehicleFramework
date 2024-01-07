@@ -11,10 +11,12 @@ using System.Reflection;
 
 using UnityEngine.U2D;
 using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Engines;
 
 namespace AbyssVehicle
 {
-    public class Abyss : ModVehicle
+    public class Abyss : Submarine
     {
         public static GameObject model = null;
         public static RuntimeAnimatorController animatorController = null;
@@ -60,23 +62,27 @@ namespace AbyssVehicle
                 }
             }
         }
-        public static Dictionary<TechType, int> GetRecipe()
+        public override Dictionary<TechType, int> Recipe
         {
-            Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
-            recipe.Add(TechType.PlasteelIngot, 2);
-            recipe.Add(TechType.Lubricant, 1);
-            recipe.Add(TechType.ComputerChip, 1);
-            recipe.Add(TechType.AdvancedWiringKit, 1);
-            recipe.Add(TechType.Lead, 2);
-            recipe.Add(TechType.EnameledGlass, 2);
-            return recipe;
+            get
+            {
+
+                Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
+                recipe.Add(TechType.PlasteelIngot, 2);
+                recipe.Add(TechType.Lubricant, 1);
+                recipe.Add(TechType.ComputerChip, 1);
+                recipe.Add(TechType.AdvancedWiringKit, 1);
+                recipe.Add(TechType.Lead, 2);
+                recipe.Add(TechType.EnameledGlass, 2);
+                return recipe;
+            }
         }
         public static IEnumerator Register()
         {
             GetAssets();
-            ModVehicle abyss = model.EnsureComponent<Abyss>() as ModVehicle;
+            Submarine abyss = model.EnsureComponent<Abyss>() as Submarine;
             abyss.name = "Abyss";
-            yield return UWE.CoroutineHost.StartCoroutine(VehicleManager.RegisterVehicle(abyss, new AbyssEngine(), GetRecipe(), (PingType)123, pingSprite, 8, 0, 600, 1500, 5000));
+            yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(abyss));
         }
 
         public override string vehicleDefaultName
@@ -91,38 +97,44 @@ namespace AbyssVehicle
                 return main.Get("AbyssDefaultName");
             }
         }
-        public override string GetDescription()
+        public override string Description
         {
-            return "A sturdy submarine with plenty of floorspace. With a wide flat top that can be tread upon, it's like a tiny island.";
+            get
+            {
+                return "A sturdy submarine with plenty of floorspace. With a wide flat top that can be tread upon, it's like a tiny island.";
+            }
         }
 
-        public override string GetEncyEntry()
+        public override string EncyclopediaEntry
         {
-            /*
-             * The Formula:
-             * 2 or 3 sentence blurb
-             * Features
-             * Advice
-             * Ratings
-             * Kek
-             */
-            string ency = "The Abyss is a submarine built to last. ";
-            ency += "It is meant to be large enough to build small constructions inside. \n";
-            ency += "It is quite sturdy among submersibles. \n";
-            ency += "\nIt features:\n";
-            ency += "- A system of cameras that can be used by the pilot. \n";
-            ency += "- Great external storage capacity, that cannot be further expanded with upgrades. \n";
-            ency += "- Standard headlights augmented with forward facing floodlamps. \n";
-            ency += "- A signature autopilot which can automatically level out the vessel. \n";
-            ency += "\nRatings:\n";
-            ency += "- Top Speed (each axis): 10.0m/s \n";
-            ency += "- Acceleration (each axis): 3.3m/s/s \n";
-            ency += "- Distance per Power Cell: 7km \n";
-            ency += "- Crush Depth: 600 \n";
-            ency += "- Upgrade Slots: 8 \n";
-            ency += "- Dimensions: 3.7m x 5m x 10.6m \n";
-            ency += "- Persons: 1-3\n";
-            return ency;
+            get
+            {
+                /*
+                 * The Formula:
+                 * 2 or 3 sentence blurb
+                 * Features
+                 * Advice
+                 * Ratings
+                 * Kek
+                 */
+                string ency = "The Abyss is a submarine built to last. ";
+                ency += "It is meant to be large enough to build small constructions inside. \n";
+                ency += "It is quite sturdy among submersibles. \n";
+                ency += "\nIt features:\n";
+                ency += "- A system of cameras that can be used by the pilot. \n";
+                ency += "- Great external storage capacity, that cannot be further expanded with upgrades. \n";
+                ency += "- Standard headlights augmented with forward facing floodlamps. \n";
+                ency += "- A signature autopilot which can automatically level out the vessel. \n";
+                ency += "\nRatings:\n";
+                ency += "- Top Speed (each axis): 10.0m/s \n";
+                ency += "- Acceleration (each axis): 3.3m/s/s \n";
+                ency += "- Distance per Power Cell: 7km \n";
+                ency += "- Crush Depth: 600 \n";
+                ency += "- Upgrade Slots: 8 \n";
+                ency += "- Dimensions: 3.7m x 5m x 10.6m \n";
+                ency += "- Persons: 1-3\n";
+                return ency;
+            }
         }
 
         public override GameObject VehicleModel
@@ -162,7 +174,6 @@ namespace AbyssVehicle
                 vps.LeftHandLocation = mainSeat;
                 vps.RightHandLocation = mainSeat;
                 vps.ExitLocation = mainSeat.Find("ExitLocation");
-                // TODO exit location
                 list.Add(vps);
                 return list;
             }
@@ -507,8 +518,15 @@ namespace AbyssVehicle
         {
             get
             {
-                //return transform.Find("CollisionModel").gameObject;
-                return null;
+                return transform.Find("CollisionModel").gameObject;
+            }
+        }
+
+        public override GameObject LeviathanGrabPoint
+        {
+            get
+            {
+                return PilotSeats.First().SitLocation;
             }
         }
 
@@ -526,6 +544,63 @@ namespace AbyssVehicle
             {
                 //return transform.Find("Geometry/Interior_Main/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1/RightHandPlug").gameObject;
                 return null;
+            }
+        }
+
+
+        public override ModVehicleEngine Engine
+        {
+            get
+            {
+                return gameObject.EnsureComponent<AbyssEngine>();
+            }
+        }
+
+        public override Atlas.Sprite PingSprite
+        {
+            get
+            {
+                return pingSprite;
+            }
+        }
+
+        public override int BaseCrushDepth
+        {
+            get
+            {
+                return 600;
+            }
+        }
+
+        public override int MaxHealth
+        {
+            get
+            {
+                return 1500;
+            }
+        }
+
+        public override int Mass
+        {
+            get
+            {
+                return 5000;
+            }
+        }
+
+        public override int NumModules
+        {
+            get
+            {
+                return 8;
+            }
+        }
+
+        public override bool HasArms
+        {
+            get
+            {
+                return false;
             }
         }
 
