@@ -22,6 +22,7 @@ namespace AbyssVehicle
         public static RuntimeAnimatorController animatorController = null;
         public static GameObject controlPanel = null;
         public static Atlas.Sprite pingSprite = null;
+        public static Atlas.Sprite crafterSprite = null;
         public static GameObject cameraGUI = null;
 
         public static void GetAssets()
@@ -38,11 +39,13 @@ namespace AbyssVehicle
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
             foreach (System.Object obj in arr)
             {
-                if (obj.ToString().Contains("PingSpriteAtlas"))
+                if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                    Sprite ping = thisAtlas.GetSprite("AbyssPingSprite");
+                    Sprite ping = thisAtlas.GetSprite("PingSprite"); 
                     pingSprite = new Atlas.Sprite(ping);
+                    Sprite ping2 = thisAtlas.GetSprite("CrafterSprite");
+                    crafterSprite = new Atlas.Sprite(ping2);
                 }
                 else if (obj.ToString().Contains("Vehicle"))
                 {
@@ -601,6 +604,14 @@ namespace AbyssVehicle
             get
             {
                 return false;
+            }
+        }
+
+        public override Atlas.Sprite CraftingSprite
+        {
+            get
+            {
+                return crafterSprite;
             }
         }
 

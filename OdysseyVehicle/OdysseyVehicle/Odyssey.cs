@@ -16,12 +16,13 @@ using VehicleFramework.Engines;
 
 namespace OdysseyVehicle
 {
-    public class Odyssey : Submarine
+    public class Odyssey : Submarine, ILightsStatusListener
     {
         public static GameObject model = null;
         public static RuntimeAnimatorController animatorController = null;
         public static GameObject controlPanel = null;
         public static Atlas.Sprite pingSprite = null;
+        public static Atlas.Sprite crafterSprite = null;
 
         public const int textureRadius = 2048;
 
@@ -37,10 +38,6 @@ namespace OdysseyVehicle
         public static Texture2D name_height = null;
         public static Texture2D name_normal = null;
         public static Texture2D name_metal = null;
-
-        public static Texture2D main_lightmap = null;
-        public static Texture2D steering_lightmap = null;
-        public static Texture2D storage_lightmap = null;
 
         private static GameObject generator = null;
         private static Queue<Tuple<ModVehicle, string, Color, Color>> innerNameLabelsToGenerate = null;
@@ -83,11 +80,16 @@ namespace OdysseyVehicle
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
             foreach (System.Object obj in arr)
             {
-                if (obj.ToString().Contains("PingSpriteAtlas"))
+
+                if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                    Sprite ping = thisAtlas.GetSprite("OdysseyPingSprite");
+
+                    Sprite ping = thisAtlas.GetSprite("PingSprite");
                     pingSprite = new Atlas.Sprite(ping);
+
+                    Sprite ping3 = thisAtlas.GetSprite("CrafterSprite");
+                    crafterSprite = new Atlas.Sprite(ping3);
                 }
                 else if (obj.ToString().Contains("Odyssey"))
                 {
@@ -151,18 +153,6 @@ namespace OdysseyVehicle
             name_details = new Texture2D(1024, 256, TextureFormat.ARGB32, false);
             byte[] nameDetailsBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/name_details.png"));
             name_details.LoadImage(nameDetailsBytes);
-            
-            main_lightmap = new Texture2D(1024, 256, TextureFormat.ARGB32, false);
-            byte[] mainBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/Interior_Main_Lightmap.png"));
-            main_lightmap.LoadImage(mainBytes);
-
-            steering_lightmap = new Texture2D(1024, 256, TextureFormat.ARGB32, false);
-            byte[] steeringBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/Interior_Steering_Lightmap.png"));
-            steering_lightmap.LoadImage(steeringBytes);
-
-            storage_lightmap = new Texture2D(1024, 256, TextureFormat.ARGB32, false);
-            byte[] storageBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "assets/Interior_Storage_Lightmap.png"));
-            storage_lightmap.LoadImage(storageBytes);
         }
         public override Dictionary<TechType, int> Recipe
         {
@@ -268,7 +258,7 @@ namespace OdysseyVehicle
             {
                 var list = new List<VehicleFramework.VehicleParts.VehiclePilotSeat>();
                 VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
-                Transform mainSeat = transform.Find("Geometry/Interior_Main/SteeringConsole/Seat");
+                Transform mainSeat = transform.Find("Geometry/Interior_Main_light/SteeringConsole/Seat");
                 vps.Seat = mainSeat.gameObject;
                 vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
                 vps.LeftHandLocation = mainSeat;
@@ -286,14 +276,14 @@ namespace OdysseyVehicle
                 var list = new List<VehicleFramework.VehicleParts.VehicleHatchStruct>();
 
                 VehicleFramework.VehicleParts.VehicleHatchStruct interior_vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
-                Transform intHatch = transform.Find("Geometry/Interior_Main/Hatch/InteriorHatch");
+                Transform intHatch = transform.Find("Geometry/Interior_Main_light/Hatch/InteriorHatch");
                 interior_vhs.Hatch = intHatch.gameObject;
                 interior_vhs.EntryLocation = intHatch.Find("Entry");
                 interior_vhs.ExitLocation = intHatch.Find("Exit");
                 interior_vhs.SurfaceExitLocation = intHatch.Find("SurfaceExit");
 
                 VehicleFramework.VehicleParts.VehicleHatchStruct exterior_vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
-                Transform extHatch = transform.Find("Geometry/Interior_Main/Hatch/ExteriorHatch");
+                Transform extHatch = transform.Find("Geometry/Interior_Main_light/Hatch/ExteriorHatch");
                 exterior_vhs.Hatch = extHatch.gameObject;
                 //exterior_vhs.EntryLocation = extHatch.Find("Entry");
                 //exterior_vhs.ExitLocation = extHatch.Find("Exit");
@@ -313,10 +303,10 @@ namespace OdysseyVehicle
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
 
-                Transform innate1 = transform.Find("Geometry/Interior_Main/InnateStorage/DoorModule/InateStorageBaseRooms.001/InateStorageRoot.001/Rail1.001/Rail2.001/Rail3.001/InateStorageDoor.001");
-                Transform innate2 = transform.Find("Geometry/Interior_Main/InnateStorage/DoorModule.001/InateStorageBaseRooms.002/InateStorageRoot.002/Rail1.002/Rail2.002/Rail3.002/InateStorageDoor.002");
-                Transform innate3 = transform.Find("Geometry/Interior_Main/InnateStorage/DoorModule.002/InateStorageBaseRooms.003/InateStorageRoot.003/Rail1.003/Rail2.003/Rail3.003/InateStorageDoor.003");
-                Transform innate4 = transform.Find("Geometry/Interior_Main/InnateStorage/DoorModule.003/InateStorageBaseRooms.004/InateStorageRoot.004/Rail1.004/Rail2.004/Rail3.004/InateStorageDoor.004");
+                Transform innate1 = transform.Find("Geometry/Interior_Main_light/InnateStorage/DoorModule/InateStorageBaseRooms.001/InateStorageRoot.001/Rail1.001/Rail2.001/Rail3.001/InateStorageDoor.001_light");
+                Transform innate2 = transform.Find("Geometry/Interior_Main_light/InnateStorage/DoorModule.001/InateStorageBaseRooms.002/InateStorageRoot.002/Rail1.002/Rail2.002/Rail3.002/InateStorageDoor.002_light");
+                Transform innate3 = transform.Find("Geometry/Interior_Main_light/InnateStorage/DoorModule.002/InateStorageBaseRooms.003/InateStorageRoot.003/Rail1.003/Rail2.003/Rail3.003/InateStorageDoor.003_light");
+                Transform innate4 = transform.Find("Geometry/Interior_Main_light/InnateStorage/DoorModule.003/InateStorageBaseRooms.004/InateStorageRoot.004/Rail1.004/Rail2.004/Rail3.004/InateStorageDoor.004_light");
 
                 VehicleFramework.VehicleParts.VehicleStorage IS1 = new VehicleFramework.VehicleParts.VehicleStorage();
                 IS1.Container = innate1.gameObject;
@@ -395,22 +385,22 @@ namespace OdysseyVehicle
                 var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
 
                 VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb1.BatterySlot = transform.Find("Geometry/Interior_Main/MainPower/PowerCellSlot.002").gameObject;
+                vb1.BatterySlot = transform.Find("Geometry/Interior_Main_light/MainPower/PowerCellSlot.002").gameObject;
                 vb1.BatteryProxy = transform.Find("Proxies/Battery_1_Proxy");
                 list.Add(vb1);
 
                 VehicleFramework.VehicleParts.VehicleBattery vb2 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb2.BatterySlot = transform.Find("Geometry/Interior_Main/MainPower/PowerCellSlot.003").gameObject;
+                vb2.BatterySlot = transform.Find("Geometry/Interior_Main_light/MainPower/PowerCellSlot.003").gameObject;
                 vb2.BatteryProxy = transform.Find("Proxies/Battery_2_Proxy");
                 list.Add(vb2);
 
                 VehicleFramework.VehicleParts.VehicleBattery vb3 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb3.BatterySlot = transform.Find("Geometry/Interior_Main/MainPower/PowerCellSlot").gameObject;
+                vb3.BatterySlot = transform.Find("Geometry/Interior_Main_light/MainPower/PowerCellSlot").gameObject;
                 vb3.BatteryProxy = transform.Find("Proxies/Battery_3_Proxy");
                 list.Add(vb3);
 
                 VehicleFramework.VehicleParts.VehicleBattery vb4 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb4.BatterySlot = transform.Find("Geometry/Interior_Main/MainPower/PowerCellSlot.001").gameObject;
+                vb4.BatterySlot = transform.Find("Geometry/Interior_Main_light/MainPower/PowerCellSlot.001").gameObject;
                 vb4.BatteryProxy = transform.Find("Proxies/Battery_4_Proxy");
                 list.Add(vb4);
 
@@ -614,7 +604,7 @@ namespace OdysseyVehicle
         {
             get
             {
-                //return transform.Find("Geometry/Interior_Main/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1/LeftHandPlug").gameObject;
+                //return transform.Find("Geometry/Interior_Main_light/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1/LeftHandPlug").gameObject;
                 return null;
             }
         }
@@ -622,7 +612,7 @@ namespace OdysseyVehicle
         {
             get
             {
-                //return transform.Find("Geometry/Interior_Main/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1/RightHandPlug").gameObject;
+                //return transform.Find("Geometry/Interior_Main_light/SteeringConsole/SteeringConsoleArmature/SteeringRoot 1/SteeringStem1/SteeringStem2/SteeringWheel 1/RightHandPlug").gameObject;
                 return null;
             }
         }
@@ -681,6 +671,32 @@ namespace OdysseyVehicle
             {
                 return false;
             }
+        }
+
+        public override List<Light> InteriorLights
+        {
+            get
+            {
+                List<Light> lights = new List<Light>
+                {
+                    transform.Find("wall_light1/light").GetComponent<Light>(),
+                    transform.Find("wall_light2/light").GetComponent<Light>(),
+                    transform.Find("wall_light3/light").GetComponent<Light>(),
+                    transform.Find("wall_light4/light").GetComponent<Light>()
+                };
+                return lights;
+            }
+        }
+
+        public override void SubConstructionBeginning()
+        {
+            base.SubConstructionBeginning();
+            transform.Find("Geometry/Interior_Main_light").gameObject.SetActive(false);
+        }
+        public override void SubConstructionComplete()
+        {
+            base.SubConstructionComplete();
+            transform.Find("Geometry/Interior_Main_light").gameObject.SetActive(true);
         }
 
         public override void PaintVehicleSection(string materialName, Color col)
@@ -853,51 +869,6 @@ namespace OdysseyVehicle
             OGVehicleName = "ODY-" + Mathf.RoundToInt(UnityEngine.Random.value * 10000).ToString();
             vehicleName = OGVehicleName;
             NowVehicleName = OGVehicleName;
-
-            // Apply the lightmap textures
-            foreach (Renderer thisRend in GetComponentsInChildren<Renderer>())
-            {
-                for (int j = 0; j < thisRend.materials.Length; j++)
-                {
-                    Material thisMat = thisRend.materials[j];
-                    if (thisMat.name.Contains("Odyssey_Interior_Main"))
-                    {
-                        //Logger.Log("adding main lightmap...");
-                        Material[] deseMats = thisRend.materials;
-                        deseMats[j].SetTexture("_EmissiveTex", main_lightmap);
-                        deseMats[j].EnableKeyword("MARMO_EMISSION");
-                        deseMats[j].SetFloat("_GlowStrength", 0);
-                        deseMats[j].SetFloat("_GlowStrengthNight", 0);
-                        deseMats[j].SetFloat("_EmissionLM", 0);
-                        deseMats[j].SetFloat("_EmissionLMNight", 0.1f);
-                        thisRend.materials = deseMats;
-                    }
-                    else if (thisMat.name.Contains("Odyssey_Interior_Storage"))
-                    {
-                        //Logger.Log("adding storage lightmap...");
-                        Material[] deseMats = thisRend.materials;
-                        deseMats[j].SetTexture("_EmissiveTex", storage_lightmap);
-                        deseMats[j].EnableKeyword("MARMO_EMISSION");
-                        deseMats[j].SetFloat("_GlowStrength", 0);
-                        deseMats[j].SetFloat("_GlowStrengthNight", 0);
-                        deseMats[j].SetFloat("_EmissionLM", 0);
-                        deseMats[j].SetFloat("_EmissionLMNight", 0.1f);
-                        thisRend.materials = deseMats;
-                    }
-                    else if (thisMat.name.Contains("Odyssey_Interior_Steering"))
-                    {
-                        //Logger.Log("adding steering lightmap...");  
-                        Material[] deseMats = thisRend.materials;
-                        deseMats[j].SetTexture("_EmissiveTex", steering_lightmap);
-                        deseMats[j].EnableKeyword("MARMO_EMISSION");
-                        deseMats[j].SetFloat("_GlowStrength", 0);
-                        deseMats[j].SetFloat("_GlowStrengthNight", 0);
-                        deseMats[j].SetFloat("_EmissionLM", 0);
-                        deseMats[j].SetFloat("_EmissionLMNight", 0.1f);
-                        thisRend.materials = deseMats;
-                    }
-                }
-            }
             
             manageNameLabelQueue = Player.main.StartCoroutine(ManageLabelQueue());
 
@@ -907,6 +878,7 @@ namespace OdysseyVehicle
         public override void Start()
         {
             base.Start();
+            ApplySkyAppliers();
         }
 
         public Sequence aiBatterySequence = new Sequence();
@@ -934,16 +906,16 @@ namespace OdysseyVehicle
             this.mainAnimator.runtimeAnimatorController = animatorController;
             switch (storageName)
             {
-                case "InateStorageDoor.001":
+                case "InateStorageDoor.001_light":
                     this.mainAnimator.SetBool("OD_inat_S1", open);
                     return 1f;
-                case "InateStorageDoor.002":
+                case "InateStorageDoor.002_light":
                     this.mainAnimator.SetBool("OD_inat_S2", open);
                     return 1f;
-                case "InateStorageDoor.003":
+                case "InateStorageDoor.003_light":
                     this.mainAnimator.SetBool("OD_inat_S3", open);
                     return 1f;
-                case "InateStorageDoor.004":
+                case "InateStorageDoor.004_light":
                     this.mainAnimator.SetBool("OD_inat_S4", open);
                     return 1f;
                 case "ExternalStorage1":
@@ -979,6 +951,72 @@ namespace OdysseyVehicle
         {
             base.ModVehicleReset();
             innerNameLabelsToGenerate = null;
+        }
+
+        void ILightsStatusListener.OnHeadLightsOn()
+        {
+        }
+
+        void ILightsStatusListener.OnHeadLightsOff()
+        {
+        }
+
+        void ILightsStatusListener.OnInteriorLightsOn()
+        {
+            InteriorLights.ForEach(x =>
+            {
+                x.transform.parent.Find("WallLightGlassCover").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(1f, 1f, 1f, 1f));
+            });
+        }
+
+        void ILightsStatusListener.OnInteriorLightsOff()
+        {
+            InteriorLights.ForEach(x =>
+            {
+                x.transform.parent.Find("WallLightGlassCover").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0.285f, 0, 0.047f, 0f));
+            });
+        }
+
+        void ILightsStatusListener.OnNavLightsOn()
+        {
+        }
+
+        void ILightsStatusListener.OnNavLightsOff()
+        {
+        }
+
+        void ILightsStatusListener.OnFloodLightsOn()
+        {
+        }
+
+        void ILightsStatusListener.OnFloodLightsOff()
+        {
+        }
+
+        public override Atlas.Sprite CraftingSprite
+        {
+            get
+            {
+                return crafterSprite;
+            }
+        }
+
+        public void ApplySkyAppliers()
+        {
+            var ska = transform.Find("Geometry/Interior_Main_light").gameObject.EnsureComponent<SkyApplier>();
+            ska.anchorSky = Skies.Auto;
+            ska.customSkyPrefab = null;
+            ska.dynamic = true;
+            ska.emissiveFromPower = false;
+            ska.environmentSky = null;
+
+            var rends = transform.Find("Geometry/Interior_Main_light").gameObject.GetComponentsInChildren<Renderer>();
+            ska.renderers = new Renderer[rends.Count()];
+            foreach (var rend in rends)
+            {
+                ska.renderers.Append(rend);
+            }
+
         }
     }
 }

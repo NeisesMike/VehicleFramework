@@ -20,7 +20,7 @@ namespace VehicleFramework
             Nautilus.Crafting.RecipeData modulerRecipe = new Nautilus.Crafting.RecipeData();
             modulerRecipe.Ingredients.AddRange(convertRecipe(vehicle.mv.Recipe));
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
-            vehicle_info.WithIcon(MainPatcher.ModVehicleIcon);
+            vehicle_info.WithIcon(vehicle.mv.CraftingSprite);
             PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
             {
                 key = vehicle.mv.name,

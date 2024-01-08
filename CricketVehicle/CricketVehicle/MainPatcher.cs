@@ -52,7 +52,7 @@ namespace CricketVehicle
         {
             const string ccName = "Cricket Container";
             PrefabInfo ccInfo = PrefabInfo.WithTechType("CricketContainer", ccName, "A haulable container designed for the Cricket submersible.");
-            ccInfo.WithIcon(SpriteManager.Get(TechType.SmallLocker));
+            ccInfo.WithIcon(Cricket.boxCrafterSprite);
             PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
             {
                 key = ccName,
@@ -71,20 +71,11 @@ namespace CricketVehicle
             Cricket.storageContainer.EnsureComponent<PrefabIdentifier>().ClassId = ccName;
             cricketContainerCustomPrefab.SetGameObject(Cricket.storageContainer);
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("{");
-            sb.AppendLine("\t\"craftAmount\": 1,");
-            sb.AppendLine("\t\"Ingredients\": [");
-            sb.AppendLine("\t\t{");
-            sb.AppendLine("\t\t\t\"techType\": \"Titanium\",");
-            sb.AppendLine("\t\t\t\"amount\": 2");
-            sb.AppendLine("\t\t}");
-            sb.AppendLine("\t]");
-            sb.AppendLine("}");
-            string jsonRecipe = sb.ToString();
+
+            RecipeData recipe = new RecipeData(new CraftData.Ingredient(TechType.Titanium, 2), new CraftData.Ingredient(TechType.Copper, 1));
 
             cricketContainerCustomPrefab
-                .SetRecipeFromJson(jsonRecipe)
+                .SetRecipe(recipe)
                 .WithCraftingTime(5)
                 .WithFabricatorType(CraftTree.Type.Constructor)
                 .WithStepsToFabricatorTab(new string[] { "Vehicles" });

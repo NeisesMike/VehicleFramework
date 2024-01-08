@@ -21,7 +21,10 @@ namespace CricketVehicle
         public static GameObject controlPanel = null;
         public static Atlas.Sprite pingSprite = null;
         public static Atlas.Sprite cratePingSprite = null;
+        public static Atlas.Sprite crafterSprite = null;
+        public static Atlas.Sprite boxCrafterSprite = null;
         public static GameObject storageContainer = null;
+        
         public static void GetAssets()
         {
             // load the asset bundle
@@ -36,21 +39,25 @@ namespace CricketVehicle
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
             foreach (System.Object obj in arr)
             {
-                if (obj.ToString().Contains("PingSpriteAtlas"))
+                if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
+
                     Sprite ping = thisAtlas.GetSprite("PingSprite");
                     pingSprite = new Atlas.Sprite(ping);
+
+                    Sprite ping2 = thisAtlas.GetSprite("BoxSprite");
+                    cratePingSprite = new Atlas.Sprite(ping2);
+
+                    Sprite ping3 = thisAtlas.GetSprite("CrafterSprite");
+                    crafterSprite = new Atlas.Sprite(ping3);
+
+                    Sprite ping4 = thisAtlas.GetSprite("BoxCrafterSprite");
+                    boxCrafterSprite = new Atlas.Sprite(ping4);
                 }
                 else if (obj.ToString().Contains("Cricket"))
                 {
                     model = (GameObject)obj;
-                }
-                else if (obj.ToString().Contains("CrateAtlas"))
-                {
-                    SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                    Sprite ping = thisAtlas.GetSprite("box");
-                    cratePingSprite = new Atlas.Sprite(ping);
                 }
                 else if (obj.ToString().Contains("SFCrate"))
                 {
@@ -412,6 +419,13 @@ namespace CricketVehicle
             get
             {
                 return false;
+            }
+        }
+        public override Atlas.Sprite CraftingSprite
+        {
+            get
+            {
+                return crafterSprite;
             }
         }
 

@@ -21,6 +21,7 @@ namespace Atrama
         public static GameObject model = null;
         public static GameObject controlPanel = null;
         public static Atlas.Sprite pingSprite = null;
+        public static Atlas.Sprite crafterSprite = null;
         public static void GetAssets()
         {
             // load the asset bundle
@@ -35,11 +36,15 @@ namespace Atrama
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
             foreach (System.Object obj in arr)
             {
-                if (obj.ToString().Contains("PingSpriteAtlas"))
+                if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                    Sprite ping = thisAtlas.GetSprite("AtramaHudPing");
+
+                    Sprite ping = thisAtlas.GetSprite("PingSprite");
                     pingSprite = new Atlas.Sprite(ping);
+
+                    Sprite ping3 = thisAtlas.GetSprite("CrafterSprite");
+                    crafterSprite = new Atlas.Sprite(ping3);
                 }
                 else if (obj.ToString().Contains("Atrama"))
                 {
@@ -532,6 +537,13 @@ namespace Atrama
             get
             {
                 return true;
+            }
+        }
+        public override Atlas.Sprite CraftingSprite
+        {
+            get
+            {
+                return crafterSprite;
             }
         }
     }

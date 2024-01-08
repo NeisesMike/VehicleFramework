@@ -68,6 +68,13 @@ namespace VehicleFramework
                 }
             }
         }
+        public virtual Atlas.Sprite CraftingSprite
+        {
+            get
+            {
+                return MainPatcher.ModVehicleIcon;
+            }
+        }
         public override void Awake()
         {
 
