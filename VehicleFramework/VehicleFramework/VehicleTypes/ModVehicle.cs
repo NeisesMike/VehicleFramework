@@ -74,7 +74,10 @@ namespace VehicleFramework
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
 
-            headlights = gameObject.EnsureComponent<HeadLightsController>();
+            if (HeadLights != null)
+            {
+                headlights = gameObject.EnsureComponent<HeadLightsController>();
+            }
             voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
 

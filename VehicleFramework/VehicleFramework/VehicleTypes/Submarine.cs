@@ -28,11 +28,12 @@ namespace VehicleFramework.VehicleTypes
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
         public abstract ModVehicleEngine Engine { get; }
+        public virtual List<Light> InteriorLights { get; }
 
 
         public ControlPanel controlPanelLogic;
-        protected bool isPilotSeated = false;
-        protected bool isPlayerInside = false;
+        public bool isPilotSeated = false;
+        public bool isPlayerInside = false;
 
         public Transform thisStopPilotingLocation;
 
@@ -84,11 +85,22 @@ namespace VehicleFramework.VehicleTypes
         {
             base.Awake();
 
-            floodlights = gameObject.EnsureComponent<FloodLightsController>();
-            interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
-            navlights = gameObject.EnsureComponent<NavigationLightsController>();
-
-            gameObject.EnsureComponent<TetherSource>();
+            if(FloodLights != null)
+            {
+                floodlights = gameObject.EnsureComponent<FloodLightsController>();
+            }
+            if (InteriorLights != null)
+            {
+                interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
+            }
+            if (NavigationPortLights != null || NavigationStarboardLights != null || NavigationRedStrobeLights != null || NavigationWhiteStrobeLights != null || NavigationPositionLights != null)
+            {
+                navlights = gameObject.EnsureComponent<NavigationLightsController>();
+            }
+            if (TetherSources != null)
+            {
+                TetherSources.ForEach(x => x.EnsureComponent<TetherSource>());
+            }
             controlPanelLogic?.Init();
         }
         public override void Start()

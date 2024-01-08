@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class FloodLightsController : MonoBehaviour, IPowerListener
-	{
+    public class FloodLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
+    {
 		private VehicleTypes.Submarine mv;
         private bool isFloodLightsOn = false;
 
@@ -15,23 +15,17 @@ namespace VehicleFramework
 
         public void EnableFloodLights()
         {
-            if (!isFloodLightsOn)
-            {
-                SetFloodLampsActive(true);
-                mv.lightsOnSound.Stop();
-                mv.lightsOnSound.Play();
-                isFloodLightsOn = !isFloodLightsOn;
-            }
+            SetFloodLampsActive(true);
+            mv.lightsOnSound.Stop();
+            mv.lightsOnSound.Play();
+            isFloodLightsOn = !isFloodLightsOn;
         }
         public void DisableFloodLights()
         {
-            if (isFloodLightsOn)
-            {
-                SetFloodLampsActive(false);
-                mv.lightsOffSound.Stop();
-                mv.lightsOffSound.Play();
-                isFloodLightsOn = !isFloodLightsOn;
-            }
+            SetFloodLampsActive(false);
+            mv.lightsOffSound.Stop();
+            mv.lightsOffSound.Play();
+            isFloodLightsOn = !isFloodLightsOn;
         }
         public void ToggleFloodLights()
         {
@@ -135,6 +129,18 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatteryRevive()
         {
+        }
+        void IVehicleStatusListener.OnNearbyLeviathan()
+        {
+            if (isFloodLightsOn)
+            {
+                ToggleFloodLights();
+            }
+        }
+
+        void IVehicleStatusListener.OnTakeDamage()
+        {
+            return;
         }
     }
 }

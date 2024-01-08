@@ -35,22 +35,19 @@ namespace VehicleFramework
                 else
                 {
                     var mv = GetComponent<Submarine>();
-                    foreach (var tethersrc in mv.TetherSources)
+                    // TODO: make this constant depend on the vehicle model somehow
+                    var tmp = Vector3.Distance(Player.main.transform.position, transform.position);
+                    if (tmp < 0.75f)
                     {
-                        // TODO: make this constant depend on the vehicle model somehow
-                        var tmp = Vector3.Distance(Player.main.transform.position, tethersrc.transform.position);
-                        if (tmp < 0.75f)
+                        if (!mv.IsPlayerInside())
                         {
-                            if (!mv.IsPlayerInside())
-                            {
-                                mv.PlayerEntry();
-                            }
-                            isTetherEstablished = true;
-                            Player.main.GetComponent<ModVehicleTether>().CatchTether(mv);
-                            break;
+                            mv.PlayerEntry();
                         }
+                        isTetherEstablished = true;
+                        Player.main.GetComponent<ModVehicleTether>().CatchTether(mv);
+                        break;
                     }
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.05f);
                 }
             }
         }

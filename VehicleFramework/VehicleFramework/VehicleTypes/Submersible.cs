@@ -58,9 +58,14 @@ namespace VehicleFramework.VehicleTypes
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_stand_up", false);
+            Player.main.playerAnimator.speed = 100f;
+            yield return new WaitForSeconds(0.05f);
+            Player.main.playerAnimator.speed = 1f;
+            yield return null;
         }
         protected IEnumerator TryStandUpFromChair()
         {
+            /*
             while (IsPlayerInside())
             {
                 yield return new WaitForSeconds(0.1f);
@@ -69,13 +74,15 @@ namespace VehicleFramework.VehicleTypes
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_stand_up", false);
+            */
+            yield return null;
         }
         public override void BeginPiloting()
         {
             base.BeginPiloting();
             Player.main.EnterSittingMode();
             StartCoroutine(SitDownInChair());
-            StartCoroutine(TryStandUpFromChair());
+            //StartCoroutine(TryStandUpFromChair());
             isPlayerInside = true;
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
@@ -85,7 +92,7 @@ namespace VehicleFramework.VehicleTypes
             // this function
             // called by Player.ExitLockedMode()
             // which is triggered on button press
-            //StartCoroutine(StandUpFromChair());
+            StartCoroutine(StandUpFromChair());
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
             uGUI.main.quickSlots.SetTarget(null);

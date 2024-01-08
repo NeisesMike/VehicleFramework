@@ -792,7 +792,7 @@ namespace VehicleFramework
                 {
                     continue;
                 }
-                if(mv.CanopyWindows.Contains(renderer.gameObject))
+                if(mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
                 {
                     // TODO: find a way to add transparency
                     // ZWrite set to 1 (a boolean value) makes the canopy opaque.
@@ -811,25 +811,6 @@ namespace VehicleFramework
                 {
                     // give it the marmo shader, no matter what
                     mat.shader = marmosetShader;
-
-                    // if this is a piece of interior geometry, enable the lightmap
-                    Transform itInterior = renderer.gameObject.transform;
-                    bool isthisinterior = itInterior.name == "Interior_Main";
-                    while (itInterior.parent != null)
-                    {
-                        if (itInterior.parent.name == "Interior_Main")
-                        {
-                            isthisinterior = true;
-                            break;
-                        }
-                        itInterior = itInterior.parent;
-                    }
-                    if (isthisinterior)
-                    {
-                        mat.EnableKeyword("MARMO_SPECMAP");
-                        mat.EnableKeyword("UWE_LIGHTMAP");
-                        mat.SetFloat("_LightmapStrength", 7.5f);
-                    }
                 }
             }
         }

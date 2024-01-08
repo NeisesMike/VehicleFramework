@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class NavigationLightsController : MonoBehaviour, IPowerListener
+    public class NavigationLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
     {
         private bool isNavLightsEnabled = true;
 
@@ -122,7 +122,6 @@ namespace VehicleFramework
             return isNavLightsEnabled;
         }
 
-
         public void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -192,26 +191,20 @@ namespace VehicleFramework
         }
         public void DisableNavLights()
         {
-            if (isNavLightsEnabled)
+            foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
             {
-                foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
-                {
-                    DisableLightClass(lc);
-                }
-                isNavLightsEnabled = false;
-                mv.NotifyStatus(LightsStatus.OnNavLightsOff);
+                DisableLightClass(lc);
             }
+            isNavLightsEnabled = false;
+            mv.NotifyStatus(LightsStatus.OnNavLightsOff);
         }
         public void EnableNavLights()
         {
-            if (!isNavLightsEnabled)
-            {
-                EnableLightClass(LightClass.Positions);
-                EnableLightClass(LightClass.Ports);
-                EnableLightClass(LightClass.Starboards);
-                isNavLightsEnabled = true;
-                mv.NotifyStatus(LightsStatus.OnNavLightsOn);
-            }
+            EnableLightClass(LightClass.Positions);
+            EnableLightClass(LightClass.Ports);
+            EnableLightClass(LightClass.Starboards);
+            isNavLightsEnabled = true;
+            mv.NotifyStatus(LightsStatus.OnNavLightsOn);
         }
         public void ToggleNavLights()
         {
@@ -220,10 +213,12 @@ namespace VehicleFramework
                 if (isNavLightsEnabled)
                 {
                     DisableNavLights();
+                    mv.NotifyStatus(LightsStatus.OnNavLightsOff);
                 }
                 else
                 {
                     EnableNavLights();
+                    mv.NotifyStatus(LightsStatus.OnNavLightsOn);
                 }
             }
         }
@@ -523,12 +518,12 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatterySafe()
         {
-            EnableNavLights();
+            //EnableNavLights();
         }
 
         void IPowerListener.OnBatteryLow()
         {
-            EnableNavLights();
+            //EnableNavLights();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
@@ -549,6 +544,18 @@ namespace VehicleFramework
         void IPowerListener.OnBatteryRevive()
         {
             EnableNavLights();
+        }
+        void IVehicleStatusListener.OnNearbyLeviathan()
+        {
+            if (isNavLightsEnabled)
+            {
+                ToggleNavLights();
+            }
+        }
+
+        void IVehicleStatusListener.OnTakeDamage()
+        {
+            return;
         }
     }
 }

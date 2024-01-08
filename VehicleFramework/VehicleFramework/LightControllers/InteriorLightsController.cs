@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
-    public class InteriorLightsController : MonoBehaviour, IPowerListener
-	{
-		private ModVehicle mv;
-        private bool isInteriorLightsOn = false;
+    public class InteriorLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
+    {
+		private Submarine mv;
+        private bool isInteriorLightsOn = true;
         
         public void Awake()
         {
-            mv = GetComponent<ModVehicle>();
+            mv = GetComponent<Submarine>();
         }
 
         public void ToggleInteriorLighting()
@@ -24,10 +25,14 @@ namespace VehicleFramework
                 if (isInteriorLightsOn)
                 {
                     DisableInteriorLighting();
+                    isInteriorLightsOn = false;
+                    mv.NotifyStatus(LightsStatus.OnInteriorLightsOff);
                 }
                 else
                 {
                     EnableInteriorLighting();
+                    isInteriorLightsOn = true;
+                    mv.NotifyStatus(LightsStatus.OnInteriorLightsOn);
                 }
             }
             else
@@ -37,45 +42,11 @@ namespace VehicleFramework
         }
         public void EnableInteriorLighting()
         {
-            if (!isInteriorLightsOn)
-            {
-                foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
-                {
-                    foreach (Material mat in renderer.materials)
-                    {
-                        // add emission to certain materials
-                        if (mat.name.Contains("InteriorIlluminatedMaterial"))
-                        {
-                            mat.EnableKeyword("MARMO_EMISSION");
-                            mat.SetFloat("_EmissionLM", 0.25f);
-                            mat.SetFloat("_EmissionLMNight", 0.25f);
-                            mat.SetFloat("_GlowStrength", 0f);
-                            mat.SetFloat("_GlowStrengthNight", 0f);
-                        }
-                    }
-                }
-                isInteriorLightsOn = true;
-                mv.NotifyStatus(LightsStatus.OnInteriorLightsOn);
-            }
+            mv.InteriorLights.ForEach(x => x.enabled = true);
         }
         public void DisableInteriorLighting()
         {
-            if (isInteriorLightsOn)
-            {
-                foreach (var renderer in mv.GetComponentsInChildren<Renderer>())
-                {
-                    foreach (Material mat in renderer.materials)
-                    {
-                        // add emission to certain materials
-                        if (mat.name.Contains("InteriorIlluminatedMaterial"))
-                        {
-                            mat.DisableKeyword("MARMO_EMISSION");
-                        }
-                    }
-                }
-                isInteriorLightsOn = false;
-                mv.NotifyStatus(LightsStatus.OnInteriorLightsOff);
-            }
+            mv.InteriorLights.ForEach(x => x.enabled = false);
         }
 
         void IPowerListener.OnPowerUp()
@@ -90,12 +61,12 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatterySafe()
         {
-            EnableInteriorLighting();
+            //EnableInteriorLighting();
         }
 
         void IPowerListener.OnBatteryLow()
         {
-            EnableInteriorLighting();
+            //EnableInteriorLighting();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
@@ -116,6 +87,18 @@ namespace VehicleFramework
         void IPowerListener.OnBatteryRevive()
         {
             EnableInteriorLighting();
+        }
+        void IVehicleStatusListener.OnNearbyLeviathan()
+        {
+            if (isInteriorLightsOn)
+            {
+                ToggleInteriorLighting();
+            }
+        }
+
+        void IVehicleStatusListener.OnTakeDamage()
+        {
+            return;
         }
     }
 }

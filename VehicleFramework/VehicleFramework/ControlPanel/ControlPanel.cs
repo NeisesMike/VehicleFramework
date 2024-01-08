@@ -61,15 +61,15 @@ namespace VehicleFramework
         }
         private void ResetAllButtonLighting()
         {
-            SetButtonLightingActive(buttonHeadLights, true);
+            SetButtonLightingActive(buttonHeadLights, false);
             SetButtonLightingActive(buttonNavLights, false);
             SetButtonLightingActive(buttonAutoPilot, false);
-            SetButtonLightingActive(buttonInteriorLights, false);
+            SetButtonLightingActive(buttonInteriorLights, true);
             SetButtonLightingActive(button5, false);
             SetButtonLightingActive(buttonDefaultColor, false);
-            SetButtonLightingActive(buttonFloodLights, true);
+            SetButtonLightingActive(buttonFloodLights, false);
             SetButtonLightingActive(button8, false);
-            SetButtonLightingActive(buttonPower, false);
+            SetButtonLightingActive(buttonPower, true);
         }
         private void AdjustButtonLightingForPowerDown()
         {
@@ -81,7 +81,7 @@ namespace VehicleFramework
             SetButtonLightingActive(buttonDefaultColor, false);
             SetButtonLightingActive(buttonFloodLights, false);
             SetButtonLightingActive(button8, false);
-            SetButtonLightingActive(buttonPower, true);
+            SetButtonLightingActive(buttonPower, false);
         }
         public bool EmptyClick()
         {
@@ -106,6 +106,10 @@ namespace VehicleFramework
         }
         public bool FloodLightsClick()
         {
+            if (mv.floodlights is null)
+            {
+                return true;
+            }
             mv.floodlights.ToggleFloodLights();
             return true;
         }
@@ -117,6 +121,10 @@ namespace VehicleFramework
         }
         public bool NavLightsClick()
         {
+            if (mv.navlights is null)
+            {
+                return true;
+            }
             SetButtonLightingActive(buttonNavLights, mv.navlights.GetNavLightsEnabled());
             mv.navlights.ToggleNavLights();
             return true;
@@ -129,6 +137,10 @@ namespace VehicleFramework
         }
         public bool InteriorLightsClick()
         {
+            if(mv.interiorlights is null)
+            {
+                return true;
+            }
             mv.interiorlights.ToggleInteriorLighting();
             return true;
         }
@@ -209,22 +221,22 @@ namespace VehicleFramework
 
         void ILightsStatusListener.OnHeadLightsOn()
         {
-            SetButtonLightingActive(buttonHeadLights, false);
+            SetButtonLightingActive(buttonHeadLights, true);
         }
 
         void ILightsStatusListener.OnHeadLightsOff()
         {
-            SetButtonLightingActive(buttonHeadLights, true);
+            SetButtonLightingActive(buttonHeadLights, false);
         }
 
         void ILightsStatusListener.OnInteriorLightsOn()
         {
-            SetButtonLightingActive(buttonInteriorLights, false);
+            SetButtonLightingActive(buttonInteriorLights, true);
         }
 
         void ILightsStatusListener.OnInteriorLightsOff()
         {
-            SetButtonLightingActive(buttonInteriorLights, true);
+            SetButtonLightingActive(buttonInteriorLights, false);
         }
 
         void IVehicleStatusListener.OnTakeDamage()
@@ -239,32 +251,32 @@ namespace VehicleFramework
 
         void IAutoPilotListener.OnAutoPilotBegin()
         {
-            SetButtonLightingActive(buttonAutoPilot, false);
+            SetButtonLightingActive(buttonAutoPilot, true);
         }
 
         void IAutoPilotListener.OnAutoPilotEnd()
         {
-            SetButtonLightingActive(buttonAutoPilot, true);
+            SetButtonLightingActive(buttonAutoPilot, false);
         }
 
         void ILightsStatusListener.OnFloodLightsOn()
         {
-            SetButtonLightingActive(buttonFloodLights, false);
+            SetButtonLightingActive(buttonFloodLights, true);
         }
 
         void ILightsStatusListener.OnFloodLightsOff()
         {
-            SetButtonLightingActive(buttonFloodLights, true);
+            SetButtonLightingActive(buttonFloodLights, false);
         }
 
         void ILightsStatusListener.OnNavLightsOn()
         {
-            SetButtonLightingActive(buttonNavLights, false);
+            SetButtonLightingActive(buttonNavLights, true);
         }
 
         void ILightsStatusListener.OnNavLightsOff()
         {
-            SetButtonLightingActive(buttonNavLights, true);
+            SetButtonLightingActive(buttonNavLights, false);
         }
 
         void IPowerListener.OnBatterySafe()
@@ -304,6 +316,8 @@ namespace VehicleFramework
         {
             SetButtonLightingActive(buttonHeadLights, false);
             SetButtonLightingActive(buttonFloodLights, false);
+            SetButtonLightingActive(buttonInteriorLights, false);
+            SetButtonLightingActive(buttonNavLights, false);
         }
     }
 }
