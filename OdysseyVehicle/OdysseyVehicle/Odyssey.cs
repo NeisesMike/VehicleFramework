@@ -34,14 +34,10 @@ namespace OdysseyVehicle
         public static Texture2D hull_metal = null;
 
         public static GameObject name_label_generator = null;
-        public static Texture2D name_details = null;
-        public static Texture2D name_height = null;
-        public static Texture2D name_normal = null;
-        public static Texture2D name_metal = null;
+        public static Texture2D name_details = null; 
 
         private static GameObject generator = null;
         private static Queue<Tuple<ModVehicle, string, Color, Color>> innerNameLabelsToGenerate = null;
-        private static Coroutine manageNameLabelQueue = null;
         public static Queue<Tuple<ModVehicle, string, Color, Color>> NameLabelsToGenerate
         {
             get
@@ -114,18 +110,6 @@ namespace OdysseyVehicle
                 else if (obj.ToString().Contains("hull_metal"))
                 {
                     hull_metal = (Texture2D)obj;
-                }
-                else if (obj.ToString().Contains("name_height"))
-                {
-                    name_height = (Texture2D)obj;
-                }
-                else if (obj.ToString().Contains("name_normal"))
-                {
-                    name_normal = (Texture2D)obj;
-                }
-                else if (obj.ToString().Contains("name_metal"))
-                {
-                    name_metal = (Texture2D)obj;
                 }
                 else if (obj.ToString().Contains("hull_default"))
                 {
@@ -544,6 +528,8 @@ namespace OdysseyVehicle
                 var list = new List<GameObject>();
                 list.Add(transform.Find("Geometry/Canopy_Inner").gameObject);
                 list.Add(transform.Find("Geometry/Canopy_Outer").gameObject);
+                list.Add(transform.Find("Geometry/camera/Camera_Glass_LP1").gameObject);
+                list.Add(transform.Find("Geometry/camera2/Camera_Glass_LP1.001").gameObject);
                 return list;
             }
         }
@@ -805,31 +791,21 @@ namespace OdysseyVehicle
             yield return null;
             newlyColoredTexture.Apply();
             yield return null;
-            foreach (Renderer thisRend in mv.GetComponentsInChildren<Renderer>())
+
+            var thisRend = mv.transform.Find("Geometry/hull_geo.001").GetComponent<Renderer>();
+            Material[] deseMats = thisRend.materials;
+            for (int j = 0; j < deseMats.Length; j++)
             {
-                if (thisRend.materials is null)
+                if (deseMats[j] is null)
                 {
-                    Logger.Log("Renderer " + thisRend.name + " had no materials.");
                     continue;
                 }
-                Material[] deseMats = thisRend.materials;
-                for (int j = 0; j < deseMats.Length; j++)
+                if (deseMats[j].name.Contains("ExteriorNameLabel"))
                 {
-                    if (deseMats[j] is null)
-                    {
-                        continue;
-                    }
-                    if (deseMats[j].name.Contains("ExteriorNameLabel"))
-                    {
-                        deseMats[j].SetTexture("_MainTex", newlyColoredTexture);
-                        deseMats[j].SetTexture("_BumpMap", name_normal);
-                        deseMats[j].SetTexture("_ParallaxMap", name_height);
-                        deseMats[j].SetTexture("_MetallicGlossMap", name_metal);
-                    }
-                    //yield return null;
+                    deseMats[j].SetTexture("_MainTex", newlyColoredTexture);
                 }
-                thisRend.materials = deseMats;
             }
+            thisRend.materials = deseMats;
             GameObject.Destroy(generator);
             yield break;
         }
@@ -870,7 +846,7 @@ namespace OdysseyVehicle
             vehicleName = OGVehicleName;
             NowVehicleName = OGVehicleName;
             
-            manageNameLabelQueue = Player.main.StartCoroutine(ManageLabelQueue());
+            Player.main.StartCoroutine(ManageLabelQueue());
 
             // ModVehicle.Awake
             base.Awake();
@@ -1016,7 +992,7 @@ namespace OdysseyVehicle
             {
                 ska.renderers.Append(rend);
             }
-
         }
+
     }
 }
