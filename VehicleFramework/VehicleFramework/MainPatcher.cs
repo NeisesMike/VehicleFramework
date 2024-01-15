@@ -85,6 +85,7 @@ namespace VehicleFramework
             VehicleFramework.Logger.MyLog = base.Logger;
             GetAssets();
             SetupDefaultAssets();
+            BuildableDroneStation.Register();
             PrePatch();
         }
 

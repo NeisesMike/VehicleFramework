@@ -124,6 +124,8 @@
     <Compile Include="Admin\GameObjectManager.cs" />
     <Compile Include="Admin\GameStateWatcher.cs" />
     <Compile Include="Admin\VehicleRegistrar.cs" />
+    <Compile Include="Drone\BuildableDroneStation.cs" />
+    <Compile Include="Drone\IDroneInterface.cs" />
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\StealthModulePatcher.cs" />
