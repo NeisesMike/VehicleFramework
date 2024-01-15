@@ -121,7 +121,7 @@ namespace CricketVehicle
             {
                 return;
             }
-            CricketContainer container = CricketContainerManager.main.FindNearestCricketContainer(ContainerMountPoint.transform.position);
+            CricketContainer container = VehicleFramework.Admin.GameObjectManager<CricketContainer>.FindNearestSuch(ContainerMountPoint.transform.position, x=>!x.GetComponentInParent<Cricket>());
             if (!ValidateAttachment(container))
             {
                 Logger.Log("Container Attachment Request was Invalid");
@@ -188,7 +188,7 @@ namespace CricketVehicle
 
         public void ShowAttachmentStatus()
         {
-            CricketContainer container = CricketContainerManager.main.FindNearestCricketContainer(ContainerMountPoint.transform.position);
+            CricketContainer container = VehicleFramework.Admin.GameObjectManager<CricketContainer>.FindNearestSuch(ContainerMountPoint.transform.position, x => !x.GetComponentInParent<Cricket>());
             if (container is null)
             {
                 return;
@@ -229,14 +229,22 @@ namespace CricketVehicle
             }
             currentMountedContainer.transform.Find("AttachedCollider").gameObject.SetActive(true);
         }
+
         public override void PlayerEntry()
         {
             base.PlayerEntry();
-            if (!HasContainerAttached)
+            Nautilus.Utility.BasicText message = new Nautilus.Utility.BasicText(500, 0);
+            string msg;
+            if (HasContainerAttached)
             {
-                return;
+                msg = "Press " + MainPatcher.config.attach + " to release container.";
+                currentMountedContainer.transform.Find("AttachedCollider").gameObject.SetActive(false);
             }
-            currentMountedContainer.transform.Find("AttachedCollider").gameObject.SetActive(false);
+            else
+            {
+                msg = "Hold " + MainPatcher.config.attach + " to attempt container attachment.";
+            }
+            message.ShowMessage(msg, 1);
         }
     }
 }

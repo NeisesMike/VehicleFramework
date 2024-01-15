@@ -50,8 +50,8 @@ namespace CricketVehicle
 
         public TechType RegisterCricketContainer()
         {
-            const string ccName = "Cricket Container";
-            PrefabInfo ccInfo = PrefabInfo.WithTechType("CricketContainer", ccName, "A haulable container designed for the Cricket submersible.");
+            const string ccName = "CricketContainer";
+            PrefabInfo ccInfo = PrefabInfo.WithTechType(ccName, ccName, "A haulable container designed for the Cricket submersible.");
             ccInfo.WithIcon(Cricket.boxCrafterSprite);
             PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
             {
@@ -63,7 +63,7 @@ namespace CricketVehicle
                 image = null,
             };
             LanguageHandler.SetLanguageLine("Ency_" + ccName, ccName);
-            LanguageHandler.SetLanguageLine("EncyDesc_" + ccName, "test description");
+            LanguageHandler.SetLanguageLine("EncyDesc_" + ccName, "The Cricket Container is a special type of floating locker that can be hauled by a Cricket Submersible.");
             Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
 
             CustomPrefab cricketContainerCustomPrefab = new CustomPrefab(ccInfo);
@@ -92,7 +92,7 @@ namespace CricketVehicle
             ccPingInstance.pingType = myPT;
             ccPingInstance.SetLabel("Vehicle");
             VehicleFramework.VehicleManager.mvPings.Add(ccPingInstance);
-            VehicleFramework.VehicleManager.vehicleTypes.Add(new VehicleFramework.VehicleEntry(Cricket.storageContainer, 100, myPT, Cricket.cratePingSprite, ccInfo.TechType));
+            VehicleFramework.VehicleManager.vehicleTypes.Add(new VehicleFramework.VehicleEntry(Cricket.storageContainer, 225, myPT, Cricket.cratePingSprite, ccInfo.TechType));
 
             Constructor.SpawnPoint sp = new Constructor.SpawnPoint();
 
@@ -100,6 +100,8 @@ namespace CricketVehicle
         }
         public void Awake()
         {
+            Cricket.GetAssets();
+            cricketContainerTT = RegisterCricketContainer();
             SaveData saveData = SaveDataHandler.RegisterSaveDataCache<SaveData>();
 
             // Update the player position before saving it
@@ -116,8 +118,6 @@ namespace CricketVehicle
         }
         public void Start()
         {
-            Cricket.GetAssets();
-            cricketContainerTT = RegisterCricketContainer();
             config = OptionsPanelHandler.RegisterModOptions<CricketConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.cricket.mod");
             harmony.PatchAll();
@@ -128,7 +128,7 @@ namespace CricketVehicle
         internal static List<Tuple<Vector3, innateStorage>> SerializeStorage()
         {
             List<Tuple<Vector3, innateStorage>> allVehiclesStoragesContents = new List<Tuple<Vector3, innateStorage>>();
-            foreach (CricketContainer cc in CricketContainerManager.main.AllCricketContainers)
+            foreach (CricketContainer cc in VehicleFramework.Admin.GameObjectManager<CricketContainer>.AllSuchObjects)
             {
                 if (cc == null)
                 {

@@ -19,8 +19,8 @@ using Nautilus.Crafting;
 
 namespace CricketVehicle
 {
-    public class CricketStorageInput : HandTarget, IHandTarget
-    {
+	public class CricketStorageInput : HandTarget, IHandTarget
+	{
 		public int slotID = -1;
 		public GameObject model;
 		public Collider collider;
@@ -61,7 +61,7 @@ namespace CricketVehicle
 			SetEnabled(true);
 		}
 		public void Start()
-        {
+		{
 			myContainer = GetComponent<InnateStorageContainer>().container;
 		}
 		protected void OnDisable()
@@ -120,10 +120,11 @@ namespace CricketVehicle
 		}
 	}
 
-    public class CricketContainer : MonoBehaviour
-    {
-        public InnateStorageContainer storageContainer;
+	public class CricketContainer : MonoBehaviour
+	{
+		public InnateStorageContainer storageContainer;
 		public float marginOfError = 0.9f;
+		private bool wasJustBuilt = false;
 		public static void ApplyShaders(GameObject mv)
 		{
 			// Add the marmoset shader to all renderers
@@ -158,7 +159,7 @@ namespace CricketVehicle
 			rb.useGravity = false;
 			rb.mass = 120;
 			rb.drag = 10f;
-			rb.angularDrag = 10f;
+			rb.angularDrag = 1f;
 
 			gameObject.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
 			LargeWorldEntity.Register(gameObject);
@@ -194,13 +195,23 @@ namespace CricketVehicle
 			gameObject.SetActive(false);
 			SetupGameObjectWakeTime();
 			gameObject.SetActive(true);
-			CricketContainerManager.main.RegisterCricketContainer(this);
 		}
 		public void Start()
+		{
+			if (!wasJustBuilt)
+			{
+				UWE.CoroutineHost.StartCoroutine(MainPatcher.DeserializeStorage(this));
+			}
+			StartCoroutine(RegisterWithManager());
+		}
+		public IEnumerator RegisterWithManager()
         {
-			UWE.CoroutineHost.StartCoroutine(MainPatcher.DeserializeStorage(this));
-        }
-
+			while(!VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted)
+            {
+				yield return null;
+            }
+			VehicleFramework.Admin.GameObjectManager<CricketContainer>.Register(this);
+		}
 		public void OnDestroy()
 		{
 			//CricketContainerManager.main.DeregisterCricketContainer(this);
@@ -208,6 +219,7 @@ namespace CricketVehicle
 
 		public void CricketContainerConstructionBeginning()
 		{
+			wasJustBuilt = true;
 			GetComponent<PingInstance>().enabled = false;
 		}
 		public void SubConstructionComplete()
@@ -232,12 +244,19 @@ namespace CricketVehicle
 
 		public void FixedUpdate()
 		{
-			float num = Mathf.Abs(base.transform.eulerAngles.z - 180f);
-			if (num <= 178f)
+			float zCorrection = Mathf.Abs(transform.eulerAngles.z - 180f);
+			if (zCorrection <= 178f)
 			{
-				float d = Mathf.Clamp01(1f - num / 180f) * 20f;
+				float d = Mathf.Clamp01(1f - zCorrection / 180f) * 20f;
 				GetComponent<Rigidbody>().AddTorque(transform.forward * d * Time.fixedDeltaTime * Mathf.Sign(transform.eulerAngles.z - 180f), ForceMode.VelocityChange);
 			}
+
+			float xCorrection = Mathf.Abs(transform.eulerAngles.x - 180f);
+			if (xCorrection <= 178f)
+			{
+				float d = Mathf.Clamp01(1f - xCorrection / 180f) * 20f;
+				GetComponent<Rigidbody>().AddTorque(transform.right * d * Time.fixedDeltaTime * Mathf.Sign(transform.eulerAngles.x - 180f), ForceMode.VelocityChange);
+			}
 		}
-    }
+	}
 }

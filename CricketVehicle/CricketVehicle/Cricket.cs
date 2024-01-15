@@ -110,7 +110,7 @@ namespace CricketVehicle
         {
             get
             {
-                return "A small spherical submersible built for rapid forward movement and deep dives.";
+                return "A small spherical submersible built for rapid forward movement of personal and cargo.";
             }
         }
 
@@ -126,10 +126,10 @@ namespace CricketVehicle
                  * Ratings
                  * Kek
                  */
-                string ency = "The Cricket is a submersible designed for rapid movement in tight spaces. ";
+                string ency = "The Cricket is a submersible designed for rapid movement of personal and cargo through tight spaces.";
                 ency += "Its speed and size are what earned it the name. \n";
                 ency += "\nIt features:\n";
-                ency += "- A mount for one over-sized storage container (upgrade required). \n";
+                ency += "- A mount for one Cricket Container (built separately). \n";
                 ency += "- Rapid acceleration in all directions, but only a high top speed moving forward. \n";
                 ency += "- One power cell in each of the two small thrusters. \n";
                 ency += "\nRatings:\n";
@@ -170,20 +170,17 @@ namespace CricketVehicle
             }
         }
 
-        public override List<VehiclePilotSeat> PilotSeats
+        public override VehiclePilotSeat PilotSeat
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehiclePilotSeat>();
                 VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
                 Transform mainSeat = transform.Find("Chair");
                 vps.Seat = mainSeat.gameObject;
                 vps.SitLocation = mainSeat.Find("SitPosition").gameObject;
                 vps.LeftHandLocation = mainSeat;
                 vps.RightHandLocation = mainSeat;
-                // TODO exit location
-                list.Add(vps);
-                return list;
+                return vps;
             }
         }
 
@@ -301,10 +298,13 @@ namespace CricketVehicle
             get
             {
                 var list = new List<GameObject>();
+                list.Add(transform.Find("CollisionModel/Sphere").gameObject);
+                /*
                 foreach (Transform child in transform.Find("WaterClipProxies"))
                 {
                     list.Add(child.gameObject);
                 }
+                */
                 return list;
             }
         }

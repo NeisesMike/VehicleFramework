@@ -94,7 +94,6 @@
     <Compile Include="ConstructorPatcher.cs" />
     <Compile Include="CricketAlso.cs" />
     <Compile Include="CricketContainer.cs" />
-    <Compile Include="CricketContainerManager.cs" />
     <Compile Include="MainPatcher.cs" />
     <Compile Include="Cricket.cs" />
     <Compile Include="PlayerPatcher.cs" />
