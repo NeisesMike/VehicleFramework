@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
-    public class InteriorLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
+    public class InteriorLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener, IPlayerListener
     {
 		private Submarine mv;
         private bool isInteriorLightsOn = true;
@@ -98,7 +98,40 @@ namespace VehicleFramework
 
         void IVehicleStatusListener.OnTakeDamage()
         {
+            IEnumerator BlinkThrice()
+            {
+                for(int i=0; i<4; i++)
+                {
+                    ToggleInteriorLighting();
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+            StartCoroutine(BlinkThrice());
             return;
+        }
+
+        void IPlayerListener.OnPlayerEntry()
+        {
+            if(!isInteriorLightsOn)
+            {
+                ToggleInteriorLighting();
+            }
+        }
+
+        void IPlayerListener.OnPlayerExit()
+        {
+            if (isInteriorLightsOn)
+            {
+                ToggleInteriorLighting();
+            }
+        }
+
+        void IPlayerListener.OnPilotBegin()
+        {
+        }
+
+        void IPlayerListener.OnPilotEnd()
+        {
         }
     }
 }

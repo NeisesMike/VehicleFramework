@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class HeadLightsController : MonoBehaviour, IPowerListener, IPlayerListener, IVehicleStatusListener
+    public class HeadLightsController : MonoBehaviour, IPowerListener, IPlayerListener
 	{
         private ModVehicle mv;
         private bool isHeadlightsOn = false;
@@ -31,15 +31,21 @@ namespace VehicleFramework
         public void EnableHeadlights()
         {
             SetHeadLightsActive(true);
-            mv.lightsOnSound.Stop();
-            mv.lightsOnSound.Play();
+            if (VehicleManager.isWorldLoaded)
+            {
+                mv.lightsOnSound.Stop();
+                mv.lightsOnSound.Play();
+            }
             isHeadlightsOn = !isHeadlightsOn;
         }
         public void DisableHeadlights()
         {
             SetHeadLightsActive(false);
-            mv.lightsOffSound.Stop();
-            mv.lightsOffSound.Play();
+            if (VehicleManager.isWorldLoaded)
+            {
+                mv.lightsOffSound.Stop();
+                mv.lightsOffSound.Play();
+            }
             isHeadlightsOn = !isHeadlightsOn;
         }
         public void ToggleHeadlights()
@@ -146,18 +152,6 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatteryRevive()
         {
-        }
-        void IVehicleStatusListener.OnNearbyLeviathan()
-        {
-            if(isHeadlightsOn)
-            {
-                ToggleHeadlights();
-            }
-        }
-
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-            return;
         }
     }
 }
