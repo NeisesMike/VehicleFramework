@@ -112,32 +112,6 @@ namespace VehicleFramework.VehicleTypes
             NowVehicleName = OGVehicleName;
 
         }
-        public override void OnKill()
-        {
-            base.OnKill();
-            StartCoroutine(EnqueueDestroy());
-        }
-        public IEnumerator EnqueueDestroy()
-        {
-            if (IsPlayerPiloting())
-            {
-                Player.main.playerController.SetEnabled(true);
-                Player.main.mode = Player.Mode.Normal;
-                Player.main.playerModeChanged.Trigger(Player.main.mode);
-                Player.main.sitting = false;
-                Player.main.playerController.ForceControllerSize();
-                Player.main.transform.parent = null;
-                StopPiloting();
-            }
-            //yield return new WaitForSeconds(1f);
-            if (IsPlayerInside())
-            {
-                PlayerExit();
-            }
-            //yield return new WaitForSeconds(1f);
-            Destroy(gameObject);
-            yield return null;
-        }
         public bool IsPlayerInside()
         {
             // this one is correct ?

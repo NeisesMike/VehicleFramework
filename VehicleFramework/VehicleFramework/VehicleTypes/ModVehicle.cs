@@ -119,17 +119,22 @@ namespace VehicleFramework
             base.Update();
             HandleExtraQuickSlotInputs();
         }
-        public new virtual void OnKill()
+        public override void FixedUpdate()
         {
-            IEnumerator SpillScrapMetal()
+            ManagePhysics();
+        }
+        public virtual void DestroyMV()
+        {
+            // TODO: is this really what we want to do here?
+            IEnumerator SpillScrapMetal(Vector3 place)
             {
                 TaskResult<GameObject> result = new TaskResult<GameObject>();
-                yield return CraftData.InstantiateFromPrefabAsync(TechType.ScrapMetal, result, false);
-                GameObject go = result.Get();
                 // spill out some scrap metal, lmao
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    Vector3 loc = transform.position + 3 * UnityEngine.Random.onUnitSphere;
+                    yield return CraftData.InstantiateFromPrefabAsync(TechType.ScrapMetal, result, false);
+                    GameObject go = result.Get();
+                    Vector3 loc = place + 3 * UnityEngine.Random.onUnitSphere;
                     Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
                     go.transform.position = loc;
                     go.transform.eulerAngles = rot;
@@ -137,6 +142,23 @@ namespace VehicleFramework
                     rb.isKinematic = false;
                 }
                 yield break;
+            }
+            UWE.CoroutineHost.StartCoroutine(SpillScrapMetal(transform.position));
+            Destroy(gameObject);
+        }
+
+        public new virtual void OnKill()
+        {
+            if (IsPlayerDry)
+            {
+                Player.main.playerController.SetEnabled(true);
+                Player.main.mode = Player.Mode.Normal;
+                Player.main.playerModeChanged.Trigger(Player.main.mode);
+                Player.main.sitting = false;
+                Player.main.playerController.ForceControllerSize();
+                Player.main.transform.parent = null;
+                StopPiloting();
+                PlayerExit();
             }
 
             if (destructionEffect)
@@ -146,8 +168,9 @@ namespace VehicleFramework
                 gameObject.transform.rotation = transform.rotation;
             }
 
-            StartCoroutine(SpillScrapMetal());
+            DestroyMV();
         }
+
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
             if (active)
@@ -826,6 +849,19 @@ namespace VehicleFramework
             float num2;
             base.GetEnergyValues(out num, out num2);
             power = ((num > 0f && num2 > 0f) ? (num / num2) : 0f);
+        }
+        public void ManagePhysics()
+        {
+            if (worldForces.IsAboveWater() != wasAboveWater)
+            {
+                PlaySplashSound();
+                wasAboveWater = worldForces.IsAboveWater();
+            }
+            if (stabilizeRoll)
+            {
+                StabilizeRoll();
+            }
+            prevVelocity = useRigidbody.velocity;
         }
         #endregion
 
