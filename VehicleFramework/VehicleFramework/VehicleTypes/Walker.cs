@@ -10,16 +10,38 @@ namespace VehicleFramework.VehicleTypes
     public abstract class Walker : ModVehicle
     {
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
+        public abstract float DistanceAboveGround { get; }
+        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
-        protected bool isPlayerInside = false;
-        public virtual List<GameObject> Arms => null;
-        public virtual List<GameObject> Legs => null;
-
+        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
+        public virtual float GroundSpeed { get; }
+        public virtual float BobSpeed { get; }
         public bool IsPlayerInside()
         {
-            // this one is correct ?
-            return isPlayerInside;
+            return IsPlayerDry;
+        }
+        public override void PlayerEntry()
+        {
+            base.PlayerEntry();
+            StandUp();
+        }
+        public override void PlayerExit()
+        {
+            base.PlayerExit();
+            StandDown();
+        }
+        public virtual void StandUp()
+        {
+
+        }
+        public virtual void StandDown()
+        {
+
+        }
+        public virtual void DoWalkAnimation()
+        {
+
         }
     }
 }
