@@ -99,7 +99,7 @@ namespace VehicleFramework.VehicleTypes
             }
             if (TetherSources != null)
             {
-                TetherSources.ForEach(x => x.EnsureComponent<TetherSource>());
+                TetherSources.ForEach(x => x.EnsureComponent<TetherSource>().mv = this);
             }
             controlPanelLogic?.Init();
         }
