@@ -133,6 +133,13 @@ namespace VehicleFramework
         #region setup_funcs
         public static bool SetupObjects(ModVehicle mv)
         {
+
+            // Wow, look at this:
+            // This Nautilus line might be super nice if it works for us
+            // allow it to be opened as a storage container:
+            //PrefabUtils.AddStorageContainer(obj, "StorageRoot", "TallLocker", 3, 8, true);
+
+
             int iter = 0;
             try
             {
@@ -282,16 +289,12 @@ namespace VehicleFramework
         }
         public static bool SetupObjects(Submersible mv)
         {
-            int iter = 0;
             try
             {
-                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
-                {
-                    mv.playerPosition = ps.SitLocation;
-                    PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
-                    pt.mv = mv;
-                    pt.exit = ps.ExitLocation;
-                }
+                mv.playerPosition = mv.PilotSeat.SitLocation;
+                PilotingTrigger pt = mv.PilotSeat.Seat.EnsureComponent<PilotingTrigger>();
+                pt.mv = mv;
+                pt.exit = mv.PilotSeat.ExitLocation;
             }
             catch (Exception e)
             {
@@ -316,7 +319,6 @@ namespace VehicleFramework
                 Logger.Error(e.ToString());
                 return false;
             }
-            iter = 0;
             // Configure the Control Panel
             return true;
         }

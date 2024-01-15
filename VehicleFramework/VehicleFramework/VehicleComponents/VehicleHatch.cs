@@ -62,8 +62,8 @@ namespace VehicleFramework
 			}
 			else if (mv as Submersible != null) 
 			{
-				Player.main.transform.position = (mv as Submersible).PilotSeats.First().SitLocation.transform.position;
-				Player.main.transform.rotation = (mv as Submersible).PilotSeats.First().SitLocation.transform.rotation;
+				Player.main.transform.position = (mv as Submersible).PilotSeat.SitLocation.transform.position;
+				Player.main.transform.rotation = (mv as Submersible).PilotSeat.SitLocation.transform.rotation;
 				(mv as Submersible).PlayerEntry();
 			}
 			/*

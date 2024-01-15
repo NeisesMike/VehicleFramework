@@ -37,7 +37,7 @@ namespace VehicleFramework.Patches
                 string text = (string)n.data[0];
                 foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
-                    if (text == ve.mv.name)
+                    if (text == ve.name)
                     {
                         PDAEncyclopedia.Add(ve.name, true);
                     }

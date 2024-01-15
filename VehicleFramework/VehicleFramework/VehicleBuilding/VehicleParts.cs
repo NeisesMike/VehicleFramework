@@ -49,4 +49,11 @@ namespace VehicleFramework.VehicleParts
         public Color Color;
         public float Angle;
     }
+
+    public struct VehicleArmProxy
+    {
+        public bool IsLeftArm;
+        public GameObject ShoulderPivotLocation;
+        public Vector3 scale;
+    }
 }

@@ -476,16 +476,6 @@ namespace VehicleFramework
                 {
                     Logger.Warn(thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
                 }
-                if (mv.PilotSeats is null || mv.PilotSeats.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.PilotSeats were provided. These specify what the player will click on to begin piloting the vehicle.");
-                    return false;
-                }
-                if (mv.PilotSeats.Count != 1)
-                {
-                    Logger.Error(thisName + " More than one pilot seat was provided. Submersibles have exactly one pilot seat.");
-                    return false;
-                }
                 if (mv.Hatches is null || mv.Hatches.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
@@ -499,30 +489,27 @@ namespace VehicleFramework
                 {
                     Logger.Log(thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
                 }
-                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
+                if (mv.PilotSeat.Seat is null)
                 {
-                    if (ps.Seat is null)
-                    {
-                        Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
-                        return false;
-                    }
-                    if (ps.SitLocation is null)
-                    {
-                        Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
-                        return false;
-                    }
-                    if (ps.LeftHandLocation is null)
-                    {
-                        Logger.Log(thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
-                    }
-                    if (ps.RightHandLocation is null)
-                    {
-                        Logger.Log(thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
-                    }
-                    if (ps.ExitLocation is null)
-                    {
-                        Logger.Warn(thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
-                    }
+                    Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
+                    return false;
+                }
+                if (mv.PilotSeat.SitLocation is null)
+                {
+                    Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
+                    return false;
+                }
+                if (mv.PilotSeat.LeftHandLocation is null)
+                {
+                    Logger.Log(thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
+                }
+                if (mv.PilotSeat.RightHandLocation is null)
+                {
+                    Logger.Log(thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
+                }
+                if (mv.PilotSeat.ExitLocation is null)
+                {
+                    Logger.Warn(thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
                 }
                 foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
                 {

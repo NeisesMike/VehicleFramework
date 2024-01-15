@@ -150,6 +150,17 @@ namespace VehicleFramework
                 VehicleSaveData = e.Instance as SaveData;
             };
 
+            void SetWorldNotLoaded()
+            {
+                VehicleManager.isWorldLoaded = false;
+            }
+            void SetWorldLoaded()
+            {
+                VehicleManager.isWorldLoaded = true;
+            }
+            Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
+            Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);
+
             var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
             harmony.PatchAll();
         
@@ -192,14 +203,8 @@ namespace VehicleFramework
             }
             */
 
-            void ResetVehiclesInPlay(Scene scene)
-            {
-                // Ensure this list is cleaned up before we load another scene
-                // otherwise, unpredictability ensues
-                VehicleManager.VehiclesInPlay.Clear();
-            }
             // do this here because it happens only once
-            SceneManager.sceneUnloaded += ResetVehiclesInPlay;
+            SceneManager.sceneUnloaded += Admin.GameStateWatcher.OnResetScene;
         }
 
         public void PostPatch()
@@ -245,6 +250,8 @@ namespace VehicleFramework
 
             VehicleManager.defaultEngine = new Engines.AtramaEngine();
         }
+
+        public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
     }
 
 
@@ -260,7 +267,7 @@ namespace VehicleFramework
         [Toggle("Enable Debug Logs")]
         public bool isDebugLogging = false;
 
-        [Choice("Autopilot Voice", "ShirubaFoxy", "Chels-E", "Mikjaw", "Turtle", "Salli"), OnChange(nameof(GrabNewVoiceLines))]
+        [Choice("Autopilot Voice", Options = new[] { "ShirubaFoxy", "Chels-E", "Mikjaw", "Turtle", "Salli" }), OnChange(nameof(GrabNewVoiceLines))]
         public string voiceChoice = "ShirubaFoxy";
 
         public void GrabNewVoiceLines()

@@ -111,14 +111,11 @@ namespace VehicleFramework
             }
             if (mv as Submersible != null)
             {
-                foreach (var ps in (mv as Submersible).PilotSeats)
-                {
-                    speakerPtr = ps.Seat.EnsureComponent<AudioSource>();
-                    speakerPtr.playOnAwake = false;
-                    speakerPtr.spatialBlend = 1f;
-                    speakerPtr.clip = Silence;
-                    speakers.Add(speakerPtr);
-                }
+                speakerPtr = (mv as Submersible).PilotSeat.Seat.EnsureComponent<AudioSource>();
+                speakerPtr.playOnAwake = false;
+                speakerPtr.spatialBlend = 1f;
+                speakerPtr.clip = Silence;
+                speakers.Add(speakerPtr);
                 foreach (var ps in (mv as Submersible).Hatches)
                 {
                     speakerPtr = ps.Hatch.EnsureComponent<AudioSource>();

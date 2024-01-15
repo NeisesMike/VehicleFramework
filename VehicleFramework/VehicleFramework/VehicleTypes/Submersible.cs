@@ -14,29 +14,15 @@ namespace VehicleFramework.VehicleTypes
      */
     public abstract class Submersible : ModVehicle
     { 
-        public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
+        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; }
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
-        protected bool isPlayerInside = false;
 
 
         public abstract ModVehicleEngine Engine { get; }
-        public virtual List<GameObject> Arms => null;
+        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
 
-        public override void FixedUpdate()
-        {
-            if (worldForces.IsAboveWater() != wasAboveWater)
-            {
-                PlaySplashSound();
-                wasAboveWater = worldForces.IsAboveWater();
-            }
-            if (stabilizeRoll)
-            {
-                StabilizeRoll();
-            }
-            prevVelocity = useRigidbody.velocity;
-        }
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
@@ -45,7 +31,7 @@ namespace VehicleFramework.VehicleTypes
         public bool IsPlayerInside()
         {
             // this one is correct ?
-            return isPlayerInside;
+            return IsPlayerDry;
         }
         protected IEnumerator SitDownInChair()
         {
@@ -83,7 +69,6 @@ namespace VehicleFramework.VehicleTypes
             Player.main.EnterSittingMode();
             StartCoroutine(SitDownInChair());
             //StartCoroutine(TryStandUpFromChair());
-            isPlayerInside = true;
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
         }
@@ -103,7 +88,6 @@ namespace VehicleFramework.VehicleTypes
             base.PlayerEntry();
             Logger.DebugLog("start submersible player entry");
             Player.main.currentSub = null;
-            isPlayerInside = true;
             Player.main.currentMountedVehicle = this;
             Player.main.transform.SetParent(transform);
 
@@ -122,7 +106,6 @@ namespace VehicleFramework.VehicleTypes
             Logger.DebugLog("start submersible player exit");
 
             Player.main.currentSub = null;
-            isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
             Player.main.transform.SetParent(null);
             Player.main.transform.position = Hatches.First().ExitLocation.position;

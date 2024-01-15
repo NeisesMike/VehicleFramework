@@ -121,6 +121,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\GameObjectManager.cs" />
+    <Compile Include="Admin\GameStateWatcher.cs" />
     <Compile Include="Admin\VehicleRegistrar.cs" />
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
@@ -168,7 +170,6 @@
     <Compile Include="Engines\ModVehicleEngine.cs" />
     <Compile Include="VehicleComponents\PowerManager.cs" />
     <Compile Include="VehicleComponents\TetherSource.cs" />
-    <Compile Include="VehicleComponents\ModVehicleTether.cs" />
     <Compile Include="VehicleBuilding\HUDBuilder.cs" />
     <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />

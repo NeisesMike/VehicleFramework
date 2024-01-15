@@ -43,21 +43,8 @@ namespace VehicleFramework.VehicleTypes
         public GameObject fabricator = null; //fabricator
 
 
-        public virtual List<GameObject> Arms => null;
+        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
 
-        public override void FixedUpdate()
-        {
-            if (worldForces.IsAboveWater() != wasAboveWater)
-            {
-                PlaySplashSound();
-                wasAboveWater = worldForces.IsAboveWater();
-            }
-            if (stabilizeRoll)
-            {
-                StabilizeRoll();
-            }
-            prevVelocity = useRigidbody.velocity;
-        }
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();

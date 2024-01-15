@@ -207,10 +207,12 @@ namespace VehicleFramework
                 energyInterface.ConsumeEnergy(moduleUseAction.Item3);
             }
         }
+        /*
         public override void OnCollisionEnter(Collision col)
         {
             base.OnCollisionEnter(col);
         }
+        */
         public override void OnPilotModeBegin()
         {
             base.OnPilotModeBegin();
@@ -272,11 +274,10 @@ namespace VehicleFramework
                 }
                 return _slotIDs;
             }
-        }        // These two functions control the transition from in the water to the dry interior
+        }        
         public virtual void PlayerEntry()
         {
             Logger.DebugLog("start modvehicle player entry");
-
             IsPlayerDry = true;
             Player.main.SetScubaMaskActive(false);
             try
@@ -360,7 +361,7 @@ namespace VehicleFramework
         }
         public virtual void OnCraftEnd(TechType techType)
         {
-            Logger.Log("ModVehicle OnCraftEnd");
+            //Logger.Log("ModVehicle OnCraftEnd");
             IEnumerator GiveUsABatteryOrGiveUsDeath()
             {
                 yield return new WaitForSeconds(2.5f);
