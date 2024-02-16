@@ -83,14 +83,12 @@ namespace VehicleFramework
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
 
-        internal static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
-
         public void Awake()
         {
             VehicleFramework.Logger.MyLog = base.Logger;
             GetAssets();
             SetupDefaultAssets();
-            BuildableDroneStation.Register();
+            //BuildableDroneStation.Register();
             PrePatch();
         }
 
