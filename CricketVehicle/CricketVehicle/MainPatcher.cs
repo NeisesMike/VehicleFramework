@@ -39,9 +39,9 @@ namespace CricketVehicle
         }
     }
 
-    [BepInPlugin("com.mikjaw.subnautica.cricket.mod", "CricketVehicle", "1.0.0")]
-    [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
-    [BepInDependency("com.snmodding.nautilus")]
+    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInDependency(VehicleFramework.PluginInfo.PLUGIN_GUID)]
+    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
     public class MainPatcher : BaseUnityPlugin
     {
         internal static CricketConfig config { get; private set; }

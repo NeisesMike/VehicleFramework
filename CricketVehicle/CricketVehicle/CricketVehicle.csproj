@@ -97,6 +97,7 @@
     <Compile Include="MainPatcher.cs" />
     <Compile Include="Cricket.cs" />
     <Compile Include="PlayerPatcher.cs" />
+    <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VFXConstructingPatcher.cs" />
   </ItemGroup>
