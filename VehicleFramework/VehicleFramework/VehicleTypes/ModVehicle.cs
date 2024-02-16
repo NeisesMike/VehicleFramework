@@ -115,11 +115,33 @@ namespace VehicleFramework
 
             powerMan = gameObject.EnsureComponent<PowerManager>();
 
+            //TODO I don't think we want this
+            //StartCoroutine(ManageMyWaterProxies());
 
             // Register our new vehicle with Vehicle Framework
             VehicleManager.EnrollVehicle(this);
             isInited = true;
-            voice.NotifyReadyToSpeak();
+            //voice.NotifyReadyToSpeak();
+        }
+        public IEnumerator ManageMyWaterProxies()
+        {
+            if(this as VehicleTypes.Drone != null)
+            {
+                yield break;
+            }
+            while (true)
+            {
+                yield return new WaitForSeconds(0.05f);
+                if(IsPlayerDry)
+                {
+                    WaterClipProxies.ForEach(x => x.SetActive(true));
+                }
+                else
+                {
+                    WaterClipProxies.ForEach(x => x.SetActive(false));
+                }
+
+            }
         }
         public override void Update()
         {

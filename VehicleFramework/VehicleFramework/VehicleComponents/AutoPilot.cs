@@ -14,7 +14,7 @@ namespace VehicleFramework
 	{
 		public ModVehicle mv;
         public EnergyInterface aiEI;
-        public AutoPilotVoice voice;
+        public AutoPilotVoice apVoice;
         public LiveMixin liveMixin;
         public EnergyInterface eInterf;
 
@@ -78,7 +78,7 @@ namespace VehicleFramework
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
-            voice = gameObject.EnsureComponent<AutoPilotVoice>();
+            apVoice = gameObject.EnsureComponent<AutoPilotVoice>();
             liveMixin = mv.liveMixin;
             eInterf = mv.energyInterface;
             healthStatus = HealthState.Safe;
@@ -198,7 +198,7 @@ namespace VehicleFramework
             {
                 if (healthStatus < HealthState.DoomImminent)
                 {
-                    voice.EnqueueClip(voice.HullFailureImminent);
+                    apVoice.EnqueueClip(apVoice.voice.HullFailureImminent);
                 }
                 healthStatus = HealthState.DoomImminent;
             }
@@ -206,7 +206,7 @@ namespace VehicleFramework
             {
                 if (healthStatus < HealthState.Critical)
                 {
-                    voice.EnqueueClip(voice.HullIntegrityCritical);
+                    apVoice.EnqueueClip(apVoice.voice.HullIntegrityCritical);
                 }
                 healthStatus = HealthState.Critical;
             }
@@ -214,7 +214,7 @@ namespace VehicleFramework
             {
                 if (healthStatus < HealthState.Low)
                 {
-                    voice.EnqueueClip(voice.HullIntegrityLow);
+                    apVoice.EnqueueClip(apVoice.voice.HullIntegrityLow);
                 }
                 healthStatus = HealthState.Low;
             }
@@ -231,7 +231,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.OxygenOffline)
                 {
-                    voice.EnqueueClip(voice.OxygenProductionOffline);
+                    apVoice.EnqueueClip(apVoice.voice.OxygenProductionOffline);
                 }
                 powerStatus = PowerState.OxygenOffline;
             }
@@ -239,7 +239,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.Depleted)
                 {
-                    voice.EnqueueClip(voice.BatteriesDepleted);
+                    apVoice.EnqueueClip(apVoice.voice.BatteriesDepleted);
                 }
                 powerStatus = PowerState.Depleted;
             }
@@ -247,7 +247,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.NearMT)
                 {
-                    voice.EnqueueClip(voice.BatteriesNearlyEmpty);
+                    apVoice.EnqueueClip(apVoice.voice.BatteriesNearlyEmpty);
                 }
                 powerStatus = PowerState.NearMT;
             }
@@ -255,7 +255,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.Low)
                 {
-                    voice.EnqueueClip(voice.PowerLow);
+                    apVoice.EnqueueClip(apVoice.voice.PowerLow);
                 }
                 powerStatus = PowerState.Low;
             }
@@ -273,7 +273,7 @@ namespace VehicleFramework
             {
                 if (depthStatus < DepthState.Lethal)
                 {
-                    voice.EnqueueClip(voice.MaximumDepthReached);
+                    apVoice.EnqueueClip(apVoice.voice.MaximumDepthReached);
                 }
                 depthStatus = DepthState.Lethal;
             }
@@ -281,7 +281,7 @@ namespace VehicleFramework
             {
                 if (depthStatus < DepthState.Perilous)
                 {
-                    voice.EnqueueClip(voice.PassingSafeDepth);
+                    apVoice.EnqueueClip(apVoice.voice.PassingSafeDepth);
                 }
                 depthStatus = DepthState.Perilous;
             }
@@ -356,7 +356,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("OnPowerUp");
             isDead = false;
-            voice.EnqueueClip(voice.EnginePoweringUp);
+            apVoice.EnqueueClip(apVoice.voice.EnginePoweringUp);
         }
 
         void IPowerListener.OnPowerDown()
@@ -364,7 +364,7 @@ namespace VehicleFramework
             Logger.DebugLog("OnPowerDown");
             isDead = true;
             autoLeveling = false;
-            voice.EnqueueClip(voice.EnginePoweringDown);
+            apVoice.EnqueueClip(apVoice.voice.EnginePoweringDown);
         }
 
         void IPowerListener.OnBatterySafe()
@@ -392,18 +392,18 @@ namespace VehicleFramework
             Logger.DebugLog("OnPlayerEntry");
             if (powerStatus < PowerState.NearMT)
             {
-                voice.EnqueueClip(voice.WelcomeAboardAllSystemsOnline);
+                apVoice.EnqueueClip(apVoice.voice.WelcomeAboardAllSystemsOnline);
             }
             else
             {
-                voice.EnqueueClip(voice.WelcomeAboard);
+                apVoice.EnqueueClip(apVoice.voice.WelcomeAboard);
             }
         }
 
         void IPlayerListener.OnPlayerExit()
         {
             Logger.DebugLog("OnPlayerExit");
-            voice.EnqueueClip(voice.Goodbye);
+            apVoice.EnqueueClip(apVoice.voice.Goodbye);
         }
 
         void IPlayerListener.OnPilotBegin()
@@ -429,7 +429,7 @@ namespace VehicleFramework
         void IAutoPilotListener.OnAutoLevelBegin()
         {
             Logger.DebugLog("OnAutoLevelBegin");
-            voice.EnqueueClip(voice.Leveling);
+            apVoice.EnqueueClip(apVoice.voice.Leveling);
         }
 
         void IAutoPilotListener.OnAutoLevelEnd()
@@ -468,11 +468,11 @@ namespace VehicleFramework
                 dangerStatus = DangerState.LeviathanNearby;
                 if ((new System.Random()).NextDouble() < 0.5)
                 {
-                    voice.EnqueueClip(voice.LeviathanDetected);
+                    apVoice.EnqueueClip(apVoice.voice.LeviathanDetected);
                 }
                 else
                 {
-                    voice.EnqueueClip(voice.UhOh);
+                    apVoice.EnqueueClip(apVoice.voice.UhOh);
                 }
             }
         }

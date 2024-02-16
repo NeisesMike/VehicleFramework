@@ -143,6 +143,7 @@
     <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
+    <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
     <Compile Include="VehicleTypes\Skimmer.cs" />

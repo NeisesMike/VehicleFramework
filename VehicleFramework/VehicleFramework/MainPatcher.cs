@@ -132,6 +132,10 @@ namespace VehicleFramework
 
             // patch in the depth module upgrades
             ModulePrepper.RegisterModVehicleDepthModules();
+
+
+            UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
+            UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());
         }
 
         public void Patch()
@@ -276,20 +280,33 @@ namespace VehicleFramework
 
         [Choice("Autopilot Voice", Options = new[] { "ShirubaFoxy", "Chels-E", "Mikjaw", "Turtle", "Salli" }), OnChange(nameof(GrabNewVoiceLines))]
         public string voiceChoice = "ShirubaFoxy";
-
         public void GrabNewVoiceLines()
         {
             if (Player.main != null)
             {
-                foreach (var tmp in MainPatcher.voices)
+                foreach (var tmp in VoiceManager.voices)
                 {
-                    tmp.TryGetAllAudioClips(voiceChoice);
+                    tmp.SetVoice(VoiceManager.GetVoice(voiceChoice));
+                }
+            }
+        }
+
+        [Choice("Engine Sounds", Options = new[] { "ShirubaFoxy" }), OnChange(nameof(GrabNewEngineSounds))]
+        public string engineSounds = "ShirubaFoxy";
+        public void GrabNewEngineSounds()
+        {
+            if (Player.main != null)
+            {
+                foreach (var tmp in EngineSoundsManager.engines)
+                {
+                    tmp.SetVoice(EngineSoundsManager.GetVoice(engineSounds));
                 }
             }
         }
 
         [Slider("Engine Volume", Step = 1f, DefaultValue = 100, Min = 0, Max = 100)]
         public float engineVolume = 50f;
+
     }
 
 

@@ -16,6 +16,8 @@ namespace VehicleFramework.Engines
     {
         public ModVehicle mv;
         public Rigidbody rb;
+        public EngineSounds sounds;
+        public bool blockVoiceChange = false;
 
         protected virtual float FORWARD_TOP_SPEED => 1000;
         protected virtual float REVERSE_TOP_SPEED => 1000;
@@ -139,86 +141,65 @@ namespace VehicleFramework.Engines
             UpMomentum += inputMagnitude * VERT_ACCEL * Time.fixedDeltaTime;
         }
 
-        protected float _engineWhir = 0;
-        protected virtual float EngineWhir
+        protected float _engineHum = 0;
+        protected virtual float EngineHum
         {
             get
             {
-                return _engineWhir;
+                return _engineHum;
             }
             set
             {
                 if (value < 0)
                 {
-                    _engineWhir = 0;
+                    _engineHum = 0;
                 }
                 else if (10 < value)
                 {
-                    _engineWhir = 10;
+                    _engineHum = 10;
                 }
                 else
                 {
-                    _engineWhir = value;
+                    _engineHum = value;
                 }
             }
         }
-        protected virtual void UpdateEngineWhir(float inputMagnitude)
+        protected virtual void UpdateEngineHum(float inputMagnitude)
         {
             if (inputMagnitude == 0)
             {
                 inputMagnitude = -1;
             }
-            EngineWhir += inputMagnitude * Time.deltaTime;
+            EngineHum += inputMagnitude * Time.deltaTime;
         }
         protected bool isReadyToWhistle = true;
-        public AudioClip EngineWhirClip;
-        public AudioClip EngineWhistleClip;
         private AudioSource EngineSource1;
         private AudioSource EngineSource2;
 
+        public void Awake()
+        {
+            // register self with mainpatcher, for on-the-fly voice selection updating
+            EngineSoundsManager.engines.Add(this);
+        }
         // Start is called before the first frame update
         public void Start()
         {
             rb.centerOfMass = Vector3.zero;
             rb.angularDrag = 5f;
-            IEnumerator GrabEngineSounds()
-            {
-                string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string engineSoundsFolder = Path.Combine(modPath, "EngineSounds");
 
-                UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + engineSoundsFolder + "/engine1_high.ogg", AudioType.OGGVORBIS);
-                yield return www.SendWebRequest();
-                if (www.isHttpError || www.isNetworkError)
-                {
-                    Logger.Warn("WARNING: could not find engine1_high.ogg");
-                    EngineWhistleClip = null;
-                }
-                else
-                {
-                    EngineWhistleClip = DownloadHandlerAudioClip.GetContent(www);
-                }
-                EngineSource2.playOnAwake = false;
-                EngineSource2.clip = EngineWhistleClip;
+            sounds = EngineSoundsManager.GetDefaultVoice(mv);
 
-                www = UnityWebRequestMultimedia.GetAudioClip("file://" + engineSoundsFolder + "/engine1_low.ogg", AudioType.OGGVORBIS);
-                yield return www.SendWebRequest();
-                if (www.isHttpError || www.isNetworkError)
-                {
-                    Logger.Warn("WARNING: could not find engine1_low.ogg");
-                    EngineWhirClip = null;
-                }
-                else
-                {
-                    EngineWhirClip = DownloadHandlerAudioClip.GetContent(www);
-                }
-                EngineSource1.playOnAwake = false;
-                EngineSource1.clip = EngineWhirClip;
-            }
-            EngineSource1 = mv.gameObject.EnsureComponent<AudioSource>();
-            EngineSource2 = mv.gameObject.EnsureComponent<AudioSource>();
+            EngineSource1 = mv.gameObject.AddComponent<AudioSource>();
             EngineSource1.loop = true;
-            StartCoroutine(GrabEngineSounds());
+            EngineSource1.playOnAwake = false;
+            EngineSource1.clip = sounds.hum;
+            EngineSource1.priority = 0;
 
+            EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
+            EngineSource1.loop = false;
+            EngineSource2.playOnAwake = false;
+            EngineSource2.clip = sounds.whistle;
+            EngineSource2.priority = 0;
         }
         public virtual void FixedUpdate()
         {
@@ -253,13 +234,13 @@ namespace VehicleFramework.Engines
                 }
                 if (moveDirection == Vector3.zero)
                 {
-                    UpdateEngineWhir(-3);
+                    UpdateEngineHum(-3);
                 }
                 else
                 {
-                    UpdateEngineWhir(moveDirection.magnitude);
+                    UpdateEngineHum(moveDirection.magnitude);
                 }
-                PlayEngineWhir();
+                PlayEngineHum();
                 PlayEngineWhistle(moveDirection);
 
                 // Execute a state-based physics move
@@ -267,7 +248,7 @@ namespace VehicleFramework.Engines
             }
             else
             {
-                UpdateEngineWhir(-3);
+                UpdateEngineHum(-3);
             }
             ApplyDrag(moveDirection);
         }
@@ -343,9 +324,9 @@ namespace VehicleFramework.Engines
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
             mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
         }
-        public virtual void PlayEngineWhir()
+        public virtual void PlayEngineHum()
         {
-            EngineSource1.volume = EngineWhir / 10f * (MainPatcher.VFConfig.engineVolume / 100);
+            EngineSource1.volume = EngineHum / 10f * (MainPatcher.VFConfig.engineVolume / 100);
             if (mv.IsPowered())
             {
                 if (!EngineSource1.isPlaying)
@@ -360,6 +341,14 @@ namespace VehicleFramework.Engines
         }
         public virtual void PlayEngineWhistle(Vector3 moveDirection)
         {
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude < 1)
+            {
+                isReadyToWhistle = true;
+            }
+            else
+            {
+                isReadyToWhistle = false;
+            }
             if (EngineSource2.isPlaying)
             {
                 if (moveDirection.magnitude == 0)
@@ -371,17 +360,9 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) - 20f;
+                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) * 0.8f;
                     EngineSource2.Play();
                 }
-            }
-            if(gameObject.GetComponent<Rigidbody>().velocity.magnitude < 1)
-            {
-                isReadyToWhistle = true;
-            }
-            else
-            {
-                isReadyToWhistle = false;
             }
         }
 
@@ -422,6 +403,21 @@ namespace VehicleFramework.Engines
             ForwardMomentum = 0f;
             RightMomentum = 0f;
             UpMomentum = 0f;
+        }
+
+        public void SetVoice(EngineSounds inputVoice)
+        {
+            if (!blockVoiceChange)
+            {
+                sounds = inputVoice;
+            }
+        }
+        public void SetVoice(KnownEngineSounds voiceName)
+        {
+            if (!blockVoiceChange)
+            {
+                sounds = EngineSoundsManager.GetVoice(EngineSoundsManager.GetKnownVoice(voiceName));
+            }
         }
     }
 }
