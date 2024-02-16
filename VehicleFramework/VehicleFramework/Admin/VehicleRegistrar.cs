@@ -115,7 +115,7 @@ namespace VehicleFramework
                 }
                 Logger.Log("Validating the Registration of the " + mv.name);
                 thisName = mv.name + ": ";
-                if (mv.VehicleModel is null)
+                if (mv.VehicleModel == null)
                 {
                     Logger.Error(thisName + " A null ModVehicle.VehicleModel was passed for registration.");
                     return false;
@@ -177,18 +177,18 @@ namespace VehicleFramework
                 {
                     Logger.Warn(thisName + " No ModVehicle.CanopyWindows were provided. These must be specified to handle window transparencies.");
                 }
-                if (mv.BoundingBox is null)
+                if (mv.BoundingBox == null)
                 {
                     Logger.Error(thisName + " A null ModVehicle.BoundingBox was provided. This is necessary for the build bots to animate well.");
                     return false;
                 }
-                if (mv.CollisionModel is null)
+                if (mv.CollisionModel == null)
                 {
                     Logger.Warn(thisName + " A null ModVehicle.CollisionModel was provided. This is necessary for leviathans to grab the vehicle.");
                 }
                 foreach (VehicleParts.VehicleStorage vs in (mv.InnateStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>()).Concat(mv.ModularStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>()))
                 {
-                    if (vs.Container is null)
+                    if (vs.Container == null)
                     {
                         Logger.Error(thisName + " A null VehicleStorage.Container was provided. There would be no way to access this storage.");
                         return false;
@@ -206,7 +206,7 @@ namespace VehicleFramework
                 }
                 foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
                 {
-                    if (vu.Interface is null)
+                    if (vu.Interface == null)
                     {
                         Logger.Error(thisName + " A null VehicleUpgrades.Interface was provided. There would be no way to upgrade this vehicle.");
                         return false;
@@ -223,21 +223,26 @@ namespace VehicleFramework
                 }
                 foreach (VehicleParts.VehicleBattery vb in mv.Batteries.Concat(mv.BackupBatteries ?? Enumerable.Empty<VehicleParts.VehicleBattery>()))
                 {
-                    if (vb.BatterySlot is null)
+                    if (vb.BatterySlot == null)
                     {
                         Logger.Error(thisName + " A null VehicleBattery.BatterySlot was provided. There would be no way to access this battery.");
                         return false;
                     }
-                    if (vb.BatteryProxy is null)
+                    if (vb.BatteryProxy == null)
                     {
                         Logger.Log(thisName + " A null VehicleBattery.BatteryProxy was provided. VehicleFramework will not provide a model for this battery slot.");
                     }
                 }
                 foreach (VehicleParts.VehicleFloodLight vfl in (mv.HeadLights ?? Enumerable.Empty<VehicleParts.VehicleFloodLight>()))
                 {
-                    if (vfl.Light is null)
+                    if (vfl.Light == null)
                     {
                         Logger.Error(thisName + " A null VehicleFloodLight.Light was provided. There would be nothing from which to emit light.");
+                        return false;
+                    }
+                    if (vfl.Light.transform.Find("VolumetricLight") == null)
+                    {
+                        Logger.Error(thisName + " A headlight was missing its VolumetricLight.");
                         return false;
                     }
                     if (vfl.Intensity < 0)
@@ -252,12 +257,12 @@ namespace VehicleFramework
                     }
                 }
 
-                if (mv.StorageRootObject is null)
+                if (mv.StorageRootObject == null)
                 {
                     Logger.Error(thisName + " A null ModVehicle.StorageRootObject was provided. There would be no way to store things in this vehicle.");
                     return false;
                 }
-                if (mv.ModulesRootObject is null)
+                if (mv.ModulesRootObject == null)
                 {
                     Logger.Error(thisName + " A null ModVehicle.ModulesRootObject was provided. There would be no way to upgrade this vehicle.");
                     return false;
@@ -282,7 +287,7 @@ namespace VehicleFramework
                     Logger.Error(thisName + " A null ModVehicle.GetEncyEntry was provided. This is a possibly lengthy encyclopedia entry for the vehicle.");
                     return false;
                 }
-                if(mv.LeviathanGrabPoint is null)
+                if(mv.LeviathanGrabPoint == null)
                 {
                     Logger.Warn(thisName + " A null ModVehicle.LeviathanGrabPoint was provided. This is where leviathans attach to the vehicle. The root object will be used instead.");
                 }
@@ -310,7 +315,7 @@ namespace VehicleFramework
                 {
                     Logger.Warn(thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
                 }
-                if (mv.PilotSeats is null || mv.PilotSeats.Count == 0)
+                if (mv.PilotSeats == null || mv.PilotSeats.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.PilotSeats were provided. These specify what the player will click on to begin piloting the vehicle.");
                     return false;
@@ -349,76 +354,76 @@ namespace VehicleFramework
                     Logger.Error(thisName + " No ModVehicle.TetherSources were provided. These are necessary to keep the player 'grounded' within the vehicle.");
                     return false;
                 }
-                if (mv.ColorPicker is null)
+                if (mv.ColorPicker == null)
                 {
                     Logger.Log(thisName + " A null ModVehicle.ColorPicker was provided. You only need this if you implement the necessary painting functions.");
                 }
-                if (mv.Fabricator is null)
+                if (mv.Fabricator == null)
                 {
                     Logger.Warn(thisName + " A null ModVehicle.Fabricator was provided. You know what this is.");
                 }
-                if (mv.ControlPanel is null)
+                if (mv.ControlPanel == null)
                 {
                     Logger.Warn(thisName + " A null ModVehicle.ControlPanel was provided. This is necessary to toggle floodlights.");
                 }
-                if (mv.SteeringWheelLeftHandTarget is null)
+                if (mv.SteeringWheelLeftHandTarget == null)
                 {
                     Logger.Log(thisName + " A null ModVehicle.SteeringWheelLeftHandTarget was provided. This is what the player's left hand will 'grab' while you pilot.");
                 }
-                if (mv.SteeringWheelRightHandTarget is null)
+                if (mv.SteeringWheelRightHandTarget == null)
                 {
                     Logger.Log(thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
                 }
                 foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
                 {
-                    if (ps.Seat is null)
+                    if (ps.Seat == null)
                     {
                         Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
                         return false;
                     }
-                    if (ps.SitLocation is null)
+                    if (ps.SitLocation == null)
                     {
                         Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
                         return false;
                     }
-                    if (ps.LeftHandLocation is null)
+                    if (ps.LeftHandLocation == null)
                     {
                         Logger.Log(thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
                     }
-                    if (ps.RightHandLocation is null)
+                    if (ps.RightHandLocation == null)
                     {
                         Logger.Log(thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
                     }
-                    if (ps.ExitLocation is null)
+                    if (ps.ExitLocation == null)
                     {
                         Logger.Warn(thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
                     }
                 }
                 foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    if (vhs.Hatch is null)
+                    if (vhs.Hatch == null)
                     {
                         Logger.Error(thisName + " A null VehicleHatchStruct.Hatch was provided. There would be no way to enter/exit this vehicle.");
                         return false;
                     }
-                    if (vhs.EntryLocation is null)
+                    if (vhs.EntryLocation == null)
                     {
                         Logger.Error(thisName + " A null VehicleHatchStruct.EntryLocation was provided. There would be no way to enter/exit this vehicle.");
                         return false;
                     }
-                    if (vhs.ExitLocation is null)
+                    if (vhs.ExitLocation == null)
                     {
                         Logger.Error(thisName + " A null VehicleHatchStruct.ExitLocation was provided. There would be no way to enter/exit this vehicle.");
                         return false;
                     }
-                    if (vhs.SurfaceExitLocation is null)
+                    if (vhs.SurfaceExitLocation == null)
                     {
                         Logger.Warn(thisName + " A null VehicleHatchStruct.SurfaceExitLocation was provided. You might need this if you exit weirdly near the surface.");
                     }
                 }
                 foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>())
                 {
-                    if (vs.Container is null)
+                    if (vs.Container == null)
                     {
                         Logger.Error(thisName + " A null VehicleStorage.Container was provided. There would be no way to access this storage.");
                         return false;
@@ -436,9 +441,14 @@ namespace VehicleFramework
                 }
                 foreach (VehicleParts.VehicleFloodLight vfl in mv.FloodLights ?? Enumerable.Empty<VehicleParts.VehicleFloodLight>())
                 {
-                    if (vfl.Light is null)
+                    if (vfl.Light == null)
                     {
                         Logger.Error(thisName + " A null VehicleFloodLight.Light was provided. There would be nothing from which to emit light.");
+                        return false;
+                    }
+                    if (vfl.Light.transform.Find("VolumetricLight") == null)
+                    {
+                        Logger.Error(thisName + " A floodlight was missing its VolumetricLight.");
                         return false;
                     }
                     if (vfl.Intensity < 0)
@@ -455,7 +465,7 @@ namespace VehicleFramework
             }
             catch (Exception e)
             {
-                Logger.Error(thisName + " Exception Caught. Likely this ModVehicle is not implementing something it must. Check the abstract features of ModVehicle.\n\n" + e.ToString() + "\n\n");
+                Logger.Error(thisName + " Exception Caught. Likely this Submarine is not implementing something it must. Check the abstract features of Submarine.\n\n" + e.ToString() + "\n\n");
                 return false;
             }
 
@@ -481,39 +491,39 @@ namespace VehicleFramework
                     Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
                     return false;
                 }
-                if (mv.SteeringWheelLeftHandTarget is null)
+                if (mv.SteeringWheelLeftHandTarget == null)
                 {
                     Logger.Log(thisName + " A null ModVehicle.SteeringWheelLeftHandTarget was provided. This is what the player's left hand will 'grab' while you pilot.");
                 }
-                if (mv.SteeringWheelRightHandTarget is null)
+                if (mv.SteeringWheelRightHandTarget == null)
                 {
                     Logger.Log(thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
                 }
-                if (mv.PilotSeat.Seat is null)
+                if (mv.PilotSeat.Seat == null)
                 {
                     Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
                     return false;
                 }
-                if (mv.PilotSeat.SitLocation is null)
+                if (mv.PilotSeat.SitLocation == null)
                 {
                     Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
                     return false;
                 }
-                if (mv.PilotSeat.LeftHandLocation is null)
+                if (mv.PilotSeat.LeftHandLocation == null)
                 {
                     Logger.Log(thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
                 }
-                if (mv.PilotSeat.RightHandLocation is null)
+                if (mv.PilotSeat.RightHandLocation == null)
                 {
                     Logger.Log(thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
                 }
-                if (mv.PilotSeat.ExitLocation is null)
+                if (mv.PilotSeat.ExitLocation == null)
                 {
                     Logger.Warn(thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
                 }
                 foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    if (vhs.Hatch is null)
+                    if (vhs.Hatch == null)
                     {
                         Logger.Error(thisName + " A null VehicleHatchStruct.Hatch was provided. There would be no way to enter/exit this vehicle.");
                         return false;
@@ -530,7 +540,7 @@ namespace VehicleFramework
                 }
                 foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>())
                 {
-                    if (vs.Container is null)
+                    if (vs.Container == null)
                     {
                         Logger.Error(thisName + " A null VehicleStorage.Container was provided. There would be no way to access this storage.");
                         return false;
@@ -549,217 +559,35 @@ namespace VehicleFramework
             }
             catch (Exception e)
             {
-                Logger.Error(thisName + " Exception Caught. Likely this ModVehicle is not implementing something it must. Check the abstract features of ModVehicle.\n\n" + e.ToString() + "\n\n");
+                Logger.Error(thisName + " Exception Caught. Likely this Submersible is not implementing something it must. Check the abstract features of Submersible.\n\n" + e.ToString() + "\n\n");
                 return false;
             }
 
             Logger.Log("The Registration of the " + mv.name + " as a Submersible has been Validated.");
             return true;
         }
-
-
-        /*
-        public static bool ValidateRegistration(ModVehicle mv, ModVehicleEngine engine, Dictionary<TechType, int> recipe, PingType pt, Atlas.Sprite sprite, int modules, int arms, int baseCrushDepth, int maxHealth, int mass)
+        public static bool ValidateRegistration(Drone mv)
         {
+            if (!ValidateRegistration(mv as ModVehicle))
+            {
+                return false;
+            }
             string thisName = "";
             try
             {
-                if (mv is null)
-                {
-                    Logger.Error("An null mod vehicle was passed for registration.");
-                    return false;
-                }
-                if (mv.name == "")
-                {
-                    Logger.Error(thisName + " An empty name was provided for this vehicle.");
-                    return false;
-                }
-                Logger.Log("Validating the Registration of the " + mv.name);
                 thisName = mv.name + ": ";
-                if (mv.VehicleModel is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.VehicleModel was passed for registration.");
-                    return false;
-                }
-                if (engine is null)
+                if (mv.Engine is null)
                 {
                     Logger.Warn(thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
                 }
-                if (recipe is null)
+                if (mv.Camera is null)
                 {
-                    Logger.Warn(thisName + " An empty recipe was passed for registration. The default recipe will be used.");
-                }
-                if (sprite is null)
-                {
-                    Logger.Warn(thisName + " An empty sprite was passed for registration. The default ping sprite will be used.");
-                }
-                if (baseCrushDepth < 0)
-                {
-                    Logger.Error(thisName + " A negative crush depth was passed for registration. This vehicle would take crush damage even out of water.");
+                    Logger.Error(thisName + " No Drone.Camera was provided. This is how the player will see when they control the drone.");
                     return false;
                 }
-                if (maxHealth <= 0)
+                foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>())
                 {
-                    Logger.Error(thisName + " A non-positive max health was passed for registration. This vehicle would be destroyed as soon as it awakens.");
-                    return false;
-                }
-                if (mass <= 0)
-                {
-                    Logger.Error(thisName + " A non-positive mass was passed for registration. Don't do that.");
-                    return false;
-                }
-                if (mv.PilotSeats is null || mv.PilotSeats.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.PilotSeats were provided. These specify what the player will click on to begin piloting the vehicle.");
-                    return false;
-                }
-                if (mv.Hatches is null || mv.Hatches.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
-                    return false;
-                }
-                if (mv.InnateStorages is null || mv.InnateStorages.Count == 0)
-                {
-                    Logger.Warn(thisName + " No ModVehicle.InnateStorages were provided. These are lockers the vehicle always has.");
-                }
-                if (mv.ModularStorages is null || mv.ModularStorages.Count == 0)
-                {
-                    Logger.Log(thisName + " No ModVehicle.ModularStorages were provided. These are lockers that can be unlocked with upgrades.");
-                }
-                if (mv.Upgrades is null || mv.Upgrades.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.Upgrades were provided. These specify interfaces the player can click to insert and remove upgrades.");
-                    return false;
-                }
-                if (mv.Batteries is null || mv.Batteries.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.Batteries were provided. These are necessary to power the engines.");
-                    return false;
-                }
-                if (mv.BackupBatteries is null || mv.BackupBatteries.Count == 0)
-                {
-                    Logger.Log(thisName + " No ModVehicle.BackupBatteries were provided. This collection of batteries belong to the AI and will be used exclusively for life support, auto-leveling, and other AI tasks. The AI will use the main batteries instead.");
-                }
-                if (mv.HeadLights is null || mv.HeadLights.Count == 0)
-                {
-                    Logger.Warn(thisName + " No ModVehicle.HeadLights were provided. These lights would be activated when the player right clicks while piloting.");
-                }
-                if (mv.FloodLights is null || mv.FloodLights.Count == 0)
-                {
-                    Logger.Warn(thisName + " No ModVehicle.FloodLights were provided. These lights would be activated on the control panel.");
-                }
-                if (mv.NavigationPortLights is null || mv.NavigationPortLights.Count == 0)
-                {
-                    Logger.Log(thisName + " Some navigation lights were missing.");
-                }
-                if (mv.NavigationStarboardLights is null || mv.NavigationStarboardLights.Count == 0)
-                {
-                    Logger.Log(thisName + " Some navigation lights were missing.");
-                }
-                if (mv.NavigationPositionLights is null || mv.NavigationPositionLights.Count == 0)
-                {
-                    Logger.Log(thisName + " Some navigation lights were missing.");
-                }
-                if (mv.NavigationWhiteStrobeLights is null || mv.NavigationWhiteStrobeLights.Count == 0)
-                {
-                    Logger.Log(thisName + " Some navigation lights were missing.");
-                }
-                if (mv.NavigationRedStrobeLights is null || mv.NavigationRedStrobeLights.Count == 0)
-                {
-                    Logger.Log(thisName + " Some navigation lights were missing.");
-                }
-                if (mv.WaterClipProxies is null || mv.WaterClipProxies.Count == 0)
-                {
-                    Logger.Warn(thisName + " No ModVehicle.WaterClipProxies were provided. These are necessary to keep the ocean surface out of the vehicle.");
-                }
-                if (mv.CanopyWindows is null || mv.CanopyWindows.Count == 0)
-                {
-                    Logger.Warn(thisName + " No ModVehicle.CanopyWindows were provided. These must be specified to handle window transparencies.");
-                }
-                if (mv.TetherSources is null || mv.TetherSources.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.TetherSources were provided. These are necessary to keep the player 'grounded' within the vehicle.");
-                    return false;
-                }
-                if (mv.ColorPicker is null)
-                {
-                    Logger.Log(thisName + " A null ModVehicle.ColorPicker was provided. You only need this if you implement the necessary painting functions.");
-                }
-                if (mv.Fabricator is null)
-                {
-                    Logger.Warn(thisName + " A null ModVehicle.Fabricator was provided. You know what this is.");
-                }
-                if (mv.BoundingBox is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.BoundingBox was provided. This is necessary for the build bots to animate well.");
-                    return false;
-                }
-                if (mv.ControlPanel is null)
-                {
-                    Logger.Warn(thisName + " A null ModVehicle.ControlPanel was provided. This is necessary to toggle floodlights.");
-                }
-                if (mv.CollisionModel is null)
-                {
-                    Logger.Warn(thisName + " A null ModVehicle.CollisionModel was provided. This is necessary for leviathans to grab the vehicle.");
-                }
-                if (mv.SteeringWheelLeftHandTarget is null)
-                {
-                    Logger.Log(thisName + " A null ModVehicle.SteeringWheelLeftHandTarget was provided. This is what the player's left hand will 'grab' while you pilot.");
-                }
-                if (mv.SteeringWheelRightHandTarget is null)
-                {
-                    Logger.Log(thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
-                }
-                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
-                {
-                    if (ps.Seat is null)
-                    {
-                        Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
-                        return false;
-                    }
-                    if (ps.SitLocation is null)
-                    {
-                        Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
-                        return false;
-                    }
-                    if (ps.LeftHandLocation is null)
-                    {
-                        Logger.Log(thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
-                    }
-                    if (ps.RightHandLocation is null)
-                    {
-                        Logger.Log(thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
-                    }
-                    if (ps.ExitLocation is null)
-                    {
-                        Logger.Warn(thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
-                    }
-                }
-                foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
-                {
-                    if (vhs.Hatch is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleHatchStruct.Hatch was provided. There would be no way to enter/exit this vehicle.");
-                        return false;
-                    }
-                    if (vhs.EntryLocation is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleHatchStruct.EntryLocation was provided. There would be no way to enter/exit this vehicle.");
-                        return false;
-                    }
-                    if (vhs.ExitLocation is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleHatchStruct.ExitLocation was provided. There would be no way to enter/exit this vehicle.");
-                        return false;
-                    }
-                    if (vhs.SurfaceExitLocation is null)
-                    {
-                        Logger.Warn(thisName + " A null VehicleHatchStruct.SurfaceExitLocation was provided. You might need this if you exit weirdly near the surface.");
-                    }
-                }
-                foreach (VehicleParts.VehicleStorage vs in (mv.InnateStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>()).Concat(mv.ModularStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>()))
-                {
-                    if (vs.Container is null)
+                    if (vs.Container == null)
                     {
                         Logger.Error(thisName + " A null VehicleStorage.Container was provided. There would be no way to access this storage.");
                         return false;
@@ -775,86 +603,27 @@ namespace VehicleFramework
                         return false;
                     }
                 }
-                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                if(mv.PairingButtons == null || mv.PairingButtons.Count < 1)
                 {
-                    if (vu.Interface is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleUpgrades.Interface was provided. There would be no way to upgrade this vehicle.");
-                        return false;
-                    }
-                    if (vu.Flap is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleUpgrades.Flap was provided. The upgrades interface requires this. It will be rotated by the angles in this struct when activated. You can set the rotation angle to zero to take no action.");
-                        return false;
-                    }
-                    if (vu.ModuleProxies is null)
-                    {
-                        Logger.Log(thisName + " A null VehicleUpgrades.ModuleProxies was provided. VehicleFramework will not provide a model for this upgrade slot.");
-                    }
-                }
-                foreach (VehicleParts.VehicleBattery vb in mv.Batteries.Concat(mv.BackupBatteries ?? Enumerable.Empty<VehicleParts.VehicleBattery>()))
-                {
-                    if (vb.BatterySlot is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleBattery.BatterySlot was provided. There would be no way to access this battery.");
-                        return false;
-                    }
-                    if (vb.BatteryProxy is null)
-                    {
-                        Logger.Log(thisName + " A null VehicleBattery.BatteryProxy was provided. VehicleFramework will not provide a model for this battery slot.");
-                    }
-                }
-                foreach (VehicleParts.VehicleFloodLight vfl in (mv.HeadLights ?? Enumerable.Empty<VehicleParts.VehicleFloodLight>()).Concat(mv.FloodLights ?? Enumerable.Empty<VehicleParts.VehicleFloodLight>()))
-                {
-                    if (vfl.Light is null)
-                    {
-                        Logger.Error(thisName + " A null VehicleFloodLight.Light was provided. There would be nothing from which to emit light.");
-                        return false;
-                    }
-                    if (vfl.Intensity < 0)
-                    {
-                        Logger.Error(thisName + " A negative VehicleFloodLight.Intensity was provided. The light would be totally dark.");
-                        return false;
-                    }
-                    if (vfl.Range < 0)
-                    {
-                        Logger.Error(thisName + " A negative VehicleFloodLight.Range was provided. The light would be totally dark.");
-                        return false;
-                    }
-                }
-
-                if (mv.StorageRootObject is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.StorageRootObject was provided. There would be no way to store things in this vehicle.");
-                    return false;
-                }
-                if (mv.ModulesRootObject is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.ModulesRootObject was provided. There would be no way to upgrade this vehicle.");
-                    return false;
-                }
-                if (mv.GetDescription() is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.GetDescription was provided. This is a brief description of the vehicle.");
-                    return false;
-                }
-                if (mv.GetEncyEntry() is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.GetEncyEntry was provided. This is a possibly lengthy encyclopedia entry for the vehicle.");
+                    Logger.Error(thisName + " No pairing buttons were supplied. This GameObject is required for pairing with remote stations.");
                     return false;
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(thisName + " Exception Caught. Likely this ModVehicle is not implementing something it must. Check the abstract features of ModVehicle.\n\n" + e.ToString() + "\n\n");
+                Logger.Error(thisName + " Exception Caught. Likely this Drone is not implementing something it must. Check the abstract features of Drone.\n\n" + e.ToString() + "\n\n");
                 return false;
             }
 
-            Logger.Log("The Registration of the " + mv.name + " has been Validated.");
+            Logger.Log("The Registration of the " + mv.name + " as a Drone has been Validated.");
             return true;
+
+
+            /*
+            public abstract Camera Camera { get; }
+            */
+
         }
-         
-         */
 
     }
 }

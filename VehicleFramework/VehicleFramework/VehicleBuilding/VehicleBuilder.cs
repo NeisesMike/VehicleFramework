@@ -143,30 +143,33 @@ namespace VehicleFramework
             int iter = 0;
             try
             {
-                foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
+                if (mv.InnateStorages != null)
                 {
-                    vs.Container.SetActive(false);
-
-                    var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
-                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                    cont.storageLabel = "Vehicle Storage " + iter.ToString();
-                    cont.height = vs.Height;
-                    cont.width = vs.Width;
-
-                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                    var inp = vs.Container.EnsureComponent<InnateStorageInput>();
-                    inp.mv = mv;
-                    inp.slotID = iter;
-                    iter++;
-                    inp.model = vs.Container;
-                    if(vs.Container.GetComponentInChildren<Collider>() is null)
+                    foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
                     {
-                        inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                        vs.Container.SetActive(false);
+
+                        var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
+                        cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                        cont.storageLabel = "Vehicle Storage " + iter.ToString();
+                        cont.height = vs.Height;
+                        cont.width = vs.Width;
+
+                        FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                        FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                        var inp = vs.Container.EnsureComponent<InnateStorageInput>();
+                        inp.mv = mv;
+                        inp.slotID = iter;
+                        iter++;
+                        inp.model = vs.Container;
+                        if (vs.Container.GetComponentInChildren<Collider>() is null)
+                        {
+                            inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                        }
+                        inp.openSound = storageOpenSound;
+                        inp.closeSound = storageCloseSound;
+                        vs.Container.SetActive(true);
                     }
-                    inp.openSound = storageOpenSound;
-                    inp.closeSound = storageCloseSound;
-                    vs.Container.SetActive(true);
                 }
             }
             catch (Exception e)
@@ -178,29 +181,32 @@ namespace VehicleFramework
             iter = 0;
             try
             {
-                foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
+                if (mv.ModularStorages != null)
                 {
-                    vs.Container.SetActive(false);
-
-                    var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
-                    cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                    cont.storageLabel = "Modular Storage " + iter.ToString();
-                    cont.height = vs.Height;
-                    cont.width = vs.Width;
-
-                    FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
-                    FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
-                    var inp = vs.Container.EnsureComponent<ModularStorageInput>();
-                    inp.mv = mv;
-                    inp.slotID = iter;
-                    iter++;
-                    inp.model = vs.Container;
-                    if (vs.Container.GetComponentInChildren<Collider>() is null)
+                    foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
                     {
-                        inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                        vs.Container.SetActive(false);
+
+                        var cont = vs.Container.EnsureComponent<SeamothStorageContainer>();
+                        cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                        cont.storageLabel = "Modular Storage " + iter.ToString();
+                        cont.height = vs.Height;
+                        cont.width = vs.Width;
+
+                        FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+                        FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+                        var inp = vs.Container.EnsureComponent<ModularStorageInput>();
+                        inp.mv = mv;
+                        inp.slotID = iter;
+                        iter++;
+                        inp.model = vs.Container;
+                        if (vs.Container.GetComponentInChildren<Collider>() is null)
+                        {
+                            inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+                        }
+                        inp.openSound = storageOpenSound;
+                        inp.closeSound = storageCloseSound;
                     }
-                    inp.openSound = storageOpenSound;
-                    inp.closeSound = storageCloseSound;
                 }
             }
             catch (Exception e)
@@ -211,15 +217,23 @@ namespace VehicleFramework
             }
             try
             {
-                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                if (mv.Upgrades != null)
                 {
-                    VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                    vuci.flap = vu.Flap.transform;
-                    vuci.anglesOpened = vu.AnglesOpened;
-                    vuci.anglesClosed = vu.AnglesClosed;
-                    mv.upgradesInput = vuci;
-                    var up = vu.Interface.EnsureComponent<UpgradeProxy>();
-                    up.proxies = vu.ModuleProxies;
+                    foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                    {
+                        VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
+                        vuci.flap = vu.Flap.transform;
+                        vuci.anglesOpened = vu.AnglesOpened;
+                        vuci.anglesClosed = vu.AnglesClosed;
+                        mv.upgradesInput = vuci;
+                        var up = vu.Interface.EnsureComponent<UpgradeProxy>();
+                        up.proxies = vu.ModuleProxies;
+                    }
+                }
+                else
+                {
+                    Logger.Error("The ModVehicle.Upgrades was null.");
+                    return false;
                 }
             }
             catch (Exception e)
@@ -232,7 +246,6 @@ namespace VehicleFramework
         }
         public static bool SetupObjects(Submarine mv)
         {
-            int iter = 0;
             try
             {
                 foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
@@ -266,7 +279,6 @@ namespace VehicleFramework
                 Logger.Error(e.ToString());
                 return false;
             }
-            iter = 0;
             // Configure the Control Panel
             try
             {
@@ -533,12 +545,30 @@ namespace VehicleFramework
         }
         public static void SetupEngine(Submarine mv)
         {
+            if(mv.Engine == null)
+            {
+                mv.Engine = mv.gameObject.AddComponent<AtramaEngine>();
+            }
             // Add the engine (physics control)
             mv.Engine.mv = mv;
             mv.Engine.rb = mv.useRigidbody;
         }
         public static void SetupEngine(Submersible mv)
         {
+            if (mv.Engine == null)
+            {
+                mv.Engine = mv.gameObject.AddComponent<CricketEngine>();
+            }
+            // Add the engine (physics control)
+            mv.Engine.mv = mv;
+            mv.Engine.rb = mv.useRigidbody;
+        }
+        public static void SetupEngine(Drone mv)
+        {
+            if (mv.Engine == null)
+            {
+                mv.Engine = mv.gameObject.AddComponent<CricketEngine>();
+            }
             // Add the engine (physics control)
             mv.Engine.mv = mv;
             mv.Engine.rb = mv.useRigidbody;
@@ -604,16 +634,19 @@ namespace VehicleFramework
         }
         public static void SetupWaterClipping(ModVehicle mv)
         {
-            // Enable water clipping for proper interaction with the surface of the ocean
-            WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
-            foreach (GameObject proxy in mv.WaterClipProxies)
+            if (mv.WaterClipProxies != null)
             {
-                WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
-                waterClip.shape = WaterClipProxy.Shape.Box;
-                //"""Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.""" -Lee23
-                waterClip.clipMaterial = seamothWCP.clipMaterial;
-                //"""You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.""" -Lee23
-                waterClip.gameObject.layer = seamothWCP.gameObject.layer;
+                // Enable water clipping for proper interaction with the surface of the ocean
+                WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
+                foreach (GameObject proxy in mv.WaterClipProxies)
+                {
+                    WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
+                    waterClip.shape = WaterClipProxy.Shape.Box;
+                    //"""Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.""" -Lee23
+                    waterClip.clipMaterial = seamothWCP.clipMaterial;
+                    //"""You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.""" -Lee23
+                    waterClip.gameObject.layer = seamothWCP.gameObject.layer;
+                }
             }
         }
         public static void SetupSubName(ModVehicle mv)
@@ -744,6 +777,7 @@ namespace VehicleFramework
             SetupVehicleConfig(mv);
             SetupCrushDamage(mv, 15, 1);
             SetupWaterClipping(mv);
+            SetupSubName(mv);
             SetupCollisionSound(mv);
             SetupOutOfBoundsWarp(mv);
             SetupConstructionObstacle(mv);

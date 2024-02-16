@@ -54,6 +54,13 @@ namespace VehicleFramework
         public abstract int Mass { get; }
         public abstract int NumModules { get; }
         public abstract bool HasArms { get; }
+        public virtual TechType UnlockedWith
+        {
+            get
+            {
+                return TechType.Constructor;
+            }
+        }
 
         #endregion
 
@@ -209,6 +216,7 @@ namespace VehicleFramework
             {
                 toggledActions.Where(x => x.Item1 == slotID).Where(x => x.Item2 != null).ToList().ForEach(x => StopCoroutine(x.Item2));
             }
+            base.OnUpgradeModuleToggle(slotID, active);
         }
         public override void OnUpgradeModuleUse(TechType techType, int slotID)
         {
@@ -229,6 +237,7 @@ namespace VehicleFramework
                 moduleUseAction.Item1(this, slotID, techType, charge, slotCharge);
                 energyInterface.ConsumeEnergy(moduleUseAction.Item3);
             }
+            base.OnUpgradeModuleUse(techType, slotID);
         }
         /*
         public override void OnCollisionEnter(Collision col)
@@ -310,7 +319,7 @@ namespace VehicleFramework
                     window?.SetActive(false);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //It's okay if the vehicle doesn't have a canopy
             }
@@ -328,7 +337,7 @@ namespace VehicleFramework
                     window?.SetActive(true);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //It's okay if the vehicle doesn't have a canopy
             }
@@ -884,16 +893,16 @@ namespace VehicleFramework
         }
         public static void MaybeControlRotation(Vehicle veh)
         {
-            if (Player.main.GetVehicle() != veh)
-            {
-                return;
-            }
             ModVehicle mv = veh as ModVehicle;
             if (mv is null)
             {
                 return;
             }
             if (Player.main.mode != Player.Mode.LockedPiloting)
+            {
+                return;
+            }
+            if (!mv.IsPlayerDry)
             {
                 return;
             }

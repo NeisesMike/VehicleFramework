@@ -27,7 +27,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual GameObject ColorPicker { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
-        public abstract ModVehicleEngine Engine { get; }
+        public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<Light> InteriorLights { get; }
 
 
@@ -251,7 +251,10 @@ namespace VehicleFramework.VehicleTypes
                 }
                 yield break;
             }
-            StartCoroutine(TrySpawnFabricator());
+            if (Fabricator != null)
+            {
+                StartCoroutine(TrySpawnFabricator());
+            }
         }
         public virtual void PaintNameDefaultStyle(string name)
         {

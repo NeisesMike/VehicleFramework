@@ -18,9 +18,7 @@ namespace VehicleFramework.VehicleTypes
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
-
-
-        public abstract ModVehicleEngine Engine { get; }
+        public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
 
         public override bool CanPilot()

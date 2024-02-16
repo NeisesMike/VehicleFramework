@@ -52,10 +52,15 @@ namespace VehicleFramework
                 MyLog.LogInfo("[VehicleFramework] " + message);
             }
         }
-        public static void Output(string msg)
+        public static void Output(string msg, int x=500, int y=0)
         {
-            BasicText message = new BasicText(500, 0);
-            message.ShowMessage(msg, 5);
+            BasicText message = new BasicText(x, y);
+            message.ShowMessage(msg, 4);
+        }
+        public static void Output(string msg, float time, int x = 500, int y = 0)
+        {
+            BasicText message = new BasicText(x, y);
+            message.ShowMessage(msg, time);
         }
         public static void OutputLong(string msg)
         {
@@ -69,8 +74,8 @@ namespace VehicleFramework
         }
     }
 
-    [BepInPlugin("com.mikjaw.subnautica.vehicleframework.mod", "VehicleFramework", "0.9.6.3")]
-    [BepInDependency("com.snmodding.nautilus")]
+    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
     public class MainPatcher : BaseUnityPlugin
     {
 
@@ -158,11 +163,12 @@ namespace VehicleFramework
             void SetWorldLoaded()
             {
                 VehicleManager.isWorldLoaded = true;
+                VoiceManager.voices.ForEach(x => x.NotifyReadyToSpeak());
             }
             Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
             Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);
 
-            var harmony = new Harmony("com.mikjaw.subnautica.vehicleframework.mod");
+            var harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             harmony.PatchAll();
         
             // Patch SubnauticaMap with appropriate ping sprites, lest it crash.

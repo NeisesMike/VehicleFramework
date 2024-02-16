@@ -107,6 +107,10 @@ namespace VehicleFramework
                     // skip the prefabs
                     continue;
                 }
+                if (mv.ModularStorages == null)
+                {
+                    return allVehiclesStoragesContents;
+                }
                 List<Tuple<int, batteries>> thisVehiclesStoragesContents = new List<Tuple<int, batteries>>();
 
                 for (int i = 0; i < mv.ModularStorages.Count; i++)
