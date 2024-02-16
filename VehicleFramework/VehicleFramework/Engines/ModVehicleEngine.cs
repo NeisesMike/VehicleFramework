@@ -293,6 +293,13 @@ namespace VehicleFramework.Engines
         }
         public virtual void ApplyPlayerControls(Vector3 moveDirection)
         {
+            // Thank you to MrPurple6411 for this snip regarding VehicleAccelerationModifier
+            var modifiers = base.gameObject.GetComponentsInChildren<VehicleAccelerationModifier>();
+            foreach (var modifier in modifiers)
+            {
+                modifier.ModifyAcceleration(ref moveDirection);
+            }
+
             // Control velocity
             UpdateRightMomentum(moveDirection.x);
             UpdateUpMomentum(moveDirection.y);
