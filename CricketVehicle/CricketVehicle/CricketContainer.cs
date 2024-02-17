@@ -162,7 +162,6 @@ namespace CricketVehicle
 			rb.angularDrag = 1f;
 
 			gameObject.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
-			LargeWorldEntity.Register(gameObject);
 
 			gameObject.SetActive(true);
 		}
@@ -205,11 +204,11 @@ namespace CricketVehicle
 			StartCoroutine(RegisterWithManager());
 		}
 		public IEnumerator RegisterWithManager()
-        {
-			while(!VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted)
-            {
+		{
+			while (!VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted)
+			{
 				yield return null;
-            }
+			}
 			VehicleFramework.Admin.GameObjectManager<CricketContainer>.Register(this);
 		}
 		public void OnDestroy()

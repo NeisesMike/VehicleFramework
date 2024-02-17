@@ -28,14 +28,19 @@ namespace CricketVehicle
 {
     public static class Logger
     {
+        internal static ManualLogSource MyLog { get; set; }
         public static void Log(string message)
         {
-            UnityEngine.Debug.Log("[CricketVehicle] " + message);
+            MyLog.LogInfo(message);
         }
-        public static void Output(string msg)
+        public static void Error(string message)
         {
-            BasicText message = new BasicText(500, 0);
-            message.ShowMessage(msg, 5);
+            MyLog.LogError(message);
+        }
+        public static void Output(string msg, int x = 500, int y = 0)
+        {
+            BasicText message = new BasicText(x, y);
+            message.ShowMessage(msg, 4);
         }
     }
 
@@ -100,6 +105,7 @@ namespace CricketVehicle
         }
         public void Awake()
         {
+            CricketVehicle.Logger.MyLog = base.Logger;
             Cricket.GetAssets();
             cricketContainerTT = RegisterCricketContainer();
             SaveData saveData = SaveDataHandler.RegisterSaveDataCache<SaveData>();
@@ -109,17 +115,21 @@ namespace CricketVehicle
             {
                 SaveData data = e.Instance as SaveData;
                 data.InnateStorages = SerializeStorage();
+                data.AttachmentStatuses = SerializeAttachmentStatuses();
             };
 
             saveData.OnFinishedLoading += (object sender, JsonFileEventArgs e) =>
             {
                 ContainerSaveData = e.Instance as SaveData;
+                UWE.CoroutineHost.StartCoroutine(SaveUtils.ReattachContainers(ContainerSaveData));
             };
         }
+
+
         public void Start()
         {
             config = OptionsPanelHandler.RegisterModOptions<CricketConfig>();
-            var harmony = new Harmony("com.mikjaw.subnautica.cricket.mod");
+            var harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             harmony.PatchAll();
             UWE.CoroutineHost.StartCoroutine(Cricket.Register());
         }
@@ -199,11 +209,21 @@ namespace CricketVehicle
             }
             yield break;
         }
+        internal static List<Tuple<Vector3, bool>> SerializeAttachmentStatuses()
+        {
+            return VehicleFramework.Admin.GameObjectManager<CricketContainer>.AllSuchObjects
+                .Where(x => x != null && x.transform != null)
+                .Select(x => new Tuple<Vector3, bool>(x.transform.position, SaveUtils.IsAttached(x)))
+                .ToList();
+        }
     }
     [FileName("cricket_containers")]
     internal class SaveData : SaveDataCache
     {
+        // location of the storage container : storage contents
         public List<Tuple<Vector3, innateStorage>> InnateStorages { get; set; }
+        // location of the storage container : attachment status (true only if this container was attached at save-time)
+        public List<Tuple<Vector3, bool>> AttachmentStatuses { get; set; }
     }
 
     [Menu("Cricket Vehicle Options")]

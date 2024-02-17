@@ -29,31 +29,11 @@ namespace CricketVehicle
             }
         }
         public CricketContainer currentMountedContainer;
-        public GameObject fabricator
-        {
-            get
-            {
-                return transform.Find("Fabricator").gameObject;
-            }
-        }
 
         public override void Awake()
         {
             base.Awake();
-            //SetupFabricator();
-            fabricator.SetActive(false);
-        }
-        public void SetupFabricator()
-        {
-            GhostCrafter crafter;
-            crafter = fabricator.EnsureComponent<Fabricator>();
-
-            CraftTree.Type mycraftTree = new CraftTree.Type();
-            Nautilus.Handlers.CraftTreeHandler.AddCraftingNode(mycraftTree, MainPatcher.cricketContainerTT, "");
-
-            crafter.craftTree = mycraftTree;
-            crafter.handOverText = "Use Cricket Fabricator";
-            crafter.ghost.itemSpawnPoint = ContainerMountPoint;
+            LargeWorldEntity.Register(gameObject);
         }
         private bool waitingForButtonRelease = false;
         public override void Update()
@@ -160,6 +140,10 @@ namespace CricketVehicle
         }
         public void AttachContainer(CricketContainer container)
         {
+            if (HasContainerAttached)
+            {
+                return;
+            }
             container.transform.SetParent(ContainerMountPoint);
             container.transform.localPosition = Vector3.zero;
             container.transform.localRotation = Quaternion.identity;
@@ -233,7 +217,7 @@ namespace CricketVehicle
         public override void PlayerEntry()
         {
             base.PlayerEntry();
-            Nautilus.Utility.BasicText message = new Nautilus.Utility.BasicText(500, 0);
+            Nautilus.Utility.BasicText message = new Nautilus.Utility.BasicText(500, 100);
             string msg;
             if (HasContainerAttached)
             {

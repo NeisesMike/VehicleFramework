@@ -99,6 +99,7 @@
     <Compile Include="PlayerPatcher.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveUtils.cs" />
     <Compile Include="VFXConstructingPatcher.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
