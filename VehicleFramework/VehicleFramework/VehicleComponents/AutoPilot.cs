@@ -267,7 +267,7 @@ namespace VehicleFramework
         private void UpdateDepthState()
         {
             float crushDepth = GetComponent<CrushDamage>().crushDepth * -1;
-            float perilousDepth = crushDepth + 100;
+            float perilousDepth = crushDepth * 0.9f;
             float depth = transform.position.y;
             if (depth < crushDepth)
             {
