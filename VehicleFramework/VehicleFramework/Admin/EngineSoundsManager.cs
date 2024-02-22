@@ -30,7 +30,6 @@ namespace VehicleFramework
         private static Dictionary<string, EngineSounds> EngineSoundss = new Dictionary<string, EngineSounds>();
         // vehicle names : EngineSounds names
         private static Dictionary<string, string> defaultEngineSounds = new Dictionary<string, string>();
-        public static AudioClip silence;
         public static EngineSounds silentVoice = new EngineSounds();
         public static void RegisterVoice(string name, EngineSounds voice)
         {
@@ -50,13 +49,13 @@ namespace VehicleFramework
             }
             Logger.Log("Successfully registered engine-sounds: " + name);
         }
-        public static IEnumerator RegisterVoice(string name, bool isInCallingAssembly=false)
+        public static IEnumerator RegisterVoice(string name, string voicepath="")
         {
             yield return LoadEngineSoundClips(name, EngineSounds =>
             {
                 // Once the voice is loaded, store it in the dictionary
                 RegisterVoice(name, EngineSounds);
-            }, isInCallingAssembly);
+            }, voicepath);
         }
         public static EngineSounds GetVoice(string name)
         {
@@ -105,7 +104,7 @@ namespace VehicleFramework
             }
             catch(Exception e)
             {
-                Logger.Warn("No default engine sounds for vehicle type: " + mv.name + ". Using Shiruba." + e.Message);
+                Logger.Warn("No default engine sounds for vehicle type: " + mv.name + ". Using Shiruba. " + e.Message);
                 return GetVoice(GetKnownVoice(KnownEngineSounds.ShirubaFoxy));
             }
         }
@@ -116,38 +115,32 @@ namespace VehicleFramework
         }
         public static IEnumerator GetSilence()
         {
-            string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string autoPilotVoicesFolder = Path.Combine(modPath, "AutoPilotVoices");
-            UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicesFolder + "/Silence.ogg", AudioType.OGGVORBIS);
-            yield return www.SendWebRequest();
-            if (www.isHttpError || www.isNetworkError)
+            while(VoiceManager.silence == null)
             {
-                Logger.Error("ERROR: Silence.ogg not found. Directory error.");
-                yield break;
+                yield return null;
             }
-            silence = DownloadHandlerAudioClip.GetContent(www);
-
             silentVoice = new EngineSounds
             {
-                hum = silence,
-                whistle = silence,
+                hum = VoiceManager.silence,
+                whistle = VoiceManager.silence,
             };
 
             yield break;
         }
         // Method signature with a callback to return the EngineSounds instance
-        public static IEnumerator LoadEngineSoundClips(string voice, Action<EngineSounds> onComplete, bool isInCallingAssembly)
+        public static IEnumerator LoadEngineSoundClips(string voice, Action<EngineSounds> onComplete, string voicepath)
         {
             EngineSounds returnVoice = new EngineSounds();
-
+            
             string modPath = "";
-            if (isInCallingAssembly)
+            if(voicepath == "")
             {
-                modPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+                modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
             }
             else
             {
-                modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                modPath = voicepath;
             }
             string engineSoundsFolder = Path.Combine(modPath, "EngineSounds");
             string engineSoundPath = Path.Combine(engineSoundsFolder, voice) + "/";
@@ -171,7 +164,7 @@ namespace VehicleFramework
                 {
                     // Handle error, potentially logging and assigning Silence
                     Logger.Warn($"WARNING: {clipName} could not be loaded. Assigning Silence.");
-                    typeof(EngineSounds).GetField(clipName).SetValue(returnVoice, silence);
+                    typeof(EngineSounds).GetField(clipName).SetValue(returnVoice, VoiceManager.silence);
                 });
             }
 

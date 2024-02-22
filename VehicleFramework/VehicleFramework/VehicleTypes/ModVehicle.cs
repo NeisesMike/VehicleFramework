@@ -94,6 +94,8 @@ namespace VehicleFramework
             }
             voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
+            voice.voice = VoiceManager.GetDefaultVoice(this);
+
 
             upgradeOnAddedActions.Add(storageModuleAction);
             upgradeOnAddedActions.Add(armorPlatingModuleAction);
@@ -121,7 +123,16 @@ namespace VehicleFramework
             // Register our new vehicle with Vehicle Framework
             VehicleManager.EnrollVehicle(this);
             isInited = true;
-            //voice.NotifyReadyToSpeak();
+            StartCoroutine(WaitUntilReadyToSpeak());
+        }
+        private IEnumerator WaitUntilReadyToSpeak()
+        {
+            while(!Admin.GameStateWatcher.IsWorldSettled)
+            {
+                yield return null;
+            }
+            voice.NotifyReadyToSpeak();
+            yield break;
         }
         public IEnumerator ManageMyWaterProxies()
         {

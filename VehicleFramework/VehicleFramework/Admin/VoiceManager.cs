@@ -70,13 +70,13 @@ namespace VehicleFramework
             }
             Logger.Log("Successfully registered voice: " + name);
         }
-        public static IEnumerator RegisterVoice(string name, bool isInCallingAssembly = false)
+        public static IEnumerator RegisterVoice(string name, string voicepath="")
         {
             yield return LoadVoiceClips(name, vehicleVoice =>
             {
                 // Once the voice is loaded, store it in the dictionary
                 RegisterVoice(name, vehicleVoice);
-            }, isInCallingAssembly);
+            }, voicepath);
         }
         public static VehicleVoice GetVoice(string name)
         {
@@ -96,6 +96,7 @@ namespace VehicleFramework
             {
                 Logger.Error("GetVoice failed: " + e.Message);
             }
+            Logger.Log("Assigning the silent voice.");
             return silentVoice;
         }
         public static void RegisterDefault(ModVehicle mv, string voice)
@@ -127,14 +128,17 @@ namespace VehicleFramework
             catch (KeyNotFoundException e)
             {
                 Logger.Warn("Default voice option not found for vehicle: " + mv.name + ". " + e.Message);
+                goto exit;
             }
             catch (ArgumentNullException e)
             {
-                Logger.Warn("That mv.name was null: " + e.Message);
+                Logger.Error("That mv.name was null: " + e.Message);
+                goto exit;
             }
             catch (Exception e)
             {
                 Logger.Error("GetDefaultVoice option failed: " + e.Message);
+                goto exit;
             }
 
             try
@@ -147,12 +151,15 @@ namespace VehicleFramework
             }
             catch (ArgumentNullException e)
             {
-                Logger.Warn("That default voice index was null: " + e.Message);
+                Logger.Error("That default voice index was null: " + e.Message);
             }
             catch (Exception e)
             {
                 Logger.Error("GetDefaultVoice failed: " + e.Message);
             }
+
+        exit:
+            Logger.Log("Assigning " + MainPatcher.VFConfig.voiceChoice + " voice instead.");
             return GetVoice(MainPatcher.VFConfig.voiceChoice);
         }
         public static IEnumerator LoadAllVoices()
@@ -202,20 +209,23 @@ namespace VehicleFramework
             yield break;
         }
         // Method signature with a callback to return the VehicleVoice instance
-        public static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, bool isInCallingAssembly)
+        public static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string voicepath)
         {
             VehicleVoice returnVoice = new VehicleVoice();
             string modPath = "";
-            if(isInCallingAssembly)
+            if(voicepath == "")
             {
-                modPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+                modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
             }
             else
             {
-                modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                modPath = voicepath;
             }
             string autoPilotVoicesFolder = Path.Combine(modPath, "AutoPilotVoices");
             string autoPilotVoicePath = Path.Combine(autoPilotVoicesFolder, voice) + "/";
+
+            Logger.Log("AutoPilot Voice Path is : " + autoPilotVoicePath);
 
             // List of clip names to load, corresponding to their fields in VehicleVoice
             string[] clipNames = {
@@ -262,8 +272,11 @@ namespace VehicleFramework
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.OGGVORBIS))
             {
                 yield return www.SendWebRequest();
-
-                if (www.isHttpError || www.isNetworkError)
+                if(www.isHttpError)
+                {
+                    onError?.Invoke();
+                }
+                else if (www.isNetworkError)
                 {
                     onError?.Invoke();
                 }

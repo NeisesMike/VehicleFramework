@@ -165,7 +165,6 @@ namespace VehicleFramework
             void SetWorldLoaded()
             {
                 VehicleManager.isWorldLoaded = true;
-                VoiceManager.voices.ForEach(x => x.NotifyReadyToSpeak());
             }
             Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
             Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);

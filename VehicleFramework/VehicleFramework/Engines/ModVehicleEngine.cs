@@ -336,7 +336,7 @@ namespace VehicleFramework.Engines
             EngineSource1.volume = EngineHum / 10f * (MainPatcher.VFConfig.engineVolume / 100);
             if (mv.IsPowered())
             {
-                if (!EngineSource1.isPlaying)
+                if (!EngineSource1.isPlaying && rb.velocity.magnitude > 0.2f) // why 0.2f ?
                 {
                     EngineSource1.Play();
                 }

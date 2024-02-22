@@ -60,7 +60,7 @@ namespace VehicleFramework
         }
         private void SetupSpeakers()
         {
-            speakers.Add(mv.VehicleModel.EnsureComponent<AudioSource>());
+            //speakers.Add(mv.VehicleModel.EnsureComponent<AudioSource>());
             if (mv as Submarine != null)
             {
                 foreach (var ps in (mv as Submarine).PilotSeats)
@@ -96,10 +96,6 @@ namespace VehicleFramework
         public void Start()
         {
             SetupSpeakers();
-            if(voice == null)
-            {
-                voice = VoiceManager.GetDefaultVoice(mv);
-            }
         }
         public void SetVoice(VehicleVoice inputVoice)
         {
@@ -152,12 +148,12 @@ namespace VehicleFramework
         {
             if (speechQueue.TryDequeue(out AudioClip clip))
             {
+                //speakers.ForEach(x => x.PlayOneShot(clip, MainPatcher.VFConfig.aiVoiceVolume / 100f));
                 foreach(var speaker in speakers)
                 {
                     speaker.volume = MainPatcher.VFConfig.aiVoiceVolume / 100f;
-                    speaker.PlayOneShot(clip);
-                    //speaker.clip = clip;
-                    //speaker.Play();
+                    speaker.clip = clip;
+                    speaker.Play();
                 }
             }
         }
