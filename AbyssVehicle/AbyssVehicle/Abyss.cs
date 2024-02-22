@@ -686,6 +686,7 @@ namespace AbyssVehicle
                 cam.EnsureComponent<UnityEngine.PostProcessing.PostProcessingBehaviour>().jitteredMatrixFunc = MainCamera.camera.gameObject.GetComponent<UnityEngine.PostProcessing.PostProcessingBehaviour>().jitteredMatrixFunc;
                 cam.EnsureComponent<ColorCorrection>().shader = MainCamera.camera.gameObject.GetComponent<ColorCorrection>().shader;
                 cam.EnsureComponent<ColorCorrection>().adjustWithDepth = false;
+                cam.gameObject.GetComponent<AudioListener>().enabled = false;
             }
             DisableAllCameras();
         }
