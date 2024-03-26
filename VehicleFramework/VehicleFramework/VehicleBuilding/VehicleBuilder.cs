@@ -745,6 +745,38 @@ namespace VehicleFramework
             }
         }
 
+        public static void SetupCameraGameObject(GameObject go)
+        {
+            IEnumerator SetupCameraInTime(GameObject gor)
+            {
+                while (!Admin.GameStateWatcher.IsPlayerStarted)
+                {
+                    yield return null;
+                }
+                gor.EnsureComponent<WaterscapeVolumeOnCamera>().settings = MainCamera.camera.gameObject.GetComponent<WaterscapeVolumeOnCamera>().settings;
+                gor.EnsureComponent<WaterSurfaceOnCamera>().waterSurface = MainCamera.camera.gameObject.GetComponent<WaterSurfaceOnCamera>().waterSurface;
+                gor.EnsureComponent<WaterSunShaftsOnCamera>().surface = MainCamera.camera.gameObject.GetComponent<WaterSunShaftsOnCamera>().surface;
+                gor.EnsureComponent<UnityEngine.PostProcessing.PostProcessingBehaviour>().profile = MainCamera.camera.gameObject.GetComponent<UnityEngine.PostProcessing.PostProcessingBehaviour>().profile;
+                gor.EnsureComponent<UnityEngine.PostProcessing.PostProcessingBehaviour>().jitteredMatrixFunc = MainCamera.camera.gameObject.GetComponent<UnityEngine.PostProcessing.PostProcessingBehaviour>().jitteredMatrixFunc;
+                gor.EnsureComponent<ColorCorrection>().shader = MainCamera.camera.gameObject.GetComponent<ColorCorrection>().shader;
+                gor.EnsureComponent<ColorCorrection>().adjustWithDepth = false;
+                gor.GetComponent<Camera>().cullingMask = MainCamera.camera.cullingMask;
+                gor.GetComponent<Camera>().cullingMatrix = MainCamera.camera.cullingMatrix;
+                gor.GetComponent<Camera>().allowMSAA = MainCamera.camera.allowMSAA;
+                gor.GetComponent<Camera>().orthographic = MainCamera.camera.orthographic;
+                gor.GetComponent<Camera>().farClipPlane = MainCamera.camera.farClipPlane;
+                gor.GetComponent<Camera>().fieldOfView = MainCamera.camera.fieldOfView;
+                gor.GetComponent<Camera>().backgroundColor = MainCamera.camera.backgroundColor;
+                gor.GetComponent<Camera>().renderingPath = MainCamera.camera.renderingPath;
+            }
+            UWE.CoroutineHost.StartCoroutine(SetupCameraInTime(go));
+        }
+        public static void SetupDroneObjects(Drone drone)
+        {
+            SetupCameraGameObject(drone.Camera.gameObject);
+            drone.PairingButtons.ForEach(x => x.EnsureComponent<PairingButton>().drone = drone);
+        }
+
         #endregion
         public static bool Instrument(ModVehicle mv, PingType pingType)
         {
