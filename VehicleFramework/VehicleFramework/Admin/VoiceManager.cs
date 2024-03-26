@@ -54,6 +54,10 @@ namespace VehicleFramework
         public static VehicleVoice silentVoice = new VehicleVoice();
         public static void RegisterVoice(string name, VehicleVoice voice)
         {
+            RegisterVoice(name, voice, false);
+        }
+        public static void RegisterVoice(string name, VehicleVoice voice, bool verbose)
+        {
             try
             {
                 vehicleVoices.Add(name, voice);
@@ -68,7 +72,7 @@ namespace VehicleFramework
                 Logger.Error("Failed to register a voice: " + e.Message);
                 return;
             }
-            Logger.Log("Successfully registered voice: " + name);
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Successfully registered voice: " + name);
         }
         public static IEnumerator RegisterVoice(string name, string voicepath="")
         {
@@ -206,12 +210,16 @@ namespace VehicleFramework
 
             yield break;
         }
-        // Method signature with a callback to return the VehicleVoice instance
         public static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string voicepath)
+        {
+            yield return LoadVoiceClips(voice, onComplete, voicepath, false);
+        }
+        // Method signature with a callback to return the VehicleVoice instance
+        public static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string voicepath, bool verbose)
         {
             VehicleVoice returnVoice = new VehicleVoice();
             string modPath = "";
-            if(voicepath == "")
+            if (voicepath == "")
             {
                 modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -223,7 +231,7 @@ namespace VehicleFramework
             string autoPilotVoicesFolder = Path.Combine(modPath, "AutoPilotVoices");
             string autoPilotVoicePath = Path.Combine(autoPilotVoicesFolder, voice) + "/";
 
-            Logger.Log("AutoPilot Voice Path is : " + autoPilotVoicePath);
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "AutoPilot Voice Path is : " + autoPilotVoicePath);
 
             // List of clip names to load, corresponding to their fields in VehicleVoice
             string[] clipNames = {
@@ -258,7 +266,7 @@ namespace VehicleFramework
                 () =>
                 {
                     // Handle error, potentially logging and assigning Silence
-                    Logger.Warn($"WARNING: {clipName} could not be loaded. Assigning Silence.");
+                    VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Warn, verbose, $"WARNING: {clipName} could not be loaded. Assigning Silence.");
                     typeof(VehicleVoice).GetField(clipName).SetValue(returnVoice, silence);
                 });
             }

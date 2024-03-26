@@ -101,10 +101,9 @@ namespace VehicleFramework
         public const EquipmentType ArmType = (EquipmentType)626;
         public const TechType InnateStorage = (TechType)0x4100;
 
-        public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType)
+        public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
-            Logger.Log("Prefabricating the " + mv.gameObject.name);
-            mv.numVehicleModules = mv.HasArms ? mv.NumModules + 2 : mv.NumModules;
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Prefabricating the " + mv.gameObject.name);
 
             // wait for a seamoth to be ready
             yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
@@ -127,7 +126,7 @@ namespace VehicleFramework
             VehicleManager.vehicleTypes.Add(ve);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
-            VehicleManager.PatchCraftable(ref ve);
+            VehicleManager.PatchCraftable(ref ve, verbose);
         }
 
         #region setup_funcs

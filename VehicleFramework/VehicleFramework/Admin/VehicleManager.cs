@@ -29,28 +29,32 @@ namespace VehicleFramework
         public static ModVehicleEngine defaultEngine = null;
         public static bool isWorldLoaded = false;
 
-        public static void PatchCraftable(ref VehicleEntry ve)
+        public static void PatchCraftable(ref VehicleEntry ve, bool verbose)
         {
             VehicleEntry vehicle = ve;
             vehicle.techType = VehiclePrepper.RegisterVehicle(vehicle);// vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe, vehicle.encyEntry);
-            Logger.Log("Patched the " + vehicle.name + " Craftable.");
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + vehicle.name + " Craftable.");
             ve = vehicle;
         }
 
         public static PingType RegisterPingType(PingType pt)
         {
+            return RegisterPingType(pt, false);
+        }
+        public static PingType RegisterPingType(PingType pt, bool verbose)
+        {
             PingType ret = pt;
-            if((int)ret < 121)
+            if ((int)ret < 121)
             {
-                Logger.Log("PingType " + pt.ToString() + " was too small. Trying 121.");
+                VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "PingType " + pt.ToString() + " was too small. Trying 121.");
                 ret = (PingType)121;
             }
             while (mvPings.Where(x => x.pingType == ret).Count() > 0)
             {
-                Logger.Log("PingType " + ret.ToString() + " was taken.");
+                VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "PingType " + ret.ToString() + " was taken.");
                 ret++;
             }
-            Logger.Log("Registering PingType " + ret.ToString() + ".");
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Registering PingType " + ret.ToString() + ".");
             return ret;
         }
         public static void EnrollVehicle(ModVehicle mv)
