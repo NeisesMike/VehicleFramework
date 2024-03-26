@@ -1,15 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using UnityEngine;
 
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(VFXConstructing))]
     public static class VFXConstructingPatch
     {
+        public static IEnumerator ManageColor(VFXConstructing vfx, ModVehicle mv)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                if (vfx.ghostMaterial != null && mv.ConstructionGhostColor != Color.black)
+                {
+                    vfx.ghostMaterial.color = mv.ConstructionGhostColor;
+                }
+                if (mv.ConstructionWireframeColor != Color.black)
+                {
+                    vfx.wireColor = mv.ConstructionWireframeColor;
+                }
+                yield return null;
+            }
+        }
         /*
          * This patches ensures it takes several seconds for the build-bots to build our vehicle.
          */
@@ -17,16 +33,13 @@ namespace VehicleFramework.Patches
         [HarmonyPatch("StartConstruction")]
         public static void StartConstructionPostfix(VFXConstructing __instance)
         {
-            if (__instance.GetComponent<ModVehicle>() != null)
+            ModVehicle mv = __instance.GetComponent<ModVehicle>();
+            if (mv != null)
             {
-                // TODO : make this configurable
-                // Seamoth : 10 seconds
-                // Cyclops : 20
-                // Rocket Base : 25
-                // TODO : why does this even happen on `spawn atrama` ?
-                __instance.timeToConstruct = 15f;
+                __instance.timeToConstruct = mv.TimeToConstruct;
                 __instance.BroadcastMessage("SubConstructionBeginning", null, (UnityEngine.SendMessageOptions)1);
                 __instance.SendMessageUpwards("SubConstructionBeginning", null, (UnityEngine.SendMessageOptions)1);
+                UWE.CoroutineHost.StartCoroutine(ManageColor(__instance, mv));
             }
         }
     }

@@ -10,14 +10,21 @@ namespace VehicleFramework.VehicleTypes
 {
     public abstract class Drone : ModVehicle, IDroneInterface
     {
+        public static Drone BroadcastingDrone = null;
         public DroneStation pairedStation = null;
-        public ModVehicleEngine Engine { get; }
+
+        public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public abstract Camera Camera { get; }
+        public abstract List<GameObject> PairingButtons { get; }
+
+
         public override void Awake()
         {
             base.Awake();
+
             Camera.enabled = false;
+            Camera.gameObject.GetComponent<AudioListener>().enabled = false;
             Admin.GameObjectManager<Drone>.Register(this);
         }
         public override void Start()
@@ -25,6 +32,17 @@ namespace VehicleFramework.VehicleTypes
             base.Start();
             pairedStation = FindNearestUnpairedStation();
 
+        }
+        public override void Update()
+        {
+            base.Update();
+            if(IsPlayerDry)
+            {
+                if (GameInput.GetButtonHeld(GameInput.Button.Exit))
+                {
+                    StopControlling();
+                }
+            }
         }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
@@ -38,8 +56,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.EnterLockedMode(null, false);
             // the noraml BeginPiloting stuff
             uGUI.main.quickSlots.SetTarget(this);
-            SwapCamera();
-
+            SwapToDroneCamera();
             NotifyStatus(PlayerStatus.OnPilotBegin);
         }
         public virtual void StopControlling()
@@ -47,21 +64,26 @@ namespace VehicleFramework.VehicleTypes
             base.PlayerExit();
             base.StopPiloting();
             Player.main.ExitLockedMode();
-            SwapCamera();
+            SwapToPlayerCamera();
         }
-        public void SwapCamera()
+        public void SwapToDroneCamera()
         {
-            if (Camera.enabled)
-            {
-                MainCameraControl.main.enabled = true;
-                Camera.enabled = false;
-            }
-            else
-            {
-                MainCameraControl.main.enabled = false;
-                Camera.enabled = true;
-            }
+            MainCameraControl.main.enabled = false;
+            MainCamera.camera.enabled = false;
+            uGUI.main.screenCanvas.transform.Find("Pings").GetComponent<uGUI_Pings>().enabled = false;
+            Camera.enabled = true;
+            Camera.gameObject.GetComponent<AudioListener>().enabled = true;
+            Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.");
         }
+        public void SwapToPlayerCamera()
+        {
+            MainCameraControl.main.enabled = true;
+            MainCamera.camera.enabled = true;
+            uGUI.main.screenCanvas.transform.Find("Pings").GetComponent<uGUI_Pings>().enabled = true;
+            Camera.enabled = false;
+            Camera.gameObject.GetComponent<AudioListener>().enabled = false;
+        }
+
         public bool IsInPairingMode
         {
             get
@@ -73,6 +95,7 @@ namespace VehicleFramework.VehicleTypes
         {
             return Admin.GameObjectManager<DroneStation>.FindNearestSuch(transform.position, x => x.pairedDrone is null);
         }
+        /*
         public new void OnHandHover(GUIHand hand)
         {
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
@@ -97,8 +120,7 @@ namespace VehicleFramework.VehicleTypes
             }
             else if ((this as IDroneInterface).IsInPairingModeAsResponder())
             {
-                pairedStation = Admin.GameObjectManager<DroneStation>.AllSuchObjects.Where(x => (x as IDroneInterface).IsInPairingModeAsInitiator()).First();
-                pairedStation.pairedDrone = this;
+                DroneStation.FastenConnection(DroneStation.BroadcastingStation, this);
                 (this as IDroneInterface).FinalizePairingMode();
             }
             else
@@ -106,14 +128,18 @@ namespace VehicleFramework.VehicleTypes
                 (this as IDroneInterface).InitiatePairingMode();
             }
         }
+        */
         void IDroneInterface.InitiatePairingMode()
         {
+            Drone.BroadcastingDrone = this;
             isInitiator = true;
             Admin.GameObjectManager<DroneStation>.AllSuchObjects.ForEach(x => (x as IDroneInterface).RespondWithPairingMode());
             Admin.GameObjectManager<Drone>.AllSuchObjects.Where(x => x != this).ForEach(x => (x as IDroneInterface).ExitPairingMode());
         }
         void IDroneInterface.FinalizePairingMode()
         {
+            DroneStation.BroadcastingStation = null;
+            Drone.BroadcastingDrone = null;
             Admin.GameObjectManager<DroneStation>.AllSuchObjects.ForEach(x => (x as IDroneInterface).ExitPairingMode());
             Admin.GameObjectManager<Drone>.AllSuchObjects.ForEach(x => (x as IDroneInterface).ExitPairingMode());
         }

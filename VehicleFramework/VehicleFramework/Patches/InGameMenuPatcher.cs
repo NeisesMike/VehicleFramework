@@ -15,30 +15,35 @@ namespace VehicleFramework.Patches
 		[HarmonyPatch("GetAllowSaving")]
 		public static bool GetAllowSavingPrefix(ref bool __result)
 		{
-			bool isPilotingMV = false;
-			foreach(ModVehicle mv in VehicleManager.VehiclesInPlay)
+			ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+			if(mv == null)
             {
-				if (mv as Submarine != null)
-				{
-					if ((mv as Submarine).IsPlayerPiloting())
-					{
-						isPilotingMV = true;
-						break;
-					}
-					continue;
-				}
+				return true;
+            }
+			else if(mv as Submarine != null)
+            {
+				if(mv.IsPlayerDry && (mv as Submarine).isPilotSeated)
+                {
+					__result = false;
+					return false;
+                }
+                else
+                {
+					return true;
+                }
+            }
+            else
+			{
 				if (mv.IsPlayerDry)
 				{
-					isPilotingMV = true;
-					break;
+					__result = false;
+					return false;
+				}
+				else
+				{
+					return true;
 				}
 			}
-			if (isPilotingMV)
-            {
-				__result = false;
-				return false;
-            }
-			return true;
 		}
 	}
 }

@@ -19,10 +19,11 @@ namespace VehicleFramework
     {
         private bool isTetherEstablished = false;
         public Submarine mv = null;
+        public bool isLive = true;
 
         public void Start()
         {
-            Player.main.StartCoroutine(ManagerTether());
+            Player.main.StartCoroutine(ManageTether());
         }
 
         public void TryToDropLeash()
@@ -57,7 +58,7 @@ namespace VehicleFramework
             }
         }
 
-        public IEnumerator ManagerTether()
+        public IEnumerator ManageTether()
         {
             yield return new WaitForSeconds(3f);
             while (true)
@@ -66,13 +67,16 @@ namespace VehicleFramework
                 {
                     yield break;
                 }
-                if (isTetherEstablished)
+                if(isLive)
                 {
-                    TryToDropLeash();
-                }
-                else
-                {
-                    TryToEstablishLeash();
+                    if (isTetherEstablished)
+                    {
+                        TryToDropLeash();
+                    }
+                    else
+                    {
+                        TryToEstablishLeash();
+                    }
                 }
                 yield return new WaitForSeconds(0.1f);
             }

@@ -18,12 +18,11 @@ namespace VehicleFramework
          */
 
         [HarmonyPrefix]
-        [HarmonyPatch("OnHandHover")]
+        [HarmonyPatch(nameof(Vehicle.OnHandHover))]
         public static bool OnHandHoverPrefix(Vehicle __instance)
         {
-            // What the hell is this?
-            // Just testing something, I guess?
-            if (__instance is ModVehicle mv)
+            ModVehicle mv = __instance as ModVehicle;
+            if (mv != null)
             {
                 return false;
             }
@@ -31,7 +30,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("OnHandClick")]
+        [HarmonyPatch(nameof(Vehicle.OnHandClick))]
         public static bool OnHandClickPrefix(Vehicle __instance, EnergyInterface ___energyInterface)
         {
             ModVehicle mv = __instance as ModVehicle;
@@ -43,7 +42,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("ApplyPhysicsMove")]
+        [HarmonyPatch(nameof(Vehicle.ApplyPhysicsMove))]
         private static bool ApplyPhysicsMovePrefix(Vehicle __instance, ref bool ___wasAboveWater, ref VehicleAccelerationModifier[] ___accelerationModifiers)
         {
             ModVehicle mv = __instance as ModVehicle;
@@ -55,20 +54,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("UpdateEnergyRecharge")]
-        public static bool UpdateEnergyRechargePrefix(Vehicle __instance)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv == null)
-            {
-                return true;
-            }
-            // TODO
-            return false;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("LazyInitialize")]
+        [HarmonyPatch(nameof(Vehicle.LazyInitialize))]
         public static bool LazyInitializePrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
         {
             ModVehicle mv = __instance as ModVehicle;
@@ -82,7 +68,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("GetAllStorages")]
+        [HarmonyPatch(nameof(Vehicle.GetAllStorages))]
         public static void GetAllStoragesPostfix(Vehicle __instance, ref List<IItemsContainer> containers)
         {
             ModVehicle mv = __instance as ModVehicle;
@@ -98,7 +84,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("IsPowered")]
+        [HarmonyPatch(nameof(Vehicle.IsPowered))]
         public static void IsPoweredPostfix(Vehicle __instance, ref EnergyInterface ___energyInterface, ref bool __result)
         {
             ModVehicle mv = __instance as ModVehicle;
@@ -112,7 +98,7 @@ namespace VehicleFramework
             }
         }
 
-        [HarmonyPatch("Update")]
+        [HarmonyPatch(nameof(Vehicle.Update))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             /* This is basically a prefix for Vehicle.Update,
@@ -139,6 +125,19 @@ namespace VehicleFramework
                 newCodes[i+2] = codes[i];
             }
             return newCodes.AsEnumerable();
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Vehicle.GetPilotingMode))]
+        public static bool GetPilotingModePrefix(Vehicle __instance, ref bool __result)
+        {
+            VehicleTypes.Drone mv = __instance as VehicleTypes.Drone;
+            if (mv == null)
+            {
+                return true;
+            }
+            __result = Player.main.GetMode() == Player.Mode.LockedPiloting && mv.IsPlayerDry;
+            return false;
         }
     }
 }

@@ -17,7 +17,11 @@ namespace VehicleFramework.Engines
         public ModVehicle mv;
         public Rigidbody rb;
         public EngineSounds sounds;
-        public bool blockVoiceChange = false;
+        public bool blockVoiceChange => false;
+        public virtual bool CanMoveAboveWater { get; set; } = false;
+        public virtual bool CanRotateAboveWater { get; set; } = false;
+
+
 
         protected virtual float FORWARD_TOP_SPEED => 1000;
         protected virtual float REVERSE_TOP_SPEED => 1000;
@@ -216,7 +220,7 @@ namespace VehicleFramework.Engines
                 return innerMoveDirection;
             }
             Vector3 moveDirection = Vector3.zero;
-            if (mv.GetIsUnderwater())
+            if (mv.GetIsUnderwater() || CanMoveAboveWater)
             {
                 if (mv.CanPilot() && mv.IsPlayerDry)
                 {
@@ -308,14 +312,17 @@ namespace VehicleFramework.Engines
         }
         public virtual void ControlRotation()
         {
-            // Control rotation
-            float pitchFactor = 1.4f;
-            float yawFactor = 1.4f;
-            Vector2 mouseDir = GameInput.GetLookDelta();
-            float xRot = mouseDir.x;
-            float yRot = mouseDir.y;
-            rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-            rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+            if (mv.GetIsUnderwater() || CanRotateAboveWater)
+            {
+                // Control rotation
+                float pitchFactor = 1.4f;
+                float yawFactor = 1.4f;
+                Vector2 mouseDir = GameInput.GetLookDelta();
+                float xRot = mouseDir.x;
+                float yRot = mouseDir.y;
+                rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+                rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+            }
         }
         public virtual void DrainPower(Vector3 moveDirection)
         {

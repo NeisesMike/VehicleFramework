@@ -59,7 +59,7 @@ namespace VehicleFramework
             get
             {
                 GameObject thisSeamoth = request.Get();
-                if (thisSeamoth is null)
+                if (thisSeamoth == null)
                 {
                     Logger.Error("Couldn't get Seamoth...");
                     return null;
@@ -74,7 +74,7 @@ namespace VehicleFramework
             if (request.Get()) // if we have seamoth
             {
             }
-            else if(cor is null) // if we need to get seamoth
+            else if(cor == null) // if we need to get seamoth
             {
                 cor = UWE.CoroutineHost.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
                 yield return cor;
@@ -225,6 +225,7 @@ namespace VehicleFramework
                         vuci.flap = vu.Flap.transform;
                         vuci.anglesOpened = vu.AnglesOpened;
                         vuci.anglesClosed = vu.AnglesClosed;
+                        vuci.collider = vuci.GetComponentInChildren<Collider>();
                         mv.upgradesInput = vuci;
                         var up = vu.Interface.EnsureComponent<UpgradeProxy>();
                         up.proxies = vu.ModuleProxies;
@@ -363,6 +364,9 @@ namespace VehicleFramework
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
             eInterf.sources = energyMixins.ToArray();
             mv.energyInterface = eInterf;
+
+            mv.chargingSound = mv.gameObject.AddComponent<FMOD_CustomLoopingEmitter>();
+            mv.chargingSound.asset = SeamothHelper.Seamoth.GetComponent<SeaMoth>().chargingSound.asset;
         }
         public static void SetupAIEnergyInterface(ModVehicle mv)
         {
@@ -504,7 +508,7 @@ namespace VehicleFramework
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
             lmData.canResurrect = true;
             lmData.broadcastKillOnDeath = true;
-            lmData.destroyOnDeath = true;
+            lmData.destroyOnDeath = false;
             // NEWNEW
             // What's going to happen when a vdehicle dies now?
             //lmData.explodeOnDestroy = true;
@@ -796,31 +800,56 @@ namespace VehicleFramework
             {
                 SetupEngine(mv as Submersible);
             }
+            if (mv as Drone != null)
+            {
+                SetupEngine(mv as Drone);
+                SetupDroneObjects(mv as Drone);
+            }
             ApplySkyAppliers(mv);
 
             // ApplyShaders should happen last
-            ApplyShaders(mv);
+            Shader shader = Shader.Find("MarmosetUBER");
+            ApplyShaders(mv, shader);
+            ApplyGlassMaterial(mv);
 
             #region todo
             /*
             //Allows power to connect to here.
             var powerRelay = prefab.AddComponent<PowerRelay>();
-
-            //Sky appliers to make it look nicer. Not sure if it even makes a difference, but I'm sticking with it.
-            var skyApplierInterior = interiorModels.gameObject.AddComponent<SkyApplier>();
-            skyApplierInterior.renderers = interiorModels.GetComponentsInChildren<Renderer>();
-            skyApplierInterior.anchorSky = Skies.BaseInterior;
-            skyApplierInterior.SetSky(Skies.BaseInterior);
             */
             #endregion
 
             return true;
         }
-
-        public static void ApplyShaders(ModVehicle mv)
+        public static void ApplyGlassMaterial(ModVehicle mv)
         {
-            // Add the marmoset shader to all renderers
-            Shader marmosetShader = Shader.Find("MarmosetUBER");
+            // Add the [marmoset] shader to all renderers
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
+                {
+                    var seamothGlassMaterial = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
+                    renderer.material = seamothGlassMaterial;
+                    renderer.material = seamothGlassMaterial; // this is the right line
+                    continue;
+                }
+            }
+        }
+        public static void ApplyShaders(ModVehicle mv, Shader shader)
+        {
+            if (mv.AutoApplyShaders)
+            {
+                ForceApplyShaders(mv, shader);
+            }
+        }
+        public static void ForceApplyShaders(ModVehicle mv, Shader shader)
+        {
+            if(shader == null)
+            {
+                Logger.Error("Tried to apply a null Shader.");
+                return;
+            }
+            // Add the [marmoset] shader to all renderers
             foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>(true))
             {
                 // skip some materials
@@ -830,23 +859,12 @@ namespace VehicleFramework
                 }
                 if(mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
                 {
-                    // TODO: find a way to add transparency
-                    // ZWrite set to 1 (a boolean value) makes the canopy opaque.
-                    var seamothGlassMaterial = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
-                    var seamothGlassShader = seamothGlassMaterial.shader;
-                    renderer.material = seamothGlassMaterial;
-                    // TODO decide which line is right:
-                    renderer.material = seamothGlassMaterial; // this is the right line
-                    //renderer.material.shader = seamothGlassShader;
-                    //renderer.material.shader = marmosetShader;
-                    //renderer.material.SetFloat("_ZWrite", 1f);
-                    //renderer.material.SetFloat("_MyCullVariable", 1f);
                     continue;
                 }
                 foreach (Material mat in renderer.materials)
                 {
                     // give it the marmo shader, no matter what
-                    mat.shader = marmosetShader;
+                    mat.shader = shader;
                 }
             }
         }

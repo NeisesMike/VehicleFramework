@@ -148,8 +148,8 @@ namespace VehicleFramework.VehicleTypes
         {
             base.BeginPiloting();
             Player.main.EnterSittingMode();
-            StartCoroutine(SitDownInChair());
-            StartCoroutine(TryStandUpFromChair());
+            UWE.CoroutineHost.StartCoroutine(SitDownInChair());
+            UWE.CoroutineHost.StartCoroutine(TryStandUpFromChair());
             isPilotSeated = true;
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
@@ -162,37 +162,58 @@ namespace VehicleFramework.VehicleTypes
             // which is triggered on button press
             //StartCoroutine(StandUpFromChair());
             isPilotSeated = false;
-            Player.main.transform.SetParent(transform);
-            if (thisStopPilotingLocation == null)
-            {
-                Logger.Warn("Warning: pilot exit location was null. Defaulting to first tether.");
-                Player.main.transform.position = TetherSources[0].transform.position;
-            }
-            else
-            {
-                Player.main.transform.position = thisStopPilotingLocation.position;
-            }
             Player.main.SetScubaMaskActive(false);
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
+            if (!IsVehicleDocked)
+            {
+                Player.main.transform.SetParent(transform);
+                if (thisStopPilotingLocation == null)
+                {
+                    Logger.Warn("Warning: pilot exit location was null. Defaulting to first tether.");
+                    Player.main.transform.position = TetherSources[0].transform.position;
+                }
+                else
+                {
+                    Player.main.transform.position = thisStopPilotingLocation.position;
+                }
+            }
+            if(isScuttled)
+            {
+                UWE.CoroutineHost.StartCoroutine(GrantPlayerInvincibility(3f));
+            }
+        }
+        public static IEnumerator GrantPlayerInvincibility(float time)
+        {
+            Player.main.liveMixin.invincible = true;
+            yield return new WaitForSeconds(time);
+            Player.main.liveMixin.invincible = false;
         }
         // These two functions control the transition from in the water to the dry interior
         public override void PlayerEntry()
         {
             base.PlayerEntry();
-            Player.main.currentSub = null;
             isPlayerInside = true;
-            Player.main.currentMountedVehicle = this;
-            Player.main.transform.SetParent(transform);
+            if (!isScuttled)
+            {
+                Player.main.currentSub = null;
+                Player.main.currentMountedVehicle = this;
+                TryRemoveDuplicateFabricator();
+                if (IsVehicleDocked)
+                { 
 
-            Player.main.playerController.activeController.SetUnderWater(false);
-            Player.main.isUnderwater.Update(false);
-            Player.main.isUnderwaterForSwimming.Update(false);
-            Player.main.playerController.SetMotorMode(Player.MotorMode.Walk);
-            Player.main.motorMode = Player.MotorMode.Walk;
-            Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
-
-            TryRemoveDuplicateFabricator();
+                }
+                else
+                {
+                    Player.main.transform.SetParent(transform);
+                    Player.main.playerController.activeController.SetUnderWater(false);
+                    Player.main.isUnderwater.Update(false);
+                    Player.main.isUnderwaterForSwimming.Update(false);
+                    Player.main.playerController.SetMotorMode(Player.MotorMode.Walk);
+                    Player.main.motorMode = Player.MotorMode.Walk;
+                    Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
+                }
+            }
         }
         public override void PlayerExit()
         {
@@ -200,12 +221,10 @@ namespace VehicleFramework.VehicleTypes
             Player.main.currentSub = null;
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
-            Player.main.transform.SetParent(null);
-        }
-        public override void SetPlayerInside(bool inside)
-        {
-            base.SetPlayerInside(inside);
-            Player.main.inSeamoth = inside;
+            if (!IsVehicleDocked)
+            {
+                Player.main.transform.SetParent(null);
+            }
         }
         public override void SubConstructionBeginning()
         {
@@ -470,11 +489,54 @@ namespace VehicleFramework.VehicleTypes
         public override void ModVehicleReset()
         {
         }
-
-
-
-
-
-
+        public void EnableFabricator(bool enabled)
+        {
+            foreach (Transform tran in transform)
+            {
+                if (tran.gameObject.name == "Fabricator(Clone)")
+                {
+                    fabricator = tran.gameObject;
+                    fabricator.GetComponentInChildren<Fabricator>().enabled = enabled;
+                    //fabricator.SetActive(enabled);
+                }
+            }
+        }
+        public override void OnVehicleDocked()
+        {
+            base.OnVehicleDocked();
+            Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = false);
+            PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = false);
+            TetherSources.ForEach(x => x.GetComponent<TetherSource>().isLive = false);
+            EnableFabricator(false);
+        }
+        public override void OnVehicleUndocked()
+        {
+            Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = true);
+            PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = true);
+            TetherSources.ForEach(x => x.GetComponent<TetherSource>().isLive = true);
+            EnableFabricator(true);
+            base.OnVehicleUndocked();
+        }
+        public override void OnPlayerDocked()
+        {
+            StopPiloting();
+            base.OnPlayerDocked();
+            //UWE.CoroutineHost.StartCoroutine(TryStandUpFromChair());
+        }
+        public override void OnPlayerUndocked()
+        {
+            base.OnPlayerUndocked();
+            BeginPiloting();
+        }
+        public override void ScuttleVehicle()
+        {
+            base.ScuttleVehicle();
+            EnableFabricator(false);
+        }
+        public override void UnscuttleVehicle()
+        {
+            base.UnscuttleVehicle();
+            EnableFabricator(true);
+        }
     }
 }

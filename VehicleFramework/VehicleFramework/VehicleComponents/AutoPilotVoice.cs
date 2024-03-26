@@ -18,9 +18,32 @@ namespace VehicleFramework
         public EnergyInterface aiEI;
         private List<AudioSource> speakers = new List<AudioSource>();
         private PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
-        private bool isReadyToSpeak = false; // we let this be set to true only in ModVehicle.start
+        private bool isReadyToSpeak = false; 
         public bool blockVoiceChange = false;
         public VehicleVoice voice = null;
+        private float m_balance = 1f;
+        public float balance
+        {
+            get
+            {
+                return m_balance;
+            }
+            set
+            {
+                if(value < 0)
+                {
+                    m_balance = 0;
+                }
+                else if(1 < value)
+                {
+                    m_balance = 1;
+                }
+                else
+                {
+                    m_balance = value;
+                }
+            }
+        }
 
 
 
@@ -90,7 +113,11 @@ namespace VehicleFramework
                 sp.priority = 1;
                 sp.playOnAwake = false;
                 sp.clip = VoiceManager.silence;
-                sp.spatialBlend = 1f;
+                sp.spatialBlend = 0.92f;
+                sp.spatialize = true;
+                sp.rolloffMode = AudioRolloffMode.Linear;
+                sp.minDistance = 0f;
+                sp.maxDistance = 100f;
             }
         }
         public void Start()
@@ -151,7 +178,7 @@ namespace VehicleFramework
                 //speakers.ForEach(x => x.PlayOneShot(clip, MainPatcher.VFConfig.aiVoiceVolume / 100f));
                 foreach(var speaker in speakers)
                 {
-                    speaker.volume = MainPatcher.VFConfig.aiVoiceVolume / 100f;
+                    speaker.volume = balance * MainPatcher.VFConfig.aiVoiceVolume / 100f;
                     speaker.clip = clip;
                     speaker.Play();
                 }

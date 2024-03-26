@@ -96,7 +96,6 @@ namespace VehicleFramework
             {
                 Logger.Error("GetVoice failed: " + e.Message);
             }
-            Logger.Log("Assigning the silent voice.");
             return silentVoice;
         }
         public static void RegisterDefault(ModVehicle mv, string voice)
@@ -159,7 +158,6 @@ namespace VehicleFramework
             }
 
         exit:
-            Logger.Log("Assigning " + MainPatcher.VFConfig.voiceChoice + " voice instead.");
             return GetVoice(MainPatcher.VFConfig.voiceChoice);
         }
         public static IEnumerator LoadAllVoices()
@@ -314,6 +312,15 @@ namespace VehicleFramework
                     break;
             }
             return "The KnownVoices enum is likely outdated";
+        }
+        public static void LogAllAvailableVoices()
+        {
+            Logger.Log("Voices available:");
+            vehicleVoices.Select(x => x.Key).ForEach(x => Logger.Log(x));
+            foreach(var but in voices)
+            {
+                Logger.Log(but.name);
+            }
         }
     }
 }

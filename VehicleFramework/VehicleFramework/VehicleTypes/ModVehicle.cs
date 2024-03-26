@@ -17,6 +17,14 @@ namespace VehicleFramework
      */
     public abstract class ModVehicle : Vehicle, ICraftTarget
     {
+        #region enumerations
+        public enum DeathStyle
+        {
+            Explode,
+            Sink,
+            Float
+        }
+        #endregion
         #region abstract_members
         /* These things require implementation
          * They are required to have a coherent concept of a vehicle
@@ -54,6 +62,10 @@ namespace VehicleFramework
         public abstract int Mass { get; }
         public abstract int NumModules { get; }
         public abstract bool HasArms { get; }
+        #endregion
+
+        #region virtual_properties
+        public virtual List<VehicleParts.VehicleBattery> BackupBatteries { get; }
         public virtual TechType UnlockedWith
         {
             get
@@ -61,11 +73,7 @@ namespace VehicleFramework
                 return TechType.Constructor;
             }
         }
-
-        #endregion
-
-        #region virtual_methods
-        public virtual List<VehicleParts.VehicleBattery> BackupBatteries { get; }
+        public virtual bool CanLeviathanGrab { get; set; } = true;
         public virtual GameObject LeviathanGrabPoint
         {
             get
@@ -82,6 +90,49 @@ namespace VehicleFramework
                 return MainPatcher.ModVehicleIcon;
             }
         }
+        public virtual int CrushDepthUpgrade1
+        {
+            get
+            {
+                return 300;
+            }
+        }
+        public virtual int CrushDepthUpgrade2
+        {
+            get
+            {
+                return 300;
+            }
+        }
+        public virtual int CrushDepthUpgrade3
+        {
+            get
+            {
+                return 300;
+            }
+        }
+        public virtual bool CanMoonpoolDock { get; set; } = true;
+        public virtual DeathStyle OnDeathBehavior { get; set; } = DeathStyle.Sink;
+        public virtual float TimeToConstruct { get; set; } = 15f; // Seamoth : 10 seconds, Cyclops : 20, Rocket Base : 25
+        public virtual Color ConstructionGhostColor { get; set; } = Color.black;
+        public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
+        public virtual bool AutoApplyShaders { get; set; } = true;
+        public override string[] slotIDs
+        { // You probably do not want to override this
+            get
+            {
+                if (_slotIDs == null)
+                {
+                    int numVehicleModules = HasArms ? NumModules + 2 : NumModules;
+                    _slotIDs = GenerateSlotIDs(numVehicleModules, HasArms);
+                }
+                return _slotIDs;
+            }
+        }
+
+        #endregion
+
+        #region virtual_methods
         public override void Awake()
         {
 
@@ -96,6 +147,10 @@ namespace VehicleFramework
             gameObject.EnsureComponent<AutoPilot>();
             voice.voice = VoiceManager.GetDefaultVoice(this);
 
+            if (BoundingBox != null && BoundingBox.GetComponent<BoxCollider>() != null)
+            {
+                BoundingBox.GetComponent<BoxCollider>().enabled = false;
+            }
 
             upgradeOnAddedActions.Add(storageModuleAction);
             upgradeOnAddedActions.Add(armorPlatingModuleAction);
@@ -156,8 +211,11 @@ namespace VehicleFramework
         }
         public override void Update()
         {
-            base.Update();
-            HandleExtraQuickSlotInputs();
+            if (!isScuttled)
+            {
+                base.Update();
+                HandleExtraQuickSlotInputs();
+            }
         }
         public override void FixedUpdate()
         {
@@ -165,28 +223,22 @@ namespace VehicleFramework
         }
         public virtual void DestroyMV()
         {
-            // TODO: is this really what we want to do here?
-            IEnumerator SpillScrapMetal(Vector3 place)
+            GetComponent<PingInstance>().enabled = false;
+            switch (OnDeathBehavior)
             {
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                // spill out some scrap metal, lmao
-                for (int i = 0; i < 3; i++)
-                {
-                    yield return CraftData.InstantiateFromPrefabAsync(TechType.ScrapMetal, result, false);
-                    GameObject go = result.Get();
-                    Vector3 loc = place + 3 * UnityEngine.Random.onUnitSphere;
-                    Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
-                    go.transform.position = loc;
-                    go.transform.eulerAngles = rot;
-                    var rb = go.EnsureComponent<Rigidbody>();
-                    rb.isKinematic = false;
-                }
-                yield break;
+                case DeathStyle.Explode:
+                    DeathExplodeAction();
+                    return;
+                case DeathStyle.Sink:
+                    DeathSinkAction();
+                    return;
+                case DeathStyle.Float:
+                    DeathFloatAction();
+                    return;
+                default:
+                    return;
             }
-            UWE.CoroutineHost.StartCoroutine(SpillScrapMetal(transform.position));
-            Destroy(gameObject);
         }
-
         public new virtual void OnKill()
         {
             if (IsPlayerDry)
@@ -198,19 +250,15 @@ namespace VehicleFramework
                 Player.main.playerController.ForceControllerSize();
                 Player.main.transform.parent = null;
                 StopPiloting();
-                PlayerExit();
             }
-
             if (destructionEffect)
             {
                 GameObject gameObject = Instantiate<GameObject>(destructionEffect);
                 gameObject.transform.position = transform.position;
                 gameObject.transform.rotation = transform.rotation;
             }
-
             DestroyMV();
         }
-
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
             if (active)
@@ -272,12 +320,6 @@ namespace VehicleFramework
             }
             base.OnUpgradeModuleUse(techType, slotID);
         }
-        /*
-        public override void OnCollisionEnter(Collision col)
-        {
-            base.OnCollisionEnter(col);
-        }
-        */
         public override void OnPilotModeBegin()
         {
             base.OnPilotModeBegin();
@@ -287,16 +329,16 @@ namespace VehicleFramework
             // This function locks the player in and configures several variables for that purpose
             base.EnterVehicle(player, teleport, playEnterAnimation);
         }
-        // BeginPiloting is the VF trigger to start controlling a vehicle.
         public virtual void BeginPiloting()
         {
+            // BeginPiloting is the VF trigger to start controlling a vehicle.
             base.EnterVehicle(Player.main, true);
             uGUI.main.quickSlots.SetTarget(this);
             NotifyStatus(PlayerStatus.OnPilotBegin);
         }
-        // StopPiloting is the VF trigger to discontinue controlling a vehicle.
         public virtual void StopPiloting()
         {
+            // StopPiloting is the VF trigger to discontinue controlling a vehicle.
             // this function
             // called by Player.ExitLockedMode()
             // which is triggered on button press
@@ -329,61 +371,47 @@ namespace VehicleFramework
             depth = Mathf.FloorToInt(GetComponent<CrushDamage>().GetDepth());
             crushDepth = Mathf.FloorToInt(GetComponent<CrushDamage>().crushDepth);
         }
-        public override string[] slotIDs
-        {
-            get
-            {
-                if (_slotIDs == null)
-                {
-                    _slotIDs = GenerateSlotIDs(numVehicleModules, HasArms);
-                }
-                return _slotIDs;
-            }
-        }        
         public virtual void PlayerEntry()
         {
             Logger.DebugLog("start modvehicle player entry");
-            IsPlayerDry = true;
-            Player.main.SetScubaMaskActive(false);
-            try
+            if (!isScuttled)
             {
-                foreach (GameObject window in CanopyWindows)
+                IsPlayerDry = true;
+                Player.main.SetScubaMaskActive(false);
+                try
                 {
-                    window?.SetActive(false);
+                    foreach (GameObject window in CanopyWindows)
+                    {
+                        window?.SetActive(false);
+                    }
                 }
+                catch (Exception)
+                {
+                    //It's okay if the vehicle doesn't have a canopy
+                }
+                Player.main.lastValidSub = GetComponent<SubRoot>();
+                NotifyStatus(PlayerStatus.OnPlayerEntry);
             }
-            catch (Exception)
-            {
-                //It's okay if the vehicle doesn't have a canopy
-            }
-            Player.main.lastValidSub = GetComponent<SubRoot>();
-            NotifyStatus(PlayerStatus.OnPlayerEntry);
         }
         public virtual void PlayerExit()
         {
             Logger.DebugLog("start modvehicle player exit");
-            IsPlayerDry = false;
-            try
+            if (IsPlayerDry)
             {
-                foreach (GameObject window in CanopyWindows)
+                try
                 {
-                    window?.SetActive(true);
+                    foreach (GameObject window in CanopyWindows)
+                    {
+                        window?.SetActive(true);
+                    }
+                }
+                catch (Exception)
+                {
+                    //It's okay if the vehicle doesn't have a canopy
                 }
             }
-            catch (Exception)
-            {
-                //It's okay if the vehicle doesn't have a canopy
-            }
+            IsPlayerDry = false;
             NotifyStatus(PlayerStatus.OnPlayerExit);
-        }
-        public virtual void DoControlRotation(ModVehicle veh)
-        {
-            if (!veh.GetIsUnderwater())
-            {
-                return;
-            }
-            ModVehicleEngine mve = veh.GetComponent<ModVehicleEngine>();
-            mve?.ControlRotation();
         }
         public virtual void SubConstructionBeginning()
         {
@@ -394,6 +422,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
             GetComponent<PingInstance>().enabled = true;
+            BuildBotManager.ResetGhostMaterial();
         }
         public virtual void ForceExitLockedMode()
         {
@@ -457,26 +486,183 @@ namespace VehicleFramework
             }
             StartCoroutine(GiveUsABatteryOrGiveUsDeath());
         }
-        public virtual int CrushDepthUpgrade1
+        List<ColliderState> storedStates;
+        public virtual void OnVehicleDocked()
         {
-            get
+            // The Moonpool invokes this once upon vehicle entry into the dock
+            IsVehicleDocked = true;
+            headlights.DisableHeadlights();
+            //StoreShader();
+            //ApplyInteriorLighting();
+            if (IsPlayerDry)
             {
-                return 300;
+                OnPlayerDocked();
+            }
+            storedStates = ColliderState.DisableAllColliders(gameObject);
+        }
+        public virtual void OnPlayerDocked()
+        {
+            PlayerExit();
+        }
+        public virtual void OnVehicleUndocked()
+        {
+            // The Moonpool invokes this once upon vehicle exit from the dock
+            //LoadShader();
+            OnPlayerUndocked();
+            ColliderState.RestoreColliderStates(storedStates);
+            IsVehicleDocked = false;
+        }
+        public virtual void OnPlayerUndocked()
+        {
+            PlayerEntry();
+        }
+        public virtual void StoreShader()
+        {
+            foreach (var renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                // skip some materials
+                if (renderer.gameObject.name.ToLower().Contains("light"))
+                {
+                    continue;
+                }
+                if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
+                {
+                    continue;
+                }
+                foreach (Material mat in renderer.materials)
+                {
+                    if (mat.shader != null)
+                    {
+                        m_ShaderMemory = mat.shader;
+                        break;
+                    }
+                }
             }
         }
-        public virtual int CrushDepthUpgrade2
+        public virtual void ApplyInteriorLighting()
         {
-            get
+            void ListShadersInUse()
             {
-                return 300;
+                HashSet<string> shaderNames = new HashSet<string>();
+
+                // Find all materials currently loaded in the game.
+                Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
+
+                foreach (var material in materials)
+                {
+                    if (material.shader != null)
+                    {
+                        // Add the shader name to the set to ensure uniqueness.
+                        shaderNames.Add(material.shader.name);
+                    }
+                }
+
+                // Now you have a unique list of shader names in use.
+                foreach (var shaderName in shaderNames)
+                {
+                    Debug.Log("Shader in use: " + shaderName);
+                }
             }
+            //ListShadersInUse();
+            //VehicleBuilder.ApplyShaders(this, shader4);
         }
-        public virtual int CrushDepthUpgrade3
+        public virtual void LoadShader()
         {
-            get
+            VehicleBuilder.ApplyShaders(this, m_ShaderMemory);
+        }
+        public virtual Vector3 GetBoundingDimensions()
+        {
+            if(BoundingBox == null || BoundingBox.GetComponentInChildren<BoxCollider>(true) == null)
             {
-                return 300;
+                return Vector3.zero;
             }
+            var box = BoundingBox.GetComponentInChildren<BoxCollider>(true);
+            Vector3 boxDimensions = box.size;
+            Vector3 worldScale = box.transform.lossyScale;
+            return Vector3.Scale(boxDimensions, worldScale);
+        }
+        public virtual Vector3 GetDifferenceFromCenter()
+        {
+            var box = BoundingBox.GetComponentInChildren<BoxCollider>(true);
+            if (box != null)
+            {
+                Vector3 colliderCenterWorld = box.transform.TransformPoint(box.center);
+                Vector3 difference = colliderCenterWorld - transform.position;
+                return difference;
+            }
+            return Vector3.zero;
+        }
+        public virtual void AnimateMoonPoolArms(VehicleDockingBay moonpool)
+        {
+            // AnimateMoonPoolArms is called in VehicleDockingBay.LateUpdate when a ModVehicle is docked in a moonpool.
+            // This line sets the arms of the moonpool to do exactly as they do for the seamoth
+            // There is also "exosuit_docked"
+            SafeAnimator.SetBool(moonpool.animator, "seamoth_docked", moonpool.vehicle_docked_param && moonpool.dockedVehicle != null);
+        }
+        public virtual void ScuttleVehicle()
+        {
+            isScuttled = true;
+            GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = false);
+            GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
+            GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = false);
+            GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = false);
+            WaterClipProxies.ForEach(x => x.SetActive(false));
+            voice.enabled = false;
+            headlights.isLive = false;
+            isPoweredOn = false;
+            gameObject.EnsureComponent<Scuttler>().Scuttle();
+        }
+        public virtual void UnscuttleVehicle()
+        {
+            isScuttled = false;
+            GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = true);
+            GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
+            GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
+            GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
+            WaterClipProxies.ForEach(x => x.SetActive(true));
+            voice.enabled = true;
+            headlights.isLive = true;
+            isPoweredOn = true;
+            gameObject.EnsureComponent<Scuttler>().Unscuttle();
+        }
+        public virtual void DeathSinkAction()
+        {
+            ScuttleVehicle();
+            worldForces.enabled = true;
+            worldForces.handleGravity = true;
+            worldForces.underwaterGravity = 1.5f;
+        }
+        public virtual void DeathFloatAction()
+        {
+            ScuttleVehicle();
+            // set to buoyant, recalling that the ocean surface is the plane y=0
+            worldForces.enabled = true;
+            worldForces.handleGravity = true;
+            worldForces.underwaterGravity = -1f;
+            worldForces.aboveWaterGravity = 9.8f;
+        }
+        public virtual void DeathExplodeAction()
+        {
+            IEnumerator SpillScrapMetal(Vector3 place)
+            {
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                // spill out some scrap metal, lmao
+                for (int i = 0; i < 3; i++)
+                {
+                    yield return CraftData.InstantiateFromPrefabAsync(TechType.ScrapMetal, result, false);
+                    GameObject go = result.Get();
+                    Vector3 loc = place + 3 * UnityEngine.Random.onUnitSphere;
+                    Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
+                    go.transform.position = loc;
+                    go.transform.eulerAngles = rot;
+                    var rb = go.EnsureComponent<Rigidbody>();
+                    rb.isKinematic = false;
+                }
+                yield break;
+            }
+            UWE.CoroutineHost.StartCoroutine(SpillScrapMetal(transform.position));
+            // MAkeExplosionAndSmokeFX();
+            Destroy(gameObject);
         }
         #endregion
 
@@ -490,7 +676,6 @@ namespace VehicleFramework
         public HeadLightsController headlights;
         public bool isRegistered = false;
         public EnergyInterface AIEnergyInterface;
-        public int numVehicleModules;
         public AutoPilotVoice voice;
         public bool isInited = false;
         // if the player toggles the power off,
@@ -502,8 +687,11 @@ namespace VehicleFramework
         private int numArmorModules = 0;
         public PowerManager powerMan = null;
         public bool IsPlayerDry = false;
+        public bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         private List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
+        private Shader m_ShaderMemory;
+        public bool isScuttled = false;
         #endregion
 
         #region methods
@@ -905,6 +1093,7 @@ namespace VehicleFramework
             }
             prevVelocity = useRigidbody.velocity;
         }
+
         #endregion
 
 
@@ -927,19 +1116,26 @@ namespace VehicleFramework
         public static void MaybeControlRotation(Vehicle veh)
         {
             ModVehicle mv = veh as ModVehicle;
-            if (mv is null)
+            if (mv == null
+                || Player.main.mode != Player.Mode.LockedPiloting
+                || !mv.IsPlayerDry
+                || mv.GetComponent<ModVehicleEngine>() == null
+                || Player.main.GetPDA().isOpen)
             {
                 return;
             }
-            if (Player.main.mode != Player.Mode.LockedPiloting)
+            mv.GetComponent<ModVehicleEngine>().ControlRotation();
+        }
+        public static EnergyMixin GetEnergyMixinFromVehicle(Vehicle veh)
+        {
+            if ((veh as ModVehicle) == null)
             {
-                return;
+                return veh.GetComponent<EnergyMixin>();
             }
-            if (!mv.IsPlayerDry)
+            else
             {
-                return;
+                return (veh as ModVehicle).energyInterface.sources.First();
             }
-            mv.DoControlRotation(mv);
         }
         #endregion
     }

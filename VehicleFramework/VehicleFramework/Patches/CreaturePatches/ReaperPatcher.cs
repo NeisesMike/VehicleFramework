@@ -42,7 +42,7 @@ namespace VehicleFramework.Patches.LeviathanPatches
 						ReaperLeviathan component2 = __instance.GetComponent<ReaperLeviathan>();
 						if (!component2.IsHoldingVehicle() && !__instance.playerDeathCinematic.IsCinematicModeActive())
 						{
-							if (component2.GetCanGrabVehicle())
+							if (component2.GetCanGrabVehicle() && mv.CanLeviathanGrab)
 							{
 								component2.GrabVehicle(mv, ReaperLeviathan.VehicleType.Seamoth);
 							}

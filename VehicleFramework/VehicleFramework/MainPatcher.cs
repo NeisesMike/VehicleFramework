@@ -88,7 +88,6 @@ namespace VehicleFramework
             VehicleFramework.Logger.MyLog = base.Logger;
             GetAssets();
             SetupDefaultAssets();
-            //BuildableDroneStation.Register();
             PrePatch();
         }
 
@@ -166,8 +165,16 @@ namespace VehicleFramework
             {
                 VehicleManager.isWorldLoaded = true;
             }
+            void OnLoadOnce()
+            {
+                if (VehicleManager.vehicleTypes.Where(x => (x.mv as VehicleTypes.Drone) != null).Count() > 0)
+                {
+                    BuildableDroneStation.Register();
+                }
+            }
             Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
             Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);
+            Nautilus.Utility.SaveUtils.RegisterOneTimeUseOnLoadEvent(OnLoadOnce);
 
             var harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             harmony.PatchAll();

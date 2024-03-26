@@ -101,16 +101,20 @@ namespace VehicleFramework
                 yield return null;
             }
             Logger.Log("Loading: " + mv.GetName());
-            Coroutine ModuleGetter = mv.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData, mv));
-            mv.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData, mv));
-            mv.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData, mv));
+            Coroutine ModuleGetter = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData, mv));
+            UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData, mv));
+            UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
-            mv.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData, mv));
+            UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData, mv));
             if(mv as Submarine != null)
             {
-                mv.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv as Submarine));
-                mv.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv as Submarine));
-                mv.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv as Submarine));
+                UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv as Submarine));
+                UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv as Submarine));
+                UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv as Submarine));
+            }
+            if(mv.liveMixin.health == 0)
+            {
+                mv.OnKill();
             }
         }
 
