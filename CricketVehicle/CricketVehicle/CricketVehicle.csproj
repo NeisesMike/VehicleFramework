@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellManagerPatcher.cs" />
     <Compile Include="ConstructorPatcher.cs" />
     <Compile Include="CricketAlso.cs" />
     <Compile Include="CricketContainer.cs" />

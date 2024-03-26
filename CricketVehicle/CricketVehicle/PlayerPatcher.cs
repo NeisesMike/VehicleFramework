@@ -18,13 +18,8 @@ namespace CricketVehicle
             // Setup build bot paths.
             // We have to do this at game-start time,
             // because the new objects we create are wiped on scene-change.
-            UWE.CoroutineHost.StartCoroutine(VehicleFramework.BuildBotManager.BuildBotPathsHelper(Cricket.storageContainer));
-
+            UWE.CoroutineHost.StartCoroutine(VehicleFramework.BuildBotManager.SetupBuildBotPaths(Cricket.storageContainer));
             return;
         }
-
-
     }
-
-
 }

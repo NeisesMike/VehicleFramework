@@ -167,6 +167,15 @@ namespace CricketVehicle
         }
         internal static IEnumerator DeserializeStorage(CricketContainer cc)
         {
+            while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
+            {
+                yield return null;
+            }
+            while (WaitScreen.IsWaiting)
+            {
+                yield return null;
+            }
+            yield return new WaitForSeconds(3.2f);
             List<Tuple<Vector3, innateStorage>> allCricketContainers = ContainerSaveData.InnateStorages;
             // try to match against a saved vehicle in our list
             foreach (var container in allCricketContainers)

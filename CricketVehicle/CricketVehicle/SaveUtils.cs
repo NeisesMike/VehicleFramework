@@ -17,7 +17,7 @@ namespace CricketVehicle
         }
         private static bool IsNearMatch(Vector3 one, Vector3 two)
         {
-            return Vector3.Distance(one, two) < 0.01f; // why 0.01f ?
+            return Vector3.Distance(one, two) < 1f; // why 1f ?
         }
         private static void ReattachAndReload((CricketContainer cont, Vector3 loc) x)
         {
@@ -67,11 +67,7 @@ namespace CricketVehicle
                 {
                     yield return null;
                 }
-                // then wait five more frames
-                for (int i = 0; i < 100; i++)
-                {
-                    //yield return null;
-                }
+                yield return new WaitForSeconds(3.2f); // wait until docking animations are done
             }
             // real containers have real storage
             // that storage exists in savedata.InnateStorages

@@ -428,6 +428,9 @@ namespace CricketVehicle
                 return crafterSprite;
             }
         }
-
+        public static readonly Color earthbornCricket = new Color(165f / 255f, 192f / 255f, 155f / 255f, 1f);
+        public override Color ConstructionGhostColor { get; set; } = earthbornCricket;
+        public override Color ConstructionWireframeColor { get; set; } = earthbornCricket;
+        public override float TimeToConstruct { get; set; } = 12f;
     }
 }

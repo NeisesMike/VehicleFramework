@@ -201,7 +201,7 @@ namespace CricketVehicle
 			{
 				UWE.CoroutineHost.StartCoroutine(MainPatcher.DeserializeStorage(this));
 			}
-			StartCoroutine(RegisterWithManager());
+			UWE.CoroutineHost.StartCoroutine(RegisterWithManager());
 		}
 		public IEnumerator RegisterWithManager()
 		{
