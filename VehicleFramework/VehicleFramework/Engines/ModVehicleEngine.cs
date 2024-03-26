@@ -32,9 +32,7 @@ namespace VehicleFramework.Engines
         protected virtual float STRAFE_ACCEL => STRAFE_MAX_SPEED / 10f;
         protected virtual float VERT_ACCEL => VERT_MAX_SPEED / 10f;
 
-        // a value of 0.25 here indicates that
-        // velocity will decay 25% every second
-        protected virtual float waterDragDecay => 0.25f;
+        protected virtual float waterDragDecay => 2.5f;
         protected virtual float airDragDecay => 0.15f;
         protected virtual float DragDecay
         {
@@ -180,13 +178,13 @@ namespace VehicleFramework.Engines
         private AudioSource EngineSource1;
         private AudioSource EngineSource2;
 
-        public void Awake()
+        public virtual void Awake()
         {
             // register self with mainpatcher, for on-the-fly voice selection updating
             EngineSoundsManager.engines.Add(this);
         }
         // Start is called before the first frame update
-        public void Start()
+        public virtual void Start()
         {
             rb.centerOfMass = Vector3.zero;
             rb.angularDrag = 5f;
@@ -297,6 +295,11 @@ namespace VehicleFramework.Engines
         }
         public virtual void ApplyPlayerControls(Vector3 moveDirection)
         {
+            if(Player.main.GetPDA().isOpen)
+            {
+                return;
+            }
+
             // Thank you to MrPurple6411 for this snip regarding VehicleAccelerationModifier
             var modifiers = base.gameObject.GetComponentsInChildren<VehicleAccelerationModifier>();
             foreach (var modifier in modifiers)
