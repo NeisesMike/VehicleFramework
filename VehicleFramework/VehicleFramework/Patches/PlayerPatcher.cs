@@ -35,17 +35,29 @@ namespace VehicleFramework
         [HarmonyPatch("Start")]
         public static void StartPostfix(Player __instance)
         {
+            /*
+            IEnumerator raycastme()
+            {
+                while (true)
+                {
+                    yield return new WaitForSeconds(0.5f);
+                    RaycastHit[] allHits;
+                    allHits = Physics.RaycastAll(MainCamera.camera.transform.position, MainCamera.camera.transform.forward, 100f);
+                    allHits
+                        .Where(hit=>hit.transform.GetComponent<TerrainChunkPieceCollider>() != null)
+                        .ForEach(x => Logger.Error("Did Hit: " + x.ToString() + " : " + x.transform.name + " : " + x.collider.gameObject.name));
+                }
+            }
+            UWE.CoroutineHost.StartCoroutine(raycastme());
+            */
+
+
             HUDBuilder.DecideBuildHUD();
 
             // Setup build bot paths.
             // We have to do this at game-start time,
             // because the new objects we create are wiped on scene-change.
-            // TODO
-            // Knowing this, we might be able to factor out some gameobjects,
-            // that we'd been requiring in the assetbundle side of things.
-            __instance.StartCoroutine(BuildBotManager.SetupBuildBotPaths());
-
-
+            UWE.CoroutineHost.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
             MainPatcher.VFPlayerStartActions.ForEach(x => x(__instance));
             VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted = true;
             return;
@@ -170,7 +182,7 @@ namespace VehicleFramework
             }
             return true;
         }
-
+        
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         public static void UpdatePostfix(Player __instance)
