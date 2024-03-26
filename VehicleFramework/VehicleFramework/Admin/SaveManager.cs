@@ -240,6 +240,10 @@ namespace VehicleFramework
                     foreach (var thisStorage in vehicle.Item2)
                     {
                         bool isStorageMatched = false;
+                        if(mv.GetComponentsInChildren<InnateStorageContainer>().Count() == 0)
+                        {
+                            continue;
+                        }
                         // load up the storages
                         foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
                         {
@@ -284,64 +288,7 @@ namespace VehicleFramework
                         }
                         if (!isStorageMatched)
                         {
-                            // shit out the contents of the missing container, marked with a beacon
-                            IEnumerator MarkWithBeacon(Vector3 position)
-                            {
-                                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                yield return CraftData.InstantiateFromPrefabAsync(TechType.Beacon, result, false);
-                                GameObject thisBeacon = result.Get();
-                                thisBeacon.transform.position = position;
-                                yield return null; // let the stray entity be registered by the game
-                                thisBeacon.GetComponentInChildren<BeaconLabel>().SetLabel("Thanks! -Mikjaw");
-                                yield break;
-                            }
-                            UWE.CoroutineHost.StartCoroutine(MarkWithBeacon(mv.transform.position + mv.transform.forward * 5f));
-
-                            GameObject thisFloatingContainer = null;
-                            int numContainersSoFar = 0;
-                            for (int i = 0; i < thisStorage.Item2.Count; i++)
-                            {
-                                if (i % 16 == 0)
-                                {
-                                    TaskResult<GameObject> resultthisFloatingContainer = new TaskResult<GameObject>();
-                                    yield return CraftData.InstantiateFromPrefabAsync(TechType.SmallStorage, resultthisFloatingContainer, false);
-                                    thisFloatingContainer = resultthisFloatingContainer.Get();
-                                    Vector3 randomDirection = Vector3.Normalize(new Vector3(UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1, UnityEngine.Random.value * 2 - 1));
-                                    thisFloatingContainer.transform.position = mv.transform.position + mv.transform.forward * 5f + randomDirection * 2f;
-                                    thisFloatingContainer.GetComponentInChildren<uGUI_InputField>().text = "Overflow " + numContainersSoFar++.ToString();
-                                }
-
-                                Tuple<techtype, float> techtype = thisStorage.Item2[i];
-                                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
-                                yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                                GameObject thisItem = result.Get();
-                                if (techtype.Item2 >= 0)
-                                {
-                                    // check whether we *are* a battery xor we *have* a battery
-                                    if (thisItem.GetComponent<Battery>() != null)
-                                    {
-                                        // we are a battery
-                                        var bat = thisItem.GetComponentInChildren<Battery>();
-                                        bat.charge = techtype.Item2;
-                                    }
-                                    else
-                                    {
-                                        // we have a battery (we are a tool)
-                                        // Thankfully we have this naming convention
-                                        Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                        result = new TaskResult<GameObject>();
-                                        yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
-                                        GameObject newBat = result.Get();
-                                        newBat.GetComponent<Battery>().charge = techtype.Item2;
-                                        newBat.transform.SetParent(batSlot);
-                                        newBat.SetActive(false);
-                                    }
-                                }
-                                thisItem.transform.SetParent(thisFloatingContainer.GetComponentInChildren<StorageContainer>().transform);
-                                thisFloatingContainer.GetComponentInChildren<StorageContainer>().container.AddItem(thisItem.GetComponent<Pickupable>());
-                                thisItem.SetActive(false);
-                            }
+                            Logger.Error("Failed to restore the contents of the " + mv.name);
                         }
                     }
                 }
