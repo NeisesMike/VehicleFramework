@@ -226,35 +226,27 @@ namespace CricketVehicle
 			GetComponent<WorldForces>().handleGravity = true;
 			GetComponent<PingInstance>().enabled = true;
 		}
-
-		/*
-        void IHandTarget.OnHandClick(GUIHand hand)
-        {
-            // Offer to rename the container
-            return;
-        }
-
-        void IHandTarget.OnHandHover(GUIHand hand)
-        {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, storageContainer.storageLabel);
-            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-        }
-		*/
-
 		public void FixedUpdate()
 		{
-			float zCorrection = Mathf.Abs(transform.eulerAngles.z - 180f);
-			if (zCorrection <= 178f)
+			if (GetComponentInParent<Cricket>() == null)
 			{
-				float d = Mathf.Clamp01(1f - zCorrection / 180f) * 20f;
-				GetComponent<Rigidbody>().AddTorque(transform.forward * d * Time.fixedDeltaTime * Mathf.Sign(transform.eulerAngles.z - 180f), ForceMode.VelocityChange);
-			}
+				float zCorrection = Mathf.Abs(transform.eulerAngles.z - 180f);
+				if (zCorrection <= 178f)
+				{
+					float d = Mathf.Clamp01(1f - zCorrection / 180f) * 20f;
+					GetComponent<Rigidbody>().AddTorque(transform.forward * d * Time.fixedDeltaTime * Mathf.Sign(transform.eulerAngles.z - 180f), ForceMode.VelocityChange);
+				}
 
-			float xCorrection = Mathf.Abs(transform.eulerAngles.x - 180f);
-			if (xCorrection <= 178f)
+				float xCorrection = Mathf.Abs(transform.eulerAngles.x - 180f);
+				if (xCorrection <= 178f)
+				{
+					float d = Mathf.Clamp01(1f - xCorrection / 180f) * 20f;
+					GetComponent<Rigidbody>().AddTorque(transform.right * d * Time.fixedDeltaTime * Mathf.Sign(transform.eulerAngles.x - 180f), ForceMode.VelocityChange);
+				}
+			}
+			if (transform.position.y > 0)
 			{
-				float d = Mathf.Clamp01(1f - xCorrection / 180f) * 20f;
-				GetComponent<Rigidbody>().AddTorque(transform.right * d * Time.fixedDeltaTime * Mathf.Sign(transform.eulerAngles.x - 180f), ForceMode.VelocityChange);
+				GetComponent<WorldForces>().handleGravity = true;
 			}
 		}
 	}
