@@ -8,9 +8,9 @@ namespace VehicleFramework
 {
     public class ControlPanelButton : HandTarget, IHandTarget
     {
-        private System.Func<bool> myClickFunction;
-        private System.Func<bool> myHoverFunction;
-        public void Init(System.Func<bool> clickFunc, System.Func<bool> hoverFunc)
+        private System.Action myClickFunction;
+        private System.Action myHoverFunction;
+        public void Init(System.Action clickFunc, System.Action hoverFunc)
         {
             myClickFunction = clickFunc;
             myHoverFunction = hoverFunc;

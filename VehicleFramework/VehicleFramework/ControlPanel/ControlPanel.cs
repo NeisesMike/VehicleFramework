@@ -83,110 +83,94 @@ namespace VehicleFramework
             SetButtonLightingActive(button8, false);
             SetButtonLightingActive(buttonPower, false);
         }
-        public bool EmptyClick()
+        public void EmptyClick()
         {
-            return true;
         }
-        public bool EmptyHover()
+        public void EmptyHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EmptyHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool HeadlightsClick()
+        public void HeadlightsClick()
         {
             mv.headlights.ToggleHeadlights();
-            return true;
         }
-        public bool HeadLightsHover()
+        public void HeadLightsHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.HeadLightsHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool FloodLightsClick()
+        public void FloodLightsClick()
         {
             if (mv.floodlights is null)
             {
-                return true;
+                return;
             }
             mv.floodlights.ToggleFloodLights();
-            return true;
         }
-        public bool FloodLightsHover()
+        public void FloodLightsHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.FloodLightsHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool NavLightsClick()
+        public void NavLightsClick()
         {
             if (mv.navlights is null)
             {
-                return true;
+                return;
             }
             SetButtonLightingActive(buttonNavLights, mv.navlights.GetNavLightsEnabled());
             mv.navlights.ToggleNavLights();
-            return true;
         }
-        public bool NavLightsHover()
+        public void NavLightsHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.NavLightsHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool InteriorLightsClick()
+        public void InteriorLightsClick()
         {
             if(mv.interiorlights is null)
             {
-                return true;
+                return;
             }
             mv.interiorlights.ToggleInteriorLighting();
-            return true;
         }
-        public bool InteriorLightsHover()
+        public void InteriorLightsHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.InteriorLightsHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool DefaultColorClick()
+        public void DefaultColorClick()
         {
             mv.PaintVehicleDefaultStyle(mv.vehicleName);
             mv.IsDefaultTexture = true;
-            return true;
         }
-        public bool DefaultColorHover()
+        public void DefaultColorHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.DefaultColorHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool PowerClick()
+        public void PowerClick()
         {
             mv.energyInterface.GetValues(out float charge, out _);
             if (0 < charge)
             {
                 mv.TogglePower();
             }
-            return true;
         }
-        public bool PowerHover()
+        public void PowerHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.PowerHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
-        public bool AutoPilotClick()
+        public void AutoPilotClick()
         {
             // TODO
-            return true;
         }
-        public bool AutoPilotHover()
+        public void AutoPilotHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.AutoPilotHover));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            return true;
         }
         public void SetButtonLightingActive(GameObject button, bool active)
         {
