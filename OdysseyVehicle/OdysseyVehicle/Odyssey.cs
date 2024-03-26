@@ -993,6 +993,11 @@ namespace OdysseyVehicle
                 ska.renderers.Append(rend);
             }
         }
+        public override void OnVehicleDocked()
+        {
+            base.OnVehicleDocked();
+            upgradesInput.collider.enabled = true;
+        }
 
     }
 }
