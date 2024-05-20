@@ -53,7 +53,7 @@ namespace VehicleFramework.UpgradeModules
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = Color.red))
             };
             module_CustomPrefab.SetGameObject(moduleTemplate);
-            module_CustomPrefab.SetRecipe(moduleRecipe).WithCraftingTime(3).WithFabricatorType(CraftTree.Type.SeamothUpgrades).WithStepsToFabricatorTab(new string[] { "MVUM", tabName });
+            module_CustomPrefab.SetRecipe(moduleRecipe).WithCraftingTime(3).WithFabricatorType(CraftTree.Type.Workbench).WithStepsToFabricatorTab(new string[] { "MVUM", tabName });
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
             module_CustomPrefab.SetUnlock(TechType.BaseUpgradeConsole);
             module_CustomPrefab.SetEquipment(VehicleBuilder.ModuleType).WithQuickSlotType(qst);

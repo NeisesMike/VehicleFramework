@@ -113,7 +113,7 @@ namespace VehicleFramework
                 }
                 yield return UWE.CoroutineHost.StartCoroutine(VehicleBuilder.Prefabricate(mv, registeredPingType, verbose));
                 RegistrySemaphore = false;
-                mv.gameObject.SetActive(false);
+                mv.gameObject.SetActive(true);
 
                 Logger.Log("Registered the " + mv.gameObject.name + ".");
             }
