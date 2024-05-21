@@ -390,7 +390,7 @@ namespace VehicleFramework
         void IPlayerListener.OnPlayerEntry()
         {
             Logger.DebugLog("OnPlayerEntry");
-            if (powerStatus < PowerState.NearMT)
+            if (powerStatus < PowerState.NearMT && UnityEngine.Random.value < 0.5f)
             {
                 apVoice.EnqueueClip(apVoice.voice.WelcomeAboardAllSystemsOnline);
             }
