@@ -69,7 +69,7 @@ namespace VehicleFramework.Patches
         public static bool IsThisVehicleSmallEnough(VehicleDockingBay bay, GameObject nearby)
         {
             ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(nearby.gameObject);
-            if (mv == null)
+            if (mv == null || Player.main.GetVehicle() != mv)
             {
                 return true;
             }
@@ -204,29 +204,6 @@ namespace VehicleFramework.Patches
         {
             return IsThisVehicleSmallEnough(__instance, nearby);
         }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(VehicleDockingBay.OnUndockingStart))]
-        public static void OnUndockingStartPostfix(VehicleDockingBay __instance)
-        {
-            ModVehicle mv = __instance.dockedVehicle as ModVehicle;
-            if (mv != null)
-            {
-                //mv.OnVehicleUndocked();
-            }
-        }
-        /*
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(VehicleDockingBay.OnUndockingComplete))]
-        public static void OnUndockingCompletePostfix(VehicleDockingBay __instance, Player player)
-        {
-            ModVehicle mv = player.GetVehicle() as ModVehicle;
-            if (mv != null)
-            {
-                mv.OnVehicleUndocked();
-            }
-        }
-        */
         [HarmonyPrefix]
         [HarmonyPatch(nameof(VehicleDockingBay.OnUndockingComplete))]
         public static bool OnUndockingCompletePrefix(VehicleDockingBay __instance, Player player)
