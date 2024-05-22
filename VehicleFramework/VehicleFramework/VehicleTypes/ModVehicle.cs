@@ -516,6 +516,15 @@ namespace VehicleFramework
         {
             PlayerEntry();
         }
+        public bool IsUndockingAnimating = false;
+        public void OnUndockingStart()
+        {
+            IsUndockingAnimating = true;
+        }
+        public void OnUndockingComplete()
+        {
+            IsUndockingAnimating = false;
+        }
         public virtual void StoreShader()
         {
             foreach (var renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
