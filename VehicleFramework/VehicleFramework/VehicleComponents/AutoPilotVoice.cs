@@ -193,7 +193,7 @@ namespace VehicleFramework
         }
         public void EnqueueClip(AudioClip clip)
         {
-            if (mv && aiEI.hasCharge && clip && isReadyToSpeak)
+            if (mv && aiEI.hasCharge && clip && isReadyToSpeak && mv.GetComponent<PingInstance>().enabled)
             {
                 speechQueue.Enqueue(clip, 0);
             }
