@@ -33,12 +33,12 @@ namespace VehicleFramework
             if (isLive)
             {
                 SetHeadLightsActive(true);
-                if (VehicleManager.isWorldLoaded)
+                if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
                 {
                     mv.lightsOnSound.Stop();
                     mv.lightsOnSound.Play();
                 }
-                isHeadlightsOn = !isHeadlightsOn;
+                isHeadlightsOn = true;
             }
         }
         public void DisableHeadlights()
@@ -46,12 +46,12 @@ namespace VehicleFramework
             if (isLive)
             {
                 SetHeadLightsActive(false);
-                if (VehicleManager.isWorldLoaded)
+                if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
                 {
                     mv.lightsOffSound.Stop();
                     mv.lightsOffSound.Play();
                 }
-                isHeadlightsOn = !isHeadlightsOn;
+                isHeadlightsOn = false;
             }
         }
         public void ToggleHeadlights()
@@ -124,12 +124,10 @@ namespace VehicleFramework
 
         void IPowerListener.OnBatteryLow()
         {
-            DisableHeadlights();
         }
 
         void IPowerListener.OnBatteryNearlyEmpty()
         {
-            DisableHeadlights();
         }
 
         void IPowerListener.OnBatteryDepleted()
@@ -154,7 +152,6 @@ namespace VehicleFramework
 
         void IPlayerListener.OnPilotEnd()
         {
-            DisableHeadlights();
         }
 
         void IPowerListener.OnBatteryDead()

@@ -16,22 +16,22 @@ namespace VehicleFramework
         public void EnableFloodLights()
         {
             SetFloodLampsActive(true);
-            if (VehicleManager.isWorldLoaded)
+            if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
             {
                 mv.lightsOnSound.Stop();
                 mv.lightsOnSound.Play();
             }
-            isFloodLightsOn = !isFloodLightsOn;
+            isFloodLightsOn = true;
         }
         public void DisableFloodLights()
         {
             SetFloodLampsActive(false);
-            if (VehicleManager.isWorldLoaded)
+            if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
             {
                 mv.lightsOffSound.Stop();
                 mv.lightsOffSound.Play();
             }
-            isFloodLightsOn = !isFloodLightsOn;
+            isFloodLightsOn = false;
         }
         public void ToggleFloodLights()
         {
