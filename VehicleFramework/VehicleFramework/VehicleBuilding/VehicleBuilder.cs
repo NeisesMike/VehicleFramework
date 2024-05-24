@@ -739,7 +739,9 @@ namespace VehicleFramework
         {
             if (mv.TetherSources.Count > 0)
             {
-                mv.gameObject.EnsureComponent<SubRoot>();
+                var subroot = mv.gameObject.EnsureComponent<SubRoot>();
+                subroot.rb = mv.useRigidbody;
+                subroot.worldForces = mv.worldForces;
                 var tmp = mv.TetherSources.First();
                 tmp.EnsureComponent<RespawnPoint>();
             }
@@ -825,7 +827,7 @@ namespace VehicleFramework
             {
                 SetupEngine(mv as Submarine);
                 SetupFloodLights(mv as Submarine);
-                SetupRespawnPoint(mv as Submarine);
+                SetupRespawnPoint(mv as Submarine); // depends on SetupWorldForces
             }
             if (mv as Submersible != null)
             {

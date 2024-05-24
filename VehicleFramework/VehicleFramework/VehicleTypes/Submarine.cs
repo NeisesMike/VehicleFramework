@@ -153,6 +153,7 @@ namespace VehicleFramework.VehicleTypes
             isPilotSeated = true;
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
+            Player.main.SetCurrentSub(GetComponent<SubRoot>());
         }
         public override void StopPiloting()
         {
@@ -182,6 +183,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 UWE.CoroutineHost.StartCoroutine(GrantPlayerInvincibility(3f));
             }
+            Player.main.SetCurrentSub(GetComponent<SubRoot>());
         }
         public static IEnumerator GrantPlayerInvincibility(float time)
         {
@@ -196,7 +198,7 @@ namespace VehicleFramework.VehicleTypes
             isPlayerInside = true;
             if (!isScuttled)
             {
-                Player.main.currentSub = null;
+                //Player.main.currentSub = null;
                 Player.main.currentMountedVehicle = this;
                 TryRemoveDuplicateFabricator();
                 if (IsVehicleDocked)
@@ -218,7 +220,7 @@ namespace VehicleFramework.VehicleTypes
         public override void PlayerExit()
         {
             base.PlayerExit();
-            Player.main.currentSub = null;
+            //Player.main.currentSub = null;
             isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
             if (!IsVehicleDocked)

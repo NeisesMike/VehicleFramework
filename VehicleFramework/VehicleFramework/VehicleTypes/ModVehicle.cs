@@ -211,11 +211,12 @@ namespace VehicleFramework
         }
         public override void Update()
         {
-            if (!isScuttled)
+            if (isScuttled)
             {
-                base.Update();
-                HandleExtraQuickSlotInputs();
+                return;
             }
+            base.Update();
+            HandleExtraQuickSlotInputs();
         }
         public override void FixedUpdate()
         {
@@ -390,6 +391,7 @@ namespace VehicleFramework
                     //It's okay if the vehicle doesn't have a canopy
                 }
                 Player.main.lastValidSub = GetComponent<SubRoot>();
+                Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
                 NotifyStatus(PlayerStatus.OnPlayerEntry);
             }
         }
@@ -411,6 +413,7 @@ namespace VehicleFramework
                 }
             }
             IsPlayerDry = false;
+            Player.main.SetCurrentSub(null);
             NotifyStatus(PlayerStatus.OnPlayerExit);
         }
         public virtual void SubConstructionBeginning()
@@ -548,31 +551,41 @@ namespace VehicleFramework
                 }
             }
         }
-        public virtual void ApplyInteriorLighting()
+        public void ListShadersInUse()
         {
-            void ListShadersInUse()
+            HashSet<string> shaderNames = new HashSet<string>();
+
+            // Find all materials currently loaded in the game.
+            Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
+
+            foreach (var material in materials)
             {
-                HashSet<string> shaderNames = new HashSet<string>();
-
-                // Find all materials currently loaded in the game.
-                Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
-
-                foreach (var material in materials)
+                if (material.shader != null)
                 {
-                    if (material.shader != null)
-                    {
-                        // Add the shader name to the set to ensure uniqueness.
-                        shaderNames.Add(material.shader.name);
-                    }
-                }
-
-                // Now you have a unique list of shader names in use.
-                foreach (var shaderName in shaderNames)
-                {
-                    Debug.Log("Shader in use: " + shaderName);
+                    // Add the shader name to the set to ensure uniqueness.
+                    shaderNames.Add(material.shader.name);
                 }
             }
+
+            // Now you have a unique list of shader names in use.
+            foreach (var shaderName in shaderNames)
+            {
+                Debug.Log("Shader in use: " + shaderName);
+            }
+        }
+        public void ListShaderProperties()
+        {
+            Shader shader = Shader.Find("MarmosetUBER");
+            for (int i = 0; i < shader.GetPropertyCount(); i++)
+            {
+                string propertyName = shader.GetPropertyName(i);
+                Debug.Log($"Property {i}: {propertyName}, Type: {shader.GetPropertyType(i)}");
+            }
+        }
+        public virtual void ApplyInteriorLighting()
+        {
             //ListShadersInUse();
+            //ListShaderProperties();
             //VehicleBuilder.ApplyShaders(this, shader4);
         }
         public virtual void LoadShader()

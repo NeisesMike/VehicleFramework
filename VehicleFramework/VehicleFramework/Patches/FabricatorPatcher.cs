@@ -7,8 +7,6 @@ using HarmonyLib;
 
 namespace VehicleFramework.Patches
 {
-
-
 	[HarmonyPatch(typeof(GhostCrafter))]
 	public static class FabricatorPatcher
 	{
@@ -38,7 +36,7 @@ namespace VehicleFramework.Patches
 			{
 				return true;
 			}
-			__result = false;
+			__result = !(__instance is Fabricator);
 			return false;
 		}
 	}
