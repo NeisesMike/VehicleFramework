@@ -27,18 +27,6 @@ namespace VehicleFramework.Patches
 			__result = mv.GetComponent<PowerManager>().EvaluatePowerStatus() == goodPS;
 			return false;
 		}
-		[HarmonyPrefix]
-		[HarmonyPatch("CanDeconstruct")]
-		public static bool CanDeconstructPrefix(GhostCrafter __instance, string reason, ref bool __result)
-		{
-			ModVehicle mv = __instance.GetComponentInParent<ModVehicle>();
-			if (mv is null)
-			{
-				return true;
-			}
-			__result = !(__instance is Fabricator);
-			return false;
-		}
 	}
 
 	[HarmonyPatch(typeof(CrafterLogic))]
