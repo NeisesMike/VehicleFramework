@@ -15,6 +15,8 @@ namespace VehicleFramework.Patches
     // - animating the docking bay arms
     // - alerting the vehicle it has been docked
     // See DockedVehicleHandTargetPatcher for undocking actions
+
+
     [HarmonyPatch(typeof(VehicleDockingBay))]
     class VehicleDockingBayPatch
     {
@@ -92,8 +94,7 @@ namespace VehicleFramework.Patches
                 return false;
             }
         }
-
-
+        
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleDockingBay.LateUpdate))]
         // This patch animates the docking bay arms as if a seamoth is docked
@@ -105,7 +106,7 @@ namespace VehicleFramework.Patches
                 mv.AnimateMoonPoolArms(__instance);
             }
         }
-        
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleDockingBay.DockVehicle))]
         // This patch ensures a modvehicle docks correctly
@@ -116,7 +117,7 @@ namespace VehicleFramework.Patches
                 (vehicle as ModVehicle).OnVehicleDocked();
             }
         }
-        
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleDockingBay.SetVehicleDocked))]
         // This patch ensures a modvehicle docks correctly
@@ -127,25 +128,25 @@ namespace VehicleFramework.Patches
                 (vehicle as ModVehicle).OnVehicleDocked();
             }
         }
-        
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(VehicleDockingBay.OnTriggerEnter))]
         // This patch controls whether to dock a ModVehicle. Only small Submersibles are accepted.
         public static bool OnTriggerEnterPrefix(VehicleDockingBay __instance, Collider other)
         {
             ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(other.gameObject);
-            if(mv == null)
+            if (mv == null)
             {
                 return true;
             }
-            if(!mv.CanMoonpoolDock)
+            if (!mv.CanMoonpoolDock)
             {
                 return false;
             }
             string subRootName = __instance.subRoot.name.ToLower();
             if (subRootName.Contains("base"))
             {
-                 return HandleMoonpool(mv);
+                return HandleMoonpool(mv);
             }
             else if (subRootName.Contains("cyclops"))
             {
@@ -193,14 +194,14 @@ namespace VehicleFramework.Patches
             }
             return false;
         }
-        
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(VehicleDockingBay.LaunchbayAreaEnter))]
         public static bool LaunchbayAreaEnterPrefix(VehicleDockingBay __instance, GameObject nearby)
         {
             return IsThisVehicleSmallEnough(__instance, nearby);
         }
-        
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(VehicleDockingBay.LaunchbayAreaExit))]
         public static bool LaunchbayAreaExitPrefix(VehicleDockingBay __instance, GameObject nearby)
@@ -237,7 +238,7 @@ namespace VehicleFramework.Patches
                 timeToWaitForAnimationSweetspot = 3.6f;
             }
             yield return new WaitForSeconds(timeToWaitForAnimationSweetspot);
-            UWE.CoroutineHost.StartCoroutine(mv.Undock(Player.main, db.transform.position.y)); // this releases the vehicle model into the water
+            UWE.CoroutineHost.StartCoroutine(mv.Undock(Player.main, db.transform.position.y - 4)); // this releases the vehicle model into the water
             yield break;
         }
 
@@ -259,5 +260,15 @@ namespace VehicleFramework.Patches
                 //__instance.StartCoroutine(__instance.dockedVehicle.Undock(player, __instance.transform.position.y - 4f)); // this releases the vehicle model into the water
             }
         }
+        //[HarmonyPostfix]
+        //[HarmonyPatch(nameof(VehicleDockingBay.OnUndockingComplete))]
+        //public static void OnUndockingCompletePostfix(VehicleDockingBay __instance, Player player)
+        //{
+        //    ModVehicle mv = player.GetVehicle() as ModVehicle;
+        //    if (mv != null)
+        //    {
+        //        mv.OnVehicleUndocked();
+        //    }
+        //}
     }
 }
