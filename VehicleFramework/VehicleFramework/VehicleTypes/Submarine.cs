@@ -444,7 +444,7 @@ namespace VehicleFramework.VehicleTypes
 
             GameObject frame = ColorPicker;
             ActualEditScreen.transform.SetParent(frame.transform);
-            ActualEditScreen.transform.localPosition = new Vector3(.15f, .33f, 0f);
+            ActualEditScreen.transform.localPosition = new Vector3(.15f, .28f, 0.01f);
             ActualEditScreen.transform.localEulerAngles = new Vector3(0, 180, 0);
 
             var but = ActualEditScreen.transform.Find("Active/BaseTab");
