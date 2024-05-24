@@ -30,8 +30,8 @@ namespace OdysseyVehicle
 
         public static Texture2D hull_details = null;
         public static Texture2D hull_height = null;
-        public static Texture2D hull_normal = null;
         public static Texture2D hull_metal = null;
+        public static Texture2D hull_normal = null;
 
         public static GameObject name_label_generator = null;
         public static Texture2D name_details = null; 
@@ -76,7 +76,7 @@ namespace OdysseyVehicle
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
             foreach (System.Object obj in arr)
             {
-
+                Logger.Log(obj.ToString());
                 if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
@@ -103,13 +103,13 @@ namespace OdysseyVehicle
                 {
                     hull_height = (Texture2D)obj;
                 }
-                else if (obj.ToString().Contains("hull_normal"))
-                {
-                    hull_normal = (Texture2D)obj;
-                }
                 else if (obj.ToString().Contains("hull_metal"))
                 {
                     hull_metal = (Texture2D)obj;
+                }
+                else if (obj.ToString().Contains("hull_normal"))
+                {
+                    hull_normal = (Texture2D)obj;
                 }
                 else if (obj.ToString().Contains("hull_default"))
                 {
@@ -260,14 +260,14 @@ namespace OdysseyVehicle
                 var list = new List<VehicleFramework.VehicleParts.VehicleHatchStruct>();
 
                 VehicleFramework.VehicleParts.VehicleHatchStruct interior_vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
-                Transform intHatch = transform.Find("Geometry/Interior_Main_light/Hatch/InteriorHatch");
+                Transform intHatch = transform.Find("Geometry/Interior_Main_light/Hatch_light/InteriorHatch");
                 interior_vhs.Hatch = intHatch.gameObject;
                 interior_vhs.EntryLocation = intHatch.Find("Entry");
                 interior_vhs.ExitLocation = intHatch.Find("Exit");
                 interior_vhs.SurfaceExitLocation = intHatch.Find("SurfaceExit");
 
                 VehicleFramework.VehicleParts.VehicleHatchStruct exterior_vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
-                Transform extHatch = transform.Find("Geometry/Interior_Main_light/Hatch/ExteriorHatch");
+                Transform extHatch = transform.Find("Geometry/Interior_Main_light/Hatch_light/ExteriorHatch");
                 exterior_vhs.Hatch = extHatch.gameObject;
                 //exterior_vhs.EntryLocation = extHatch.Find("Entry");
                 //exterior_vhs.ExitLocation = extHatch.Find("Exit");
