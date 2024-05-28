@@ -32,7 +32,7 @@ namespace VehicleFramework.Patches
                 mv.GetComponentInChildren<VFXConstructing>(true).delay = 0f;
             }
             VehicleManager.VehiclesInPlay
-                .Where(x => x.GetComponentInChildren<VFXConstructing>(true) != null && x.GetComponentInChildren<VFXConstructing>(true).constructed < 100f)
+                .Where(x => x != null && x.GetComponentInChildren<VFXConstructing>(true) != null && x.GetComponentInChildren<VFXConstructing>(true).constructed < 100f)
                 .ForEach(x => FinishHim(x));
         }
         public static IEnumerator CheckSpawnForMVs(TechType tt)
