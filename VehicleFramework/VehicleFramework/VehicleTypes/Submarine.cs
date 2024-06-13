@@ -508,6 +508,7 @@ namespace VehicleFramework.VehicleTypes
                 {
                     fabricator = tran.gameObject;
                     fabricator.GetComponentInChildren<Fabricator>().enabled = enabled;
+                    fabricator.GetComponentInChildren<Collider>().enabled = enabled;
                     //fabricator.SetActive(enabled);
                 }
             }

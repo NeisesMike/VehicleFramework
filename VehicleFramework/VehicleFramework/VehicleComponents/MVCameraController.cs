@@ -32,7 +32,7 @@ namespace VehicleFramework.VehicleComponents
             mv = GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                VehicleFramework.Logger.Log("MVCameraController did not detect a ModVehicle in the parents of this GameObject: " + gameObject.name);
+                Logger.Error("MVCameraController did not detect a ModVehicle in the parents of this GameObject: " + gameObject.name);
                 enabled = false;
             }
             AddCamera(PlayerCamPivot, playerCameraState);
@@ -59,12 +59,12 @@ namespace VehicleFramework.VehicleComponents
         {
             if (cameras.ContainsKey(label))
             {
-                VehicleFramework.Logger.Log("That camera label already exists in this list of cameras.");
+                Logger.Error("That camera label already exists in this list of cameras.");
                 return false;
             }
             if (cameras.ContainsValue(tran))
             {
-                VehicleFramework.Logger.Log("That camera transform already exists in this list of cameras.");
+                Logger.Error("That camera transform already exists in this list of cameras.");
                 return false;
             }
             cameras.Add(label, tran);

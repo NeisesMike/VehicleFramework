@@ -489,7 +489,6 @@ namespace VehicleFramework
             }
             StartCoroutine(GiveUsABatteryOrGiveUsDeath());
         }
-        List<ColliderState> storedStates;
         public virtual void OnVehicleDocked()
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
@@ -1142,7 +1141,8 @@ namespace VehicleFramework
                 || Player.main.mode != Player.Mode.LockedPiloting
                 || !mv.IsPlayerDry
                 || mv.GetComponent<ModVehicleEngine>() == null
-                || Player.main.GetPDA().isOpen)
+                || Player.main.GetPDA().isOpen
+                || !mv.energyInterface.hasCharge)
             {
                 return;
             }
