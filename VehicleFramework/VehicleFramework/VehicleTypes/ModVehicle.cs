@@ -501,7 +501,7 @@ namespace VehicleFramework
             {
                 OnPlayerDocked();
             }
-            storedStates = ColliderState.DisableAllColliders(gameObject);
+            useRigidbody.detectCollisions = false;
         }
         public virtual void OnPlayerDocked()
         {
@@ -512,8 +512,8 @@ namespace VehicleFramework
             // The Moonpool invokes this once upon vehicle exit from the dock
             //LoadShader();
             OnPlayerUndocked();
-            ColliderState.RestoreColliderStates(storedStates);
             IsVehicleDocked = false;
+            useRigidbody.detectCollisions = true;
         }
         public virtual void OnPlayerUndocked()
         {
