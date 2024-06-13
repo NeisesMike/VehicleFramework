@@ -68,6 +68,15 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void StopPiloting()
         {
+            if (Player.main.currentSub != null && Player.main.currentSub.name.ToLower().Contains("cyclops"))
+            {
+                //Unfortunately, this method shares a name with some Cyclops components.
+                // PilotingChair.ReleaseBy broadcasts a message for "StopPiloting"
+                // So because a docked vehicle is part of the Cyclops heirarchy,
+                // it tries to respond, which causes a game crash.
+                // So we'll return if the player is within a Cyclops.
+                return;
+            }
             // this function
             // called by Player.ExitLockedMode()
             // which is triggered on button press
