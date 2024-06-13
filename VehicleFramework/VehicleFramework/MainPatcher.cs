@@ -311,6 +311,15 @@ namespace VehicleFramework
         [Slider("Engine Volume", Step = 1f, DefaultValue = 100, Min = 0, Max = 100)]
         public float engineVolume = 50f;
 
+        [Keybind("Next Camera")]
+        public KeyCode nextCamera = KeyCode.F;
+
+        [Keybind("Previous Camera")]
+        public KeyCode previousCamera = KeyCode.T;
+
+        [Keybind("Exit Camera")]
+        public KeyCode exitCamera = KeyCode.V;
+
     }
 
 

@@ -53,15 +53,6 @@ namespace AbyssVehicle
     [Menu("Abyss Vehicle Options")]
     public class AbyssVehicleConfig : ConfigFile
     {
-        [Keybind("Next Camera")]
-        public KeyCode nextCamera = KeyCode.F;
-
-        [Keybind("Previous Camera")]
-        public KeyCode previousCamera = KeyCode.T;
-
-        [Keybind("Exit Camera")]
-        public KeyCode exitCamera = KeyCode.V;
-
         [Slider("Abyss GUI Size", Min =0.1f, Max =3f, Step =0.01f)]
         public float guiSize = 0.8f;
 

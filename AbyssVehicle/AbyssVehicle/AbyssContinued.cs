@@ -13,16 +13,15 @@ using UnityEngine.U2D;
 using VehicleFramework.VehicleParts;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Engines;
+using VehicleFramework.VehicleComponents;
 
 namespace AbyssVehicle
 {
     public partial class Abyss : Submarine
     {
         public static GameObject cameraGUI = null;
-        private CameraState currentCameraState = CameraState.player;
-        private Transform playerCamActual = null;
-        Dictionary<CameraState, GameObject> guiCanvases = new Dictionary<CameraState, GameObject>();
-
+        Dictionary<string, GameObject> guiCanvases = new Dictionary<string, GameObject>();
+        public MVCameraController cams = null;
         private Transform bottomCam => transform.Find("RoundCamera1/Inner_corpuse/Lens_camera/Camera");
         private Transform wideCam => transform.Find("RoundCamera2/Inner_corpuse/Lens_camera/Camera");
         private Transform rearCam => transform.Find("RoundCamera3/Inner_corpuse/Lens_camera/Camera");
@@ -30,171 +29,56 @@ namespace AbyssVehicle
         private Transform starboardCam => transform.Find("RoundCamera5/Inner_corpuse/Lens_camera/Camera");
         private Transform forwardCam => transform.Find("RoundCamera6/Inner_corpuse/Lens_camera/Camera");
         public Transform PlayerCamPivot => Player.main.transform.Find("camPivot");
-        public Transform PlayerCam
-        {
-            get
-            {
-                if (playerCamActual == null)
-                {
-                    playerCamActual = PlayerCamPivot.Find("camRoot");
-                }
-                return playerCamActual;
-            }
-        }
-        public enum CameraState
-        {
-            bottomHatch,
-            port,
-            player,
-            forward,
-            starboard,
-            rear,
-            widelens
-        }
-
         public override void Awake()
         {
             OGVehicleName = "ABY-" + Mathf.RoundToInt(UnityEngine.Random.value * 10000).ToString();
             vehicleName = OGVehicleName;
             NowVehicleName = OGVehicleName;
             base.Awake();
-
-            List<string> cameraNames = new List<string>();
-            cameraNames.Add("RoundCamera1");
-            cameraNames.Add("RoundCamera2");
-            cameraNames.Add("RoundCamera3");
-            cameraNames.Add("RoundCamera4");
-            cameraNames.Add("RoundCamera5");
-            cameraNames.Add("RoundCamera6");
-            foreach (string str in cameraNames)
-            {
-                Transform cameraObject = transform.Find(str + "/Inner_corpuse/Lens_camera/Camera");
-                cameraObject.GetComponent<Camera>().enabled = false;
-            }
-
         }
         public override void Start()
         {
             base.Start();
             SetupMotorWheels();
             SetupCameraGUI();
+            cams = gameObject.AddComponent<MVCameraController>();
+            cams.AddCamera(forwardCam, "forward");
+            cams.AddCamera(starboardCam, "starboard");
+            cams.AddCamera(rearCam, "rear");
+            cams.AddCamera(wideCam, "wide");
+            cams.AddCamera(bottomCam, "bottom");
+            cams.AddCamera(portCam, "port");
         }
         public override void Update()
         {
             base.Update();
-            MaybeControlCameras();
+            UpdateCameraGUI();
+        }
+        private void UpdateCameraGUI()
+        {
             guiCanvases.ForEach(x => x.Value.transform.Find("RawImage").localScale = Vector3.one * MainPatcher.config.guiSize);
             guiCanvases.ForEach(x => x.Value.transform.Find("RawImage").localPosition = new Vector3(MainPatcher.config.guiXPosition, MainPatcher.config.guiYPosition, x.Value.transform.Find("RawImage").localPosition.z));
-        }
-        public override void StopPiloting()
-        {
-            base.StopPiloting();
-            ForceResetPlayerCameraToHead();
-            currentCameraState = CameraState.player;
-        }
-        private void MaybeControlCameras()
-        {
             if (IsPlayerPiloting())
             {
-                CameraState lastCameraState = currentCameraState;
-                ControlCameraState();
-                ControlCameras(lastCameraState);
+                guiCanvases.Where(x => x.Key == cams.GetState()).ForEach(x => x.Value.SetActive(true));
+                guiCanvases.Where(x => x.Key != cams.GetState()).ForEach(x => x.Value.SetActive(false));
             }
             else
             {
                 guiCanvases.ForEach(x => x.Value.SetActive(false));
             }
         }
-        private void ControlCameraState()
-        {
-            if (Input.GetKeyDown(MainPatcher.config.nextCamera))
-            {
-                currentCameraState++;
-                if (currentCameraState > CameraState.widelens)
-                {
-                    currentCameraState = 0;
-                }
-            }
-            else if (Input.GetKeyDown(MainPatcher.config.previousCamera))
-            {
-                currentCameraState--;
-                if (currentCameraState < 0)
-                {
-                    currentCameraState = CameraState.widelens;
-                }
-            }
-            else if (Input.GetKeyDown(MainPatcher.config.exitCamera))
-            {
-                currentCameraState = CameraState.player;
-            }
-        }
-        private void ControlCameras(CameraState lastState)
-        {
-            switch (currentCameraState)
-            {
-                case CameraState.bottomHatch:
-                    MovePlayerCameraToTransform(bottomCam, lastState);
-                    break;
-                case CameraState.port:
-                    MovePlayerCameraToTransform(portCam, lastState);
-                    break;
-                case CameraState.player:
-                    ResetPlayerCameraToHead(lastState);
-                    break;
-                case CameraState.forward:
-                    MovePlayerCameraToTransform(forwardCam, lastState);
-                    break;
-                case CameraState.starboard:
-                    MovePlayerCameraToTransform(starboardCam, lastState);
-                    break;
-                case CameraState.rear:
-                    MovePlayerCameraToTransform(rearCam, lastState);
-                    break;
-                case CameraState.widelens:
-                    MovePlayerCameraToTransform(wideCam, lastState);
-                    break;
-                default:
-                    ResetPlayerCameraToHead(lastState);
-                    break;
-            }
-            guiCanvases.Where(x => x.Key == currentCameraState).ForEach(x => x.Value.SetActive(true));
-            guiCanvases.Where(x => x.Key != currentCameraState).ForEach(x => x.Value.SetActive(false));
-        }
-        public void MovePlayerCameraToTransform(Transform destination, CameraState lastState)
-        {
-            if (lastState != currentCameraState)
-            {
-                PlayerCam.SetParent(destination);
-                PlayerCam.localPosition = Vector3.zero;
-                PlayerCam.localRotation = Quaternion.identity;
-            }
-        }
-        public void ResetPlayerCameraToHead(CameraState lastState)
-        {
-            if (lastState != currentCameraState)
-            {
-                PlayerCam.SetParent(PlayerCamPivot);
-                PlayerCam.localPosition = Vector3.zero;
-                PlayerCam.localRotation = Quaternion.identity;
-            }
-        }
-        public void ForceResetPlayerCameraToHead()
-        {
-            PlayerCam.SetParent(PlayerCamPivot);
-            PlayerCam.localPosition = Vector3.zero;
-            PlayerCam.localRotation = Quaternion.identity;
-        }
         private void SetupCameraGUI()
         {
             GameObject thisCameraGUI = Instantiate(cameraGUI);
             thisCameraGUI.transform.SetParent(transform);
-            guiCanvases.Add(CameraState.player, thisCameraGUI.transform.Find("CanvasNone").gameObject);
-            guiCanvases.Add(CameraState.forward, thisCameraGUI.transform.Find("CanvasForward").gameObject);
-            guiCanvases.Add(CameraState.port, thisCameraGUI.transform.Find("CanvasPort").gameObject);
-            guiCanvases.Add(CameraState.starboard, thisCameraGUI.transform.Find("CanvasStarboard").gameObject);
-            guiCanvases.Add(CameraState.rear, thisCameraGUI.transform.Find("CanvasAstern").gameObject);
-            guiCanvases.Add(CameraState.widelens, thisCameraGUI.transform.Find("CanvasDescent").gameObject);
-            guiCanvases.Add(CameraState.bottomHatch, thisCameraGUI.transform.Find("CanvasHatch").gameObject);
+            guiCanvases.Add("player", thisCameraGUI.transform.Find("CanvasNone").gameObject);
+            guiCanvases.Add("forward", thisCameraGUI.transform.Find("CanvasForward").gameObject);
+            guiCanvases.Add("port", thisCameraGUI.transform.Find("CanvasPort").gameObject);
+            guiCanvases.Add("starboard", thisCameraGUI.transform.Find("CanvasStarboard").gameObject);
+            guiCanvases.Add("rear", thisCameraGUI.transform.Find("CanvasAstern").gameObject);
+            guiCanvases.Add("wide", thisCameraGUI.transform.Find("CanvasDescent").gameObject);
+            guiCanvases.Add("bottom", thisCameraGUI.transform.Find("CanvasHatch").gameObject);
         }
         public void SetupMotorWheels()
         {
