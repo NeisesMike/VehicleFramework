@@ -103,7 +103,7 @@ namespace VehicleFramework
             UpdateHealthState();
             UpdatePowerState();
             UpdateDepthState();
-            if(mv as Drone is null)
+            if(mv as Drone == null)
             {
                 MaybeRefillOxygen();
             }
@@ -292,7 +292,7 @@ namespace VehicleFramework
         }
         private void MaybeRefillOxygen()
         {
-            float totalPower = eInterf.TotalCanProvide(out _);
+            float totalPower = mv.energyInterface.TotalCanProvide(out _);
             float totalAIPower = eInterf.TotalCanProvide(out _);
             if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsPlayerDry)
             {
