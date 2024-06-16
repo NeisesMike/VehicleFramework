@@ -232,6 +232,23 @@ namespace VehicleFramework
             }
             return true;
         }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Player.CanBreathe))]
+        public static void CanBreathePostfix(Player __instance, ref bool __result)
+        {
+            if(__instance.currentMountedVehicle != null)
+            {
+                ModVehicle mv = __instance.currentMountedVehicle as ModVehicle;
+                switch(mv)
+                {
+                    case VehicleTypes.Submarine sub:
+                        __result = mv.IsPowered() && mv.IsPlayerDry;
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
 
     }
 }
