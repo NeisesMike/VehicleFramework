@@ -174,6 +174,11 @@ namespace VehicleFramework
         }
         public void SetButtonLightingActive(GameObject button, bool active)
         {
+            if (button == null)
+            {
+                Logger.Warn("Tried to set control-panel button active, but it was NULL");
+                return;
+            }
             if (active)
             {
                 foreach (var renderer in button.GetComponentsInChildren<Renderer>())
