@@ -41,9 +41,10 @@ namespace VehicleFramework.Patches
 				// If this is Creative or something, don't even bother
 				return true;
 			}
-			if (powerRelay is null)
+			if (powerRelay.powerPreview == null)
 			{
-				// if powerRelay was null, we must be talking about a ModVehicle
+				// if powerRelay.powerPreview was null, we must be talking about a ModVehicle
+				// (it was never assigned because PowerRelay.Start is skipped for ModVehicles)
 				// so let's check for one
 				ModVehicle mv = null;
 				foreach (ModVehicle tempMV in VehicleManager.VehiclesInPlay)

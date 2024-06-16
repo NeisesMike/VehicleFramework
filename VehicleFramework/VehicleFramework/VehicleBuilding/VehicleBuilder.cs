@@ -828,6 +828,7 @@ namespace VehicleFramework
                 SetupEngine(mv as Submarine);
                 SetupFloodLights(mv as Submarine);
                 SetupRespawnPoint(mv as Submarine); // depends on SetupWorldForces
+                mv.gameObject.AddComponent<PowerRelay>(); // See PowerRelayPatcher. Allows Submarines to recharge batteries.
             }
             if (mv as Submersible != null)
             {
@@ -844,13 +845,6 @@ namespace VehicleFramework
             Shader shader = Shader.Find("MarmosetUBER");
             ApplyShaders(mv, shader);
             ApplyGlassMaterial(mv);
-
-            #region todo
-            /*
-            //Allows power to connect to here.
-            var powerRelay = prefab.AddComponent<PowerRelay>();
-            */
-            #endregion
 
             return true;
         }
