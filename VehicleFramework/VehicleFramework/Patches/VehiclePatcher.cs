@@ -24,7 +24,14 @@ namespace VehicleFramework
             ModVehicle mv = __instance as ModVehicle;
             if (mv != null)
             {
-                if (mv.IsPlayerDry)
+                if(mv.isScuttled)
+                {
+                    float now = mv.GetComponent<Sealed>().openedAmount;
+                    float max = mv.GetComponent<Sealed>().maxOpenedAmount;
+                    string percent = Mathf.CeilToInt(now * 100f / max).ToString();
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, percent + "% deconstructed", true, GameInput.Button.None);
+                }
+                else if (mv.IsPlayerDry)
                 {
                     HandReticle.main.SetText(HandReticle.TextType.Hand, "", true, GameInput.Button.None);
                 }

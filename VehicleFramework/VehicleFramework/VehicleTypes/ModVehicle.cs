@@ -632,6 +632,14 @@ namespace VehicleFramework
             headlights.isLive = false;
             isPoweredOn = false;
             gameObject.EnsureComponent<Scuttler>().Scuttle();
+            var sealedThing = gameObject.AddComponent<Sealed>();
+            sealedThing.openedAmount = 0;
+            sealedThing.maxOpenedAmount = liveMixin.maxHealth;
+            sealedThing.openedEvent.AddHandler(gameObject, new UWE.Event<Sealed>.HandleFunction(OnCutOpen));
+        }
+        private void OnCutOpen(Sealed sealedComp)
+        {
+            DeathExplodeAction();
         }
         public virtual void UnscuttleVehicle()
         {
@@ -662,27 +670,32 @@ namespace VehicleFramework
             worldForces.underwaterGravity = -1f;
             worldForces.aboveWaterGravity = 9.8f;
         }
-        public virtual void DeathExplodeAction()
+        IEnumerator DropLoot(Vector3 place)
         {
-            IEnumerator SpillScrapMetal(Vector3 place)
+            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            foreach(KeyValuePair<TechType, int> item in Recipe)
             {
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                // spill out some scrap metal, lmao
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < item.Value; i++)
                 {
-                    yield return CraftData.InstantiateFromPrefabAsync(TechType.ScrapMetal, result, false);
+                    yield return null;
+                    if (UnityEngine.Random.value < 0.6f)
+                    {
+                        continue;
+                    }
+                    yield return CraftData.InstantiateFromPrefabAsync(item.Key, result, false);
                     GameObject go = result.Get();
-                    Vector3 loc = place + 3 * UnityEngine.Random.onUnitSphere;
+                    Vector3 loc = place + 1.2f * UnityEngine.Random.onUnitSphere;
                     Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
                     go.transform.position = loc;
                     go.transform.eulerAngles = rot;
                     var rb = go.EnsureComponent<Rigidbody>();
                     rb.isKinematic = false;
                 }
-                yield break;
             }
-            UWE.CoroutineHost.StartCoroutine(SpillScrapMetal(transform.position));
-            // MAkeExplosionAndSmokeFX();
+        }
+        public virtual void DeathExplodeAction()
+        {
+            UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position));
             Destroy(gameObject);
         }
         #endregion
