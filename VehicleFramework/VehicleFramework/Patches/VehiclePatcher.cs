@@ -24,6 +24,15 @@ namespace VehicleFramework
             ModVehicle mv = __instance as ModVehicle;
             if (mv != null)
             {
+                if (mv.IsPlayerDry)
+                {
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, "", true, GameInput.Button.None);
+                }
+                else
+                {
+                    string text = mv.name.Substring(0, mv.name.Length - 7);
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, GameInput.Button.None);
+                }
                 return false;
             }
             return true;
