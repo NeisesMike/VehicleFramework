@@ -608,9 +608,9 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
                 }
-                if (mv.Camera is null)
+                if (mv.CameraLocation is null)
                 {
-                    Logger.Error(thisName + " No Drone.Camera was provided. This is how the player will see when they control the drone.");
+                    Logger.Error(thisName + " No Drone.CameraLocation was provided. This is where VF will place the camera while the Drone is remotely piloted.");
                     return false;
                 }
                 foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages ?? Enumerable.Empty<VehicleParts.VehicleStorage>())

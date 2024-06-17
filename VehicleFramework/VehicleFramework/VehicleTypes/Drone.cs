@@ -15,16 +15,14 @@ namespace VehicleFramework.VehicleTypes
 
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
-        public abstract Camera Camera { get; }
+        public abstract Transform CameraLocation { get; }
         public abstract List<GameObject> PairingButtons { get; }
-
+        private VehicleComponents.MVCameraController camControl;
 
         public override void Awake()
         {
             base.Awake();
-
-            Camera.enabled = false;
-            Camera.gameObject.GetComponent<AudioListener>().enabled = false;
+            camControl = CameraLocation.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
             Admin.GameObjectManager<Drone>.Register(this);
         }
         public override void Start()
@@ -48,8 +46,25 @@ namespace VehicleFramework.VehicleTypes
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);
         }
+        private SubRoot memory = null;
+        private GUIHand _guihand = null;
+        private bool guihand
+        {
+            set
+            {
+                if (_guihand == null)
+                {
+                    _guihand = gameObject.EnsureComponent<GUIHand>();
+                    _guihand.player = Player.main;
+                }
+                Player.main.GetComponent<GUIHand>().enabled = !value;
+                _guihand.enabled = value;
+            }
+        }
         public virtual void BeginControlling()
         {
+            guihand = true;
+            memory = Player.main.GetCurrentSub();
             base.PlayerEntry();
             //base.EnterVehicle(Player.main, true); //Don't actually want to do this. Just do the relevant things instead:
             //player.SetCurrentSub(null, false);
@@ -64,24 +79,19 @@ namespace VehicleFramework.VehicleTypes
             base.PlayerExit();
             base.StopPiloting();
             Player.main.ExitLockedMode();
+            Player.main.SetCurrentSub(memory, true);
+            guihand = false;
             SwapToPlayerCamera();
         }
         public void SwapToDroneCamera()
         {
-            MainCameraControl.main.enabled = false;
-            MainCamera.camera.enabled = false;
-            uGUI.main.screenCanvas.transform.Find("Pings").GetComponent<uGUI_Pings>().enabled = false;
-            Camera.enabled = true;
-            Camera.gameObject.GetComponent<AudioListener>().enabled = true;
+            //uGUI.main.screenCanvas.transform.Find("Pings").GetComponent<uGUI_Pings>().enabled = false;
+            camControl.MovePlayerCameraToTransform(CameraLocation);
             Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.");
         }
         public void SwapToPlayerCamera()
         {
-            MainCameraControl.main.enabled = true;
-            MainCamera.camera.enabled = true;
-            uGUI.main.screenCanvas.transform.Find("Pings").GetComponent<uGUI_Pings>().enabled = true;
-            Camera.enabled = false;
-            Camera.gameObject.GetComponent<AudioListener>().enabled = false;
+            camControl.MovePlayerCameraToTransform(camControl.PlayerCamPivot);
         }
 
         public bool IsInPairingMode

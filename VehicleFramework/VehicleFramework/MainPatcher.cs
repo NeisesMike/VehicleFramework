@@ -89,6 +89,7 @@ namespace VehicleFramework
             GetAssets();
             SetupDefaultAssets();
             PrePatch();
+            BuildableDroneStation.Register();
         }
 
         public void Start()
@@ -167,10 +168,7 @@ namespace VehicleFramework
             }
             void OnLoadOnce()
             {
-                if (VehicleManager.vehicleTypes.Where(x => (x.mv as VehicleTypes.Drone) != null).Count() > 0)
-                {
-                    BuildableDroneStation.Register();
-                }
+
             }
             Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
             Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);
