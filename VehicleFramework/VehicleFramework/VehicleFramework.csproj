@@ -48,7 +48,7 @@
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\FMODUnity.dll</HintPath>
     </Reference>
     <Reference Include="Nautilus">
-      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\BepInEx\plugins\Nautilus\Nautilus.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\Nautilus\Nautilus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Unity.Addressables, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.Addressables.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.Addressables.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.TextMeshPro.dll</HintPath>
@@ -74,7 +74,7 @@
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\SteamLibrary\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -123,6 +123,7 @@
   <ItemGroup>
     <Compile Include="Admin\GameObjectManager.cs" />
     <Compile Include="Admin\GameStateWatcher.cs" />
+    <Compile Include="Admin\Utils.cs" />
     <Compile Include="Admin\VehicleRegistrar.cs" />
     <Compile Include="Admin\EngineSoundsManager.cs" />
     <Compile Include="Admin\VoiceManager.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Drone\IDroneInterface.cs" />
     <Compile Include="Drone\PairingButton.cs" />
     <Compile Include="LocalizationManager.cs" />
+    <Compile Include="Patches\BuilderToolPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\StealthModulePatcher.cs" />
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
@@ -144,14 +146,17 @@
     <Compile Include="Patches\FabricatorPatcher.cs" />
     <Compile Include="Patches\InGameMenuPatcher.cs" />
     <Compile Include="Patches\EncyUnlocksPatcher.cs" />
+    <Compile Include="Patches\PowerRelayPatcher.cs" />
     <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
     <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
+    <Compile Include="Patches\TargetingPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
     <Compile Include="VehicleBuilding\ColliderState.cs" />
+    <Compile Include="VehicleComponents\MVCameraController.cs" />
     <Compile Include="VehicleComponents\Scuttler.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
     <Compile Include="VehicleTypes\Skimmer.cs" />
@@ -222,6 +227,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\$(ProjectName)\" /y
-xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\$(ProjectName)\BepInEx\plugins\$(ProjectName)\" /y</PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
