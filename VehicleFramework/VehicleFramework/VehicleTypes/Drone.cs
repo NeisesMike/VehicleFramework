@@ -36,7 +36,7 @@ namespace VehicleFramework.VehicleTypes
             base.Update();
             if(IsPlayerDry)
             {
-                if (GameInput.GetButtonHeld(GameInput.Button.Exit))
+                if (GameInput.GetButtonDown(GameInput.Button.Exit))
                 {
                     StopControlling();
                 }

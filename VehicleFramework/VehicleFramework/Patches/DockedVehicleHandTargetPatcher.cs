@@ -62,6 +62,10 @@ namespace VehicleFramework.Patches
             if (mv != null)
             {
                 string text = "Enter " + mv.name.Replace("(Clone)", "");
+                if((mv as Drone) != null)
+                {
+                    text = mv.name.Replace("(Clone)", "");
+                }
                 float energyActual = 0;
                 float energyMax = 0;
                 foreach (var battery in mv.energyInterface.sources)
@@ -73,17 +77,30 @@ namespace VehicleFramework.Patches
                 if (energyFraction == 1)
                 {
                     string format2 = Language.main.GetFormat<float>("VehicleStatusChargedFormat", mv.liveMixin.GetHealthFraction());
-                    HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, GameInput.Button.LeftHand);
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, ((mv as Drone) == null) ? GameInput.Button.LeftHand : GameInput.Button.None);
                     HandReticle.main.SetText(HandReticle.TextType.HandSubscript, format2, false, GameInput.Button.None);
                 }
                 else
                 {
                     string format = Language.main.GetFormat<float, float>("VehicleStatusFormat", mv.liveMixin.GetHealthFraction(), energyFraction);
-                    HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, GameInput.Button.LeftHand);
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, ((mv as Drone) == null) ? GameInput.Button.LeftHand : GameInput.Button.None);
                     HandReticle.main.SetText(HandReticle.TextType.HandSubscript, format, false, GameInput.Button.None);
                 }
-                HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
+                HandReticle.main.SetIcon(((mv as Drone) != null) ? HandReticle.IconType.Hand : HandReticle.IconType.None, 1f);
             }
+        }
+
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandClick))]
+        public static bool OnHandClickPostfix(DockedVehicleHandTarget __instance, GUIHand hand)
+        {
+            Drone thisDrone = __instance.dockingBay.GetDockedVehicle() as Drone;
+            if (thisDrone == null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

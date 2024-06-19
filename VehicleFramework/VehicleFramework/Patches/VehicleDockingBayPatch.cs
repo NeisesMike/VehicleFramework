@@ -131,7 +131,7 @@ namespace VehicleFramework.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(VehicleDockingBay.OnTriggerEnter))]
-        // This patch controls whether to dock a ModVehicle. Only small Submersibles are accepted.
+        // This patch controls whether to dock a ModVehicle. Only small ModVehicles are accepted.
         public static bool OnTriggerEnterPrefix(VehicleDockingBay __instance, Collider other)
         {
             ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(other.gameObject);
