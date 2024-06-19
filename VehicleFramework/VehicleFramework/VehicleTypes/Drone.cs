@@ -51,7 +51,7 @@ namespace VehicleFramework.VehicleTypes
                 _guihand.enabled = value;
             }
         }
-        private SubRoot memory = null;
+        public SubRoot lastSubRoot = null;
         private IEnumerator MaybeToggleCyclopsCollision(VehicleDockingBay bay)
         {
             if (bay.subRoot.name.ToLower().Contains("cyclops"))
@@ -63,10 +63,23 @@ namespace VehicleFramework.VehicleTypes
             yield break;
         }
         public static Drone mountedDrone = null;
+        private Coroutine CheckingPower = null;
+        private IEnumerator CheckPower()
+        {
+            energyInterface.GetValues(out float charge, out _);
+            while (charge > 3)
+            {
+                yield return new WaitForSeconds(1f);
+                energyInterface.GetValues(out charge, out _);
+            }
+            Player.main.ExitLockedMode();
+            Logger.Output("Disconnected: Low Power", time:5f, y:150);
+            yield break;
+        }
         public virtual void BeginControlling()
         {
             guihand = true;
-            memory = Player.main.GetCurrentSub();
+            lastSubRoot = Player.main.GetCurrentSub();
             base.PlayerEntry();
             Player.main.EnterLockedMode(null, false);
             uGUI.main.quickSlots.SetTarget(this);
@@ -83,15 +96,17 @@ namespace VehicleFramework.VehicleTypes
                 OnVehicleUndocked();
             }
             mountedDrone = this;
+            CheckingPower = UWE.CoroutineHost.StartCoroutine(CheckPower());
         }
         public virtual void StopControlling()
         {
             base.StopPiloting();
             base.PlayerExit();
-            Player.main.SetCurrentSub(memory, true);
+            Player.main.SetCurrentSub(lastSubRoot, true);
             guihand = false;
             SwapToPlayerCamera();
             mountedDrone = null;
+            UWE.CoroutineHost.StopCoroutine(CheckingPower);
         }
         public void SwapToDroneCamera()
         {
