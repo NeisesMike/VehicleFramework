@@ -21,27 +21,17 @@ namespace VehicleFramework
         public static PrefabInfo Info { get; } = PrefabInfo.WithTechType("DroneStation", "Drone Station", "A terminal from which to control drones remotely.")
             // set the icon to that of the vanilla locker:
             .WithIcon(SpriteManager.Get(TechType.PictureFrame));
-
         public static void Register()
         {
             CustomPrefab prefab = new CustomPrefab(Info);
-
-
-            //GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //PrefabTemplate cloneTemplate = new CloneTemplate(Info, TechType.Workbench);
             CloneTemplate cloneTemplate = new CloneTemplate(Info, TechType.PictureFrame);
-
             cloneTemplate.ModifyPrefab += obj =>
             {
-                // find the object that holds the model:
-                //GameObject model = obj.transform.Find("model/submarine_Workbench/workbench_geo").gameObject;
                 GameObject model = obj.transform.Find("mesh/submarine_Picture_Frame").gameObject;
                 ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Wall | ConstructableFlags.Submarine;
-                //obj.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = Color.red));
                 obj.AddComponent<DroneStation>();
                 PrefabUtils.AddConstructable(obj, Info.TechType, constructableFlags, model);
             };
-
             prefab.SetGameObject(cloneTemplate);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
             prefab.SetRecipe(new RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
@@ -71,6 +61,7 @@ namespace VehicleFramework
                 transform.Find("mesh/submarine_Picture_Frame/submarine_Picture_Frame_button").gameObject.AddComponent<BoxCollider>();
                 gameObject.AddComponent<BoxCollider>();
                 DroneStation.FastenConnection(this, FindNearestUnpairedDrone());
+                Component.Destroy(GetComponent<Rigidbody>());
             }
             StartCoroutine(WaitThenAct());
         }
