@@ -19,7 +19,7 @@ namespace VehicleFramework
 
 		public void OnHandHover(GUIHand hand)
 		{
-			if (!isLive)
+			if (!isLive || Drone.mountedDrone != null)
 			{
 				return;
 			}
@@ -43,7 +43,7 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
-			if (!isLive)
+			if (!isLive || Drone.mountedDrone != null)
 			{
 				return;
 			}

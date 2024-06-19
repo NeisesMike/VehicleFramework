@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,17 @@ namespace VehicleFramework.VehicleTypes
             }
         }
         private SubRoot memory = null;
+        private IEnumerator MaybeToggleCyclopsCollision(VehicleDockingBay bay)
+        {
+            if (bay.subRoot.name.ToLower().Contains("cyclops"))
+            {
+                bay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(false);
+                yield return new WaitForSeconds(2f);
+                bay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
+            }
+            yield break;
+        }
+        public static Drone mountedDrone = null;
         public virtual void BeginControlling()
         {
             guihand = true;
@@ -73,12 +85,14 @@ namespace VehicleFramework.VehicleTypes
             if (IsVehicleDocked)
             {
                 VehicleDockingBay thisBay = transform.parent.gameObject.GetComponentInChildren<VehicleDockingBay>();
+                UWE.CoroutineHost.StartCoroutine(MaybeToggleCyclopsCollision(thisBay));
                 thisBay.vehicle_docked_param = false;
                 UWE.CoroutineHost.StartCoroutine(Undock(Player.main, thisBay.transform.position.y));
                 SkyEnvironmentChanged.Broadcast(gameObject, (GameObject)null);
                 thisBay.dockedVehicle = null;
                 OnVehicleUndocked();
             }
+            mountedDrone = this;
         }
         public virtual void StopControlling()
         {
@@ -88,6 +102,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.ExitLockedMode();
             guihand = false;
             SwapToPlayerCamera();
+            mountedDrone = null;
         }
         public void SwapToDroneCamera()
         {
