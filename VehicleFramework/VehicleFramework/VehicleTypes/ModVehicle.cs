@@ -372,10 +372,10 @@ namespace VehicleFramework
             depth = Mathf.FloorToInt(GetComponent<CrushDamage>().GetDepth());
             crushDepth = Mathf.FloorToInt(GetComponent<CrushDamage>().crushDepth);
         }
-        public virtual void PlayerEntry()
+        public virtual bool PlayerEntry() // return true if successful
         {
             Logger.DebugLog("start modvehicle player entry");
-            if (!isScuttled)
+            if (!isScuttled && !IsPlayerDry)
             {
                 IsPlayerDry = true;
                 Player.main.SetScubaMaskActive(false);
@@ -393,7 +393,9 @@ namespace VehicleFramework
                 Player.main.lastValidSub = GetComponent<SubRoot>();
                 Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
                 NotifyStatus(PlayerStatus.OnPlayerEntry);
+                return true;
             }
+            return false;
         }
         public virtual void PlayerExit()
         {
