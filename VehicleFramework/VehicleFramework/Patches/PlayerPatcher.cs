@@ -108,7 +108,7 @@ namespace VehicleFramework
             }
             if (mvDrone != null)
             {
-                DoExitActions(ref ___mode);
+                //DoExitActions(ref ___mode);
                 mvDrone.StopPiloting();
                 return false;
             }

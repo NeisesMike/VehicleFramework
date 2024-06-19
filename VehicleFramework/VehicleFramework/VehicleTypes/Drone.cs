@@ -33,20 +33,19 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void Update()
         {
-            base.Update();
             if(IsPlayerDry)
             {
-                if (GameInput.GetButtonDown(GameInput.Button.Exit))
+                if (GameInput.GetButtonHeld(GameInput.Button.Exit) || GameInput.GetButtonDown(GameInput.Button.Exit))
                 {
                     StopControlling();
                 }
             }
+            base.Update();
         }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);
         }
-        private SubRoot memory = null;
         private GUIHand _guihand = null;
         private bool guihand
         {
@@ -61,31 +60,37 @@ namespace VehicleFramework.VehicleTypes
                 _guihand.enabled = value;
             }
         }
+        private SubRoot memory = null;
         public virtual void BeginControlling()
         {
             guihand = true;
             memory = Player.main.GetCurrentSub();
             base.PlayerEntry();
-            //base.EnterVehicle(Player.main, true); //Don't actually want to do this. Just do the relevant things instead:
-            //player.SetCurrentSub(null, false);
             Player.main.EnterLockedMode(null, false);
-            // the noraml BeginPiloting stuff
             uGUI.main.quickSlots.SetTarget(this);
             SwapToDroneCamera();
             NotifyStatus(PlayerStatus.OnPilotBegin);
+            if (IsVehicleDocked)
+            {
+                VehicleDockingBay thisBay = transform.parent.gameObject.GetComponentInChildren<VehicleDockingBay>();
+                thisBay.vehicle_docked_param = false;
+                UWE.CoroutineHost.StartCoroutine(Undock(Player.main, thisBay.transform.position.y));
+                SkyEnvironmentChanged.Broadcast(gameObject, (GameObject)null);
+                thisBay.dockedVehicle = null;
+                OnVehicleUndocked();
+            }
         }
         public virtual void StopControlling()
         {
-            base.PlayerExit();
             base.StopPiloting();
-            Player.main.ExitLockedMode();
+            base.PlayerExit();
             Player.main.SetCurrentSub(memory, true);
+            Player.main.ExitLockedMode();
             guihand = false;
             SwapToPlayerCamera();
         }
         public void SwapToDroneCamera()
         {
-            //uGUI.main.screenCanvas.transform.Find("Pings").GetComponent<uGUI_Pings>().enabled = false;
             camControl.MovePlayerCameraToTransform(CameraLocation);
             Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.");
         }
@@ -172,6 +177,41 @@ namespace VehicleFramework.VehicleTypes
         bool IDroneInterface.IsInPairingModeAsResponder()
         {
             return isResponder;
+        }
+
+        public override void OnPlayerDocked()
+        {
+            StopControlling();
+            //  PlayerExit();
+        }
+        public override void OnPlayerUndocked()
+        {
+            base.OnPlayerUndocked();
+            //  PlayerEntry();
+            //BeginPiloting();
+        }
+
+        public override System.Collections.IEnumerator Undock(Player player, float yUndockedPosition)
+        {
+            docked = false;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, true, false);
+            Vector3 initialPosition = transform.position;
+            Vector3 finalPosition = new Vector3(initialPosition.x, yUndockedPosition, initialPosition.z);
+            float duration = (initialPosition.y - finalPosition.y) / 5f;
+            float timeInterpolated = 0f;
+            if (duration > 0f)
+            {
+                do
+                {
+                    transform.position = Vector3.Lerp(initialPosition, finalPosition, timeInterpolated / duration);
+                    timeInterpolated += Time.deltaTime;
+                    yield return null;
+                }
+                while (timeInterpolated < duration);
+            }
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, false, false);
+            useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
+            yield break;
         }
     }
 }
