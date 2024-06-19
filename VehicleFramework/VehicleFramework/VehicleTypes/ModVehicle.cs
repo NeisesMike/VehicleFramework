@@ -527,70 +527,6 @@ namespace VehicleFramework
         {
             IsUndockingAnimating = false;
         }
-        public virtual void StoreShader()
-        {
-            foreach (var renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
-            {
-                // skip some materials
-                if (renderer.gameObject.name.ToLower().Contains("light"))
-                {
-                    continue;
-                }
-                if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
-                {
-                    continue;
-                }
-                foreach (Material mat in renderer.materials)
-                {
-                    if (mat.shader != null)
-                    {
-                        m_ShaderMemory = mat.shader;
-                        break;
-                    }
-                }
-            }
-        }
-        public void ListShadersInUse()
-        {
-            HashSet<string> shaderNames = new HashSet<string>();
-
-            // Find all materials currently loaded in the game.
-            Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
-
-            foreach (var material in materials)
-            {
-                if (material.shader != null)
-                {
-                    // Add the shader name to the set to ensure uniqueness.
-                    shaderNames.Add(material.shader.name);
-                }
-            }
-
-            // Now you have a unique list of shader names in use.
-            foreach (var shaderName in shaderNames)
-            {
-                Debug.Log("Shader in use: " + shaderName);
-            }
-        }
-        public void ListShaderProperties()
-        {
-            Shader shader = Shader.Find("MarmosetUBER");
-            for (int i = 0; i < shader.GetPropertyCount(); i++)
-            {
-                string propertyName = shader.GetPropertyName(i);
-                Debug.Log($"Property {i}: {propertyName}, Type: {shader.GetPropertyType(i)}");
-            }
-        }
-        public virtual void ApplyInteriorLighting()
-        {
-            //ListShadersInUse();
-            //ListShaderProperties();
-            //VehicleBuilder.ApplyShaders(this, shader4);
-        }
-        public virtual void LoadShader()
-        {
-            VehicleBuilder.ApplyShaders(this, m_ShaderMemory);
-        }
         public virtual Vector3 GetBoundingDimensions()
         {
             if(BoundingBox == null || BoundingBox.GetComponentInChildren<BoxCollider>(true) == null)
@@ -724,7 +660,6 @@ namespace VehicleFramework
         public bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         private List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
-        private Shader m_ShaderMemory;
         public bool isScuttled = false;
         #endregion
 
