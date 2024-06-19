@@ -16,6 +16,7 @@ namespace VehicleFramework
 			if (main != null)
 			{
 				mv = (main.GetVehicle() as ModVehicle);
+				mv = mv ?? VehicleTypes.Drone.mountedDrone;
 				pda = main.GetPDA();
 			}
 			bool flag = mv != null && (pda == null || !pda.isInUse);
