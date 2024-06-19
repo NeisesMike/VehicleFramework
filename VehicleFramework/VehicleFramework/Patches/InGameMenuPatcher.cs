@@ -16,6 +16,7 @@ namespace VehicleFramework.Patches
 		public static bool GetAllowSavingPrefix(ref bool __result)
 		{
 			ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+			mv = mv ?? Drone.mountedDrone;
 			if(mv == null)
             {
 				return true;

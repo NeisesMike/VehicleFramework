@@ -84,6 +84,10 @@ namespace VehicleFramework
 		}
 		public void OnHandHover(GUIHand hand)
 		{
+			if (VehicleTypes.Drone.mountedDrone != null)
+			{
+				return;
+			}
 			HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.OpenStorage));
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
@@ -95,6 +99,10 @@ namespace VehicleFramework
         }
 		public void OnHandClick(GUIHand hand)
 		{
+			if (VehicleTypes.Drone.mountedDrone != null)
+			{
+				return;
+			}
 			float timeToWait = gameObject.GetComponentInParent<ModVehicle>().OnStorageOpen(transform.name, true);
 			seq.Set(timeToWait, true, new SequenceCallback(ChangeFlapState));
 		}

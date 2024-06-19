@@ -85,7 +85,7 @@ namespace VehicleFramework
             VehicleTypes.Submersible mvSubmersible = __instance.GetVehicle() as VehicleTypes.Submersible;
             VehicleTypes.Walker mvWalker = __instance.GetVehicle() as VehicleTypes.Walker;
             VehicleTypes.Skimmer mvSkimmer = __instance.GetVehicle() as VehicleTypes.Skimmer;
-            VehicleTypes.Drone mvDrone = __instance.GetVehicle() as VehicleTypes.Drone;
+            VehicleTypes.Drone mvDrone = VehicleTypes.Drone.mountedDrone;
             VehicleTypes.Submarine mvSubmarine = __instance.GetVehicle() as VehicleTypes.Submarine;
             if (mvSubmersible != null)
             {
@@ -108,9 +108,7 @@ namespace VehicleFramework
             }
             if (mvDrone != null)
             {
-                //DoExitActions(ref ___mode);
-                mvDrone.StopPiloting();
-                return false;
+                mvDrone.StopControlling();
             }
             if (mvSubmarine != null)
             {

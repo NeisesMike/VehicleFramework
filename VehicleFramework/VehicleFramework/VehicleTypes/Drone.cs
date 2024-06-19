@@ -32,17 +32,6 @@ namespace VehicleFramework.VehicleTypes
             pairedStation = FindNearestUnpairedStation();
 
         }
-        public override void Update()
-        {
-            if(IsPlayerDry)
-            {
-                if (GameInput.GetButtonHeld(GameInput.Button.Exit) || GameInput.GetButtonDown(GameInput.Button.Exit))
-                {
-                    StopControlling();
-                }
-            }
-            base.Update();
-        }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);
@@ -99,7 +88,6 @@ namespace VehicleFramework.VehicleTypes
             base.StopPiloting();
             base.PlayerExit();
             Player.main.SetCurrentSub(memory, true);
-            Player.main.ExitLockedMode();
             guihand = false;
             SwapToPlayerCamera();
             mountedDrone = null;
@@ -125,40 +113,6 @@ namespace VehicleFramework.VehicleTypes
         {
             return Admin.GameObjectManager<DroneStation>.FindNearestSuch(transform.position, x => x.pairedDrone is null);
         }
-        /*
-        public new void OnHandHover(GUIHand hand)
-        {
-            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            if ((this as IDroneInterface).IsInPairingModeAsInitiator())
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Cancel Pairing");
-            }
-            else if ((this as IDroneInterface).IsInPairingModeAsResponder())
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Confirm Pairing");
-            }
-            else
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Enter Pairing Mode");
-            }
-        }
-        public new void OnHandClick(GUIHand hand)
-        {
-            if ((this as IDroneInterface).IsInPairingModeAsInitiator())
-            {
-                (this as IDroneInterface).FinalizePairingMode();
-            }
-            else if ((this as IDroneInterface).IsInPairingModeAsResponder())
-            {
-                DroneStation.FastenConnection(DroneStation.BroadcastingStation, this);
-                (this as IDroneInterface).FinalizePairingMode();
-            }
-            else
-            {
-                (this as IDroneInterface).InitiatePairingMode();
-            }
-        }
-        */
         void IDroneInterface.InitiatePairingMode()
         {
             Drone.BroadcastingDrone = this;
@@ -196,14 +150,11 @@ namespace VehicleFramework.VehicleTypes
 
         public override void OnPlayerDocked()
         {
-            StopControlling();
-            //  PlayerExit();
+            Player.main.ExitLockedMode();
         }
         public override void OnPlayerUndocked()
         {
             base.OnPlayerUndocked();
-            //  PlayerEntry();
-            //BeginPiloting();
         }
 
         public override System.Collections.IEnumerator Undock(Player player, float yUndockedPosition)

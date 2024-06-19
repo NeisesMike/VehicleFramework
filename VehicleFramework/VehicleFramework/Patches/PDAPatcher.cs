@@ -18,7 +18,7 @@ namespace VehicleFramework
          * When merely standing in the ModVehicle, we should see our own items: knife, flashlight, scanner, etc
          */
         [HarmonyPostfix]
-        [HarmonyPatch("Close")]
+        [HarmonyPatch(nameof(PDA.Close))]
         public static void ClosePostfix()
         {
             VehicleTypes.Submarine mv = Player.main.GetVehicle() as VehicleTypes.Submarine;
@@ -26,6 +26,13 @@ namespace VehicleFramework
             {
                 uGUI.main.quickSlots.SetTarget(null);
             }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(PDA.Open))]
+        public static bool OpenPrefix(PDA __instance)
+        {
+            return VehicleTypes.Drone.mountedDrone == null;
         }
     }
 }
