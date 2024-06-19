@@ -25,6 +25,7 @@ namespace VehicleFramework.VehicleTypes
             base.Awake();
             camControl = CameraLocation.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
             Admin.GameObjectManager<Drone>.Register(this);
+            replenishesOxygen = false;
         }
         public override void Start()
         {

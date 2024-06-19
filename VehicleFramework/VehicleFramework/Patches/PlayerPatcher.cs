@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 
 using Nautilus.Utility;
 using UWE;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 { 
@@ -239,24 +240,29 @@ namespace VehicleFramework
                 ModVehicle mv = __instance.currentMountedVehicle as ModVehicle;
                 switch(mv)
                 {
-                    case VehicleTypes.Submarine sub:
+                    case Submarine sub:
                         __result = mv.IsPowered() && mv.IsPlayerDry;
                         return;
                     default:
                         return;
                 }
             }
+            if (Drone.mountedDrone?.lastSubRoot?.powerRelay != null)
+            {
+                __result = Drone.mountedDrone.lastSubRoot.powerRelay.IsPowered();
+                return;
+            }
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Player.IsFreeToInteract))]
         public static void IsFreeToInteractPostfix(Player __instance, ref bool __result)
         {
-            var list = Admin.GameObjectManager<VehicleTypes.Drone>.AllSuchObjects.Where(x => x.IsPlayerDry);
+            var list = Admin.GameObjectManager<Drone>.AllSuchObjects.Where(x => x.IsPlayerDry);
             if (list.Count() == 0)
             {
                 return;
             }
-            VehicleTypes.Drone drone = list.First();
+            Drone drone = list.First();
             __result = true;
         }
 
