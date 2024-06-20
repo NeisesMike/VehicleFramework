@@ -9,17 +9,14 @@ using UnityEngine;
 
 namespace VehicleFramework.VehicleTypes
 {
-    public abstract class Drone : ModVehicle, IDroneInterface
+    public abstract class Drone : ModVehicle
     {
-        public static Drone BroadcastingDrone = null;
         public DroneStation pairedStation = null;
-
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public abstract Transform CameraLocation { get; }
         public abstract List<GameObject> PairingButtons { get; }
         private VehicleComponents.MVCameraController camControl;
-
         public override void Awake()
         {
             base.Awake();
@@ -30,8 +27,6 @@ namespace VehicleFramework.VehicleTypes
         public override void Start()
         {
             base.Start();
-            pairedStation = FindNearestUnpairedStation();
-
         }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
@@ -117,53 +112,10 @@ namespace VehicleFramework.VehicleTypes
         {
             camControl.MovePlayerCameraToTransform(camControl.PlayerCamPivot);
         }
-
-        public bool IsInPairingMode
+        public void Rename()
         {
-            get
-            {
-                return (this as IDroneInterface).IsInPairingModeAsInitiator() || (this as IDroneInterface).IsInPairingModeAsInitiator();
-            }
+            // TODO
         }
-        DroneStation FindNearestUnpairedStation()
-        {
-            return Admin.GameObjectManager<DroneStation>.FindNearestSuch(transform.position, x => x.pairedDrone is null);
-        }
-        void IDroneInterface.InitiatePairingMode()
-        {
-            Drone.BroadcastingDrone = this;
-            isInitiator = true;
-            Admin.GameObjectManager<DroneStation>.AllSuchObjects.ForEach(x => (x as IDroneInterface).RespondWithPairingMode());
-            Admin.GameObjectManager<Drone>.AllSuchObjects.Where(x => x != this).ForEach(x => (x as IDroneInterface).ExitPairingMode());
-        }
-        void IDroneInterface.FinalizePairingMode()
-        {
-            DroneStation.BroadcastingStation = null;
-            Drone.BroadcastingDrone = null;
-            Admin.GameObjectManager<DroneStation>.AllSuchObjects.ForEach(x => (x as IDroneInterface).ExitPairingMode());
-            Admin.GameObjectManager<Drone>.AllSuchObjects.ForEach(x => (x as IDroneInterface).ExitPairingMode());
-        }
-        void IDroneInterface.RespondWithPairingMode()
-        {
-            isInitiator = false;
-            isResponder = true;
-        }
-        void IDroneInterface.ExitPairingMode()
-        {
-            isInitiator = false;
-            isResponder = false;
-        }
-        bool isInitiator = false;
-        bool isResponder = false;
-        bool IDroneInterface.IsInPairingModeAsInitiator()
-        {
-            return isInitiator;
-        }
-        bool IDroneInterface.IsInPairingModeAsResponder()
-        {
-            return isResponder;
-        }
-
         public override void OnPlayerDocked()
         {
             Player.main.ExitLockedMode();
@@ -172,7 +124,6 @@ namespace VehicleFramework.VehicleTypes
         {
             base.OnPlayerUndocked();
         }
-
         public override System.Collections.IEnumerator Undock(Player player, float yUndockedPosition)
         {
             docked = false;

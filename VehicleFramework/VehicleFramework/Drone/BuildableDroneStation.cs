@@ -39,7 +39,7 @@ namespace VehicleFramework
         }
     }
 
-    public class DroneStation : HandTarget, IHandTarget, IDroneInterface
+    public class DroneStation : HandTarget, IHandTarget
     {
         public static DroneStation BroadcastingStation = null;
         public Drone pairedDrone;
@@ -65,128 +65,9 @@ namespace VehicleFramework
             }
             StartCoroutine(WaitThenAct());
         }
-        public void HandlePairingClick()
-        {
-            if ((this as IDroneInterface).IsInPairingModeAsInitiator())
-            {
-                (this as IDroneInterface).FinalizePairingMode();
-            }
-            else if ((this as IDroneInterface).IsInPairingModeAsResponder())
-            {
-                DroneStation.FastenConnection(this, Drone.BroadcastingDrone);
-                (this as IDroneInterface).FinalizePairingMode();
-            }
-            else
-            {
-                (this as IDroneInterface).InitiatePairingMode();
-            }
-        }
-        public void HandleRemoteControlClick()
-        {
-            if ((this as IDroneInterface).IsInPairingModeAsInitiator())
-            {
-                (this as IDroneInterface).FinalizePairingMode();
-                if (pairedDrone != null)
-                {
-                    pairedDrone.BeginControlling();
-                }
-            }
-            else if ((this as IDroneInterface).IsInPairingModeAsResponder())
-            {
-                (this as IDroneInterface).ExitPairingMode();
-            }
-            else
-            {
-                if (pairedDrone == null)
-                {
-                    (this as IDroneInterface).InitiatePairingMode();
-                }
-                else
-                {
-                    pairedDrone.BeginControlling();
-                }
-            }
-        }
-        void IHandTarget.OnHandClick(GUIHand hand)
-        {
-            Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float num);
-            if (target.name.Contains("DroneStation"))
-            {
-                HandleRemoteControlClick();
-            }
-            else
-            {
-                HandlePairingClick();
-            }
-        }
-        public void HandleRemoteControlHover()
-        {
-            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            if ((this as IDroneInterface).IsInPairingModeAsInitiator())
-            {
-                if (pairedDrone == null)
-                {
-                    HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Cancel Pairing");
-                }
-                else
-                {
-                    HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Cancel Pairing and Connect");
-                }
-            }
-            else if ((this as IDroneInterface).IsInPairingModeAsResponder())
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Ignore Pairing");
-            }
-            else
-            {
-                if (pairedDrone == null)
-                {
-                    HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Begin Pairing");
-                }
-                else
-                {
-                    HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Connect");
-                }
-            }
-        }
-        public void HandlePairingHover()
-        {
-            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-            if ((this as IDroneInterface).IsInPairingModeAsInitiator())
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Cancel Pairing");
-            }
-            else if ((this as IDroneInterface).IsInPairingModeAsResponder())
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Accept Pairing");
-            }
-            else
-            {
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Begin Pairing");
-            }
-        }
-        void IHandTarget.OnHandHover(GUIHand hand)
-        {
-            Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float num);
-            if (target.name.Contains("DroneStation"))
-            {
-                HandleRemoteControlHover();
-            }
-            else
-            {
-                HandlePairingHover();
-            }
-        }
         Drone FindNearestUnpairedDrone()
         {
             return Admin.GameObjectManager<Drone>.FindNearestSuch(transform.position, (x => x.pairedStation is null));
-        }
-        public bool IsInPairingMode
-        {
-            get
-            {
-                return (this as IDroneInterface).IsInPairingModeAsInitiator() || (this as IDroneInterface).IsInPairingModeAsInitiator();
-            }
         }
         public static void FastenConnection(DroneStation station, Drone drone)
         {
@@ -208,39 +89,70 @@ namespace VehicleFramework
             }
             drone.pairedStation = station;
         }
-        void IDroneInterface.InitiatePairingMode()
+        void IHandTarget.OnHandClick(GUIHand hand)
         {
-            DroneStation.BroadcastingStation = this;
-            isInitiator = true;
-            Admin.GameObjectManager<Drone>.AllSuchObjects.ForEach(x => (x as IDroneInterface).RespondWithPairingMode());
-            Admin.GameObjectManager<DroneStation>.AllSuchObjects.Where(x => x != this).ForEach(x => (x as IDroneInterface).ExitPairingMode());
         }
-        void IDroneInterface.FinalizePairingMode()
+        void IHandTarget.OnHandHover(GUIHand hand)
         {
-            DroneStation.BroadcastingStation = null;
-            Drone.BroadcastingDrone = null;
-            Admin.GameObjectManager<DroneStation>.AllSuchObjects.ForEach(x => (x as IDroneInterface).ExitPairingMode());
-            Admin.GameObjectManager<Drone>.AllSuchObjects.ForEach(x => (x as IDroneInterface).ExitPairingMode());
+            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
+            Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
+            if (target.name.Contains("DroneStation"))
+            {
+                OnScreenHover();
+            }
+            else if(target.name.Contains("submarine_Picture_Frame_button"))
+            {
+                OnButtonHover();
+            }
         }
-        void IDroneInterface.RespondWithPairingMode()
+        public void OnScreenHover()
         {
-            isInitiator = false;
-            isResponder = true;
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
+            if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
+            {
+                pairedDrone.BeginControlling();
+            }
+            else if (GameInput.GetButtonDown(GameInput.Button.RightHand))
+            {
+                pairedDrone.Rename();
+            }
+            else if (GameInput.GetButtonDown(GameInput.Button.CycleNext))
+            {
+                int index = Admin.GameObjectManager<Drone>.AllSuchObjects.FindIndex(x => x == pairedDrone);
+                index++;
+                if (index == Admin.GameObjectManager<Drone>.AllSuchObjects.Count())
+                {
+                    index = 0;
+                }
+                FastenConnection(this, Admin.GameObjectManager<Drone>.AllSuchObjects[index]);
+            }
+            else if (GameInput.GetButtonDown(GameInput.Button.CyclePrev))
+            {
+                int index = Admin.GameObjectManager<Drone>.AllSuchObjects.FindIndex(x => x == pairedDrone);
+                index--;
+                if (index == -1)
+                {
+                    index = Admin.GameObjectManager<Drone>.AllSuchObjects.Count() - 1;
+                }
+                FastenConnection(this, Admin.GameObjectManager<Drone>.AllSuchObjects[index]);
+            }
         }
-        void IDroneInterface.ExitPairingMode()
+        public void OnButtonHover()
         {
-            isInitiator = false;
-            isResponder = false;
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Connect to Last Drone");
+            if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
+            {
+                pairedDrone.BeginControlling();
+            }
         }
-        bool isInitiator = false;
-        bool isResponder = false;
-        bool IDroneInterface.IsInPairingModeAsInitiator()
+        public string BuildScreenText()
         {
-            return isInitiator;
-        }
-        bool IDroneInterface.IsInPairingModeAsResponder()
-        {
-            return isResponder;
+            string ret = "Current Drone: " + ((pairedDrone != null) ? pairedDrone.name : "[empty]") + "\n";
+            ret += HandReticle.main.GetText("Connect ", false, GameInput.Button.LeftHand) + "\n";
+            ret += HandReticle.main.GetText("Rename ", false, GameInput.Button.RightHand) + "\n";
+            ret += HandReticle.main.GetText("Next Drone: ", false, GameInput.Button.CycleNext) + "\n";
+            ret += HandReticle.main.GetText("Previous Drone: ", false, GameInput.Button.CyclePrev) + "\n";
+            return ret;
         }
     }
 }
