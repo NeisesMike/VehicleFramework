@@ -88,7 +88,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public override bool PlayerEntry()
         {
-            if (base.PlayerEntry() && !isScuttled)
+            if (base.PlayerEntry())
             {
                 Logger.DebugLog("start submersible player entry");
                 Player.main.currentSub = null;

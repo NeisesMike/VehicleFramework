@@ -203,29 +203,26 @@ namespace VehicleFramework.VehicleTypes
         // These two functions control the transition from in the water to the dry interior
         public override bool PlayerEntry()
         {
+            isPlayerInside = true;
             if (base.PlayerEntry())
             {
-                isPlayerInside = true;
-                if (!isScuttled)
+                Player.main.currentMountedVehicle = this;
+                TryRemoveDuplicateFabricator();
+                if (IsVehicleDocked)
                 {
-                    Player.main.currentMountedVehicle = this;
-                    TryRemoveDuplicateFabricator();
-                    if (IsVehicleDocked)
-                    {
 
-                    }
-                    else
-                    {
-                        Player.main.transform.SetParent(transform);
-                        Player.main.playerController.activeController.SetUnderWater(false);
-                        Player.main.isUnderwater.Update(false);
-                        Player.main.isUnderwaterForSwimming.Update(false);
-                        Player.main.playerController.SetMotorMode(Player.MotorMode.Walk);
-                        Player.main.motorMode = Player.MotorMode.Walk;
-                        Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
-                    }
-                    return true;
                 }
+                else
+                {
+                    Player.main.transform.SetParent(transform);
+                    Player.main.playerController.activeController.SetUnderWater(false);
+                    Player.main.isUnderwater.Update(false);
+                    Player.main.isUnderwaterForSwimming.Update(false);
+                    Player.main.playerController.SetMotorMode(Player.MotorMode.Walk);
+                    Player.main.motorMode = Player.MotorMode.Walk;
+                    Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
+                }
+                return true;
             }
             return false;
         }

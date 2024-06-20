@@ -372,7 +372,7 @@ namespace VehicleFramework
             depth = Mathf.FloorToInt(GetComponent<CrushDamage>().GetDepth());
             crushDepth = Mathf.FloorToInt(GetComponent<CrushDamage>().crushDepth);
         }
-        public virtual bool PlayerEntry() // return true if successful
+        public virtual bool PlayerEntry() // return true unless scuttled or not player-active
         {
             Logger.DebugLog("start modvehicle player entry");
             if (!isScuttled && !IsPlayerDry)
