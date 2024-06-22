@@ -13,7 +13,7 @@ namespace VehicleFramework.Admin
     }
     public class GameObjectManager<T> : IGameObjectManager where T : Component
     {
-        public static List<T> AllSuchObjects = new List<T>();
+        private static List<T> AllSuchObjects = new List<T>();
         public static T FindNearestSuch(Vector3 target, Func<T, bool> filter=null)
         {
             float ComputeDistance(T thisObject)
@@ -28,12 +28,18 @@ namespace VehicleFramework.Admin
                 }
             }
 
-            List<T> FilteredSuchObjects = AllSuchObjects.Where(x => x != null).ToList();
+            List<T> FilteredSuchObjects = Where(x => x != null);
             if(filter != null)
             {
                 FilteredSuchObjects = FilteredSuchObjects.Where(x=>filter(x)).ToList();
             }
             return FilteredSuchObjects.OrderBy(x => ComputeDistance(x)).FirstOrDefault();
+        }
+
+        public static List<T> Where(Func<T,bool> pred)
+        {
+            AllSuchObjects.RemoveAll(x => x == null);
+            return AllSuchObjects.Where(pred).ToList();
         }
 
         public static void Register(T cont)

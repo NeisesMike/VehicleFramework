@@ -257,7 +257,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Player.IsFreeToInteract))]
         public static void IsFreeToInteractPostfix(Player __instance, ref bool __result)
         {
-            var list = Admin.GameObjectManager<Drone>.AllSuchObjects.Where(x => x.IsPlayerDry);
+            var list = Admin.GameObjectManager<Drone>.Where(x => x.IsPlayerDry);
             if (list.Count() == 0)
             {
                 return;

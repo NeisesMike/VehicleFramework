@@ -25,7 +25,7 @@ namespace VehicleFramework.Patches
             {
                 goto exit;
             }
-            var list = Admin.GameObjectManager<VehicleTypes.Drone>.AllSuchObjects.Where(x => x.IsPlayerDry);
+            var list = Admin.GameObjectManager<VehicleTypes.Drone>.Where(x => x.IsPlayerDry);
             if (list.Count() == 0)
             {
                 goto exit;
@@ -48,7 +48,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Inventory.Pickup))]
         public static bool PickupPrefix(Inventory __instance, Pickupable pickupable, ref bool __result)
         {
-            var list = Admin.GameObjectManager<VehicleTypes.Drone>.AllSuchObjects.Where(x => x.IsPlayerDry);
+            var list = Admin.GameObjectManager<VehicleTypes.Drone>.Where(x => x.IsPlayerDry);
             if (list.Count() == 0)
             {
                 return true;
