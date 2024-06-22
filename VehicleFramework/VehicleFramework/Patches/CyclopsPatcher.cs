@@ -41,17 +41,13 @@ namespace VehicleFramework.Patches
             return newCodes.AsEnumerable();
         }
 
-
         [HarmonyPrefix]
         [HarmonyPatch(nameof(CyclopsVehicleStorageTerminalManager.VehicleDocked))]
         static void VehicleDockedPrefix(CyclopsVehicleStorageTerminalManager __instance, Vehicle vehicle)
         {
             if (vehicle is ModVehicle)
             {
-                // TODO
-                // does this work?
-                // What should the screen say?
-                // We should be able to change our name...
+                // TODO: make custom DockedVehicleType and associated HUD
                 __instance.dockedVehicleType = CyclopsVehicleStorageTerminalManager.DockedVehicleType.Seamoth;
                 __instance.usingModulesUIHolder = __instance.seamothModulesUIHolder;
                 __instance.currentScreen = __instance.seamothVehicleScreen;
@@ -64,7 +60,7 @@ namespace VehicleFramework.Patches
                         Player.main.SetCurrentSub(__instance.dockingBay.GetSubRoot(), false);
                     }
                 }
-                UWE.CoroutineHost.StartCoroutine(doit());
+                //UWE.CoroutineHost.StartCoroutine(doit());
             }
         }
         [HarmonyPostfix]
@@ -82,6 +78,23 @@ namespace VehicleFramework.Patches
                     //__instance.vehicleUpgradeConsole.equipment.onEquip += __instance.OnEquip;
                     //__instance.vehicleUpgradeConsole.equipment.onUnequip += __instance.OnUneqip;
                 }
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(CyclopsVehicleStorageTerminalManager.StorageButtonClick))]
+        public static void StorageButtonClickPostfix(CyclopsVehicleStorageTerminalManager __instance, CyclopsVehicleStorageTerminalManager.VehicleStorageType type, int slotID)
+        {
+            if (__instance.dockedVehicleType == CyclopsVehicleStorageTerminalManager.DockedVehicleType.Seamoth)
+            {
+                foreach (StorageInput seamothStorageInput in __instance.currentVehicle.GetAllComponentsInChildren<StorageInput>())
+                {
+                    if (seamothStorageInput.slotID == slotID)
+                    {
+                        seamothStorageInput.OpenFromExternal();
+                        return;
+                    }
+                }
+                return;
             }
         }
     }
