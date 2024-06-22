@@ -42,7 +42,22 @@ namespace VehicleFramework
     public class DroneStation : HandTarget, IHandTarget
     {
         public static DroneStation BroadcastingStation = null;
-        public Drone pairedDrone;
+        private Drone _pairedDrone = null;
+        public Drone pairedDrone
+        {
+            get
+            {
+                return _pairedDrone;
+            }
+            private set
+            {
+                _pairedDrone = value;
+            }
+        }
+        public void Unpair()
+        {
+            pairedDrone = null;
+        }
         public override void Awake()
         {
             base.Awake();
@@ -105,32 +120,68 @@ namespace VehicleFramework
                 OnButtonHover();
             }
         }
+        public Drone SelectDrone(List<Drone> list, bool next)
+        {
+            int index = list.FindIndex(x => x == pairedDrone);
+            if (list.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                if (index == -1)
+                {
+                    return list.First();
+                }
+                else
+                {
+                    if(next)
+                    {
+                        index++;
+                    }
+                    else
+                    {
+                        index--;
+                    }
+                    if(index < 0)
+                    {
+                        index = list.Count() - 1;
+                    }
+                    if((list.Count - 1) < index)
+                    {
+                        index = 0;
+                    }
+                    return list[index];
+                }
+            }
+        }
         public void OnScreenHover()
         {
+            var list = Admin.GameObjectManager<Drone>.Where(x => !x.isScuttled && x.liveMixin.IsAlive() && x.energyInterface.hasCharge);
+            if (pairedDrone == null && list.Count() > 0)
+            {
+                FastenConnection(this, list.First());
+            }
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
-            if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
+            if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && pairedDrone != null)
             {
                 pairedDrone.BeginControlling();
             }
-            else if (GameInput.GetButtonDown(GameInput.Button.CycleNext))
+            if (list.Count() > 0)
             {
-                int index = Admin.GameObjectManager<Drone>.AllSuchObjects.FindIndex(x => x == pairedDrone);
-                index++;
-                if (index == Admin.GameObjectManager<Drone>.AllSuchObjects.Count())
+                Drone selected = null;
+                if (GameInput.GetButtonDown(GameInput.Button.CycleNext))
                 {
-                    index = 0;
+                    selected = SelectDrone(list, true);
                 }
-                FastenConnection(this, Admin.GameObjectManager<Drone>.AllSuchObjects[index]);
-            }
-            else if (GameInput.GetButtonDown(GameInput.Button.CyclePrev))
-            {
-                int index = Admin.GameObjectManager<Drone>.AllSuchObjects.FindIndex(x => x == pairedDrone);
-                index--;
-                if (index == -1)
+                else if (GameInput.GetButtonDown(GameInput.Button.CyclePrev))
                 {
-                    index = Admin.GameObjectManager<Drone>.AllSuchObjects.Count() - 1;
+                    selected = SelectDrone(list, false);
                 }
-                FastenConnection(this, Admin.GameObjectManager<Drone>.AllSuchObjects[index]);
+                if (selected != null)
+                {
+                    FastenConnection(this, selected);
+                }
             }
         }
         public void OnButtonHover()
