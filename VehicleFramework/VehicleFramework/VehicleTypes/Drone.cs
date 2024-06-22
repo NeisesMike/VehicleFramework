@@ -142,5 +142,16 @@ namespace VehicleFramework.VehicleTypes
             useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
             yield break;
         }
+        public override void ScuttleVehicle()
+        {
+            base.ScuttleVehicle();
+            if (mountedDrone == this)
+            {
+                Player.main.ExitLockedMode();
+            }
+            pairedStation.Unpair();
+            pairedStation = null;
+            Admin.GameObjectManager<Drone>.Deregister(this);
+        }
     }
 }

@@ -242,7 +242,7 @@ namespace VehicleFramework
         }
         public new virtual void OnKill()
         {
-            if (IsPlayerDry)
+            if (IsPlayerDry && VehicleTypes.Drone.mountedDrone == null)
             {
                 Player.main.playerController.SetEnabled(true);
                 Player.main.mode = Player.Mode.Normal;
@@ -564,7 +564,7 @@ namespace VehicleFramework
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = false);
-            WaterClipProxies.ForEach(x => x.SetActive(false));
+            WaterClipProxies?.ForEach(x => x.SetActive(false));
             voice.enabled = false;
             headlights.isLive = false;
             isPoweredOn = false;
@@ -585,7 +585,7 @@ namespace VehicleFramework
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
-            WaterClipProxies.ForEach(x => x.SetActive(true));
+            WaterClipProxies?.ForEach(x => x.SetActive(true));
             voice.enabled = true;
             headlights.isLive = true;
             isPoweredOn = true;
