@@ -201,10 +201,11 @@ namespace VehicleFramework.VehicleTypes
             Player.main.liveMixin.invincible = false;
         }
         // These two functions control the transition from in the water to the dry interior
-        public override bool PlayerEntry()
+        public override void PlayerEntry()
         {
             isPlayerInside = true;
-            if (base.PlayerEntry())
+            base.PlayerEntry();
+            if (!isScuttled)
             {
                 Player.main.currentMountedVehicle = this;
                 TryRemoveDuplicateFabricator();
@@ -222,9 +223,7 @@ namespace VehicleFramework.VehicleTypes
                     Player.main.motorMode = Player.MotorMode.Walk;
                     Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
                 }
-                return true;
             }
-            return false;
         }
         public override void PlayerExit()
         {

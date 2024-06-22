@@ -86,9 +86,10 @@ namespace VehicleFramework.VehicleTypes
             uGUI.main.quickSlots.SetTarget(null);
             PlayerExit();
         }
-        public override bool PlayerEntry()
+        public override void PlayerEntry()
         {
-            if (base.PlayerEntry())
+            base.PlayerEntry();
+            if (!isScuttled)
             {
                 Logger.DebugLog("start submersible player entry");
                 Player.main.currentSub = null;
@@ -102,9 +103,7 @@ namespace VehicleFramework.VehicleTypes
                 Player.main.SetScubaMaskActive(false);
                 //Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
                 BeginPiloting();
-                return true;
             }
-            return false;
         }
         public override void PlayerExit()
         {

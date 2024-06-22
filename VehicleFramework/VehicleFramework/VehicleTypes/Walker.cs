@@ -21,14 +21,13 @@ namespace VehicleFramework.VehicleTypes
         {
             return IsPlayerDry;
         }
-        public override bool PlayerEntry()
+        public override void PlayerEntry()
         {
-            if(base.PlayerEntry())
+            base.PlayerEntry();
+            if (!isScuttled)
             {
                 StandUp();
-                return true;
             }
-            return false;
         }
         public override void PlayerExit()
         {
