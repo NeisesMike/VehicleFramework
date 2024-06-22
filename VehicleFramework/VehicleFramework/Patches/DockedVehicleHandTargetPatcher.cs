@@ -86,7 +86,7 @@ namespace VehicleFramework.Patches
                     HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, ((mv as Drone) == null) ? GameInput.Button.LeftHand : GameInput.Button.None);
                     HandReticle.main.SetText(HandReticle.TextType.HandSubscript, format, false, GameInput.Button.None);
                 }
-                HandReticle.main.SetIcon(((mv as Drone) != null) ? HandReticle.IconType.Hand : HandReticle.IconType.None, 1f);
+                HandReticle.main.SetIcon(((mv as Drone) == null) ? HandReticle.IconType.Hand : HandReticle.IconType.Default, 1f);
             }
         }
 

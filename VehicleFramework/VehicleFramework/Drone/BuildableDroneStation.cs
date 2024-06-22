@@ -94,7 +94,7 @@ namespace VehicleFramework
         }
         void IHandTarget.OnHandHover(GUIHand hand)
         {
-            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
+            HandReticle.main.SetIcon(HandReticle.IconType.Interact, 1f);
             Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
             if (target.name.Contains("DroneStation"))
             {
@@ -111,10 +111,6 @@ namespace VehicleFramework
             if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
             {
                 pairedDrone.BeginControlling();
-            }
-            else if (GameInput.GetButtonDown(GameInput.Button.RightHand))
-            {
-                pairedDrone.Rename();
             }
             else if (GameInput.GetButtonDown(GameInput.Button.CycleNext))
             {

@@ -377,7 +377,7 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) * 0.8f;
+                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) * 0.4f;
                     EngineSource2.Play();
                 }
             }

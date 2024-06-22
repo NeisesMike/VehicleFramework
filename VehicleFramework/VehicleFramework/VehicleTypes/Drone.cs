@@ -112,10 +112,6 @@ namespace VehicleFramework.VehicleTypes
         {
             camControl.MovePlayerCameraToTransform(camControl.PlayerCamPivot);
         }
-        public void Rename()
-        {
-            // TODO
-        }
         public override void OnPlayerDocked()
         {
             Player.main.ExitLockedMode();
