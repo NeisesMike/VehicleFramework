@@ -38,7 +38,7 @@ namespace VehicleFramework
                 {
                     return LocalizationManager.GetString(EnglishString.Vehicle);
                 }
-                return main.Get("VehicleDefaultName");
+                return main.Get("ModVehicle");
             }
         }
         public abstract GameObject VehicleModel { get; }
@@ -429,6 +429,7 @@ namespace VehicleFramework
         }
         public virtual void ForceExitLockedMode()
         {
+            //TODO handle warper specially
             GameInput.ClearInput();
             Player.main.playerController.SetEnabled(true);
             Player.main.mode = Player.Mode.Normal;
@@ -637,7 +638,6 @@ namespace VehicleFramework
         #endregion
 
         #region member_variables
-        public new SubName subName = new SubName();
         public FMOD_CustomEmitter lightsOnSound = null;
         public FMOD_CustomEmitter lightsOffSound = null;
         public List<GameObject> lights = new List<GameObject>();

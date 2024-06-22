@@ -654,11 +654,11 @@ namespace VehicleFramework
         }
         public static void SetupSubName(ModVehicle mv)
         {
-            // TODO. What's the point of this?
             var subname = mv.gameObject.EnsureComponent<SubName>();
             subname.pingInstance = mv.pingInstance;
             subname.colorsInitialized = 0;
-            subname.hullName = null;
+            subname.hullName = mv.StorageRootObject.AddComponent<TMPro.TextMeshProUGUI>(); // DO NOT push a TMPro.TextMeshProUGUI on the root vehicle object!!!
+            subname.hullName.text = mv.vehicleName;
             mv.subName = subname;
         }
         public static void SetupCollisionSound(ModVehicle mv)

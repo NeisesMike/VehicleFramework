@@ -61,10 +61,10 @@ namespace VehicleFramework.Patches
             ModVehicle mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
             if (mv != null)
             {
-                string text = "Enter " + mv.name.Replace("(Clone)", "");
+                string text = "Enter " + mv.subName.hullName.text;
                 if((mv as Drone) != null)
                 {
-                    text = mv.name.Replace("(Clone)", "");
+                    text = mv.subName.hullName.text;
                 }
                 float energyActual = 0;
                 float energyMax = 0;
