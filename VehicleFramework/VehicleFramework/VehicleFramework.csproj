@@ -127,9 +127,7 @@
     <Compile Include="Admin\VehicleRegistrar.cs" />
     <Compile Include="Admin\EngineSoundsManager.cs" />
     <Compile Include="Admin\VoiceManager.cs" />
-    <Compile Include="Drone\BuildableDroneStation.cs" />
-    <Compile Include="Drone\IDroneInterface.cs" />
-    <Compile Include="Drone\PairingButton.cs" />
+    <Compile Include="Buildables\BuildableDroneStation.cs" />
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="Patches\BuilderToolPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
