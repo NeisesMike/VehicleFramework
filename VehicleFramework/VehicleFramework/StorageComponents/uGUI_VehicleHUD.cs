@@ -8,6 +8,7 @@ namespace VehicleFramework
 {
 	public class uGUI_VehicleHUD : MonoBehaviour
 	{
+		public GameObject droneHUD = null;
 		public void Update()
 		{
 			ModVehicle mv = null;
@@ -23,6 +24,7 @@ namespace VehicleFramework
 			if (this.root.activeSelf != flag)
 			{
 				this.root.SetActive(flag);
+				droneHUD.SetActive(flag && (VehicleTypes.Drone.mountedDrone != null));
 			}
 			if (flag)
 			{
@@ -50,7 +52,16 @@ namespace VehicleFramework
 					this.textTemperature.text = IntStringCache.GetStringForInt(this.lastTemperature);
 					this.textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
 				}
+				if ((VehicleTypes.Drone.mountedDrone != null))
+				{
+					DroneUpdate();
+				}
 			}
+		}
+		public void DroneUpdate()
+		{
+			int distance = Mathf.CeilToInt(Vector3.Distance(VehicleTypes.Drone.mountedDrone.transform.position, VehicleTypes.Drone.mountedDrone.pairedStation.transform.position));
+			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 		}
 
 		public const float temperatureSmoothTime = 1f;

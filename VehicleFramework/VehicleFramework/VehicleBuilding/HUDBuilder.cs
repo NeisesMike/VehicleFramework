@@ -81,6 +81,18 @@ namespace VehicleFramework
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
+
+            // copy the CameraScannerRoom hud for now
+            GameObject cameraScannerRoomObj = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/CameraScannerRoom").gameObject;
+            GameObject droneHUDElementsRoot = GameObject.Instantiate(cameraScannerRoomObj, mvHUDElementsRoot.transform);
+            droneHUDElementsRoot.name = "VFDrone";
+
+            GameObject.Destroy(droneHUDElementsRoot.transform.Find("HealthBackground").gameObject);
+            GameObject.Destroy(droneHUDElementsRoot.transform.Find("PingCanvas").gameObject);
+            GameObject.Destroy(droneHUDElementsRoot.transform.Find("PowerBackground").gameObject);
+            droneHUDElementsRoot.transform.localPosition = new Vector3(-730.410f, 334.763f, 0f);
+            ret.droneHUD = droneHUDElementsRoot;
+
         }
         public static void BuildVRHUD(GameObject VRVehicleCanvas)
         {

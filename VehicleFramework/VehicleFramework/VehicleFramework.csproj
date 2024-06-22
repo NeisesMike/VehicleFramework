@@ -152,6 +152,7 @@
     <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\TargetingPatcher.cs" />
+    <Compile Include="Patches\uGUI_DepthCompassPatcher.cs" />
     <Compile Include="Patches\uGUI_QuickSlotsPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
