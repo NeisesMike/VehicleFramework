@@ -39,5 +39,29 @@ namespace VehicleFramework.Patches
                 //ModuleBuilder.main.vehicleAllSlots = null;
             }
         }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.UpdateVisuals))]
+        public static void UpdateVisualsPostfix(VehicleUpgradeConsoleInput __instance)
+        {
+            if (__instance.GetComponentInParent<ModVehicle>() != null)
+            {
+                for (int i = 0; i < __instance.slots.Length; i++)
+                {
+                    VehicleUpgradeConsoleInput.Slot slot = __instance.slots[i];
+                    GameObject model = slot.model;
+                    if (model != null)
+                    {
+                        bool active = __instance.equipment != null && __instance.equipment.GetTechTypeInSlot(slot.id) > TechType.None;
+                        //Logger.Log((__instance.equipment.GetTechTypeInSlot(slot.id)).ToString()); // always returns none
+                        model.SetActive(active);
+                    }
+                }
+            }
+        }
+
+
+
+
     }
 }
