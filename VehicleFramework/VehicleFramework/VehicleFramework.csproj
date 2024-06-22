@@ -146,11 +146,14 @@
     <Compile Include="Patches\FabricatorPatcher.cs" />
     <Compile Include="Patches\InGameMenuPatcher.cs" />
     <Compile Include="Patches\EncyUnlocksPatcher.cs" />
+    <Compile Include="Patches\PingInstancePatcher.cs" />
     <Compile Include="Patches\PowerRelayPatcher.cs" />
     <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
     <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />
+    <Compile Include="Patches\SubNameInputPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\TargetingPatcher.cs" />
+    <Compile Include="Patches\uGUI_QuickSlotsPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="PluginInfo.cs" />
