@@ -748,7 +748,6 @@ namespace VehicleFramework
         }
         public static void SetupDroneObjects(Drone drone)
         {
-            drone.PairingButtons.ForEach(x => x.EnsureComponent<PairingButton>().drone = drone);
         }
 
         #endregion
