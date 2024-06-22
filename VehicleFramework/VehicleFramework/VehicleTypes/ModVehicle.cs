@@ -1089,6 +1089,7 @@ namespace VehicleFramework
                 || Player.main.mode != Player.Mode.LockedPiloting
                 || !mv.IsPlayerDry
                 || mv.GetComponent<ModVehicleEngine>() == null
+                || !veh.GetComponent<ModVehicleEngine>().enabled
                 || Player.main.GetPDA().isOpen
                 || !mv.energyInterface.hasCharge)
             {

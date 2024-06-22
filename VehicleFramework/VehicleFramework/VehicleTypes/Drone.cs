@@ -17,6 +17,33 @@ namespace VehicleFramework.VehicleTypes
         public abstract Transform CameraLocation { get; }
         public abstract List<GameObject> PairingButtons { get; }
         private VehicleComponents.MVCameraController camControl;
+        private bool _IsConnecting = false;
+        public bool IsConnecting
+        {
+            get
+            {
+                return _IsConnecting;
+            }
+            private set
+            {
+                _IsConnecting = value;
+                if(value)
+                {
+                    UWE.CoroutineHost.StartCoroutine(EstablishConnection());
+                    GetComponent<ModVehicleEngine>().enabled = false;
+                }
+            }
+        }
+        private IEnumerator EstablishConnection()
+        {
+            yield return new WaitForSeconds(0.1f);
+            while (!LargeWorldStreamer.main.isIdle)
+            {
+                yield return null;
+            }
+            IsConnecting = false;
+            GetComponent<ModVehicleEngine>().enabled = true;
+        }
         public override void Awake()
         {
             base.Awake();
@@ -92,6 +119,7 @@ namespace VehicleFramework.VehicleTypes
             }
             mountedDrone = this;
             CheckingPower = UWE.CoroutineHost.StartCoroutine(CheckPower());
+            IsConnecting = true;
         }
         public virtual void StopControlling()
         {

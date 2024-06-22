@@ -145,7 +145,6 @@ namespace VehicleFramework
         {
             string ret = "Current Drone: " + ((pairedDrone != null) ? pairedDrone.subName.hullName.text : "[empty]") + "\n";
             ret += HandReticle.main.GetText("Connect ", false, GameInput.Button.LeftHand) + "\n";
-            ret += HandReticle.main.GetText("Rename ", false, GameInput.Button.RightHand) + "\n";
             ret += HandReticle.main.GetText("Next Drone: ", false, GameInput.Button.CycleNext) + "\n";
             ret += HandReticle.main.GetText("Previous Drone: ", false, GameInput.Button.CyclePrev) + "\n";
             return ret;

@@ -33,6 +33,10 @@ namespace VehicleFramework.Patches
                 noise = 0.04f * ((distance - threshold) / 10f);
             }
             __instance.fx.noiseFactor = noise;
+            if(drone.IsConnecting)
+            {
+                __instance.fx.noiseFactor = 10f;
+            }
         }
     }
 }

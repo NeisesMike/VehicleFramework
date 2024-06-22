@@ -60,8 +60,17 @@ namespace VehicleFramework
 		}
 		public void DroneUpdate()
 		{
-			int distance = Mathf.CeilToInt(Vector3.Distance(VehicleTypes.Drone.mountedDrone.transform.position, VehicleTypes.Drone.mountedDrone.pairedStation.transform.position));
+			VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
 			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
+			if (drone.IsConnecting)
+			{
+				droneHUD.transform.Find("Connecting").gameObject.SetActive(true);
+			}
+            else
+			{
+				droneHUD.transform.Find("Connecting").gameObject.SetActive(false);
+			}
 		}
 
 		public const float temperatureSmoothTime = 1f;
