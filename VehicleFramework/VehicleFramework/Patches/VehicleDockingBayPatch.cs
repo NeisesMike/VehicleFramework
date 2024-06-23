@@ -94,7 +94,15 @@ namespace VehicleFramework.Patches
                 return false;
             }
         }
-        
+        private static void HandleMVDocked(Vehicle vehicle, VehicleDockingBay dock)
+        {
+            ModVehicle mv = vehicle as ModVehicle;
+            if (mv != null)
+            {
+                mv.OnVehicleDocked();
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleDockingBay.LateUpdate))]
         // This patch animates the docking bay arms as if a seamoth is docked
@@ -112,10 +120,7 @@ namespace VehicleFramework.Patches
         // This patch ensures a modvehicle docks correctly
         public static void DockVehiclePostfix(VehicleDockingBay __instance, Vehicle vehicle, bool rebuildBase)
         {
-            if (vehicle is ModVehicle)
-            {
-                (vehicle as ModVehicle).OnVehicleDocked();
-            }
+            HandleMVDocked(vehicle, __instance);
         }
 
         [HarmonyPostfix]
@@ -123,10 +128,7 @@ namespace VehicleFramework.Patches
         // This patch ensures a modvehicle docks correctly
         public static void SetVehicleDockedPostfix(VehicleDockingBay __instance, Vehicle vehicle)
         {
-            if (vehicle is ModVehicle)
-            {
-                (vehicle as ModVehicle).OnVehicleDocked();
-            }
+            HandleMVDocked(vehicle, __instance);
         }
 
         [HarmonyPrefix]

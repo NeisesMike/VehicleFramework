@@ -144,10 +144,6 @@ namespace VehicleFramework.VehicleTypes
         {
             Player.main.ExitLockedMode();
         }
-        public override void OnPlayerUndocked()
-        {
-            base.OnPlayerUndocked();
-        }
         public override System.Collections.IEnumerator Undock(Player player, float yUndockedPosition)
         {
             docked = false;
