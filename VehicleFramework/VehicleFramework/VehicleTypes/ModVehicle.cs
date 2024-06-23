@@ -497,11 +497,11 @@ namespace VehicleFramework
             headlights.DisableHeadlights();
             //StoreShader();
             //ApplyInteriorLighting();
-            useRigidbody.detectCollisions = false;
             if (IsPlayerDry)
             {
                 OnPlayerDocked();
             }
+            useRigidbody.detectCollisions = false;
         }
         public virtual void OnPlayerDocked()
         {

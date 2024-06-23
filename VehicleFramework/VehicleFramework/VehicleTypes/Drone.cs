@@ -51,6 +51,10 @@ namespace VehicleFramework.VehicleTypes
             Admin.GameObjectManager<Drone>.Register(this);
             replenishesOxygen = false;
         }
+        public override void Start()
+        {
+            base.Start();
+        }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);
@@ -121,10 +125,10 @@ namespace VehicleFramework.VehicleTypes
         {
             base.StopPiloting();
             base.PlayerExit();
+            Player.main.SetCurrentSub(lastSubRoot, true);
             guihand = false;
             SwapToPlayerCamera();
             mountedDrone = null;
-            Player.main.SetCurrentSub(lastSubRoot, true);
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
         }
         public void SwapToDroneCamera()
@@ -139,6 +143,10 @@ namespace VehicleFramework.VehicleTypes
         public override void OnPlayerDocked()
         {
             Player.main.ExitLockedMode();
+        }
+        public override void OnPlayerUndocked()
+        {
+            base.OnPlayerUndocked();
         }
         public override System.Collections.IEnumerator Undock(Player player, float yUndockedPosition)
         {
