@@ -387,7 +387,7 @@ namespace VehicleFramework.Patches
 		{
 			if (__instance.GetComponent<ModVehicle>())
 			{
-				__result = true;
+				__result = __instance.GetComponent<ModVehicle>().GetIsUnderwater();
 				return false;
 			}
 			return true;
