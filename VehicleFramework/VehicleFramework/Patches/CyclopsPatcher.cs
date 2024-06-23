@@ -52,7 +52,7 @@ namespace VehicleFramework.Patches
                 __instance.usingModulesUIHolder = __instance.seamothModulesUIHolder;
                 __instance.currentScreen = __instance.seamothVehicleScreen;
 
-                IEnumerator doit()
+                IEnumerator EnsureSubRootSet()
                 {
                     for (int i = 0; i < 100; i++)
                     {
@@ -60,7 +60,11 @@ namespace VehicleFramework.Patches
                         Player.main.SetCurrentSub(__instance.dockingBay.GetSubRoot(), false);
                     }
                 }
-                //UWE.CoroutineHost.StartCoroutine(doit());
+				
+                if((vehicle as VehicleTypes.Drone) == null)
+                {
+                    UWE.CoroutineHost.StartCoroutine(EnsureSubRootSet());
+                }
             }
         }
         [HarmonyPostfix]
