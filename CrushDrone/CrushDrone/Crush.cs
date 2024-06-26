@@ -111,13 +111,8 @@ namespace CrushDrone
                 return recipe;
             }
         }
-        public override Atlas.Sprite PingSprite
-        {
-            get
-            {
-                return pingSprite;
-            }
-        }
+        public override Atlas.Sprite PingSprite => MainPatcher.assets.ping;
+        public override Atlas.Sprite CraftingSprite => MainPatcher.assets.crafter;
         public override string Description =>  "A small drone with powerful claws capable of collecting resources.";
         public override string EncyclopediaEntry
         {
@@ -160,49 +155,5 @@ namespace CrushDrone
         public override int Mass => 500;
         public override int NumModules => 2;
         public override bool HasArms => false;
-        public override Atlas.Sprite CraftingSprite
-        {
-            get
-            {
-                return crafterSprite;
-            }
-        }
-        public static GameObject model = null;
-        public static Atlas.Sprite pingSprite = null;
-        public static Atlas.Sprite crafterSprite = null;
-        public static void GetAssets()
-        {
-            // load the asset bundle
-            string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(modPath, "crush"));
-            if (myLoadedAssetBundle == null)
-            {
-                Logger.Log("CrushDrone Failed to load AssetBundle!");
-                return;
-            }
-            System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
-            foreach (System.Object obj in arr)
-            {
-                if (obj.ToString().Contains("SpriteAtlas"))
-                {
-                    SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                    Sprite ping = thisAtlas.GetSprite("DronePing");
-                    pingSprite = new Atlas.Sprite(ping);
-                }
-                else if (obj.ToString().Contains("Crush"))
-                {
-                    model = (GameObject)obj;
-                }
-                else
-                {
-                    Logger.Log(obj.ToString());
-                }
-            }
-        }
-        public static IEnumerator Register()
-        {
-            Drone crush = model.EnsureComponent<Crush>() as Drone;
-            yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(crush));
-        }
     }
 }
