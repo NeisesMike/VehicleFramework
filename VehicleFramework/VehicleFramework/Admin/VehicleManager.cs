@@ -31,10 +31,10 @@ namespace VehicleFramework
 
         public static void PatchCraftable(ref VehicleEntry ve, bool verbose)
         {
-            VehicleEntry vehicle = ve;
-            vehicle.techType = VehiclePrepper.RegisterVehicle(vehicle);// vehicle.prefab.name, vehicle.prefab.name, vehicle.description, vehicle.recipe, vehicle.encyEntry);
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + vehicle.name + " Craftable.");
-            ve = vehicle;
+            TechType techType = VehiclePrepper.RegisterVehicle(ve);
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + ve.name + " Craftable");
+            VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
+            VehicleManager.vehicleTypes.Add(newVE);
         }
 
         public static PingType RegisterPingType(PingType pt)

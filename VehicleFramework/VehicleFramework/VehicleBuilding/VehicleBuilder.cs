@@ -33,13 +33,13 @@ namespace VehicleFramework
             techType = tt;
             ping_sprite = sprite;
         }
-        public VehicleEntry(ModVehicle inputMv, int id, PingType pt_in, Atlas.Sprite sprite)
+        public VehicleEntry(ModVehicle inputMv, int id, PingType pt_in, Atlas.Sprite sprite, TechType tt=(TechType)0)
         {
             mv = inputMv;
             unique_id = id;
             pt = pt_in;
             name = mv.name;
-            techType = (TechType)0;
+            techType = tt;
             ping_sprite = sprite;
         }
         public ModVehicle mv;
@@ -123,7 +123,6 @@ namespace VehicleFramework
                 usedPingSprite = VehicleManager.defaultPingSprite;
             }
             VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, usedPingSprite);
-            VehicleManager.vehicleTypes.Add(ve);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
             VehicleManager.PatchCraftable(ref ve, verbose);
