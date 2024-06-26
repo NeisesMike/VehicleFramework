@@ -24,17 +24,6 @@ namespace CrushDrone
                 return transform.Find("CameraLocation");
             }
         }
-        public override List<GameObject> PairingButtons
-        {
-            get
-            {
-
-                var list = new List<GameObject>();
-                list.Add(transform.Find("FrontButton").gameObject);
-                list.Add(transform.Find("RearButton").gameObject);
-                return list;
-            }
-        }
         public override string vehicleDefaultName
         {
             get

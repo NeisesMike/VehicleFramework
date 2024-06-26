@@ -631,11 +631,6 @@ namespace VehicleFramework
                         return false;
                     }
                 }
-                if (mv.PairingButtons == null || mv.PairingButtons.Count < 1)
-                {
-                    Logger.Error(thisName + " No pairing buttons were supplied. This GameObject is required for pairing with remote stations.");
-                    return false;
-                }
             }
             catch (Exception e)
             {

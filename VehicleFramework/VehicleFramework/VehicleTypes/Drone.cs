@@ -15,7 +15,6 @@ namespace VehicleFramework.VehicleTypes
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public abstract Transform CameraLocation { get; }
-        public abstract List<GameObject> PairingButtons { get; }
         private VehicleComponents.MVCameraController camControl;
         private bool _IsConnecting = false;
         public bool IsConnecting
