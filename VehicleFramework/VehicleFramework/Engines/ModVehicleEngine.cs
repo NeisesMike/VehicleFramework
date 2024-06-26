@@ -198,7 +198,7 @@ namespace VehicleFramework.Engines
             EngineSource1.priority = 0;
 
             EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
-            EngineSource1.loop = false;
+            EngineSource2.loop = false;
             EngineSource2.playOnAwake = false;
             EngineSource2.clip = sounds.whistle;
             EngineSource2.priority = 0;
