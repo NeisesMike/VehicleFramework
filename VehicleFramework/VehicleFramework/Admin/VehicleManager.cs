@@ -12,11 +12,6 @@ using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
-    public class VehicleMemory
-    {
-        public ModVehicle mv;
-    }
-
     public static class VehicleManager
     {
         public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
@@ -36,7 +31,6 @@ namespace VehicleFramework
             VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
             VehicleManager.vehicleTypes.Add(newVE);
         }
-
         public static PingType RegisterPingType(PingType pt)
         {
             return RegisterPingType(pt, false);
@@ -121,6 +115,5 @@ namespace VehicleFramework
                 mv.OnKill();
             }
         }
-
     }
 }

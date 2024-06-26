@@ -17,78 +17,34 @@ namespace CrushDrone
 {
     public class Crush : Drone
     {
-        public override Transform CameraLocation
-        {
-            get
-            {
-                return transform.Find("CameraLocation");
-            }
-        }
-        public override string vehicleDefaultName
-        {
-            get
-            {
-                return "Crush";
-            }
-        }
-
-        public override GameObject VehicleModel
-        {
-            get
-            {
-                return model;
-            }
-        }
-
-        public override GameObject CollisionModel
-        {
-            get
-            {
-                return transform.Find("CollisionModel").gameObject;
-            }
-        }
-
-        public override GameObject StorageRootObject
-        {
-            get
-            {
-                return transform.Find("StorageRoot").gameObject;
-            }
-        }
-
-        public override GameObject ModulesRootObject
-        {
-            get
-            {
-                return transform.Find("ModulesRoot").gameObject;
-            }
-        }
-
+        /* Set UnlockedWith to an impossible value
+         * So that the Crush can be unlocked,
+         * but not by scanning anything in the base game.
+         * We add our own scanning logic in CrushFragment.
+         */
+        public override TechType UnlockedWith => TechType.Fragment;
+        public override int FragmentsToScan => 3;
+        public override Transform CameraLocation => transform.Find("CameraLocation");
+        public override string vehicleDefaultName => "Crush";
+        public override GameObject VehicleModel => MainPatcher.assets.model;
+        public override GameObject CollisionModel => transform.Find("CollisionModel").gameObject;
+        public override GameObject StorageRootObject => transform.Find("StorageRoot").gameObject;
+        public override GameObject ModulesRootObject => transform.Find("ModulesRoot").gameObject;
         public override List<VehicleStorage> InnateStorages
         {
             get
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
-
                 VehicleFramework.VehicleParts.VehicleStorage thisVS = new VehicleFramework.VehicleParts.VehicleStorage();
                 Transform thisStorage = transform.Find("ChassiTop");
                 thisVS.Container = thisStorage.gameObject;
                 thisVS.Height = 5;
                 thisVS.Width = 4;
                 list.Add(thisVS);
-
                 return list;
             }
         }
-
-        public override List<VehicleStorage> ModularStorages
-        {
-            get
-            {
-                return null;
-            }
-        }
-
+        public override List<VehicleStorage> ModularStorages => null;
         public override List<VehicleUpgrades> Upgrades
         {
             get
@@ -101,27 +57,22 @@ namespace CrushDrone
                 return list;
             }
         }
-
         public override List<VehicleBattery> Batteries
         {
             get
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
-
                 VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
                 vb1.BatterySlot = transform.Find("BackRight").gameObject;
                 list.Add(vb1);
-
                 return list;
             }
         }
-
         public override List<VehicleFloodLight> HeadLights
         {
             get
             {
                 var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
-
                 VehicleFramework.VehicleParts.VehicleFloodLight leftLight = new VehicleFramework.VehicleParts.VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/headlights/left").gameObject,
@@ -131,7 +82,6 @@ namespace CrushDrone
                     Range = 30f
                 };
                 list.Add(leftLight);
-
                 VehicleFramework.VehicleParts.VehicleFloodLight rightLight = new VehicleFramework.VehicleParts.VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/headlights/right").gameObject,
@@ -141,24 +91,12 @@ namespace CrushDrone
                     Range = 30f
                 };
                 list.Add(rightLight);
-
-
                 return list;
             }
         }
-
         public override List<GameObject> WaterClipProxies => null;
-
         public override List<GameObject> CanopyWindows => null;
-
-        public override GameObject BoundingBox
-        {
-            get
-            {
-                return transform.Find("BoundingBox").gameObject;
-            }
-        }
-
+        public override GameObject BoundingBox => transform.Find("BoundingBox").gameObject;
         public override Dictionary<TechType, int> Recipe
         {
             get
@@ -173,7 +111,6 @@ namespace CrushDrone
                 return recipe;
             }
         }
-
         public override Atlas.Sprite PingSprite
         {
             get
@@ -181,15 +118,7 @@ namespace CrushDrone
                 return pingSprite;
             }
         }
-
-        public override string Description
-        {
-            get
-            {
-                return "A small drone with powerful claws capable of collecting resources.";
-            }
-        }
-
+        public override string Description =>  "A small drone with powerful claws capable of collecting resources.";
         public override string EncyclopediaEntry
         {
             get
@@ -209,8 +138,6 @@ namespace CrushDrone
                 ency += "- Powerful claws for collecting resources \n";
                 ency += "- One power cell capacity. \n";
 
-
-
                 ency += "\nRatings:\n";
                 ency += "- Top Speed: 12m/s \n";
                 ency += "- Acceleration: 6m/s/s \n";
@@ -220,28 +147,18 @@ namespace CrushDrone
                 ency += "- Upgrade Slots: 4 \n";
                 ency += "- Dimensions: 3.5m x 3.5m x 3.1m \n";
 
-
-
                 ency += "- Persons: 0\n";
-                ency += "\n\"You can count on your Crush.\" ";
+                ency += "\n\"You can count on Crush.\" ";
                 return ency;
             }
         }
-
         public override int BaseCrushDepth => 300;
-
         public override int CrushDepthUpgrade1 => 200;
-
         public override int CrushDepthUpgrade2 => 400;
-
         public override int CrushDepthUpgrade3 => 800;
-
         public override int MaxHealth => 250;
-
         public override int Mass => 500;
-
         public override int NumModules => 2;
-
         public override bool HasArms => false;
         public override Atlas.Sprite CraftingSprite
         {
@@ -250,12 +167,9 @@ namespace CrushDrone
                 return crafterSprite;
             }
         }
-
-
         public static GameObject model = null;
         public static Atlas.Sprite pingSprite = null;
         public static Atlas.Sprite crafterSprite = null;
-
         public static void GetAssets()
         {
             // load the asset bundle
@@ -272,12 +186,8 @@ namespace CrushDrone
                 if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-
                     Sprite ping = thisAtlas.GetSprite("DronePing");
                     pingSprite = new Atlas.Sprite(ping);
-
-                    //Sprite ping4 = thisAtlas.GetSprite("DroneCrafterSprite");
-                    //crafterSprite = new Atlas.Sprite(ping4);
                 }
                 else if (obj.ToString().Contains("Crush"))
                 {
@@ -289,7 +199,6 @@ namespace CrushDrone
                 }
             }
         }
-
         public static IEnumerator Register()
         {
             Drone crush = model.EnsureComponent<Crush>() as Drone;

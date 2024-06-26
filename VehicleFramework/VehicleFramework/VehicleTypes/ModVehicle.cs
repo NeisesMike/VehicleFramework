@@ -66,13 +66,8 @@ namespace VehicleFramework
 
         #region virtual_properties
         public virtual List<VehicleParts.VehicleBattery> BackupBatteries { get; }
-        public virtual TechType UnlockedWith
-        {
-            get
-            {
-                return TechType.Constructor;
-            }
-        }
+        public virtual TechType UnlockedWith => TechType.Constructor;
+        public virtual int FragmentsToScan => 1;
         public virtual bool CanLeviathanGrab { get; set; } = true;
         public virtual GameObject LeviathanGrabPoint
         {
@@ -429,7 +424,7 @@ namespace VehicleFramework
         }
         public virtual void ForceExitLockedMode()
         {
-            //TODO handle warper specially
+            // handle warper specially
             GameInput.ClearInput();
             Player.main.playerController.SetEnabled(true);
             Player.main.mode = Player.Mode.Normal;
@@ -1064,7 +1059,6 @@ namespace VehicleFramework
         }
 
         #endregion
-
 
         #region static_methods
         private static string[] GenerateSlotIDs(int modules, bool arms)

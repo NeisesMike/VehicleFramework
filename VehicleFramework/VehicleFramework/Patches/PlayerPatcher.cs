@@ -240,7 +240,7 @@ namespace VehicleFramework
                 ModVehicle mv = __instance.currentMountedVehicle as ModVehicle;
                 switch(mv)
                 {
-                    case Submarine sub:
+                    case Submarine _:
                         __result = mv.IsPowered() && mv.IsPlayerDry;
                         return;
                     default:
