@@ -42,18 +42,12 @@ namespace CrushDrone
             const string classID = "CrushArmFragment";
             const string displayName = "Crush Arm Fragment";
             const string description = "A Scannable fragment of the Crush Drone";
-            var useBiomes = new List<BiomeData>();
-            for (int i=400; i<432; i++)
-            {
-                // Add a small chance to spawn over all the MushroomForest biomes
-                useBiomes.Add(new BiomeData { biome = (BiomeType)i, count = 1, probability = 0.1f });
-            }
-            for (int i = 600; i < 612; i++)
-            {
-                // Add a small chance to spawn over all the JellyShroom caves
-                useBiomes.Add(new BiomeData { biome = (BiomeType)i, count = 1, probability = 0.1f });
-            }
-            return VehicleFramework.Assets.FragmentManager.RegisterFragment(assets.fragment, unlockVehicle, classID, displayName, description, assets.crafter, useBiomes);
+
+            AbstractBiomeData abd = new AbstractBiomeData()
+                .WithBiome(AbstractBiomeType.MushroomForest)
+                .WithBiome(AbstractBiomeType.JellyshroomCaves);
+
+            return FragmentManager.RegisterFragment(assets.fragment, unlockVehicle, classID, displayName, description, assets.unlock, abd.Get());
         }
         public static void GetAssets()
         {

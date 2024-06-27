@@ -17,40 +17,44 @@ namespace VehicleFramework.Assets
     public class FragmentManager : MonoBehaviour
     {
         private static readonly List<PDAScanner.EntryData> PDAScannerData = new List<PDAScanner.EntryData>();
-        public static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, ModVehicle mv)
+        public static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, TechType toUnlock, int numFragmentsToScan)
         {
             PDAScanner.EntryData entryData = new PDAScanner.EntryData()
             {
                 key = fragmentTT,
                 locked = true,
-                totalFragments = mv.FragmentsToScan,
+                totalFragments = numFragmentsToScan,
                 destroyAfterScan = true,
                 encyclopedia = "Irrelevant Text",
-                blueprint = mv.GetComponent<TechTag>().type,
+                blueprint = toUnlock,
                 scanTime = 5f,
                 isFragment = true
             };
             return entryData;
         }
-        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Atlas.Sprite atlasSprite=null, List<BiomeData> biomeData=null)
+        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Sprite unlockSprite=null, List<BiomeData> biomeData=null)
         {
-            if(fragment == null)
-            {
-                Logger.Error("RegisterFragment error: fragment was null");
-                return 0;
-            }
             if (vehicle == null)
             {
                 Logger.Error("RegisterFragment error: vehicle was null");
                 return 0;
             }
-            Atlas.Sprite useSprite = atlasSprite;
-            if(useSprite == null)
+            return RegisterFragment(fragment, vehicle.GetComponent<TechTag>().type, vehicle.FragmentsToScan, classID, displayName, description, unlockSprite, biomeData);
+        }
+        public static TechType RegisterFragment(GameObject fragment, TechType toUnlock, int fragmentsToScan, string classID, string displayName, string description, Sprite sprite = null, List<BiomeData> biomeData = null)
+        {
+            if (fragment == null)
             {
-                useSprite = VehicleManager.defaultPingSprite;
+                Logger.Error("RegisterFragment error: fragment was null");
+                return 0;
             }
+            TechType fragmentTT = RegisterGenericFragment(fragment, classID, displayName, description, sprite, biomeData, "congration");
+            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, toUnlock, fragmentsToScan));
+            return fragmentTT;
+        }
+        public static TechType RegisterGenericFragment(GameObject fragment, string classID, string displayName, string description, Sprite unlockSprite = null, List<BiomeData> biomeData = null, string unlockedMessage = "")
+        {
             PrefabInfo fragmentInfo = PrefabInfo.WithTechType(classID, displayName, description);
-            fragmentInfo.WithIcon(useSprite);
             CustomPrefab armFragment = new CustomPrefab(fragmentInfo);
             fragment.AddComponent<BoxCollider>();
             fragment.AddComponent<PrefabIdentifier>().ClassId = classID;
@@ -67,8 +71,19 @@ namespace VehicleFramework.Assets
             }
             armFragment.SetSpawns(useBiomes.ToArray());
             armFragment.Register();
-            PDAScannerData.Add(MakeGenericEntryData(fragmentInfo.TechType, vehicle));
             return fragmentInfo.TechType;
+        }
+        public static void AddScannerDataEntries()
+        {
+            void TryAddScannerData(PDAScanner.EntryData data)
+            {
+                if (PDAScanner.mapping.ContainsKey(data.key))
+                {
+                    return;
+                }
+                PDAScanner.mapping.Add(data.key, data);
+            }
+            PDAScannerData.ForEach(x => TryAddScannerData(x));
         }
         public void Start()
         {
@@ -82,18 +97,6 @@ namespace VehicleFramework.Assets
                 Component.Destroy(this);
             }
             UWE.CoroutineHost.StartCoroutine(DestroyPickupable());
-        }
-        public static void AddScannerDataEntries()
-        {
-            void TryAddScannerData(PDAScanner.EntryData data)
-            {
-                if(PDAScanner.mapping.ContainsKey(data.key))
-                {
-                    return;
-                }
-                PDAScanner.mapping.Add(data.key, data);
-            }
-            PDAScannerData.ForEach(x => TryAddScannerData(x));
         }
     }
 }
