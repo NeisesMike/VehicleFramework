@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AssetBundleManager.cs" />
+    <Compile Include="Assets\BiomeType.cs" />
     <Compile Include="Assets\FragmentManager.cs" />
     <Compile Include="Admin\GameObjectManager.cs" />
     <Compile Include="Admin\GameStateWatcher.cs" />
