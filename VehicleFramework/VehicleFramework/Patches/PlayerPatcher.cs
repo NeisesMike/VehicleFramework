@@ -30,6 +30,7 @@ namespace VehicleFramework
         public static void AwakePostfix(Player __instance)
         {
             VehicleFramework.Admin.GameStateWatcher.IsPlayerAwaked = true;
+            VehicleFramework.Assets.FragmentManager.AddScannerDataEntries();
             return;
         }
         [HarmonyPostfix]

@@ -67,6 +67,8 @@ namespace VehicleFramework
         #region virtual_properties
         public virtual List<VehicleParts.VehicleBattery> BackupBatteries { get; }
         public virtual TechType UnlockedWith => TechType.Constructor;
+        public virtual Sprite UnlockedSprite => null;
+        public virtual string UnlockedMessage => "";
         public virtual int FragmentsToScan => 1;
         public virtual bool CanLeviathanGrab { get; set; } = true;
         public virtual GameObject LeviathanGrabPoint

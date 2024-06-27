@@ -50,10 +50,6 @@ namespace VehicleFramework.VehicleTypes
             Admin.GameObjectManager<Drone>.Register(this);
             replenishesOxygen = false;
         }
-        public override void Start()
-        {
-            base.Start();
-        }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);

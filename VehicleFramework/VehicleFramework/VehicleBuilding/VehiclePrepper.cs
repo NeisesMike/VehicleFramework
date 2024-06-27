@@ -41,7 +41,11 @@ namespace VehicleFramework
 
             module_CustomPrefab.SetRecipe(modulerRecipe).WithCraftingTime(3).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.Constructor, TechCategory.Constructor);
-            module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith);
+            var scanningGadget = module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith);
+            if (vehicle.mv.UnlockedSprite != null)
+            {
+                scanningGadget.WithAnalysisTech(vehicle.mv.UnlockedSprite, unlockMessage: vehicle.mv.UnlockedMessage);
+            }
             module_CustomPrefab.Register();
             return vehicle_info.TechType;
         }

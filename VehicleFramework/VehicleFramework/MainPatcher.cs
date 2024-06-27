@@ -236,21 +236,7 @@ namespace VehicleFramework
                 return;
             }
             System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
-            foreach (System.Object obj in arr)
-            {
-                if (obj.ToString().Contains("ModVehicleSpriteAtlas"))
-                {
-                    UnityEngine.U2D.SpriteAtlas thisAtlas = (UnityEngine.U2D.SpriteAtlas)obj;
-                    Sprite ping = thisAtlas.GetSprite("ModVehiclePingSprite");
-                    VehicleManager.defaultPingSprite = new Atlas.Sprite(ping);
-                    return;
-                }
-                else
-                {
-                    //Logger.Log(obj.ToString());
-                }
-            }
-            VehicleFramework.Logger.Error("Failed to retrieve PingSprite from asset bundle.");
+            VehicleManager.defaultPingSprite = VehicleFramework.Assets.AssetBundleManager.GetSprite(arr, "modvehiclepingsprite", "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
         }
         public static void SetupDefaultAssets()
         {

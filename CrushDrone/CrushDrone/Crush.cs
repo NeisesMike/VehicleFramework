@@ -23,6 +23,8 @@ namespace CrushDrone
          * We add our own scanning logic in CrushFragment.
          */
         public override TechType UnlockedWith => TechType.Fragment;
+        public override Sprite UnlockedSprite => MainPatcher.assets.unlock;
+        public override string UnlockedMessage => "Congrations";
         public override int FragmentsToScan => 3;
         public override Transform CameraLocation => transform.Find("CameraLocation");
         public override string vehicleDefaultName => "Crush";
