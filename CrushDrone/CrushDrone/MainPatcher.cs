@@ -12,6 +12,7 @@ using BepInEx;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework;
 using BiomeData = LootDistributionData.BiomeData;
+using VehicleFramework.Assets;
 
 using innateStorage = System.Collections.Generic.List<System.Tuple<System.String, float>>;
 
@@ -58,7 +59,7 @@ namespace CrushDrone
         {
             string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string bundlePath = Path.Combine(directoryPath, "crush");
-            assets = VehicleFramework.Assets.AssetBundleManager.GetVehicleAssetsFromBundle(bundlePath, "Crush", "SpriteAtlas", "DronePing", "CrafterSprite", "ArmFragment", "UnlockSprite");
+            assets = AssetBundleInterface.GetVehicleAssetsFromBundle(bundlePath, "Crush", "SpriteAtlas", "DronePing", "CrafterSprite", "ArmFragment", "UnlockSprite");
         }
         public static IEnumerator Register()
         {

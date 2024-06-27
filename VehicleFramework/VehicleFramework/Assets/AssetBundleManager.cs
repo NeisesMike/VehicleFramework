@@ -26,56 +26,80 @@ namespace VehicleFramework.Assets
             unlock = iunlock;
         }
     }
-    public static class AssetBundleManager
+    public class AssetBundleInterface
     {
-        public static Atlas.Sprite GetSprite(System.Object[] arr, string bundleName, string spriteAtlasName, string spriteName)
+        private string bundleName;
+        private AssetBundle bundle;
+        private System.Object[] objectArray;
+        public AssetBundleInterface(string bundlePath)
         {
-            foreach (System.Object obj in arr)
+            bundleName = bundlePath;
+            try
             {
-                if (obj.ToString().Contains(spriteAtlasName))
-                {
-                    try
-                    {
-                        SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                        Sprite ping = thisAtlas.GetSprite(spriteName);
-                        return new Atlas.Sprite(ping);
-                    }
-                    catch(Exception e)
-                    {
-                        Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
-                        Logger.Error(e.Message);
-                        return null;
-                    }
-                }
+                bundle = AssetBundle.LoadFromFile(bundlePath);
             }
-            Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
-            return null;
+            catch (Exception e)
+            {
+                Logger.Error("AssetBundleInterface failed to load AssetBundle with the path: " + bundlePath);
+                Logger.Error("Make sure the name is correct.");
+                Logger.Error(e.Message);
+                return;
+            }
+            objectArray = bundle.LoadAllAssets();
         }
-        public static Sprite GetRawSprite(System.Object[] arr, string bundleName, string spriteAtlasName, string spriteName)
+        public SpriteAtlas GetSpriteAtlas(string spriteAtlasName)
         {
-            foreach (System.Object obj in arr)
+            foreach (System.Object obj in objectArray)
             {
                 if (obj.ToString().Contains(spriteAtlasName))
                 {
                     try
                     {
-                        SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-                        return thisAtlas.GetSprite(spriteName);
+                        return (SpriteAtlas)obj;
                     }
                     catch (Exception e)
                     {
-                        Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
+                        Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite Atlas " + spriteAtlasName);
                         Logger.Error(e.Message);
                         return null;
                     }
                 }
             }
-            Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
+            Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite Atlas " + spriteAtlasName);
             return null;
         }
-        public static GameObject GetGameObject(System.Object[] arr, string bundleName, string gameObjectName)
+        public Atlas.Sprite GetSprite(string spriteAtlasName, string spriteName)
         {
-            foreach (System.Object obj in arr)
+            SpriteAtlas thisAtlas = GetSpriteAtlas(spriteAtlasName);
+            try
+            {
+                Sprite ping = thisAtlas.GetSprite(spriteName);
+                return new Atlas.Sprite(ping);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
+                Logger.Error(e.Message);
+                return null;
+            }
+        }
+        public Sprite GetRawSprite(string spriteAtlasName, string spriteName)
+        {
+            SpriteAtlas thisAtlas = GetSpriteAtlas(spriteAtlasName);
+            try
+            {
+                return thisAtlas.GetSprite(spriteName);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
+                Logger.Error(e.Message);
+                return null;
+            }
+        }
+        public GameObject GetGameObject(string gameObjectName)
+        {
+            foreach (System.Object obj in objectArray)
             {
                 if (obj.ToString().Contains(gameObjectName))
                 {
@@ -85,22 +109,15 @@ namespace VehicleFramework.Assets
             Logger.Error("In AssetBundle " + bundleName + ", failed to get GameObject " + gameObjectName);
             return null;
         }
-
         public static VehicleAssets GetVehicleAssetsFromBundle(string bundlePath, string modelName, string spriteAtlasName = "", string pingSpriteName = "", string crafterSpriteName = "", string fragmentName = "", string unlockName = "")
         {
-            var myLoadedAssetBundle = AssetBundle.LoadFromFile(bundlePath);
-            if (myLoadedAssetBundle == null)
-            {
-                Logger.Error("Failed to load AssetBundle: " + bundlePath);
-                return new VehicleAssets(null, null, null, null, null);
-            }
-            System.Object[] arr = myLoadedAssetBundle.LoadAllAssets();
-            GameObject model = GetGameObject(arr, bundlePath, modelName);
-            Atlas.Sprite ping = GetSprite(arr, bundlePath, spriteAtlasName, pingSpriteName);
-            Atlas.Sprite crafter = GetSprite(arr, bundlePath, spriteAtlasName, crafterSpriteName);
-            GameObject fragment = GetGameObject(arr, bundlePath, fragmentName);
-            Sprite unlock = GetRawSprite(arr, bundlePath, spriteAtlasName, unlockName);
-            return new VehicleAssets ( model, ping, crafter, fragment, unlock );
+            AssetBundleInterface abi = new AssetBundleInterface(bundlePath);
+            GameObject model = abi.GetGameObject(modelName);
+            Atlas.Sprite ping = abi.GetSprite(spriteAtlasName, pingSpriteName);
+            Atlas.Sprite crafter = abi.GetSprite(spriteAtlasName, crafterSpriteName);
+            GameObject fragment = abi.GetGameObject(fragmentName);
+            Sprite unlock = abi.GetRawSprite(spriteAtlasName, unlockName);
+            return new VehicleAssets(model, ping, crafter, fragment, unlock);
         }
     }
 }

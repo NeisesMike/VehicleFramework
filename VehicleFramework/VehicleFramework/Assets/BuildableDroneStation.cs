@@ -13,15 +13,21 @@ using UnityEngine;
 using Nautilus.Assets.PrefabTemplates;
 using Ingredient = CraftData.Ingredient;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Assets;
+using System.IO;
+using System.Reflection;
 
 namespace VehicleFramework
 {
     public static class BuildableDroneStation
     {
-        public static PrefabInfo Info { get; } = PrefabInfo.WithTechType("DroneStation", "Drone Station", "A terminal from which to control drones remotely.")
-            // set the icon to that of the vanilla locker:
+        public static PrefabInfo Info { get; } = PrefabInfo.WithTechType(classID, displayName, description)
             .WithIcon(SpriteManager.Get(TechType.PictureFrame));
-        public static void Register()
+        public const string classID = "DroneStation";
+        public const string displayName = "Drone Station";
+        public const string description = "A terminal from which to control drones remotely";
+
+        public static TechType RegisterConsole(GameObject droneStation, Atlas.Sprite crafter, Sprite unlock)
         {
             CustomPrefab prefab = new CustomPrefab(Info);
             CloneTemplate cloneTemplate = new CloneTemplate(Info, TechType.PictureFrame);
@@ -35,7 +41,27 @@ namespace VehicleFramework
             prefab.SetGameObject(cloneTemplate);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
             prefab.SetRecipe(new RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
+            prefab.SetUnlock(TechType.Fragment)
+                .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
             prefab.Register();
+            return Info.TechType;
+        }
+
+        public static void Register()
+        {
+            string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string bundlePath = Path.Combine(directoryPath, "dronestation");
+            AssetBundleInterface abi = new AssetBundleInterface(bundlePath);
+            GameObject fragment = abi.GetGameObject("Fragment");
+            GameObject droneStation = abi.GetGameObject("DroneStation");
+            Atlas.Sprite sprite = abi.GetSprite("DSSpriteAtlas", "DSCrafterSprite");
+            Sprite rawSprite = abi.GetRawSprite("DSSpriteAtlas", "DSUnlockSprite");
+            TechType consoleTT = RegisterConsole(droneStation, sprite, rawSprite);
+            AbstractBiomeData abd = new AbstractBiomeData()
+                .WithBiome(AbstractBiomeType.SafeShallows)
+                .WithBiome(AbstractBiomeType.KelpForest)
+                .WithBiome(AbstractBiomeType.GrassyPlateus);
+            FragmentManager.RegisterFragment(fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", rawSprite, abd.Get());
         }
     }
 
@@ -74,7 +100,7 @@ namespace VehicleFramework
                 GetComponent<PictureFrame>().enabled = false;
                 transform.Find("Trigger").gameObject.SetActive(false);
                 transform.Find("mesh/submarine_Picture_Frame/submarine_Picture_Frame_button").gameObject.AddComponent<BoxCollider>();
-                gameObject.AddComponent<BoxCollider>();
+                gameObject.EnsureComponent<BoxCollider>();
                 DroneStation.FastenConnection(this, FindNearestUnpairedDrone());
                 Component.Destroy(GetComponent<Rigidbody>());
             }
