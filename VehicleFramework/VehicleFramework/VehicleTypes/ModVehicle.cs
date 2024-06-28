@@ -221,7 +221,7 @@ namespace VehicleFramework
         }
         public virtual void DestroyMV()
         {
-            GetComponent<PingInstance>().enabled = false;
+            pingInstance.enabled = false;
             switch (OnDeathBehavior)
             {
                 case DeathStyle.Explode:
@@ -416,12 +416,12 @@ namespace VehicleFramework
         public virtual void SubConstructionBeginning()
         {
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
-            GetComponent<PingInstance>().enabled = false;
+            pingInstance.enabled = false;
         }
         public override void SubConstructionComplete()
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
-            GetComponent<PingInstance>().enabled = true;
+            pingInstance.enabled = true;
             BuildBotManager.ResetGhostMaterial();
         }
         public virtual void ForceExitLockedMode()

@@ -170,7 +170,6 @@ namespace VehicleFramework.VehicleTypes
             }
             pairedStation.Unpair();
             pairedStation = null;
-            Admin.GameObjectManager<Drone>.Deregister(this);
         }
     }
 }

@@ -821,7 +821,7 @@ namespace VehicleFramework
         public static void ApplyGlassMaterial(ModVehicle mv)
         {
             // Add the [marmoset] shader to all renderers
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>(true))
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true))
             {
                 if (mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
                 {
@@ -847,7 +847,7 @@ namespace VehicleFramework
                 return;
             }
             // Add the [marmoset] shader to all renderers
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<MeshRenderer>(true))
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true))
             {
                 // skip some materials
                 if (renderer.gameObject.name.ToLower().Contains("light"))

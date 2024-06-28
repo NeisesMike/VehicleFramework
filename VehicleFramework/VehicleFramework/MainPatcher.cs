@@ -52,25 +52,11 @@ namespace VehicleFramework
                 MyLog.LogInfo("[VehicleFramework] " + message);
             }
         }
-        public static void Output(string msg, int x=500, int y=0)
-        {
-            BasicText message = new BasicText(x, y);
-            message.ShowMessage(msg, 4);
-        }
-        public static void Output(string msg, float time, int x = 500, int y = 0)
+        public static BasicText Output(string msg, float time = 4, int x = 500, int y = 0)
         {
             BasicText message = new BasicText(x, y);
             message.ShowMessage(msg, time);
-        }
-        public static void OutputLong(string msg)
-        {
-            BasicText message = new BasicText(0, 100);
-            message.ShowMessage(msg, 5);
-        }
-        public static void Narrate(string msg)
-        {
-            BasicText message = new BasicText(0, -100);
-            message.ShowMessage(msg, 2);
+            return message;
         }
     }
 

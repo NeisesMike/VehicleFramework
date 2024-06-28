@@ -21,7 +21,7 @@ namespace VehicleFramework
             {
                 return true;
             }
-            if (target.name.Contains("DroneStation") || target.name.Contains("submarine_Picture_Frame_button"))
+            if (target.name.Contains("DroneStation") || (target.transform.parent != null && target.transform.parent.name.Contains("DroneStation")))
             {
                 return false;
             }
