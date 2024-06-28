@@ -998,6 +998,22 @@ namespace OdysseyVehicle
             base.OnVehicleDocked();
             upgradesInput.collider.enabled = true;
         }
-
+        public override void OnVehicleUndocked()
+        {
+            base.OnVehicleUndocked();
+            foreach (var renderer in GetComponentsInChildren<Renderer>())
+            {
+                if(renderer.gameObject.name != "hull_geo")
+                {
+                    continue;
+                }
+                foreach (Material mat in renderer.materials)
+                {
+                    mat.SetFloat("_GlowStrength", 1f);
+                    mat.SetFloat("_GlowStrengthNight", 1f);
+                    mat.EnableKeyword("MARMO_SPECMAP");
+                }
+            }
+        }
     }
 }

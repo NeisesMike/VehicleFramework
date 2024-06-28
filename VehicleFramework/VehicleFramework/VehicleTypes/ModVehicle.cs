@@ -487,6 +487,37 @@ namespace VehicleFramework
             }
             StartCoroutine(GiveUsABatteryOrGiveUsDeath());
         }
+        public void SetDockedLighting(bool docked)
+        {
+            foreach (var renderer in GetComponentsInChildren<Renderer>())
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    if (renderer.gameObject.name.ToLower().Contains("light"))
+                    {
+                        continue;
+                    }
+                    if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
+                    {
+                        continue;
+                    }
+                    mat.EnableKeyword("MARMO_EMISSION");
+                    mat.SetFloat("_EmissionLMNight", docked ? 0.4f : 0f);
+                    mat.SetFloat("_EmissionLM", 0);
+                    mat.SetFloat("_GlowStrength", 0);
+                    mat.SetFloat("_GlowStrengthNight", 0);
+                    mat.SetFloat("_SpecInt", 0f);
+                    if(docked)
+                    {
+                        mat.EnableKeyword("MARMO_SPECMAP");
+                    }
+                    else
+                    {
+                        mat.DisableKeyword("MARMO_SPECMAP");
+                    }
+                }
+            }
+        }
         public virtual void OnVehicleDocked()
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
@@ -499,6 +530,7 @@ namespace VehicleFramework
                 OnPlayerDocked();
             }
             useRigidbody.detectCollisions = false;
+            SetDockedLighting(true);
         }
         public virtual void OnPlayerDocked()
         {
@@ -511,6 +543,7 @@ namespace VehicleFramework
             OnPlayerUndocked();
             IsVehicleDocked = false;
             useRigidbody.detectCollisions = true;
+            SetDockedLighting(false);
         }
         public virtual void OnPlayerUndocked()
         {
