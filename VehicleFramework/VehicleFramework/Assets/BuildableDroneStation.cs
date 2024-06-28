@@ -21,24 +21,21 @@ namespace VehicleFramework
 {
     public static class BuildableDroneStation
     {
-        public static PrefabInfo Info { get; } = PrefabInfo.WithTechType(classID, displayName, description)
-            .WithIcon(SpriteManager.Get(TechType.PictureFrame));
         public const string classID = "DroneStation";
         public const string displayName = "Drone Station";
         public const string description = "A terminal from which to control drones remotely";
 
         public static TechType RegisterConsole(GameObject droneStation, Atlas.Sprite crafter, Sprite unlock)
         {
+            PrefabInfo Info = PrefabInfo.WithTechType(classID, displayName, description)
+                .WithIcon(crafter);
             CustomPrefab prefab = new CustomPrefab(Info);
-            CloneTemplate cloneTemplate = new CloneTemplate(Info, TechType.PictureFrame);
-            cloneTemplate.ModifyPrefab += obj =>
-            {
-                GameObject model = obj.transform.Find("mesh/submarine_Picture_Frame").gameObject;
-                ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Wall | ConstructableFlags.Submarine;
-                obj.AddComponent<DroneStation>();
-                PrefabUtils.AddConstructable(obj, Info.TechType, constructableFlags, model);
-            };
-            prefab.SetGameObject(cloneTemplate);
+            ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Wall | ConstructableFlags.Submarine;
+            droneStation.AddComponent<DroneStation>();
+            droneStation.GetComponentsInChildren<MeshRenderer>(true).ForEach(x => x.materials.ForEach(y => y.shader = Shader.Find("MarmosetUBER")));
+            PrefabUtils.AddBasicComponents(droneStation, classID, Info.TechType, LargeWorldEntity.CellLevel.Medium);
+            PrefabUtils.AddConstructable(droneStation, Info.TechType, constructableFlags, droneStation.transform.Find("model").gameObject);
+            prefab.SetGameObject(droneStation);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
             prefab.SetRecipe(new RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
             prefab.SetUnlock(TechType.Fragment)
@@ -97,12 +94,11 @@ namespace VehicleFramework
                 {
                     yield return null;
                 }
-                GetComponent<PictureFrame>().enabled = false;
-                transform.Find("Trigger").gameObject.SetActive(false);
-                transform.Find("mesh/submarine_Picture_Frame/submarine_Picture_Frame_button").gameObject.AddComponent<BoxCollider>();
-                gameObject.EnsureComponent<BoxCollider>();
                 DroneStation.FastenConnection(this, FindNearestUnpairedDrone());
-                Component.Destroy(GetComponent<Rigidbody>());
+                if (GetComponent<Rigidbody>())
+                {
+                    Component.Destroy(GetComponent<Rigidbody>());
+                }
             }
             StartCoroutine(WaitThenAct());
         }
@@ -137,14 +133,7 @@ namespace VehicleFramework
         {
             HandReticle.main.SetIcon(HandReticle.IconType.Interact, 1f);
             Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
-            if (target.name.Contains("DroneStation"))
-            {
-                OnScreenHover();
-            }
-            else if(target.name.Contains("submarine_Picture_Frame_button"))
-            {
-                OnButtonHover();
-            }
+            OnScreenHover();
         }
         public Drone SelectDrone(List<Drone> list, bool next)
         {
@@ -208,14 +197,6 @@ namespace VehicleFramework
                 {
                     FastenConnection(this, selected);
                 }
-            }
-        }
-        public void OnButtonHover()
-        {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, "Connect to Last Drone");
-            if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
-            {
-                pairedDrone.BeginControlling();
             }
         }
         public string BuildScreenText()
