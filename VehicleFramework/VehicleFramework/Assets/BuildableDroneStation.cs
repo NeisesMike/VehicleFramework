@@ -65,6 +65,7 @@ namespace VehicleFramework
     public class DroneStation : HandTarget, IHandTarget
     {
         public static DroneStation BroadcastingStation = null;
+        private BasicText currentLog = null;
         private Drone _pairedDrone = null;
         public Drone pairedDrone
         {
@@ -76,10 +77,6 @@ namespace VehicleFramework
             {
                 _pairedDrone = value;
             }
-        }
-        public void Unpair()
-        {
-            pairedDrone = null;
         }
         public override void Awake()
         {
@@ -94,7 +91,8 @@ namespace VehicleFramework
                 {
                     yield return null;
                 }
-                DroneStation.FastenConnection(this, FindNearestUnpairedDrone());
+                Drone nearest = Admin.GameObjectManager<Drone>.FindNearestSuch(transform.position);
+                DroneStation.FastenConnection(this, nearest);
                 if (GetComponent<Rigidbody>())
                 {
                     Component.Destroy(GetComponent<Rigidbody>());
@@ -102,28 +100,13 @@ namespace VehicleFramework
             }
             StartCoroutine(WaitThenAct());
         }
-        Drone FindNearestUnpairedDrone()
-        {
-            return Admin.GameObjectManager<Drone>.FindNearestSuch(transform.position, (x => x.pairedStation is null));
-        }
         public static void FastenConnection(DroneStation station, Drone drone)
         {
             if(drone == null || station == null)
             {
                 return;
             }
-            if(station.pairedDrone != null)
-            {
-                // if we have a paired drone already, we need to tell it we're finished
-                station.pairedDrone.pairedStation = null;
-            }
             station.pairedDrone = drone;
-
-            if(drone.pairedStation != null)
-            {
-                // if our newly paired drone already had a paired station, we need to tell that station its pairing is history
-                drone.pairedStation.pairedDrone = null;
-            }
             drone.pairedStation = station;
         }
         void IHandTarget.OnHandClick(GUIHand hand)
@@ -172,7 +155,7 @@ namespace VehicleFramework
         }
         public void OnScreenHover()
         {
-            var list = Admin.GameObjectManager<Drone>.Where(x => !x.isScuttled && x.liveMixin.IsAlive() && x.energyInterface.hasCharge);
+            var list = Admin.GameObjectManager<Drone>.Where(x => true);
             if (pairedDrone == null && list.Count() > 0)
             {
                 FastenConnection(this, list.First());
@@ -180,7 +163,14 @@ namespace VehicleFramework
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
             if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && pairedDrone != null)
             {
-                pairedDrone.BeginControlling();
+                if (pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
+                {
+                    ShowDetails(pairedDrone);
+                }
+                else
+                {
+                    pairedDrone.BeginControlling();
+                }
             }
             if (list.Count() > 0)
             {
@@ -199,13 +189,69 @@ namespace VehicleFramework
                 }
             }
         }
+        public static string GetStatus(Drone drone)
+        {
+            if(drone.isScuttled)
+            {
+                return "Destroyed";
+            }
+            else if(!drone.HasEnoughPowerToConnect())
+            {
+                return "Low power";
+            }
+            else
+            {
+                drone.GetHUDValues(out float hp, out float energy);
+                string health = Mathf.CeilToInt(100 * hp).ToString();
+                string power = Mathf.CeilToInt(100 * energy).ToString();
+                return "HP " + health + "%, Power " + power + "%";
+            }
+        }
         public string BuildScreenText()
         {
-            string ret = "Current Drone: " + ((pairedDrone != null) ? pairedDrone.subName.hullName.text : "[empty]") + "\n";
-            ret += HandReticle.main.GetText("Connect ", false, GameInput.Button.LeftHand) + "\n";
+            string ret = "Current Drone: " + ((pairedDrone != null) ? pairedDrone.subName.hullName.text : "[None Detected]") + "\n";
+            ret += "Status: " + GetStatus(pairedDrone) + "\n";
+            if(pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
+            {
+                ret += HandReticle.main.GetText("Request Details ", false, GameInput.Button.LeftHand) + "\n";
+            }
+            else
+            {
+                ret += HandReticle.main.GetText("Connect ", false, GameInput.Button.LeftHand) + "\n";
+            }
             ret += HandReticle.main.GetText("Next Drone: ", false, GameInput.Button.CycleNext) + "\n";
             ret += HandReticle.main.GetText("Previous Drone: ", false, GameInput.Button.CyclePrev) + "\n";
             return ret;
+        }
+        public void ShowDetails(Drone drone)
+        {
+            if(drone == null)
+            {
+                return;
+            }
+            IEnumerator PingPingForAWhile()
+            {
+                drone.pingInstance.enabled = true;
+                yield return new WaitForSeconds(60);
+                drone.pingInstance.enabled = false;
+            }
+            UWE.CoroutineHost.StartCoroutine(PingPingForAWhile());
+            string ret = "Current Drone: " + drone.subName.hullName.text + "\n";
+            ret += "Distance: " + Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position)).ToString() + "\n";
+            if(drone.isScuttled)
+            {
+                ret += "Status: Damaged\n";
+                ret += "Recommendation: Dismantle with laser cutter.\n";
+            }
+            else
+            {
+                ret += "Status: Low Power\n";
+                ret += "Recommendation: Replace power source.\n";
+            }
+            ret += "Making drone visible on HUD for one minute.\n";
+
+            currentLog?.Hide();
+            currentLog = Logger.Output(ret, 8);
         }
     }
 }

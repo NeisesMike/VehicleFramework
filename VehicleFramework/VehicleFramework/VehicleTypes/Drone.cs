@@ -81,13 +81,16 @@ namespace VehicleFramework.VehicleTypes
         }
         public static Drone mountedDrone = null;
         private Coroutine CheckingPower = null;
-        private IEnumerator CheckPower()
+        public virtual bool HasEnoughPowerToConnect()
         {
             energyInterface.GetValues(out float charge, out _);
-            while (charge > 3)
+            return 3 < charge;
+        }
+        private IEnumerator CheckPower()
+        {
+            while (HasEnoughPowerToConnect())
             {
                 yield return new WaitForSeconds(1f);
-                energyInterface.GetValues(out charge, out _);
             }
             Player.main.ExitLockedMode();
             Logger.Output("Disconnected: Low Power", time:5f, y:150);
@@ -124,6 +127,7 @@ namespace VehicleFramework.VehicleTypes
             guihand = false;
             SwapToPlayerCamera();
             mountedDrone = null;
+            pairedStation = null;
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
         }
         public void SwapToDroneCamera()
@@ -168,8 +172,6 @@ namespace VehicleFramework.VehicleTypes
             {
                 Player.main.ExitLockedMode();
             }
-            pairedStation.Unpair();
-            pairedStation = null;
         }
     }
 }
