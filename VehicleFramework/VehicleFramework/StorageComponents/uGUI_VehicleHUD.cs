@@ -71,10 +71,6 @@ namespace VehicleFramework
 			{
 				droneHUD.transform.Find("Connecting").gameObject.SetActive(false);
 			}
-			if (drone.pairedStation == null)
-			{
-				return;
-			}
 			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
 			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 		}

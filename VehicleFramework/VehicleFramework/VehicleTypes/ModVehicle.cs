@@ -140,9 +140,7 @@ namespace VehicleFramework
             {
                 headlights = gameObject.EnsureComponent<HeadLightsController>();
             }
-            voice = gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilot>();
-            voice.voice = VoiceManager.GetDefaultVoice(this);
 
             if (BoundingBox != null && BoundingBox.GetComponent<BoxCollider>() != null)
             {

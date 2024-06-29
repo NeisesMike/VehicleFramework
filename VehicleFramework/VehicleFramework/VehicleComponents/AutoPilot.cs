@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.VehicleComponents;
 
 namespace VehicleFramework
 {
@@ -78,7 +79,8 @@ namespace VehicleFramework
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
-            apVoice = gameObject.EnsureComponent<AutoPilotVoice>();
+            mv.voice = apVoice = mv.gameObject.EnsureComponent<AutoPilotVoice>();
+            mv.voice.voice = VoiceManager.GetDefaultVoice(mv);
             liveMixin = mv.liveMixin;
             eInterf = mv.energyInterface;
             healthStatus = HealthState.Safe;

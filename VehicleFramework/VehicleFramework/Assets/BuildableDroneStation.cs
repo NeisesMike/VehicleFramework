@@ -196,6 +196,7 @@ namespace VehicleFramework
                 }
                 else
                 {
+                    FastenConnection(this, pairedDrone);
                     pairedDrone.BeginControlling();
                 }
             }
