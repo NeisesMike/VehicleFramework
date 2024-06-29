@@ -25,12 +25,11 @@ namespace VehicleFramework.Patches
             {
                 goto exit;
             }
-            var list = Admin.GameObjectManager<VehicleTypes.Drone>.Where(x => x.IsPlayerDry);
-            if (list.Count() == 0)
+            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            if (drone == null)
             {
                 goto exit;
             }
-            VehicleTypes.Drone drone = list.First();
             Targeting.AddToIgnoreList(drone.transform);
             __result = Targeting.GetTarget(maxDistance, out result, out distance);
             return false;
@@ -48,12 +47,11 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Inventory.Pickup))]
         public static bool PickupPrefix(Inventory __instance, Pickupable pickupable, ref bool __result)
         {
-            var list = Admin.GameObjectManager<VehicleTypes.Drone>.Where(x => x.IsPlayerDry);
-            if (list.Count() == 0)
+            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            if(drone == null)
             {
                 return true;
             }
-            VehicleTypes.Drone drone = list.First();
             foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
             {
                 var cont = vs.Container.GetComponent<InnateStorageContainer>().container;
