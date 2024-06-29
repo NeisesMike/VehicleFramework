@@ -32,7 +32,7 @@ namespace VehicleFramework.Engines
         protected virtual float STRAFE_ACCEL => STRAFE_MAX_SPEED / 10f;
         protected virtual float VERT_ACCEL => VERT_MAX_SPEED / 10f;
 
-        protected virtual float waterDragDecay => 2.5f;
+        protected virtual float waterDragDecay => 4.5f;
         protected virtual float airDragDecay => 0.15f;
         protected virtual float DragDecay
         {
@@ -254,30 +254,54 @@ namespace VehicleFramework.Engines
             }
             ApplyDrag(moveDirection);
         }
+        public virtual float DragThresholdSpeed
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
         protected void ApplyDrag(Vector3 move)
         {
             // Only apply drag if we aren't applying movement in that direction.
             // That is, if we aren't holding forward, our forward momentum should decay.
-            if (move.z == 0)
+            // Kill anything under 1%
+            bool isForward = move.z != 0;
+            bool isRight = move.x != 0;
+            bool isUp = move.y != 0;
+            bool activated = isForward || isRight || isUp;
+
+            if (!isForward)
             {
-                if (1 < Mathf.Abs(ForwardMomentum))
+                if (0 < Mathf.Abs(ForwardMomentum))
                 {
                     ForwardMomentum -= DragDecay * ForwardMomentum * Time.deltaTime;
                 }
             }
-            if (move.x == 0)
+            if (!isRight)
             {
-                if (1 < Mathf.Abs(RightMomentum))
+                if (0 < Mathf.Abs(RightMomentum))
                 {
                     RightMomentum -= DragDecay * RightMomentum * Time.deltaTime;
                 }
             }
-            if (move.y == 0)
+            if (!isUp)
             {
-                if (1 < Mathf.Abs(UpMomentum))
+                if (0 < Mathf.Abs(UpMomentum))
                 {
                     UpMomentum -= DragDecay * UpMomentum * Time.deltaTime;
                 }
+            }
+            if(!activated && rb.velocity.magnitude < DragThresholdSpeed)
+            {
+                ForwardMomentum = 0;
+                RightMomentum = 0;
+                UpMomentum = 0;
+                rb.velocity = Vector3.zero;
             }
         }
         public void ExecutePhysicsMove()

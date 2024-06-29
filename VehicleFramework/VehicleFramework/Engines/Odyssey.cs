@@ -18,6 +18,8 @@ namespace VehicleFramework.Engines
         protected override float REVERSE_ACCEL => REVERSE_TOP_SPEED / 2.5f;
         protected override float STRAFE_ACCEL => STRAFE_MAX_SPEED / 2.5f;
         protected override float VERT_ACCEL => VERT_MAX_SPEED / 2.5f;
+        public override float DragThresholdSpeed => 1;
+
 
         // SOAK describes how low to go before grinding to an abrupt halt.
         // This is useful because otherwise the low-speed light are always blinking
