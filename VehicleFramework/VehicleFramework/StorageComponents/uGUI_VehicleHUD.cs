@@ -20,61 +20,63 @@ namespace VehicleFramework
 				mv = mv ?? VehicleTypes.Drone.mountedDrone;
 				pda = main.GetPDA();
 			}
-			bool flag = mv != null && (pda == null || !pda.isInUse);
-			if (this.root.activeSelf != flag)
+			bool mvflag = mv != null && (pda == null || !pda.isInUse);
+			bool droneflag = mvflag && (VehicleTypes.Drone.mountedDrone != null);
+			if (root.activeSelf != mvflag)
 			{
-				this.root.SetActive(flag);
-				droneHUD.SetActive(flag && (VehicleTypes.Drone.mountedDrone != null));
+				root.SetActive(mvflag);
 			}
-			if (flag)
+			if(droneHUD.activeSelf != droneflag)
+            {
+				droneHUD.SetActive(droneflag);
+            }
+			if (mvflag)
 			{
-				float num;
-				float num2;
-				mv.GetHUDValues(out num, out num2);
-				float temperature = mv.GetTemperature();
+                mv.GetHUDValues(out float num, out float num2);
+                float temperature = mv.GetTemperature();
 				int num3 = Mathf.CeilToInt(num * 100f);
-				if (this.lastHealth != num3)
+				if (lastHealth != num3)
 				{
-					this.lastHealth = num3;
-					this.textHealth.text = IntStringCache.GetStringForInt(this.lastHealth);
+					lastHealth = num3;
+					textHealth.text = IntStringCache.GetStringForInt(lastHealth);
 				}
 				int num4 = Mathf.CeilToInt(num2 * 100f);
-				if (this.lastPower != num4)
+				if (lastPower != num4)
 				{
-					this.lastPower = num4;
-					this.textPower.text = IntStringCache.GetStringForInt(this.lastPower);
+					lastPower = num4;
+					textPower.text = IntStringCache.GetStringForInt(lastPower);
 				}
-				this.temperatureSmoothValue = ((this.temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(this.temperatureSmoothValue, temperature, ref this.temperatureVelocity, 1f));
-				int num5 = Mathf.CeilToInt(this.temperatureSmoothValue);
-				if (this.lastTemperature != num5)
+				temperatureSmoothValue = ((temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(temperatureSmoothValue, temperature, ref temperatureVelocity, 1f));
+				int num5 = Mathf.CeilToInt(temperatureSmoothValue);
+				if (lastTemperature != num5)
 				{
-					this.lastTemperature = num5;
-					this.textTemperature.text = IntStringCache.GetStringForInt(this.lastTemperature);
-					this.textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
-				}
-				if ((VehicleTypes.Drone.mountedDrone != null))
-				{
-					DroneUpdate();
+					lastTemperature = num5;
+					textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
+					textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
 				}
 			}
+			if(droneflag)
+            {
+				DroneUpdate();
+            }
 		}
 		public void DroneUpdate()
 		{
 			VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
-			if(drone == null || drone.pairedStation == null)
-            {
-				return;
-            }
-			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
-			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 			if (drone.IsConnecting)
 			{
 				droneHUD.transform.Find("Connecting").gameObject.SetActive(true);
 			}
-            else
+			else
 			{
 				droneHUD.transform.Find("Connecting").gameObject.SetActive(false);
 			}
+			if (drone.pairedStation == null)
+			{
+				return;
+			}
+			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
+			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 		}
 
 		public const float temperatureSmoothTime = 1f;

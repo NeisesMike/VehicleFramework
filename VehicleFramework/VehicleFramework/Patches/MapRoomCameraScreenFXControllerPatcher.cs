@@ -36,6 +36,11 @@ namespace VehicleFramework.Patches
             if(drone.IsConnecting)
             {
                 __instance.fx.noiseFactor = 10f;
+                __instance.fx.color = Color.white * 0.2f;
+            }
+            else
+            {
+                __instance.fx.color = Color.white;
             }
         }
     }
