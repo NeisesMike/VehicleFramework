@@ -51,6 +51,16 @@ namespace VehicleFramework.VehicleTypes
             replenishesOxygen = false;
             gameObject.AddComponent<VFXSchoolFishRepulsor>();
         }
+        public override void Update()
+        {
+            base.Update();
+            if(IsPlayerDry && GameInput.GetButtonDown(GameInput.Button.PDA) && pairedStation != null)
+            {
+                Vector3 destination = pairedStation.transform.position;
+                Player.main.ExitLockedMode();
+                GetComponent<VehicleComponents.AutoPilotNavigator>().NaiveGo(destination);
+            }
+        }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);

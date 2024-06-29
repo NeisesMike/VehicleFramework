@@ -81,6 +81,7 @@ namespace VehicleFramework
             mv = GetComponent<ModVehicle>();
             mv.voice = apVoice = mv.gameObject.EnsureComponent<AutoPilotVoice>();
             mv.voice.voice = VoiceManager.GetDefaultVoice(mv);
+            mv.gameObject.EnsureComponent<AutoPilotNavigator>();
             liveMixin = mv.liveMixin;
             eInterf = mv.energyInterface;
             healthStatus = HealthState.Safe;
