@@ -69,6 +69,7 @@ namespace VehicleFramework.VehicleTypes
             }
         }
         public SubRoot lastSubRoot = null;
+        public Vehicle lastVehicle = null;
         private IEnumerator MaybeToggleCyclopsCollision(VehicleDockingBay bay)
         {
             if (bay.subRoot.name.ToLower().Contains("cyclops"))
@@ -100,7 +101,11 @@ namespace VehicleFramework.VehicleTypes
         {
             guihand = true;
             lastSubRoot = Player.main.GetCurrentSub();
-            base.PlayerEntry();
+            lastVehicle = Player.main.GetVehicle();
+            Player.main.currentMountedVehicle = null;
+            Player.main.SetCurrentSub(null, true);
+            IsPlayerDry = true;
+            Player.main.SetScubaMaskActive(false);
             Player.main.EnterLockedMode(null, false);
             uGUI.main.quickSlots.SetTarget(this);
             SwapToDroneCamera();
@@ -122,8 +127,11 @@ namespace VehicleFramework.VehicleTypes
         public virtual void StopControlling()
         {
             base.StopPiloting();
-            base.PlayerExit();
+            IsPlayerDry = false;
             Player.main.SetCurrentSub(lastSubRoot, true);
+            Player.main.currentMountedVehicle = lastVehicle;
+            lastVehicle = null;
+            lastSubRoot = null;
             guihand = false;
             SwapToPlayerCamera();
             mountedDrone = null;

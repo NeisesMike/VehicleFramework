@@ -71,8 +71,7 @@ namespace VehicleFramework
         public static bool ExitLockedModePrefix(Player __instance, ref Player.Mode ___mode)
         {
             /*
-             * This patch ensures we exit out of the pilot seat correctly.
-             * It also controls pilot-initiated auto-leveling.
+             * This patch ensures we exit piloting mode correctly.
              */
             void DoExitActions(ref Player.Mode mode)
             {
@@ -87,32 +86,38 @@ namespace VehicleFramework
             VehicleTypes.Submersible mvSubmersible = __instance.GetVehicle() as VehicleTypes.Submersible;
             VehicleTypes.Walker mvWalker = __instance.GetVehicle() as VehicleTypes.Walker;
             VehicleTypes.Skimmer mvSkimmer = __instance.GetVehicle() as VehicleTypes.Skimmer;
-            VehicleTypes.Drone mvDrone = VehicleTypes.Drone.mountedDrone;
             VehicleTypes.Submarine mvSubmarine = __instance.GetVehicle() as VehicleTypes.Submarine;
-            if (mvSubmersible != null)
+            if (Drone.mountedDrone != null)
+            {
+                Drone.mountedDrone.StopControlling();
+                if (Player.main.GetVehicle() != null)
+                {
+                    __instance.playerController.SetEnabled(true);
+                    __instance.mode = Player.Mode.Normal;
+                    return false;
+                }
+                return true;
+            }
+            else if (mvSubmersible != null)
             {
                 // exit locked mode
                 DoExitActions(ref ___mode);
                 mvSubmersible.StopPiloting();
                 return false;
             }
-            if (mvWalker != null)
+            else if (mvWalker != null)
             {
                 DoExitActions(ref ___mode);
                 mvWalker.StopPiloting();
                 return false;
             }
-            if (mvSkimmer != null)
+            else if (mvSkimmer != null)
             {
                 DoExitActions(ref ___mode);
                 mvSkimmer.StopPiloting();
                 return false;
             }
-            if (mvDrone != null)
-            {
-                mvDrone.StopControlling();
-            }
-            if (mvSubmarine != null)
+            else if (mvSubmarine != null)
             {
                 // check if we're level by comparing pitch and roll
                 float roll = mvSubmarine.transform.rotation.eulerAngles.z;
@@ -267,5 +272,11 @@ namespace VehicleFramework
             __result = true;
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Player.UpdatePosition))]
+        public static bool UpdatePositionPrefix(Player __instance)
+        {
+            return Drone.mountedDrone == null;
+        }
     }
 }

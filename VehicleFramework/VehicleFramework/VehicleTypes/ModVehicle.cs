@@ -686,7 +686,7 @@ namespace VehicleFramework
         public int numEfficiencyModules = 0;
         private int numArmorModules = 0;
         public PowerManager powerMan = null;
-        public bool IsPlayerDry = false;
+        public bool IsPlayerDry = false; // true when inside a vehicle (or piloting a drone)
         public bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         private List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
@@ -1115,7 +1115,7 @@ namespace VehicleFramework
         {
             ModVehicle mv = veh as ModVehicle;
             if (mv == null
-                || Player.main.mode != Player.Mode.LockedPiloting
+                || !veh.GetPilotingMode()
                 || !mv.IsPlayerDry
                 || mv.GetComponent<ModVehicleEngine>() == null
                 || !veh.GetComponent<ModVehicleEngine>().enabled
