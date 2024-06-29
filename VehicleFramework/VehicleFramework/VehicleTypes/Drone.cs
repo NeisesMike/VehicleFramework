@@ -49,6 +49,7 @@ namespace VehicleFramework.VehicleTypes
             camControl = CameraLocation.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
             Admin.GameObjectManager<Drone>.Register(this);
             replenishesOxygen = false;
+            gameObject.AddComponent<VFXSchoolFishRepulsor>();
         }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
         {

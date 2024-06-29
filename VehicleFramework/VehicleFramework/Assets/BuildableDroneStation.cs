@@ -237,6 +237,10 @@ namespace VehicleFramework
         public string BuildScreenText()
         {
             string ret = "Current Drone: " + ((pairedDrone != null) ? pairedDrone.subName.hullName.text : "[None Detected]") + "\n";
+            if (pairedDrone == null)
+            {
+                return ret;
+            }
             ret += "Status: " + GetStatus(pairedDrone) + "\n";
             if(pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
             {
