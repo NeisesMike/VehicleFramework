@@ -12,6 +12,7 @@ using System.Reflection;
 using UnityEngine.U2D;
 using VehicleFramework.VehicleParts;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Engines;
 
 namespace CrushDrone
 {
@@ -157,5 +158,6 @@ namespace CrushDrone
         public override int Mass => 500;
         public override int NumModules => 2;
         public override bool HasArms => false;
+        public override ModVehicleEngine Engine => gameObject.EnsureComponent<CrushEngine>();
     }
 }
