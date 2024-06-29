@@ -153,8 +153,31 @@ namespace VehicleFramework
                 }
             }
         }
+        private bool IsConstructed()
+        {
+            return GetComponent<Constructable>().constructed;
+        }
+        private bool IsPowered()
+        {
+            if(GetComponentInParent<ModVehicle>() is ModVehicle mv)
+            {
+                return mv.energyInterface.hasCharge;
+            }
+            else if(GetComponentInParent<SubRoot>() is SubRoot sr)
+            {
+                return sr.powerRelay.IsPowered();
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void OnScreenHover()
         {
+            if(!IsConstructed() || !IsPowered())
+            {
+                return;
+            }
             var list = Admin.GameObjectManager<Drone>.Where(x => true);
             if (pairedDrone == null && list.Count() > 0)
             {
