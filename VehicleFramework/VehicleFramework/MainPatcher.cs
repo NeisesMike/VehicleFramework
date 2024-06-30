@@ -213,9 +213,8 @@ namespace VehicleFramework
 
         public static void GetAssets()
         {
-            string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Assets.AssetBundleInterface abi = new Assets.AssetBundleInterface(Path.Combine(modPath, "modvehiclepingsprite"));
-            VehicleManager.defaultPingSprite = abi.GetSprite("ModVehicleSpriteAtlas", "ModVehiclePingSprite");
+            Assets.VehicleAssets DSAssets = Assets.AssetBundleInterface.GetVehicleAssetsFromBundle("modvehiclepingsprite", "", "ModVehicleSpriteAtlas", "ModVehiclePingSprite", "", "", "");
+            VehicleManager.defaultPingSprite = DSAssets.ping;
         }
         public static void SetupDefaultAssets()
         {

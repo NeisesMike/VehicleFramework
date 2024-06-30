@@ -51,9 +51,7 @@ namespace CrushDrone
         }
         public static void GetAssets()
         {
-            string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string bundlePath = Path.Combine(directoryPath, "crush");
-            assets = AssetBundleInterface.GetVehicleAssetsFromBundle(bundlePath, "Crush", "SpriteAtlas", "DronePing", "CrafterSprite", "ArmFragment", "UnlockSprite");
+            assets = AssetBundleInterface.GetVehicleAssetsFromBundle("crush", "Crush", "SpriteAtlas", "DronePing", "CrafterSprite", "ArmFragment", "UnlockSprite");
         }
         public static IEnumerator Register()
         {

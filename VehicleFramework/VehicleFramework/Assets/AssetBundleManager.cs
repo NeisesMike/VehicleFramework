@@ -28,10 +28,10 @@ namespace VehicleFramework.Assets
     }
     public class AssetBundleInterface
     {
-        private string bundleName;
-        private AssetBundle bundle;
-        private System.Object[] objectArray;
-        public AssetBundleInterface(string bundlePath)
+        internal string bundleName;
+        internal AssetBundle bundle;
+        internal System.Object[] objectArray;
+        internal AssetBundleInterface(string bundlePath)
         {
             bundleName = bundlePath;
             try
@@ -47,7 +47,7 @@ namespace VehicleFramework.Assets
             }
             objectArray = bundle.LoadAllAssets();
         }
-        public SpriteAtlas GetSpriteAtlas(string spriteAtlasName)
+        internal SpriteAtlas GetSpriteAtlas(string spriteAtlasName)
         {
             foreach (System.Object obj in objectArray)
             {
@@ -68,7 +68,7 @@ namespace VehicleFramework.Assets
             Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite Atlas " + spriteAtlasName);
             return null;
         }
-        public Atlas.Sprite GetSprite(string spriteAtlasName, string spriteName)
+        internal Atlas.Sprite GetSprite(string spriteAtlasName, string spriteName)
         {
             SpriteAtlas thisAtlas = GetSpriteAtlas(spriteAtlasName);
             try
@@ -83,7 +83,7 @@ namespace VehicleFramework.Assets
                 return null;
             }
         }
-        public Sprite GetRawSprite(string spriteAtlasName, string spriteName)
+        internal Sprite GetRawSprite(string spriteAtlasName, string spriteName)
         {
             SpriteAtlas thisAtlas = GetSpriteAtlas(spriteAtlasName);
             try
@@ -97,7 +97,7 @@ namespace VehicleFramework.Assets
                 return null;
             }
         }
-        public GameObject GetGameObject(string gameObjectName)
+        internal GameObject GetGameObject(string gameObjectName)
         {
             foreach (System.Object obj in objectArray)
             {
@@ -109,15 +109,36 @@ namespace VehicleFramework.Assets
             Logger.Error("In AssetBundle " + bundleName + ", failed to get GameObject " + gameObjectName);
             return null;
         }
-        public static VehicleAssets GetVehicleAssetsFromBundle(string bundlePath, string modelName, string spriteAtlasName = "", string pingSpriteName = "", string crafterSpriteName = "", string fragmentName = "", string unlockName = "")
+        public static VehicleAssets GetVehicleAssetsFromBundle(string bundleName, string modelName = "", string spriteAtlasName = "", string pingSpriteName = "", string crafterSpriteName = "", string fragmentName = "", string unlockName = "")
         {
+            string directoryPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+            string bundlePath = Path.Combine(directoryPath, bundleName);
             AssetBundleInterface abi = new AssetBundleInterface(bundlePath);
-            GameObject model = abi.GetGameObject(modelName);
-            Atlas.Sprite ping = abi.GetSprite(spriteAtlasName, pingSpriteName);
-            Atlas.Sprite crafter = abi.GetSprite(spriteAtlasName, crafterSpriteName);
-            GameObject fragment = abi.GetGameObject(fragmentName);
-            Sprite unlock = abi.GetRawSprite(spriteAtlasName, unlockName);
-            return new VehicleAssets(model, ping, crafter, fragment, unlock);
+            VehicleAssets result = new VehicleAssets();
+            if(modelName != "")
+            {
+                result.model = abi.GetGameObject(modelName);
+            }
+            if (spriteAtlasName != "")
+            {
+                if (pingSpriteName != "")
+                {
+                    result.ping = abi.GetSprite(spriteAtlasName, pingSpriteName);
+                }
+                if (crafterSpriteName != "")
+                {
+                    result.crafter = abi.GetSprite(spriteAtlasName, crafterSpriteName);
+                }
+                if (unlockName != "")
+                {
+                    result.unlock = abi.GetRawSprite(spriteAtlasName, unlockName);
+                }
+            }
+            if (fragmentName != "")
+            {
+                result.fragment = abi.GetGameObject(fragmentName);
+            }
+            return result;
         }
     }
 }

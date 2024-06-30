@@ -46,19 +46,13 @@ namespace VehicleFramework
 
         public static void Register()
         {
-            string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string bundlePath = Path.Combine(directoryPath, "dronestation");
-            AssetBundleInterface abi = new AssetBundleInterface(bundlePath);
-            GameObject fragment = abi.GetGameObject("Fragment");
-            GameObject droneStation = abi.GetGameObject("DroneStation");
-            Atlas.Sprite sprite = abi.GetSprite("DSSpriteAtlas", "DSCrafterSprite");
-            Sprite rawSprite = abi.GetRawSprite("DSSpriteAtlas", "DSUnlockSprite");
-            TechType consoleTT = RegisterConsole(droneStation, sprite, rawSprite);
+            VehicleAssets DSAssets = AssetBundleInterface.GetVehicleAssetsFromBundle("dronestation", "DroneStation", "DSSpriteAtlas", "", "DSCrafterSprite", "Fragment", "DSUnlockSprite");
+            TechType consoleTT = RegisterConsole(DSAssets.model, DSAssets.crafter, DSAssets.unlock);
             AbstractBiomeData abd = new AbstractBiomeData()
                 .WithBiome(AbstractBiomeType.SafeShallows)
                 .WithBiome(AbstractBiomeType.KelpForest)
                 .WithBiome(AbstractBiomeType.GrassyPlateus);
-            FragmentManager.RegisterFragment(fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", rawSprite, abd.Get());
+            FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, abd.Get());
         }
     }
 
