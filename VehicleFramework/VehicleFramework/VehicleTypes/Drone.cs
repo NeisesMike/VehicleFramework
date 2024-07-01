@@ -156,10 +156,12 @@ namespace VehicleFramework.VehicleTypes
             Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.", y: 25);
             string text3 = uGUI.FormatButton(AutoHomeButton, false, " / ", false);
             Logger.Output("Press " + text3 + " to return home.", y: -25);
+            Player.main.SetHeadVisible(true);
         }
         public void SwapToPlayerCamera()
         {
             camControl.MovePlayerCameraToTransform(camControl.PlayerCamPivot);
+            Player.main.SetHeadVisible(false);
         }
         public override void OnPlayerDocked()
         {
