@@ -16,6 +16,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public abstract Transform CameraLocation { get; }
         private VehicleComponents.MVCameraController camControl;
+        private const GameInput.Button AutoHomeButton = GameInput.Button.PDA;
         private bool _IsConnecting = false;
         public bool IsConnecting
         {
@@ -54,7 +55,7 @@ namespace VehicleFramework.VehicleTypes
         public override void Update()
         {
             base.Update();
-            if(IsPlayerDry && GameInput.GetButtonDown(GameInput.Button.PDA) && pairedStation != null)
+            if(IsPlayerDry && GameInput.GetButtonDown(AutoHomeButton) && pairedStation != null)
             {
                 Vector3 destination = pairedStation.transform.position;
                 Player.main.ExitLockedMode();
@@ -152,7 +153,9 @@ namespace VehicleFramework.VehicleTypes
         public void SwapToDroneCamera()
         {
             camControl.MovePlayerCameraToTransform(CameraLocation);
-            Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.");
+            Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.", y: 25);
+            string text3 = uGUI.FormatButton(AutoHomeButton, false, " / ", false);
+            Logger.Output("Press " + text3 + " to return home.", y: -25);
         }
         public void SwapToPlayerCamera()
         {
