@@ -17,7 +17,7 @@ namespace VehicleFramework.Assets
     public class FragmentManager : MonoBehaviour
     {
         private static readonly List<PDAScanner.EntryData> PDAScannerData = new List<PDAScanner.EntryData>();
-        public static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, TechType toUnlock, int numFragmentsToScan)
+        public static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, TechType toUnlock, int numFragmentsToScan, string encyKey="IAmAnUnusedEncyclopediaKey")
         {
             PDAScanner.EntryData entryData = new PDAScanner.EntryData()
             {
@@ -25,23 +25,23 @@ namespace VehicleFramework.Assets
                 locked = true,
                 totalFragments = numFragmentsToScan,
                 destroyAfterScan = true,
-                encyclopedia = "Irrelevant Text",
+                encyclopedia = encyKey,
                 blueprint = toUnlock,
                 scanTime = 5f,
                 isFragment = true
             };
             return entryData;
         }
-        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Sprite unlockSprite=null, List<BiomeData> biomeData=null)
+        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Sprite unlockSprite=null, List<BiomeData> biomeData=null, string encyKey= "IAmAnUnusedEncyclopediaKey")
         {
             if (vehicle == null)
             {
                 Logger.Error("RegisterFragment error: vehicle was null");
                 return 0;
             }
-            return RegisterFragment(fragment, vehicle.GetComponent<TechTag>().type, vehicle.FragmentsToScan, classID, displayName, description, unlockSprite, biomeData);
+            return RegisterFragment(fragment, vehicle.GetComponent<TechTag>().type, vehicle.FragmentsToScan, classID, displayName, description, unlockSprite, biomeData, encyKey);
         }
-        public static TechType RegisterFragment(GameObject fragment, TechType toUnlock, int fragmentsToScan, string classID, string displayName, string description, Sprite sprite = null, List<BiomeData> biomeData = null)
+        public static TechType RegisterFragment(GameObject fragment, TechType toUnlock, int fragmentsToScan, string classID, string displayName, string description, Sprite sprite = null, List<BiomeData> biomeData = null, string encyKey= "IAmAnUnusedEncyclopediaKey")
         {
             if (fragment == null)
             {
@@ -49,7 +49,7 @@ namespace VehicleFramework.Assets
                 return 0;
             }
             TechType fragmentTT = RegisterGenericFragment(fragment, classID, displayName, description, sprite, biomeData, "congration");
-            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, toUnlock, fragmentsToScan));
+            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, toUnlock, fragmentsToScan, encyKey));
             return fragmentTT;
         }
         public static TechType RegisterGenericFragment(GameObject fragment, string classID, string displayName, string description, Sprite unlockSprite = null, List<BiomeData> biomeData = null, string unlockedMessage = "")

@@ -129,7 +129,7 @@ namespace CrushDrone
                  * Ratings
                  * Kek
                  */
-                string ency = "The Crush is a remotely controlled drone designed for resource collection.";
+                string ency = "The Crush is a remotely controlled drone designed for resource collection. ";
                 ency += "Its powerful claws are what earned it its name. \n";
                 ency += "\nIt features:\n";
                 ency += "- Remote Connectivity \n";
@@ -137,7 +137,7 @@ namespace CrushDrone
                 ency += "- One power cell capacity. \n";
 
                 ency += "\nRatings:\n";
-                ency += "- Top Speed: 12m/s \n";
+                ency += "- Top Speed: 11m/s \n";
                 ency += "- Acceleration: 6m/s/s \n";
                 ency += "- Distance per Power Cell: 7km \n";
                 ency += "- Crush Depth: 300 \n";

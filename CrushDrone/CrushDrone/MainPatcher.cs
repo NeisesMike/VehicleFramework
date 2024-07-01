@@ -47,7 +47,7 @@ namespace CrushDrone
                 .WithBiome(AbstractBiomeType.MushroomForest)
                 .WithBiome(AbstractBiomeType.JellyshroomCaves);
 
-            return FragmentManager.RegisterFragment(assets.fragment, unlockVehicle, classID, displayName, description, assets.unlock, abd.Get());
+            return FragmentManager.RegisterFragment(assets.fragment, unlockVehicle, classID, displayName, description, assets.unlock, abd.Get(), "Crush");
         }
         public static void GetAssets()
         {

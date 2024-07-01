@@ -24,6 +24,11 @@ namespace VehicleFramework
         public const string classID = "DroneStation";
         public const string displayName = "Drone Station";
         public const string description = "A terminal from which to control drones remotely";
+        public const string encyclopediaDesc = "The drone station can be used to remotely connect to and pilot any nearby drone vehicles. The drone station enhances radio technology to keep users safe from distant threats."
+                                            + "\n "
+                                            + " - Connection Range: ~600 meters\n"
+                                            + " - Designed for: Compartments and Submarines\n"
+                                            + " - Can automatically return drones to itself\n";
 
         public static TechType RegisterConsole(GameObject droneStation, Atlas.Sprite crafter, Sprite unlock)
         {
@@ -52,7 +57,8 @@ namespace VehicleFramework
                 .WithBiome(AbstractBiomeType.SafeShallows)
                 .WithBiome(AbstractBiomeType.KelpForest)
                 .WithBiome(AbstractBiomeType.GrassyPlateus);
-            FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, abd.Get());
+            Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(classID, "Tech/Habitats", displayName, encyclopediaDesc, null, DSAssets.unlock, null, null);
+            FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, abd.Get(), classID);
         }
     }
 
