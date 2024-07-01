@@ -20,7 +20,7 @@ namespace VehicleFramework.Engines
         protected override float VERT_ACCEL => VERT_MAX_SPEED * 6;
 
         protected override float waterDragDecay => 6.5f;
-        public override float DragThresholdSpeed => 1;
+        protected override float DragThresholdSpeed => 1;
 
 
         public override void ControlRotation()

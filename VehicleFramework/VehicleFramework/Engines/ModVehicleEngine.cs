@@ -254,7 +254,7 @@ namespace VehicleFramework.Engines
             }
             ApplyDrag(moveDirection);
         }
-        public virtual float DragThresholdSpeed
+        protected virtual float DragThresholdSpeed
         {
             get
             {
