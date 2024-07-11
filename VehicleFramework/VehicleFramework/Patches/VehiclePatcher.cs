@@ -156,4 +156,48 @@ namespace VehicleFramework
             return false;
         }
     }
+
+    [HarmonyPatch(typeof(Vehicle))]
+    public class VehiclePatcher2
+    {
+        /* This transpiler makes one part of UpdateEnergyRecharge more generic
+         * Optionally change GetComponentInParent to GetComponentInParentButNotInMe
+         * Simple as.
+         * The purpose is to ensure ModVehicles are recharged while docked.
+         */
+        [HarmonyPatch(nameof(Vehicle.UpdateEnergyRecharge))]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count);
+            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                newCodes.Add(myNOP);
+            }
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Call && codes[i].operand.ToString().ToLower().Contains("powerrelay"))
+                {
+                    newCodes[i] = CodeInstruction.Call(typeof(VehiclePatcher2), nameof(VehiclePatcher2.GetPowerRelayAboveVehicle));
+                }
+                else
+                {
+                    newCodes[i] = codes[i];
+                }
+            }
+            return newCodes.AsEnumerable();
+        }
+        public static PowerRelay GetPowerRelayAboveVehicle(Vehicle veh)
+        {
+            if ((veh as ModVehicle) == null)
+            {
+                return veh.GetComponentInParent<PowerRelay>();
+            }
+            else
+            {
+                return veh.transform.parent.gameObject.GetComponentInParent<PowerRelay>();
+            }
+        }
+    }
 }
