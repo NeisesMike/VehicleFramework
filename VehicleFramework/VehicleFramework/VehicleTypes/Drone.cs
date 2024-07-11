@@ -149,6 +149,7 @@ namespace VehicleFramework.VehicleTypes
             mountedDrone = null;
             pairedStation = null;
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
+            GetComponent<ModVehicleEngine>().KillMomentum();
         }
         public void SwapToDroneCamera()
         {
