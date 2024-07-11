@@ -1,13 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System.Collections;
-using Nautilus.Utility;
 using BepInEx;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework;
@@ -23,7 +15,7 @@ namespace CrushDrone
     [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID)]
     public class MainPatcher : BaseUnityPlugin
     {
-        //internal static CrushConfig config { get; private set; }
+        internal static CrushConfig config { get; private set; }
         public static TechType CrushArmTechType;
         public static VehicleFramework.Assets.VehicleAssets assets;
         public void Awake()
@@ -32,7 +24,7 @@ namespace CrushDrone
         }
         public void Start()
         {
-            //config = OptionsPanelHandler.RegisterModOptions<CrushConfig>();
+            config = Nautilus.Handlers.OptionsPanelHandler.RegisterModOptions<CrushConfig>();
             var harmony = new Harmony("com.mikjaw.subnautica.crush.mod");
             harmony.PatchAll();
             UWE.CoroutineHost.StartCoroutine(Register());
@@ -58,14 +50,40 @@ namespace CrushDrone
             Drone crush = assets.model.EnsureComponent<Crush>() as Drone;
             yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(crush));
             CrushArmTechType = RegisterCrushArmFragment(crush);
+
+            //Nautilus.Handlers.StoryGoalHandler.RegisterBiomeGoal("CrushMushroomForest", Story.GoalType.Story, biomeName: "mushroomForest", minStayDuration: 3f, delay: 3f);
+            //Nautilus.Handlers.StoryGoalHandler.RegisterBiomeGoal("CrushJellyShroom", Story.GoalType.Story, biomeName: "jellyshroomCaves", minStayDuration: 3f, delay: 3f);
+            //Nautilus.Handlers.StoryGoalHandler.RegisterCompoundGoal("CrushBiomes", Story.GoalType.PDA, delay: 3f, new string[]{ "CrushMushroomForest", "CrushJellyShroom" });
+
+            /*
+            Nautilus.Handlers.StoryGoalHandler.RegisterBiomeGoal("CrushBiomes", Story.GoalType.Radio, biomeName: "mushroomForest", minStayDuration: 3f, delay: 3f);
+            Nautilus.Handlers.StoryGoalHandler.RegisterBiomeGoal("CrushBiomes", Story.GoalType.Radio, biomeName: "jellyshroomCaves", minStayDuration: 3f, delay: 3f);
+            Nautilus.Handlers.PDAHandler.AddLogEntry("CrushBiomes", "CrushBiomes", "soundpath", null); // TODO add a sound
+            Nautilus.Handlers.LanguageHandler.SetLanguageLine("CrushBiomes", "You did it", "English");
+            Nautilus.Handlers.StoryGoalHandler.RegisterCustomEvent("CrushBiomes", () =>
+            {
+            });
+            */
+
+            /*
+            var but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_13.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_12.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_3.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_19.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_17.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_2.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_6.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_7.prefab");
+            but = UWE.PrefabDatabase.GetPrefabForFilenameAsync("WorldEntities/Environment/Wrecks/life_pod_exploded_4.prefab");
+            */
         }
+
     }
 
-    /*
-    [Menu("Crush Drone Options")]
-    public class CrushConfig : ConfigFile
+    [Nautilus.Options.Attributes.Menu("Crush Drone Options")]
+    public class CrushConfig : Nautilus.Json.ConfigFile
     {
-
+        [Nautilus.Options.Attributes.Toggle("Fragment Experience", Tooltip = "Leave checked for the fragment experience.\nLeave unchecked to unlock Crush automatically.\nMust reboot Subnautica to take effect.")]
+        public bool isFragmentExperience = true;
     }
-    */
 }

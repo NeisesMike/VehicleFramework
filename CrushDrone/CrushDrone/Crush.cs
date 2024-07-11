@@ -23,7 +23,7 @@ namespace CrushDrone
          * but not by scanning anything in the base game.
          * We add our own scanning logic in CrushFragment.
          */
-        public override TechType UnlockedWith => TechType.Fragment;
+        public override TechType UnlockedWith => MainPatcher.config.isFragmentExperience ? TechType.Fragment : TechType.Constructor;
         public override Sprite UnlockedSprite => MainPatcher.assets.unlock;
         public override string UnlockedMessage => "Drone Station Required";
         public override int FragmentsToScan => 3;
