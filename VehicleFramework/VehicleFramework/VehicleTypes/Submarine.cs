@@ -33,7 +33,7 @@ namespace VehicleFramework.VehicleTypes
 
         public ControlPanel controlPanelLogic;
         public bool isPilotSeated = false;
-        public bool isPlayerInside = false;
+        public bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
 
         public Transform thisStopPilotingLocation;
 
