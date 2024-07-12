@@ -84,10 +84,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 navlights = gameObject.EnsureComponent<NavigationLightsController>();
             }
-            if (TetherSources != null)
-            {
-                TetherSources.ForEach(x => x.EnsureComponent<TetherSource>().mv = this);
-            }
+            gameObject.EnsureComponent<TetherSource>().mv = this;
             controlPanelLogic?.Init();
         }
         public override void Start()
@@ -517,14 +514,14 @@ namespace VehicleFramework.VehicleTypes
             base.OnVehicleDocked();
             Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = false);
             PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = false);
-            TetherSources.ForEach(x => x.GetComponent<TetherSource>().isLive = false);
+            GetComponent<TetherSource>().isLive = false;
             EnableFabricator(false);
         }
         public override void OnVehicleUndocked()
         {
             Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = true);
             PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = true);
-            TetherSources.ForEach(x => x.GetComponent<TetherSource>().isLive = true);
+            GetComponent<TetherSource>().isLive = true;
             EnableFabricator(true);
             base.OnVehicleUndocked();
         }

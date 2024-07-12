@@ -11,50 +11,64 @@ namespace VehicleFramework
 {
     /*
      * Tether Sources are meant to be placed throughout the Submarine.
-     * They will interact with a player's ModVehicleTether.
+     * The Submarine has one TetherSource component to manage them.
+     * They should be strictly inside the ship.
      * A player will "leash" to them when close enough,
      * which ensures the player's entry is recognized no matter what (warp in).
      */
     public class TetherSource : MonoBehaviour
     {
-        private bool isTetherEstablished = false;
         public Submarine mv = null;
         public bool isLive = true;
+        public Bounds bounds
+        {
+            get
+            {
+                if (mv == null)
+                {
+                    return new Bounds(Vector3.zero, Vector3.zero);
+                }
+                BoxCollider collider = mv.BoundingBox.GetComponentInChildren<BoxCollider>(true);
+                if(collider == null)
+                {
+                    return new Bounds(Vector3.zero, Vector3.zero);
+                }
+                collider.enabled = true;
+                Bounds result = collider.bounds;
+                collider.enabled = false;
+                return result;
+            }
+        }
 
         public void Start()
         {
+            mv.BoundingBox.SetActive(true);
+            mv.BoundingBox.GetComponentInChildren<BoxCollider>(true).enabled = false;
             Player.main.StartCoroutine(ManageTether());
         }
 
         public void TryToDropLeash()
         {
-            isTetherEstablished = Vector3.Distance(Player.main.transform.position, transform.position) < 5f;
-            if(!isTetherEstablished)
+            if (!bounds.Contains(Player.main.transform.position))
             {
-                if(mv.TetherSources.Where(x=>x.GetComponent<TetherSource>().isTetherEstablished).Count() > 0)
-                {
-                    // some tether is still hanging on
-                }
-                else
-                {
-                    if (mv.IsPlayerInside())
-                    {
-                        mv.PlayerExit();
-                    }
-                }
+                mv.PlayerExit();
             }
         }
 
         public void TryToEstablishLeash()
         {
-            // TODO: make this constant depend on the vehicle model somehow
-            isTetherEstablished = Vector3.Distance(Player.main.transform.position, transform.position) < 0.75f;
-            if (isTetherEstablished)
+            bool PlayerWithinLeash(GameObject tetherSrc)
             {
-                if (!mv.IsPlayerInside())
+                float radius = 0.75f;
+                if (tetherSrc.GetComponent<SphereCollider>() != null)
                 {
-                    mv.PlayerEntry();
+                    radius = tetherSrc.GetComponent<SphereCollider>().radius;
                 }
+                return Vector3.Distance(Player.main.transform.position, tetherSrc.transform.position) < radius;
+            }
+            if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Count() > 0)
+            {
+                mv.PlayerEntry();
             }
         }
 
@@ -69,7 +83,7 @@ namespace VehicleFramework
                 }
                 if(isLive)
                 {
-                    if (isTetherEstablished)
+                    if (mv.IsPlayerInside())
                     {
                         TryToDropLeash();
                     }
