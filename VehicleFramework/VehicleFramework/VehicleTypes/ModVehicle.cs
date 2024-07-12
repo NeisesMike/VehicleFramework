@@ -1135,6 +1135,18 @@ namespace VehicleFramework
                 return (veh as ModVehicle).energyInterface.sources.First();
             }
         }
+        public static void TeleportPlayer(Vector3 destination)
+        {
+            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+            Player.main.SetCurrentSub(null);
+            IEnumerator doThing()
+            {
+                yield return null;
+                Player.main.transform.position = destination;
+                Player.main.SetCurrentSub(mv?.GetComponent<SubRoot>(), true);
+            }
+            UWE.CoroutineHost.StartCoroutine(doThing());
+        }
         #endregion
     }
 }
