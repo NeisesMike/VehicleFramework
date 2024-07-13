@@ -204,11 +204,13 @@ namespace VehicleFramework
                 }
                 if (mv.BoundingBox == null)
                 {
-                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.BoundingBox was provided. This is required to calculate dimensions for build bots and docking. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
+                    Logger.Error(thisName + " No BoundingBox was provided. ModVehicle needs this to manage tethers, build bots, and docking.");
+                    return false;
                 }
                 if (mv.BoundingBox.GetComponentInChildren<BoxCollider>(true) == null)
                 {
-                    VerboseLog(LogType.Warn, verbose, thisName + " There was no BoxCollider in the transform heirarchy of the BoundingBox. This is required to calculate dimensions for build bots and docking. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
+                    Logger.Error(thisName + " No BoundingBox was provided. ModVehicle needs this to manage tethers, build bots, and docking.");
+                    return false;
                 }
                 if (mv.CollisionModel == null)
                 {
