@@ -20,6 +20,7 @@ namespace VehicleFramework
     {
         public Submarine mv = null;
         public bool isLive = true;
+        public bool isSimple;
         public Bounds bounds
         {
             get
@@ -42,16 +43,34 @@ namespace VehicleFramework
 
         public void Start()
         {
-            mv.BoundingBox.SetActive(true);
-            mv.BoundingBox.GetComponentInChildren<BoxCollider>(true).enabled = false;
+            if (mv.BoundingBox == null || mv.BoundingBox.GetComponentInChildren<BoxCollider>(true) == null || mv.TetherSources.Count() == 0)
+            {
+                isSimple = true;
+            }
+            else
+            {
+                isSimple = false;
+                mv.BoundingBox.SetActive(true);
+                mv.BoundingBox.GetComponentInChildren<BoxCollider>(true).enabled = false;
+            }
             Player.main.StartCoroutine(ManageTether());
         }
 
         public void TryToDropLeash()
         {
-            if (!bounds.Contains(Player.main.transform.position))
+            if (isSimple)
             {
-                mv.PlayerExit();
+                if (Vector3.Distance(Player.main.transform.position, transform.position) > 10)
+                {
+                    mv.PlayerExit();
+                }
+            }
+            else
+            {
+                if (!bounds.Contains(Player.main.transform.position))
+                {
+                    mv.PlayerExit();
+                }
             }
         }
 
@@ -66,10 +85,21 @@ namespace VehicleFramework
                 }
                 return Vector3.Distance(Player.main.transform.position, tetherSrc.transform.position) < radius;
             }
-            if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Count() > 0)
+            if (isSimple)
             {
-                mv.PlayerEntry();
+                if (Vector3.Distance(Player.main.transform.position, transform.position) < 0.5f)
+                {
+                    mv.PlayerEntry();
+                }
             }
+            else
+            {
+                if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Count() > 0)
+                {
+                    mv.PlayerEntry();
+                }
+            }
+
         }
 
         public IEnumerator ManageTether()
