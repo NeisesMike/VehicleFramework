@@ -814,7 +814,6 @@ namespace VehicleFramework
             // ApplyShaders should happen last
             Shader shader = Shader.Find("MarmosetUBER");
             ApplyShaders(mv, shader);
-            ApplyGlassMaterial(mv);
 
             return true;
         }
@@ -837,6 +836,7 @@ namespace VehicleFramework
             if (mv.AutoApplyShaders)
             {
                 ForceApplyShaders(mv, shader);
+                ApplyGlassMaterial(mv);
             }
         }
         public static void ForceApplyShaders(ModVehicle mv, Shader shader)
