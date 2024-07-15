@@ -13,22 +13,21 @@ namespace VehicleFramework.VehicleTypes
 {
     public abstract class Submarine : ModVehicle
     {
-        public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
-        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
-        public abstract List<VehicleParts.VehicleFloodLight> FloodLights { get; }
-        public abstract List<GameObject> NavigationPortLights { get; }
-        public abstract List<GameObject> NavigationStarboardLights { get; }
-        public abstract List<GameObject> NavigationPositionLights { get; }
-        public abstract List<GameObject> NavigationWhiteStrobeLights { get; }
-        public abstract List<GameObject> NavigationRedStrobeLights { get; }
-        public abstract List<GameObject> TetherSources { get; }
-        public abstract GameObject ControlPanel { get; }
-        public virtual GameObject Fabricator { get; }
-        public virtual GameObject ColorPicker { get; }
-        public virtual GameObject SteeringWheelLeftHandTarget { get; }
-        public virtual GameObject SteeringWheelRightHandTarget { get; }
-        public virtual ModVehicleEngine Engine { get; set; }
-        public virtual List<Light> InteriorLights { get; }
+        public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; } // Need a way to start and stop piloting
+        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
+        public virtual List<VehicleParts.VehicleFloodLight> FloodLights => null;
+        public virtual List<GameObject> TetherSources => null;
+        public virtual GameObject ControlPanel => null;
+        public virtual GameObject Fabricator => null;
+        public virtual GameObject ColorPicker => null;
+        public virtual GameObject SteeringWheelLeftHandTarget => null;
+        public virtual GameObject SteeringWheelRightHandTarget => null;
+        public virtual List<Light> InteriorLights => null;
+        public virtual List<GameObject> NavigationPortLights => null;
+        public virtual List<GameObject> NavigationStarboardLights => null;
+        public virtual List<GameObject> NavigationPositionLights => null;
+        public virtual List<GameObject> NavigationWhiteStrobeLights => null;
+        public virtual List<GameObject> NavigationRedStrobeLights => null;
 
 
         public ControlPanel controlPanelLogic;
