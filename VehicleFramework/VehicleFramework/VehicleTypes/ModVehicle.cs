@@ -26,51 +26,35 @@ namespace VehicleFramework
         }
         #endregion
         #region abstract_members
-        /* These things require implementation
-         * They are required to have a coherent concept of a vehicle
+        /* The model, collision model, storage root object, and modules root object
+         * must all be unique game objects.
+         * And since VF cannot add gameobjects to the prefab,
+         * they must be supplied for each vehicle.
+         * 
+         * On the other hand, Batteries and Upgrades are requirements
+         * for semantic reasons. If a thing cannot be powered and if
+         * it cannot be upgraded, then it is not a ModVehicle.
          */
-        public override string vehicleDefaultName
-        {
-            get
-            {
-                Language main = Language.main;
-                if (main == null)
-                {
-                    return LocalizationManager.GetString(EnglishString.Vehicle);
-                }
-                return main.Get("ModVehicle");
-            }
-        }
-        public abstract GameObject VehicleModel { get; }
+        public abstract GameObject VehicleModel { get; } 
         public abstract GameObject CollisionModel { get; }
         public abstract GameObject StorageRootObject { get; }
         public abstract GameObject ModulesRootObject { get; }
-        public abstract List<VehicleParts.VehicleStorage> InnateStorages { get; }
-        public abstract List<VehicleParts.VehicleStorage> ModularStorages { get; }
-        public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
-        public abstract List<VehicleParts.VehicleFloodLight> HeadLights { get; }
-        public abstract List<GameObject> WaterClipProxies { get; }
-        public abstract List<GameObject> CanopyWindows { get; }
-        public abstract GameObject BoundingBox { get; }
-        public abstract Dictionary<TechType, int> Recipe { get; }
-        public abstract Atlas.Sprite PingSprite { get; }
-        public abstract string Description { get; }
-        public abstract string EncyclopediaEntry { get; }
-        public abstract int BaseCrushDepth { get; }
-        public abstract int MaxHealth { get; }
-        public abstract int Mass { get; }
-        public abstract int NumModules { get; }
-        public abstract bool HasArms { get; }
+        public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         #endregion
 
-        #region virtual_properties
+        #region virtual_properties_nullable
+        public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly
+        public virtual BoxCollider BoundingBoxCollider { get; set; }
+        public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;
+        public virtual List<GameObject> WaterClipProxies => null;
+        public virtual List<VehicleParts.VehicleStorage> InnateStorages => null;
+        public virtual List<VehicleParts.VehicleStorage> ModularStorages => null;
+        public virtual List<VehicleParts.VehicleFloodLight> HeadLights => null;
+        public virtual List<GameObject> CanopyWindows => null;
+        public virtual Dictionary<TechType, int> Recipe => new Dictionary<TechType, int>() { { TechType.Titanium, 1 } };
         public virtual List<VehicleParts.VehicleBattery> BackupBatteries { get; }
-        public virtual TechType UnlockedWith => TechType.Constructor;
         public virtual Sprite UnlockedSprite => null;
-        public virtual string UnlockedMessage => "";
-        public virtual int FragmentsToScan => 1;
-        public virtual bool CanLeviathanGrab { get; set; } = true;
         public virtual GameObject LeviathanGrabPoint
         {
             get
@@ -87,33 +71,6 @@ namespace VehicleFramework
                 return MainPatcher.ModVehicleIcon;
             }
         }
-        public virtual int CrushDepthUpgrade1
-        {
-            get
-            {
-                return 300;
-            }
-        }
-        public virtual int CrushDepthUpgrade2
-        {
-            get
-            {
-                return 300;
-            }
-        }
-        public virtual int CrushDepthUpgrade3
-        {
-            get
-            {
-                return 300;
-            }
-        }
-        public virtual bool CanMoonpoolDock { get; set; } = true;
-        public virtual DeathStyle OnDeathBehavior { get; set; } = DeathStyle.Sink;
-        public virtual float TimeToConstruct { get; set; } = 15f; // Seamoth : 10 seconds, Cyclops : 20, Rocket Base : 25
-        public virtual Color ConstructionGhostColor { get; set; } = Color.black;
-        public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
-        public virtual bool AutoApplyShaders { get; set; } = true;
         public override string[] slotIDs
         { // You probably do not want to override this
             get
@@ -126,6 +83,44 @@ namespace VehicleFramework
                 return _slotIDs;
             }
         }
+        #endregion
+
+        #region virtual_properties_nonnullable_static
+        public virtual string Description => "A vehicle";
+        public virtual string EncyclopediaEntry => "This is a vehicle you can build at the Mobile Vehicle Bay. It can be controlled either directly or with a Drone Station.";
+        public virtual int BaseCrushDepth => 250;
+        public virtual int MaxHealth => 100;
+        public virtual int Mass => 1000;
+        public virtual int NumModules => 4;
+        public virtual bool HasArms => false;
+        public virtual TechType UnlockedWith => TechType.Constructor;
+        public virtual string UnlockedMessage => "New vehicle blueprint acquired";
+        public virtual int FragmentsToScan => 3;
+        public virtual int CrushDepthUpgrade1 => 300;
+        public virtual int CrushDepthUpgrade2 => 300;
+        public virtual int CrushDepthUpgrade3 => 300;
+        #endregion
+
+        #region virtual_properties_nonnullable_dynamic
+        public override string vehicleDefaultName
+        {
+            get
+            {
+                Language main = Language.main;
+                if (main == null)
+                {
+                    return LocalizationManager.GetString(EnglishString.Vehicle);
+                }
+                return main.Get("ModVehicle");
+            }
+        }
+        public virtual bool CanLeviathanGrab { get; set; } = true;
+        public virtual bool CanMoonpoolDock { get; set; } = true;
+        public virtual DeathStyle OnDeathBehavior { get; set; } = DeathStyle.Sink;
+        public virtual float TimeToConstruct { get; set; } = 15f; // Seamoth : 10 seconds, Cyclops : 20, Rocket Base : 25
+        public virtual Color ConstructionGhostColor { get; set; } = Color.black;
+        public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
+        public virtual bool AutoApplyShaders { get; set; } = true;
 
         #endregion
 
@@ -142,9 +137,9 @@ namespace VehicleFramework
             }
             gameObject.EnsureComponent<AutoPilot>();
 
-            if (BoundingBox != null && BoundingBox.GetComponent<BoxCollider>() != null)
+            if (BoundingBoxCollider != null)
             {
-                BoundingBox.GetComponent<BoxCollider>().enabled = false;
+                BoundingBoxCollider.enabled = false;
             }
 
             upgradeOnAddedActions.Add(storageModuleAction);
@@ -167,42 +162,19 @@ namespace VehicleFramework
 
             powerMan = gameObject.EnsureComponent<PowerManager>();
 
-            //TODO I don't think we want this
-            //StartCoroutine(ManageMyWaterProxies());
-
             // Register our new vehicle with Vehicle Framework
             VehicleManager.EnrollVehicle(this);
             isInited = true;
-            StartCoroutine(WaitUntilReadyToSpeak());
-        }
-        private IEnumerator WaitUntilReadyToSpeak()
-        {
-            while(!Admin.GameStateWatcher.IsWorldSettled)
+            IEnumerator WaitUntilReadyToSpeak()
             {
-                yield return null;
-            }
-            voice.NotifyReadyToSpeak();
-            yield break;
-        }
-        public IEnumerator ManageMyWaterProxies()
-        {
-            if(this as VehicleTypes.Drone != null)
-            {
+                while (!Admin.GameStateWatcher.IsWorldSettled)
+                {
+                    yield return null;
+                }
+                voice.NotifyReadyToSpeak();
                 yield break;
             }
-            while (true)
-            {
-                yield return new WaitForSeconds(0.05f);
-                if(IsPlayerDry)
-                {
-                    WaterClipProxies.ForEach(x => x.SetActive(true));
-                }
-                else
-                {
-                    WaterClipProxies.ForEach(x => x.SetActive(false));
-                }
-
-            }
+            StartCoroutine(WaitUntilReadyToSpeak());
         }
         public override void Update()
         {
@@ -443,10 +415,6 @@ namespace VehicleFramework
         {
             return 0;
         }
-        public virtual void ModVehicleReset()
-        {
-            Logger.DebugLog("ModVehicle Reset");
-        }
         public virtual bool GetIsUnderwater()
         {
             // TODO: justify this constant
@@ -558,21 +526,19 @@ namespace VehicleFramework
         }
         public virtual Vector3 GetBoundingDimensions()
         {
-            if(BoundingBox == null || BoundingBox.GetComponentInChildren<BoxCollider>(true) == null)
+            if(BoundingBoxCollider == null)
             {
                 return Vector3.zero;
             }
-            var box = BoundingBox.GetComponentInChildren<BoxCollider>(true);
-            Vector3 boxDimensions = box.size;
-            Vector3 worldScale = box.transform.lossyScale;
+            Vector3 boxDimensions = BoundingBoxCollider.size;
+            Vector3 worldScale = BoundingBoxCollider.transform.lossyScale;
             return Vector3.Scale(boxDimensions, worldScale);
         }
         public virtual Vector3 GetDifferenceFromCenter()
         {
-            var box = BoundingBox.GetComponentInChildren<BoxCollider>(true);
-            if (box != null)
+            if (BoundingBoxCollider != null)
             {
-                Vector3 colliderCenterWorld = box.transform.TransformPoint(box.center);
+                Vector3 colliderCenterWorld = BoundingBoxCollider.transform.TransformPoint(BoundingBoxCollider.center);
                 Vector3 difference = colliderCenterWorld - transform.position;
                 return difference;
             }

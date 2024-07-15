@@ -94,8 +94,6 @@ namespace VehicleFramework
 
         private static int numVehicleTypes = 0;
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
-        public static GameObject coroutineHelper;
-        public static GameObject powercell = GameObject.CreatePrimitive(PrimitiveType.Capsule);//CraftData.GetPrefabForTechType(TechType.PowerCell, true); // TODO is this right?
 
         public const EquipmentType ModuleType = (EquipmentType)625;
         public const EquipmentType ArmType = (EquipmentType)626;
@@ -104,25 +102,14 @@ namespace VehicleFramework
         public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Prefabricating the " + mv.gameObject.name);
-
-            // wait for a seamoth to be ready
             yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
-
-            bool instrumentSuccessful = Instrument(mv, pingType);
-            if(!instrumentSuccessful)
+            if(!Instrument(mv, pingType))
             {
                 Logger.Error("Failed to instrument the vehicle: " + mv.gameObject.name);
                 yield break;
             }
-
-
             prefabs.Add(mv);
-            Atlas.Sprite usedPingSprite = mv.PingSprite;
-            if(usedPingSprite is null)
-            {
-                usedPingSprite = VehicleManager.defaultPingSprite;
-            }
-            VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, usedPingSprite);
+            VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
             VehicleManager.PatchCraftable(ref ve, verbose);

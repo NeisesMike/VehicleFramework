@@ -29,7 +29,7 @@ namespace VehicleFramework
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
                 }
-                BoxCollider collider = mv.BoundingBox.GetComponentInChildren<BoxCollider>(true);
+                BoxCollider collider = mv.BoundingBoxCollider;
                 if(collider == null)
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
@@ -43,15 +43,15 @@ namespace VehicleFramework
 
         public void Start()
         {
-            if (mv.BoundingBox == null || mv.BoundingBox.GetComponentInChildren<BoxCollider>(true) == null || mv.TetherSources.Count() == 0)
+            if (mv.BoundingBoxCollider == null || mv.TetherSources.Count() == 0)
             {
                 isSimple = true;
             }
             else
             {
                 isSimple = false;
-                mv.BoundingBox.SetActive(true);
-                mv.BoundingBox.GetComponentInChildren<BoxCollider>(true).enabled = false;
+                mv.BoundingBoxCollider.gameObject.SetActive(true);
+                mv.BoundingBoxCollider.enabled = false;
             }
             Player.main.StartCoroutine(ManageTether());
         }

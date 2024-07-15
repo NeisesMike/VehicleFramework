@@ -493,9 +493,6 @@ namespace VehicleFramework.VehicleTypes
             return 0;
         }
 
-        public override void ModVehicleReset()
-        {
-        }
         public void EnableFabricator(bool enabled)
         {
             foreach (Transform tran in transform)

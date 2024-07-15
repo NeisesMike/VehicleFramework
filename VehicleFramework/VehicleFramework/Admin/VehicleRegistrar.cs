@@ -145,14 +145,6 @@ namespace VehicleFramework
                     Logger.Error(thisName + " A null ModVehicle.VehicleModel was passed for registration.");
                     return false;
                 }
-                if (mv.Recipe is null)
-                {
-                    VerboseLog(LogType.Warn, verbose, thisName + " An empty recipe was passed for registration. The default recipe will be used.");
-                }
-                if (mv.PingSprite is null)
-                {
-                    VerboseLog(LogType.Warn, verbose, thisName + " An empty ping sprite was passed for registration. The default ping sprite will be used.");
-                }
                 if (mv.BaseCrushDepth < 0)
                 {
                     Logger.Error(thisName + " A negative crush depth was passed for registration. This vehicle would take crush damage even out of water.");
@@ -202,14 +194,17 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.CanopyWindows were provided. These must be specified to handle window transparencies.");
                 }
-                if (mv.BoundingBox == null)
+
+                BoxCollider boundingBox = mv.BoundingBoxCollider ?? mv.BoundingBox?.GetComponentInChildren<BoxCollider>(true);
+                if(boundingBox == null)
                 {
-                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.BoundingBox was provided. This is required to calculate dimensions for build bots and docking. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
+                    VerboseLog(LogType.Warn, verbose, thisName + " No BoundingBox BoxCollider was provided. If a BoundingBox GameObject was provided, it did not have a BoxCollider. Tether range is 10 meters. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
                 }
-                if (mv.BoundingBox.GetComponentInChildren<BoxCollider>(true) == null)
+                else
                 {
-                    VerboseLog(LogType.Warn, verbose, thisName + " There was no BoxCollider in the transform heirarchy of the BoundingBox. This is required to calculate dimensions for build bots and docking. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
+                    mv.BoundingBoxCollider = boundingBox;
                 }
+
                 if (mv.CollisionModel == null)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.CollisionModel was provided. This is necessary for leviathans to grab the vehicle.");
@@ -284,7 +279,6 @@ namespace VehicleFramework
                         return false;
                     }
                 }
-
                 if (mv.StorageRootObject == null)
                 {
                     Logger.Error(thisName + " A null ModVehicle.StorageRootObject was provided. There would be no way to store things in this vehicle.");
@@ -303,16 +297,6 @@ namespace VehicleFramework
                 if (mv.ModulesRootObject == mv.gameObject)
                 {
                     Logger.Error(thisName + " The ModulesRootObject was the same as the Vehicle itself. These must be uniquely identifiable objects!");
-                    return false;
-                }
-                if (mv.Description is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.GetDescription was provided. This is a brief description of the vehicle.");
-                    return false;
-                }
-                if (mv.EncyclopediaEntry is null)
-                {
-                    Logger.Error(thisName + " A null ModVehicle.GetEncyEntry was provided. This is a possibly lengthy encyclopedia entry for the vehicle.");
                     return false;
                 }
                 if (mv.LeviathanGrabPoint == null)
