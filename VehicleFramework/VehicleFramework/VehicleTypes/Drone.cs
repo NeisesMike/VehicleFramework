@@ -11,9 +11,8 @@ namespace VehicleFramework.VehicleTypes
 {
     public abstract class Drone : ModVehicle
     {
+        public static Drone mountedDrone = null;
         public DroneStation pairedStation = null;
-        public virtual ModVehicleEngine Engine { get; set; }
-        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public abstract Transform CameraLocation { get; }
         private VehicleComponents.MVCameraController camControl;
         private const GameInput.Button AutoHomeButton = GameInput.Button.PDA;
@@ -92,7 +91,6 @@ namespace VehicleFramework.VehicleTypes
             }
             yield break;
         }
-        public static Drone mountedDrone = null;
         private Coroutine CheckingPower = null;
         public virtual bool HasEnoughPowerToConnect()
         {

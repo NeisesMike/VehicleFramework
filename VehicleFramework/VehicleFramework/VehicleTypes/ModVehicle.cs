@@ -44,6 +44,8 @@ namespace VehicleFramework
         #endregion
 
         #region virtual_properties_nullable
+        public virtual ModVehicleEngine Engine { get; set; }
+        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly
         public virtual BoxCollider BoundingBoxCollider { get; set; }
         public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;

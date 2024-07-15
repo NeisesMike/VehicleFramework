@@ -536,7 +536,7 @@ namespace VehicleFramework
         {
             if(mv.Engine == null)
             {
-                mv.Engine = mv.gameObject.AddComponent<AtramaEngine>();
+                mv.Engine = mv.gameObject.AddComponent<OdysseyEngine>();
             }
             // Add the engine (physics control)
             mv.Engine.mv = mv;

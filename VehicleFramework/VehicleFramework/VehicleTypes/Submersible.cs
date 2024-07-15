@@ -14,21 +14,13 @@ namespace VehicleFramework.VehicleTypes
      */
     public abstract class Submersible : ModVehicle
     { 
-        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; }
-        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
+        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
+        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
-        public virtual ModVehicleEngine Engine { get; set; }
-        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
-
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
-        }
-
-        public bool IsPlayerInside()
-        {
-            return IsPlayerDry;
         }
         protected IEnumerator SitDownInChair()
         {
@@ -134,13 +126,11 @@ namespace VehicleFramework.VehicleTypes
             PilotSeat.Seat.GetComponent<PilotingTrigger>().isLive = true;
             base.OnVehicleUndocked();
         }
-
         public override void ScuttleVehicle()
         {
             base.ScuttleVehicle();
             GetComponentsInChildren<VehicleHatch>().ForEach(x => x.isLive = false);
         }
-
         public override void UnscuttleVehicle()
         {
             base.UnscuttleVehicle();

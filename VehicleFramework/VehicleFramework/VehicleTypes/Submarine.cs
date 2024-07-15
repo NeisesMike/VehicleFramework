@@ -42,14 +42,10 @@ namespace VehicleFramework.VehicleTypes
         public NavigationLightsController navlights;
         public GameObject fabricator = null; //fabricator
 
-
-        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
-
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
         }
-
 
         private void TryRemoveDuplicateFabricator()
         {

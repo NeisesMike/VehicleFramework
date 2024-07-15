@@ -265,7 +265,7 @@ namespace VehicleFramework.Engines
 
             }
         }
-        protected void ApplyDrag(Vector3 move)
+        protected virtual void ApplyDrag(Vector3 move)
         {
             // Only apply drag if we aren't applying movement in that direction.
             // That is, if we aren't holding forward, our forward momentum should decay.
@@ -304,7 +304,7 @@ namespace VehicleFramework.Engines
                 rb.velocity = Vector3.zero;
             }
         }
-        public void ExecutePhysicsMove()
+        public virtual void ExecutePhysicsMove()
         {
             rb.AddForce(mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             rb.AddForce(mv.transform.right * (RightMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
@@ -439,7 +439,7 @@ namespace VehicleFramework.Engines
 
             return Mathf.Max(timeToXStop,timeToYStop,timeToZStop);
         }
-        public void KillMomentum()
+        public virtual void KillMomentum()
         {
             ForwardMomentum = 0f;
             RightMomentum = 0f;

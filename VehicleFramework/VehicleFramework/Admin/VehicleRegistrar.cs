@@ -303,6 +303,10 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.LeviathanGrabPoint was provided. This is where leviathans attach to the vehicle. The root object will be used instead.");
                 }
+                if (mv.Engine is null)
+                {
+                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. A default engine will be chosen.");
+                }
             }
             catch (Exception e)
             {
@@ -323,10 +327,6 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.Engine is null)
-                {
-                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
-                }
                 if (mv.PilotSeats == null || mv.PilotSeats.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.PilotSeats were provided. These specify what the player will click on to begin piloting the vehicle.");
@@ -494,10 +494,6 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.Engine is null)
-                {
-                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
-                }
                 if (mv.Hatches is null || mv.Hatches.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
@@ -588,10 +584,6 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.Engine is null)
-                {
-                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. The AtramaEngine will be used.");
-                }
                 if (mv.CameraLocation is null)
                 {
                     Logger.Error(thisName + " No Drone.CameraLocation was provided. This is where VF will place the camera while the Drone is remotely piloted.");

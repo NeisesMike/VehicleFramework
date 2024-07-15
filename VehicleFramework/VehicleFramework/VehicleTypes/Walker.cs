@@ -14,7 +14,6 @@ namespace VehicleFramework.VehicleTypes
         public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
-        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public virtual float GroundSpeed { get; }
         public virtual float BobSpeed { get; }
         public bool IsPlayerInside()
