@@ -365,7 +365,7 @@ namespace VehicleFramework
                 }
                 if (mv.Fabricator == null)
                 {
-                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.Fabricator was provided. You know what this is.");
+                    VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.Fabricator was provided. The Submarine will not come with a fabricator at construction-time.");
                 }
                 if (mv.ControlPanel == null)
                 {

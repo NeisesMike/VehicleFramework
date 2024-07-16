@@ -46,23 +46,6 @@ namespace VehicleFramework.VehicleTypes
             return !FPSInputModule.current.lockMovement && IsPowered();
         }
 
-        private void TryRemoveDuplicateFabricator()
-        {
-            bool foundOne = false;
-            foreach (Transform tran in transform)
-            {
-                if (tran.gameObject.name == "Fabricator(Clone)")
-                {
-                    if (foundOne)
-                    {
-                        UnityEngine.Object.Destroy(tran.gameObject);
-                        continue;
-                    }
-                    foundOne = true;
-                }
-            }
-        }
-
         public override void Awake()
         {
             base.Awake();
@@ -200,7 +183,6 @@ namespace VehicleFramework.VehicleTypes
             if (!isScuttled)
             {
                 Player.main.currentMountedVehicle = this;
-                TryRemoveDuplicateFabricator();
                 if (IsVehicleDocked)
                 {
 
@@ -235,47 +217,53 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void SubConstructionComplete()
         {
-            base.SubConstructionComplete();
-            PaintNameDefaultStyle(OGVehicleName);
-            // Setup the color picker with the odyssey's name
-            var active = transform.Find("ColorPicker/EditScreen/Active");
-            if (active)
+            if (!pingInstance.enabled)
             {
-                active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = NowVehicleName;
-                active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = NowVehicleName;
+                base.SubConstructionComplete();
+                PaintNameDefaultStyle(OGVehicleName);
+                // Setup the color picker with the odyssey's name
+                var active = transform.Find("ColorPicker/EditScreen/Active");
+                if (active)
+                {
+                    active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = NowVehicleName;
+                    active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = NowVehicleName;
+                }
+                UWE.CoroutineHost.StartCoroutine(TrySpawnFabricator());
             }
+        }
 
-            IEnumerator TrySpawnFabricator()
+        IEnumerator TrySpawnFabricator()
+        {
+            if(Fabricator == null)
             {
-                Transform fabLoc = Fabricator.transform;
-                if (fabLoc is null)
-                {
-                    fabLoc = transform.Find("Fabricator-Location");
-                    if (fabLoc is null)
-                    {
-                        Logger.Warn("Warning: " + name + " does not have a Fabricator-Location.");
-                        yield break;
-                    }
-                }
-
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                yield return StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
-                fabricator = result.Get();
-                fabricator.GetComponent<SkyApplier>().enabled = true;
-                fabricator.transform.SetParent(transform);
-                fabricator.transform.localPosition = fabLoc.localPosition;
-                fabricator.transform.localRotation = fabLoc.localRotation;
-                fabricator.transform.localScale = fabLoc.transform.localScale;
-                if (fabLoc.transform.localScale.x == 0 || fabLoc.transform.localScale.y == 0 || fabLoc.transform.localScale.z == 0)
-                {
-                    fabricator.transform.localScale = Vector3.one;
-                }
                 yield break;
             }
-            if (Fabricator != null)
+            foreach (var fab in GetComponentsInChildren<Fabricator>())
             {
-                StartCoroutine(TrySpawnFabricator());
+                if (fab.gameObject.transform.localPosition == Fabricator.transform.localPosition)
+                {
+                    // This fabricator blueprint has already been fulfilled.
+                    yield break;
+                }
             }
+            yield return SpawnFabricator(Fabricator.transform);
+        }
+
+        IEnumerator SpawnFabricator(Transform location)
+        {
+            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            yield return StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
+            fabricator = result.Get();
+            fabricator.GetComponent<SkyApplier>().enabled = true;
+            fabricator.transform.SetParent(transform);
+            fabricator.transform.localPosition = location.localPosition;
+            fabricator.transform.localRotation = location.localRotation;
+            fabricator.transform.localScale = location.localScale;
+            if (location.localScale.x == 0 || location.localScale.y == 0 || location.localScale.z == 0)
+            {
+                fabricator.transform.localScale = Vector3.one;
+            }
+            yield break;
         }
         public virtual void PaintNameDefaultStyle(string name)
         {
