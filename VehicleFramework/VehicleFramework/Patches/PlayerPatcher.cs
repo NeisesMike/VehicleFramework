@@ -284,7 +284,10 @@ namespace VehicleFramework
 
             // don't do this if there is a parent and mounted vehicle mismatch
             // This is a weird thing. How do we handle it?
-            if (__instance.mode == Player.Mode.LockedPiloting && __instance.transform.parent != __instance.GetVehicle().transform)
+
+
+
+            if (__instance.mode == Player.Mode.LockedPiloting && !Admin.Utils.IsAnAncestorTheCurrentMountedVehicle(Player.main.transform))
             {
                 Logger.Error("Mismatch between the Player's mounted vehicle and the Player's parent!");
                 // Don't skip. This is a weird problem and it needs resolved, so let it die strangely.

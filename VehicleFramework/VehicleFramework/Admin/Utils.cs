@@ -67,5 +67,17 @@ namespace VehicleFramework.Admin
         {
             VehicleBuilder.ApplyShaders(mv, shade);
         }
+        public static bool IsAnAncestorTheCurrentMountedVehicle(Transform current)
+        {
+            if (current == null)
+            {
+                return false;
+            }
+            if (current.GetComponent<Vehicle>() != null)
+            {
+                return current.GetComponent<Vehicle>() == Player.main.GetVehicle();
+            }
+            return IsAnAncestorTheCurrentMountedVehicle(current.parent);
+        }
     }
 }

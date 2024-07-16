@@ -34,15 +34,23 @@ namespace VehicleFramework
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
                 }
+                mv.BoundingBox.SetActive(true);
+                collider.gameObject.SetActive(true);
                 collider.enabled = true;
                 Bounds result = collider.bounds;
                 collider.enabled = false;
+                if (result.size == Vector3.zero)
+                {
+                    Logger.Error("TetherSource Error: BoundingBox Bounds had zero volume (size was zero). You may see this message if one or more of the BoundingBox collider's parents are inactive.");
+                    return new Bounds(Vector3.one, Vector3.zero);
+                }
                 return result;
             }
         }
 
         public void Start()
         {
+            mv.BoundingBoxCollider = mv.BoundingBoxCollider ?? mv.BoundingBox?.GetComponentInChildren<BoxCollider>(true);
             if (mv.BoundingBoxCollider == null || mv.TetherSources.Count() == 0)
             {
                 isSimple = true;
@@ -85,18 +93,25 @@ namespace VehicleFramework
                 }
                 return Vector3.Distance(Player.main.transform.position, tetherSrc.transform.position) < radius;
             }
-            if (isSimple)
+            if (Player.main.GetVehicle() == null && Player.main.currentSub == null)
             {
-                if (Vector3.Distance(Player.main.transform.position, transform.position) < 0.5f)
+                if (isSimple)
                 {
-                    mv.PlayerEntry();
+                    if (Vector3.Distance(Player.main.transform.position, transform.position) < 1f)
+                    {
+                        mv.PlayerEntry();
+                    }
+                    else if (Vector3.Distance(Player.main.transform.position, mv.PilotSeats.First().Seat.transform.position) < 1f)
+                    {
+                        mv.PlayerEntry();
+                    }
                 }
-            }
-            else
-            {
-                if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Count() > 0)
+                else
                 {
-                    mv.PlayerEntry();
+                    if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Count() > 0)
+                    {
+                        mv.PlayerEntry();
+                    }
                 }
             }
 
