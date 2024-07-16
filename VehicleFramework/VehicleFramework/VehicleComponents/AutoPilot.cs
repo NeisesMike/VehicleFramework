@@ -360,6 +360,16 @@ namespace VehicleFramework
             Logger.DebugLog("OnPowerUp");
             isDead = false;
             apVoice.EnqueueClip(apVoice.voice.EnginePoweringUp);
+            if (mv.IsPlayerDry)
+            {
+                IEnumerator ShakeCamera()
+                {
+                    yield return new WaitForSeconds(4.6f);
+                    MainCameraControl.main.ShakeCamera(1f, 0.5f, MainCameraControl.ShakeMode.Linear, 1f);
+                }
+                StartCoroutine(ShakeCamera());
+                MainCameraControl.main.ShakeCamera(0.15f, 4.5f, MainCameraControl.ShakeMode.Linear, 1f);
+            }
         }
 
         void IPowerListener.OnPowerDown()
