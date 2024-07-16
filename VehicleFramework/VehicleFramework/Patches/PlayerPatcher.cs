@@ -276,7 +276,22 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Player.UpdatePosition))]
         public static bool UpdatePositionPrefix(Player __instance)
         {
-            return Drone.mountedDrone == null;
+            // don't do this if a drone is being piloted
+            if (Drone.mountedDrone != null)
+            {
+                return false;
+            }
+
+            // don't do this if there is a parent and mounted vehicle mismatch
+            // This is a weird thing. How do we handle it?
+            if (__instance.mode == Player.Mode.LockedPiloting && __instance.transform.parent != __instance.GetVehicle().transform)
+            {
+                Logger.Error("Mismatch between the Player's mounted vehicle and the Player's parent!");
+                // Don't skip. This is a weird problem and it needs resolved, so let it die strangely.
+                //return false;
+            }
+
+            return true;
         }
     }
 }
