@@ -11,6 +11,9 @@ using UnityEngine.UI;
 
 namespace VehicleFramework.VehicleTypes
 {
+    /*
+     * Submarine is the class of self-leveling, walkable submarines
+     */
     public abstract class Submarine : ModVehicle
     {
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; } // Need a way to start and stop piloting

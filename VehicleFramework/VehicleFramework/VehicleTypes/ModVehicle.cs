@@ -13,16 +13,17 @@ using UnityEngine.SceneManagement;
 namespace VehicleFramework
 {
     /*
-     * ModVehicle is the class of self-leveling, walkable submarines
+     * ModVehicle is the primary abstract class provided by Vehicle Framework.
+     * All VF vehicles inherit from ModVehicle.
      */
     public abstract class ModVehicle : Vehicle, ICraftTarget
     {
         #region enumerations
         public enum DeathStyle
         {
-            Explode,
-            Sink,
-            Float
+            Explode = 0,
+            Sink = 1,
+            Float = 2
         }
         #endregion
         #region abstract_members
@@ -101,6 +102,8 @@ namespace VehicleFramework
         public virtual int CrushDepthUpgrade1 => 300;
         public virtual int CrushDepthUpgrade2 => 300;
         public virtual int CrushDepthUpgrade3 => 300;
+        public virtual int CrushDamage => MaxHealth / 15;
+        public virtual int CrushPeriod => 1;
         #endregion
 
         #region virtual_properties_nonnullable_dynamic
@@ -777,59 +780,6 @@ namespace VehicleFramework
                 SlotKeyDown(9);
             }
         }
-        /*
-        public override QuickSlotType GetQuickSlotType(int slotID, out TechType techType)
-        {
-            if (slotID >= 0 && slotID < this.slotIDs.Length)
-            {
-                techType = upgradesEquipment.GetTechTypeInSlot(this.slotIDs[slotID]);
-                if (techType != TechType.None)
-                {
-                    return CraftData.GetQuickSlotType(techType);
-                }
-            }
-            techType = TechType.None;
-            return QuickSlotType.None;
-        }
-        public override TechType[] GetSlotBinding()
-        {
-            int num = this.slotIDs.Length;
-            TechType[] array = new TechType[num];
-            for (int i = 0; i < num; i++)
-            {
-                array[i] = upgradesEquipment.GetTechTypeInSlot(this.slotIDs[i]);
-            }
-            return array;
-        }
-        public override TechType GetSlotBinding(int slotID)
-        {
-            if (slotID < 0 || slotID >= this.slotIDs.Length)
-            {
-                return TechType.None;
-            }
-            string slot = this.slotIDs[slotID];
-            return upgradesEquipment.GetTechTypeInSlot(slot);
-        }
-        public override int GetSlotByItem(InventoryItem item)
-        {
-            if (item != null)
-            {
-                int i = 0;
-                int num = this.slotIDs.Length;
-                while (i < num)
-                {
-                    if (upgradesEquipment.GetItemInSlot(this.slotIDs[i]) == item)
-                    {
-                        return i;
-                    }
-                    i++;
-                }
-            }
-            return -1;
-        }
-
-
-        */
         private void SetStorageModule(int slotID, bool activated)
         {
             foreach (var sto in InnateStorages)

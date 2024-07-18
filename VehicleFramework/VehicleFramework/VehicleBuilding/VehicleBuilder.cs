@@ -594,7 +594,7 @@ namespace VehicleFramework
             // TODO
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
-        public static void SetupCrushDamage(ModVehicle mv, int secondsCanLiveAtCrushDepth, int crushPeriod)
+        public static void SetupCrushDamage(ModVehicle mv)
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
@@ -614,8 +614,8 @@ namespace VehicleFramework
             mv.crushDamage = mv.gameObject.EnsureComponent<CrushDamage>();
             mv.crushDamage.soundOnDamage = ce;
             mv.crushDamage.kBaseCrushDepth = mv.BaseCrushDepth;
-            mv.crushDamage.damagePerCrush = ((float)mv.MaxHealth) /(secondsCanLiveAtCrushDepth/ crushPeriod);
-            mv.crushDamage.crushPeriod = crushPeriod;
+            mv.crushDamage.damagePerCrush = mv.CrushDamage;
+            mv.crushDamage.crushPeriod = mv.CrushPeriod;
             mv.crushDamage.vehicle = mv;
             mv.crushDamage.liveMixin = mv.liveMixin;
             // TODO: this is of type VoiceNotification
@@ -769,7 +769,7 @@ namespace VehicleFramework
             SetupLargeWorldEntity(mv);
             SetupHudPing(mv, pingType);
             SetupVehicleConfig(mv);
-            SetupCrushDamage(mv, 15, 1);
+            SetupCrushDamage(mv);
             SetupWaterClipping(mv);
             SetupSubName(mv);
             SetupCollisionSound(mv);

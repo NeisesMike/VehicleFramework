@@ -33,7 +33,7 @@ namespace VehicleFramework.Engines
         protected virtual float VERT_ACCEL => VERT_MAX_SPEED / 10f;
 
         protected virtual float waterDragDecay => 4.5f;
-        protected virtual float airDragDecay => 0.15f;
+        protected virtual float airDragDecay => 1.5f;
         protected virtual float DragDecay
         {
             get
