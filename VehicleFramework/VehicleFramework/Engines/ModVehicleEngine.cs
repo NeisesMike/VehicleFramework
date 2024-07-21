@@ -22,6 +22,7 @@ namespace VehicleFramework.Engines
         public virtual bool CanRotateAboveWater { get; set; } = false;
 
 
+        public float damageModifier { get; set; } = 1f;
 
         protected virtual float FORWARD_TOP_SPEED => 1000;
         protected virtual float REVERSE_TOP_SPEED => 1000;
@@ -306,9 +307,9 @@ namespace VehicleFramework.Engines
         }
         public virtual void ExecutePhysicsMove()
         {
-            rb.AddForce(mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.right * (RightMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(mv.transform.up * (UpMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(damageModifier * mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(damageModifier * mv.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(damageModifier * mv.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
         public enum ForceDirection
         {

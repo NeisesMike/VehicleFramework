@@ -104,6 +104,15 @@ namespace VehicleFramework
         public virtual int CrushDepthUpgrade3 => 300;
         public virtual int CrushDamage => MaxHealth / 15;
         public virtual int CrushPeriod => 1;
+        /// <summary>
+        /// You can set this to true to use the default damage tracking mechanisms
+        /// ONLY IF ALL OF THE FOLLOWING ARE TRUE:
+        /// Five special gameobjects must appear somewhere in your vehicle.
+        /// Each should have at least one collider on itself or any of its children.
+        /// For each gameobject, all of its colliders will be used as repair targets.
+        /// The names are MVDAMAGE_HULL, MVDAMAGE_UPGRADES, MVDAMAGE_ENGINE, MVDAMAGE_BATTERIES, MVDAMAGE_LIGHTS
+        /// </summary>
+        public virtual bool UseDefaultDamageTracker => false;
         #endregion
 
         #region virtual_properties_nonnullable_dynamic
@@ -145,6 +154,10 @@ namespace VehicleFramework
             if (BoundingBoxCollider != null)
             {
                 BoundingBoxCollider.enabled = false;
+            }
+            if (UseDefaultDamageTracker)
+            {
+                gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
             }
 
             upgradeOnAddedActions.Add(storageModuleAction);

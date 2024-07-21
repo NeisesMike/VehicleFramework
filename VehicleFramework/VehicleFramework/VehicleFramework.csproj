@@ -163,6 +163,7 @@
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
     <Compile Include="VehicleComponents\MVCameraController.cs" />
     <Compile Include="VehicleComponents\Scuttler.cs" />
+    <Compile Include="VehicleComponents\VehicleDamageTracker.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
     <Compile Include="VehicleTypes\Skimmer.cs" />
     <Compile Include="VehicleTypes\Submarine.cs" />

@@ -12,15 +12,23 @@ namespace VehicleFramework
     public class LiveMixinPatcher
     {
         [HarmonyPrefix]
-        [HarmonyPatch("Start")]
-        public static bool StartPrefix(LiveMixin __instance, GameObject ___loopingDamageEffectObj)
+        [HarmonyPatch(nameof(LiveMixin.Start))]
+        public static void StartPrefix(LiveMixin __instance, GameObject ___loopingDamageEffectObj)
         {
-            if(__instance.gameObject == null || __instance.gameObject.name == null || !__instance.gameObject.name.Contains("Vehicle"))
+            if (__instance.gameObject?.GetComponent<ModVehicle>() != null)
             {
-                return true;
+                __instance.player = Player.main;
             }
-            __instance.player = Player.main;
-            return true;
-		}
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(LiveMixin.TakeDamage))]
+        public static void TakeDamagePostfix(LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
+        {
+            VehicleComponents.VehicleDamageTracker vdt = __instance.gameObject?.GetComponent<ModVehicle>()?.GetComponent<VehicleComponents.VehicleDamageTracker>();
+            if (vdt != null)
+            {
+                vdt.TakeDamagePostfix(originalDamage, position, type, dealer);
+            }
+        }
     }
 }

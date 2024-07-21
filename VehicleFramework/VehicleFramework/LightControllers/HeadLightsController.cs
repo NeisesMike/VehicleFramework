@@ -12,6 +12,7 @@ namespace VehicleFramework
         private ModVehicle mv;
         private bool isHeadlightsOn = false;
         public bool isLive = true;
+        public bool isDamaged = false;
         public void Awake()
         {
             mv = GetComponent<ModVehicle>();
@@ -30,7 +31,7 @@ namespace VehicleFramework
         }
         public void EnableHeadlights()
         {
-            if (isLive)
+            if (isLive && !isDamaged)
             {
                 SetHeadLightsActive(true);
                 if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
@@ -43,7 +44,7 @@ namespace VehicleFramework
         }
         public void DisableHeadlights()
         {
-            if (isLive)
+            if (isLive && !isDamaged)
             {
                 SetHeadLightsActive(false);
                 if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
@@ -74,7 +75,7 @@ namespace VehicleFramework
         }
         public void SetVolumetricLightsActive(bool enabled)
         {
-            if (isLive)
+            if (isLive && !isDamaged)
             {
                 foreach (GameObject light in mv.volumetricLights)
                 {
@@ -91,7 +92,7 @@ namespace VehicleFramework
         }
         public void SetHeadLightsActive(bool enabled)
         {
-            if (isLive)
+            if (isLive && !isDamaged)
             {
                 foreach (GameObject light in mv.lights)
                 {
