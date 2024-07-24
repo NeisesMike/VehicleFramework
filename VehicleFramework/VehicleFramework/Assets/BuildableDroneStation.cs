@@ -82,10 +82,7 @@ namespace VehicleFramework
         {
             base.Awake();
             Admin.GameObjectManager<DroneStation>.Register(this);
-            if((Player.main.GetVehicle() as Submarine) != null)
-            {
-                transform.SetParent((Player.main.GetVehicle() as Submarine).transform);
-            }
+            transform.SetParent(Player.main.transform.parent);
         }
         public void Start()
         {
