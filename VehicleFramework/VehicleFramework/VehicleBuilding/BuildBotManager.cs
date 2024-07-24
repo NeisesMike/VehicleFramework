@@ -225,7 +225,7 @@ namespace VehicleFramework
         }
         public static void BuildPathsForModVehicle(ModVehicle mv, GameObject pointsRoot)
         {
-            BoxCollider box = mv.BoundingBoxCollider;
+            BoxCollider box = mv.BoundingBoxCollider ?? mv.BoundingBox?.GetComponentInChildren<BoxCollider>(true);
             if (box != null)
             {
                 Transform A = GetCornerBoxCollider(pointsRoot, box, CornerValue.lefttopfront);

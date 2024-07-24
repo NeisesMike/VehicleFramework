@@ -155,6 +155,10 @@ namespace VehicleFramework
             {
                 BoundingBoxCollider.enabled = false;
             }
+            if (BoundingBox.GetComponentInChildren<BoxCollider>(true) != null)
+            {
+                BoundingBox.GetComponentInChildren<BoxCollider>(true).enabled = false;
+            }
             if (UseDefaultDamageTracker)
             {
                 gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
@@ -544,19 +548,21 @@ namespace VehicleFramework
         }
         public virtual Vector3 GetBoundingDimensions()
         {
-            if(BoundingBoxCollider == null)
+            BoxCollider box = BoundingBoxCollider ?? BoundingBox?.GetComponentInChildren<BoxCollider>(true);
+            if (box == null)
             {
                 return Vector3.zero;
             }
-            Vector3 boxDimensions = BoundingBoxCollider.size;
-            Vector3 worldScale = BoundingBoxCollider.transform.lossyScale;
+            Vector3 boxDimensions = box.size;
+            Vector3 worldScale = box.transform.lossyScale;
             return Vector3.Scale(boxDimensions, worldScale);
         }
         public virtual Vector3 GetDifferenceFromCenter()
         {
-            if (BoundingBoxCollider != null)
+            BoxCollider box = BoundingBoxCollider ?? BoundingBox?.GetComponentInChildren<BoxCollider>(true);
+            if (box != null)
             {
-                Vector3 colliderCenterWorld = BoundingBoxCollider.transform.TransformPoint(BoundingBoxCollider.center);
+                Vector3 colliderCenterWorld = box.transform.TransformPoint(box.center);
                 Vector3 difference = colliderCenterWorld - transform.position;
                 return difference;
             }
