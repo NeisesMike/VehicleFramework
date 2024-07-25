@@ -18,11 +18,25 @@ namespace VehicleFramework
          */
 
         [HarmonyPrefix]
+        [HarmonyPatch(nameof(Vehicle.OnHandClick))]
+        public static bool OnHandClickPrefix(Vehicle __instance)
+        {
+            return VehicleTypes.Drone.mountedDrone == null;
+        }
+
+            [HarmonyPrefix]
         [HarmonyPatch(nameof(Vehicle.OnHandHover))]
         public static bool OnHandHoverPrefix(Vehicle __instance)
         {
             ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
+            if (mv == null)
+            {
+                if(VehicleTypes.Drone.mountedDrone != null)
+                {
+                    return false;
+                }
+            }
+            else
             {
                 if(mv.isScuttled)
                 {
