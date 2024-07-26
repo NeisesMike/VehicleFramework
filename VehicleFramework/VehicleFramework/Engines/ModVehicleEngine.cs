@@ -204,6 +204,11 @@ namespace VehicleFramework.Engines
             EngineSource2.clip = sounds.whistle;
             EngineSource2.priority = 0;
         }
+        public void OnDisable()
+        {
+            EngineSource1.Stop();
+            EngineSource2.Stop();
+        }
         public virtual void FixedUpdate()
         {
             Vector3 DoMoveAction()
