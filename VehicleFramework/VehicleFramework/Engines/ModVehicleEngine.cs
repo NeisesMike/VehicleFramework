@@ -206,8 +206,8 @@ namespace VehicleFramework.Engines
         }
         public void OnDisable()
         {
-            EngineSource1.Stop();
-            EngineSource2.Stop();
+            EngineSource1?.Stop();
+            EngineSource2?.Stop();
         }
         public virtual void FixedUpdate()
         {
