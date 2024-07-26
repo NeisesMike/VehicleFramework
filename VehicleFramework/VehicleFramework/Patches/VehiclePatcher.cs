@@ -21,10 +21,14 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.OnHandClick))]
         public static bool OnHandClickPrefix(Vehicle __instance)
         {
-            return VehicleTypes.Drone.mountedDrone == null;
+            if(VehicleTypes.Drone.mountedDrone != null || (__instance as ModVehicle) != null)
+            {
+                return false;
+            }
+            return true;
         }
 
-            [HarmonyPrefix]
+        [HarmonyPrefix]
         [HarmonyPatch(nameof(Vehicle.OnHandHover))]
         public static bool OnHandHoverPrefix(Vehicle __instance)
         {
@@ -54,18 +58,6 @@ namespace VehicleFramework
                     string text = mv.name.Substring(0, mv.name.Length - 7);
                     HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, GameInput.Button.None);
                 }
-                return false;
-            }
-            return true;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(Vehicle.OnHandClick))]
-        public static bool OnHandClickPrefix(Vehicle __instance, EnergyInterface ___energyInterface)
-        {
-            ModVehicle mv = __instance as ModVehicle;
-            if (mv != null)
-            {
                 return false;
             }
             return true;

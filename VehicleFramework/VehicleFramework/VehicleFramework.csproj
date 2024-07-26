@@ -156,6 +156,7 @@
     <Compile Include="Patches\uGUI_DepthCompassPatcher.cs" />
     <Compile Include="Patches\uGUI_QuickSlotsPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
+    <Compile Include="Patches\BulkheadDoorPatcher.cs" />
     <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
