@@ -40,7 +40,11 @@ namespace VehicleFramework
                 }
             }
         }
-        public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose)
+        public static void RegisterVehicleLater(ModVehicle mv, bool verbose=false)
+        {
+            UWE.CoroutineHost.StartCoroutine(RegisterVehicle(mv, verbose));
+        }
+        public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose=false)
         {
             bool isNewEntry = true;
             foreach (VehicleEntry ve in VehicleManager.vehicleTypes)

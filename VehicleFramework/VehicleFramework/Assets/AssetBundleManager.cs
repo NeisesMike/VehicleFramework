@@ -17,6 +17,7 @@ namespace VehicleFramework.Assets
         public Atlas.Sprite crafter;
         public GameObject fragment;
         public Sprite unlock;
+        public AssetBundleInterface abi;
         public VehicleAssets(GameObject imodel, Atlas.Sprite iping, Atlas.Sprite icrafter, GameObject ifragment, Sprite iunlock)
         {
             model = imodel;
@@ -24,6 +25,7 @@ namespace VehicleFramework.Assets
             crafter = icrafter;
             fragment = ifragment;
             unlock = iunlock;
+            abi = null;
         }
     }
     public class AssetBundleInterface
@@ -115,6 +117,7 @@ namespace VehicleFramework.Assets
             string bundlePath = Path.Combine(directoryPath, bundleName);
             AssetBundleInterface abi = new AssetBundleInterface(bundlePath);
             VehicleAssets result = new VehicleAssets();
+            result.abi = abi;
             if(modelName != "")
             {
                 result.model = abi.GetGameObject(modelName);
@@ -139,6 +142,10 @@ namespace VehicleFramework.Assets
                 result.fragment = abi.GetGameObject(fragmentName);
             }
             return result;
+        }
+        public static GameObject LoadAdditionalGameObject(AssetBundleInterface abi, string modelName)
+        {
+            return abi.GetGameObject(modelName);
         }
     }
 }
