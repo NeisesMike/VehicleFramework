@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nautilus.Assets;
-using Nautilus.Assets.Gadgets;
-using Nautilus.Assets.PrefabTemplates;
 using BiomeData = LootDistributionData.BiomeData;
 using UnityEngine;
-using Nautilus.Handlers;
 
 namespace VehicleFramework.UpgradeModules
 {
@@ -36,7 +28,7 @@ namespace VehicleFramework.UpgradeModules
         }
         public static TechType RegisterModuleGeneric(List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon=null, string tabName="MVCM")
         {
-            Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
+            SMLHelper.V2.Crafting.RecipeData moduleRecipe = new SMLHelper.V2.Crafting.RecipeData();
             moduleRecipe.Ingredients.AddRange(recipe);
             PrefabInfo module_info = PrefabInfo.WithTechType(classId, displayName, description, unlockAtStart: false);
             if(icon is null)

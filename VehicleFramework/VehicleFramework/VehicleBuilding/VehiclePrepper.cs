@@ -1,23 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nautilus.Assets;
-using Nautilus.Assets.Gadgets;
-using Nautilus.Assets.PrefabTemplates;
 using BiomeData = LootDistributionData.BiomeData;
 using UnityEngine;
-using Nautilus.Handlers;
+using SMLHelper.V2.Handlers;
+using SMLHelper.V2.Assets;
+using SMLHelper.V2.Crafting;
 
 namespace VehicleFramework
 {
+    public class VehicleCraftable : Craftable
+    {
+        VehicleEntry ve;
+        public VehicleCraftable(VehicleEntry inputVE) : base(inputVE.name, inputVE.mv.name, inputVE.mv.Description)
+        {
+            ve = inputVE;
+        }
+
+        //===============================
+        // Craftable overrides
+        //===============================
+        public override CraftTree.Type FabricatorType => CraftTree.Type.Constructor;
+        public override string[] StepsToFabricatorTab => new[] { "Vehicles" };
+        public override float CraftingTime => 10f;
+
+
+        //===============================
+        // PDAItem overrides
+        //===============================
+        public override TechType RequiredForUnlock => TechType.Constructor;
+        public override TechGroup GroupForPDA => TechGroup.Constructor;
+        public override TechCategory CategoryForPDA => TechCategory.Constructor;
+        public override PDAEncyclopedia.EntryData EncyclopediaEntryData
+        {
+            get
+            {
+                PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
+                {
+                    key = ClassID,
+                    path = "Tech/Vehicles",
+                    nodes = new[] { "Tech", "Vehicles" },
+                    unlocked = true,
+                    popup = null,
+                    image = null
+                };
+                LanguageHandler.SetLanguageLine("Ency_" + ClassID, ClassID);
+                LanguageHandler.SetLanguageLine("EncyDesc_" + ClassID, ve.mv.EncyclopediaEntry);
+                return entry;
+            }
+        }
+
+        protected override TechData GetBlueprintRecipe()
+        {
+            List<Ingredient> ingredients = new List<Ingredient>();
+            foreach (KeyValuePair<TechType, int> pair in ve.mv.Recipe)
+            {
+                ingredients.Add(new Ingredient(pair.Key, pair.Value));
+            }
+            return new TechData
+            {
+                Ingredients = ingredients,
+                craftAmount = 1
+            };
+        }
+
+        //===============================
+        // Spawnable overrides
+        //===============================
+        protected override Atlas.Sprite GetItemSprite()
+        {
+            return MainPatcher.ModVehicleIcon;
+        }
+
+        //===============================
+        // ModPrefab overrides
+        //===============================
+        public override GameObject GetGameObject()
+        {
+            foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
+            {
+                if (ve.mv.name == ClassID)
+                {
+                    GameObject thisVehicle = GameObject.Instantiate(ve.mv.VehicleModel);
+                    thisVehicle.EnsureComponent<TechTag>().type = TechType;
+                    thisVehicle.EnsureComponent<PrefabIdentifier>().ClassId = ClassID;
+                    thisVehicle.SetActive(true);
+                    return thisVehicle;
+                }
+            }
+            Logger.Error("Craftable failed to find the prefab for: " + ClassID);
+            return null;
+        }
+    }
+    /*
     static class VehiclePrepper
     { 
         //public static TechType RegisterVehicle(string classId, string displayName, string description, Dictionary<TechType,int> recipe, string encyEntry)
         public static TechType RegisterVehicle(VehicleEntry vehicle)
         {
-            Nautilus.Crafting.RecipeData modulerRecipe = new Nautilus.Crafting.RecipeData();
+            SMLHelper.V2.Crafting.RecipeData modulerRecipe = new SMLHelper.V2.Crafting.RecipeData();
             modulerRecipe.Ingredients.AddRange(convertRecipe(vehicle.mv.Recipe));
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite);
@@ -32,7 +112,7 @@ namespace VehicleFramework
             };
             LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
             LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
-            Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
+            SMLHelper.V2.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
 
             CustomPrefab module_CustomPrefab = new CustomPrefab(vehicle_info);
             vehicle.mv.VehicleModel.EnsureComponent<TechTag>().type = vehicle_info.TechType;
@@ -60,4 +140,5 @@ namespace VehicleFramework
             return output;
         }
     }
+    */
 }

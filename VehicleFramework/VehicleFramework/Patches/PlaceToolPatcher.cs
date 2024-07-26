@@ -21,7 +21,8 @@ namespace VehicleFramework.Patches
                 for (int i = 0; i < num; i++)
                 {
                     RaycastHit raycastHit2 = UWE.Utils.sharedHitBuffer[i];
-                    if (!raycastHit2.collider.isTrigger && !UWE.Utils.SharingHierarchy(__instance.gameObject, raycastHit2.collider.gameObject) && num2 > raycastHit2.distance)
+                    //if (!raycastHit2.collider.isTrigger && !UWE.Utils.SharingHierarchy(__instance.gameObject, raycastHit2.collider.gameObject) && num2 > raycastHit2.distance)
+                    if (!raycastHit2.collider.isTrigger && num2 > raycastHit2.distance)
                     {
                         flag = true;
                         raycastHit = raycastHit2;
@@ -52,7 +53,8 @@ namespace VehicleFramework.Patches
                     for (int i = 0; i < num; i++)
                     {
                         RaycastHit raycastHit2 = UWE.Utils.sharedHitBuffer[i];
-                        if (!raycastHit2.collider.isTrigger && !UWE.Utils.SharingHierarchy(__instance.gameObject, raycastHit2.collider.gameObject) && num2 > raycastHit2.distance)
+                        ///if (!raycastHit2.collider.isTrigger && !UWE.Utils.SharingHierarchy(__instance.gameObject, raycastHit2.collider.gameObject) && num2 > raycastHit2.distance)
+                        if (!raycastHit2.collider.isTrigger && num2 > raycastHit2.distance)
                         {
                             flag = true;
                             raycastHit = raycastHit2;

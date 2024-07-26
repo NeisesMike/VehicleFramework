@@ -74,6 +74,12 @@ namespace VehicleFramework.VehicleComponents
         {
             return state;
         }
+        public Transform GetCamera(string name)
+        {
+            Transform ret = null;
+            cameras.TryGetValue(name, out ret);
+            return ret;
+        }
         public bool SetState(string label)
         {
             if (state == label || !cameras.ContainsKey(label))

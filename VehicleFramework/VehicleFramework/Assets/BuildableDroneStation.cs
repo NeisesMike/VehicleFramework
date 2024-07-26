@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx;
-using Nautilus.Crafting;
-using Nautilus.Assets;
-using Nautilus.Assets.Gadgets;
-using Nautilus.Utility;
+using SMLHelper.V2.Assets.Gadgets;
+using SMLHelper.V2.Utility;
 using UnityEngine;
-using Nautilus.Assets.PrefabTemplates;
+using SMLHelper.V2.Assets.PrefabTemplates;
 using Ingredient = CraftData.Ingredient;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
@@ -57,7 +52,7 @@ namespace VehicleFramework
                 .WithBiome(AbstractBiomeType.SafeShallows)
                 .WithBiome(AbstractBiomeType.KelpForest)
                 .WithBiome(AbstractBiomeType.GrassyPlateus);
-            Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(classID, "Tech/Habitats", displayName, encyclopediaDesc, null, DSAssets.unlock, null, null);
+            SMLHelper.V2.Handlers.PDAHandler.AddEncyclopediaEntry(classID, "Tech/Habitats", displayName, encyclopediaDesc, null, DSAssets.unlock, null, null);
             FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, abd.Get(), classID);
         }
     }
@@ -184,7 +179,8 @@ namespace VehicleFramework
             {
                 FastenConnection(this, list.First());
             }
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
+            HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
+            HandReticle.main.SetInteractText(BuildScreenText());
             if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && pairedDrone != null)
             {
                 if (pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
@@ -242,14 +238,18 @@ namespace VehicleFramework
             ret += "Status: " + GetStatus(pairedDrone) + "\n";
             if(pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
             {
-                ret += HandReticle.main.GetText("Request Details ", false, GameInput.Button.LeftHand) + "\n";
+                ret += "Request Details ";
+                ret += uGUI.FormatButton(GameInput.Button.LeftHand) + "\n";
             }
             else
             {
-                ret += HandReticle.main.GetText("Connect ", false, GameInput.Button.LeftHand) + "\n";
+                ret += "Connect ";
+                ret += uGUI.FormatButton(GameInput.Button.LeftHand) + "\n";
             }
-            ret += HandReticle.main.GetText("Next Drone: ", false, GameInput.Button.CycleNext) + "\n";
-            ret += HandReticle.main.GetText("Previous Drone: ", false, GameInput.Button.CyclePrev) + "\n";
+            ret += "Next Drone: ";
+            ret += uGUI.FormatButton(GameInput.Button.CycleNext) + "\n";
+            ret += "Previous Drone: ";
+            ret += uGUI.FormatButton(GameInput.Button.CyclePrev) + "\n";
             return ret;
         }
         public void ShowDetails(Drone drone)

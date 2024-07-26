@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Nautilus.Json;
 using VehicleFramework.Engines;
 using UnityEngine.SceneManagement;
 using VehicleFramework.VehicleTypes;
@@ -26,9 +25,11 @@ namespace VehicleFramework
 
         public static void PatchCraftable(ref VehicleEntry ve, bool verbose)
         {
-            TechType techType = VehiclePrepper.RegisterVehicle(ve);
+            //TechType techType = VehiclePrepper.RegisterVehicle(ve);
+            VehicleCraftable thisCraftable = new VehicleCraftable(ve);
+            thisCraftable.Patch();
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + ve.name + " Craftable");
-            VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
+            VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, ve.techType);
             VehicleManager.vehicleTypes.Add(newVE);
         }
         public static PingType RegisterPingType(PingType pt)
@@ -67,7 +68,7 @@ namespace VehicleFramework
         {
             VehiclesInPlay.Remove(mv);
         }
-        public static void SaveVehicles(object sender, JsonFileEventArgs e)
+        public static void SaveVehicles(object sender, SMLHelper.V2.Json.JsonFileEventArgs e)
         {
             SaveData data = e.Instance as SaveData;
             /* TODO
@@ -94,7 +95,7 @@ namespace VehicleFramework
             {
                 yield return null;
             }
-            while (WaitScreen.IsWaiting)
+            while (WaitScreen.main.isShown)
             {
                 yield return null;
             }

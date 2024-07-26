@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using BepInEx;
-using Nautilus.Assets;
-using Nautilus.Assets.Gadgets;
-using Nautilus.Assets.PrefabTemplates;
+using SMLHelper.V2.Assets.Gadgets;
+using SMLHelper.V2.Assets.PrefabTemplates;
 using BiomeData = LootDistributionData.BiomeData;
 
 

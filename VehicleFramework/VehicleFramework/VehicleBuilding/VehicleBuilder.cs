@@ -5,18 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using System.IO;
-using System.Reflection;
-
-using UnityEngine.U2D;
-
-using Nautilus.Assets;
-using Nautilus.Crafting;
-using Nautilus.Handlers;
-using Nautilus.Utility;
-
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleTypes;
 
@@ -52,36 +40,18 @@ namespace VehicleFramework
 
     public static class SeamothHelper
     {
-        internal static TaskResult<GameObject> request = new TaskResult<GameObject>();
-        private static Coroutine cor = null;
+        private static GameObject seamoth = null;
         public static GameObject Seamoth
         {
             get
             {
-                GameObject thisSeamoth = request.Get();
-                if (thisSeamoth == null)
+                if (seamoth == null)
                 {
-                    Logger.Error("Couldn't get Seamoth...");
-                    return null;
+                    seamoth = CraftData.InstantiateFromPrefab(TechType.Seamoth, false);
+                    UnityEngine.Object.DontDestroyOnLoad(seamoth);
+                    seamoth.SetActive(false);
                 }
-                UnityEngine.Object.DontDestroyOnLoad(thisSeamoth);
-                thisSeamoth.SetActive(false);
-                return thisSeamoth;
-            }
-        }
-        public static IEnumerator EnsureSeamoth()
-        {
-            if (request.Get()) // if we have seamoth
-            {
-            }
-            else if(cor == null) // if we need to get seamoth
-            {
-                cor = UWE.CoroutineHost.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
-                yield return cor;
-                cor = null;
-            }
-            else // if someone else is getting seamoth
-            {
+                return seamoth;
             }
         }
     }
@@ -102,7 +72,6 @@ namespace VehicleFramework
         public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Prefabricating the " + mv.gameObject.name);
-            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
             if(!Instrument(mv, pingType))
             {
                 Logger.Error("Failed to instrument the vehicle: " + mv.gameObject.name);
@@ -643,7 +612,7 @@ namespace VehicleFramework
             var subname = mv.gameObject.EnsureComponent<SubName>();
             subname.pingInstance = mv.pingInstance;
             subname.colorsInitialized = 0;
-            subname.hullName = mv.StorageRootObject.AddComponent<TMPro.TextMeshProUGUI>(); // DO NOT push a TMPro.TextMeshProUGUI on the root vehicle object!!!
+            subname.hullName = mv.StorageRootObject.AddComponent<UnityEngine.UI.Text>(); // DO NOT push a TMPro.TextMeshProUGUI on the root vehicle object!!!
             subname.hullName.text = mv.vehicleName;
             mv.subName = subname;
         }
@@ -690,7 +659,7 @@ namespace VehicleFramework
             ddoi.timeLastDamagedSelf = 0;
             ddoi.prevPosition = Vector3.zero;
             ddoi.prevPosition = Vector3.zero;
-            ddoi.allowDamageToPlayer = false;
+            ddoi.AddException(Player.main.gameObject);
         }
         public static void SetupDamageComponents(ModVehicle mv)
         {

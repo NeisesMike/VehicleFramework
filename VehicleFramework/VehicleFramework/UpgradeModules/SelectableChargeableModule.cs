@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nautilus.Handlers;
+using SMLHelper.V2.Handlers;
 
 namespace VehicleFramework.UpgradeModules
 {
     public static partial class ModuleManager
     {
+        /*
         public static TechType AddSelectableChargeableModule(List<Tuple<TechType, int>> inputRecipe, string classId, string displayName, string description, Action<ModVehicle, int, float, float> onSelected, float maxCharge, float energyCost, Atlas.Sprite icon=null, string tabName = "MVCM")
         {
             List<CraftData.Ingredient> recipe = inputRecipe.Select(x => new CraftData.Ingredient(x.Item1, x.Item2)).ToList();
@@ -23,5 +24,6 @@ namespace VehicleFramework.UpgradeModules
             ModulePrepper.upgradeOnUseChargeableActions.Add(new Tuple<Action<ModVehicle, int, TechType, float, float>, float, float>(WrappedOnSelected, maxCharge, energyCost));
             return tt;
         }
+        */
     }
 }

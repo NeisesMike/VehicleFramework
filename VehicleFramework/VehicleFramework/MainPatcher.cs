@@ -8,14 +8,14 @@ using UnityEngine;
 using HarmonyLib;
 using System.Runtime.CompilerServices;
 using System.Collections;
-using Nautilus.Options.Attributes;
-using Nautilus.Options;
-using Nautilus.Json;
-using Nautilus.Handlers;
-using Nautilus.Utility;
-using Nautilus.Json.Attributes;
+using SMLHelper.V2.Options.Attributes;
+using SMLHelper.V2.Options;
+using SMLHelper.V2.Json;
+using SMLHelper.V2.Handlers;
+using SMLHelper.V2.Utility;
+using SMLHelper.V2.Json.Attributes;
 using VehicleFramework.UpgradeModules;
-using Nautilus.Assets;
+using SMLHelper.V2.Assets;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Bootstrap;
@@ -61,7 +61,6 @@ namespace VehicleFramework
     }
 
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
     public class MainPatcher : BaseUnityPlugin
     {
 
@@ -124,45 +123,36 @@ namespace VehicleFramework
 
         public void Patch()
         {
-            SaveData saveData = SaveDataHandler.RegisterSaveDataCache<SaveData>();
+            SaveData saveData = SaveDataHandler.Main.RegisterSaveDataCache<SaveData>();
 
             // Update the player position before saving it
             saveData.OnStartedSaving += (object sender, JsonFileEventArgs e) =>
             {
                 VehicleManager.SaveVehicles(sender, e);
             };
-
             saveData.OnFinishedSaving += (object sender, JsonFileEventArgs e) =>
             {
                 //SaveData data = e.Instance as SaveData;
                 //Logger.Output(VehicleManager.VehiclesInPlay.Count.ToString());
                 //Logger.Output(data.UpgradeList.Keys.ToString());
             };
-
             saveData.OnFinishedLoading += (object sender, JsonFileEventArgs e) =>
             {
                 VehicleSaveData = e.Instance as SaveData;
             };
 
-            void SetWorldNotLoaded()
-            {
-                VehicleManager.isWorldLoaded = false;
-            }
-            void SetWorldLoaded()
-            {
-                VehicleManager.isWorldLoaded = true;
-            }
-            void OnLoadOnce()
-            {
-
-            }
-            Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
-            Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);
-            Nautilus.Utility.SaveUtils.RegisterOneTimeUseOnLoadEvent(OnLoadOnce);
-
             var harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             harmony.PatchAll();
-        
+
+            //harmony.Patch(AccessTools.Method(typeof(IngameMenu), nameof(IngameMenu.CaptureSaveScreenshot)),
+               //postfix: new HarmonyMethod(AccessTools.Method(typeof(Admin.SaveLoadQuitManager), nameof(InvokeSaveEvents))));
+            harmony.Patch(AccessTools.Method(typeof(MainGameController), nameof(MainGameController.StartGame)),
+               postfix: new HarmonyMethod(AccessTools.Method(typeof(Admin.SaveLoadQuitManager), nameof(Admin.SaveLoadQuitManager.SetWorldLoaded))));
+            harmony.Patch(AccessTools.Method(typeof(IngameMenu), nameof(IngameMenu.QuitGameAsync)),
+                postfix: new HarmonyMethod(AccessTools.Method(typeof(Admin.SaveLoadQuitManager), nameof(Admin.SaveLoadQuitManager.SetWorldNotLoaded))));
+
+
+
             // Patch SubnauticaMap with appropriate ping sprites, lest it crash.
             var type = Type.GetType("SubnauticaMap.PingMapIcon, SubnauticaMap", false, false);
             if (type != null)

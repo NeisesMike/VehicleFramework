@@ -380,7 +380,7 @@ namespace VehicleFramework
                     //It's okay if the vehicle doesn't have a canopy
                 }
                 Player.main.lastValidSub = GetComponent<SubRoot>();
-                Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
+                Player.main.SetCurrentSub(GetComponent<SubRoot>());
                 NotifyStatus(PlayerStatus.OnPlayerEntry);
             }
         }
@@ -410,7 +410,7 @@ namespace VehicleFramework
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
             pingInstance.enabled = false;
         }
-        public override void SubConstructionComplete()
+        public void SubConstructionComplete()
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
             pingInstance.enabled = true;
@@ -450,9 +450,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(2.5f);
 
                 // give us an AI battery please
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
-                yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
-                GameObject newAIBattery = result.Get();
+                GameObject newAIBattery = CraftData.InstantiateFromPrefab(TechType.PowerCell);
                 newAIBattery.GetComponent<Battery>().charge = 200;
                 newAIBattery.transform.SetParent(StorageRootObject.transform);
                 if (AIEnergyInterface)
@@ -463,8 +461,7 @@ namespace VehicleFramework
                 }
                 if (!energyInterface.hasCharge)
                 {
-                    yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
-                    GameObject newPowerCell = result.Get();
+                    GameObject newPowerCell = CraftData.InstantiateFromPrefab(TechType.PowerCell);
                     newPowerCell.GetComponent<Battery>().charge = 200;
                     newPowerCell.transform.SetParent(StorageRootObject.transform);
                     Batteries[0].BatterySlot.gameObject.GetComponent<EnergyMixin>().battery = newPowerCell.GetComponent<Battery>();
@@ -637,8 +634,7 @@ namespace VehicleFramework
                     {
                         continue;
                     }
-                    yield return CraftData.InstantiateFromPrefabAsync(item.Key, result, false);
-                    GameObject go = result.Get();
+                    GameObject go = CraftData.InstantiateFromPrefab(item.Key);
                     Vector3 loc = place + 1.2f * UnityEngine.Random.onUnitSphere;
                     Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
                     go.transform.position = loc;
@@ -1080,7 +1076,7 @@ namespace VehicleFramework
             {
                 yield return null;
                 Player.main.transform.position = destination;
-                Player.main.SetCurrentSub(mv?.GetComponent<SubRoot>(), true);
+                Player.main.SetCurrentSub(mv?.GetComponent<SubRoot>());
             }
             UWE.CoroutineHost.StartCoroutine(doThing());
         }
