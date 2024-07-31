@@ -90,8 +90,6 @@ namespace VehicleFramework
     {
         public static GameObject upgradeconsole { get; internal set; }
 
-        public static GameObject moduleBuilder;
-
         private static int numVehicleTypes = 0;
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
 

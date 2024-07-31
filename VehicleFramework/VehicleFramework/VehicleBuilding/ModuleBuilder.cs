@@ -138,7 +138,7 @@ namespace VehicleFramework
             // so that we can access the same PDA here
             // Unfortunately this means we must wait for the player to open the PDA.
             // Maybe we can grab equipment from prefab?
-            equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
+            equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab").GetComponentInChildren<uGUI_Equipment>(true);
 
             while (!main.isEquipmentInit)
             {

@@ -195,7 +195,6 @@
     <Compile Include="VehicleComponents\PowerManager.cs" />
     <Compile Include="VehicleComponents\TetherSource.cs" />
     <Compile Include="VehicleBuilding\HUDBuilder.cs" />
-    <Compile Include="Patches\uGUI_PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="Admin\SaveManager.cs" />
