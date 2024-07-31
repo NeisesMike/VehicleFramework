@@ -210,16 +210,17 @@ namespace VehicleFramework
                     pairedDrone.BeginControlling();
                 }
             }
-            if (list.Count() > 0)
+            List<Drone> availableDrones = list.Where(x => GetComponentInParent<Player>() == null).ToList();
+            if (availableDrones.Count() > 0)
             {
                 Drone selected = null;
                 if (GameInput.GetButtonDown(GameInput.Button.CycleNext))
                 {
-                    selected = SelectDrone(list, true);
+                    selected = SelectDrone(availableDrones, true);
                 }
                 else if (GameInput.GetButtonDown(GameInput.Button.CyclePrev))
                 {
-                    selected = SelectDrone(list, false);
+                    selected = SelectDrone(availableDrones, false);
                 }
                 if (selected != null)
                 {
