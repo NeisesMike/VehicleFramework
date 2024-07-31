@@ -122,7 +122,7 @@ namespace VehicleFramework.VehicleTypes
             NotifyStatus(PlayerStatus.OnPilotBegin);
             if (IsVehicleDocked)
             {
-                VehicleDockingBay thisBay = transform.parent.gameObject.GetComponentInChildren<VehicleDockingBay>();
+                VehicleDockingBay thisBay = transform.parent.gameObject.GetComponentsInChildren<VehicleDockingBay>().Where(x=>x.dockedVehicle == this).First();
                 UWE.CoroutineHost.StartCoroutine(MaybeToggleCyclopsCollision(thisBay));
                 thisBay.vehicle_docked_param = false;
                 UWE.CoroutineHost.StartCoroutine(Undock(Player.main, thisBay.transform.position.y));
