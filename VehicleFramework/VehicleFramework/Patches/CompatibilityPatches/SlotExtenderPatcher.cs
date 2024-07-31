@@ -18,13 +18,13 @@ namespace VehicleFramework.Patches.CompatibilityPatches
         [HarmonyPrefix]
         public static bool PrePrefix(object __instance)
         {
-            if (ModuleBuilder.main.slotExtenderIsPatched)
+            if (ModuleBuilder.slotExtenderIsPatched)
             {
                 return true;
             }
-            else if(ModuleBuilder.main.slotExtenderHasGreenLight)
+            else if(ModuleBuilder.slotExtenderHasGreenLight)
             {
-                ModuleBuilder.main.slotExtenderIsPatched = true;
+                ModuleBuilder.slotExtenderIsPatched = true;
                 return true;
             }
             return false;
@@ -33,13 +33,13 @@ namespace VehicleFramework.Patches.CompatibilityPatches
         [HarmonyPrefix]
         public static bool PrePostfix(object __instance)
         {
-            if (ModuleBuilder.main.slotExtenderIsPatched)
+            if (ModuleBuilder.slotExtenderIsPatched)
             {
                 return true;
             }
-            else if (ModuleBuilder.main.slotExtenderHasGreenLight)
+            else if (ModuleBuilder.slotExtenderHasGreenLight)
             {
-                ModuleBuilder.main.slotExtenderIsPatched = true;
+                ModuleBuilder.slotExtenderIsPatched = true;
                 return true;
             }
             return false;

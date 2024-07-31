@@ -20,32 +20,32 @@ namespace VehicleFramework
         [HarmonyPatch("Awake")]
         public static void AwakePostfix(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            if (!ModuleBuilder.main.haveWeCalledBuildAllSlots)
+            if (!ModuleBuilder.haveWeCalledBuildAllSlots)
             {
-                ModuleBuilder.main.haveWeCalledBuildAllSlots = true;
+                ModuleBuilder.haveWeCalledBuildAllSlots = true;
                 ModuleBuilder.main.isEquipmentInit = true;
-                ModuleBuilder.main.vehicleAllSlots = ___allSlots;
+                ModuleBuilder.vehicleAllSlots = ___allSlots;
                 ModuleBuilder.main.BuildAllSlots();
-                ___allSlots = ModuleBuilder.main.vehicleAllSlots;
+                ___allSlots = ModuleBuilder.vehicleAllSlots;
             }
         }
         [HarmonyPrefix]
         [HarmonyPatch("OnDragHoverEnter")]
         public static void OnDragHoverEnterPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ___allSlots = ModuleBuilder.main.vehicleAllSlots;
+            ___allSlots = ModuleBuilder.vehicleAllSlots;
         }
         [HarmonyPrefix]
         [HarmonyPatch("OnDragHoverStay")]
         public static void OnDragHoverStayPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ___allSlots = ModuleBuilder.main.vehicleAllSlots;
+            ___allSlots = ModuleBuilder.vehicleAllSlots;
         }
         [HarmonyPrefix]
         [HarmonyPatch("OnDragHoverExit")]
         public static void OnDragHoverExitPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ___allSlots = ModuleBuilder.main.vehicleAllSlots;
+            ___allSlots = ModuleBuilder.vehicleAllSlots;
         }
     }
 }

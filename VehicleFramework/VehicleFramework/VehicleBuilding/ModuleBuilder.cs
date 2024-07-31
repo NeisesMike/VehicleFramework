@@ -19,13 +19,12 @@ namespace VehicleFramework
     public class ModuleBuilder : MonoBehaviour
     {
         public static ModuleBuilder main;
-        public Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
-        public Dictionary<string, uGUI_EquipmentSlot> baseVehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
+        public static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
         public bool isEquipmentInit = false;
         public bool areModulesReady = false;
-        public bool haveWeCalledBuildAllSlots = false;
-        public bool slotExtenderIsPatched = false;
-        public bool slotExtenderHasGreenLight = false;
+        public static bool haveWeCalledBuildAllSlots = false;
+        public static bool slotExtenderIsPatched = false;
+        public static bool slotExtenderHasGreenLight = false;
 
         public enum ModuleSlotType
         {
@@ -125,7 +124,7 @@ namespace VehicleFramework
             if (type2 != null)
             {
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                ModuleBuilder.main.slotExtenderHasGreenLight = true;
+                ModuleBuilder.slotExtenderHasGreenLight = true;
                 equipment.Awake();
             }
         }

@@ -147,6 +147,9 @@ namespace VehicleFramework
             void SetWorldNotLoaded()
             {
                 VehicleManager.isWorldLoaded = false;
+                ModuleBuilder.haveWeCalledBuildAllSlots = false;
+                ModuleBuilder.slotExtenderIsPatched = false;
+                ModuleBuilder.slotExtenderHasGreenLight = false;
             }
             void SetWorldLoaded()
             {
