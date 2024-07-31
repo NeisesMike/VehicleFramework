@@ -32,27 +32,27 @@ namespace VehicleFramework.Assets
             };
             return entryData;
         }
-        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Sprite unlockSprite=null, List<BiomeData> biomeData=null, string encyKey= "IAmAnUnusedEncyclopediaKey")
+        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Sprite unlockSprite = null, List<Vector3> spawnLocations = null, string encyKey = "IAmAnUnusedEncyclopediaKey")
         {
             if (vehicle == null)
             {
                 Logger.Error("RegisterFragment error: vehicle was null");
                 return 0;
             }
-            return RegisterFragment(fragment, vehicle.GetComponent<TechTag>().type, vehicle.FragmentsToScan, classID, displayName, description, unlockSprite, biomeData, encyKey);
+            return RegisterFragment(fragment, vehicle.GetComponent<TechTag>().type, vehicle.FragmentsToScan, classID, displayName, description, unlockSprite, spawnLocations, encyKey);
         }
-        public static TechType RegisterFragment(GameObject fragment, TechType toUnlock, int fragmentsToScan, string classID, string displayName, string description, Sprite sprite = null, List<BiomeData> biomeData = null, string encyKey= "IAmAnUnusedEncyclopediaKey")
+        public static TechType RegisterFragment(GameObject fragment, TechType toUnlock, int fragmentsToScan, string classID, string displayName, string description, Sprite sprite = null, List<Vector3> spawnLocations = null, string encyKey = "IAmAnUnusedEncyclopediaKey")
         {
             if (fragment == null)
             {
                 Logger.Error("RegisterFragment error: fragment was null");
                 return 0;
             }
-            TechType fragmentTT = RegisterGenericFragment(fragment, classID, displayName, description, sprite, biomeData, "congration");
+            TechType fragmentTT = RegisterGenericFragment(fragment, classID, displayName, description, sprite, spawnLocations, "congration");
             PDAScannerData.Add(MakeGenericEntryData(fragmentTT, toUnlock, fragmentsToScan, encyKey));
             return fragmentTT;
         }
-        public static TechType RegisterGenericFragment(GameObject fragment, string classID, string displayName, string description, Sprite unlockSprite = null, List<BiomeData> biomeData = null, string unlockedMessage = "")
+        public static TechType RegisterGenericFragment(GameObject fragment, string classID, string displayName, string description, Sprite unlockSprite = null, List<Vector3> spawnLocations = null, string unlockedMessage = "")
         {
             PrefabInfo fragmentInfo = PrefabInfo.WithTechType(classID, displayName, description);
             CustomPrefab armFragment = new CustomPrefab(fragmentInfo);
@@ -60,16 +60,20 @@ namespace VehicleFramework.Assets
             fragment.AddComponent<PrefabIdentifier>().ClassId = classID;
             fragment.AddComponent<FragmentManager>();
             armFragment.SetGameObject(() => fragment);
-            List<BiomeData> useBiomes = biomeData;
-            if (useBiomes == null)
+            List<BiomeData> useBiomes = new List<BiomeData>();
+            if (spawnLocations == null)
             {
                 useBiomes = new List<BiomeData>
                 {
-                    new BiomeData { biome = BiomeType.SafeShallows_Grass, count = 4, probability = 0.3f },
-                    new BiomeData { biome = BiomeType.SafeShallows_CaveFloor, count = 1, probability = 0.4f }
+                    new BiomeData { biome = BiomeType.SafeShallows_Grass, count = 4, probability = 0.01f },
+                    new BiomeData { biome = BiomeType.SafeShallows_CaveFloor, count = 1, probability = 0.02f }
                 };
+                armFragment.SetSpawns(useBiomes.ToArray());
             }
-            armFragment.SetSpawns(useBiomes.ToArray());
+            else
+            {
+                armFragment.SetSpawns(spawnLocations.Select(x => new SpawnLocation(x)).ToArray());
+            }
             armFragment.Register();
             return fragmentInfo.TechType;
         }

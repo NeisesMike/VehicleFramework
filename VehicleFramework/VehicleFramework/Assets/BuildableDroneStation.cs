@@ -53,12 +53,25 @@ namespace VehicleFramework
         {
             VehicleAssets DSAssets = AssetBundleInterface.GetVehicleAssetsFromBundle("dronestation", "DroneStation", "DSSpriteAtlas", "", "DSCrafterSprite", "Fragment", "DSUnlockSprite");
             TechType consoleTT = RegisterConsole(DSAssets.model, DSAssets.crafter, DSAssets.unlock);
-            AbstractBiomeData abd = new AbstractBiomeData()
-                .WithBiome(AbstractBiomeType.SafeShallows)
-                .WithBiome(AbstractBiomeType.KelpForest)
-                .WithBiome(AbstractBiomeType.GrassyPlateus);
+            List<Vector3> spawnLocations = new List<Vector3>
+            {
+                new Vector3 (375.1f, -69.4f, -22.4f),
+                new Vector3 (122.4f, -38.9f, -131.4f),
+                new Vector3 (89.9f, -30.5f, -162.6f),
+                new Vector3 (30.2f, -42.4f, -217.5f),
+                new Vector3 (46.9f, -20.1f, -86.7f),
+                new Vector3 (-148.1f, -31.7f, 252.8f),
+                new Vector3 (-150.2f, -47.7f, 234.4f),
+                new Vector3 (-228.7f, -66.2f, 159.8f),
+                new Vector3 (172.2f, -73.6f, -7.1f),
+                new Vector3 (394.4f, -98.7f, 83.3f),
+                new Vector3 (379.4f, -117.9f, 122.3f),
+                new Vector3 (424.8f, -112.5f, 104.3f),
+                new Vector3 (375.1f, -69.4f, -22.4f),
+                new Vector3 (-148.1f, -31.7f, 252.8f)
+            };
             Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(classID, "Tech/Habitats", displayName, encyclopediaDesc, null, DSAssets.unlock, null, null);
-            FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, abd.Get(), classID);
+            FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, spawnLocations, classID);
         }
     }
 
