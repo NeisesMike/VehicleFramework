@@ -59,6 +59,7 @@ namespace VehicleFramework.Assets
             fragment.AddComponent<BoxCollider>();
             fragment.AddComponent<PrefabIdentifier>().ClassId = classID;
             fragment.AddComponent<FragmentManager>();
+            fragment.AddComponent<LargeWorldEntity>();
             armFragment.SetGameObject(() => fragment);
             List<BiomeData> useBiomes = new List<BiomeData>();
             if (spawnLocations == null)
