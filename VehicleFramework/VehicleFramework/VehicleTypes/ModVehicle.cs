@@ -31,20 +31,16 @@ namespace VehicleFramework
          * must all be unique game objects.
          * And since VF cannot add gameobjects to the prefab,
          * they must be supplied for each vehicle.
-         * 
-         * On the other hand, Batteries and Upgrades are requirements
-         * for semantic reasons. If a thing cannot be powered and if
-         * it cannot be upgraded, then it is not a ModVehicle.
          */
         public abstract GameObject VehicleModel { get; } 
         public abstract GameObject CollisionModel { get; }
         public abstract GameObject StorageRootObject { get; }
         public abstract GameObject ModulesRootObject { get; }
-        public abstract List<VehicleParts.VehicleBattery> Batteries { get; }
-        public abstract List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         #endregion
 
         #region virtual_properties_nullable
+        public virtual List<VehicleParts.VehicleBattery> Batteries { get; }
+        public virtual List<VehicleParts.VehicleUpgrades> Upgrades { get; }
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly
@@ -473,7 +469,10 @@ namespace VehicleFramework
                 }
                 //GetComponent<InteriorLightsController>().EnableInteriorLighting();
             }
-            StartCoroutine(GiveUsABatteryOrGiveUsDeath());
+            if (Batteries != null && Batteries.Count() > 0)
+            {
+                StartCoroutine(GiveUsABatteryOrGiveUsDeath());
+            }
         }
         public void SetDockedLighting(bool docked)
         {

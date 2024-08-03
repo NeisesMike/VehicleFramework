@@ -93,8 +93,14 @@ namespace VehicleFramework.VehicleComponents
             subsystems.Add("hull", new SubSystemStruct { currentDamage = 0, maxDamage = 3, ManageDamageState = SimpleManageHullDamageState, ModifyDamageCalculation = SimpleDamageModification });
             subsystems.Add("engines", new SubSystemStruct { currentDamage = 0, maxDamage = 3, ManageDamageState = SimpleManageEngineDamageState, ModifyDamageCalculation = SimpleDamageModification });
             subsystems.Add("lights", new SubSystemStruct { currentDamage = 0, maxDamage = 1, ManageDamageState = SimpleManageLightsDamageState, ModifyDamageCalculation = SimpleDamageModification });
-            subsystems.Add("batteries", new SubSystemStruct { currentDamage = 0, maxDamage = 4, ManageDamageState = SimpleManageBatteriesDamageState, ModifyDamageCalculation = SimpleDamageModification });
-            subsystems.Add("upgrades", new SubSystemStruct { currentDamage = 0, maxDamage = 3, ManageDamageState = SimpleManageUpgradesDamageState, ModifyDamageCalculation = SimpleDamageModification });
+            if (mv.Batteries != null && mv.Batteries.Count() > 0)
+            {
+                subsystems.Add("batteries", new SubSystemStruct { currentDamage = 0, maxDamage = 4, ManageDamageState = SimpleManageBatteriesDamageState, ModifyDamageCalculation = SimpleDamageModification });
+            }
+            if (mv.Upgrades != null && mv.Upgrades.Count() > 0)
+            {
+                subsystems.Add("upgrades", new SubSystemStruct { currentDamage = 0, maxDamage = 3, ManageDamageState = SimpleManageUpgradesDamageState, ModifyDamageCalculation = SimpleDamageModification });
+            }
         }
         public void TakeDamagePostfix(float damage, Vector3 position, DamageType type, GameObject dealer)
         {
@@ -238,6 +244,7 @@ namespace VehicleFramework.VehicleComponents
         {
             void EnsureNumGashes(int num)
             {
+                /*
                 var cols = mv.Batteries.Select(x => x.BatterySlot.GetComponent<Collider>()).ToList();
                 while (cols.Where(x => !x.enabled).Count() < num)
                 {
@@ -247,6 +254,7 @@ namespace VehicleFramework.VehicleComponents
                 {
                     cols[(new System.Random()).Next(0, cols.Count())].enabled = true;
                 }
+                */
             }
             // diminish crush depth
             mv.crushDamage.kBaseCrushDepth = mv.BaseCrushDepth - damage * 50;

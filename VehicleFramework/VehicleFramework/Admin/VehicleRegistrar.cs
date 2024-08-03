@@ -174,13 +174,11 @@ namespace VehicleFramework
                 }
                 if (mv.Upgrades is null || mv.Upgrades.Count == 0)
                 {
-                    Logger.Error(thisName + " No ModVehicle.Upgrades were provided. These specify interfaces the player can click to insert and remove upgrades.");
-                    return false;
+                    Logger.Warn(thisName + " No ModVehicle.Upgrades were provided. These specify interfaces the player can click to insert and remove upgrades.");
                 }
                 if (mv.Batteries is null || mv.Batteries.Count == 0)
                 {
-                    Logger.Error(thisName + " No ModVehicle.Batteries were provided. These are necessary to power the engines.");
-                    return false;
+                    Logger.Warn(thisName + " No ModVehicle.Batteries were provided. These are necessary to power the engines. This vehicle will be always powered.");
                 }
                 if (mv.BackupBatteries is null || mv.BackupBatteries.Count == 0)
                 {
