@@ -11,8 +11,19 @@ namespace VehicleFramework
     public class InteriorLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener, IPlayerListener
     {
 		private Submarine mv;
-        private bool isInteriorLightsOn = true;
-        
+        private bool _isInteriorLightsOn = false;
+        public bool isInteriorLightsOn
+        {
+            get
+            {
+                return _isInteriorLightsOn;
+            }
+            private set
+            {
+                _isInteriorLightsOn = value;
+            }
+        }
+
         public void Awake()
         {
             mv = GetComponent<Submarine>();

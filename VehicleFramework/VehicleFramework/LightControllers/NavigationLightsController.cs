@@ -10,7 +10,18 @@ namespace VehicleFramework
 {
     public class NavigationLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
     {
-        private bool isNavLightsEnabled = true;
+        private bool _isNavLightsEnabled = false;
+        public bool isNavLightsEnabled
+        {
+            get
+            {
+                return _isNavLightsEnabled;
+            }
+            private set
+            {
+                _isNavLightsEnabled = value;
+            }
+        }
 
         private VehicleTypes.Submarine mv;
         private List<Material> positionMats = new List<Material>();

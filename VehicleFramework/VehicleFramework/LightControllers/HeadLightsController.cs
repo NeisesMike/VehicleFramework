@@ -10,7 +10,18 @@ namespace VehicleFramework
     public class HeadLightsController : MonoBehaviour, IPowerListener, IPlayerListener
 	{
         private ModVehicle mv;
-        private bool isHeadlightsOn = false;
+        private bool _isHeadlightsOn = false;
+        public bool isHeadlightsOn
+        {
+            get
+            {
+                return _isHeadlightsOn;
+            }
+            private set
+            {
+                _isHeadlightsOn = value;
+            }
+        }
         public bool isLive = true;
         public bool isDamaged = false;
         public void Awake()
