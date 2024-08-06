@@ -39,8 +39,8 @@ namespace VehicleFramework
         #endregion
 
         #region virtual_properties_nullable
-        public virtual List<VehicleParts.VehicleBattery> Batteries { get; }
-        public virtual List<VehicleParts.VehicleUpgrades> Upgrades { get; }
+        public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
+        public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly
@@ -52,7 +52,7 @@ namespace VehicleFramework
         public virtual List<VehicleParts.VehicleFloodLight> HeadLights => null;
         public virtual List<GameObject> CanopyWindows => null;
         public virtual Dictionary<TechType, int> Recipe => new Dictionary<TechType, int>() { { TechType.Titanium, 1 } };
-        public virtual List<VehicleParts.VehicleBattery> BackupBatteries { get; }
+        public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new List<VehicleParts.VehicleBattery>();
         public virtual Sprite UnlockedSprite => null;
         public virtual GameObject LeviathanGrabPoint
         {

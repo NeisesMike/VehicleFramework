@@ -222,7 +222,7 @@ namespace VehicleFramework
                         return false;
                     }
                 }
-                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades ?? Enumerable.Empty<VehicleParts.VehicleUpgrades>())
                 {
                     if (vu.Interface == null)
                     {
@@ -239,7 +239,7 @@ namespace VehicleFramework
                         VerboseLog(LogType.Log, verbose, thisName + " A null VehicleUpgrades.ModuleProxies was provided. VehicleFramework will not provide a model for this upgrade slot.");
                     }
                 }
-                foreach (VehicleParts.VehicleBattery vb in mv.Batteries.Concat(mv.BackupBatteries ?? Enumerable.Empty<VehicleParts.VehicleBattery>()))
+                foreach (VehicleParts.VehicleBattery vb in (mv.Batteries ?? Enumerable.Empty<VehicleParts.VehicleBattery>()).Concat(mv.BackupBatteries ?? Enumerable.Empty<VehicleParts.VehicleBattery>()))
                 {
                     if (vb.BatterySlot == null)
                     {

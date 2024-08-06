@@ -213,11 +213,16 @@ namespace VehicleFramework
                         var up = vu.Interface.EnsureComponent<UpgradeProxy>();
                         up.proxies = vu.ModuleProxies;
                     }
+                    if(mv.Upgrades.Count() == 0)
+                    {
+                        VehicleUpgradeConsoleInput vuci = mv.VehicleModel.EnsureComponent<VehicleUpgradeConsoleInput>();
+                        vuci.enabled = false;
+                        mv.upgradesInput = vuci;
+                    }
                 }
                 else
                 {
-                    Logger.Error("The ModVehicle.Upgrades was null.");
-                    return false;
+                    Logger.Warn("The ModVehicle.Upgrades was null.");
                 }
             }
             catch (Exception e)
