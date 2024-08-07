@@ -17,6 +17,8 @@ namespace VehicleFramework.Engines
         public ModVehicle mv;
         public Rigidbody rb;
         public EngineSounds sounds;
+        public float WhistleFactor = 1f;
+        public float HumFactor = 1f;
         public bool blockVoiceChange => false;
         public virtual bool CanMoveAboveWater { get; set; } = false;
         public virtual bool CanRotateAboveWater { get; set; } = false;
@@ -373,7 +375,7 @@ namespace VehicleFramework.Engines
         }
         public virtual void PlayEngineHum()
         {
-            EngineSource1.volume = EngineHum / 10f * (MainPatcher.VFConfig.engineVolume / 100);
+            EngineSource1.volume = EngineHum / 10f * (MainPatcher.VFConfig.engineVolume / 100) * HumFactor;
             if (mv.IsPowered())
             {
                 if (!EngineSource1.isPlaying && rb.velocity.magnitude > 0.2f) // why 0.2f ?
@@ -407,7 +409,7 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) * 0.4f;
+                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) * 0.4f * WhistleFactor;
                     EngineSource2.Play();
                 }
             }
