@@ -231,6 +231,32 @@ namespace VehicleFramework
                 Logger.Error(e.ToString());
                 return false;
             }
+            try
+            {
+                if (mv.BoundingBoxCollider == null)
+                {
+                    mv.BoundingBoxCollider = mv.BoundingBox.GetComponentInChildren<BoxCollider>(true);
+                    mv.BoundingBoxCollider.enabled = false;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warn("There was a problem setting up the BoundingBoxCollider. If your vehicle uses 'BoundingBox', use 'BoundingBoxCollider' instead.");
+                Logger.Warn(e.Message);
+                try
+                {
+                    mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();
+                    mv.BoundingBoxCollider.size = new Vector3(6, 8, 12);
+                    mv.BoundingBoxCollider.enabled = false;
+                    Logger.Warn("The " + mv.name + " has been given a default BoundingBox of size 6x8x12.");
+                }
+                catch
+                {
+                    Logger.Error("I couldn't provide a bounding box for this vehicle. See the following error:");
+                    Logger.Error(e.ToString());
+                    return false;
+                }
+            }
             return true;
         }
         public static bool SetupObjects(Submarine mv)

@@ -43,7 +43,7 @@ namespace VehicleFramework
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
-        public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly
+        public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
         public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;
         public virtual List<GameObject> WaterClipProxies => null;
@@ -147,14 +147,6 @@ namespace VehicleFramework
             }
             gameObject.EnsureComponent<AutoPilot>();
 
-            if (BoundingBoxCollider != null)
-            {
-                BoundingBoxCollider.enabled = false;
-            }
-            if (BoundingBox.GetComponentInChildren<BoxCollider>(true) != null)
-            {
-                BoundingBox.GetComponentInChildren<BoxCollider>(true).enabled = false;
-            }
             if (UseDefaultDamageTracker)
             {
                 gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
@@ -547,7 +539,7 @@ namespace VehicleFramework
         }
         public virtual Vector3 GetBoundingDimensions()
         {
-            BoxCollider box = BoundingBoxCollider ?? BoundingBox?.GetComponentInChildren<BoxCollider>(true);
+            BoxCollider box = BoundingBoxCollider;
             if (box == null)
             {
                 return Vector3.zero;
@@ -558,7 +550,7 @@ namespace VehicleFramework
         }
         public virtual Vector3 GetDifferenceFromCenter()
         {
-            BoxCollider box = BoundingBoxCollider ?? BoundingBox?.GetComponentInChildren<BoxCollider>(true);
+            BoxCollider box = BoundingBoxCollider;
             if (box != null)
             {
                 Vector3 colliderCenterWorld = box.transform.TransformPoint(box.center);

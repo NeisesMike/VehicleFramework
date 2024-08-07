@@ -34,7 +34,6 @@ namespace VehicleFramework
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
                 }
-                mv.BoundingBox.SetActive(true);
                 collider.gameObject.SetActive(true);
                 collider.enabled = true;
                 Bounds result = collider.bounds;
@@ -50,7 +49,7 @@ namespace VehicleFramework
 
         public void Start()
         {
-            mv.BoundingBoxCollider = mv.BoundingBoxCollider ?? mv.BoundingBox?.GetComponentInChildren<BoxCollider>(true);
+            mv.BoundingBoxCollider = mv.BoundingBoxCollider;
             if (mv.BoundingBoxCollider == null || mv.TetherSources.Count() == 0)
             {
                 isSimple = true;
