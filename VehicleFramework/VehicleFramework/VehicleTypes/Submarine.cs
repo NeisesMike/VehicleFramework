@@ -204,9 +204,9 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void PlayerExit()
         {
+            isPlayerInside = false;
             base.PlayerExit();
             //Player.main.currentSub = null;
-            isPlayerInside = false;
             Player.main.currentMountedVehicle = null;
             if (!IsVehicleDocked)
             {

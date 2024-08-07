@@ -84,21 +84,17 @@ namespace VehicleFramework
                 isHeadlightsOn = false;
             }
         }
-        public void SetVolumetricLightsActive(bool enabled)
+        public void UpdateVolumetricLights()
         {
-            if (isLive && !isDamaged)
+            if (!isHeadlightsOn || !isLive || !mv.IsPowered() || mv.IsPlayerDry || isDamaged ||
+                ((mv as VehicleTypes.Submarine != null) && (mv as VehicleTypes.Submarine).IsPlayerInside())
+                )
             {
-                foreach (GameObject light in mv.volumetricLights)
-                {
-                    bool result = enabled;
-                    result &= mv.IsPowered();
-                    if (mv as VehicleTypes.Submarine != null)
-                    {
-                        result &= !(mv as VehicleTypes.Submarine).IsPlayerInside();
-                    }
-                    result &= !mv.IsPlayerDry;
-                    light.SetActive(result);
-                }
+                mv.volumetricLights.ForEach(x => x.SetActive(false));
+            }
+            else
+            {
+                mv.volumetricLights.ForEach(x => x.SetActive(true));
             }
         }
         public void SetHeadLightsActive(bool enabled)
@@ -109,7 +105,7 @@ namespace VehicleFramework
                 {
                     light.SetActive(enabled && mv.IsPowered());
                 }
-                SetVolumetricLightsActive(enabled);
+                UpdateVolumetricLights();
                 if (enabled)
                 {
                     mv.NotifyStatus(LightsStatus.OnHeadLightsOn);
@@ -149,12 +145,12 @@ namespace VehicleFramework
 
         void IPlayerListener.OnPlayerEntry()
         {
-            SetVolumetricLightsActive(false);
+            UpdateVolumetricLights();
         }
 
         void IPlayerListener.OnPlayerExit()
         {
-            SetVolumetricLightsActive(true);
+            UpdateVolumetricLights();
         }
 
         void IPlayerListener.OnPilotBegin()
