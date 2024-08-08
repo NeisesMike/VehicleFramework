@@ -355,6 +355,20 @@ namespace VehicleFramework
         {
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new List<EnergyMixin>();
+            if(mv.Batteries.Count() == 0)
+            {
+                // Configure energy mixin for this battery slot
+                var energyMixin = mv.gameObject.AddComponent<VehicleComponents.ForeverBattery>();
+                energyMixin.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+                energyMixin.defaultBattery = seamothEnergyMixin.defaultBattery;
+                energyMixin.compatibleBatteries = seamothEnergyMixin.compatibleBatteries;
+                energyMixin.soundPowerUp = seamothEnergyMixin.soundPowerUp;
+                energyMixin.soundPowerDown = seamothEnergyMixin.soundPowerDown;
+                energyMixin.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
+                energyMixin.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
+                energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
+                energyMixins.Add(energyMixin);
+            }
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
             {
                 // Configure energy mixin for this battery slot

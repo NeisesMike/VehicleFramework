@@ -168,6 +168,7 @@
     <Compile Include="StorageComponents\BatteryProxy.cs" />
     <Compile Include="VehicleBuilding\ColliderState.cs" />
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
+    <Compile Include="VehicleComponents\ForeverBattery.cs" />
     <Compile Include="VehicleComponents\MVCameraController.cs" />
     <Compile Include="VehicleComponents\Scuttler.cs" />
     <Compile Include="VehicleComponents\VehicleDamageTracker.cs" />
