@@ -275,13 +275,13 @@ namespace VehicleFramework.Engines
         }
         protected virtual void ApplyDrag(Vector3 move)
         {
-            // Only apply drag if we aren't applying movement in that direction.
+            // Only apply drag if we aren't applying movement in that direction (or falling).
             // That is, if we aren't holding forward, our forward momentum should decay.
             // Kill anything under 1%
             bool isForward = move.z != 0;
             bool isRight = move.x != 0;
             bool isUp = move.y != 0;
-            bool activated = isForward || isRight || isUp;
+            bool activated = isForward || isRight || isUp || mv.worldForces.IsAboveWater();
 
             if (!isForward)
             {
