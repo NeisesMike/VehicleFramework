@@ -49,7 +49,6 @@ namespace VehicleFramework
 
         public void Start()
         {
-            mv.BoundingBoxCollider = mv.BoundingBoxCollider;
             if (mv.BoundingBoxCollider == null || mv.TetherSources.Count() == 0)
             {
                 isSimple = true;

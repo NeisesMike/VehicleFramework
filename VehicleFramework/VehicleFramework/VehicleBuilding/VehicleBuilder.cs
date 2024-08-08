@@ -217,6 +217,8 @@ namespace VehicleFramework
                     {
                         VehicleUpgradeConsoleInput vuci = mv.VehicleModel.EnsureComponent<VehicleUpgradeConsoleInput>();
                         vuci.enabled = false;
+                        vuci.collider = mv.VehicleModel.AddComponent<BoxCollider>();
+                        (vuci.collider as BoxCollider).size = Vector3.zero;
                         mv.upgradesInput = vuci;
                     }
                 }
@@ -236,8 +238,8 @@ namespace VehicleFramework
                 if (mv.BoundingBoxCollider == null)
                 {
                     mv.BoundingBoxCollider = mv.BoundingBox.GetComponentInChildren<BoxCollider>(true);
-                    mv.BoundingBoxCollider.enabled = false;
                 }
+                mv.BoundingBoxCollider.enabled = false;
             }
             catch (Exception e)
             {
