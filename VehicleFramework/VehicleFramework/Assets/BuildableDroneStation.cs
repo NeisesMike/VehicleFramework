@@ -43,8 +43,15 @@ namespace VehicleFramework
             prefab.SetGameObject(droneStation);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
             prefab.SetRecipe(new RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
-            prefab.SetUnlock(TechType.Fragment)
-                .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
+            if(MainPatcher.VFConfig.isFragmentExperience)
+            {
+                prefab.SetUnlock(TechType.Fragment)
+                    .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
+            }
+            else
+            {
+                prefab.SetUnlock(TechType.Constructor);
+            }
             prefab.Register();
             return Info.TechType;
         }
