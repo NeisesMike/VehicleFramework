@@ -310,9 +310,22 @@ namespace VehicleFramework
         public virtual void BeginPiloting()
         {
             // BeginPiloting is the VF trigger to start controlling a vehicle.
-            base.EnterVehicle(Player.main, true);
+            EnterVehicle(Player.main, true);
             uGUI.main.quickSlots.SetTarget(this);
             NotifyStatus(PlayerStatus.OnPilotBegin);
+            if (gameObject.GetComponentInChildren<VehicleComponents.MVCameraController>() != null)
+            {
+                Logger.Output("Press " +
+                              MainPatcher.VFConfig.nextCamera +
+                              " and " +
+                              MainPatcher.VFConfig.previousCamera +
+                              " to switch cameras.\n" +
+                              "Press " +
+                              MainPatcher.VFConfig.exitCamera +
+                              " to exit cameras."
+                              , time: 2f
+                              , y: 300);
+            }
         }
         public virtual void StopPiloting()
         {
