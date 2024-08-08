@@ -38,7 +38,7 @@ namespace VehicleFramework
         public abstract GameObject ModulesRootObject { get; }
         #endregion
 
-        #region virtual_properties_nullable
+        #region virtual_properties_optional
         public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
         public virtual ModVehicleEngine Engine { get; set; }
@@ -46,30 +46,16 @@ namespace VehicleFramework
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
         public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;
-        public virtual List<GameObject> WaterClipProxies => null;
-        public virtual List<VehicleParts.VehicleStorage> InnateStorages => null;
-        public virtual List<VehicleParts.VehicleStorage> ModularStorages => null;
-        public virtual List<VehicleParts.VehicleFloodLight> HeadLights => null;
-        public virtual List<GameObject> CanopyWindows => null;
+        public virtual List<GameObject> WaterClipProxies => new List<GameObject>();
+        public virtual List<VehicleParts.VehicleStorage> InnateStorages => new List<VehicleParts.VehicleStorage>();
+        public virtual List<VehicleParts.VehicleStorage> ModularStorages => new List<VehicleParts.VehicleStorage>();
+        public virtual List<VehicleParts.VehicleFloodLight> HeadLights => new List<VehicleParts.VehicleFloodLight>();
+        public virtual List<GameObject> CanopyWindows => new List<GameObject>();
         public virtual Dictionary<TechType, int> Recipe => new Dictionary<TechType, int>() { { TechType.Titanium, 1 } };
         public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new List<VehicleParts.VehicleBattery>();
         public virtual Sprite UnlockedSprite => null;
-        public virtual GameObject LeviathanGrabPoint
-        {
-            get
-            {
-                {
-                    return gameObject;
-                }
-            }
-        }
-        public virtual Atlas.Sprite CraftingSprite
-        {
-            get
-            {
-                return MainPatcher.ModVehicleIcon;
-            }
-        }
+        public virtual GameObject LeviathanGrabPoint => gameObject;
+        public virtual Atlas.Sprite CraftingSprite => MainPatcher.ModVehicleIcon;
         public override string[] slotIDs
         { // You probably do not want to override this
             get
@@ -137,7 +123,6 @@ namespace VehicleFramework
         #region virtual_methods
         public override void Awake()
         {
-
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
 
