@@ -119,7 +119,7 @@ namespace VehicleFramework
                 RegistrySemaphore = false;
                 mv.gameObject.SetActive(true);
 
-                Logger.Log("Registered the " + mv.gameObject.name + ".");
+                Logger.Log("Finished " + mv.gameObject.name + " registration.");
             }
             yield break;
         }

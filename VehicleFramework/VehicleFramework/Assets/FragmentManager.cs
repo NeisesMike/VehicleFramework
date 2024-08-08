@@ -75,7 +75,9 @@ namespace VehicleFramework.Assets
             {
                 armFragment.SetSpawns(spawnLocations.Select(x => new SpawnLocation(x)).ToArray());
             }
+            Logger.Log("Registering fragments. You may see errors below.");
             armFragment.Register();
+            Logger.Log("Done registering fragments.");
             return fragmentInfo.TechType;
         }
         public static void AddScannerDataEntries()
