@@ -590,7 +590,7 @@ namespace VehicleFramework
             isScuttled = false;
             GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = true);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
-            GetComponent<TetherSource>().isLive = true;
+            GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
             WaterClipProxies?.ForEach(x => x.SetActive(true));
             voice.enabled = true;

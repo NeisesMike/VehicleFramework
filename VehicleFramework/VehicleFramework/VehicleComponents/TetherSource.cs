@@ -58,6 +58,7 @@ namespace VehicleFramework
                 isSimple = false;
                 mv.BoundingBoxCollider.gameObject.SetActive(true);
                 mv.BoundingBoxCollider.enabled = false;
+                mv.TetherSources.ForEach(x => x.SetActive(false));
             }
             Player.main.StartCoroutine(ManageTether());
         }
@@ -85,9 +86,9 @@ namespace VehicleFramework
             bool PlayerWithinLeash(GameObject tetherSrc)
             {
                 float radius = 0.75f;
-                if (tetherSrc.GetComponent<SphereCollider>() != null)
+                if (tetherSrc.GetComponentInChildren<SphereCollider>(true) != null)
                 {
-                    radius = tetherSrc.GetComponent<SphereCollider>().radius;
+                    radius = tetherSrc.GetComponentInChildren<SphereCollider>(true).radius;
                 }
                 return Vector3.Distance(Player.main.transform.position, tetherSrc.transform.position) < radius;
             }
