@@ -24,22 +24,6 @@ namespace VehicleFramework.Patches
             return VehicleTypes.Drone.mountedDrone == null;
         }
 
-        // this is slotextender compat shit
-        [HarmonyPrefix]
-        [HarmonyPatch("OpenPDA")]
-        public static void OpenPDAPrefix(VehicleUpgradeConsoleInput __instance)
-        {
-            // configure the appropriate AllSlots
-            if (__instance.GetComponentInParent<ModVehicle>() != null)
-            {
-                //ModuleBuilder.main.vehicleAllSlots = null;
-            }
-            else
-            {
-                //ModuleBuilder.main.vehicleAllSlots = null;
-            }
-        }
-
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.UpdateVisuals))]
         public static void UpdateVisualsPostfix(VehicleUpgradeConsoleInput __instance)
