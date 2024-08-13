@@ -13,6 +13,8 @@ namespace VehicleFramework.VehicleTypes
     {
         public static Drone mountedDrone = null;
         public DroneStation pairedStation = null;
+        public const float baseConnectionDistance = 350;
+        public float addedConnectionDistance = 0;
         public abstract Transform CameraLocation { get; }
         private VehicleComponents.MVCameraController camControl;
         private const GameInput.Button AutoHomeButton = GameInput.Button.PDA;

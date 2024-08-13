@@ -23,7 +23,7 @@ namespace VehicleFramework.Patches
             }
             float noise;
             float distance = Vector3.Distance(Player.main.transform.position, drone.transform.position);
-            const float threshold = 350;
+            float threshold = Drone.baseConnectionDistance + drone.addedConnectionDistance;
             if(distance < threshold)
             {
                 noise = 0;
