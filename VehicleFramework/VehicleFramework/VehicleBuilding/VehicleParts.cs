@@ -50,10 +50,9 @@ namespace VehicleFramework.VehicleParts
         public float Angle;
     }
 
-    public struct VehicleArmProxy
+    public struct VehicleArmsProxy
     {
-        public bool IsLeftArm;
-        public GameObject ShoulderPivotLocation;
-        public Vector3 scale;
+        public Transform leftArmPlacement;
+        public Transform rightArmPlacement;
     }
 }

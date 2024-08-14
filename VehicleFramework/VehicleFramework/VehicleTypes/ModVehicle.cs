@@ -42,7 +42,7 @@ namespace VehicleFramework
         public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
         public virtual ModVehicleEngine Engine { get; set; }
-        public virtual List<VehicleParts.VehicleArmProxy> Arms => null;
+        public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
         public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;
