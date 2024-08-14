@@ -39,7 +39,7 @@ namespace VehicleFramework
         }
         public static IEnumerator SetupVFXConstructing(GameObject go)
         {
-            yield return SeamothHelper.EnsureSeamoth();
+            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
             GameObject seamoth = SeamothHelper.Seamoth;
             VFXConstructing seamothVFXC = seamoth.GetComponent<VFXConstructing>();
             VFXConstructing rocketPlatformVfx = seamoth.GetComponentInChildren<VFXConstructing>();

@@ -85,6 +85,41 @@ namespace VehicleFramework
             }
         }
     }
+    public static class PrawnHelper
+    {
+        internal static TaskResult<GameObject> request = new TaskResult<GameObject>();
+        private static Coroutine cor = null;
+        public static GameObject Prawn
+        {
+            get
+            {
+                GameObject thisPrawn = request.Get();
+                if (thisPrawn == null)
+                {
+                    Logger.Error("Couldn't get Prawn...");
+                    return null;
+                }
+                UnityEngine.Object.DontDestroyOnLoad(thisPrawn);
+                thisPrawn.SetActive(false);
+                return thisPrawn;
+            }
+        }
+        public static IEnumerator EnsurePrawn()
+        {
+            if (request.Get()) // if we have prawn
+            {
+            }
+            else if (cor == null) // if we need to get prawn
+            {
+                cor = UWE.CoroutineHost.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Exosuit, request, false));
+                yield return cor;
+                cor = null;
+            }
+            else // if someone else is getting prawn
+            {
+            }
+        }
+    }
 
     public static class VehicleBuilder
     {
