@@ -137,6 +137,7 @@
     <Compile Include="Assets\BuildableDroneStation.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="LocalizationManager.cs" />
+    <Compile Include="Patches\CompatibilityPatches\ChameleonSubPatcher.cs" />
     <Compile Include="Patches\PlaceToolPatcher.cs" />
     <Compile Include="Patches\BuilderToolPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
