@@ -60,6 +60,8 @@ namespace VehicleFramework.Assets
             fragment.AddComponent<PrefabIdentifier>().ClassId = classID;
             fragment.AddComponent<FragmentManager>();
             fragment.AddComponent<LargeWorldEntity>();
+            fragment.AddComponent<SkyApplier>().enabled = true;
+            SetupScannable(fragment, fragmentInfo.TechType);
             armFragment.SetGameObject(() => fragment);
             List<BiomeData> useBiomes = new List<BiomeData>();
             if (spawnLocations == null)
@@ -104,6 +106,15 @@ namespace VehicleFramework.Assets
                 Component.Destroy(this);
             }
             UWE.CoroutineHost.StartCoroutine(DestroyPickupable());
+        }
+
+        public static void SetupScannable(GameObject obj, TechType tt)
+        {
+            var rt = obj.AddComponent<ResourceTracker>();
+            rt.techType = tt;
+            rt.prefabIdentifier = obj.GetComponent<PrefabIdentifier>();
+            rt.prefabIdentifier.Id = "";
+            rt.overrideTechType = TechType.None;
         }
     }
 }
