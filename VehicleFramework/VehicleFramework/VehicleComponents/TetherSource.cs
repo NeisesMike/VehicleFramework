@@ -40,7 +40,36 @@ namespace VehicleFramework
                 collider.enabled = false;
                 if (result.size == Vector3.zero)
                 {
-                    Logger.Error("TetherSource Error: BoundingBox Bounds had zero volume (size was zero). You may see this message if one or more of the BoundingBox collider's parents are inactive.");
+                    if(!collider.gameObject.activeInHierarchy)
+                    {
+                        if(!collider.gameObject.activeSelf)
+                        {
+                            Logger.Warn("TetherSource Error: BoundingBoxCollider was not active. Setting it active.");
+                            collider.gameObject.SetActive(true);
+                        }
+                        if (!collider.gameObject.activeInHierarchy)
+                        {
+                            Logger.Warn("TetherSource Error: BoundingBoxCollider was not active in its hierarchy. One of its parents must be inactive. Trying to set them active...");
+                            Transform iterator = collider.transform;
+                            while (iterator != mv.transform)
+                            {
+                                if (!iterator.gameObject.activeSelf)
+                                {
+                                    iterator.gameObject.SetActive(true);
+                                    Logger.Warn("Set " + iterator.name + " active.");
+                                }
+                                iterator = iterator.parent;
+                            }
+                        }
+                        collider.enabled = true;
+                        result = collider.bounds;
+                        collider.enabled = false;
+                        return result;
+                    }
+                    else
+                    {
+                        Logger.Warn("TetherSource Error: BoundingBox Bounds had zero volume (size was zero).");
+                    }
                     return new Bounds(Vector3.one, Vector3.zero);
                 }
                 return result;

@@ -141,6 +141,10 @@ namespace VehicleFramework
             upgradeOnAddedActions.Add(armorPlatingModuleAction);
             upgradeOnAddedActions.Add(powerUpgradeModuleAction);
 
+            if (BoundingBoxCollider == null && BoundingBox != null)
+            {
+                BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
+            }
             // perform normal vehicle lazyinitializing
             base.LazyInitialize();
         }
