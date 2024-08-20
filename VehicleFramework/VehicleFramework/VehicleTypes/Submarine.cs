@@ -153,7 +153,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.SetScubaMaskActive(false);
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
-            if (!IsVehicleDocked)
+            if (!IsVehicleDocked && IsPlayerPiloting())
             {
                 Player.main.transform.SetParent(transform);
                 if (thisStopPilotingLocation == null)
