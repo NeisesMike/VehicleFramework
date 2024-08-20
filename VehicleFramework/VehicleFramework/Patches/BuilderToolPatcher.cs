@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using HarmonyLib;
+using UnityEngine;
 
 namespace VehicleFramework.Patches
 {
@@ -18,9 +15,16 @@ namespace VehicleFramework.Patches
             SubRoot subroot = Player.main.currentSub;
             if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>())
             {
-                if (c != null && !c.constructed && __instance.HasEnergyOrInBase())
+                if (c != null && __instance.HasEnergyOrInBase())
                 {
-                    c.gameObject.transform.SetParent(subroot.gameObject.transform);
+                    if (!c.constructed)
+                    {
+                        if (c.gameObject.GetComponent<LargeWorldEntity>() != null)
+                        {
+                            c.gameObject.GetComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
+                        }
+                        c.gameObject.transform.SetParent(subroot.gameObject.transform);
+                    }
                 }
             }
         }
