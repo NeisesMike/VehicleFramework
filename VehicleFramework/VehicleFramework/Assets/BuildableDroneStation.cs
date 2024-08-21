@@ -199,7 +199,7 @@ namespace VehicleFramework
             {
                 return;
             }
-            var list = Admin.GameObjectManager<Drone>.Where(x => true);
+            var list = Admin.GameObjectManager<Drone>.Where(x => x.gameObject.activeSelf); // Pickupable Vehicles, for example, sets drones inactive.
             if (pairedDrone == null && list.Count() > 0)
             {
                 FastenConnection(this, list.First());
