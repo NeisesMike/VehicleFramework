@@ -68,6 +68,8 @@ namespace VehicleFramework
         internal static VehicleFrameworkConfig VFConfig { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
+        internal static Atlas.Sprite UpgradeIcon { get; private set; }
+        internal static Atlas.Sprite ArmIcon { get; private set; }
 
         public void Awake()
         {
@@ -83,6 +85,12 @@ namespace VehicleFramework
             Patch();
             PostPatch();
         }
+        public void GetSprites()
+        {
+            ModVehicleIcon = Assets.SpriteHelper.GetSpriteInternal("ModVehicleIcon.png");
+            ArmIcon = Assets.SpriteHelper.GetSpriteInternal("ArmUpgradeIcon.png");
+            UpgradeIcon = Assets.SpriteHelper.GetSpriteInternal("UpgradeIcon.png");
+        }
         public void PrePatch()
         {
             VFConfig = OptionsPanelHandler.RegisterModOptions<VehicleFrameworkConfig>();
@@ -96,13 +104,7 @@ namespace VehicleFramework
             }
             StartCoroutine(CollectPrefabsForBuilderReference());
 
-            // grab the icon image
-            string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            byte[] spriteBytes = System.IO.File.ReadAllBytes(Path.Combine(modPath, "ModVehicleIcon.png"));
-            Texture2D SpriteTexture = new Texture2D(128, 128);
-            SpriteTexture.LoadImage(spriteBytes);
-            Sprite mySprite = Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-            ModVehicleIcon = new Atlas.Sprite(mySprite);
+            GetSprites();
 
             // patch in the crafting node for the vehicle upgrade menu
             string[] stepsToDepthTab = { "MVUM" };
