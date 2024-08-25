@@ -8,12 +8,6 @@ using UnityEngine;
 using System.Reflection;
 using HarmonyLib;
 
-/*
- * DEPENDS:
- * uGUI_EquipmentPatcher
- * uGUI_PDAPatcher
- */
-
 namespace VehicleFramework
 {
     public class ModuleBuilder : MonoBehaviour
@@ -27,13 +21,6 @@ namespace VehicleFramework
         public static bool slotExtenderHasGreenLight = false;
         public static readonly string LeftArmSlotName = "VehicleArmLeft";
         public static readonly string RightArmSlotName = "VehicleArmRight";
-
-        public enum ModuleSlotType
-        {
-            Default,
-            LeftArm,
-            RightArm
-        }
 
         public void Awake()
         {
@@ -283,7 +270,6 @@ namespace VehicleFramework
                 leftArm.name = ModuleBuilder.LeftArmSlotName;
                 leftArm.SetActive(false);
                 leftArm.transform.SetParent(equipment.transform, false);
-                //leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0);
                 leftArm.transform.localScale = new Vector3(-1, 1, 1); // need to flip this hand to look "left"
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = ModuleBuilder.LeftArmSlotName;
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
@@ -332,8 +318,6 @@ namespace VehicleFramework
             float thisX = arrayOrigin.x + arrayX * stepX;
             float thisY = arrayOrigin.y + arrayY * stepY;
 
-            //thisModule.transform.position = new Vector3(thisX, thisY, topLeftSlot.position.z);
-            //thisModule.transform.localPosition = new Vector3((topLeftSlot.localPosition.x + bottomRightSlot.localPosition.x) / 2, 1.5f * topLeftSlot.localPosition.y - leftArmSlot.localPosition.y, 0);
             thisModule.transform.localPosition = new Vector3(thisX, thisY, 0);
         }
         public void AddBackgroundImage(ref GameObject parent)
