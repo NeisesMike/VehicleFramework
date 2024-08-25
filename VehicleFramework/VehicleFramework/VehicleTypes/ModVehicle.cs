@@ -702,7 +702,22 @@ namespace VehicleFramework
         {
             List<string> upgradeSlots = new List<string>();
             upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
-            return upgradeSlots.GroupBy(x => x).Select(y => y.First()).Where(x => upgradesInput.equipment.GetItemInSlot(x) != null).Select(x => upgradesInput.equipment.GetItemInSlot(x).item.name).ToList();
+            List<string> upgradeStrings = upgradeSlots
+                .GroupBy(x => x)
+                .Select(y => y.First())
+                .Where(x => upgradesInput.equipment.GetItemInSlot(x) != null)
+                .Select(x => upgradesInput.equipment.GetItemInSlot(x).item.name)
+                .ToList();
+            List<string> armSlots = new List<string>();
+            upgradesInput.equipment.GetSlots(VehicleBuilder.ArmType, armSlots);
+            List<string> armStrings= armSlots
+                .GroupBy(x => x)
+                .Select(y => y.First())
+                .Where(x => upgradesInput.equipment.GetItemInSlot(x) != null)
+                .Select(x => upgradesInput.equipment.GetItemInSlot(x).item.name)
+                .ToList();
+            upgradeStrings.AddRange(armStrings);
+            return upgradeStrings.ToList();
         }
         public IEnumerator EvaluateDepthModuleLevel()
         {
