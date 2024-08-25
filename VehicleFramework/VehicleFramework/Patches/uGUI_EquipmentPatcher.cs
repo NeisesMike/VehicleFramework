@@ -17,7 +17,7 @@ namespace VehicleFramework
          * That is, we ensure here that our PDA displays ModVehicle upgrades correctly
          */
         [HarmonyPostfix]
-        [HarmonyPatch("Awake")]
+        [HarmonyPatch(nameof(uGUI_Equipment.Awake))]
         public static void AwakePostfix(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
             if (!ModuleBuilder.haveWeCalledBuildAllSlots)
@@ -32,21 +32,21 @@ namespace VehicleFramework
             }
         }
         [HarmonyPrefix]
-        [HarmonyPatch("OnDragHoverEnter")]
+        [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverEnter))]
         public static void OnDragHoverEnterPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
             ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
             ___allSlots = ModuleBuilder.vehicleAllSlots;
         }
         [HarmonyPrefix]
-        [HarmonyPatch("OnDragHoverStay")]
+        [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverStay))]
         public static void OnDragHoverStayPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
             ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
             ___allSlots = ModuleBuilder.vehicleAllSlots;
         }
         [HarmonyPrefix]
-        [HarmonyPatch("OnDragHoverExit")]
+        [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverExit))]
         public static void OnDragHoverExitPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
             ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
