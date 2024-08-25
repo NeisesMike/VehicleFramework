@@ -54,6 +54,7 @@ namespace VehicleFramework.VehicleComponents
                 if (mv.Arms.leftArmPlacement != null)
                 {
                     leftArm.transform.localPosition = mv.Arms.leftArmPlacement.localPosition;
+                    leftArm.transform.localRotation = mv.Arms.leftArmPlacement.localRotation;
                 }
                 else
                 {
@@ -74,6 +75,7 @@ namespace VehicleFramework.VehicleComponents
                 if (mv.Arms.rightArmPlacement != null)
                 {
                     rightArm.transform.localPosition = mv.Arms.rightArmPlacement.localPosition;
+                    rightArm.transform.localRotation = mv.Arms.rightArmPlacement.localRotation;
                 }
                 else
                 {
