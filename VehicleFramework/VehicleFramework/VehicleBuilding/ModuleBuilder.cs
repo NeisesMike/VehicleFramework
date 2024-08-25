@@ -219,10 +219,18 @@ namespace VehicleFramework
                             // add background child gameobject and components
                             var genericModuleBackground = new GameObject("Background");
                             genericModuleBackground.transform.SetParent(armModuleObject.transform, false);
+
+                            // configure background image
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<RectTransform>(), genericModuleBackground);
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<CanvasRenderer>(), genericModuleBackground);
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Background").GetComponent<UnityEngine.UI.Image>(), genericModuleBackground);
 
+                            // add iconrect child gameobject
+                             var thisModuleIconRect = new GameObject("IconRect");
+                            thisModuleIconRect.transform.SetParent(armModuleObject.transform, false);
+                            armModuleObject.EnsureComponent<uGUI_EquipmentSlot>().iconRect = VehicleBuilder.CopyComponent(topLeftSlot.Find("IconRect").GetComponent<RectTransform>(), thisModuleIconRect);
+
+                            // add 'hints' to show which arm is which (left vs right)
                             leftArmModuleSlotSprite = arm.Find("Hint").GetComponent<UnityEngine.UI.Image>().sprite;
                             genericModuleHint = new GameObject("Hint");
                             genericModuleHint.transform.SetParent(armModuleObject.transform, false);
@@ -275,8 +283,8 @@ namespace VehicleFramework
                 leftArm.name = ModuleBuilder.LeftArmSlotName;
                 leftArm.SetActive(false);
                 leftArm.transform.SetParent(equipment.transform, false);
-                leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0); // need to flip this hand to look "left"
-                leftArm.transform.localScale = Vector3.one;
+                //leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0);
+                leftArm.transform.localScale = new Vector3(-1, 1, 1); // need to flip this hand to look "left"
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = ModuleBuilder.LeftArmSlotName;
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
                 LinkArm(ref leftArm);
