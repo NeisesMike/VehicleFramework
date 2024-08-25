@@ -36,6 +36,14 @@ namespace VehicleFramework.UpgradeModules
         }
         public static TechType RegisterModuleGeneric(List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon=null, string tabName="MVCM")
         {
+            return RegisterUpgradeGeneric(false, recipe, classId, displayName, description, qst, icon, tabName);
+        }
+        public static TechType RegisterArmGeneric(List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon = null, string tabName = "MVCM")
+        {
+            return RegisterUpgradeGeneric(true, recipe, classId, displayName, description, qst, icon, tabName);
+        }
+        public static TechType RegisterUpgradeGeneric(bool isArm, List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon = null, string tabName = "MVCM")
+        {
             Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
             moduleRecipe.Ingredients.AddRange(recipe);
             PrefabInfo module_info = PrefabInfo.WithTechType(classId, displayName, description, unlockAtStart: false);
@@ -56,7 +64,14 @@ namespace VehicleFramework.UpgradeModules
             module_CustomPrefab.SetRecipe(moduleRecipe).WithCraftingTime(3).WithFabricatorType(CraftTree.Type.Workbench).WithStepsToFabricatorTab(new string[] { "MVUM", tabName });
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
             module_CustomPrefab.SetUnlock(TechType.BaseUpgradeConsole);
-            module_CustomPrefab.SetEquipment(VehicleBuilder.ModuleType).WithQuickSlotType(qst);
+            if(isArm)
+            {
+                module_CustomPrefab.SetEquipment(VehicleBuilder.ArmType).WithQuickSlotType(qst);
+            }
+            else
+            {
+                module_CustomPrefab.SetEquipment(VehicleBuilder.ModuleType).WithQuickSlotType(qst);
+            }
             module_CustomPrefab.Register();
             return module_info.TechType;
         }
