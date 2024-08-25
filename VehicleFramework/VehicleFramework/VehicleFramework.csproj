@@ -137,6 +137,7 @@
     <Compile Include="Assets\BuildableDroneStation.cs" />
     <Compile Include="Assets\SpriteHelper.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Assets\ModVehicleArm.cs" />
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="Patches\CompatibilityPatches\ChameleonSubPatcher.cs" />
     <Compile Include="Patches\PlaceToolPatcher.cs" />
@@ -169,12 +170,14 @@
     <Compile Include="Patches\WaterClipProxyPatcher.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
+    <Compile Include="UpgradeModules\ArmModule.cs" />
     <Compile Include="VehicleBuilding\ColliderState.cs" />
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
     <Compile Include="VehicleComponents\ForeverBattery.cs" />
     <Compile Include="VehicleComponents\MVCameraController.cs" />
     <Compile Include="VehicleComponents\Scuttler.cs" />
     <Compile Include="VehicleComponents\VehicleDamageTracker.cs" />
+    <Compile Include="VehicleComponents\VFArmsManager.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
     <Compile Include="VehicleTypes\Skimmer.cs" />
     <Compile Include="VehicleTypes\Submarine.cs" />

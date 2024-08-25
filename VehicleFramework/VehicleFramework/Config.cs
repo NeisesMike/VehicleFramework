@@ -57,5 +57,8 @@ namespace VehicleFramework
         [Toggle("Fragment Experience", Tooltip = "Enable scannable fragments. Leave unchecked if adding this mod to an existing world. Requires Subnautica reboot when changed.")]
         public bool isFragmentExperience = true;
 
+        [Toggle("Force Arms Compat", Tooltip = "Force arm slots onto every vehicle. Otherwise, only already-setup vehicles will accept arm upgrades. Requires game reboot to take effect. Be careful when disabling this in the middle of a save.")]
+        public bool forceArmsCompat = true;
+
     }
 }

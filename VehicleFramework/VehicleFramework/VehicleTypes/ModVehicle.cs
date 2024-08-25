@@ -62,8 +62,7 @@ namespace VehicleFramework
             {
                 if (_slotIDs == null)
                 {
-                    int numVehicleModules = HasArms ? NumModules + 2 : NumModules;
-                    _slotIDs = GenerateSlotIDs(numVehicleModules, HasArms);
+                    _slotIDs = GenerateSlotIDs(NumModules, HasArms);
                 }
                 return _slotIDs;
             }
@@ -1041,13 +1040,14 @@ namespace VehicleFramework
         #region static_methods
         private static string[] GenerateSlotIDs(int modules, bool arms)
         {
-            int numModules = arms ? modules + 2 : modules;
-            string[] retIDs = new string[numModules];
+            string[] retIDs;
+            int numUpgradesTotal = (arms || MainPatcher.VFConfig.forceArmsCompat) ? (modules + 2) : modules;
+            retIDs = new string[numUpgradesTotal];
             for (int i = 0; i < modules; i++)
             {
                 retIDs[i] = "VehicleModule" + i.ToString();
             }
-            if (arms)
+            if (arms || MainPatcher.VFConfig.forceArmsCompat)
             {
                 retIDs[modules] = ModuleBuilder.LeftArmSlotName;
                 retIDs[modules + 1] = ModuleBuilder.RightArmSlotName;
