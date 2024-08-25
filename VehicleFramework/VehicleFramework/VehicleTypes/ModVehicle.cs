@@ -1034,8 +1034,8 @@ namespace VehicleFramework
             }
             if (arms)
             {
-                retIDs[modules] = "VehicleArmLeft";
-                retIDs[modules + 1] = "VehicleArmRight";
+                retIDs[modules] = ModuleBuilder.LeftArmSlotName;
+                retIDs[modules + 1] = ModuleBuilder.RightArmSlotName;
             }
             return retIDs;
         }

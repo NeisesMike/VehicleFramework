@@ -25,7 +25,7 @@ namespace VehicleFramework
                                                                            "VehicleModule3", "VehicleModule4", "VehicleModule5",
                                                                            "VehicleModule6", "VehicleModule7", "VehicleModule8",
                                                                            "VehicleModule9", "VehicleModule10", "VehicleModule11"};
-        public static List<string> vehicleArmSlots = new List<string> { "VehicleArmLeft", "VehicleArmRight" };
+        public static List<string> vehicleArmSlots = new List<string> { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
 
         public static Dictionary<EquipmentType, List<string>> vehicleTypeToSlots = new Dictionary<EquipmentType, List<string>>
                 {
@@ -35,7 +35,7 @@ namespace VehicleFramework
 
 
         [HarmonyPrefix]
-        [HarmonyPatch("SetLabel")]
+        [HarmonyPatch(nameof(Equipment.SetLabel))]
         public static bool SetLabelPrefix(Equipment __instance, string l, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (!l.Contains("VehicleModule") && !l.Contains("VehicleArm"))
@@ -47,7 +47,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("AddSlot")]
+        [HarmonyPatch(nameof(Equipment.AddSlot))]
         public static bool AddSlotPrefix(string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
@@ -59,7 +59,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("GetCompatibleSlotDefault")]
+        [HarmonyPatch(nameof(Equipment.GetCompatibleSlotDefault))]
         public static bool GetCompatibleSlotDefaultPrefix(EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
@@ -71,7 +71,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("GetFreeSlot")]
+        [HarmonyPatch(nameof(Equipment.GetFreeSlot))]
         public static bool GetFreeSlotPrefix(EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (type != VehicleBuilder.ModuleType && type != VehicleBuilder.ArmType)
@@ -83,7 +83,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("GetSlots")]
+        [HarmonyPatch(nameof(Equipment.GetSlots))]
         public static bool GetSlotsPrefix(EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
@@ -95,7 +95,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("RemoveSlot")]
+        [HarmonyPatch(nameof(Equipment.RemoveSlot))]
         public static bool RemoveSlot(string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
@@ -107,7 +107,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("GetSlotType")]
+        [HarmonyPatch(nameof(Equipment.GetSlotType))]
         public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result, Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (vehicleModuleSlots.Contains(slot))
@@ -124,7 +124,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("IsCompatible")]
+        [HarmonyPatch(nameof(Equipment.IsCompatible))]
         public static bool IsCompatiblePrefix(EquipmentType itemType, EquipmentType slotType, ref bool __result)
         {
             __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == VehicleBuilder.ModuleType));

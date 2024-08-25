@@ -25,6 +25,8 @@ namespace VehicleFramework
         public static bool haveWeCalledBuildAllSlots = false;
         public static bool slotExtenderIsPatched = false;
         public static bool slotExtenderHasGreenLight = false;
+        public static readonly string LeftArmSlotName = "VehicleArmLeft";
+        public static readonly string RightArmSlotName = "VehicleArmRight";
 
         public enum ModuleSlotType
         {
@@ -92,8 +94,8 @@ namespace VehicleFramework
                 {
                     vehicleAllSlots.Add("VehicleModule" + i.ToString(), equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>());
                 }
-                vehicleAllSlots.Add("VehicleArmLeft", equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>());
-                vehicleAllSlots.Add("VehicleArmRight", equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>());
+                vehicleAllSlots.Add(ModuleBuilder.LeftArmSlotName, equipment.transform.Find(ModuleBuilder.LeftArmSlotName).GetComponent<uGUI_EquipmentSlot>());
+                vehicleAllSlots.Add(ModuleBuilder.RightArmSlotName, equipment.transform.Find(ModuleBuilder.RightArmSlotName).GetComponent<uGUI_EquipmentSlot>());
             }
             else
             {
@@ -114,8 +116,8 @@ namespace VehicleFramework
                 {
                     vehicleAllSlots["VehicleModule" + i.ToString()] = equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>();
                 }
-                vehicleAllSlots["VehicleArmLeft"] = equipment.transform.Find("VehicleArmLeft").GetComponent<uGUI_EquipmentSlot>();
-                vehicleAllSlots["VehicleArmRight"] = equipment.transform.Find("VehicleArmRight").GetComponent<uGUI_EquipmentSlot>();
+                vehicleAllSlots[ModuleBuilder.LeftArmSlotName] = equipment.transform.Find(ModuleBuilder.LeftArmSlotName).GetComponent<uGUI_EquipmentSlot>();
+                vehicleAllSlots[ModuleBuilder.RightArmSlotName] = equipment.transform.Find(ModuleBuilder.RightArmSlotName).GetComponent<uGUI_EquipmentSlot>();
             }
 
             // Now that we've gotten the data we need,
@@ -270,12 +272,12 @@ namespace VehicleFramework
             GameObject leftArm = GetLeftArmSlot();
             if (arms)
             {
-                leftArm.name = "VehicleArmLeft";
+                leftArm.name = ModuleBuilder.LeftArmSlotName;
                 leftArm.SetActive(false);
                 leftArm.transform.SetParent(equipment.transform, false);
                 leftArm.transform.Find("Hint").localEulerAngles = new Vector3(0, 180, 0); // need to flip this hand to look "left"
                 leftArm.transform.localScale = Vector3.one;
-                leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmLeft";
+                leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = ModuleBuilder.LeftArmSlotName;
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
                 LinkArm(ref leftArm);
                 DistributeModule(ref leftArm, modules, numModules);
@@ -285,11 +287,11 @@ namespace VehicleFramework
             GameObject rightArm = GetRightArmSlot();
             if (arms)
             {
-                rightArm.name = "VehicleArmRight";
+                rightArm.name = ModuleBuilder.RightArmSlotName;
                 rightArm.SetActive(false);
                 rightArm.transform.SetParent(equipment.transform, false);
                 rightArm.transform.localScale = Vector3.one;
-                rightArm.EnsureComponent<uGUI_EquipmentSlot>().slot = "VehicleArmRight";
+                rightArm.EnsureComponent<uGUI_EquipmentSlot>().slot = ModuleBuilder.RightArmSlotName;
                 rightArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
                 LinkArm(ref rightArm);
                 DistributeModule(ref rightArm, modules + 1, numModules);
