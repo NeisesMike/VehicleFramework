@@ -42,6 +42,8 @@ namespace VehicleFramework.VehicleComponents
                 Logger.Warn("Can't update arms for a non-arm slot. How did we get here?");
                 return;
             }
+            mv.Arms.originalLeftArm.SetActive(GetComponent<VFArmsManager>().leftArm == null);
+            mv.Arms.originalRightArm.SetActive(GetComponent<VFArmsManager>().rightArm == null);
         }
         public void SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {

@@ -52,6 +52,8 @@ namespace VehicleFramework.VehicleParts
 
     public struct VehicleArmsProxy
     {
+        public GameObject originalLeftArm;
+        public GameObject originalRightArm;
         public Transform leftArmPlacement;
         public Transform rightArmPlacement;
     }
