@@ -97,7 +97,7 @@ namespace VehicleFramework.VehicleComponents
             else
             {
                 rightArm = null;
-                leftArmSlotID = 0;
+                rightArmSlotID = 0;
                 UnityEngine.Object.DestroyImmediate(transform.Find("RightArm")?.gameObject);
             }
         }

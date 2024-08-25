@@ -33,7 +33,7 @@ namespace VehicleFramework.UpgradeModules
                     VehicleComponents.VFArmsManager vfam = mv.GetComponent<VehicleComponents.VFArmsManager>();
                     GameObject leftArm = vfam.leftArm;
                     GameObject rightArm = vfam.rightArm;
-                    if (slotID == vfam.leftArmSlotID && vfam.leftArm != null)
+                    if (slotID == vfam.leftArmSlotID && leftArm != null)
                     {
                         arm.OnSelected(mv, leftArm, slotID);
                     }
