@@ -16,7 +16,22 @@ namespace VehicleFramework.Engines
     {
         public ModVehicle mv;
         public Rigidbody rb;
-        public EngineSounds sounds;
+        private EngineSounds _sounds = null;
+        public EngineSounds sounds
+        {
+            get
+            {
+                return _sounds;
+            }
+            set
+            {
+                _sounds = value;
+                EngineSource1.clip = sounds.hum;
+                EngineSource2.clip = sounds.whistle;
+            }
+        }
+
+
         public float WhistleFactor = 1f;
         public float HumFactor = 1f;
         public bool blockVoiceChange => false;
