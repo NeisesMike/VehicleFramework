@@ -66,11 +66,18 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else
                 {
-                    leftArm.transform.localPosition =
-                        ((mv is Drone) ?
-                        (mv as Drone).CameraLocation.localPosition :
-                        mv.playerPosition.transform.localPosition)
-                        - Vector3.right;
+                    if(mv is Drone)
+                    {
+                        leftArm.transform.localPosition = (mv as Drone).CameraLocation.localPosition
+                            - Vector3.right;
+                    }
+                    else
+                    {
+                        Vector3 worldPositionOfC = mv.playerPosition.transform.position;
+                        Vector3 localPositionOfCInA = mv.transform.InverseTransformPoint(worldPositionOfC);
+                        leftArm.transform.localPosition = localPositionOfCInA
+                            - Vector3.right;
+                    }
                 }
                 leftArm.name = "LeftArm";
             }
@@ -79,7 +86,11 @@ namespace VehicleFramework.VehicleComponents
                 rightArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
                 rightArm.transform.SetParent(mv.transform);
                 rightArm.transform.localRotation = Quaternion.identity;
-                rightArm.transform.localScale = new Vector3(-1, 1, 1);
+                rightArm.transform.localScale = new Vector3(
+                    -rightArm.transform.localScale.x,
+                    rightArm.transform.localScale.y,
+                    rightArm.transform.localScale.z
+                );
                 if (mv.Arms.rightArmPlacement != null)
                 {
                     rightArm.transform.localPosition = mv.Arms.rightArmPlacement.localPosition;
@@ -87,11 +98,18 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else
                 {
-                    rightArm.transform.localPosition =
-                        ((mv is Drone) ?
-                        (mv as Drone).CameraLocation.localPosition :
-                        mv.playerPosition.transform.localPosition)
-                        + Vector3.right;
+                    if (mv is Drone)
+                    {
+                        leftArm.transform.localPosition = (mv as Drone).CameraLocation.localPosition
+                            + Vector3.right;
+                    }
+                    else
+                    {
+                        Vector3 worldPositionOfC = mv.playerPosition.transform.position;
+                        Vector3 localPositionOfCInA = mv.transform.InverseTransformPoint(worldPositionOfC);
+                        rightArm.transform.localPosition = localPositionOfCInA
+                            + Vector3.right;
+                    }
                 }
                 rightArm.name = "RightArm";
             }
