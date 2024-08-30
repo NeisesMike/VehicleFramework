@@ -26,8 +26,8 @@ namespace VehicleFramework.Engines
             set
             {
                 _sounds = value;
-                EngineSource1.clip = sounds.hum;
-                EngineSource2.clip = sounds.whistle;
+                EngineSource1.clip = value.hum;
+                EngineSource2.clip = value.whistle;
             }
         }
 
@@ -207,19 +207,16 @@ namespace VehicleFramework.Engines
             rb.centerOfMass = Vector3.zero;
             rb.angularDrag = 5f;
 
-            sounds = EngineSoundsManager.GetDefaultVoice(mv);
-
             EngineSource1 = mv.gameObject.AddComponent<AudioSource>();
             EngineSource1.loop = true;
             EngineSource1.playOnAwake = false;
-            EngineSource1.clip = sounds.hum;
             EngineSource1.priority = 0;
 
             EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
             EngineSource2.loop = false;
             EngineSource2.playOnAwake = false;
-            EngineSource2.clip = sounds.whistle;
             EngineSource2.priority = 0;
+            sounds = EngineSoundsManager.GetDefaultVoice(mv);
         }
         public void OnDisable()
         {
@@ -257,6 +254,8 @@ namespace VehicleFramework.Engines
                         moveDirection = DoMoveAction();
                     }
                 }
+                // Execute a state-based physics move
+                ExecutePhysicsMove();
                 if (moveDirection == Vector3.zero)
                 {
                     UpdateEngineHum(-3);
@@ -267,9 +266,6 @@ namespace VehicleFramework.Engines
                 }
                 PlayEngineHum();
                 PlayEngineWhistle(moveDirection);
-
-                // Execute a state-based physics move
-                ExecutePhysicsMove();
             }
             else
             {
