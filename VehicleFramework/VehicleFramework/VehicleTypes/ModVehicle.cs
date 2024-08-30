@@ -749,52 +749,6 @@ namespace VehicleFramework
             upgradeStrings.AddRange(armStrings);
             return upgradeStrings.ToList();
         }
-        public IEnumerator EvaluateDepthModuleLevel()
-        {
-            // honestly I just do this to ensure the module is well-and-gone if we just removed one,
-            // since this gets called on module-remove and on module-add
-            yield return new WaitForSeconds(1);
-
-            // Iterate over all upgrade modules,
-            // in order to determine our max depth module level
-            int maxDepthModuleLevel = 0;
-            List<string> upgradeSlots = new List<string>();
-            upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
-            foreach (String slot in upgradeSlots)
-            {
-                InventoryItem upgrade = upgradesInput.equipment.GetItemInSlot(slot);
-                if (upgrade != null)
-                {
-                    //Logger.Log(slot + " : " + upgrade.item.name);
-                    if (upgrade.item.name == "ModVehicleDepthModule1(Clone)")
-                    {
-                        if (maxDepthModuleLevel < 1)
-                        {
-                            maxDepthModuleLevel = 1;
-                        }
-                    }
-                    else if (upgrade.item.name == "ModVehicleDepthModule2(Clone)")
-                    {
-                        if (maxDepthModuleLevel < 2)
-                        {
-                            maxDepthModuleLevel = 2;
-                        }
-                    }
-                    else if (upgrade.item.name == "ModVehicleDepthModule3(Clone)")
-                    {
-                        if (maxDepthModuleLevel < 3)
-                        {
-                            maxDepthModuleLevel = 3;
-                        }
-                    }
-                }
-            }
-            int extraDepthToAdd = 0;
-            extraDepthToAdd = maxDepthModuleLevel > 0 ? extraDepthToAdd += CrushDepthUpgrade1 : extraDepthToAdd;
-            extraDepthToAdd = maxDepthModuleLevel > 1 ? extraDepthToAdd += CrushDepthUpgrade2 : extraDepthToAdd;
-            extraDepthToAdd = maxDepthModuleLevel > 2 ? extraDepthToAdd += CrushDepthUpgrade3 : extraDepthToAdd;
-            GetComponent<CrushDamage>().SetExtraCrushDepth(extraDepthToAdd);
-        }
         private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
         {
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
