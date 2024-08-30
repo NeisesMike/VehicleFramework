@@ -40,8 +40,6 @@ namespace VehicleFramework.UpgradeTypes
         public ModVehicle mv;
         public int slotID;
         public TechType techType;
-        public float cooldown;
-        public float energyCost;
         public GameObject arm;
     }
 }

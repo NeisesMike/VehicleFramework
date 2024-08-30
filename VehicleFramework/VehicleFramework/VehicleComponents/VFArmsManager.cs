@@ -73,7 +73,7 @@ namespace VehicleFramework.VehicleComponents
                         (mv is VehicleFramework.VehicleTypes.Drone) ?
                         (mv as VehicleFramework.VehicleTypes.Drone).CameraLocation.localPosition :
                         mv.playerPosition.transform.localPosition;
-                    leftArm.transform.localPosition -= leftArm.transform.right;
+                    leftArm.transform.localPosition -= mv.transform.right;
                 }
                 leftArm.name = "LeftArm";
             }
@@ -94,7 +94,7 @@ namespace VehicleFramework.VehicleComponents
                         (mv is VehicleFramework.VehicleTypes.Drone) ?
                         (mv as VehicleFramework.VehicleTypes.Drone).CameraLocation.localPosition :
                         mv.playerPosition.transform.localPosition;
-                    rightArm.transform.localPosition += rightArm.transform.right;
+                    rightArm.transform.localPosition += mv.transform.right;
                 }
                 rightArm.name = "RightArm";
             }

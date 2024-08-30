@@ -180,7 +180,6 @@
     <Compile Include="Patches\WaterClipProxyPatcher.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
-    <Compile Include="UpgradeModules\ArmModule.cs" />
     <Compile Include="UpgradeTypes\UpgradeActionParams.cs" />
     <Compile Include="VehicleBuilding\ColliderState.cs" />
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />

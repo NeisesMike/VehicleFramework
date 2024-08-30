@@ -298,6 +298,7 @@ namespace VehicleFramework
                 techType = techType
             };
             Admin.UpgradeRegistrar.OnSelectActions.ForEach(x => x(param));
+
             UpgradeTypes.SelectableChargeableActionParams param2 = new UpgradeTypes.SelectableChargeableActionParams
             {
                 mv = this,
@@ -307,6 +308,26 @@ namespace VehicleFramework
                 slotCharge = param.mv.GetSlotCharge(param.slotID)
             };
             Admin.UpgradeRegistrar.OnSelectChargeActions.ForEach(x => x(param2));
+
+            VehicleComponents.VFArmsManager vfam = param.mv.GetComponent<VehicleComponents.VFArmsManager>();
+            GameObject inputArm = null;
+            if (param.slotID == vfam?.leftArmSlotID && vfam?.leftArm != null)
+            {
+                inputArm = vfam.leftArm;
+            }
+            else if (param.slotID == vfam?.rightArmSlotID && vfam?.rightArm != null)
+            {
+                inputArm = vfam.rightArm;
+            }
+            UpgradeTypes.ArmActionParams param3 = new UpgradeTypes.ArmActionParams
+            {
+                mv = this,
+                slotID = slotID,
+                techType = techType,
+                arm = inputArm
+            };
+            Admin.UpgradeRegistrar.OnArmActions.ForEach(x => x(param3));
+
             base.OnUpgradeModuleUse(techType, slotID);
         }
         public override void OnPilotModeBegin()

@@ -16,8 +16,8 @@ namespace VehicleFramework.Admin
         internal static List<Action<AddActionParams>> OnAddActions = new List<Action<AddActionParams>>();
         internal static List<Action<ToggleActionParams>> OnToggleActions = new List<Action<ToggleActionParams>>();
         internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new List<Action<SelectableChargeableActionParams>>();
-        internal static List<Func<SelectableActionParams, bool>> OnSelectActions = new List<Func<SelectableActionParams, bool>>();
-        internal static List<Func<ArmActionParams, bool>> OnArmActions = new List<Func<ArmActionParams, bool>>();
+        internal static List<Action<SelectableActionParams>> OnSelectActions = new List<Action<SelectableActionParams>>();
+        internal static List<Action<ArmActionParams>> OnArmActions = new List<Action<ArmActionParams>>();
         public static TechType RegisterUpgrade(ModVehicleUpgrade upgrade, bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
@@ -120,7 +120,7 @@ namespace VehicleFramework.Admin
             SelectableUpgrade select = upgrade as SelectableUpgrade;
             if (select != null)
             {
-                bool WrappedOnSelected(SelectableActionParams param)
+                void WrappedOnSelected(SelectableActionParams param)
                 {
                     if (param.techType == upgrade.TechType)
                     {
@@ -128,9 +128,7 @@ namespace VehicleFramework.Admin
                         param.mv.quickSlotTimeUsed[param.slotID] = Time.time;
                         param.mv.quickSlotCooldown[param.slotID] = select.Cooldown;
                         param.mv.energyInterface.ConsumeEnergy(select.EnergyCost);
-                        return true;
                     }
-                    return false;
                 }
                 OnSelectActions.Add(WrappedOnSelected);
             }
@@ -202,14 +200,15 @@ namespace VehicleFramework.Admin
             ModVehicleArm arm = upgrade as ModVehicleArm;
             if (arm != null)
             {
-                bool WrappedOnArm(ArmActionParams param)
+                void WrappedOnArm(ArmActionParams param)
                 {
                     if (param.techType == upgrade.TechType)
                     {
+                        param.mv.quickSlotTimeUsed[param.slotID] = Time.time;
+                        param.mv.quickSlotCooldown[param.slotID] = arm.Cooldown;
+                        param.mv.energyInterface.ConsumeEnergy(arm.EnergyCost);
                         arm.OnArmSelected(param);
-                        return true;
                     }
-                    return false;
                 }
                 OnArmActions.Add(WrappedOnArm);
             }
