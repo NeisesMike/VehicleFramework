@@ -140,7 +140,6 @@
     <Compile Include="Assets\SpriteHelper.cs" />
     <Compile Include="Assets\VanillaVehicleHelpers.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Assets\ModVehicleArm.cs" />
     <Compile Include="DepthModules\DepthModule3.cs" />
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
