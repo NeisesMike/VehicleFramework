@@ -110,9 +110,9 @@ namespace VehicleFramework
 
             // patch in the crafting node for the vehicle upgrade menu
             string[] stepsToDepthTab = { "MVUM" };
-            CraftTreeHandler.AddTabNode(CraftTree.Type.SeamothUpgrades, stepsToDepthTab[0], LocalizationManager.GetString(EnglishString.MVModules), MainPatcher.ModVehicleIcon);
-            CraftTreeHandler.AddTabNode(CraftTree.Type.SeamothUpgrades, "MVDM", LocalizationManager.GetString(EnglishString.MVDepthModules), MainPatcher.ModVehicleIcon, stepsToDepthTab);
-            CraftTreeHandler.AddTabNode(CraftTree.Type.SeamothUpgrades, "MVCM", "Mod Vehicle Common Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, stepsToDepthTab[0], LocalizationManager.GetString(EnglishString.MVModules), MainPatcher.ModVehicleIcon);
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVDM", LocalizationManager.GetString(EnglishString.MVDepthModules), MainPatcher.ModVehicleIcon, stepsToDepthTab);
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVCM", "Mod Vehicle Common Modules", MainPatcher.ModVehicleIcon, stepsToDepthTab);
 
 
             //string[] stepsToMVTab = { "SeamothMenu" };
