@@ -122,7 +122,7 @@ namespace VehicleFramework
                 VehicleEntry ve = vehicleTypes.Where(x => x.name.Contains(name)).First();
                 return ve.techType;
             }
-            catch(Exception e)
+            catch
             {
                 Logger.Error("GetTechTypeFromVehicleName Error. Could not find a vehicle by the name: " + name + ". Here are all vehicle names:");
                 vehicleTypes.ForEach(x => Logger.Log(x.name));
