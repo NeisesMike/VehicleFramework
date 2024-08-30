@@ -69,6 +69,7 @@ namespace VehicleFramework
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
         internal static Atlas.Sprite UpgradeIcon { get; private set; }
+        internal static Atlas.Sprite DepthIcon { get; private set; }
         internal static Atlas.Sprite ArmIcon { get; private set; }
 
         public void Awake()
@@ -90,6 +91,7 @@ namespace VehicleFramework
             ModVehicleIcon = Assets.SpriteHelper.GetSpriteInternal("ModVehicleIcon.png");
             ArmIcon = Assets.SpriteHelper.GetSpriteInternal("ArmUpgradeIcon.png");
             UpgradeIcon = Assets.SpriteHelper.GetSpriteInternal("UpgradeIcon.png");
+            DepthIcon = Assets.SpriteHelper.GetSpriteInternal("DepthIcon.png");
         }
         public void PrePatch()
         {
@@ -117,7 +119,8 @@ namespace VehicleFramework
             //CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
 
             // patch in the depth module upgrades
-            ModulePrepper.RegisterModVehicleDepthModules();
+            //ModulePrepper.RegisterModVehicleDepthModules();
+            VehicleFramework.Admin.Utils.RegisterDepthModules();
 
 
             UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());

@@ -141,6 +141,9 @@
     <Compile Include="Assets\VanillaVehicleHelpers.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Assets\ModVehicleArm.cs" />
+    <Compile Include="DepthModules\DepthModule3.cs" />
+    <Compile Include="DepthModules\DepthModule2.cs" />
+    <Compile Include="DepthModules\DepthModule1.cs" />
     <Compile Include="UpgradeTypes\ToggleableUpgrade.cs" />
     <Compile Include="UpgradeTypes\SelectableChargeableUpgrade.cs" />
     <Compile Include="UpgradeTypes\SelectableUpgrade.cs" />
