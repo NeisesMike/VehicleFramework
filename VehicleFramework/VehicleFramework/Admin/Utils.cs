@@ -135,5 +135,19 @@ namespace VehicleFramework.Admin
             extraDepthToAdd = maxDepthModuleLevel > 2 ? extraDepthToAdd += param.mv.CrushDepthUpgrade3 : extraDepthToAdd;
             param.mv.GetComponent<CrushDamage>().SetExtraCrushDepth(extraDepthToAdd);
         }
+        public static TechType GetTechTypeFromVehicleName(string name)
+        {
+            try
+            {
+                VehicleEntry ve = VehicleManager.vehicleTypes.Where(x => x.name.Contains(name)).First();
+                return ve.techType;
+            }
+            catch
+            {
+                Logger.Error("GetTechTypeFromVehicleName Error. Could not find a vehicle by the name: " + name + ". Here are all vehicle names:");
+                VehicleManager.vehicleTypes.ForEach(x => Logger.Log(x.name));
+                return 0;
+            }
+        }
     }
 }

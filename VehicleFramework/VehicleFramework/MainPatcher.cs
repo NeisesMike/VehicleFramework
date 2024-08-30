@@ -118,10 +118,7 @@ namespace VehicleFramework
             //string[] stepsToMVTab = { "SeamothMenu" };
             //CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "ModVehicle", "ModVehicle Modules", ModVehicleIcon, stepsToMVTab);
 
-            // patch in the depth module upgrades
-            //ModulePrepper.RegisterModVehicleDepthModules();
             VehicleFramework.Admin.Utils.RegisterDepthModules();
-
 
             UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
             UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());

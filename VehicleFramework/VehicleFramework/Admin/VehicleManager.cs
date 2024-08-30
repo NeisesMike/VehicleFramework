@@ -115,19 +115,5 @@ namespace VehicleFramework
                 mv.OnKill();
             }
         }
-        public static TechType GetTechTypeFromVehicleName(string name)
-        {
-            try
-            {
-                VehicleEntry ve = vehicleTypes.Where(x => x.name.Contains(name)).First();
-                return ve.techType;
-            }
-            catch
-            {
-                Logger.Error("GetTechTypeFromVehicleName Error. Could not find a vehicle by the name: " + name + ". Here are all vehicle names:");
-                vehicleTypes.ForEach(x => Logger.Log(x.name));
-                return 0;
-            }
-        }
     }
 }
