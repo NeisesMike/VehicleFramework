@@ -125,6 +125,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\UpgradeRegistrar.cs" />
     <Compile Include="Assets\AssetBundleManager.cs" />
     <Compile Include="Assets\BiomeType.cs" />
     <Compile Include="Assets\FragmentManager.cs" />
@@ -140,6 +141,11 @@
     <Compile Include="Assets\VanillaVehicleHelpers.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Assets\ModVehicleArm.cs" />
+    <Compile Include="UpgradeTypes\ToggleableUpgrade.cs" />
+    <Compile Include="UpgradeTypes\SelectableChargeableUpgrade.cs" />
+    <Compile Include="UpgradeTypes\SelectableUpgrade.cs" />
+    <Compile Include="UpgradeTypes\ModVehicleUpgrade.cs" />
+    <Compile Include="UpgradeTypes\ModVehicleArm.cs" />
     <Compile Include="LocalizationManager.cs" />
     <Compile Include="Patches\CompatibilityPatches\ChameleonSubPatcher.cs" />
     <Compile Include="Patches\PlaceToolPatcher.cs" />
@@ -173,6 +179,7 @@
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
     <Compile Include="UpgradeModules\ArmModule.cs" />
+    <Compile Include="UpgradeTypes\UpgradeActionParams.cs" />
     <Compile Include="VehicleBuilding\ColliderState.cs" />
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
     <Compile Include="VehicleComponents\ForeverBattery.cs" />

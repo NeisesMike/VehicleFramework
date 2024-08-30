@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.UpgradeTypes;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -14,7 +15,7 @@ namespace VehicleFramework.VehicleComponents
         internal int leftArmSlotID = 0;
         internal int rightArmSlotID = 0;
 
-        public void UpdateArms(ModVehicleArm arm, int slotId)
+        public IEnumerator UpdateArms(ModVehicleArm arm, int slotId)
         {
             ModVehicle mv = GetComponent<ModVehicle>();
             string thisSlotName = mv.slotIDs[slotId];
@@ -22,32 +23,40 @@ namespace VehicleFramework.VehicleComponents
             if (thisSlotName.Contains(ModuleBuilder.LeftArmSlotName))
             {
                 DestroyArm(true);
-                if (techTypeInSlot == arm.techType)
+                if (techTypeInSlot == arm.TechType)
                 {
-                    SpawnArm(mv, arm, true);
+                    yield return UWE.CoroutineHost.StartCoroutine(SpawnArm(mv, arm, true));
                     leftArmSlotID = slotId;
                 }
             }
             else if (thisSlotName.Contains(ModuleBuilder.RightArmSlotName))
             {
                 DestroyArm(false);
-                if (techTypeInSlot == arm.techType)
+                if (techTypeInSlot == arm.TechType)
                 {
-                    SpawnArm(mv, arm, false);
+                    yield return UWE.CoroutineHost.StartCoroutine(SpawnArm(mv, arm, false));
                     rightArmSlotID = slotId;
                 }
             }
             else
             {
                 Logger.Warn("Can't update arms for a non-arm slot. How did we get here?");
-                return;
+                yield break;
             }
             mv.Arms.originalLeftArm?.SetActive(GetComponent<VFArmsManager>().leftArm == null);
             mv.Arms.originalRightArm?.SetActive(GetComponent<VFArmsManager>().rightArm == null);
         }
-        public void SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
+        public IEnumerator SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {
-            var armPrefab = arm.GetPrefab();
+            TaskResult<GameObject> armRequest = new TaskResult<GameObject>();
+            yield return UWE.CoroutineHost.StartCoroutine(arm.GetArmPrefab(armRequest));
+            GameObject armPrefab = armRequest.Get();
+            if(armPrefab == null)
+            {
+                Logger.Error("VFArmsManager Error: GetArmPrefab returned a null GameObject instead of a valid arm.");
+                yield break;
+            }
+
             if (isLeft && leftArm == null)
             {
                 leftArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);

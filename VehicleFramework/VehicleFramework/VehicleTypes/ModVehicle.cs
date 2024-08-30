@@ -227,13 +227,13 @@ namespace VehicleFramework
         }
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
+            TechType techType = modules.GetTechTypeInSlot(slotIDs[slotID]);
             if (active)
             {
-                TechType techType = modules.GetTechTypeInSlot(slotIDs[slotID]);
                 var moduleToggleAction = UpgradeModules.ModulePrepper.upgradeToggleActions.Where(x => x.Item2 == techType).FirstOrDefault();
-                if (moduleToggleAction is null)
+                if (moduleToggleAction != null)
                 {
-                    return;
+                    toggledActions.Add(new Tuple<int, Coroutine>(slotID, StartCoroutine(DoToggleAction(this, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
                 }
                 IEnumerator DoToggleAction(ModVehicle thisMV, int thisSlotID, TechType tt, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
                 {
@@ -257,12 +257,19 @@ namespace VehicleFramework
                         yield return new WaitForSeconds(repeatRate);
                     }
                 }
-                toggledActions.Add(new Tuple<int, Coroutine>(slotID, StartCoroutine(DoToggleAction(this, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
             }
             else
             {
                 toggledActions.Where(x => x.Item1 == slotID).Where(x => x.Item2 != null).ToList().ForEach(x => StopCoroutine(x.Item2));
             }
+            UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
+            {
+                active = active,
+                mv = this,
+                slotID = slotID,
+                techType = techType
+            };
+            Admin.UpgradeRegistrar.OnToggleActions.ForEach(x => x(param));
             base.OnUpgradeModuleToggle(slotID, active);
         }
         public override void OnUpgradeModuleUse(TechType techType, int slotID)
@@ -284,6 +291,22 @@ namespace VehicleFramework
                 moduleUseAction.Item1(this, slotID, techType, charge, slotCharge);
                 energyInterface.ConsumeEnergy(moduleUseAction.Item3);
             }
+            UpgradeTypes.SelectableActionParams param = new UpgradeTypes.SelectableActionParams
+            {
+                mv = this,
+                slotID = slotID,
+                techType = techType
+            };
+            Admin.UpgradeRegistrar.OnSelectActions.ForEach(x => x(param));
+            UpgradeTypes.SelectableChargeableActionParams param2 = new UpgradeTypes.SelectableChargeableActionParams
+            {
+                mv = this,
+                slotID = slotID,
+                techType = techType,
+                charge = param.mv.quickSlotCharge[param.slotID],
+                slotCharge = param.mv.GetSlotCharge(param.slotID)
+            };
+            Admin.UpgradeRegistrar.OnSelectChargeActions.ForEach(x => x(param2));
             base.OnUpgradeModuleUse(techType, slotID);
         }
         public override void OnPilotModeBegin()
@@ -329,7 +352,15 @@ namespace VehicleFramework
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
             var upgradeList = GetCurrentUpgrades();
             UpgradeModules.ModulePrepper.upgradeOnAddedActions.ForEach(x => x(this, upgradeList, slotID, techType, added));
-            StartCoroutine(EvaluateDepthModuleLevel());
+
+            UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+            {
+                mv = this,
+                slotID = slotID,
+                techType = techType,
+                isAdded = added
+            };
+            Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
         }
         public override InventoryItem GetSlotItem(int slotID)
         {
@@ -669,7 +700,7 @@ namespace VehicleFramework
         public bool IsPlayerDry = false; // true when inside a vehicle (or piloting a drone)
         public bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
-        private List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
+        internal List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
         public bool isScuttled = false;
         #endregion
 
