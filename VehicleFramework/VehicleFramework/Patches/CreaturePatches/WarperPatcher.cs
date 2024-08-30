@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace VehicleFramework.Patches.CreaturePatches
 {
-    /*
     [HarmonyPatch(typeof(Creature))]
     class WarperPatcher
     {
@@ -18,16 +17,14 @@ namespace VehicleFramework.Patches.CreaturePatches
         {
             if(__instance.name.Contains("Warper") && __result.GetType().ToString().Contains("RangedAttackLastTarget"))
             {
-                ModVehicle mv =  Player.main.GetVehicle() as ModVehicle;
-                if(mv != null)
+                VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+                if(drone != null)
                 {
-                    Logger.Log("replace it 1!");
-                    //__result = new SwimRandom();
+                    __result = new SwimRandom();
                 }
             }
         }
     }
-     */
 
     [HarmonyPatch(typeof(WarpBall))]
     class WarperPatcher2
@@ -40,11 +37,10 @@ namespace VehicleFramework.Patches.CreaturePatches
             if (component != null && component.GetMode() == Player.Mode.LockedPiloting)
             {
                 ModVehicle mv = component.GetVehicle() as ModVehicle;
-                if (mv != null)
+                VehicleTypes.Submarine sub = mv as VehicleTypes.Submarine;
+                if (mv != null && sub == null)
                 {
                     mv.ForceExitLockedMode();
-                    //component.ExitLockedMode(false, true);
-                    //mv.StopPiloting();
                     mv.PlayerExit();
                     position = mv.transform.position + UnityEngine.Random.onUnitSphere * 15f;
                 }
