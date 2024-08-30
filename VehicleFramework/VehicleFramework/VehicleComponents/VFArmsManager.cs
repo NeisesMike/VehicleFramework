@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using UnityEngine;
 using VehicleFramework.UpgradeTypes;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -51,7 +48,7 @@ namespace VehicleFramework.VehicleComponents
             TaskResult<GameObject> armRequest = new TaskResult<GameObject>();
             yield return UWE.CoroutineHost.StartCoroutine(arm.GetArmPrefab(armRequest));
             GameObject armPrefab = armRequest.Get();
-            if(armPrefab == null)
+            if (armPrefab == null)
             {
                 Logger.Error("VFArmsManager Error: GetArmPrefab returned a null GameObject instead of a valid arm.");
                 yield break;
@@ -60,7 +57,7 @@ namespace VehicleFramework.VehicleComponents
             if (isLeft && leftArm == null)
             {
                 leftArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
-                leftArm.transform.parent = mv.transform;
+                leftArm.transform.SetParent(mv.transform);
                 leftArm.transform.localRotation = Quaternion.identity;
                 if (mv.Arms.leftArmPlacement != null)
                 {
@@ -70,17 +67,17 @@ namespace VehicleFramework.VehicleComponents
                 else
                 {
                     leftArm.transform.localPosition =
-                        (mv is VehicleFramework.VehicleTypes.Drone) ?
-                        (mv as VehicleFramework.VehicleTypes.Drone).CameraLocation.localPosition :
-                        mv.playerPosition.transform.localPosition;
-                    leftArm.transform.localPosition -= mv.transform.right;
+                        ((mv is Drone) ?
+                        (mv as Drone).CameraLocation.localPosition :
+                        mv.playerPosition.transform.localPosition)
+                        - Vector3.right;
                 }
                 leftArm.name = "LeftArm";
             }
             else if (!isLeft && rightArm == null)
             {
                 rightArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
-                rightArm.transform.parent = mv.transform;
+                rightArm.transform.SetParent(mv.transform);
                 rightArm.transform.localRotation = Quaternion.identity;
                 rightArm.transform.localScale = new Vector3(-1, 1, 1);
                 if (mv.Arms.rightArmPlacement != null)
@@ -91,10 +88,10 @@ namespace VehicleFramework.VehicleComponents
                 else
                 {
                     rightArm.transform.localPosition =
-                        (mv is VehicleFramework.VehicleTypes.Drone) ?
-                        (mv as VehicleFramework.VehicleTypes.Drone).CameraLocation.localPosition :
-                        mv.playerPosition.transform.localPosition;
-                    rightArm.transform.localPosition += mv.transform.right;
+                        ((mv is Drone) ?
+                        (mv as Drone).CameraLocation.localPosition :
+                        mv.playerPosition.transform.localPosition)
+                        + Vector3.right;
                 }
                 rightArm.name = "RightArm";
             }
