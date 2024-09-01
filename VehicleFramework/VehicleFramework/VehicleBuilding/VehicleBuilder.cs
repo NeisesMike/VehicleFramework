@@ -737,6 +737,7 @@ namespace VehicleFramework
                 var subroot = mv.gameObject.EnsureComponent<SubRoot>();
                 subroot.rb = mv.useRigidbody;
                 subroot.worldForces = mv.worldForces;
+                subroot.modulesRoot = mv.modulesRoot.transform;
                 var tmp = mv.TetherSources.First();
                 tmp.EnsureComponent<RespawnPoint>();
             }
