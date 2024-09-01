@@ -31,6 +31,8 @@ namespace VehicleFramework.VehicleTypes
         public virtual List<GameObject> NavigationPositionLights => null;
         public virtual List<GameObject> NavigationWhiteStrobeLights => null;
         public virtual List<GameObject> NavigationRedStrobeLights => null;
+        public virtual float ExitPitchLimit => 4f;
+        public virtual float ExitRollLimit => 4f;
 
 
         public ControlPanel controlPanelLogic;

@@ -125,7 +125,7 @@ namespace VehicleFramework
                 float pitch = mvSubmarine.transform.rotation.eulerAngles.x;
                 float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
 
-                if (rollDelta > 4f || pitchDelta > 4f)
+                if (rollDelta > mvSubmarine.ExitRollLimit || pitchDelta > mvSubmarine.ExitPitchLimit)
                 {
                     BasicText message;
                     if (HUDBuilder.IsVR)
