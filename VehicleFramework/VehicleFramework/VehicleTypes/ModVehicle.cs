@@ -1069,6 +1069,7 @@ namespace VehicleFramework
                 || mv.GetComponent<ModVehicleEngine>() == null
                 || !veh.GetComponent<ModVehicleEngine>().enabled
                 || Player.main.GetPDA().isOpen
+                || (AvatarInputHandler.main && !AvatarInputHandler.main.IsEnabled())
                 || !mv.energyInterface.hasCharge)
             {
                 return;
