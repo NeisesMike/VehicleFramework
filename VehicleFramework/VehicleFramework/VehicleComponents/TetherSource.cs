@@ -121,7 +121,7 @@ namespace VehicleFramework
                 }
                 return Vector3.Distance(Player.main.transform.position, tetherSrc.transform.position) < radius;
             }
-            if (Player.main.GetVehicle() == null && Player.main.currentSub == null)
+            if (Player.main.GetVehicle() == null)
             {
                 if (isSimple)
                 {

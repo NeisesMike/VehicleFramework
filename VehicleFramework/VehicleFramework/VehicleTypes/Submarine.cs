@@ -33,6 +33,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual List<GameObject> NavigationRedStrobeLights => null;
         public virtual float ExitPitchLimit => 4f;
         public virtual float ExitRollLimit => 4f;
+        public virtual GameObject RespawnPoint => null;
 
 
         public ControlPanel controlPanelLogic;
@@ -160,8 +161,11 @@ namespace VehicleFramework.VehicleTypes
                 Player.main.transform.SetParent(transform);
                 if (thisStopPilotingLocation == null)
                 {
-                    Logger.Warn("Warning: pilot exit location was null. Defaulting to first tether.");
-                    Player.main.transform.position = TetherSources[0].transform.position;
+                    if(TetherSources.First() != null)
+                    {
+                        Logger.Warn("Warning: pilot exit location was null. Defaulting to first tether.");
+                        Player.main.transform.position = TetherSources[0].transform.position;
+                    }
                 }
                 else
                 {

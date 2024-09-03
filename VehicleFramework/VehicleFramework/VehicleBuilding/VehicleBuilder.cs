@@ -732,14 +732,17 @@ namespace VehicleFramework
         }
         public static void SetupRespawnPoint(Submarine mv)
         {
-            if (mv.TetherSources.Count > 0)
+            var subroot = mv.gameObject.EnsureComponent<SubRoot>();
+            subroot.rb = mv.useRigidbody;
+            subroot.worldForces = mv.worldForces;
+            subroot.modulesRoot = mv.modulesRoot.transform;
+            if (mv.RespawnPoint == null)
             {
-                var subroot = mv.gameObject.EnsureComponent<SubRoot>();
-                subroot.rb = mv.useRigidbody;
-                subroot.worldForces = mv.worldForces;
-                subroot.modulesRoot = mv.modulesRoot.transform;
-                var tmp = mv.TetherSources.First();
-                tmp.EnsureComponent<RespawnPoint>();
+                mv.gameObject.EnsureComponent<RespawnPoint>();
+            }
+            else
+            {
+                mv.RespawnPoint.EnsureComponent<RespawnPoint>();
             }
         }
         public static void SetupDroneObjects(Drone drone)
