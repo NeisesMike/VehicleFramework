@@ -147,5 +147,13 @@ namespace VehicleFramework.Assets
         {
             return abi.GetGameObject(modelName);
         }
+        public static Atlas.Sprite LoadAdditionalSprite(AssetBundleInterface abi, string SpriteAtlasName, string SpriteName)
+        {
+            return abi.GetSprite(SpriteAtlasName, SpriteName);
+        }
+        public static Sprite LoadAdditionalRawSprite(AssetBundleInterface abi, string SpriteAtlasName, string SpriteName)
+        {
+            return abi.GetRawSprite(SpriteAtlasName, SpriteName);
+        }
     }
 }
