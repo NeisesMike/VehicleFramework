@@ -32,7 +32,7 @@ namespace VehicleFramework.Engines
         }
 
 
-        public float WhistleFactor = 1f;
+        public float WhistleFactor = 0.4f;
         public float HumFactor = 1f;
         public bool blockVoiceChange => false;
         public virtual bool CanMoveAboveWater { get; set; } = false;
