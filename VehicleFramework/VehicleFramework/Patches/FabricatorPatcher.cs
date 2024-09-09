@@ -11,7 +11,7 @@ namespace VehicleFramework.Patches
 	public static class FabricatorPatcher
 	{
 		[HarmonyPrefix]
-		[HarmonyPatch("HasEnoughPower")]
+		[HarmonyPatch(nameof(GhostCrafter.HasEnoughPower))]
 		public static bool HasEnoughPowerPrefix(GhostCrafter __instance, ref bool __result)
 		{
 			ModVehicle mv = __instance.GetComponentInParent<ModVehicle>();
@@ -33,7 +33,7 @@ namespace VehicleFramework.Patches
 	public static class CrafterLogicPatcher
 	{
 		[HarmonyPrefix]
-		[HarmonyPatch("ConsumeEnergy")]
+		[HarmonyPatch(nameof(CrafterLogic.ConsumeEnergy))]
 		public static bool ConsumeEnergyPrefix(CrafterLogic __instance, ref bool __result, PowerRelay powerRelay, float amount)
 		{
 			if (!GameModeUtils.RequiresPower())
@@ -63,7 +63,10 @@ namespace VehicleFramework.Patches
 				else
 				{
 					// we found the ModVehicle from whose fabricator we're trying to drain power
-					__result = 5 <= mv.powerMan.TrySpendEnergy(5f);
+					float WantToSpend = 5f;
+					float SpendTolerance = 4.99f;
+					float energySpent = mv.powerMan.TrySpendEnergy(WantToSpend);
+					__result = SpendTolerance <= energySpent;
 					return false;
 				}
 			}
@@ -76,7 +79,7 @@ namespace VehicleFramework.Patches
 	public static class ConstructorInputPatcher
 	{
 		[HarmonyPrefix]
-		[HarmonyPatch("OnHandClick")]
+		[HarmonyPatch(nameof(ConstructorInput.OnHandClick))]
 		public static bool OnHandClickPrefix(ConstructorInput __instance, GUIHand hand)
 		{
 			if (__instance.constructor.building && __instance.constructor.buildTarget?.GetComponent<ModVehicle>() != null)
