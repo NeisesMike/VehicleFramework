@@ -1040,6 +1040,57 @@ namespace VehicleFramework
             }
             prevVelocity = useRigidbody.velocity;
         }
+        public bool HasRoomFor(Pickupable pickup)
+        {
+            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            {
+                if (container.HasRoomFor(pickup))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool HasInStorage(TechType techType, int count=1)
+        {
+            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            {
+                if (container.Contains(techType))
+                {
+                    if (container.GetCount(techType) >= count)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public bool AddToStorage(Pickupable pickup)
+        {
+            if (!HasRoomFor(pickup))
+            {
+                if (Player.main.GetVehicle() == this)
+                {
+                    ErrorMessage.AddMessage(Language.main.Get("ContainerCantFit"));
+                }
+                return false;
+            }
+            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            {
+                if (container.HasRoomFor(pickup))
+                {
+                    string arg = Language.main.Get(pickup.GetTechName());
+                    ErrorMessage.AddMessage(Language.main.GetFormat<string>("VehicleAddedToStorage", arg));
+                    uGUI_IconNotifier.main.Play(pickup.GetTechType(), uGUI_IconNotifier.AnimationType.From, null);
+                    pickup.Initialize();
+                    InventoryItem item = new InventoryItem(pickup);
+                    container.UnsafeAdd(item);
+                    pickup.PlayPickupSound();
+                    return true;
+                }
+            }
+            return false;
+        }
 
         #endregion
 
