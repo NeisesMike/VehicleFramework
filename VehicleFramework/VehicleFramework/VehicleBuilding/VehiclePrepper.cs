@@ -17,18 +17,21 @@ namespace VehicleFramework
         {
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite);
-            PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
+            if (vehicle.mv.EncyclopediaEntry.Length > 0)
             {
-                key = vehicle.mv.name,
-                path = "Tech/Vehicles",
-                nodes = new[] { "Tech", "Vehicles" },
-                unlocked = true,
-                popup = null,
-                image = null,
-            };
-            LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
-            LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
-            PDAHandler.AddEncyclopediaEntry(entry);
+                PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
+                {
+                    key = vehicle.mv.name,
+                    path = "Tech/Vehicles",
+                    nodes = new[] { "Tech", "Vehicles" },
+                    unlocked = true,
+                    popup = null,
+                    image = null,
+                };
+                LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
+                LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
+                PDAHandler.AddEncyclopediaEntry(entry);
+            }
 
             CustomPrefab module_CustomPrefab = new CustomPrefab(vehicle_info);
             vehicle.mv.VehicleModel.EnsureComponent<TechTag>().type = vehicle_info.TechType;
