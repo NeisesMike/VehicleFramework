@@ -149,5 +149,13 @@ namespace VehicleFramework.Admin
                 return 0;
             }
         }
+        public static bool IsPilotingCyclops()
+        {
+            return IsInCyclops() && Player.main.mode == Player.Mode.Piloting;
+        }
+        public static bool IsInCyclops()
+        {
+            return Player.main.currentSub != null && Player.main.currentSub.name.ToLower().Contains("cyclops");
+        }
     }
 }
