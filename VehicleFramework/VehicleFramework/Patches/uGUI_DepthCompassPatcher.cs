@@ -29,7 +29,7 @@ namespace VehicleFramework.Patches
 		{
 			if (VehicleTypes.Drone.mountedDrone != null)
 			{
-				__result = uGUI_DepthCompass.DepthMode.MapRoomCamera;
+				__result = uGUI_DepthCompass.DepthMode.Submersible;
 				VehicleTypes.Drone.mountedDrone.GetDepth(out depth, out crushDepth);
 				return false;
 			}
