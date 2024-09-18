@@ -120,6 +120,11 @@ namespace VehicleFramework
                 }
             }
             StartCoroutine(WaitThenAct());
+            transform.localScale = Vector3.one;
+        }
+        public void Update()
+        {
+            GetComponentInChildren<Collider>().enabled = !Admin.Utils.IsPilotingCyclops();
         }
         public static void FastenConnection(DroneStation station, Drone drone)
         {
