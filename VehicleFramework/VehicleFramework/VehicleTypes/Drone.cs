@@ -109,6 +109,25 @@ namespace VehicleFramework.VehicleTypes
             Logger.Output("Disconnected: Low Power", time:5f, y:150);
             yield break;
         }
+        private GameObject temporaryParent = null;
+        private Transform previousParent = null;
+        private void SetupTemporaryParent()
+        {
+            previousParent = Player.main.transform.parent;
+            temporaryParent = new GameObject("DroneStationTempParent");
+            temporaryParent.transform.SetParent(pairedStation.transform);
+            temporaryParent.transform.position = Player.main.transform.position;
+            Player.main.transform.SetParent(temporaryParent.transform);
+            MainCameraControl.main.LookAt(pairedStation.transform.position);
+        }
+        private void DestroyTemporaryParent()
+        {
+            Vector3 worldPosition = Player.main.transform.position;
+            Player.main.transform.SetParent(previousParent);
+            Player.main.transform.position = worldPosition;
+            GameObject.DestroyImmediate(temporaryParent);
+            MainCameraControl.main.LookAt(pairedStation.transform.position);
+        }
         public virtual void BeginControlling()
         {
             guihand = true;
@@ -118,7 +137,8 @@ namespace VehicleFramework.VehicleTypes
             Player.main.SetCurrentSub(null, true);
             IsPlayerDry = true;
             Player.main.SetScubaMaskActive(false);
-            Player.main.EnterLockedMode(null, false);
+            SetupTemporaryParent();
+            Player.main.EnterLockedMode(temporaryParent.transform, false);
             uGUI.main.quickSlots.SetTarget(this);
             SwapToDroneCamera();
             NotifyStatus(PlayerStatus.OnPilotBegin);
@@ -146,6 +166,7 @@ namespace VehicleFramework.VehicleTypes
             lastSubRoot = null;
             guihand = false;
             SwapToPlayerCamera();
+            DestroyTemporaryParent();
             mountedDrone = null;
             pairedStation = null;
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
