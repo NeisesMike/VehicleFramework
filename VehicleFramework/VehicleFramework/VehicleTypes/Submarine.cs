@@ -37,8 +37,8 @@ namespace VehicleFramework.VehicleTypes
 
 
         public ControlPanel controlPanelLogic;
-        public bool isPilotSeated = false;
-        public bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
+        private bool isPilotSeated = false;
+        private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
 
         public Transform thisStopPilotingLocation;
 
@@ -116,7 +116,7 @@ namespace VehicleFramework.VehicleTypes
         }
         protected IEnumerator TryStandUpFromChair()
         {
-            while (IsPlayerPiloting())
+            while (IsPlayerControlling())
             {
                 yield return new WaitForSeconds(0.1f);
             }
@@ -156,7 +156,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.SetScubaMaskActive(false);
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
-            if (!IsVehicleDocked && IsPlayerPiloting())
+            if (!IsVehicleDocked && IsPlayerControlling())
             {
                 Player.main.transform.SetParent(transform);
                 if (thisStopPilotingLocation == null)

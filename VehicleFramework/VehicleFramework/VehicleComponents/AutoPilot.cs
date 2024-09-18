@@ -128,7 +128,7 @@ namespace VehicleFramework
                 prevVelocity = Vector3.zero;
                 return;
             }
-            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerPiloting()) && mv.GetIsUnderwater())
+            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerControlling()) && mv.GetIsUnderwater())
             {
                 float x = transform.rotation.eulerAngles.x;
                 float y = transform.rotation.eulerAngles.y;
@@ -172,7 +172,7 @@ namespace VehicleFramework
         private Vector3 currentVelocity;
         private void CheckForDoubleTap(Submarine mv)
         {
-            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerPiloting())
+            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerControlling())
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {

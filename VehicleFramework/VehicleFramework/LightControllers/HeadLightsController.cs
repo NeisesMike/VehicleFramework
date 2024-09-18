@@ -31,7 +31,7 @@ namespace VehicleFramework
 
         public virtual void Update()
         {
-            if(mv as VehicleTypes.Submarine != null && !(mv as VehicleTypes.Submarine).IsPlayerPiloting())
+            if(mv as VehicleTypes.Submarine != null && !mv.IsPlayerControlling())
             {
                 return;
             }

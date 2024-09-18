@@ -39,20 +39,9 @@ namespace VehicleFramework.VehicleComponents
         }
         public void Update()
         {
-            switch (mv)
+            if(mv.IsPlayerControlling())
             {
-                case Submarine sub:
-                    if (sub.IsPlayerPiloting())
-                    {
-                        ScanInput();
-                    }
-                    break;
-                case Submersible submer:
-                    if (submer.IsPlayerDry)
-                    {
-                        ScanInput();
-                    }
-                    break;
+                ScanInput();
             }
         }
         public bool AddCamera(Transform tran, string label)

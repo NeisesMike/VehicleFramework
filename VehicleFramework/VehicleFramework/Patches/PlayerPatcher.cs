@@ -176,7 +176,7 @@ namespace VehicleFramework
              * I'm not sure this patch is strictly necessary.
              */
             VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
-            if (mv != null && !mv.IsPlayerPiloting())
+            if (mv != null && !mv.IsPlayerControlling())
             {
                 //var crushDamage = __instance.gameObject.GetComponentInParent<CrushDamage>();
                 //__result = crushDamage.GetDepthClass();
@@ -197,7 +197,7 @@ namespace VehicleFramework
             {
                 return;
             }
-            if (mv.IsPlayerInside() && !mv.IsPlayerPiloting())
+            if (mv.IsPlayerInside() && !mv.IsPlayerControlling())
             {
                 // animator stuff to ensure we don't act like we're swimming at any point
                 __instance.playerAnimator.SetBool("is_underwater", false);
@@ -229,7 +229,7 @@ namespace VehicleFramework
         public static bool UpdateMotorModePrefix(Player __instance)
         {
             VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
-            if (mv != null && !mv.IsPlayerPiloting())
+            if (mv != null && !mv.IsPlayerControlling())
             {
                 // ensure: if we're in a modvehicle and we're not piloting, then we're walking.
                 __instance.SetMotorMode(Player.MotorMode.Walk);
@@ -263,7 +263,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Player.IsFreeToInteract))]
         public static void IsFreeToInteractPostfix(Player __instance, ref bool __result)
         {
-            var list = Admin.GameObjectManager<Drone>.Where(x => x.IsPlayerDry);
+            var list = Admin.GameObjectManager<Drone>.Where(x => x.IsPlayerControlling());
             if (list.Count() == 0)
             {
                 return;

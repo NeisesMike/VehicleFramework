@@ -20,7 +20,7 @@ namespace VehicleFramework
         public static bool HandleUnderWaterStatePrefix(PlayerController __instance)
         {
             VehicleTypes.Submarine mv = Player.main.GetVehicle() as VehicleTypes.Submarine;
-            if (mv != null && !mv.IsPlayerPiloting())
+            if (mv != null && !mv.IsPlayerControlling())
             {
                 __instance.inVehicle = true;
                 __instance.underWater = false;

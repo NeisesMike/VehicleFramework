@@ -244,7 +244,7 @@ namespace VehicleFramework.Engines
                 {
                     if (mv as Submarine != null)
                     {
-                        if((mv as Submarine).IsPlayerPiloting())
+                        if(mv.IsPlayerControlling())
                         {
                             moveDirection = DoMoveAction();
                         }

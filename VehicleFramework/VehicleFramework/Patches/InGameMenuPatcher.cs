@@ -23,7 +23,7 @@ namespace VehicleFramework.Patches
             }
 			else if(mv as Submarine != null)
             {
-				if(mv.IsPlayerDry && (mv as Submarine).isPilotSeated)
+				if(mv.IsPlayerControlling())
                 {
 					__result = false;
 					return false;
