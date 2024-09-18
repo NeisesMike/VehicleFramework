@@ -697,6 +697,25 @@ namespace VehicleFramework
             UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position));
             Destroy(gameObject);
         }
+        public virtual bool IsPlayerControlling()
+        {
+            if (this as VehicleTypes.Submarine != null)
+            {
+                return (this as VehicleTypes.Submarine).IsPlayerPiloting();
+            }
+            else if (this as VehicleTypes.Submersible != null)
+            {
+                return (this as VehicleTypes.Submersible).IsPlayerDry;
+            }
+            else if (this as VehicleTypes.Drone != null)
+            {
+                return (this as VehicleTypes.Drone).IsPlayerDry;
+            }
+            else // this is just a ModVehicle
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region member_variables
@@ -718,8 +737,19 @@ namespace VehicleFramework
         public int numEfficiencyModules = 0;
         private int numArmorModules = 0;
         public PowerManager powerMan = null;
-        public bool IsPlayerDry = false; // true when inside a vehicle (or piloting a drone)
-        public bool IsVehicleDocked = false;
+        private bool _IsPlayerDry = false;
+        public bool IsPlayerDry
+        {// true when inside a vehicle (or piloting a drone)
+            get
+            {
+                return _IsPlayerDry;
+            }
+            protected set
+            {
+                _IsPlayerDry = value;
+            }
+        }
+        protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         internal List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
         public bool isScuttled = false;
