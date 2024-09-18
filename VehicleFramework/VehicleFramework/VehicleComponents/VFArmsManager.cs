@@ -43,6 +43,24 @@ namespace VehicleFramework.VehicleComponents
             mv.Arms.originalLeftArm?.SetActive(GetComponent<VFArmsManager>().leftArm == null);
             mv.Arms.originalRightArm?.SetActive(GetComponent<VFArmsManager>().rightArm == null);
         }
+        public void ShowArms(bool isShown)
+        {
+            ModVehicle mv = GetComponent<ModVehicle>();
+            if(isShown)
+            {
+                leftArm?.SetActive(true);
+                rightArm?.SetActive(true);
+                mv.Arms.originalLeftArm?.SetActive(leftArm == null);
+                mv.Arms.originalRightArm?.SetActive(rightArm == null);
+            }
+            else
+            {
+                leftArm?.SetActive(false);
+                rightArm?.SetActive(false);
+                mv.Arms.originalLeftArm?.SetActive(false);
+                mv.Arms.originalRightArm?.SetActive(false);
+            }
+        }
         public IEnumerator SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {
             TaskResult<GameObject> armRequest = new TaskResult<GameObject>();
