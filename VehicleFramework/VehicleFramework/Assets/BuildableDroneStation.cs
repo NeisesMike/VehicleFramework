@@ -120,7 +120,6 @@ namespace VehicleFramework
                 }
             }
             StartCoroutine(WaitThenAct());
-            transform.localScale = Vector3.one;
         }
         public void Update()
         {
