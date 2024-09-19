@@ -16,7 +16,7 @@ namespace VehicleFramework
         public static TechType RegisterVehicle(VehicleEntry vehicle)
         {
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
-            vehicle_info.WithIcon(vehicle.mv.CraftingSprite);
+            vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? MainPatcher.ModVehicleIcon);
             if (vehicle.mv.EncyclopediaEntry.Length > 0)
             {
                 PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData

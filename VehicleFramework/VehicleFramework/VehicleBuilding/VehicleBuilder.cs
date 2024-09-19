@@ -71,7 +71,7 @@ namespace VehicleFramework
                 yield break;
             }
             prefabs.Add(mv);
-            VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite);
+            VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite ?? VehicleManager.defaultPingSprite);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
             VehicleManager.PatchCraftable(ref ve, verbose);
