@@ -57,21 +57,38 @@ namespace VehicleFramework.VehicleComponents
         public MagnetStruct CheckPlacement()
         {
             RaycastHit[] allHits = Physics.RaycastAll(transform.position, -transform.up, MagnetDistance);
-            var meaningfulHits = allHits.Where(hit => UWE.Utils.GetComponentInHierarchy<Base>(hit.collider.gameObject) || UWE.Utils.GetComponentInHierarchy<SubRoot>(hit.collider.gameObject));
-            if (meaningfulHits.Count() > 0)
+            var orderedHits = allHits.OrderBy(x => Vector3.Distance(x.point, transform.position));
+            foreach (var hit in orderedHits)
             {
-                Transform finalTarget = UWE.Utils.GetComponentInHierarchy<Base>(meaningfulHits.First().collider.gameObject)?.transform
-                ?? UWE.Utils.GetComponentInHierarchy<SubRoot>(meaningfulHits.First().collider.gameObject).transform;
-                return new MagnetStruct
+                Base baseTarget = UWE.Utils.GetComponentInHierarchy<Base>(hit.collider.gameObject);
+                SubControl cyclopsTarget = UWE.Utils.GetComponentInHierarchy<SubControl>(hit.collider.gameObject);
+                ModVehicle mvTarget = UWE.Utils.GetComponentInHierarchy<ModVehicle>(hit.collider.gameObject);
+                if (baseTarget != null)
                 {
-                    target = finalTarget,
-                    location = meaningfulHits.First().point
-                };
+                    return new MagnetStruct
+                    {
+                        target = baseTarget.transform,
+                        location = hit.point
+                    };
+                }
+                else if (cyclopsTarget != null)
+                {
+                    return new MagnetStruct
+                    {
+                        target = cyclopsTarget.transform,
+                        location = hit.point
+                    };
+                }
+                else if (mvTarget != null)
+                {
+                    return new MagnetStruct
+                    {
+                        target = mvTarget.transform,
+                        location = hit.point
+                    };
+                }
             }
-            else
-            {
-                return default;
-            }
+            return default;
         }
         public void TryMagnets(bool isKeyed, MagnetStruct magnetData)
         {
