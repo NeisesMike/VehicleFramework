@@ -143,6 +143,7 @@
     <Compile Include="DepthModules\DepthModule3.cs" />
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
+    <Compile Include="Patches\ArmsControllerPatcher.cs" />
     <Compile Include="Patches\BedPatcher.cs" />
     <Compile Include="UpgradeTypes\ToggleableUpgrade.cs" />
     <Compile Include="UpgradeTypes\SelectableChargeableUpgrade.cs" />

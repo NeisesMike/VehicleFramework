@@ -25,6 +25,13 @@ namespace VehicleFramework
             Sink = 1,
             Float = 2
         }
+        public enum PilotingStyle
+        {
+            Cyclops,
+            Seamoth,
+            Prawn,
+            Other
+        }
         #endregion
         #region abstract_members
         /* The model, collision model, storage root object, and modules root object
@@ -94,6 +101,7 @@ namespace VehicleFramework
         /// The names are MVDAMAGE_HULL, MVDAMAGE_UPGRADES, MVDAMAGE_ENGINE, MVDAMAGE_BATTERIES, MVDAMAGE_LIGHTS
         /// </summary>
         public virtual bool UseDefaultDamageTracker => false;
+        public virtual PilotingStyle pilotingStyle => PilotingStyle.Other;
         #endregion
 
         #region virtual_properties_nonnullable_dynamic
@@ -697,6 +705,7 @@ namespace VehicleFramework
             UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position));
             Destroy(gameObject);
         }
+        public virtual void HandleOtherPilotingAnimations(bool isPiloting){}
         public virtual bool IsPlayerControlling()
         {
             if (this as VehicleTypes.Submarine != null)
@@ -1120,6 +1129,24 @@ namespace VehicleFramework
                 }
             }
             return false;
+        }
+        public void HandlePilotingAnimations()
+        {
+            switch (pilotingStyle)
+            {
+                case PilotingStyle.Cyclops:
+                    SafeAnimator.SetBool(Player.main.armsController.animator, "cyclops_steering", IsPlayerControlling());
+                    break;
+                case PilotingStyle.Seamoth:
+                    SafeAnimator.SetBool(Player.main.armsController.animator, "in_seamoth", IsPlayerControlling());
+                    break;
+                case PilotingStyle.Prawn:
+                    SafeAnimator.SetBool(Player.main.armsController.animator, "in_exosuit", IsPlayerControlling());
+                    break;
+                default:
+                    HandleOtherPilotingAnimations(IsPlayerControlling());
+                    break;
+            }
         }
 
         #endregion

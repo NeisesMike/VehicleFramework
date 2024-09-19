@@ -128,9 +128,6 @@ namespace VehicleFramework.VehicleTypes
         public override void BeginPiloting()
         {
             base.BeginPiloting();
-            Player.main.EnterSittingMode();
-            UWE.CoroutineHost.StartCoroutine(SitDownInChair());
-            UWE.CoroutineHost.StartCoroutine(TryStandUpFromChair());
             isPilotSeated = true;
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
