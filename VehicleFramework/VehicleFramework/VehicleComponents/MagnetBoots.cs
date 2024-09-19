@@ -17,11 +17,14 @@ namespace VehicleFramework.VehicleComponents
         private ModVehicle mv;
         private Vector3 attachmentOffset = Vector3.zero;
         private bool IsAttached = false;
+        private Transform attachedPlatform = null;
         public Action Attach = null;
         public Action Detach = null;
         public float MagnetDistance = 5f;
         public float AttachDistance = 2f;
-        public void HandleAttachment(bool isAttached)
+        public bool recharges = true;
+        public float rechargeRate = 0.5f; // transfer 0.5 energy per second
+        public void HandleAttachment(bool isAttached, Transform platform = null)
         {
             IsAttached = isAttached;
             mv.useRigidbody.isKinematic = isAttached;
@@ -30,11 +33,13 @@ namespace VehicleFramework.VehicleComponents
             if (isAttached)
             {
                 Attach?.Invoke();
+                attachedPlatform = platform;
             }
             else
             {
                 Detach?.Invoke();
                 mv.transform.SetParent(null);
+                attachedPlatform = null;
             }
         }
         public void Start()
@@ -49,6 +54,7 @@ namespace VehicleFramework.VehicleComponents
                 HandleAttachment(false);
             }
             UpdatePosition();
+            UpdateRecharge();
         }
         public bool CheckControls()
         {
@@ -114,13 +120,42 @@ namespace VehicleFramework.VehicleComponents
             mv.transform.position = Vector3.Lerp(myLocation, hitLocation, ratio);
             mv.transform.SetParent(magnetData.target);
             attachmentOffset = transform.localPosition;
-            HandleAttachment(true);
+            HandleAttachment(true, magnetData.target);
         }
         public void UpdatePosition()
         {
             if(IsAttached)
             {
                 transform.localPosition = attachmentOffset;
+            }
+        }
+        public void UpdateRecharge()
+        {
+            if (IsAttached && attachedPlatform)
+            {
+                float consumePerFrame = rechargeRate * Time.deltaTime;
+                float canConsume = mv.energyInterface.TotalCanConsume(out _);
+                if (canConsume > consumePerFrame)
+                {
+                    Base baseTarget = UWE.Utils.GetComponentInHierarchy<Base>(attachedPlatform.gameObject);
+                    SubRoot subRootTarget = attachedPlatform.GetComponent<SubRoot>();
+                    ModVehicle mvTarget = attachedPlatform.GetComponent<ModVehicle>();
+                    if (baseTarget)
+                    {
+                        baseTarget.GetComponent<BasePowerRelay>().ConsumeEnergy(consumePerFrame, out float trulyConsumed);
+                        mv.energyInterface.AddEnergy(trulyConsumed);
+                    }
+                    else if (mvTarget)
+                    {
+                        float trulyConsumed = mvTarget.energyInterface.ConsumeEnergy(consumePerFrame);
+                        mv.energyInterface.AddEnergy(trulyConsumed);
+                    }
+                    else if (subRootTarget)
+                    {
+                        subRootTarget.powerRelay.ConsumeEnergy(consumePerFrame, out float trulyConsumed);
+                        mv.energyInterface.AddEnergy(trulyConsumed);
+                    }
+                }
             }
         }
     }
