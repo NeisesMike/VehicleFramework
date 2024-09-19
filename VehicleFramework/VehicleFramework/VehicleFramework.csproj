@@ -228,7 +228,6 @@
     <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
     <Compile Include="Engines\Cricket.cs" />
     <Compile Include="Engines\Atrama.cs" />
-    <Compile Include="VehicleComponents\FuelGauge.cs" />
     <Compile Include="LightControllers\HeadLightsController.cs" />
     <Compile Include="LightControllers\NavigationLightsController.cs" />
     <Compile Include="LightControllers\FloodLightsController.cs" />
