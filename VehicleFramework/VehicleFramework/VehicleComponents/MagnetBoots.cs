@@ -34,11 +34,19 @@ namespace VehicleFramework.VehicleComponents
             {
                 Attach?.Invoke();
                 attachedPlatform = platform;
+                if(attachedPlatform.GetComponent<ModVehicle>())
+                {
+                    attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += mv.useRigidbody.mass;
+                }
             }
             else
             {
                 Detach?.Invoke();
                 mv.transform.SetParent(null);
+                if (attachedPlatform.GetComponent<ModVehicle>())
+                {
+                    attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass -= mv.useRigidbody.mass;
+                }
                 attachedPlatform = null;
             }
         }
