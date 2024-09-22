@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
+using System.Reflection.Emit;
 
 namespace VehicleFramework.Patches
 {
@@ -99,7 +98,20 @@ namespace VehicleFramework.Patches
             ModVehicle mv = vehicle as ModVehicle;
             if (mv != null)
             {
+                Moonpool moonpool = dock.GetComponentInParent<Moonpool>();
+                CyclopsMotorMode cmm = dock.GetComponentInParent<CyclopsMotorMode>();
+                if (moonpool != null || cmm != null)
+                {
+                    Transform playerSpawn = dock.transform.Find("playerSpawn");
+                    mv.OnVehicleDocked(vehicle, playerSpawn.position);
+                }
+                else
+                {
+                    Logger.Warn("Vehicle Framework is not aware of this dock. The player is probably in a weird position now.");
                     mv.OnVehicleDocked(vehicle, Vector3.zero);
+                }
+                Player.main.SetCurrentSub(dock.GetSubRoot(), true);
+                Player.main.ToNormalMode(false);
             }
         }
 
@@ -210,66 +222,37 @@ namespace VehicleFramework.Patches
         {
             return IsThisVehicleSmallEnough(__instance, nearby);
         }
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(VehicleDockingBay.OnUndockingComplete))]
-        public static bool OnUndockingCompletePrefix(VehicleDockingBay __instance, Player player)
+
+    }
+
+
+    [HarmonyPatch(typeof(VehicleDockingBay))]
+    public static class VehicleDockingBayPatch2
+    {
+        [HarmonyPatch(nameof(VehicleDockingBay.LateUpdate))]
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            ModVehicle mv = __instance.dockedVehicle as ModVehicle;
-            if (mv == null)
-            {
-                return true;
-            }
-            mv.OnUndockingComplete();
-            string subRootName = __instance.subRoot.name.ToLower();
-            if (subRootName.Contains("cyclops"))
-            {
-                __instance.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
-            }
-            SkyEnvironmentChanged.Broadcast(mv.gameObject, (GameObject)null);
-            __instance.dockedVehicle = null;
-            return false;
+            CodeMatch startCinematicMatch = new CodeMatch(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("StartCinematicMode"));
+
+            var newInstructions = new CodeMatcher(instructions)
+                .MatchStartForward(startCinematicMatch)
+                .RemoveInstruction()
+                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
+                .Insert(Transpilers.EmitDelegate<Action<PlayerCinematicController, Player, Vehicle>>(MaybeStartCinematicMode))
+                .MatchStartForward(startCinematicMatch)
+                .RemoveInstruction()
+                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
+                .Insert(Transpilers.EmitDelegate<Action<PlayerCinematicController, Player, Vehicle>>(MaybeStartCinematicMode));
+
+            return newInstructions.InstructionEnumeration();
         }
 
-        public static IEnumerator UndockHelper(VehicleDockingBay db, ModVehicle mv)
+        public static void MaybeStartCinematicMode(PlayerCinematicController cinematic, Player player, Vehicle vehicle)
         {
-            float timeToWaitForAnimationSweetspot = 2.5f;
-            string subRootName = db.subRoot.name.ToLower();
-            if (subRootName.Contains("cyclops"))
+            if(vehicle as ModVehicle == null)
             {
-                timeToWaitForAnimationSweetspot = 3.6f;
-            }
-            yield return new WaitForSeconds(timeToWaitForAnimationSweetspot);
-            UWE.CoroutineHost.StartCoroutine(mv.Undock(Player.main, db.transform.position.y - 4)); // this releases the vehicle model into the water
-            yield break;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(VehicleDockingBay.OnUndockingStart))]
-        public static void OnUndockingStartPostfix(VehicleDockingBay __instance)
-        {
-            ModVehicle mv = __instance.dockedVehicle as ModVehicle;
-            if (mv != null)
-            {
-                mv.OnUndockingStart();
-                string subRootName = __instance.subRoot.name.ToLower();
-                if (subRootName.Contains("cyclops"))
-                {
-                    __instance.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(false);
-                }
-                Player.main.SetCurrentSub(null, false);
-                UWE.CoroutineHost.StartCoroutine(UndockHelper(__instance, mv));
-                //__instance.StartCoroutine(__instance.dockedVehicle.Undock(player, __instance.transform.position.y - 4f)); // this releases the vehicle model into the water
+                cinematic.StartCinematicMode(player);
             }
         }
-        //[HarmonyPostfix]
-        //[HarmonyPatch(nameof(VehicleDockingBay.OnUndockingComplete))]
-        //public static void OnUndockingCompletePostfix(VehicleDockingBay __instance, Player player)
-        //{
-        //    ModVehicle mv = player.GetVehicle() as ModVehicle;
-        //    if (mv != null)
-        //    {
-        //        mv.OnVehicleUndocked();
-        //    }
-        //}
     }
 }

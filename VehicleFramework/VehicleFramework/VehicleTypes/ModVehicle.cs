@@ -575,6 +575,11 @@ namespace VehicleFramework
         public virtual void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
         {
             PlayerExit();
+            if (exitLocation != Vector3.zero)
+            {
+                Player.main.transform.position = exitLocation;
+                Player.main.transform.LookAt(vehicle.transform);
+            }
         }
         public virtual void OnVehicleUndocked()
         {

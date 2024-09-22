@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +14,6 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(DockedVehicleHandTarget))]
     public static class DockedVehicleHandTargetPatch
     {
-        /*
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(DockedVehicleHandTarget.OnPlayerCinematicModeEnd))]
-        public static void OnPlayerCinematicModeEndPostfix(DockedVehicleHandTarget __instance)
-        {
-            ModVehicle mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
-            if(mv != null)
-            {
-                mv.OnVehicleUndocked();
-            }
-        }
-        */
-
         /* This transpiler makes one part of OnHandHover more generic
          * Optionally change GetComponent to GetComponentInChildren
          * Simple as
@@ -93,13 +81,56 @@ namespace VehicleFramework.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandClick))]
-        public static bool OnHandClickPostfix(DockedVehicleHandTarget __instance, GUIHand hand)
+        public static bool OnHandClickPrefix(DockedVehicleHandTarget __instance, GUIHand hand)
         {
             Drone thisDrone = __instance.dockingBay.GetDockedVehicle() as Drone;
-            if (thisDrone == null)
+            if (thisDrone != null)
+            {
+                return false;
+            }
+
+            ModVehicle mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
+            if(mv == null)
             {
                 return true;
             }
+
+            if (!__instance.dockingBay.HasUndockingClearance())
+            {
+                return false;
+            }
+
+            __instance.dockingBay.OnUndockingStart();
+            __instance.dockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
+
+            mv.OnUndockingStart();
+            string subRootName = __instance.dockingBay.subRoot.name.ToLower();
+            if (subRootName.Contains("cyclops"))
+            {
+                __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(false);
+            }
+            Player.main.SetCurrentSub(null, false);
+            if (__instance.dockingBay.dockedVehicle != null)
+            {
+                UWE.CoroutineHost.StartCoroutine(__instance.dockingBay.dockedVehicle.Undock(Player.main, __instance.dockingBay.transform.position.y));
+                SkyEnvironmentChanged.Broadcast(__instance.dockingBay.dockedVehicle.gameObject, (GameObject)null);
+            }
+            __instance.dockingBay.dockedVehicle = null;
+
+            mv.OnUndockingComplete();
+            if (subRootName.Contains("cyclops"))
+            {
+                IEnumerator ReEnableCollisionsInAMoment()
+                {
+                    yield return new WaitForSeconds(5);
+                    __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
+                }
+                UWE.CoroutineHost.StartCoroutine(ReEnableCollisionsInAMoment());
+            }
+            SkyEnvironmentChanged.Broadcast(mv.gameObject, (GameObject)null);
+            mv.OnVehicleUndocked();
+
+
             return false;
         }
     }
