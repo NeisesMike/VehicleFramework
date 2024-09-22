@@ -12,13 +12,14 @@ namespace VehicleFramework.Patches.CreaturePatches
     class WarperPatcher
     {
         [HarmonyPostfix]
-        [HarmonyPatch("ChooseBestAction")]
+        [HarmonyPatch(nameof(Creature.ChooseBestAction))]
         public static void ChooseBestActionPostfix(Creature __instance, ref CreatureAction __result)
         {
             if(__instance.name.Contains("Warper") && __result.GetType().ToString().Contains("RangedAttackLastTarget"))
             {
                 VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
-                if(drone != null)
+                VehicleTypes.Submarine sub = Player.main.GetVehicle() as VehicleTypes.Submarine;
+                if (drone != null || sub != null)
                 {
                     __result = new SwimRandom();
                 }
@@ -30,20 +31,22 @@ namespace VehicleFramework.Patches.CreaturePatches
     class WarperPatcher2
     {
         [HarmonyPrefix]
-        [HarmonyPatch("Warp")]
-        public static void WarpPrefix(WarpBall __instance, GameObject target, ref Vector3 position)
+        [HarmonyPatch(nameof(WarpBall.Warp))]
+        public static bool WarpBallWarpPrefix(WarpBall __instance, GameObject target, ref Vector3 position)
         {
-            Player component = target.GetComponent<Player>();
-            if (component != null && component.GetMode() == Player.Mode.LockedPiloting)
+            // Warp balls shouldn't effect players in Submarines
+
+            Player myPlayer = target.GetComponent<Player>();
+            VehicleTypes.Submarine mySub = target.GetComponent<VehicleTypes.Submarine>()
+                ?? myPlayer?.GetVehicle() as VehicleTypes.Submarine;
+
+            if(mySub == null)
             {
-                ModVehicle mv = component.GetVehicle() as ModVehicle;
-                VehicleTypes.Submarine sub = mv as VehicleTypes.Submarine;
-                if (mv != null && sub == null)
-                {
-                    mv.ForceExitLockedMode();
-                    mv.PlayerExit();
-                    position = mv.transform.position + UnityEngine.Random.onUnitSphere * 15f;
-                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
