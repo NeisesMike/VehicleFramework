@@ -59,7 +59,7 @@ namespace VehicleFramework.VehicleComponents
         public void Update()
         {
             TryMagnets(CheckControls(), CheckPlacement());
-            if(mv.IsPlayerControlling())
+            if(mv.IsPlayerControlling() && IsAttached)
             {
                 HandleAttachment(false);
             }
@@ -73,7 +73,7 @@ namespace VehicleFramework.VehicleComponents
         public MagnetStruct CheckPlacement()
         {
             RaycastHit[] allHits = Physics.RaycastAll(transform.position, -transform.up, MagnetDistance);
-            var orderedHits = allHits.OrderBy(x => Vector3.Distance(x.point, transform.position));
+            var orderedHits = allHits.OrderBy(x => (x.point - transform.position).sqrMagnitude);
             foreach (var hit in orderedHits)
             {
                 Base baseTarget = UWE.Utils.GetComponentInHierarchy<Base>(hit.collider.gameObject);
