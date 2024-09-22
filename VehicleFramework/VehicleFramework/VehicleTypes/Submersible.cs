@@ -114,9 +114,9 @@ namespace VehicleFramework.VehicleTypes
                 UWE.CoroutineHost.StartCoroutine(EventuallyStandUp());
             }
         }
-        public override void OnVehicleDocked()
+        public override void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
         {
-            base.OnVehicleDocked();
+            base.OnVehicleDocked(vehicle, exitLocation);
             Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = false);
             PilotSeat.Seat.GetComponent<PilotingTrigger>().isLive = false;
         }

@@ -495,9 +495,9 @@ namespace VehicleFramework.VehicleTypes
                 }
             }
         }
-        public override void OnVehicleDocked()
+        public override void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
         {
-            base.OnVehicleDocked();
+            base.OnVehicleDocked(vehicle, exitLocation);
             Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = false);
             PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = false);
             GetComponent<TetherSource>().isLive = false;
@@ -511,10 +511,10 @@ namespace VehicleFramework.VehicleTypes
             EnableFabricator(true);
             base.OnVehicleUndocked();
         }
-        public override void OnPlayerDocked()
+        public override void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
         {
             StopPiloting();
-            base.OnPlayerDocked();
+            base.OnPlayerDocked(vehicle, exitLocation);
             //UWE.CoroutineHost.StartCoroutine(TryStandUpFromChair());
         }
         public override void OnPlayerUndocked()

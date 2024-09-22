@@ -99,7 +99,7 @@ namespace VehicleFramework.Patches
             ModVehicle mv = vehicle as ModVehicle;
             if (mv != null)
             {
-                mv.OnVehicleDocked();
+                    mv.OnVehicleDocked(vehicle, Vector3.zero);
             }
         }
 
@@ -227,7 +227,6 @@ namespace VehicleFramework.Patches
             }
             SkyEnvironmentChanged.Broadcast(mv.gameObject, (GameObject)null);
             __instance.dockedVehicle = null;
-            mv.OnVehicleUndocked();
             return false;
         }
 

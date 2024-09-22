@@ -558,7 +558,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public virtual void OnVehicleDocked()
+        public virtual void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
             IsVehicleDocked = true;
@@ -567,12 +567,12 @@ namespace VehicleFramework
             //ApplyInteriorLighting();
             if (IsPlayerDry)
             {
-                OnPlayerDocked();
+                OnPlayerDocked(vehicle, exitLocation);
             }
             useRigidbody.detectCollisions = false;
             SetDockedLighting(true);
         }
-        public virtual void OnPlayerDocked()
+        public virtual void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
         {
             PlayerExit();
         }
