@@ -9,6 +9,7 @@ namespace VehicleFramework.VehicleComponents
 {
     public class MagnetBoots : MonoBehaviour
     {
+        private Transform serializerObject;
         public struct MagnetStruct
         {
             public Transform target;
@@ -42,7 +43,7 @@ namespace VehicleFramework.VehicleComponents
             else
             {
                 Detach?.Invoke();
-                mv.transform.SetParent(null);
+                mv.transform.SetParent(serializerObject);
                 if (attachedPlatform?.GetComponent<ModVehicle>())
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass -= mv.useRigidbody.mass;
@@ -53,6 +54,7 @@ namespace VehicleFramework.VehicleComponents
         public void Start()
         {
             mv = GetComponent<ModVehicle>();
+            serializerObject = transform.parent.GetComponent<StoreInformationIdentifier>().transform;
         }
         public void Update()
         {
