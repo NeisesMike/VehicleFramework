@@ -1,77 +1,25 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 using HarmonyLib;
-using System.Runtime.CompilerServices;
 using System.Collections;
-using Nautilus.Options.Attributes;
-using Nautilus.Options;
 using Nautilus.Json;
 using Nautilus.Handlers;
-using Nautilus.Utility;
-using Nautilus.Json.Attributes;
-using VehicleFramework.UpgradeModules;
-using Nautilus.Assets;
 using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Bootstrap;
 using UnityEngine.SceneManagement;
-
-using techtype = System.String;
-using upgrades = System.Collections.Generic.Dictionary<string, System.String>;
-using batteries = System.Collections.Generic.List<System.Tuple<System.String, float>>;
-using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.Vector3, System.Collections.Generic.List<System.Tuple<System.String, float>>>>;
-using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<System.Tuple<System.String, float>>>>;
-using color = System.Tuple<float, float, float, float>;
 
 namespace VehicleFramework
 {
-    public static class Logger
-    {
-        internal static ManualLogSource MyLog { get; set; }
-        public static void Log(string message)
-        {
-            MyLog.LogInfo(message);
-        }
-        public static void Warn(string message)
-        {
-            MyLog.LogWarning(message);
-        }
-        public static void Error(string message)
-        {
-            MyLog.LogError(message);
-        }
-        public static void DebugLog(string message)
-        {
-            if (MainPatcher.VFConfig.isDebugLogging)
-            {
-                MyLog.LogInfo("[VehicleFramework] " + message);
-            }
-        }
-        public static BasicText Output(string msg, float time = 4, int x = 500, int y = 0)
-        {
-            BasicText message = new BasicText(x, y);
-            message.ShowMessage(msg, time);
-            return message;
-        }
-    }
-
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
     public class MainPatcher : BaseUnityPlugin
     {
-
         internal static VehicleFrameworkConfig VFConfig { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
         internal static Atlas.Sprite ModVehicleIcon { get; private set; }
         internal static Atlas.Sprite UpgradeIcon { get; private set; }
         internal static Atlas.Sprite DepthIcon { get; private set; }
         internal static Atlas.Sprite ArmIcon { get; private set; }
-
         public void Awake()
         {
             VehicleFramework.Logger.MyLog = base.Logger;
@@ -80,7 +28,6 @@ namespace VehicleFramework
             PrePatch();
             BuildableDroneStation.Register();
         }
-
         public void Start()
         {
             Patch();
@@ -123,7 +70,6 @@ namespace VehicleFramework
             UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
             UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());
         }
-
         public void Patch()
         {
             SaveData saveData = SaveDataHandler.RegisterSaveDataCache<SaveData>();
@@ -210,12 +156,10 @@ namespace VehicleFramework
             // do this here because it happens only once
             SceneManager.sceneUnloaded += Admin.GameStateWatcher.OnResetScene;
         }
-
         public void PostPatch()
         {
             //VehicleBuilder.ScatterDataBoxes(craftables);
         }
-
         public static void GetAssets()
         {
             Assets.VehicleAssets DSAssets = Assets.AssetBundleInterface.GetVehicleAssetsFromBundle("modvehiclepingsprite", "", "ModVehicleSpriteAtlas", "ModVehiclePingSprite", "", "", "");
@@ -232,26 +176,6 @@ namespace VehicleFramework
 
             VehicleManager.defaultEngine = new Engines.AtramaEngine();
         }
-
         public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
-    }
-
-    [FileName("vehicle_storage")]
-    internal class SaveData : SaveDataCache
-    {
-        public List<Tuple<Vector3, bool>> IsPlayerInside { get; set; }
-
-        public List<Tuple<Vector3, upgrades>> UpgradeLists { get; set; }
-        public List<Tuple<Vector3, innateStorages>> InnateStorages { get; set; }
-        public List<Tuple<Vector3, modularStorages>> ModularStorages { get; set; }
-        
-        public List<Tuple<Vector3, batteries>> Batteries { get; set; }
-        public List<Tuple<Vector3, batteries>> BackupBatteries { get; set; }
-
-        // todo: maybe this?
-        // save a few lines in the output json?
-        public List<Tuple<Vector3, Tuple<upgrades, innateStorages, modularStorages, batteries>>> AllVehiclesStorages { get; set; }
-        
-        public List<Tuple<Vector3, string, color, color, color, color, bool>> AllVehiclesAesthetics { get; set; }
     }
 }
