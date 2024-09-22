@@ -43,7 +43,7 @@ namespace VehicleFramework.VehicleComponents
             {
                 Detach?.Invoke();
                 mv.transform.SetParent(null);
-                if (attachedPlatform.GetComponent<ModVehicle>())
+                if (attachedPlatform?.GetComponent<ModVehicle>())
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass -= mv.useRigidbody.mass;
                 }

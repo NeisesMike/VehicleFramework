@@ -18,6 +18,8 @@ namespace VehicleFramework.VehicleComponents
         private float rotationVelocity = 0f;
         public float smoothTime = 0.1f;
         public YawAxis yawAxis = YawAxis.z;
+        public float maxExpectedAngularVelocity = 7f;
+        public float maxSteeringWheelAngle = 45f;
         public enum YawAxis
         {
             x,
@@ -33,10 +35,8 @@ namespace VehicleFramework.VehicleComponents
             {
                 return;
             }
-            const float maxPitchAngle = 7f;
-            float percentAng = useRigidbody.angularVelocity.y / maxPitchAngle;
-            const float maxYawAngle = 45f;
-            float targetYawRotation = percentAng * maxYawAngle;
+            float percentAng = useRigidbody.angularVelocity.y / maxExpectedAngularVelocity;
+            float targetYawRotation = percentAng * maxSteeringWheelAngle;
 
             // Smoothly update the Z rotation using SmoothDamp
             currentYawRotation = Mathf.SmoothDamp(currentYawRotation, -targetYawRotation, ref rotationVelocity, smoothTime);

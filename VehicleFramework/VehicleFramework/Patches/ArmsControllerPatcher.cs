@@ -8,7 +8,7 @@ namespace VehicleFramework.Patches
     {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(ArmsController.Update))]
-        public static void ArmsControllerUpdatePostfix(Bed __instance)
+        public static void ArmsControllerUpdatePostfix()
         {
             ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
             if (mv != null)
