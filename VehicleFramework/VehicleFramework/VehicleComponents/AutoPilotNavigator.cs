@@ -13,11 +13,6 @@ namespace VehicleFramework.VehicleComponents
     {
         public void Update()
         {
-            if(GetComponent<Drone>() != null && GetComponent<Drone>().IsPlayerDry)
-            {
-                StopAllCoroutines();
-                return;
-            }
             if (GetComponent<ModVehicle>() != null && GetComponent<ModVehicle>().GetPilotingMode())
             {
                 StopAllCoroutines();
