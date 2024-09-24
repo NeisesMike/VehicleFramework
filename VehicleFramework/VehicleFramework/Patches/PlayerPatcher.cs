@@ -247,7 +247,7 @@ namespace VehicleFramework
                 switch(mv)
                 {
                     case Submarine _:
-                        __result = mv.IsPowered() && mv.IsPlayerDry;
+                        __result = mv.IsPowered() && mv.IsUnderCommand;
                         return;
                     default:
                         return;

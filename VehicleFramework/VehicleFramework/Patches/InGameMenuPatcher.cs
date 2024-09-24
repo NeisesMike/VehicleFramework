@@ -35,7 +35,7 @@ namespace VehicleFramework.Patches
             }
             else
 			{
-				if (mv.IsPlayerDry)
+				if (mv.IsUnderCommand)
 				{
 					__result = false;
 					return false;

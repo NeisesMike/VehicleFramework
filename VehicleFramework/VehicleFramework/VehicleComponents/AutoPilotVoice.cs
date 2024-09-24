@@ -142,7 +142,7 @@ namespace VehicleFramework
         {
             foreach (var speaker in speakers)
             {
-                if (mv.IsPlayerDry)
+                if (mv.IsUnderCommand)
                 {
                     speaker.GetComponent<AudioLowPassFilter>().enabled = false;
                 }

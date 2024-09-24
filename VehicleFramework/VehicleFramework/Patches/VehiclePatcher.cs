@@ -49,7 +49,7 @@ namespace VehicleFramework
                     string percent = Mathf.CeilToInt(now * 100f / max).ToString();
                     HandReticle.main.SetText(HandReticle.TextType.Hand, percent + "% deconstructed", true, GameInput.Button.None);
                 }
-                else if (mv.IsPlayerDry)
+                else if (mv.IsUnderCommand)
                 {
                     HandReticle.main.SetText(HandReticle.TextType.Hand, "", true, GameInput.Button.None);
                 }
@@ -158,7 +158,7 @@ namespace VehicleFramework
             {
                 return true;
             }
-            __result = Player.main.GetMode() == Player.Mode.LockedPiloting && mv.IsPlayerDry;
+            __result = Player.main.GetMode() == Player.Mode.LockedPiloting && mv.IsUnderCommand;
             return false;
         }
     }

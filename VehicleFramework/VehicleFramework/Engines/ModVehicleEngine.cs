@@ -240,7 +240,7 @@ namespace VehicleFramework.Engines
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater() || CanMoveAboveWater)
             {
-                if (mv.CanPilot() && mv.IsPlayerDry)
+                if (mv.CanPilot() && mv.IsUnderCommand)
                 {
                     if (mv as Submarine != null)
                     {

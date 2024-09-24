@@ -49,7 +49,7 @@ namespace VehicleFramework.Patches
 				ModVehicle mv = null;
 				foreach (ModVehicle tempMV in VehicleManager.VehiclesInPlay)
 				{
-					if (tempMV.IsPlayerDry)
+					if (tempMV.IsUnderCommand)
 					{
 						mv = tempMV;
 						break;

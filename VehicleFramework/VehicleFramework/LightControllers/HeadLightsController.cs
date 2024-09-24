@@ -35,7 +35,7 @@ namespace VehicleFramework
             {
                 return;
             }
-            if (mv.IsPlayerDry && Player.main.GetRightHandDown() && !Player.main.GetPDA().isInUse)
+            if (mv.IsUnderCommand && Player.main.GetRightHandDown() && !Player.main.GetPDA().isInUse)
             {
                 ToggleHeadlights();
             }
@@ -86,7 +86,7 @@ namespace VehicleFramework
         }
         public void UpdateVolumetricLights()
         {
-            if (!isHeadlightsOn || !isLive || !mv.IsPowered() || mv.IsPlayerDry || isDamaged ||
+            if (!isHeadlightsOn || !isLive || !mv.IsPowered() || mv.IsUnderCommand || isDamaged ||
                 ((mv as VehicleTypes.Submarine != null) && (mv as VehicleTypes.Submarine).IsPlayerInside())
                 )
             {

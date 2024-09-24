@@ -161,7 +161,7 @@ namespace VehicleFramework.Admin
                     yield return new WaitForSeconds(timeToFirstActivation);
                     while (true)
                     {
-                        if (!param.mv.IsPlayerDry)
+                        if (!param.mv.IsUnderCommand)
                         {
                             param.mv.ToggleSlot(param.slotID, false);
                             yield break;

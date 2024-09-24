@@ -56,7 +56,7 @@ namespace VehicleFramework.VehicleTypes
         public override void Update()
         {
             base.Update();
-            if(IsPlayerDry && GameInput.GetButtonDown(AutoHomeButton) && pairedStation != null)
+            if(IsUnderCommand && GameInput.GetButtonDown(AutoHomeButton) && pairedStation != null)
             {
                 Vector3 destination = pairedStation.transform.position;
                 Player.main.ExitLockedMode();
@@ -135,7 +135,7 @@ namespace VehicleFramework.VehicleTypes
             lastVehicle = Player.main.GetVehicle();
             Player.main.currentMountedVehicle = null;
             Player.main.SetCurrentSub(null, true);
-            IsPlayerDry = true;
+            IsUnderCommand = true;
             Player.main.SetScubaMaskActive(false);
             SetupTemporaryParent();
             Player.main.EnterLockedMode(temporaryParent.transform, false);
@@ -159,7 +159,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual void StopControlling()
         {
             base.StopPiloting();
-            IsPlayerDry = false;
+            IsUnderCommand = false;
             Player.main.SetCurrentSub(lastSubRoot, true);
             Player.main.currentMountedVehicle = lastVehicle;
             lastVehicle = null;

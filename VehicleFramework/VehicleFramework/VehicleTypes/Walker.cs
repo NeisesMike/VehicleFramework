@@ -16,10 +16,6 @@ namespace VehicleFramework.VehicleTypes
         public virtual GameObject SteeringWheelRightHandTarget { get; }
         public virtual float GroundSpeed { get; }
         public virtual float BobSpeed { get; }
-        public bool IsPlayerInside()
-        {
-            return IsPlayerDry;
-        }
         public override void PlayerEntry()
         {
             base.PlayerEntry();

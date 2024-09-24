@@ -215,7 +215,7 @@ namespace VehicleFramework
         }
         public new virtual void OnKill()
         {
-            if (IsPlayerDry && VehicleTypes.Drone.mountedDrone == null)
+            if (IsUnderCommand && VehicleTypes.Drone.mountedDrone == null)
             {
                 Player.main.playerController.SetEnabled(true);
                 Player.main.mode = Player.Mode.Normal;
@@ -248,7 +248,7 @@ namespace VehicleFramework
                     yield return new WaitForSeconds(timeToFirstActivation);
                     while (true)
                     {
-                        if (!thisMV.IsPlayerDry)
+                        if (!thisMV.IsUnderCommand)
                         {
                             ToggleSlot(thisSlotID, false);
                             yield break;
@@ -413,9 +413,9 @@ namespace VehicleFramework
         public virtual void PlayerEntry()
         {
             Logger.DebugLog("start modvehicle player entry");
-            if (!isScuttled && !IsPlayerDry)
+            if (!isScuttled && !IsUnderCommand)
             {
-                IsPlayerDry = true;
+                IsUnderCommand = true;
                 Player.main.SetScubaMaskActive(false);
                 try
                 {
@@ -436,7 +436,7 @@ namespace VehicleFramework
         public virtual void PlayerExit()
         {
             Logger.DebugLog("start modvehicle player exit");
-            if (IsPlayerDry)
+            if (IsUnderCommand)
             {
                 try
                 {
@@ -450,7 +450,7 @@ namespace VehicleFramework
                     //It's okay if the vehicle doesn't have a canopy
                 }
             }
-            IsPlayerDry = false;
+            IsUnderCommand = false;
             Player.main.SetCurrentSub(null);
             NotifyStatus(PlayerStatus.OnPlayerExit);
         }
@@ -565,7 +565,7 @@ namespace VehicleFramework
             headlights.DisableHeadlights();
             //StoreShader();
             //ApplyInteriorLighting();
-            if (IsPlayerDry)
+            if (IsUnderCommand)
             {
                 OnPlayerDocked(vehicle, exitLocation);
             }
@@ -719,11 +719,11 @@ namespace VehicleFramework
             }
             else if (this as VehicleTypes.Submersible != null)
             {
-                return (this as VehicleTypes.Submersible).IsPlayerDry;
+                return (this as VehicleTypes.Submersible).IsUnderCommand;
             }
             else if (this as VehicleTypes.Drone != null)
             {
-                return (this as VehicleTypes.Drone).IsPlayerDry;
+                return (this as VehicleTypes.Drone).IsUnderCommand;
             }
             else // this is just a ModVehicle
             {
@@ -751,18 +751,20 @@ namespace VehicleFramework
         public int numEfficiencyModules = 0;
         private int numArmorModules = 0;
         public PowerManager powerMan = null;
-        private bool _IsPlayerDry = false;
-        public bool IsPlayerDry
+        private bool _IsPlayerSomething = false;
+        public bool IsUnderCommand
         {// true when inside a vehicle (or piloting a drone)
             get
             {
-                return _IsPlayerDry;
+                return _IsPlayerSomething;
             }
             protected set
             {
-                _IsPlayerDry = value;
+                _IsPlayerSomething = value;
+                IsPlayerDry = value;
             }
         }
+        public bool IsPlayerDry = false;
         protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         internal List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
@@ -1178,7 +1180,7 @@ namespace VehicleFramework
             ModVehicle mv = veh as ModVehicle;
             if (mv == null
                 || !veh.GetPilotingMode()
-                || !mv.IsPlayerDry
+                || !mv.IsUnderCommand
                 || mv.GetComponent<ModVehicleEngine>() == null
                 || !veh.GetComponent<ModVehicleEngine>().enabled
                 || Player.main.GetPDA().isOpen

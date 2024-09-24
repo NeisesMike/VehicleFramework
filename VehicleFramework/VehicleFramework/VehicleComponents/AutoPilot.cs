@@ -297,7 +297,7 @@ namespace VehicleFramework
         {
             float totalPower = mv.energyInterface.TotalCanProvide(out _);
             float totalAIPower = eInterf.TotalCanProvide(out _);
-            if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsPlayerDry)
+            if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsUnderCommand)
             {
                 // The main batteries are out, so the AI will take over life support.
                 OxygenManager oxygenMgr = Player.main.oxygenMgr;
@@ -360,7 +360,7 @@ namespace VehicleFramework
             Logger.DebugLog("OnPowerUp");
             isDead = false;
             apVoice.EnqueueClip(apVoice.voice.EnginePoweringUp);
-            if (mv.IsPlayerDry)
+            if (mv.IsUnderCommand)
             {
                 IEnumerator ShakeCamera()
                 {
