@@ -57,13 +57,8 @@ namespace VehicleFramework
             List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = new List<Tuple<Vector3, Dictionary<string, techtype>>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
+                if (ValidateMvObject(mv))
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
                     continue;
                 }
                 try
@@ -100,11 +95,10 @@ namespace VehicleFramework
             {
                 yield break;
             }
-            List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = data.UpgradeLists;
             // try to match against a saved vehicle in our list
-            foreach (var tup in modVehiclesUpgrades)
+            foreach (Tuple<Vector3, Dictionary<string, techtype>> tup in data.UpgradeLists)
             {
-                if (Vector3.Distance(mv.transform.position, tup.Item1) < 3)
+                if (MatchMv(mv, tup.Item1))
                 {
                     foreach (KeyValuePair<string, techtype> pair in tup.Item2)
                     {
@@ -139,13 +133,8 @@ namespace VehicleFramework
             List<Tuple<Vector3, List<Tuple<int, batteries>>>> allVehiclesStoragesContents = new List<Tuple<Vector3, List<Tuple<int, batteries>>>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
+                if (ValidateMvObject(mv))
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
                     continue;
                 }
                 if (mv.ModularStorages == null)
@@ -192,11 +181,10 @@ namespace VehicleFramework
             {
                 yield break;
             }
-            List<Tuple<Vector3, List<Tuple<int, batteries>>>> allVehiclesStoragesLists = data.ModularStorages;
             // try to match against a saved vehicle in our list
-            foreach (var vehicle in allVehiclesStoragesLists)
+            foreach (Tuple<Vector3, List<Tuple<int, batteries>>> vehicle in data.ModularStorages)
             {
-                if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                if (MatchMv(mv, vehicle.Item1))
                 {
                     // we've matched the vehicle
                     foreach (var container in vehicle.Item2)
@@ -270,13 +258,8 @@ namespace VehicleFramework
             List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> allVehiclesStoragesContents = new List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
+                if (ValidateMvObject(mv))
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
                     continue;
                 }
                 List<Tuple<Vector3, batteries>> thisVehiclesStoragesContents = new List<Tuple<Vector3, batteries>>();
@@ -315,11 +298,10 @@ namespace VehicleFramework
             {
                 yield break;
             }
-            List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> allVehiclesStoragesLists = data.InnateStorages;
             // try to match against a saved vehicle in our list
-            foreach (var vehicle in allVehiclesStoragesLists)
+            foreach (Tuple<Vector3, List<Tuple<Vector3, batteries>>> vehicle in data.InnateStorages)
             {
-                if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                if (MatchMv(mv, vehicle.Item1))
                 {
                     foreach (var thisStorage in vehicle.Item2)
                     {
@@ -404,13 +386,8 @@ namespace VehicleFramework
             List<Tuple<Vector3, batteries>> allVehiclesBatteries = new List<Tuple<Vector3, batteries>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
+                if (ValidateMvObject(mv))
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
                     continue;
                 }
                 List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
@@ -439,11 +416,10 @@ namespace VehicleFramework
             {
                 yield break;
             }
-            List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.Batteries;
             // try to match against a saved vehicle in our list
-            foreach (var vehicle in allVehiclesBatteries)
+            foreach (Tuple<Vector3, batteries> vehicle in data.Batteries)
             {
-                if (Vector3.Distance(mv.transform.position, vehicle.Item1) < 3)
+                if (MatchMv(mv, vehicle.Item1))
                 {
                     foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
                     {
@@ -478,13 +454,8 @@ namespace VehicleFramework
             List<Tuple<Vector3, batteries>> allVehiclesBatteries = new List<Tuple<Vector3, batteries>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
+                if (ValidateMvObject(mv))
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
                     continue;
                 }
                 if (mv.energyInterface == mv.AIEnergyInterface)
@@ -518,13 +489,10 @@ namespace VehicleFramework
             {
                 yield break;
             }
-            List<Tuple<Vector3, batteries>> allVehiclesBatteries = data.BackupBatteries;
             // try to match against a saved vehicle in our list
-            foreach (var slot in allVehiclesBatteries)
+            foreach (Tuple<Vector3, batteries> slot in data.BackupBatteries)
             {
-                // the following floats we compare should in reality be the same
-                // but anyways there's probably no closer mod vehicle than 1 meter
-                if (Vector3.Distance(mv.transform.position, slot.Item1) < 1)
+                if (MatchMv(mv, slot.Item1))
                 {
                     if(mv.BackupBatteries is null || mv.BackupBatteries.Count == 0)
                     {
@@ -611,13 +579,8 @@ namespace VehicleFramework
             List<Tuple<Vector3, string, color, color, color, color, bool>> allVehiclesAesthetics = new List<Tuple<Vector3, string, color, color, color, color, bool>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
+                if (ValidateMvObject(mv))
                 {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
                     continue;
                 }
                 if (mv as Submarine is null)
@@ -647,10 +610,9 @@ namespace VehicleFramework
             {
                 return new Color(col.Item1, col.Item2, col.Item3, col.Item4);
             }
-            List<Tuple<Vector3, string, color, color, color, color, bool>> allVehiclesAesthetics = data.AllVehiclesAesthetics;
-            foreach (var vehicle in allVehiclesAesthetics)
+            foreach (Tuple<Vector3, string, color, color, color, color, bool> vehicle in data.AllVehiclesAesthetics)
             {
-                if (Vector3.Distance(vehicle.Item1, mv.transform.position) < 3)
+                if (MatchMv(mv, vehicle.Item1))
                 {
                     try
                     {
@@ -732,7 +694,14 @@ namespace VehicleFramework
                 {
                     try
                     {
-                        mv.BeginPiloting();
+                        if(mv as Drone != null)
+                        {
+                            (mv as Drone).BeginControlling();
+                        }
+                        else
+                        {
+                            mv.BeginPiloting();
+                        }
                     }
                     catch (Exception e)
                     {
