@@ -739,7 +739,6 @@ namespace VehicleFramework
         public List<GameObject> volumetricLights = new List<GameObject>();
         public PingInstance pingInstance = null;
         public HeadLightsController headlights;
-        public bool isRegistered = false;
         public EnergyInterface AIEnergyInterface;
         public AutoPilotVoice voice;
         public bool isInited = false;
