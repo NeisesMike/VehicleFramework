@@ -563,22 +563,13 @@ namespace VehicleFramework
             List<Tuple<Vector3, bool>> allVehiclesIsPlayerInside = new List<Tuple<Vector3, bool>>();
             foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
             {
-                if (mv == null)
-                {
-                    continue;
-                }
-                if (!mv.name.Contains("Clone"))
-                {
-                    // skip the prefabs
-                    continue;
-                }
-                if(mv as Submarine is null)
+                if (ValidateMvObject(mv))
                 {
                     continue;
                 }
                 try
                 {
-                    allVehiclesIsPlayerInside.Add(new Tuple<Vector3, bool>(mv.transform.position, (mv as Submarine).IsPlayerInside()));
+                    allVehiclesIsPlayerInside.Add(new Tuple<Vector3, bool>(mv.transform.position, mv.IsUnderCommand));
                 }
                 catch (Exception e)
                 {
@@ -588,16 +579,15 @@ namespace VehicleFramework
         }
             return allVehiclesIsPlayerInside;
         }
-        internal static IEnumerator DeserializePlayerInside(SaveData data, Submarine mv)
+        internal static IEnumerator DeserializePlayerInside(SaveData data, ModVehicle mv)
         {
             if (data == null || mv == null)
             {
                 yield break;
             }
-            List<Tuple<Vector3, bool>> allVehiclesPlayerInside = data.IsPlayerInside;
-            foreach (var vehicle in allVehiclesPlayerInside)
+            foreach (Tuple<Vector3, bool> vehicle in data.IsPlayerInside)
             {
-                if (Vector3.Distance(vehicle.Item1, mv.transform.position) < 3 && vehicle.Item2)
+                if (MatchMv(mv, vehicle.Item1) && vehicle.Item2)
                 {
                     try
                     {
@@ -706,6 +696,50 @@ namespace VehicleFramework
                         Logger.Error("Failed to load color details for " + mv.name + " : " + mv.subName.hullName.text);
                         Logger.Log(e.Message);
                     }
+                }
+            }
+        }
+        internal static List<Tuple<Vector3, bool>> SerializePlayerControlling()
+        {
+            List<Tuple<Vector3, bool>> allVehiclesIsPlayerControlling = new List<Tuple<Vector3, bool>>();
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (ValidateMvObject(mv))
+                {
+                    continue;
+                }
+                try
+                {
+                    allVehiclesIsPlayerControlling.Add(new Tuple<Vector3, bool>(mv.transform.position, mv.IsPlayerControlling()));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("Failed to serialize IsPlayerControlling for: " + mv.name + " : " + mv.subName.hullName.text);
+                    Logger.Log(e.Message);
+                }
+            }
+            return allVehiclesIsPlayerControlling;
+        }
+        internal static IEnumerator DeserializePlayerControlling(SaveData data, ModVehicle mv)
+        {
+            if (data == null || mv == null)
+            {
+                yield break;
+            }
+            foreach (Tuple<Vector3, bool> vehicle in data.IsPlayerControlling)
+            {
+                if (MatchMv(mv, vehicle.Item1) && vehicle.Item2)
+                {
+                    try
+                    {
+                        mv.BeginPiloting();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("Failed to load player into vehicle :" + mv.name + " : " + mv.subName.hullName.text);
+                        Logger.Log(e.Message);
+                    }
+                    yield break;
                 }
             }
         }

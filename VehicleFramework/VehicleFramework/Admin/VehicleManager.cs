@@ -87,6 +87,7 @@ namespace VehicleFramework
             data.BackupBatteries = SaveManager.SerializeBackupBatteries();
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
+            data.IsPlayerControlling = SaveManager.SerializePlayerControlling();
         }
         public static IEnumerator LoadVehicle(ModVehicle mv)
         {
@@ -107,10 +108,11 @@ namespace VehicleFramework
             if(mv as Submarine != null)
             {
                 UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv as Submarine));
-                UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv as Submarine));
                 UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv as Submarine));
             }
-            if(mv.liveMixin.health == 0)
+            UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv));
+            UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.VehicleSaveData, mv));
+            if (mv.liveMixin.health == 0)
             {
                 mv.OnKill();
             }
