@@ -751,16 +751,16 @@ namespace VehicleFramework
         public int numEfficiencyModules = 0;
         private int numArmorModules = 0;
         public PowerManager powerMan = null;
-        private bool _IsPlayerSomething = false;
+        private bool _IsUnderCommand = false;
         public bool IsUnderCommand
         {// true when inside a vehicle (or piloting a drone)
             get
             {
-                return _IsPlayerSomething;
+                return _IsUnderCommand;
             }
             protected set
             {
-                _IsPlayerSomething = value;
+                _IsUnderCommand = value;
                 IsPlayerDry = value;
             }
         }
