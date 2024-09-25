@@ -33,6 +33,25 @@ namespace VehicleFramework
             Logger.Warn(TechType.Seamoth.AsString());
             return ret;
         }
+        internal static bool ValidateMvObject(ModVehicle mv)
+        {
+            if (mv == null)
+            {
+                return true;
+            }
+            if (!mv.name.Contains("Clone"))
+            {
+                // skip the prefabs
+                return true;
+            }
+            return false;
+        }
+        internal static bool MatchMv(ModVehicle mv, Vector3 location)
+        {
+            // the following floats we compare should in reality be the same
+            // but anyways there's probably no closer mod vehicle than 1 meter
+            return Vector3.Distance(mv.transform.position, location) < 3;
+        }
         internal static List<Tuple<Vector3, Dictionary<string, techtype>>> SerializeUpgrades()
         {
             List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = new List<Tuple<Vector3, Dictionary<string, techtype>>>();
