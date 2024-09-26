@@ -730,6 +730,34 @@ namespace VehicleFramework
             cr.addedComponents.Append(et as Component);
 
         }
+        public static void SetupLavaLarvaAttachPoints(ModVehicle mv)
+        {
+            if (mv.LavaLarvaAttachPoints.Count() > 0)
+            {
+                GameObject attachParent = new GameObject("AttachedLavaLarvae");
+                attachParent.transform.SetParent(mv.transform);
+                attachParent.AddComponent<EcoTarget>().SetTargetType(EcoTargetType.HeatSource);
+                var lavaLarvaTarget = attachParent.AddComponent<LavaLarvaTarget>();
+                lavaLarvaTarget.energyInterface = mv.energyInterface;
+                lavaLarvaTarget.larvaePrefabRoot = attachParent.transform;
+                lavaLarvaTarget.liveMixin = mv.liveMixin;
+                lavaLarvaTarget.primiryPointsCount = mv.LavaLarvaAttachPoints.Count();
+                lavaLarvaTarget.vehicle = mv;
+                lavaLarvaTarget.subControl = null;
+                List<LavaLarvaAttachPoint> llapList = new List<LavaLarvaAttachPoint>();
+                foreach (var llap in mv.LavaLarvaAttachPoints)
+                {
+                    GameObject llapGO = new GameObject();
+                    llapGO.transform.SetParent(attachParent.transform);
+                    var thisLlap = llapGO.AddComponent<LavaLarvaAttachPoint>();
+                    thisLlap.Clear();
+                    llapList.Add(thisLlap);
+                    llapGO.transform.localPosition = attachParent.transform.InverseTransformPoint(llap.position);
+                    llapGO.transform.localEulerAngles = attachParent.transform.InverseTransformDirection(llap.eulerAngles);
+                }
+                lavaLarvaTarget.attachPoints = llapList.ToArray();
+            }
+        }
         public static void SetupRespawnPoint(Submarine mv)
         {
             var subroot = mv.gameObject.EnsureComponent<SubRoot>();
@@ -791,6 +819,7 @@ namespace VehicleFramework
             SetupSoundOnDamage(mv);
             SetupDealDamageOnImpact(mv);
             SetupDamageComponents(mv);
+            SetupLavaLarvaAttachPoints(mv);
             mv.collisionModel = mv.CollisionModel;
 
             if (mv as Submarine != null)

@@ -87,6 +87,7 @@ namespace VehicleFramework
         public virtual Sprite UnlockedSprite => null;
         public virtual GameObject LeviathanGrabPoint => gameObject;
         public virtual Atlas.Sprite CraftingSprite => MainPatcher.ModVehicleIcon;
+        public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
         public override string[] slotIDs
         { // You probably do not want to override this
             get
