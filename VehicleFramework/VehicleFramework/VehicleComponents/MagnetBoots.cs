@@ -68,7 +68,8 @@ namespace VehicleFramework.VehicleComponents
         }
         public bool CheckControls()
         {
-            return GameInput.GetKeyDown(MainPatcher.VFConfig.magnetBoots);
+            return mv.IsPlayerControlling()
+                && GameInput.GetKeyDown(MainPatcher.VFConfig.magnetBoots);
         }
         public MagnetStruct CheckPlacement()
         {
