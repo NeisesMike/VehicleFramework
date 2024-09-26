@@ -10,8 +10,16 @@ using System.Reflection.Emit;
 namespace VehicleFramework.Patches
 {
     /* This set of patches allows battery chargers to work inside Submarines.
-     * Submarines have a PowerRelay, and these patches ensure it does mostly nothing.
-     * Here, it acts as an interface to EnergyInterface.
+     * Submarines have a PowerRelay, but they have SubRoot.powerRelay = null.
+     * The PowerRelay acts as an interface to EnergyInterface.
+     * These patches ensure the PowerRelay does not Start.
+     * 
+         * Why doesn't ModVehicle set its powerRelay?
+         * We don't set powerRelay because we need CurrentSub.
+         * And CurrentSub calls OnPlayerEntered.
+         * And OnPlayerEntered plays a voice notification we don't set up,
+         * but only when powerRelay is not null.
+         * So this avoids an error appearing
      */
 
     [HarmonyPatch(typeof(PowerRelay))]
@@ -64,7 +72,7 @@ namespace VehicleFramework.Patches
 
         /* This transpiler simply replaces one method call with another.
          * It calls the method above, which is generic over the replaced method.
-         * It allows special handling in the case of a ModVehicle (which does not have a good PowerRelay)
+         * It allows special handling in the case of a ModVehicle (which does not have a good PowerRelay, see top of file)
          */
         [HarmonyPatch(nameof(Charger.Update))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
