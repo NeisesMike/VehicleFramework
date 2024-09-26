@@ -41,11 +41,35 @@ namespace VehicleFramework
          */
         public abstract GameObject VehicleModel { get; } 
         public abstract GameObject CollisionModel { get; }
-        public abstract GameObject StorageRootObject { get; }
-        public abstract GameObject ModulesRootObject { get; }
         #endregion
 
         #region virtual_properties_optional
+        public virtual GameObject StorageRootObject
+        {
+            get
+            {
+                var storageRO = transform.Find("StorageRootObject")?.gameObject;
+                if (storageRO == null)
+                {
+                    storageRO = new GameObject("StorageRootObject");
+                    storageRO.transform.SetParent(transform);
+                }
+                return storageRO;
+            }
+        }
+        public virtual GameObject ModulesRootObject
+        {
+            get
+            {
+                var storageRO = transform.Find("ModulesRootObject")?.gameObject;
+                if (storageRO == null)
+                {
+                    storageRO = new GameObject("ModulesRootObject");
+                    storageRO.transform.SetParent(transform);
+                }
+                return storageRO;
+            }
+        }
         public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
         public virtual ModVehicleEngine Engine { get; set; }
