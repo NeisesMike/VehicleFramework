@@ -91,7 +91,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializeUpgrades(SaveData data, ModVehicle mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.UpgradeLists == null)
             {
                 yield break;
             }
@@ -177,7 +177,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializeModularStorage(SaveData data, ModVehicle mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.ModularStorages == null)
             {
                 yield break;
             }
@@ -294,7 +294,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializeInnateStorage(SaveData data, ModVehicle mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.InnateStorages == null)
             {
                 yield break;
             }
@@ -412,7 +412,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializeBatteries(SaveData data, ModVehicle mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.Batteries == null)
             {
                 yield break;
             }
@@ -485,7 +485,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializeBackupBatteries(SaveData data, Submarine mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.BackupBatteries == null)
             {
                 yield break;
             }
@@ -549,7 +549,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializePlayerInside(SaveData data, ModVehicle mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.IsPlayerInside == null)
             {
                 yield break;
             }
@@ -602,7 +602,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializeAesthetics(SaveData data, Submarine mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.AllVehiclesAesthetics == null)
             {
                 yield break;
             }
@@ -684,7 +684,7 @@ namespace VehicleFramework
         }
         internal static IEnumerator DeserializePlayerControlling(SaveData data, ModVehicle mv)
         {
-            if (data == null || mv == null)
+            if (data == null || mv == null || data.IsPlayerControlling == null)
             {
                 yield break;
             }
