@@ -14,6 +14,7 @@ namespace VehicleFramework.VehicleComponents
     {
         public Rigidbody useRigidbody => GetComponentInParent<ModVehicle>()?.useRigidbody;
         // Store the current Z rotation and the velocity used by SmoothDamp
+        private float initialYawRotation = 0f;
         private float currentYawRotation = 0f;
         private float rotationVelocity = 0f;
         public float smoothTime = 0.1f;
@@ -29,6 +30,30 @@ namespace VehicleFramework.VehicleComponents
             z,
             minusZ
         }
+        public void Start()
+        {
+            switch (yawAxis)
+            {
+                case YawAxis.x:
+                    initialYawRotation = transform.localEulerAngles.x;
+                    break;
+                case YawAxis.y:
+                    initialYawRotation = transform.localEulerAngles.y;
+                    break;
+                case YawAxis.z:
+                    initialYawRotation = transform.localEulerAngles.z;
+                    break;
+                case YawAxis.minusX:
+                    initialYawRotation = transform.localEulerAngles.x;
+                    break;
+                case YawAxis.minusY:
+                    initialYawRotation = transform.localEulerAngles.y;
+                    break;
+                case YawAxis.minusZ:
+                    initialYawRotation = transform.localEulerAngles.z;
+                    break;
+            }
+        }
         public void Update()
         {
             if (useRigidbody == null)
@@ -42,25 +67,25 @@ namespace VehicleFramework.VehicleComponents
             currentYawRotation = Mathf.SmoothDamp(currentYawRotation, -targetYawRotation, ref rotationVelocity, smoothTime);
 
             // Apply the smoothed rotation to the transform
-            switch(yawAxis)
+            switch (yawAxis)
             {
                 case YawAxis.x:
-                    transform.localEulerAngles = new Vector3(currentYawRotation, 0f, 0f);
+                    transform.localEulerAngles = new Vector3(initialYawRotation + currentYawRotation, transform.localEulerAngles.y, transform.localEulerAngles.z);
                     break;
                 case YawAxis.y:
-                    transform.localEulerAngles = new Vector3(0f, currentYawRotation, 0f);
+                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, initialYawRotation + currentYawRotation, transform.localEulerAngles.z);
                     break;
                 case YawAxis.z:
-                    transform.localEulerAngles = new Vector3(0f, 0f, currentYawRotation);
+                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, initialYawRotation + currentYawRotation);
                     break;
                 case YawAxis.minusX:
-                    transform.localEulerAngles = new Vector3(-currentYawRotation, 0f, 0f);
+                    transform.localEulerAngles = new Vector3(initialYawRotation - currentYawRotation, transform.localEulerAngles.y, transform.localEulerAngles.z);
                     break;
                 case YawAxis.minusY:
-                    transform.localEulerAngles = new Vector3(0f, -currentYawRotation, 0f);
+                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, initialYawRotation - currentYawRotation, transform.localEulerAngles.z);
                     break;
                 case YawAxis.minusZ:
-                    transform.localEulerAngles = new Vector3(0f, 0f, -currentYawRotation);
+                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, initialYawRotation - currentYawRotation);
                     break;
             }
         }
