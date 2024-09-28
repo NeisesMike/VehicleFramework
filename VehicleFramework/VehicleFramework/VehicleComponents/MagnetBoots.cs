@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,7 +54,15 @@ namespace VehicleFramework.VehicleComponents
         public void Start()
         {
             mv = GetComponent<ModVehicle>();
-            serializerObject = transform.parent.GetComponent<StoreInformationIdentifier>().transform;
+            UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
+        }
+        public IEnumerator FindStoreInfoIdentifier()
+        {
+            while (serializerObject == null)
+            {
+                serializerObject = transform.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
+                yield return null;
+            }
         }
         public void Update()
         {
