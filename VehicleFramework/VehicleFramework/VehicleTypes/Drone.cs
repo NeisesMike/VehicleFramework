@@ -94,14 +94,9 @@ namespace VehicleFramework.VehicleTypes
             yield break;
         }
         private Coroutine CheckingPower = null;
-        public virtual bool HasEnoughPowerToConnect()
-        {
-            energyInterface.GetValues(out float charge, out _);
-            return 3 < charge;
-        }
         private IEnumerator CheckPower()
         {
-            while (HasEnoughPowerToConnect())
+            while (energyInterface.hasCharge)
             {
                 yield return new WaitForSeconds(1f);
             }

@@ -211,7 +211,7 @@ namespace VehicleFramework
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
             if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && pairedDrone != null)
             {
-                if (pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
+                if (pairedDrone.isScuttled || !pairedDrone.energyInterface.hasCharge)
                 {
                     ShowDetails(pairedDrone);
                 }
@@ -245,7 +245,7 @@ namespace VehicleFramework
             {
                 return "Destroyed";
             }
-            else if(!drone.HasEnoughPowerToConnect())
+            else if(!drone.energyInterface.hasCharge)
             {
                 return "Low power";
             }
@@ -265,7 +265,7 @@ namespace VehicleFramework
                 return ret;
             }
             ret += "Status: " + GetStatus(pairedDrone) + "\n";
-            if(pairedDrone.isScuttled || !pairedDrone.HasEnoughPowerToConnect())
+            if(pairedDrone.isScuttled || !pairedDrone.energyInterface.hasCharge)
             {
                 ret += HandReticle.main.GetText("Request Details ", false, GameInput.Button.LeftHand) + "\n";
             }
