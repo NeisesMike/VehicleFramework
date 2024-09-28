@@ -18,6 +18,7 @@ namespace VehicleFramework.VehicleTypes
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
+        public override PilotingStyle pilotingStyle => PilotingStyle.Seamoth;
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
