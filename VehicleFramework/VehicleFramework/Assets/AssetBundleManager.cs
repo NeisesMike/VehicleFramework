@@ -155,5 +155,9 @@ namespace VehicleFramework.Assets
         {
             return abi.GetRawSprite(SpriteAtlasName, SpriteName);
         }
+        public void CloseBundle()
+        {
+            bundle.Unload(false);
+        }
     }
 }
