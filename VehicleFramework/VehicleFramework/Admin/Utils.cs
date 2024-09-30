@@ -157,5 +157,18 @@ namespace VehicleFramework.Admin
         {
             return Player.main.currentSub != null && Player.main.currentSub.name.ToLower().Contains("cyclops");
         }
+        public static void EnableSimpleEmission(Material mat)
+        {
+            // This is the minumum requirement for emission under the marmosetuber shader.
+            // No guarantees this will work well, but it's a good starting place.
+            // For example, not all materials will want to use a specular map. In that case,
+            // it can make a material look brighter, shinier, or more luminescent than it should be.
+            mat.EnableKeyword("MARMO_EMISSION");
+            mat.EnableKeyword("MARMO_SPECMAP");
+            mat.SetFloat("_GlowStrength", 0);
+            mat.SetFloat("_GlowStrengthNight", 0);
+            mat.SetFloat("_EmissionLM", 1);
+            mat.SetFloat("_EmissionLMNight", 1);
+        }
     }
 }
