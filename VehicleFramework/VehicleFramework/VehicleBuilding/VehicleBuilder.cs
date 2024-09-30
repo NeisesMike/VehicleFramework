@@ -267,9 +267,12 @@ namespace VehicleFramework
                 {
                     mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
                     mv.controlPanelLogic.mv = mv;
-                    mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
-                    mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
-                    GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+                    if(mv.transform.Find("Control-Panel-Location") != null)
+                    {
+                        mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
+                        mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
+                        GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+                    }
                 }
             }
             catch (Exception e)
