@@ -27,5 +27,6 @@ namespace VehicleFramework
         // todo: maybe this?
         // save a few lines in the output json?
         public List<Tuple<Vector3, Tuple<upgrades, innateStorages, modularStorages, batteries>>> AllVehiclesStorages { get; set; }
+        public List<Tuple<Vector3, string>> SubNames { get; set; }
     }
 }

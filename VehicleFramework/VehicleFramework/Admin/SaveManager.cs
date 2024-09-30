@@ -712,5 +712,49 @@ namespace VehicleFramework
                 }
             }
         }
+        internal static List<Tuple<Vector3, string>> SerializeSubName()
+        {
+            List<Tuple<Vector3, string>> allVehiclesSubNames = new List<Tuple<Vector3, string>>();
+            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
+            {
+                if (ValidateMvObject(mv))
+                {
+                    continue;
+                }
+                try
+                {
+                    allVehiclesSubNames.Add(new Tuple<Vector3, string>(mv.transform.position, mv.subName.hullName.text));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("Failed to serialize SubName for: " + mv.name + " : " + mv.subName.hullName.text);
+                    Logger.Log(e.Message);
+                }
+            }
+            return allVehiclesSubNames;
+        }
+        internal static IEnumerator DeserializeSubName(SaveData data, ModVehicle mv)
+        {
+            if (data == null || mv == null || data.SubNames == null)
+            {
+                yield break;
+            }
+            foreach (Tuple<Vector3, string> vehicle in data.SubNames)
+            {
+                if (MatchMv(mv, vehicle.Item1))
+                {
+                    try
+                    {
+                        mv.subName.hullName.text = vehicle.Item2;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("Failed to load SubName for vehicle :" + mv.name + " : " + mv.subName.hullName.text);
+                        Logger.Log(e.Message);
+                    }
+                    yield break;
+                }
+            }
+        }
     }
 }

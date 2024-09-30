@@ -88,6 +88,7 @@ namespace VehicleFramework
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
             data.IsPlayerControlling = SaveManager.SerializePlayerControlling();
+            data.SubNames = SaveManager.SerializeSubName();
         }
         public static IEnumerator LoadVehicle(ModVehicle mv)
         {
@@ -112,6 +113,7 @@ namespace VehicleFramework
             }
             UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv));
             UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.VehicleSaveData, mv));
+            UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeSubName(MainPatcher.VehicleSaveData, mv));
             if (mv.liveMixin.health == 0)
             {
                 mv.OnKill();
