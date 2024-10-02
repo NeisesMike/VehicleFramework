@@ -46,17 +46,13 @@ namespace VehicleFramework.Patches
 				// if powerRelay.powerPreview was null, we must be talking about a ModVehicle
 				// (it was never assigned because PowerRelay.Start is skipped for ModVehicles)
 				// so let's check for one
-				ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(__instance.gameObject);
-				if (mv is null)
+				ModVehicle mv = null;
+				foreach (ModVehicle tempMV in VehicleManager.VehiclesInPlay)
 				{
-					Logger.Warn("CrafterLogic: Crafter had no ModVehicle as an ancestor or descendent.");
-					foreach (ModVehicle tempMV in VehicleManager.VehiclesInPlay)
+					if (tempMV.IsUnderCommand)
 					{
-						if (tempMV.IsUnderCommand)
-						{
-							mv = tempMV;
-							break;
-						}
+						mv = tempMV;
+						break;
 					}
 				}
 				if (mv is null)
