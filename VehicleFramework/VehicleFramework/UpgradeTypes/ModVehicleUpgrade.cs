@@ -20,6 +20,8 @@ namespace VehicleFramework.UpgradeTypes
         public virtual CraftTree.Type FabricatorType => CraftTree.Type.Workbench;
         public virtual Atlas.Sprite Icon => MainPatcher.UpgradeIcon;
         public virtual TechType UnlockWith => TechType.BaseUpgradeConsole;
+        public virtual string UnlockedMessage => "New vehicle upgrade acquired";
+        public virtual Sprite UnlockedSprite => null;
         public virtual string TabName => "MVCM";
         public virtual string[] StepsToFabricatorTab => new string[] { "MVUM", TabName };
         public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
