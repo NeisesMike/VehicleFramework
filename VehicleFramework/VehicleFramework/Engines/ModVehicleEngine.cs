@@ -428,34 +428,9 @@ namespace VehicleFramework.Engines
 
         public float GetTimeToStop()
         {
-            double LambertW(double x)
-            {
-                // LambertW is not defined in this section
-                if (x < -Math.Exp(-1))
-                    throw new Exception("The LambertW-function is not defined for " + x + ".");
-
-                // computes the first branch for real values only
-
-                // amount of iterations (empirically found)
-                int amountOfIterations = Math.Max(4, (int)Math.Ceiling(Math.Log10(x) / 3));
-
-                // initial guess is based on 0 < ln(a) < 3
-                double w = 3 * Math.Log(x + 1) / 4;
-
-                // Halley's method via eqn (5.9) in Corless et al (1996)
-                for (int i = 0; i < amountOfIterations; i++)
-                    w = w - (w * Math.Exp(w) - x) / (Math.Exp(w) * (w + 1) - (w + 2) * (w * Math.Exp(w) - x) / (2 * w + 2));
-
-                return w;
-            }
-            //float timeToXStop = ((float)LambertW(RightMomentum * Mathf.Log(1f-DragDecay)/ (-1f * STRAFE_ACCEL)))/Mathf.Log(1f-DragDecay);
-            //float timeToYStop = ((float)LambertW(RightMomentum * Mathf.Log(1f - DragDecay) / (-1f * VERT_ACCEL))) / Mathf.Log(1f - DragDecay);
-            //float timeToZStop = ((float)LambertW(RightMomentum * Mathf.Log(1f - DragDecay) / (-1f * REVERSE_ACCEL))) / Mathf.Log(1f - DragDecay);
-
             float timeToXStop = Mathf.Log(0.05f * STRAFE_MAX_SPEED / RightMomentum) / (Mathf.Log(.25f));
             float timeToYStop = Mathf.Log(0.05f * VERT_MAX_SPEED / UpMomentum) / (Mathf.Log(.25f));
             float timeToZStop = Mathf.Log(0.05f * FORWARD_TOP_SPEED / ForwardMomentum) / (Mathf.Log(.25f));
-
             return Mathf.Max(timeToXStop,timeToYStop,timeToZStop);
         }
         public virtual void KillMomentum()
