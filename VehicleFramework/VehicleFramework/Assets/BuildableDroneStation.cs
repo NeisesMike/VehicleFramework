@@ -78,7 +78,20 @@ namespace VehicleFramework
                 new Vector3 (-148.1f, -31.7f, 252.8f)
             };
             Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(classID, "Tech/Habitats", displayName, encyclopediaDesc, null, DSAssets.unlock, null, null);
-            FragmentManager.RegisterFragment(DSAssets.fragment, consoleTT, 3, classID + "Fragment", displayName + " Fragment", description + " ...fragment", DSAssets.unlock, spawnLocations, classID);
+            FragmentData fragmentData = new FragmentData
+            {
+                fragment = DSAssets.fragment,
+                toUnlock = consoleTT,
+                fragmentsToScan = 3,
+                scanTime = 5f,
+                classID = classID + "Fragment",
+                displayName = displayName + " Fragment",
+                description = description + " ...fragment",
+                spawnLocations = spawnLocations,
+                spawnRotations = null,
+                encyKey = classID
+            };
+            FragmentManager.RegisterFragment(fragmentData);
         }
     }
 

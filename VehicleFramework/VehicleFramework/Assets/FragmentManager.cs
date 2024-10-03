@@ -14,10 +14,23 @@ using BiomeData = LootDistributionData.BiomeData;
 
 namespace VehicleFramework.Assets
 {
+    public struct FragmentData
+    {
+        public GameObject fragment;
+        public TechType toUnlock;
+        public int fragmentsToScan;
+        public float scanTime;
+        public string classID;
+        public string displayName;
+        public string description;
+        public List<Vector3> spawnLocations;
+        public List<Vector3> spawnRotations;
+        public string encyKey;
+    }
     public class FragmentManager : MonoBehaviour
     {
         private static readonly List<PDAScanner.EntryData> PDAScannerData = new List<PDAScanner.EntryData>();
-        public static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, TechType toUnlock, int numFragmentsToScan, string encyKey="IAmAnUnusedEncyclopediaKey")
+        internal static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, TechType toUnlock, int numFragmentsToScan, float scanTime, string encyKey="IAmAnUnusedEncyclopediaKey")
         {
             PDAScanner.EntryData entryData = new PDAScanner.EntryData()
             {
@@ -27,33 +40,34 @@ namespace VehicleFramework.Assets
                 destroyAfterScan = true,
                 encyclopedia = encyKey,
                 blueprint = toUnlock,
-                scanTime = 5f,
+                scanTime = scanTime,
                 isFragment = true
             };
             return entryData;
         }
-        public static TechType RegisterFragment(GameObject fragment, ModVehicle vehicle, string classID, string displayName, string description, Sprite unlockSprite = null, List<Vector3> spawnLocations = null, string encyKey = "IAmAnUnusedEncyclopediaKey")
+        /// <summary>
+        /// Registers a fragment using a FragmentData struct as input. For a ModVehicle, you can access its techtype AFTER registration like this:
+        /// vehicle.GetComponent<TechTag>().type
+        /// </summary>
+        /// <returns>The TechType of the new fragment.</returns>
+        public static TechType RegisterFragment(FragmentData frag)
         {
-            if (vehicle == null)
-            {
-                Logger.Error("RegisterFragment error: vehicle was null");
-                return 0;
-            }
-            return RegisterFragment(fragment, vehicle.GetComponent<TechTag>().type, vehicle.FragmentsToScan, classID, displayName, description, unlockSprite, spawnLocations, encyKey);
-        }
-        public static TechType RegisterFragment(GameObject fragment, TechType toUnlock, int fragmentsToScan, string classID, string displayName, string description, Sprite sprite = null, List<Vector3> spawnLocations = null, string encyKey = "IAmAnUnusedEncyclopediaKey")
-        {
-            if (fragment == null)
+            if (frag.fragment == null)
             {
                 Logger.Error("RegisterFragment error: fragment was null");
                 return 0;
             }
-            TechType fragmentTT = RegisterGenericFragment(fragment, classID, displayName, description, sprite, spawnLocations, "congration");
-            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, toUnlock, fragmentsToScan, encyKey));
+            TechType fragmentTT = RegisterFragmentGeneric(frag.fragment, frag.classID, frag.displayName, frag.description, frag.spawnLocations, frag.spawnRotations);
+            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, frag.toUnlock, frag.fragmentsToScan, frag.scanTime, frag.encyKey));
             return fragmentTT;
         }
-        public static TechType RegisterGenericFragment(GameObject fragment, string classID, string displayName, string description, Sprite unlockSprite = null, List<Vector3> spawnLocations = null, string unlockedMessage = "")
+        internal static TechType RegisterFragmentGeneric(GameObject fragment, string classID, string displayName, string description, List<Vector3> spawnLocations, List<Vector3> spawnRotations = null)
         {
+            if(spawnLocations != null && spawnRotations != null && spawnLocations.Count() != spawnRotations.Count())
+            {
+                Logger.Error("For classID: " + classID + ": Tried to register fragment with unequal number of spawn locations and rotations. Ensure there is one rotation for every location, or else don't specify any rotations.");
+                return TechType.None;
+            }
             PrefabInfo fragmentInfo = PrefabInfo.WithTechType(classID, displayName, description);
             CustomPrefab armFragment = new CustomPrefab(fragmentInfo);
             fragment.AddComponent<BoxCollider>();
@@ -73,16 +87,24 @@ namespace VehicleFramework.Assets
                 };
                 armFragment.SetSpawns(useBiomes.ToArray());
             }
-            else
+            else if(spawnRotations == null)
             {
                 armFragment.SetSpawns(spawnLocations.Select(x => new SpawnLocation(x)).ToArray());
             }
-            Logger.Log("Registering fragments. You may see errors below.");
+            else
+            {
+                List<SpawnLocation> spawns = new List<SpawnLocation>();
+                for(int i=0; i<spawnLocations.Count(); i++)
+                {
+                    spawns.Add(new SpawnLocation(spawnLocations[i], spawnRotations[i]));
+                }
+                armFragment.SetSpawns(spawns.ToArray());
+            }
             armFragment.Register();
-            Logger.Log("Done registering fragments.");
+            Logger.Log("Registered fragment: " + classID);
             return fragmentInfo.TechType;
         }
-        public static void AddScannerDataEntries()
+        internal static void AddScannerDataEntries()
         {
             void TryAddScannerData(PDAScanner.EntryData data)
             {
@@ -108,7 +130,7 @@ namespace VehicleFramework.Assets
             UWE.CoroutineHost.StartCoroutine(DestroyPickupable());
         }
 
-        public static void SetupScannable(GameObject obj, TechType tt)
+        internal static void SetupScannable(GameObject obj, TechType tt)
         {
             var rt = obj.AddComponent<ResourceTracker>();
             rt.techType = tt;

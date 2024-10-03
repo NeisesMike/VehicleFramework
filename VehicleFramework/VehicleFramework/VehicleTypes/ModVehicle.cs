@@ -111,7 +111,6 @@ namespace VehicleFramework
         public virtual bool HasArms => false;
         public virtual TechType UnlockedWith => TechType.Constructor;
         public virtual string UnlockedMessage => "New vehicle blueprint acquired";
-        public virtual int FragmentsToScan => 3;
         public virtual int CrushDepthUpgrade1 => 300;
         public virtual int CrushDepthUpgrade2 => 300;
         public virtual int CrushDepthUpgrade3 => 300;
