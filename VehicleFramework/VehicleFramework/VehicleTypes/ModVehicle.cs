@@ -360,6 +360,7 @@ namespace VehicleFramework
             };
             Admin.UpgradeRegistrar.OnArmActions.ForEach(x => x(param3));
 
+            VehicleFramework.Patches.CompatibilityPatches.BetterVehicleStoragePatcher.TryUseBetterVehicleStorage(this, slotID, techType);
             base.OnUpgradeModuleUse(techType, slotID);
         }
         public override void OnPilotModeBegin()

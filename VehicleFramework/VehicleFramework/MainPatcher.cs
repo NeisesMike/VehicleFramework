@@ -128,6 +128,14 @@ namespace VehicleFramework
                 harmony.Patch(awakePostOriginal, awakePostfix);
             }
 
+            // Patch BetterVehicleStorage to add ModVehicle compat
+            var type3 = Type.GetType("BetterVehicleStorage.Managers.StorageModuleMgr, BetterVehicleStorage", false, false);
+            if (type3 != null)
+            {
+                var AllowedToAddOriginal = AccessTools.Method(type3, "AllowedToAdd");
+                var AllowedToAddPrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.BetterVehicleStoragePatcher), "Prefix"));
+                harmony.Patch(AllowedToAddOriginal, AllowedToAddPrefix);
+            }
             /*
             var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
             if (type2 != null)
