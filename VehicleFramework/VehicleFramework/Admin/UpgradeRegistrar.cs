@@ -68,7 +68,6 @@ namespace VehicleFramework.Admin
                 .WithFabricatorType(upgrade.FabricatorType)
                 .WithStepsToFabricatorTab(upgrade.StepsToFabricatorTab);
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
-            var scanningGadget = module_CustomPrefab.SetUnlock(upgrade.UnlockWith);
             if (upgrade as ModVehicleArm != null)
             {
                 module_CustomPrefab
@@ -81,8 +80,9 @@ namespace VehicleFramework.Admin
                     .SetEquipment(VehicleBuilder.ModuleType)
                     .WithQuickSlotType(upgrade.QuickSlotType);
             }
-            if (upgrade.UnlockedSprite != null)
+            if (upgrade.UnlockedSprite != null && !upgrade.UnlockAtStart)
             {
+                var scanningGadget = module_CustomPrefab.SetUnlock(upgrade.UnlockWith);
                 scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
             }
             module_CustomPrefab.Register();

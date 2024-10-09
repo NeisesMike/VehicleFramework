@@ -19,7 +19,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual float CraftingTime => 3f;
         public virtual CraftTree.Type FabricatorType => CraftTree.Type.Workbench;
         public virtual Atlas.Sprite Icon => MainPatcher.UpgradeIcon;
-        public virtual TechType UnlockWith => TechType.BaseUpgradeConsole;
+        public virtual TechType UnlockWith => TechType.Workbench;
         public virtual string UnlockedMessage => "New vehicle upgrade acquired";
         public virtual Sprite UnlockedSprite => null;
         public virtual string TabName => "MVCM";
