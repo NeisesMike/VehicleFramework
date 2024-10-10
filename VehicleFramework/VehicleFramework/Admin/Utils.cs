@@ -131,14 +131,19 @@ namespace VehicleFramework.Admin
         }
         public static void EvaluateDepthModules(AddActionParams param)
         {
+            if(param.vehicle.GetComponent<ModVehicle>() == null)
+            {
+                Subtitles.Add("This upgrade is not compatible with this vehicle.");
+                return;
+            }
             // Iterate over all upgrade modules,
             // in order to determine our max depth module level
             int maxDepthModuleLevel = 0;
             List<string> upgradeSlots = new List<string>();
-            param.mv.upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
+            param.vehicle.upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
             foreach (String slot in upgradeSlots)
             {
-                InventoryItem upgrade = param.mv.upgradesInput.equipment.GetItemInSlot(slot);
+                InventoryItem upgrade = param.vehicle.upgradesInput.equipment.GetItemInSlot(slot);
                 if (upgrade != null)
                 {
                     //Logger.Log(slot + " : " + upgrade.item.name);
@@ -166,10 +171,10 @@ namespace VehicleFramework.Admin
                 }
             }
             int extraDepthToAdd = 0;
-            extraDepthToAdd = maxDepthModuleLevel > 0 ? extraDepthToAdd += param.mv.CrushDepthUpgrade1 : extraDepthToAdd;
-            extraDepthToAdd = maxDepthModuleLevel > 1 ? extraDepthToAdd += param.mv.CrushDepthUpgrade2 : extraDepthToAdd;
-            extraDepthToAdd = maxDepthModuleLevel > 2 ? extraDepthToAdd += param.mv.CrushDepthUpgrade3 : extraDepthToAdd;
-            param.mv.GetComponent<CrushDamage>().SetExtraCrushDepth(extraDepthToAdd);
+            extraDepthToAdd = maxDepthModuleLevel > 0 ? extraDepthToAdd += param.vehicle.GetComponent<ModVehicle>().CrushDepthUpgrade1 : extraDepthToAdd;
+            extraDepthToAdd = maxDepthModuleLevel > 1 ? extraDepthToAdd += param.vehicle.GetComponent<ModVehicle>().CrushDepthUpgrade2 : extraDepthToAdd;
+            extraDepthToAdd = maxDepthModuleLevel > 2 ? extraDepthToAdd += param.vehicle.GetComponent<ModVehicle>().CrushDepthUpgrade3 : extraDepthToAdd;
+            param.vehicle.GetComponent<CrushDamage>().SetExtraCrushDepth(extraDepthToAdd);
         }
         public static TechType GetTechTypeFromVehicleName(string name)
         {

@@ -10,17 +10,17 @@ namespace VehicleFramework.UpgradeModules
 {
     public static class ModulePrepper
     {
-        public static List<Action<ModVehicle, List<string>, int, TechType, bool>> upgradeOnAddedActions = new List<Action<ModVehicle, List<string>, int, TechType, bool>>();
+        public static List<Action<Vehicle, List<string>, int, TechType, bool>> upgradeOnAddedActions = new List<Action<Vehicle, List<string>, int, TechType, bool>>();
         //public static List<ToggleAction> upgradeOnToggleActions = new List<ToggleAction>();
 
         // action, time-to-first, repeatRate, energyCostPerActivation
-        public static List<Tuple<Action<ModVehicle, int>, TechType, float, float, float>> upgradeToggleActions = new List<Tuple<Action<ModVehicle, int>, TechType, float, float, float>>();
+        public static List<Tuple<Action<Vehicle, int>, TechType, float, float, float>> upgradeToggleActions = new List<Tuple<Action<Vehicle, int>, TechType, float, float, float>>();
 
         // action, cooldown, energy_cost
-        public static List<Tuple<Func<ModVehicle, int, TechType, bool>, float, float>> upgradeOnUseActions = new List<Tuple<Func<ModVehicle, int, TechType, bool>, float, float>>();
+        public static List<Tuple<Func<Vehicle, int, TechType, bool>, float, float>> upgradeOnUseActions = new List<Tuple<Func<Vehicle, int, TechType, bool>, float, float>>();
 
         // action, max_charge, energy_cost
-        public static List<Tuple<Action<ModVehicle, int, TechType, float, float>, float, float>> upgradeOnUseChargeableActions = new List<Tuple<Action<ModVehicle, int, TechType, float, float>, float, float>>();
+        public static List<Tuple<Action<Vehicle, int, TechType, float, float>, float, float>> upgradeOnUseChargeableActions = new List<Tuple<Action<Vehicle, int, TechType, float, float>, float, float>>();
 
         public static TechType RegisterModuleGeneric(List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon = null, string tabName = "")
         {

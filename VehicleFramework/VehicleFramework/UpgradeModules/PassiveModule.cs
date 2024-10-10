@@ -14,7 +14,7 @@ namespace VehicleFramework.UpgradeModules
             }
             List<CraftData.Ingredient> recipe = inputRecipe.Select(x => new CraftData.Ingredient(x.Item1, x.Item2)).ToList();
             TechType tt = ModulePrepper.RegisterModuleGeneric(recipe, classId, displayName, description, QuickSlotType.Passive, icon, tabName:tabName);
-            void WrappedOnAdded(ModVehicle mv, List<string> currentUpgrades, int slotID, TechType moduleTechType, bool added)
+            void WrappedOnAdded(Vehicle mv, List<string> currentUpgrades, int slotID, TechType moduleTechType, bool added)
             {
                 if (moduleTechType == tt)
                 {

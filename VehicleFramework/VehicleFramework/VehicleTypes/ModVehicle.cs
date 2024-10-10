@@ -260,6 +260,7 @@ namespace VehicleFramework
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
             TechType techType = modules.GetTechTypeInSlot(slotIDs[slotID]);
+            #region oldmodulecode
             if (active)
             {
                 var moduleToggleAction = UpgradeModules.ModulePrepper.upgradeToggleActions.Where(x => x.Item2 == techType).FirstOrDefault();
@@ -294,10 +295,11 @@ namespace VehicleFramework
             {
                 toggledActions.Where(x => x.Item1 == slotID).Where(x => x.Item2 != null).ToList().ForEach(x => StopCoroutine(x.Item2));
             }
+            #endregion
             UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
             {
                 active = active,
-                mv = this,
+                vehicle = this,
                 slotID = slotID,
                 techType = techType
             };
@@ -306,6 +308,7 @@ namespace VehicleFramework
         }
         public override void OnUpgradeModuleUse(TechType techType, int slotID)
         {
+            #region OldModuleCode
             foreach (var moduleUseAction in UpgradeModules.ModulePrepper.upgradeOnUseActions)
             {
                 bool result = moduleUseAction.Item1(this, slotID, techType);
@@ -323,9 +326,10 @@ namespace VehicleFramework
                 moduleUseAction.Item1(this, slotID, techType, charge, slotCharge);
                 energyInterface.ConsumeEnergy(moduleUseAction.Item3);
             }
+            #endregion
             UpgradeTypes.SelectableActionParams param = new UpgradeTypes.SelectableActionParams
             {
-                mv = this,
+                vehicle = this,
                 slotID = slotID,
                 techType = techType
             };
@@ -333,15 +337,15 @@ namespace VehicleFramework
 
             UpgradeTypes.SelectableChargeableActionParams param2 = new UpgradeTypes.SelectableChargeableActionParams
             {
-                mv = this,
+                vehicle = this,
                 slotID = slotID,
                 techType = techType,
-                charge = param.mv.quickSlotCharge[param.slotID],
-                slotCharge = param.mv.GetSlotCharge(param.slotID)
+                charge = param.vehicle.quickSlotCharge[param.slotID],
+                slotCharge = param.vehicle.GetSlotCharge(param.slotID)
             };
             Admin.UpgradeRegistrar.OnSelectChargeActions.ForEach(x => x(param2));
 
-            VehicleComponents.VFArmsManager vfam = param.mv.GetComponent<VehicleComponents.VFArmsManager>();
+            VehicleComponents.VFArmsManager vfam = param.vehicle.GetComponent<VehicleComponents.VFArmsManager>();
             GameObject inputArm = null;
             if (param.slotID == vfam?.leftArmSlotID && vfam?.leftArm != null)
             {
@@ -353,7 +357,7 @@ namespace VehicleFramework
             }
             UpgradeTypes.ArmActionParams param3 = new UpgradeTypes.ArmActionParams
             {
-                mv = this,
+                vehicle = this,
                 slotID = slotID,
                 techType = techType,
                 arm = inputArm
@@ -409,7 +413,7 @@ namespace VehicleFramework
 
             UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
             {
-                mv = this,
+                vehicle = this,
                 slotID = slotID,
                 techType = techType,
                 isAdded = added

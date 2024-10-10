@@ -15,7 +15,7 @@ namespace VehicleFramework.UpgradeTypes
         public abstract IEnumerator GetArmPrefab(IOut<GameObject> arm);
         public virtual void OnArmSelected(ArmActionParams param)
         {
-            Logger.Log("Selecting arm: " + ClassId + " on ModVehicle: " + param.mv.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.Log("Selecting arm: " + ClassId + " on ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
     }
 }

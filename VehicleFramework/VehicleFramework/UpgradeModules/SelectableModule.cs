@@ -17,7 +17,7 @@ namespace VehicleFramework.UpgradeModules
             }
             List<CraftData.Ingredient> recipe = inputRecipe.Select(x => new CraftData.Ingredient(x.Item1, x.Item2)).ToList();
             TechType tt = ModulePrepper.RegisterModuleGeneric(recipe, classId, displayName, description, QuickSlotType.Selectable, icon, tabName: tabName);
-            bool WrappedOnSelected(ModVehicle mv, int slotID, TechType moduleTechType)
+            bool WrappedOnSelected(Vehicle mv, int slotID, TechType moduleTechType)
             {
                 if (moduleTechType == tt)
                 {
@@ -26,7 +26,7 @@ namespace VehicleFramework.UpgradeModules
                 }
                 return false;
             }
-            ModulePrepper.upgradeOnUseActions.Add(new Tuple<Func<ModVehicle, int, TechType, bool>, float, float>(WrappedOnSelected, cooldown, energyCost));
+            ModulePrepper.upgradeOnUseActions.Add(new Tuple<Func<Vehicle, int, TechType, bool>, float, float>(WrappedOnSelected, cooldown, energyCost));
             return tt;
         }
     }

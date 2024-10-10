@@ -17,7 +17,7 @@ namespace VehicleFramework.UpgradeModules
             }
             List<CraftData.Ingredient> recipe = inputRecipe.Select(x => new CraftData.Ingredient(x.Item1, x.Item2)).ToList();
             TechType tt = ModulePrepper.RegisterModuleGeneric(recipe, classId, displayName, description, QuickSlotType.Toggleable, icon, tabName: tabName);
-            ModulePrepper.upgradeToggleActions.Add(new Tuple<Action<ModVehicle, int>, TechType, float, float, float>(OnToggle, tt, timeToFirstActivation, repeatRate, energyCostPerActivation));
+            ModulePrepper.upgradeToggleActions.Add(new Tuple<Action<Vehicle, int>, TechType, float, float, float>(OnToggle, tt, timeToFirstActivation, repeatRate, energyCostPerActivation));
             return tt;
         }
     }

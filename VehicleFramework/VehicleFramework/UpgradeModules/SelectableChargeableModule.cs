@@ -17,14 +17,14 @@ namespace VehicleFramework.UpgradeModules
             TechType tt = ModulePrepper.RegisterModuleGeneric(recipe, classId, displayName, description, QuickSlotType.SelectableChargeable, icon, tabName: tabName);
             CraftDataHandler.SetMaxCharge(tt, maxCharge);
             CraftDataHandler.SetEnergyCost(tt, energyCost);
-            void WrappedOnSelected(ModVehicle mv, int slotID, TechType moduleTechType, float charge, float slotCharge)
+            void WrappedOnSelected(Vehicle mv, int slotID, TechType moduleTechType, float charge, float slotCharge)
             {
                 if (moduleTechType == tt)
                 {
                     onSelected(mv, slotID, charge, slotCharge);
                 }
             }
-            ModulePrepper.upgradeOnUseChargeableActions.Add(new Tuple<Action<ModVehicle, int, TechType, float, float>, float, float>(WrappedOnSelected, maxCharge, energyCost));
+            ModulePrepper.upgradeOnUseChargeableActions.Add(new Tuple<Action<Vehicle, int, TechType, float, float>, float, float>(WrappedOnSelected, maxCharge, energyCost));
             return tt;
         }
     }

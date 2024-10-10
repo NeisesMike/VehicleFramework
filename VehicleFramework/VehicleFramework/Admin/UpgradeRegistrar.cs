@@ -110,9 +110,9 @@ namespace VehicleFramework.Admin
                     {
                         upgrade.OnRemoved(param);
                     }
-                    if(upgrade as ModVehicleArm != null)
+                    if (upgrade as ModVehicleArm != null)
                     {
-                        var armsManager = param.mv.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
+                        var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
                         UWE.CoroutineHost.StartCoroutine(armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID));
                     }
                 }
@@ -129,9 +129,9 @@ namespace VehicleFramework.Admin
                     if (param.techType == upgrade.TechType)
                     {
                         select.OnSelected(param);
-                        param.mv.quickSlotTimeUsed[param.slotID] = Time.time;
-                        param.mv.quickSlotCooldown[param.slotID] = select.Cooldown;
-                        param.mv.energyInterface.ConsumeEnergy(select.EnergyCost);
+                        param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
+                        param.vehicle.quickSlotCooldown[param.slotID] = select.Cooldown;
+                        param.vehicle.energyInterface.ConsumeEnergy(select.EnergyCost);
                     }
                 }
                 OnSelectActions.Add(WrappedOnSelected);
@@ -149,7 +149,7 @@ namespace VehicleFramework.Admin
                     if (param.techType == upgrade.TechType)
                     {
                         selectcharge.OnSelected(param);
-                        param.mv.energyInterface.ConsumeEnergy(selectcharge.EnergyCost);
+                        param.vehicle.energyInterface.ConsumeEnergy(selectcharge.EnergyCost);
                     }
                 }
                 OnSelectChargeActions.Add(WrappedOnSelectedCharged);
@@ -162,23 +162,25 @@ namespace VehicleFramework.Admin
             {
                 IEnumerator DoToggleAction(ToggleActionParams param, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
                 {
+                    bool isModVehicle = param.vehicle.GetComponent<ModVehicle>() != null;
                     yield return new WaitForSeconds(timeToFirstActivation);
                     while (true)
                     {
-                        if (!param.mv.IsUnderCommand)
+                        bool shouldStopWorking = isModVehicle ? !param.vehicle.GetComponent<ModVehicle>().IsUnderCommand : !param.vehicle.GetPilotingMode();
+                        if (shouldStopWorking)
                         {
-                            param.mv.ToggleSlot(param.slotID, false);
+                            param.vehicle.ToggleSlot(param.slotID, false);
                             yield break;
                         }
                         toggle.OnRepeat(param);
                         int whatWeGot = 0;
-                        param.mv.energyInterface.TotalCanProvide(out whatWeGot);
+                        param.vehicle.energyInterface.TotalCanProvide(out whatWeGot);
                         if (whatWeGot < energyCostPerActivation)
                         {
-                            param.mv.ToggleSlot(param.slotID, false);
+                            param.vehicle.ToggleSlot(param.slotID, false);
                             yield break;
                         }
-                        param.mv.energyInterface.ConsumeEnergy(energyCostPerActivation);
+                        param.vehicle.energyInterface.ConsumeEnergy(energyCostPerActivation);
                         yield return new WaitForSeconds(repeatRate);
                     }
                 }
@@ -208,9 +210,9 @@ namespace VehicleFramework.Admin
                 {
                     if (param.techType == upgrade.TechType)
                     {
-                        param.mv.quickSlotTimeUsed[param.slotID] = Time.time;
-                        param.mv.quickSlotCooldown[param.slotID] = arm.Cooldown;
-                        param.mv.energyInterface.ConsumeEnergy(arm.EnergyCost);
+                        param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
+                        param.vehicle.quickSlotCooldown[param.slotID] = arm.Cooldown;
+                        param.vehicle.energyInterface.ConsumeEnergy(arm.EnergyCost);
                         arm.OnArmSelected(param);
                     }
                 }
