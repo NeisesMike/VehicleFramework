@@ -403,7 +403,7 @@ namespace VehicleFramework
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
-            var upgradeList = GetCurrentUpgrades();
+            var upgradeList = this.GetCurrentUpgrades();
             UpgradeModules.ModulePrepper.upgradeOnAddedActions.ForEach(x => x(this, upgradeList, slotID, techType, added));
 
             UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
@@ -818,27 +818,6 @@ namespace VehicleFramework
             }
         }
         public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
-        public List<string> GetCurrentUpgrades()
-        {
-            List<string> upgradeSlots = new List<string>();
-            upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
-            List<string> upgradeStrings = upgradeSlots
-                .GroupBy(x => x)
-                .Select(y => y.First())
-                .Where(x => upgradesInput.equipment.GetItemInSlot(x) != null)
-                .Select(x => upgradesInput.equipment.GetItemInSlot(x).item.name)
-                .ToList();
-            List<string> armSlots = new List<string>();
-            upgradesInput.equipment.GetSlots(VehicleBuilder.ArmType, armSlots);
-            List<string> armStrings= armSlots
-                .GroupBy(x => x)
-                .Select(y => y.First())
-                .Where(x => upgradesInput.equipment.GetItemInSlot(x) != null)
-                .Select(x => upgradesInput.equipment.GetItemInSlot(x).item.name)
-                .ToList();
-            upgradeStrings.AddRange(armStrings);
-            return upgradeStrings.ToList();
-        }
         private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
         {
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)

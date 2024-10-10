@@ -13,5 +13,9 @@ namespace VehicleFramework
             return player.GetVehicle() as ModVehicle
                 ?? player.currentSub.GetComponent<ModVehicle>();
         }
+        public static List<string> GetCurrentUpgrades(this Vehicle vehicle)
+        {
+            return vehicle.modules.equipment.Select(x => x.Value).Where(x => x != null && x.item != null).Select(x=>x.item.name).ToList();
+        }
     }
 }
