@@ -1207,14 +1207,19 @@ namespace VehicleFramework
         public static void TeleportPlayer(Vector3 destination)
         {
             ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
-            Player.main.SetCurrentSub(null);
-            IEnumerator doThing()
+            UWE.Utils.EnterPhysicsSyncSection();
+            Player.main.SetCurrentSub(null, true);
+            Player.main.playerController.SetEnabled(false);
+            IEnumerator waitForTeleport()
             {
                 yield return null;
-                Player.main.transform.position = destination;
+                Player.main.SetPosition(destination);
                 Player.main.SetCurrentSub(mv?.GetComponent<SubRoot>(), true);
+                Player.main.playerController.SetEnabled(true);
+                yield return null;
+                UWE.Utils.ExitPhysicsSyncSection();
             }
-            UWE.CoroutineHost.StartCoroutine(doThing());
+            UWE.CoroutineHost.StartCoroutine(waitForTeleport());
         }
         #endregion
     }
