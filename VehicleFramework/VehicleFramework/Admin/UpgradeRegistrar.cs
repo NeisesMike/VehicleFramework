@@ -125,6 +125,18 @@ namespace VehicleFramework.Admin
         }
         private static void RegisterPassiveUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
+            if(    upgrade is SelectableUpgrade
+                || upgrade is ToggleableUpgrade
+                || upgrade is SelectableChargeableUpgrade
+                || upgrade is ModVehicleArm)
+            {
+
+            }
+            else
+            {
+                VanillaUpgradeMaker.CreatePassiveModule(upgrade, compat, ref utt, isPDASetup);
+                isPDASetup = true;
+            }
             TechType mvTT = utt.forModVehicle;
             TechType sTT = utt.forSeamoth;
             TechType eTT = utt.forExosuit;
@@ -154,6 +166,8 @@ namespace VehicleFramework.Admin
         {
             if (upgrade is SelectableUpgrade select)
             {
+                VanillaUpgradeMaker.CreateSelectModule(select, compat, ref utt, isPDASetup);
+                isPDASetup = true;
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;
                 TechType eTT = utt.forExosuit;
@@ -175,6 +189,7 @@ namespace VehicleFramework.Admin
         {
             if (upgrade is SelectableChargeableUpgrade selectcharge)
             {
+                VanillaUpgradeMaker.CreateChargeModule(selectcharge, compat, ref utt, isPDASetup);
                 foreach (System.Reflection.FieldInfo field in typeof(UpgradeTechTypes).GetFields())
                 {
                     // Set MaxCharge and EnergyCost for all possible TechTypes emerging from this upgrade.
@@ -183,6 +198,7 @@ namespace VehicleFramework.Admin
                     Nautilus.Handlers.CraftDataHandler.SetMaxCharge(value, selectcharge.MaxCharge);
                     Nautilus.Handlers.CraftDataHandler.SetEnergyCost(value, selectcharge.EnergyCost);
                 }
+                isPDASetup = true;
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;
                 TechType eTT = utt.forExosuit;
@@ -226,6 +242,8 @@ namespace VehicleFramework.Admin
                         yield return new WaitForSeconds(repeatRate);
                     }
                 }
+                VanillaUpgradeMaker.CreateToggleModule(toggle, compat, ref utt, isPDASetup);
+                isPDASetup = true;
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;
                 TechType eTT = utt.forExosuit;
@@ -251,6 +269,8 @@ namespace VehicleFramework.Admin
         {
             if (upgrade is ModVehicleArm arm)
             {
+                VanillaUpgradeMaker.CreateExosuitArm(arm, compat, ref utt, isPDASetup);
+                isPDASetup = true;
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;
                 TechType eTT = utt.forExosuit;

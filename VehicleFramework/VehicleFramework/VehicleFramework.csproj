@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\ExtensionMethods.cs" />
+    <Compile Include="Admin\VanillaUpgradeMaker.cs" />
     <Compile Include="Admin\UpgradeRegistrar.cs" />
     <Compile Include="Assets\AssetBundleManager.cs" />
     <Compile Include="Assets\BiomeType.cs" />
