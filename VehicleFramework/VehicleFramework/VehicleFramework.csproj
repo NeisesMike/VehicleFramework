@@ -200,11 +200,6 @@
     <Compile Include="VehicleTypes\Skimmer.cs" />
     <Compile Include="VehicleTypes\Submarine.cs" />
     <Compile Include="VehicleTypes\Submersible.cs" />
-    <Compile Include="UpgradeModules\PassiveModule.cs" />
-    <Compile Include="UpgradeModules\ModulePrepper.cs" />
-    <Compile Include="UpgradeModules\SelectableChargeableModule.cs" />
-    <Compile Include="UpgradeModules\SelectableModule.cs" />
-    <Compile Include="UpgradeModules\ToggleModule.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
     <Compile Include="Admin\VehicleBlueprint.cs" />
     <Compile Include="VehicleBuilding\VehiclePrepper.cs" />

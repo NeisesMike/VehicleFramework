@@ -29,39 +29,6 @@ namespace VehicleFramework.Patches
             if (exo != null)
             {
                 TechType techType = exo.modules.GetTechTypeInSlot(exo.slotIDs[slotID]);
-                if (active)
-                {
-                    var moduleToggleAction = UpgradeModules.ModulePrepper.upgradeToggleActions.Where(x => x.Item2 == techType).FirstOrDefault();
-                    if (moduleToggleAction != null)
-                    {
-                        Admin.UpgradeRegistrar.toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(exo, slotID, exo.StartCoroutine(DoToggleAction(exo, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
-                    }
-                    IEnumerator DoToggleAction(Vehicle thisMV, int thisSlotID, TechType tt, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
-                    {
-                        yield return new WaitForSeconds(timeToFirstActivation);
-                        while (true)
-                        {
-                            if (!thisMV.GetPilotingMode())
-                            {
-                                exo.ToggleSlot(thisSlotID, false);
-                                yield break;
-                            }
-                            moduleToggleAction.Item1(thisMV, thisSlotID);
-                            exo.energyInterface.TotalCanProvide(out int whatWeGot);
-                            if (whatWeGot < energyCostPerActivation)
-                            {
-                                exo.ToggleSlot(thisSlotID, false);
-                                yield break;
-                            }
-                            exo.energyInterface.ConsumeEnergy(energyCostPerActivation);
-                            yield return new WaitForSeconds(repeatRate);
-                        }
-                    }
-                }
-                else
-                {
-                    Admin.UpgradeRegistrar.toggledActions.Where(x => x.Item1 == exo).Where(x => x.Item2 == slotID).Where(x => x.Item3 != null).ToList().ForEach(x => exo.StopCoroutine(x.Item3));
-                }
                 UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
                 {
                     active = active,

@@ -261,41 +261,6 @@ namespace VehicleFramework
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
             TechType techType = modules.GetTechTypeInSlot(slotIDs[slotID]);
-            #region oldmodulecode
-            if (active)
-            {
-                var moduleToggleAction = UpgradeModules.ModulePrepper.upgradeToggleActions.Where(x => x.Item2 == techType).FirstOrDefault();
-                if (moduleToggleAction != null)
-                {
-                    Admin.UpgradeRegistrar.toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(this, slotID, StartCoroutine(DoToggleAction(this, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
-                }
-                IEnumerator DoToggleAction(ModVehicle thisMV, int thisSlotID, TechType tt, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
-                {
-                    yield return new WaitForSeconds(timeToFirstActivation);
-                    while (true)
-                    {
-                        if (!thisMV.IsUnderCommand)
-                        {
-                            ToggleSlot(thisSlotID, false);
-                            yield break;
-                        }
-                        moduleToggleAction.Item1(thisMV, thisSlotID);
-                        energyInterface.TotalCanProvide(out int whatWeGot);
-                        if (whatWeGot < energyCostPerActivation)
-                        {
-                            ToggleSlot(thisSlotID, false);
-                            yield break;
-                        }
-                        energyInterface.ConsumeEnergy(energyCostPerActivation);
-                        yield return new WaitForSeconds(repeatRate);
-                    }
-                }
-            }
-            else
-            {
-                Admin.UpgradeRegistrar.toggledActions.Where(x=>x.Item1 == this).Where(x => x.Item2 == slotID).Where(x => x.Item3 != null).ToList().ForEach(x => StopCoroutine(x.Item3));
-            }
-            #endregion
             UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
             {
                 active = active,
@@ -308,25 +273,6 @@ namespace VehicleFramework
         }
         public override void OnUpgradeModuleUse(TechType techType, int slotID)
         {
-            #region OldModuleCode
-            foreach (var moduleUseAction in UpgradeModules.ModulePrepper.upgradeOnUseActions)
-            {
-                bool result = moduleUseAction.Item1(this, slotID, techType);
-                if (result)
-                {
-                    this.quickSlotTimeUsed[slotID] = Time.time;
-                    this.quickSlotCooldown[slotID] = moduleUseAction.Item2;
-                    energyInterface.ConsumeEnergy(moduleUseAction.Item3);
-                }
-            }
-            foreach (var moduleUseAction in UpgradeModules.ModulePrepper.upgradeOnUseChargeableActions)
-            {
-                float charge = quickSlotCharge[slotID];
-                float slotCharge = GetSlotCharge(slotID);
-                moduleUseAction.Item1(this, slotID, techType, charge, slotCharge);
-                energyInterface.ConsumeEnergy(moduleUseAction.Item3);
-            }
-            #endregion
             UpgradeTypes.SelectableActionParams param = new UpgradeTypes.SelectableActionParams
             {
                 vehicle = this,
@@ -389,8 +335,6 @@ namespace VehicleFramework
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
-            var upgradeList = this.GetCurrentUpgrades();
-            UpgradeModules.ModulePrepper.upgradeOnAddedActions.ForEach(x => x(this, upgradeList, slotID, techType, added));
 
             UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
             {
