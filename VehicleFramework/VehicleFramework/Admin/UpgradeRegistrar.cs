@@ -11,6 +11,20 @@ using UnityEngine;
 
 namespace VehicleFramework.Admin
 {
+    public struct UpgradeCompat
+    {
+        public bool skipModVehicle;
+        public bool skipSeamoth;
+        public bool skipExosuit;
+        public bool skipCyclops;
+    }
+    public struct UpgradeTechTypes
+    {
+        public TechType forModVehicle;
+        public TechType forSeamoth;
+        public TechType forExosuit;
+        public TechType forCyclops;
+    }
     public static class UpgradeRegistrar
     {
         internal static List<Action<AddActionParams>> OnAddActions = new List<Action<AddActionParams>>();
@@ -18,26 +32,37 @@ namespace VehicleFramework.Admin
         internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new List<Action<SelectableChargeableActionParams>>();
         internal static List<Action<SelectableActionParams>> OnSelectActions = new List<Action<SelectableActionParams>>();
         internal static List<Action<ArmActionParams>> OnArmActions = new List<Action<ArmActionParams>>();
-        public static TechType RegisterUpgrade(ModVehicleUpgrade upgrade, bool verbose = false)
         internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new List<Tuple<Vehicle, int, Coroutine>>();
+        public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default(UpgradeCompat), bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
-            bool result = true;
-            result &= ValidateModVehicleUpgrade(upgrade);
+            bool result = ValidateModVehicleUpgrade(upgrade, compat);
             if(result)
             {
-                upgrade.TechType = RegisterModVehicleUpgrade(upgrade);
-                RegisterUpgradeMethods(upgrade);
-                return upgrade.TechType;
+                UpgradeTechTypes utt = new UpgradeTechTypes();
+                bool isPdaRegistered = false;
+                if (!compat.skipModVehicle)
+                {
+                    utt.forModVehicle = RegisterModVehicleUpgrade(upgrade);
+                    isPdaRegistered = true;
+                }
+                RegisterUpgradeMethods(upgrade, compat, ref utt, isPdaRegistered);
+                upgrade.TechTypes = utt;
+                return utt;
             }
             else
             {
                 Logger.Error("Failed to register upgrade: " + upgrade.ClassId);
-                return 0;
+                return default;
             }
         }
-        private static bool ValidateModVehicleUpgrade(ModVehicleUpgrade upgrade)
+        private static bool ValidateModVehicleUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat)
         {
+            if(compat.skipModVehicle && compat.skipSeamoth && compat.skipExosuit && compat.skipCyclops)
+            {
+                Logger.Error("ModVehicleUpgrade compat cannot skip all vehicle types!");
+                return false;
+            }
             if(upgrade.ClassId == "")
             {
                 Logger.Error("ModVehicleUpgrade cannot have empty class ID!");
@@ -89,19 +114,24 @@ namespace VehicleFramework.Admin
             module_CustomPrefab.Register();
             return module_info.TechType;
         }
-        private static void RegisterUpgradeMethods(ModVehicleUpgrade upgrade)
+        private static void RegisterUpgradeMethods(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaRegistered)
         {
-            RegisterPassiveUpgradeActions(upgrade);
-            RegisterSelectableUpgradeActions(upgrade);
-            RegisterSelectableChargeableUpgradeActions(upgrade);
-            RegisterToggleableUpgradeActions(upgrade);
-            RegisterArmUpgradeActions(upgrade);
+            bool isPDASetup = isPdaRegistered;
+            RegisterPassiveUpgradeActions(upgrade, compat, ref utt, ref isPDASetup);
+            RegisterSelectableUpgradeActions(upgrade, compat, ref utt, ref isPDASetup);
+            RegisterSelectableChargeableUpgradeActions(upgrade, compat, ref utt, ref isPDASetup);
+            RegisterToggleableUpgradeActions(upgrade, compat, ref utt, ref isPDASetup);
+            RegisterArmUpgradeActions(upgrade, compat, ref utt, ref isPDASetup);
         }
-        private static void RegisterPassiveUpgradeActions(ModVehicleUpgrade upgrade)
+        private static void RegisterPassiveUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
+            TechType mvTT = utt.forModVehicle;
+            TechType sTT = utt.forSeamoth;
+            TechType eTT = utt.forExosuit;
+            TechType cTT = utt.forCyclops;
             void WrappedOnAdded(AddActionParams param)
             {
-                if (param.techType == upgrade.TechType)
+                if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                 {
                     if (param.isAdded)
                     {
@@ -120,14 +150,17 @@ namespace VehicleFramework.Admin
             }
             OnAddActions.Add(WrappedOnAdded);
         }
-        private static void RegisterSelectableUpgradeActions(ModVehicleUpgrade upgrade)
+        private static void RegisterSelectableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            SelectableUpgrade select = upgrade as SelectableUpgrade;
-            if (select != null)
+            if (upgrade is SelectableUpgrade select)
             {
+                TechType mvTT = utt.forModVehicle;
+                TechType sTT = utt.forSeamoth;
+                TechType eTT = utt.forExosuit;
+                TechType cTT = utt.forCyclops;
                 void WrappedOnSelected(SelectableActionParams param)
                 {
-                    if (param.techType == upgrade.TechType)
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         select.OnSelected(param);
                         param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
@@ -138,16 +171,25 @@ namespace VehicleFramework.Admin
                 OnSelectActions.Add(WrappedOnSelected);
             }
         }
-        private static void RegisterSelectableChargeableUpgradeActions(ModVehicleUpgrade upgrade)
+        private static void RegisterSelectableChargeableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            SelectableChargeableUpgrade selectcharge = upgrade as SelectableChargeableUpgrade;
-            if (selectcharge != null)
+            if (upgrade is SelectableChargeableUpgrade selectcharge)
             {
-                Nautilus.Handlers.CraftDataHandler.SetMaxCharge(selectcharge.TechType, selectcharge.MaxCharge);
-                Nautilus.Handlers.CraftDataHandler.SetEnergyCost(selectcharge.TechType, selectcharge.EnergyCost);
+                foreach (System.Reflection.FieldInfo field in typeof(UpgradeTechTypes).GetFields())
+                {
+                    // Set MaxCharge and EnergyCost for all possible TechTypes emerging from this upgrade.
+                    TechType value = (TechType)field.GetValue(utt);
+                    Logger.Log(value.AsString());
+                    Nautilus.Handlers.CraftDataHandler.SetMaxCharge(value, selectcharge.MaxCharge);
+                    Nautilus.Handlers.CraftDataHandler.SetEnergyCost(value, selectcharge.EnergyCost);
+                }
+                TechType mvTT = utt.forModVehicle;
+                TechType sTT = utt.forSeamoth;
+                TechType eTT = utt.forExosuit;
+                TechType cTT = utt.forCyclops;
                 void WrappedOnSelectedCharged(SelectableChargeableActionParams param)
                 {
-                    if (param.techType == upgrade.TechType)
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         selectcharge.OnSelected(param);
                         param.vehicle.energyInterface.ConsumeEnergy(selectcharge.EnergyCost);
@@ -156,10 +198,9 @@ namespace VehicleFramework.Admin
                 OnSelectChargeActions.Add(WrappedOnSelectedCharged);
             }
         }
-        private static void RegisterToggleableUpgradeActions(ModVehicleUpgrade upgrade)
+        private static void RegisterToggleableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            ToggleableUpgrade toggle = upgrade as ToggleableUpgrade;
-            if (toggle != null)
+            if (upgrade is ToggleableUpgrade toggle)
             {
                 IEnumerator DoToggleAction(ToggleActionParams param, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
                 {
@@ -185,9 +226,13 @@ namespace VehicleFramework.Admin
                         yield return new WaitForSeconds(repeatRate);
                     }
                 }
+                TechType mvTT = utt.forModVehicle;
+                TechType sTT = utt.forSeamoth;
+                TechType eTT = utt.forExosuit;
+                TechType cTT = utt.forCyclops;
                 void WrappedOnToggle(ToggleActionParams param)
                 {
-                    if (param.techType == upgrade.TechType)
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         if (param.active)
                         {
@@ -202,14 +247,17 @@ namespace VehicleFramework.Admin
                 OnToggleActions.Add(WrappedOnToggle);
             }
         }
-        private static void RegisterArmUpgradeActions(ModVehicleUpgrade upgrade)
+        private static void RegisterArmUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            ModVehicleArm arm = upgrade as ModVehicleArm;
-            if (arm != null)
+            if (upgrade is ModVehicleArm arm)
             {
+                TechType mvTT = utt.forModVehicle;
+                TechType sTT = utt.forSeamoth;
+                TechType eTT = utt.forExosuit;
+                TechType cTT = utt.forCyclops;
                 void WrappedOnArm(ArmActionParams param)
                 {
-                    if (param.techType == upgrade.TechType)
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
                         param.vehicle.quickSlotCooldown[param.slotID] = arm.Cooldown;

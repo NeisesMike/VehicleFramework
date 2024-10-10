@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.Admin;
 
 namespace VehicleFramework.UpgradeTypes
 {
     public abstract class ModVehicleUpgrade
     {
-        public TechType TechType { get; internal set; }
+        public UpgradeTechTypes TechTypes { get; internal set; }
         public abstract string ClassId { get; }
         public abstract string DisplayName { get; }
         public abstract string Description { get; }
@@ -44,6 +45,13 @@ namespace VehicleFramework.UpgradeTypes
         public void ExtendRecipe(Assets.Ingredient ingredient)
         {
             RecipeExtensions.Add(ingredient);
+        }
+        public bool HasTechType(TechType tt)
+        {
+            return TechTypes.forModVehicle == tt
+                || TechTypes.forSeamoth == tt
+                || TechTypes.forExosuit == tt
+                || TechTypes.forCyclops == tt;
         }
     }
 }

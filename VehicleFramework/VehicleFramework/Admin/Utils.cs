@@ -119,15 +119,22 @@ namespace VehicleFramework.Admin
         }
         public static void RegisterDepthModules()
         {
-            TechType depth1 = UpgradeRegistrar.RegisterUpgrade(new DepthModules.DepthModule1());
+            UpgradeCompat compat = new UpgradeCompat
+            {
+                skipModVehicle = false,
+                skipCyclops = true,
+                skipSeamoth = true,
+                skipExosuit = true
+            };
+            UpgradeTechTypes depth1 = UpgradeRegistrar.RegisterUpgrade(new DepthModules.DepthModule1(), compat);
 
             var depthmodule2 = new DepthModules.DepthModule2();
-            depthmodule2.ExtendRecipe(new Assets.Ingredient(depth1, 1));
-            TechType depth2 = UpgradeRegistrar.RegisterUpgrade(depthmodule2);
+            depthmodule2.ExtendRecipe(new Assets.Ingredient(depth1.forModVehicle, 1));
+            UpgradeTechTypes depth2 = UpgradeRegistrar.RegisterUpgrade(depthmodule2, compat);
 
             var depthmodule3 = new DepthModules.DepthModule3();
-            depthmodule3.ExtendRecipe(new Assets.Ingredient(depth2, 1));
-            TechType depth3 = UpgradeRegistrar.RegisterUpgrade(depthmodule3);
+            depthmodule3.ExtendRecipe(new Assets.Ingredient(depth2.forModVehicle, 1));
+            UpgradeTechTypes depth3 = UpgradeRegistrar.RegisterUpgrade(depthmodule3, compat);
         }
         public static void EvaluateDepthModules(AddActionParams param)
         {

@@ -20,7 +20,7 @@ namespace VehicleFramework.VehicleComponents
             if (thisSlotName.Contains(ModuleBuilder.LeftArmSlotName))
             {
                 DestroyArm(true);
-                if (techTypeInSlot == arm.TechType)
+                if(arm.HasTechType(techTypeInSlot))
                 {
                     yield return UWE.CoroutineHost.StartCoroutine(SpawnArm(mv, arm, true));
                     leftArmSlotID = slotId;
@@ -29,7 +29,7 @@ namespace VehicleFramework.VehicleComponents
             else if (thisSlotName.Contains(ModuleBuilder.RightArmSlotName))
             {
                 DestroyArm(false);
-                if (techTypeInSlot == arm.TechType)
+                if (arm.HasTechType(techTypeInSlot))
                 {
                     yield return UWE.CoroutineHost.StartCoroutine(SpawnArm(mv, arm, false));
                     rightArmSlotID = slotId;
