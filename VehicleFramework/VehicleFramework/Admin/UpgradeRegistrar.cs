@@ -19,6 +19,7 @@ namespace VehicleFramework.Admin
         internal static List<Action<SelectableActionParams>> OnSelectActions = new List<Action<SelectableActionParams>>();
         internal static List<Action<ArmActionParams>> OnArmActions = new List<Action<ArmActionParams>>();
         public static TechType RegisterUpgrade(ModVehicleUpgrade upgrade, bool verbose = false)
+        internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new List<Tuple<Vehicle, int, Coroutine>>();
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
             bool result = true;
@@ -190,11 +191,11 @@ namespace VehicleFramework.Admin
                     {
                         if (param.active)
                         {
-                            param.mv.toggledActions.Add(new Tuple<int, Coroutine>(param.slotID, param.mv.StartCoroutine(DoToggleAction(param, toggle.TimeToFirstActivation, toggle.RepeatRate, toggle.EnergyCostPerActivation))));
+                            toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(param.vehicle, param.slotID, param.vehicle.StartCoroutine(DoToggleAction(param, toggle.TimeToFirstActivation, toggle.RepeatRate, toggle.EnergyCostPerActivation))));
                         }
                         else
                         {
-                            param.mv.toggledActions.Where(x => x.Item1 == param.slotID).Where(x => x.Item2 != null).ToList().ForEach(x => param.mv.StopCoroutine(x.Item2));
+                            toggledActions.Where(x => x.Item1 == param.vehicle).Where(x => x.Item2 == param.slotID).Where(x => x.Item3 != null).ToList().ForEach(x => param.vehicle.StopCoroutine(x.Item3));
                         }
                     }
                 }

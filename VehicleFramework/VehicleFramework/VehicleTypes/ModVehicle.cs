@@ -266,7 +266,7 @@ namespace VehicleFramework
                 var moduleToggleAction = UpgradeModules.ModulePrepper.upgradeToggleActions.Where(x => x.Item2 == techType).FirstOrDefault();
                 if (moduleToggleAction != null)
                 {
-                    toggledActions.Add(new Tuple<int, Coroutine>(slotID, StartCoroutine(DoToggleAction(this, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
+                    Admin.UpgradeRegistrar.toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(this, slotID, StartCoroutine(DoToggleAction(this, slotID, techType, moduleToggleAction.Item3, moduleToggleAction.Item4, moduleToggleAction.Item5))));
                 }
                 IEnumerator DoToggleAction(ModVehicle thisMV, int thisSlotID, TechType tt, float timeToFirstActivation, float repeatRate, float energyCostPerActivation)
                 {
@@ -279,8 +279,7 @@ namespace VehicleFramework
                             yield break;
                         }
                         moduleToggleAction.Item1(thisMV, thisSlotID);
-                        int whatWeGot = 0;
-                        energyInterface.TotalCanProvide(out whatWeGot);
+                        energyInterface.TotalCanProvide(out int whatWeGot);
                         if (whatWeGot < energyCostPerActivation)
                         {
                             ToggleSlot(thisSlotID, false);
@@ -293,7 +292,7 @@ namespace VehicleFramework
             }
             else
             {
-                toggledActions.Where(x => x.Item1 == slotID).Where(x => x.Item2 != null).ToList().ForEach(x => StopCoroutine(x.Item2));
+                Admin.UpgradeRegistrar.toggledActions.Where(x=>x.Item1 == this).Where(x => x.Item2 == slotID).Where(x => x.Item3 != null).ToList().ForEach(x => StopCoroutine(x.Item3));
             }
             #endregion
             UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
@@ -795,7 +794,6 @@ namespace VehicleFramework
         public bool IsPlayerDry = false;
         protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
-        internal List<Tuple<int, Coroutine>> toggledActions = new List<Tuple<int, Coroutine>>();
         public bool isScuttled = false;
         #endregion
 
