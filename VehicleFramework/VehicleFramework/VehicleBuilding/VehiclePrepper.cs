@@ -17,7 +17,7 @@ namespace VehicleFramework
         {
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? MainPatcher.ModVehicleIcon);
-            if (vehicle.mv.EncyclopediaEntry.Length > 0)
+            if (vehicle.mv.EncyclopediaEntry != null && vehicle.mv.EncyclopediaEntry.Length > 0)
             {
                 PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
                 {
@@ -26,7 +26,7 @@ namespace VehicleFramework
                     nodes = new[] { "Tech", "Vehicles" },
                     unlocked = true,
                     popup = null,
-                    image = null,
+                    image = vehicle.mv.EncyclopediaImage?.texture,
                 };
                 LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
                 LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
