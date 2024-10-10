@@ -22,8 +22,12 @@ namespace VehicleFramework.UpgradeModules
         // action, max_charge, energy_cost
         public static List<Tuple<Action<ModVehicle, int, TechType, float, float>, float, float>> upgradeOnUseChargeableActions = new List<Tuple<Action<ModVehicle, int, TechType, float, float>, float, float>>();
 
-        public static TechType RegisterModuleGeneric(List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon = null, string tabName = "MVCM")
+        public static TechType RegisterModuleGeneric(List<CraftData.Ingredient> recipe, string classId, string displayName, string description, QuickSlotType qst, Atlas.Sprite icon = null, string tabName = "")
         {
+            if(tabName == "")
+            {
+                tabName = Admin.Utils.UpgradePathToString(Admin.Utils.UpgradePath.ModVehicle);
+            }
             Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
             moduleRecipe.Ingredients.AddRange(recipe);
             PrefabInfo module_info = PrefabInfo.WithTechType(classId, displayName, description, unlockAtStart: false);
