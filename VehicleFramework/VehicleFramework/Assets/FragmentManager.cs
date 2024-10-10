@@ -85,11 +85,11 @@ namespace VehicleFramework.Assets
                     new BiomeData { biome = BiomeType.SafeShallows_Grass, count = 4, probability = 0.01f },
                     new BiomeData { biome = BiomeType.SafeShallows_CaveFloor, count = 1, probability = 0.02f }
                 };
-                armFragment.SetSpawns(useBiomes.ToArray());
+                armFragment.SetSpawns(useBiomes.ToArray()); // this creates a harmless Nautilus error
             }
             else if(spawnRotations == null)
             {
-                armFragment.SetSpawns(spawnLocations.Select(x => new SpawnLocation(x)).ToArray());
+                armFragment.SetSpawns(spawnLocations.Select(x => new SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
             }
             else
             {
@@ -98,7 +98,7 @@ namespace VehicleFramework.Assets
                 {
                     spawns.Add(new SpawnLocation(spawnLocations[i], spawnRotations[i]));
                 }
-                armFragment.SetSpawns(spawns.ToArray());
+                armFragment.SetSpawns(spawns.ToArray()); // this creates a harmless Nautilus error
             }
             armFragment.Register();
             Logger.Log("Registered fragment: " + classID);
