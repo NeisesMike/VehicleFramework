@@ -176,7 +176,7 @@ namespace VehicleFramework.Admin
         }
         private static void RegisterSelectableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            if (upgrade is SelectableUpgrade select && !(upgrade is ModVehicleArm))
+            if (upgrade is SelectableUpgrade select)
             {
                 VanillaUpgradeMaker.CreateSelectModule(select, compat, ref utt, isPDASetup);
                 isPDASetup = true;
@@ -199,7 +199,7 @@ namespace VehicleFramework.Admin
         }
         private static void RegisterSelectableChargeableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            if (upgrade is SelectableChargeableUpgrade selectcharge && !(upgrade is ModVehicleArm))
+            if (upgrade is SelectableChargeableUpgrade selectcharge)
             {
                 VanillaUpgradeMaker.CreateChargeModule(selectcharge, compat, ref utt, isPDASetup);
                 foreach (System.Reflection.FieldInfo field in typeof(UpgradeTechTypes).GetFields())
