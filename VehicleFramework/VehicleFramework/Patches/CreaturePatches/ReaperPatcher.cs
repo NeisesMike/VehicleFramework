@@ -18,8 +18,8 @@ namespace VehicleFramework.Patches.LeviathanPatches
 		 * all child GameObjects must be moved in relation to the root GameObject.
 		 */
         [HarmonyPostfix]
-        [HarmonyPatch("OnTouch")]
-        public static void OnTouchPostfix(ReaperMeleeAttack __instance, Collider collider)
+		[HarmonyPatch(nameof(ReaperMeleeAttack.OnTouch))]
+		public static void OnTouchPostfix(ReaperMeleeAttack __instance, Collider collider)
         {
 			// This postfix basically executes the OnTouch function again but only for the GrabModVehicle case.
 			if(collider.gameObject.GetComponent<Player>() != null)
@@ -59,7 +59,7 @@ namespace VehicleFramework.Patches.LeviathanPatches
 	class ReaperPatcher
 	{
 		[HarmonyPostfix]
-		[HarmonyPatch("Update")]
+		[HarmonyPatch(nameof(ReaperLeviathan.Update))]
 		public static void UpdatePostfix(ReaperLeviathan __instance)
 		{
 			if ((__instance.holdingVehicle as ModVehicle) != null)

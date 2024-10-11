@@ -11,7 +11,7 @@ namespace VehicleFramework.Patches
     public static class KnownTechPatcher
     {
         [HarmonyPostfix]
-        [HarmonyPatch("Add")]
+        [HarmonyPatch(nameof(KnownTech.Add))]
         public static void UnlockPostfix(TechType techType)
         {
             if(techType == TechType.Constructor)
@@ -29,7 +29,7 @@ namespace VehicleFramework.Patches
     public static class InventoryConsoleCommandsPatcher
     {
         [HarmonyPostfix]
-        [HarmonyPatch("OnConsoleCommand_unlock")]
+        [HarmonyPatch(nameof(InventoryConsoleCommands.OnConsoleCommand_unlock))]
         public static void UnlockPostfix(NotificationCenter.Notification n)
         {
             if (n != null && n.data != null)

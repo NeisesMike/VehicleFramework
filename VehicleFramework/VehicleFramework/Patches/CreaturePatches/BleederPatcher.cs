@@ -21,7 +21,7 @@ namespace VehicleFramework.Patches.CreaturePatches
         {
             return (Player.main.GetVehicle() is ModVehicle);
         }
-        [HarmonyPatch("OnCollisionEnter")]
+        [HarmonyPatch(nameof(AttachAndSuck.OnCollisionEnter))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);

@@ -15,7 +15,7 @@ namespace VehicleFramework
          * This transpiler ensure our ping sprites are used properly by the base-game systems,
          * so that we may display our custom ping sprites on the HUD
          */
-        [HarmonyPatch("OnAdd")]
+        [HarmonyPatch(nameof(uGUI_Pings.OnAdd))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);

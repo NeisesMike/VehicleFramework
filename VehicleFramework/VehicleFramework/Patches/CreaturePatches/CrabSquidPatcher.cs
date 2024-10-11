@@ -16,7 +16,7 @@ namespace VehicleFramework.Patches.CreaturePatches
          * The problem is that the game doesn't know how to handle vehicles with more than one energy mixin
          */
         [HarmonyPrefix]
-        [HarmonyPatch("electronicsDisabled", MethodType.Setter)]
+        [HarmonyPatch(nameof(EnergyMixin.electronicsDisabled), MethodType.Setter)]
         public static bool electronicsDisabled(EnergyMixin __instance, bool value)
         {
             if (__instance.gameObject.GetComponentInParent<ModVehicle>() != null)
@@ -40,7 +40,7 @@ namespace VehicleFramework.Patches.CreaturePatches
          * This patch ensures the CrabSquid's EMP disables ModVehicles
          */
         [HarmonyPostfix]
-        [HarmonyPatch("OnTouch")]
+        [HarmonyPatch(nameof(EMPBlast.OnTouch))]
         public static void OnTouchPostfix(EMPBlast __instance, Collider collider)
         {
             ModVehicle maybeMV = collider.gameObject.GetComponentInParent<ModVehicle>();

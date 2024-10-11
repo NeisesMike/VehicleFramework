@@ -15,8 +15,8 @@ namespace VehicleFramework
          * just so that we can dodge some errors in the log.
          */
         [HarmonyPrefix]
-        [HarmonyPatch("SetState")]
-		public static bool SetStatePrefix(uGUI_EquipmentSlot.State newState, uGUI_EquipmentSlot __instance)
+        [HarmonyPatch(nameof(uGUI_EquipmentSlot.SetState))]
+        public static bool SetStatePrefix(uGUI_EquipmentSlot.State newState, uGUI_EquipmentSlot __instance)
         {
             if (!__instance.transform.name.Contains("Vehicle"))
             {

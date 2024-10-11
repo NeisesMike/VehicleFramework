@@ -16,7 +16,7 @@ namespace VehicleFramework
          * This patch prevents the player from doing any swim-related behaviors while inside a ModVehicle
          */
         [HarmonyPrefix]
-        [HarmonyPatch("HandleUnderWaterState")]
+        [HarmonyPatch(nameof(PlayerController.HandleUnderWaterState))]
         public static bool HandleUnderWaterStatePrefix(PlayerController __instance)
         {
             VehicleTypes.Submarine mv = Player.main.GetVehicle() as VehicleTypes.Submarine;

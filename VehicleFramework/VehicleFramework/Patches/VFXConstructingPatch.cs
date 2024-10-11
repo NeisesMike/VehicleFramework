@@ -30,7 +30,7 @@ namespace VehicleFramework.Patches
          * This patches ensures it takes several seconds for the build-bots to build our vehicle.
          */
         [HarmonyPostfix]
-        [HarmonyPatch("StartConstruction")]
+        [HarmonyPatch(nameof(VFXConstructing.StartConstruction))]
         public static void StartConstructionPostfix(VFXConstructing __instance)
         {
             ModVehicle mv = __instance.GetComponent<ModVehicle>();

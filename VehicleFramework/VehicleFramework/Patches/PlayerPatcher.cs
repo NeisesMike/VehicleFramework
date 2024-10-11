@@ -26,7 +26,7 @@ namespace VehicleFramework
          * TODO: there is likely some redundancy here with PlayerControllerPatcher
          */
         [HarmonyPostfix]
-        [HarmonyPatch("Awake")]
+        [HarmonyPatch(nameof(Player.Awake))]
         public static void AwakePostfix(Player __instance)
         {
             VehicleFramework.Admin.GameStateWatcher.IsPlayerAwaked = true;
@@ -34,7 +34,7 @@ namespace VehicleFramework
             return;
         }
         [HarmonyPostfix]
-        [HarmonyPatch("Start")]
+        [HarmonyPatch(nameof(Player.Start))]
         public static void StartPostfix(Player __instance)
         {
             /*
@@ -67,7 +67,7 @@ namespace VehicleFramework
 
 
         [HarmonyPrefix]
-        [HarmonyPatch("ExitLockedMode")]
+        [HarmonyPatch(nameof(Player.ExitLockedMode))]
         public static bool ExitLockedModePrefix(Player __instance, ref Player.Mode ___mode)
         {
             /*
@@ -166,7 +166,7 @@ namespace VehicleFramework
 
         }
         [HarmonyPrefix]
-        [HarmonyPatch("GetDepthClass")]
+        [HarmonyPatch(nameof(Player.GetDepthClass))]
         public static bool GetDepthClass(Player __instance, ref Ocean.DepthClass __result)
         {
             /*
@@ -189,7 +189,7 @@ namespace VehicleFramework
         }
         
         [HarmonyPostfix]
-        [HarmonyPatch("Update")]
+        [HarmonyPatch(nameof(Player.Update))]
         public static void UpdatePostfix(Player __instance)
         {
             VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
@@ -209,7 +209,7 @@ namespace VehicleFramework
 
 
         [HarmonyPrefix]
-        [HarmonyPatch("UpdateIsUnderwater")]
+        [HarmonyPatch(nameof(Player.UpdateIsUnderwater))]
         public static bool UpdateIsUnderwaterPrefix(Player __instance)
         {
             VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;
@@ -225,7 +225,7 @@ namespace VehicleFramework
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("UpdateMotorMode")]
+        [HarmonyPatch(nameof(Player.UpdateMotorMode))]
         public static bool UpdateMotorModePrefix(Player __instance)
         {
             VehicleTypes.Submarine mv = __instance.GetVehicle() as VehicleTypes.Submarine;

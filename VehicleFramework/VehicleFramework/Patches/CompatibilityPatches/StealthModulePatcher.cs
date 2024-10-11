@@ -5,7 +5,7 @@ using HarmonyLib;
 namespace VehicleFramework.Patches.CompatibilityPatches
 {
 	[HarmonyPatch(typeof(Creature))]
-	[HarmonyPatch("ChooseBestAction")]
+	[HarmonyPatch(nameof(Creature.ChooseBestAction))]
 	class CreaturePatcher
 	{
 		[HarmonyPostfix]

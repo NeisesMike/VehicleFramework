@@ -19,7 +19,7 @@ namespace VehicleFramework.Patches.LeviathanPatches
          * TODO: we should include this in the VehicleEntry struct, to make it configurable
          */
         [HarmonyPostfix]
-        [HarmonyPatch("GetBiteDamage")]
+        [HarmonyPatch(nameof(GhostLeviathanMeleeAttack.GetBiteDamage))]
         public static void GetBiteDamagePostfix(GhostLeviathanMeleeAttack __instance, ref float __result, GameObject target)
         {
             if(target.GetComponentInParent<ModVehicle>() != null)
