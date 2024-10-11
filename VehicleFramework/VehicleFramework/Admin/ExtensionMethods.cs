@@ -10,8 +10,10 @@ namespace VehicleFramework
     {
         public static ModVehicle GetModVehicle(this Player player)
         {
-            return player.GetVehicle() as ModVehicle
-                ?? player.currentSub.GetComponent<ModVehicle>();
+            return 
+                VehicleTypes.Drone.mountedDrone
+                ?? Player.main.GetVehicle() as ModVehicle
+                ?? Player.main.currentSub?.GetComponent<ModVehicle>();
         }
         public static List<string> GetCurrentUpgrades(this Vehicle vehicle)
         {
