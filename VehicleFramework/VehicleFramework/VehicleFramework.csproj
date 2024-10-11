@@ -170,12 +170,10 @@
     <Compile Include="Patches\CellManagerPatcher.cs" />
     <Compile Include="Patches\CyclopsPatcher.cs" />
     <Compile Include="Patches\DockedVehicleHandTargetPatcher.cs" />
-    <Compile Include="Patches\FreezeTimePatcher.cs" />
     <Compile Include="Patches\FabricatorPatcher.cs" />
     <Compile Include="Patches\EncyUnlocksPatcher.cs" />
     <Compile Include="Patches\MapRoomCameraScreenFXControllerPatcher.cs" />
     <Compile Include="Patches\PowerRelayPatcher.cs" />
-    <Compile Include="Patches\PrefabIdentifierPatcher.cs" />
     <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
     <Compile Include="Patches\TargetingPatcher.cs" />
@@ -227,7 +225,6 @@
     <Compile Include="VehicleComponents\PowerManager.cs" />
     <Compile Include="VehicleComponents\TetherSource.cs" />
     <Compile Include="VehicleBuilding\HUDBuilder.cs" />
-    <Compile Include="Patches\uGUI_SceneLoadingPatcher.cs" />
     <Compile Include="Patches\PlayerControllerPatcher.cs" />
     <Compile Include="Admin\SaveManager.cs" />
     <Compile Include="VehicleComponents\AutoPilot.cs" />
