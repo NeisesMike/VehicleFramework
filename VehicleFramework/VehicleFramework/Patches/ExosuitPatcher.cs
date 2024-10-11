@@ -1,8 +1,11 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.Linq;
+using VehicleFramework.VehicleComponents;
+using VehicleFramework.UpgradeTypes;
 
 namespace VehicleFramework.Patches
 {
@@ -102,44 +105,48 @@ namespace VehicleFramework.Patches
     public class ExosuitPatcher
     {
         [HarmonyPostfix]
-        [HarmonyPatch(nameof(Exosuit.SlotKeyDown))]
-        public static void ExosuitSlotKeyDownPostfix(Exosuit __instance, int slotID)
+        [HarmonyPatch(nameof(Exosuit.GetArmPrefab))]
+        public static void ExosuitGetArmPrefabPostfix(Exosuit __instance, TechType techType, ref GameObject __result)
         {
-            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
-            if (quickSlotType == QuickSlotType.Selectable)
+            if (__result == null)
             {
-                if (__instance.ConsumeEnergy(techType))
-                {
-                    __instance.OnUpgradeModuleUse(techType, slotID);
-                }
-            }
-            else if (quickSlotType == QuickSlotType.SelectableChargeable)
-            {
-                __instance.quickSlotCharge[slotID] = 0f;
+                __result = VFArm.GetArmPrefab(techType);
             }
         }
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(Exosuit.SlotKeyHeld))]
-        public static void ExosuitSlotKeyHeldPostfix(Exosuit __instance, int slotID)
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Exosuit.SpawnArm))]
+        public static bool ExosuitSpawnArmPrefix(Exosuit __instance, TechType techType, Transform parent, ref IExosuitArm __result)
         {
-            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
-            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            ModVehicleArm armLogic = VFArm.GetModVehicleArm(techType);
+            if (armLogic != null)
             {
-                __instance.ChargeModule(techType, slotID);
+                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(__instance.GetArmPrefab(techType));
+                gameObject.transform.parent = parent.transform;
+                gameObject.transform.localRotation = Quaternion.identity;
+                gameObject.transform.localPosition = Vector3.zero;
+                __result = gameObject.GetComponent<IExosuitArm>();
+                gameObject.GetComponent<VFArm>().SetArmDecl(armLogic);
+                return false;
             }
+            return true;
         }
         [HarmonyPostfix]
-        [HarmonyPatch(nameof(Exosuit.SlotKeyUp))]
-        public static void ExosuitSlotKeyUpPostfix(Exosuit __instance, int slotID)
+        [HarmonyPatch(nameof(Exosuit.OnUpgradeModuleChange))]
+        public static void ExosuitOnUpgradeModuleChangePostfix(Exosuit __instance, int slotID, TechType techType, bool added)
         {
-            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
-            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            // only work on arms here. Other types of modules are covered in VanillaUpgradeMaker.
+            ModVehicleArm armLogic = VFArm.GetModVehicleArm(techType);
+            if (armLogic != null)
             {
-                if (__instance.ConsumeEnergy(techType))
+                UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
                 {
-                    __instance.OnUpgradeModuleUse(techType, slotID);
-                    __instance.quickSlotCharge[slotID] = 0f;
-                }
+                    vehicle = __instance,
+                    slotID = slotID,
+                    techType = techType,
+                    isAdded = added
+                };
+                Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
+                __instance.MarkArmsDirty();
             }
         }
     }

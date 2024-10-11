@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
+using VehicleFramework.Admin;
+using VehicleFramework.UpgradeTypes;
 using VehicleFramework.Engines;
-using UnityEngine.SceneManagement;
+using VehicleFramework.VehicleComponents;
 
 namespace VehicleFramework
 {
@@ -344,25 +344,6 @@ namespace VehicleFramework
                 slotCharge = param.vehicle.GetSlotCharge(param.slotID)
             };
             Admin.UpgradeRegistrar.OnSelectChargeActions.ForEach(x => x(param2));
-
-            VehicleComponents.VFArmsManager vfam = param.vehicle.GetComponent<VehicleComponents.VFArmsManager>();
-            GameObject inputArm = null;
-            if (param.slotID == vfam?.leftArmSlotID && vfam?.leftArm != null)
-            {
-                inputArm = vfam.leftArm;
-            }
-            else if (param.slotID == vfam?.rightArmSlotID && vfam?.rightArm != null)
-            {
-                inputArm = vfam.rightArm;
-            }
-            UpgradeTypes.ArmActionParams param3 = new UpgradeTypes.ArmActionParams
-            {
-                vehicle = this,
-                slotID = slotID,
-                techType = techType,
-                arm = inputArm
-            };
-            Admin.UpgradeRegistrar.OnArmActions.ForEach(x => x(param3));
 
             VehicleFramework.Patches.CompatibilityPatches.BetterVehicleStoragePatcher.TryUseBetterVehicleStorage(this, slotID, techType);
             base.OnUpgradeModuleUse(techType, slotID);
@@ -758,6 +739,36 @@ namespace VehicleFramework
             {
                 return false;
             }
+        }
+        public override void SlotLeftDown()
+        {
+            base.SlotLeftDown();
+            GetComponent<VFArmsManager>().DoArmDown(true);
+        }
+        public override void SlotLeftHeld()
+        {
+            base.SlotLeftHeld();
+            GetComponent<VFArmsManager>().DoArmHeld(true);
+        }
+        public override void SlotLeftUp()
+        {
+            base.SlotLeftUp();
+            GetComponent<VFArmsManager>().DoArmUp(true);
+        }
+        public override void SlotRightDown()
+        {
+            base.SlotRightDown();
+            GetComponent<VFArmsManager>().DoArmDown(false);
+        }
+        public override void SlotRightHeld()
+        {
+            base.SlotRightHeld();
+            GetComponent<VFArmsManager>().DoArmHeld(false);
+        }
+        public override void SlotRightUp()
+        {
+            base.SlotRightUp();
+            GetComponent<VFArmsManager>().DoArmUp(false);
         }
         #endregion
 

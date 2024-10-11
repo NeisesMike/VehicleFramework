@@ -196,6 +196,7 @@
     <Compile Include="VehicleComponents\Scuttler.cs" />
     <Compile Include="VehicleComponents\SteeringWheel.cs" />
     <Compile Include="VehicleComponents\VehicleDamageTracker.cs" />
+    <Compile Include="VehicleComponents\VFArm.cs" />
     <Compile Include="VehicleComponents\VFArmsManager.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
     <Compile Include="VehicleTypes\Skimmer.cs" />

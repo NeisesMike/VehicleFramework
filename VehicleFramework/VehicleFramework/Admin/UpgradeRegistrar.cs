@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using VehicleFramework.UpgradeTypes;
+using VehicleFramework.VehicleComponents;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
@@ -31,7 +32,10 @@ namespace VehicleFramework.Admin
         internal static List<Action<ToggleActionParams>> OnToggleActions = new List<Action<ToggleActionParams>>();
         internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new List<Action<SelectableChargeableActionParams>>();
         internal static List<Action<SelectableActionParams>> OnSelectActions = new List<Action<SelectableActionParams>>();
-        internal static List<Action<ArmActionParams>> OnArmActions = new List<Action<ArmActionParams>>();
+        internal static List<Action<ArmActionParams>> OnArmDownActions = new List<Action<ArmActionParams>>();
+        internal static List<Action<ArmActionParams>> OnArmHeldActions = new List<Action<ArmActionParams>>();
+        internal static List<Action<ArmActionParams>> OnArmUpActions = new List<Action<ArmActionParams>>();
+        internal static List<Action<ArmActionParams>> OnArmAltActions = new List<Action<ArmActionParams>>();
         internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new List<Tuple<Vehicle, int, Coroutine>>();
         public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default(UpgradeCompat), bool verbose = false)
         {
@@ -72,6 +76,14 @@ namespace VehicleFramework.Admin
             {
                 Logger.Error("ModVehicleUpgrade cannot have empty recipe!");
                 return false;
+            }
+            if (upgrade as ModVehicleArm != null)
+            {
+                if ((upgrade as ModVehicleArm).QuickSlotType != QuickSlotType.Selectable && (upgrade as ModVehicleArm).QuickSlotType != QuickSlotType.SelectableChargeable)
+                {
+                    Logger.Error("ModVehicleArm must have QuickSlotType Selectable or SelectableChargeable!");
+                    return false;
+                }
             }
             return true;
         }
@@ -153,10 +165,10 @@ namespace VehicleFramework.Admin
                     {
                         upgrade.OnRemoved(param);
                     }
-                    if (upgrade as ModVehicleArm != null)
+                    if (upgrade as ModVehicleArm != null && param.vehicle as ModVehicle != null)
                     {
                         var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
-                        UWE.CoroutineHost.StartCoroutine(armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID));
+                        armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID);
                     }
                 }
             }
@@ -164,7 +176,7 @@ namespace VehicleFramework.Admin
         }
         private static void RegisterSelectableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            if (upgrade is SelectableUpgrade select)
+            if (upgrade is SelectableUpgrade select && !(upgrade is ModVehicleArm))
             {
                 VanillaUpgradeMaker.CreateSelectModule(select, compat, ref utt, isPDASetup);
                 isPDASetup = true;
@@ -187,7 +199,7 @@ namespace VehicleFramework.Admin
         }
         private static void RegisterSelectableChargeableUpgradeActions(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, ref bool isPDASetup)
         {
-            if (upgrade is SelectableChargeableUpgrade selectcharge)
+            if (upgrade is SelectableChargeableUpgrade selectcharge && !(upgrade is ModVehicleArm))
             {
                 VanillaUpgradeMaker.CreateChargeModule(selectcharge, compat, ref utt, isPDASetup);
                 foreach (System.Reflection.FieldInfo field in typeof(UpgradeTechTypes).GetFields())
@@ -271,21 +283,91 @@ namespace VehicleFramework.Admin
             {
                 VanillaUpgradeMaker.CreateExosuitArm(arm, compat, ref utt, isPDASetup);
                 isPDASetup = true;
+                UpgradeTechTypes staticUTT = utt;
+                IEnumerator PrepareModVehicleArmPrefab()
+                {
+                    TaskResult<GameObject> armRequest = new TaskResult<GameObject>();
+                    yield return UWE.CoroutineHost.StartCoroutine(arm.GetArmPrefab(armRequest));
+                    GameObject armPrefab = armRequest.Get();
+                    if (armPrefab == null)
+                    {
+                        Logger.Error("ModVehicleArm Error: GetArmPrefab returned a null GameObject instead of a valid arm.");
+                        yield break;
+                    }
+                    armPrefab.AddComponent<VFArm>();
+                    VFArm.armLogics.Add(staticUTT, arm);
+                    VFArm.armPrefabs.Add(staticUTT, armPrefab);
+                    arm.armPrefab = armPrefab;
+                }
+                UWE.CoroutineHost.StartCoroutine(PrepareModVehicleArmPrefab());
+
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;
                 TechType eTT = utt.forExosuit;
                 TechType cTT = utt.forCyclops;
-                void WrappedOnArm(ArmActionParams param)
+                void WrappedOnArmDown(ArmActionParams param)
                 {
                     if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
-                        param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
-                        param.vehicle.quickSlotCooldown[param.slotID] = arm.Cooldown;
-                        param.vehicle.energyInterface.ConsumeEnergy(arm.EnergyCost);
-                        arm.OnArmSelected(param);
+                        if(arm.ArmCooldowns.coolOnDown)
+                        {
+                            param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
+                            param.vehicle.quickSlotCooldown[param.slotID] = arm.ArmCooldowns.downCooldown;
+                        }
+                        if (arm.EnergyCosts.spendOnDown)
+                        {
+                            param.vehicle.energyInterface.ConsumeEnergy(arm.EnergyCosts.downEnergyCost);
+                        }
+                        arm.OnArmDown(param, out _);
                     }
                 }
-                OnArmActions.Add(WrappedOnArm);
+                OnArmDownActions.Add(WrappedOnArmDown);
+                void WrappedOnArmHeld(ArmActionParams param)
+                {
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    {
+                        if (arm.EnergyCosts.spendOnHeld)
+                        {
+                            param.vehicle.energyInterface.ConsumeEnergy(arm.EnergyCosts.heldEnergyCost);
+                        }
+                        arm.OnArmHeld(param, out _);
+                    }
+                }
+                OnArmHeldActions.Add(WrappedOnArmHeld);
+                void WrappedOnArmUp(ArmActionParams param)
+                {
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    {
+                        if (arm.ArmCooldowns.coolOnUp)
+                        {
+                            param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
+                            param.vehicle.quickSlotCooldown[param.slotID] = arm.ArmCooldowns.upCooldown;
+                        }
+                        if (arm.EnergyCosts.spendOnUp)
+                        {
+                            param.vehicle.energyInterface.ConsumeEnergy(arm.EnergyCosts.upEnergyCost);
+                        }
+                        arm.OnArmUp(param, out _);
+                    }
+                }
+                OnArmUpActions.Add(WrappedOnArmUp);
+                void WrappedOnArmAlt(ArmActionParams param)
+                {
+                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    {
+                        if (arm.ArmCooldowns.coolOnUp)
+                        {
+                            param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
+                            param.vehicle.quickSlotCooldown[param.slotID] = arm.ArmCooldowns.upCooldown;
+                        }
+                        if (arm.EnergyCosts.spendOnUp)
+                        {
+                            param.vehicle.energyInterface.ConsumeEnergy(arm.EnergyCosts.upEnergyCost);
+                        }
+                        arm.OnArmAltUse(param);
+                    }
+                }
+                OnArmAltActions.Add(WrappedOnArmAlt);
             }
         }
     }

@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Admin;
 
 namespace VehicleFramework.VehicleComponents
 {
+    // This component is applied to ModVehicles.
+    // It manages ModVehicleArms and their actions.
     public class VFArmsManager : MonoBehaviour
     {
         public GameObject leftArm;
@@ -12,7 +15,7 @@ namespace VehicleFramework.VehicleComponents
         internal int leftArmSlotID = 0;
         internal int rightArmSlotID = 0;
 
-        public IEnumerator UpdateArms(ModVehicleArm arm, int slotId)
+        public void UpdateArms(ModVehicleArm arm, int slotId)
         {
             ModVehicle mv = GetComponent<ModVehicle>();
             string thisSlotName = mv.slotIDs[slotId];
@@ -22,7 +25,7 @@ namespace VehicleFramework.VehicleComponents
                 DestroyArm(true);
                 if(arm.HasTechType(techTypeInSlot))
                 {
-                    yield return UWE.CoroutineHost.StartCoroutine(SpawnArm(mv, arm, true));
+                    SpawnArm(mv, arm, true);
                     leftArmSlotID = slotId;
                 }
             }
@@ -31,14 +34,14 @@ namespace VehicleFramework.VehicleComponents
                 DestroyArm(false);
                 if (arm.HasTechType(techTypeInSlot))
                 {
-                    yield return UWE.CoroutineHost.StartCoroutine(SpawnArm(mv, arm, false));
+                    SpawnArm(mv, arm, false);
                     rightArmSlotID = slotId;
                 }
             }
             else
             {
                 Logger.Warn("Can't update arms for a non-arm slot. How did we get here?");
-                yield break;
+                return;
             }
             mv.Arms.originalLeftArm?.SetActive(GetComponent<VFArmsManager>().leftArm == null);
             mv.Arms.originalRightArm?.SetActive(GetComponent<VFArmsManager>().rightArm == null);
@@ -61,17 +64,9 @@ namespace VehicleFramework.VehicleComponents
                 mv.Arms.originalRightArm?.SetActive(false);
             }
         }
-        public IEnumerator SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
+        public void SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {
-            TaskResult<GameObject> armRequest = new TaskResult<GameObject>();
-            yield return UWE.CoroutineHost.StartCoroutine(arm.GetArmPrefab(armRequest));
-            GameObject armPrefab = armRequest.Get();
-            if (armPrefab == null)
-            {
-                Logger.Error("VFArmsManager Error: GetArmPrefab returned a null GameObject instead of a valid arm.");
-                yield break;
-            }
-
+            GameObject armPrefab = arm.armPrefab;
             if (isLeft && leftArm == null)
             {
                 leftArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
@@ -146,6 +141,42 @@ namespace VehicleFramework.VehicleComponents
                 rightArmSlotID = 0;
                 UnityEngine.Object.DestroyImmediate(transform.Find("RightArm")?.gameObject);
             }
+        }
+
+        public ArmActionParams GetArmActionParams(bool isLeft)
+        {
+            ModVehicle mv = GetComponent<ModVehicle>();
+            int slotID = isLeft ? mv.GetSlotIndex(ModuleBuilder.LeftArmSlotName) : mv.GetSlotIndex(ModuleBuilder.RightArmSlotName);
+            mv.GetQuickSlotType(slotID, out TechType techType);
+            return new ArmActionParams
+            {
+                vehicle = mv,
+                slotID = slotID,
+                techType = techType,
+                arm = isLeft ? GetComponent<VFArmsManager>().leftArm : GetComponent<VFArmsManager>().rightArm
+            };
+        }
+        public void DoArmDown(bool isLeft)
+        {
+            ArmActionParams param = GetArmActionParams(isLeft);
+            if (GameInput.GetButtonDown(GameInput.Button.AltTool))
+            {
+                UpgradeRegistrar.OnArmAltActions.ForEach(x => x(param));
+            }
+            else
+            {
+                UpgradeRegistrar.OnArmDownActions.ForEach(x => x(param));
+            }
+        }
+        public void DoArmUp(bool isLeft)
+        {
+            ArmActionParams param = GetArmActionParams(isLeft);
+            UpgradeRegistrar.OnArmUpActions.ForEach(x => x(param));
+        }
+        public void DoArmHeld(bool isLeft)
+        {
+            ArmActionParams param = GetArmActionParams(isLeft);
+            UpgradeRegistrar.OnArmHeldActions.ForEach(x => x(param));
         }
     }
 }
