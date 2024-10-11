@@ -111,7 +111,10 @@ namespace VehicleFramework.Admin
         }
         internal static void CreateExosuitArm(ModVehicleArm arm, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
-            //throw new NotImplementedException();
+            if (!compat.skipExosuit)
+            {
+                CreateArmModuleExosuit(arm, ref utt, isPdaSetup);
+            }
         }
         #endregion
 
@@ -323,6 +326,24 @@ namespace VehicleFramework.Admin
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
             CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, Utils.UpgradePath.Cyclops);
+        }
+        #endregion
+
+        #region ArmModules
+        internal static TechType CreateArmModuleVanilla(ModVehicleArm upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, Utils.UpgradePath path)
+        {
+            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info, path);
+            EquipmentGadget gadget = prefab.SetEquipment(EquipmentType.ExosuitArm)
+                .WithQuickSlotType(QuickSlotType.Selectable);
+            prefab.Register();
+            return info.TechType;
+        }
+        internal static void CreateArmModuleExosuit(ModVehicleArm upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
+        {
+            var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Exosuit", "Exosuit " + upgrade.DisplayName, "An arm for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
+                .WithIcon(upgrade.Icon);
+            utt.forExosuit = prefabInfo.TechType;
+            CreateArmModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitArm, Utils.UpgradePath.Exosuit);
         }
         #endregion
     }
