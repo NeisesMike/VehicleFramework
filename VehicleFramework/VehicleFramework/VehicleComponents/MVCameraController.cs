@@ -87,6 +87,10 @@ namespace VehicleFramework.VehicleComponents
         }
         private void ScanInput()
         {
+            if(DevConsole.instance.state)
+            {
+                return;
+            }
             int currentIndex = cameras.Keys.ToList().IndexOf(state);
             if (Input.GetKeyDown(MainPatcher.VFConfig.nextCamera))
             {
