@@ -127,30 +127,26 @@ namespace VehicleFramework
 
                 if (rollDelta > mvSubmarine.ExitRollLimit || pitchDelta > mvSubmarine.ExitPitchLimit)
                 {
-                    BasicText message;
                     if (HUDBuilder.IsVR)
                     {
-                        message = new BasicText(250, 250);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 250, 250, 3);
                     }
                     else
                     {
-                        message = new BasicText(500, 0);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 500, 0, 3);
                     }
-                    message.ShowMessage(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3);
                     return false;
                 }
                 else if (mvSubmarine.useRigidbody.velocity.magnitude > 2f)
                 {
-                    BasicText message;
                     if (HUDBuilder.IsVR)
                     {
-                        message = new BasicText(250, 250);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 250, 250, 3);
                     }
                     else
                     {
-                        message = new BasicText(500, 0);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 500, 0, 3);
                     }
-                    message.ShowMessage(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3);
                     return false;
                 }
 
