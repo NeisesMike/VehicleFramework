@@ -225,6 +225,12 @@ namespace VehicleFramework.Engines
         }
         public virtual void FixedUpdate()
         {
+            var fcc = MainCameraControl.main.GetComponent<FreecamController>();
+            bool isFreecam = false;
+            if (fcc.mode || fcc.ghostMode)
+            {
+                isFreecam = true;
+            }
             Vector3 DoMoveAction()
             {
                 // Get Input Vector
@@ -240,7 +246,7 @@ namespace VehicleFramework.Engines
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater() || CanMoveAboveWater)
             {
-                if (mv.CanPilot() && mv.IsUnderCommand)
+                if (mv.CanPilot() && mv.IsUnderCommand && !isFreecam)
                 {
                     if (mv as Submarine != null)
                     {
