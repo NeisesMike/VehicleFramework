@@ -285,7 +285,11 @@ namespace VehicleFramework
             // don't do this if there is a parent and mounted vehicle mismatch
             // This is a weird thing. How do we handle it?
 
-
+            var fcc = MainCameraControl.main.GetComponent<FreecamController>();
+            if(fcc.mode || fcc.ghostMode)
+            {
+                return true;
+            }
 
             if (__instance.mode == Player.Mode.LockedPiloting && !Admin.Utils.IsAnAncestorTheCurrentMountedVehicle(Player.main.transform))
             {
