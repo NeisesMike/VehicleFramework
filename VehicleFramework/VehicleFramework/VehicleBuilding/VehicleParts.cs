@@ -14,6 +14,14 @@ namespace VehicleFramework.VehicleParts
         public Transform LeftHandLocation;
         public Transform RightHandLocation;
         public Transform ExitLocation;
+        public VehiclePilotSeat(GameObject iSeat, GameObject iSitLocation, Transform iLeftHand, Transform iRightHand, Transform iExit)
+        {
+            Seat = iSeat;
+            SitLocation = iSitLocation;
+            LeftHandLocation = iLeftHand;
+            RightHandLocation = iRightHand;
+            ExitLocation = iExit;
+        }
     }
     public struct VehicleHatchStruct
     {
@@ -21,12 +29,25 @@ namespace VehicleFramework.VehicleParts
         public Transform EntryLocation;
         public Transform ExitLocation;
         public Transform SurfaceExitLocation;
+        public VehicleHatchStruct(GameObject iHatch, Transform iEntry, Transform iExit, Transform iSurfaceExit)
+        {
+            Hatch = iHatch;
+            EntryLocation = iEntry;
+            ExitLocation = iExit;
+            SurfaceExitLocation = iSurfaceExit;
+        }
     }
     public struct VehicleStorage
     {
         public GameObject Container;
         public int Height;
         public int Width;
+        public VehicleStorage(GameObject iContainer, int iHeight = 4, int iWidth = 4)
+        {
+            Container = iContainer;
+            Height = iHeight;
+            Width = iWidth;
+        }
     }
     public struct VehicleUpgrades
     {
@@ -35,11 +56,24 @@ namespace VehicleFramework.VehicleParts
         public Vector3 AnglesOpened;
         public Vector3 AnglesClosed;
         public List<Transform> ModuleProxies;
+        public VehicleUpgrades(GameObject iInterface, GameObject iFlap, Vector3 iOpenAngles, Vector3 iClosedAngles, List<Transform> iProxies = null)
+        {
+            Interface = iInterface;
+            Flap = iFlap;
+            AnglesOpened = iOpenAngles;
+            AnglesClosed = iClosedAngles;
+            ModuleProxies = iProxies;
+        }
     }
     public struct VehicleBattery
     {
         public GameObject BatterySlot;
         public Transform BatteryProxy;
+        public VehicleBattery(GameObject iBatterySlot, Transform iBatteryProxy)
+        {
+            BatterySlot = iBatterySlot;
+            BatteryProxy = iBatteryProxy;
+        }
     }
     public struct VehicleFloodLight
     {
@@ -48,6 +82,14 @@ namespace VehicleFramework.VehicleParts
         public float Range;
         public Color Color;
         public float Angle;
+        public VehicleFloodLight(GameObject iLight, float iIntensity, float iRange, Color iColor, float iAngle)
+        {
+            Light = iLight;
+            Intensity = iIntensity;
+            Range = iRange;
+            Color = iColor;
+            Angle = iAngle;
+        }
     }
 
     public struct VehicleArmsProxy
@@ -56,5 +98,13 @@ namespace VehicleFramework.VehicleParts
         public GameObject originalRightArm;
         public Transform leftArmPlacement;
         public Transform rightArmPlacement;
+        public VehicleArmsProxy(GameObject originalLeft, GameObject originalRight, Transform leftArmPlace, Transform rightArmPlace)
+        {
+            originalLeftArm = originalLeft;
+            originalRightArm = originalRight;
+            leftArmPlacement = leftArmPlace;
+            rightArmPlacement = rightArmPlace;
+        }
+    }
     }
 }
