@@ -689,32 +689,32 @@ namespace VehicleFramework
         public override void SlotLeftDown()
         {
             base.SlotLeftDown();
-            GetComponent<VFArmsManager>().DoArmDown(true);
+            GetComponent<VFArmsManager>()?.DoArmDown(true);
         }
         public override void SlotLeftHeld()
         {
             base.SlotLeftHeld();
-            GetComponent<VFArmsManager>().DoArmHeld(true);
+            GetComponent<VFArmsManager>()?.DoArmHeld(true);
         }
         public override void SlotLeftUp()
         {
             base.SlotLeftUp();
-            GetComponent<VFArmsManager>().DoArmUp(true);
+            GetComponent<VFArmsManager>()?.DoArmUp(true);
         }
         public override void SlotRightDown()
         {
             base.SlotRightDown();
-            GetComponent<VFArmsManager>().DoArmDown(false);
+            GetComponent<VFArmsManager>()?.DoArmDown(false);
         }
         public override void SlotRightHeld()
         {
             base.SlotRightHeld();
-            GetComponent<VFArmsManager>().DoArmHeld(false);
+            GetComponent<VFArmsManager>()?.DoArmHeld(false);
         }
         public override void SlotRightUp()
         {
             base.SlotRightUp();
-            GetComponent<VFArmsManager>().DoArmUp(false);
+            GetComponent<VFArmsManager>()?.DoArmUp(false);
         }
         #endregion
 
