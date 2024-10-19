@@ -106,5 +106,14 @@ namespace VehicleFramework.VehicleParts
             rightArmPlacement = rightArmPlace;
         }
     }
+    public struct VehicleCamera
+    {
+        public string name;
+        public Transform camera;
+        public VehicleCamera(Transform cameraTransform, string cameraName)
+        {
+            name = cameraName;
+            camera = cameraTransform;
+        }
     }
 }
