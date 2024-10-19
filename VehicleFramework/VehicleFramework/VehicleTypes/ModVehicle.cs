@@ -88,6 +88,7 @@ namespace VehicleFramework
         public virtual GameObject LeviathanGrabPoint => gameObject;
         public virtual Atlas.Sprite CraftingSprite => MainPatcher.ModVehicleIcon;
         public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
+        public virtual List<VehicleParts.VehicleCamera> Cameras => new List<VehicleParts.VehicleCamera>();
         public override string[] slotIDs
         { // You probably do not want to override this
             get
@@ -177,6 +178,7 @@ namespace VehicleFramework
             {
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
             }
+            VehicleBuilder.SetupCameraController(this);
             // perform normal vehicle lazyinitializing
             base.LazyInitialize();
         }

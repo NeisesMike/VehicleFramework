@@ -776,8 +776,10 @@ namespace VehicleFramework
                 mv.RespawnPoint.EnsureComponent<RespawnPoint>();
             }
         }
-        public static void SetupDroneObjects(Drone drone)
+        public static void SetupCameraController(ModVehicle mv)
         {
+            var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
+            mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
         }
 
         #endregion
@@ -839,7 +841,6 @@ namespace VehicleFramework
             if (mv as Drone != null)
             {
                 SetupEngine(mv as Drone);
-                SetupDroneObjects(mv as Drone);
             }
             ApplySkyAppliers(mv);
 
