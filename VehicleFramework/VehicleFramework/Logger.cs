@@ -27,9 +27,13 @@ namespace VehicleFramework
         }
         public static BasicText Output(string msg, float time = 4, int x = 500, int y = 0)
         {
-            BasicText message = new BasicText(x, y);
-            message.ShowMessage(msg, time);
-            return message;
+            if(GUIController.main.GetHidePhase() < GUIController.HidePhase.HUD)
+            {
+                BasicText message = new BasicText(x, y);
+                message.ShowMessage(msg, time);
+                return message;
+            }
+            return null;
         }
     }
 }
