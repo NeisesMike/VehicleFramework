@@ -745,7 +745,7 @@ namespace VehicleFramework
                 {
                     try
                     {
-                        mv.subName.hullName.text = vehicle.Item2;
+                        mv.subName.SetName(vehicle.Item2);
                     }
                     catch (Exception e)
                     {

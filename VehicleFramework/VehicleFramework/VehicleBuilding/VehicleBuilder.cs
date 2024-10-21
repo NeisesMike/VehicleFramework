@@ -656,7 +656,7 @@ namespace VehicleFramework
             subname.pingInstance = mv.pingInstance;
             subname.colorsInitialized = 0;
             subname.hullName = mv.StorageRootObject.AddComponent<TMPro.TextMeshProUGUI>(); // DO NOT push a TMPro.TextMeshProUGUI on the root vehicle object!!!
-            subname.hullName.text = mv.vehicleName;
+            subname.SetName(mv.vehicleName);
             mv.subName = subname;
         }
         public static void SetupCollisionSound(ModVehicle mv)
