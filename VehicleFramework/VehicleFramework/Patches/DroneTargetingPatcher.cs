@@ -10,7 +10,7 @@ using System.Reflection;
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(Targeting))]
-    public static class TargetingPatcher
+    public static class DroneTargetingPatcher
     {
         [HarmonyTargetMethod]
         public static MethodBase TargetMethod()
@@ -69,4 +69,5 @@ namespace VehicleFramework.Patches
             return false;
         }
     }
+
 }
