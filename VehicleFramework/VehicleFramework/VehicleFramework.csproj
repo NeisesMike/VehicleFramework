@@ -176,7 +176,7 @@
     <Compile Include="Patches\PowerRelayPatcher.cs" />
     <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />
     <Compile Include="Patches\SubRootPatcher.cs" />
-    <Compile Include="Patches\TargetingPatcher.cs" />
+    <Compile Include="Patches\DroneTargetingPatcher.cs" />
     <Compile Include="Patches\uGUI_DepthCompassPatcher.cs" />
     <Compile Include="Patches\uGUI_QuickSlotsPatcher.cs" />
     <Compile Include="Patches\VehicleDockingBayPatch.cs" />
