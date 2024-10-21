@@ -129,11 +129,11 @@ namespace VehicleFramework
                 {
                     if (HUDBuilder.IsVR)
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 250, 250, 3);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 250, 250);
                     }
                     else
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 500, 0, 3);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 500, 0);
                     }
                     return false;
                 }
@@ -141,11 +141,11 @@ namespace VehicleFramework
                 {
                     if (HUDBuilder.IsVR)
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 250, 250, 3);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 250, 250);
                     }
                     else
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 500, 0, 3);
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 500, 0);
                     }
                     return false;
                 }
