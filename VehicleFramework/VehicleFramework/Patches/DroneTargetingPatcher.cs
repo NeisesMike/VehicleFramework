@@ -70,4 +70,77 @@ namespace VehicleFramework.Patches
         }
     }
 
+    [HarmonyPatch(typeof(Pickupable))]
+    public static class PickupablePatcher
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Pickupable.OnHandHover))]
+        public static void PickupableOnHandHoverPostfix(Pickupable __instance, GUIHand hand)
+        {
+            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            if (drone == null || !hand.IsFreeToInteract() || !__instance.isPickupable)
+            {
+                return;
+            }
+            bool hasRoomFor = false;
+            foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+            {
+                var cont = vs.Container.GetComponent<InnateStorageContainer>().container;
+                if (cont.HasRoomFor(__instance))
+                {
+                    hasRoomFor = true;
+                    break;
+                }
+            }
+            TechType techType = __instance.GetTechType();
+            if (hasRoomFor)
+            {
+                string text2 = string.Empty;
+                ISecondaryTooltip component = __instance.gameObject.GetComponent<ISecondaryTooltip>();
+                if (component != null)
+                {
+                    text2 = component.GetSecondaryTooltip();
+                }
+                string text = (__instance.usePackUpIcon ? LanguageCache.GetPackUpText(techType) : LanguageCache.GetPickupText(techType));
+                HandReticle.main.SetIcon(__instance.usePackUpIcon ? HandReticle.IconType.PackUp : HandReticle.IconType.Hand, 1f);
+                HandReticle.main.SetText(HandReticle.TextType.Hand, text, false, GameInput.Button.LeftHand);
+                HandReticle.main.SetText(HandReticle.TextType.HandSubscript, text2, false, GameInput.Button.None);
+            }
+            else
+            {
+                HandReticle.main.SetText(HandReticle.TextType.Hand, techType.AsString(false), true, GameInput.Button.None);
+                HandReticle.main.SetText(HandReticle.TextType.HandSubscript, "InventoryFull", true, GameInput.Button.None);
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Pickupable.OnHandClick))]
+        public static bool PickupableOnHandClickPostfix(Pickupable __instance, GUIHand hand)
+        {
+            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            if (drone == null || !hand.IsFreeToInteract() || !__instance.isPickupable)
+            {
+                return true;
+            }
+            bool hasRoomFor = false;
+            foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+            {
+                var cont = vs.Container.GetComponent<InnateStorageContainer>().container;
+                if (cont.HasRoomFor(__instance))
+                {
+                    hasRoomFor = true;
+                    break;
+                }
+            }
+            if (hasRoomFor)
+            {
+                Inventory.Get().Pickup(__instance, false);
+            }
+            else
+            {
+                ErrorMessage.AddWarning(Language.main.Get("InventoryFull"));
+            }
+            return false;
+        }
+    }
 }
