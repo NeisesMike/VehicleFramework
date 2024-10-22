@@ -33,6 +33,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual List<GameObject> NavigationRedStrobeLights => null;
         public virtual float ExitPitchLimit => 4f;
         public virtual float ExitRollLimit => 4f;
+        public virtual float ExitVelocityLimit => 0.5f;
         public virtual GameObject RespawnPoint => null;
 
 

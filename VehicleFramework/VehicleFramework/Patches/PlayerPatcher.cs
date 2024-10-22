@@ -137,7 +137,7 @@ namespace VehicleFramework
                     }
                     return false;
                 }
-                else if (mvSubmarine.useRigidbody.velocity.magnitude > 2f)
+                else if (mvSubmarine.useRigidbody.velocity.magnitude > mvSubmarine.ExitVelocityLimit)
                 {
                     if (HUDBuilder.IsVR)
                     {
@@ -150,6 +150,7 @@ namespace VehicleFramework
                     return false;
                 }
 
+                mv.Engine.KillMomentum();
                 // teleport the player to a walking position, just behind the chair
                 Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
 

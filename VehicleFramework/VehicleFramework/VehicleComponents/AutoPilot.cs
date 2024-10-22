@@ -52,9 +52,10 @@ namespace VehicleFramework
 
         private float timeOfLastLevelTap = 0f;
         private const float doubleTapWindow = 1f;
-        private float rollVelocity = 0.0f;
-        private float pitchVelocity = 0.0f;
+        private float PitchDelta => transform.rotation.eulerAngles.x >= 180 ? 360 - transform.rotation.eulerAngles.x : transform.rotation.eulerAngles.x;
+        private float RollDelta => transform.rotation.eulerAngles.z >= 180 ? 360 - transform.rotation.eulerAngles.z : transform.rotation.eulerAngles.z;
         private float smoothTime = 0.3f;
+        public float autoLevelRate = 11f;
         private bool _autoLeveling = false;
         private bool autoLeveling
         {
@@ -64,13 +65,19 @@ namespace VehicleFramework
             }
             set
             {
-                if (value && !_autoLeveling) 
+                if(value)
                 {
-                    mv.NotifyStatus(AutoPilotStatus.OnAutoLevelBegin);
+                    if (!_autoLeveling)
+                    {
+                        mv.NotifyStatus(AutoPilotStatus.OnAutoLevelBegin);
+                    }
                 }
-                if (!value && _autoLeveling)
+                else
                 {
-                    mv.NotifyStatus(AutoPilotStatus.OnAutoLevelEnd);
+                    if (_autoLeveling)
+                    {
+                        mv.NotifyStatus(AutoPilotStatus.OnAutoLevelEnd);
+                    }
                 }
                 _autoLeveling = value;
             }
@@ -122,69 +129,37 @@ namespace VehicleFramework
             if (autoLeveling && (10f < lookDir.magnitude || !mv.GetIsUnderwater()))
             {
                 autoLeveling = false;
-                mv.useRigidbody.isKinematic = false;
-                //mv.GetComponent<Engines.ModVehicleEngine>().KillMomentum();
-                mv.useRigidbody.velocity = prevVelocity;
-                prevVelocity = Vector3.zero;
                 return;
             }
             if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerControlling()) && mv.GetIsUnderwater())
             {
-                float x = transform.rotation.eulerAngles.x;
-                float y = transform.rotation.eulerAngles.y;
-                float z = transform.rotation.eulerAngles.z;
-                float pitchDelta = x >= 180 ? 360 - x : x;
-                float rollDelta = z >= 180 ? 360 - z : z;
-                if (rollDelta < 1 && pitchDelta < 1 && mv.useRigidbody.velocity.magnitude < 1f && prevVelocity.magnitude < 1f)
+                if (RollDelta < 0.4f && PitchDelta < 0.4f && mv.useRigidbody.velocity.magnitude < mv.ExitVelocityLimit)
                 {
                     autoLeveling = false;
-                    mv.useRigidbody.isKinematic = false;
-                    mv.GetComponent<Engines.ModVehicleEngine>().KillMomentum();
-                    prevVelocity = Vector3.zero;
                     return;
                 }
-
-                float newPitch;
-                float newRoll;
-                if (x < 180)
+                if (RollDelta > 0.4f || PitchDelta > 0.4f)
                 {
-                    newPitch = Mathf.SmoothDamp(x, 0, ref pitchVelocity, smoothTime, 10f, Time.deltaTime);
+                    Quaternion desiredRotation = Quaternion.Euler(new Vector3(0, transform.rotation.eulerAngles.y, 0));
+                    // Smoothly move towards target rotation using physics
+                    Quaternion smoothedRotation = Quaternion.RotateTowards(
+                        mv.useRigidbody.rotation,
+                        desiredRotation,
+                        smoothTime * Time.deltaTime * autoLevelRate
+                    );
+                    mv.useRigidbody.MoveRotation(smoothedRotation);
                 }
-                else
-                {
-                    newPitch = Mathf.SmoothDamp(x, 360, ref pitchVelocity, smoothTime, 10f, Time.deltaTime);
-                }
-                if(z < 180)
-                {
-                    newRoll = Mathf.SmoothDamp(z, 0, ref rollVelocity, smoothTime, 10f, Time.deltaTime);
-                }
-                else
-                {
-                    newRoll = Mathf.SmoothDamp(z, 360, ref rollVelocity, smoothTime, 10f, Time.deltaTime);
-                }
-                transform.rotation = Quaternion.Euler(new Vector3(newPitch, y, newRoll));
-                transform.position += prevVelocity * Time.deltaTime;
-                prevVelocity = Vector3.SmoothDamp(prevVelocity, Vector3.zero, ref currentVelocity, smoothTime * 0.75f, 100f, Time.deltaTime);
             }
         }
-
-        private Vector3 prevVelocity;
-        private Vector3 currentVelocity;
         private void CheckForDoubleTap(Submarine mv)
         {
             if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerControlling())
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {
-                    float pitch = transform.rotation.eulerAngles.x;
-                    float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
-                    float roll = transform.rotation.eulerAngles.z;
-                    float rollDelta = roll >= 180 ? 360 - roll : roll;
                     autoLeveling = true;
-                    prevVelocity = mv.useRigidbody.velocity;
-                    mv.useRigidbody.isKinematic = true;
-                    var smoothTime1 = 5f * pitchDelta / 90f;
-                    var smoothTime2 = 5f * rollDelta / 90f;
+                    var smoothTime1 = 5f * PitchDelta / 90f;
+                    var smoothTime2 = 5f * RollDelta / 90f;
                     var smoothTime3 = mv.GetComponent<VehicleFramework.Engines.ModVehicleEngine>().GetTimeToStop();
                     smoothTime = Mathf.Max(smoothTime1, smoothTime2, smoothTime3);
                 }
