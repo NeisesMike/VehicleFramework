@@ -39,12 +39,16 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(PlaceTool.LateUpdate))]
         public static void LateUpdatePrefix(PlaceTool __instance)
         {
-            SubRoot subroot = Player.main.currentSub;
+            SubRoot subroot = Player.main?.currentSub;
             if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>())
             {
                 if (__instance.usingPlayer != null)
                 {
                     Transform aimTransform = Builder.GetAimTransform();
+                    if(aimTransform == null)
+                    {
+                        return;
+                    }
                     RaycastHit raycastHit = default(RaycastHit);
                     bool flag = false;
                     int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, aimTransform.forward, 5f, -5, QueryTriggerInteraction.UseGlobal);
@@ -52,6 +56,10 @@ namespace VehicleFramework.Patches
                     for (int i = 0; i < num; i++)
                     {
                         RaycastHit raycastHit2 = UWE.Utils.sharedHitBuffer[i];
+                        if(raycastHit2.collider == null || raycastHit2.collider.gameObject == null)
+                        {
+                            return;
+                        }
                         if (!raycastHit2.collider.isTrigger && !UWE.Utils.SharingHierarchy(__instance.gameObject, raycastHit2.collider.gameObject) && num2 > raycastHit2.distance)
                         {
                             flag = true;
