@@ -39,6 +39,10 @@ namespace VehicleFramework.VehicleComponents
         }
         public void Update()
         {
+            if(playerCamActual == null)
+            {
+                Transform _ = PlayerCam;
+            }
             if(mv.IsPlayerControlling())
             {
                 ScanInput();
@@ -114,6 +118,11 @@ namespace VehicleFramework.VehicleComponents
                 currentIndex = cameras.Keys.Count - 1;
             }
             SetState(cameras.Keys.ToList()[currentIndex]);
+        }
+        public void ResetCamera()
+        {
+            state = playerCameraState;
+            MovePlayerCameraToTransform(cameras[playerCameraState]);
         }
         void IPlayerListener.OnPilotEnd()
         {

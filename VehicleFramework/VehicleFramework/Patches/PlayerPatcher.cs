@@ -73,6 +73,12 @@ namespace VehicleFramework
             /*
              * This patch ensures we exit piloting mode correctly.
              */
+            ModVehicle mv = __instance.GetModVehicle();
+            if(mv == null)
+            {
+                return true;
+            }
+            mv.GetComponent<VehicleComponents.MVCameraController>()?.ResetCamera();
             void DoExitActions(ref Player.Mode mode)
             {
                 GameInput.ClearInput();
@@ -83,10 +89,10 @@ namespace VehicleFramework
                 __instance.playerController.ForceControllerSize();
                 __instance.transform.parent = null;
             }
-            VehicleTypes.Submersible mvSubmersible = __instance.GetVehicle() as VehicleTypes.Submersible;
-            VehicleTypes.Walker mvWalker = __instance.GetVehicle() as VehicleTypes.Walker;
-            VehicleTypes.Skimmer mvSkimmer = __instance.GetVehicle() as VehicleTypes.Skimmer;
-            VehicleTypes.Submarine mvSubmarine = __instance.GetVehicle() as VehicleTypes.Submarine;
+            VehicleTypes.Submersible mvSubmersible = mv as VehicleTypes.Submersible;
+            VehicleTypes.Walker mvWalker = mv as VehicleTypes.Walker;
+            VehicleTypes.Skimmer mvSkimmer = mv as VehicleTypes.Skimmer;
+            VehicleTypes.Submarine mvSubmarine = mv as VehicleTypes.Submarine;
             if (Drone.mountedDrone != null)
             {
                 Drone.mountedDrone.StopControlling();
@@ -150,7 +156,7 @@ namespace VehicleFramework
                     return false;
                 }
 
-                mv.Engine.KillMomentum();
+                mvSubmarine.Engine.KillMomentum();
                 // teleport the player to a walking position, just behind the chair
                 Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
 
