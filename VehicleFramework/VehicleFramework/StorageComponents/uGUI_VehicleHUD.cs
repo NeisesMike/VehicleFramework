@@ -16,8 +16,7 @@ namespace VehicleFramework
 			Player main = Player.main;
 			if (main != null)
 			{
-				mv = (main.GetVehicle() as ModVehicle);
-				mv = mv ?? VehicleTypes.Drone.mountedDrone;
+				mv = main.GetModVehicle();
 				pda = main.GetPDA();
 			}
 			bool mvflag = mv != null && (pda == null || !pda.isInUse);

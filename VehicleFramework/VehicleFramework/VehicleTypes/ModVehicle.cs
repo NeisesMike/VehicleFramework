@@ -1167,7 +1167,7 @@ namespace VehicleFramework
         }
         public static void TeleportPlayer(Vector3 destination)
         {
-            ModVehicle mv = Player.main.GetVehicle() as ModVehicle;
+            ModVehicle mv = Player.main.GetModVehicle();
             UWE.Utils.EnterPhysicsSyncSection();
             Player.main.SetCurrentSub(null, true);
             Player.main.playerController.SetEnabled(false);
