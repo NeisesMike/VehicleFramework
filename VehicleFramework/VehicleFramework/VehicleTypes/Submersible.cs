@@ -54,7 +54,7 @@ namespace VehicleFramework.VehicleTypes
         {
             base.BeginPiloting();
             Player.main.EnterSittingMode();
-            StartCoroutine(SitDownInChair());
+            UWE.CoroutineHost.StartCoroutine(SitDownInChair());
             //StartCoroutine(TryStandUpFromChair());
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);

@@ -15,7 +15,7 @@ namespace VehicleFramework
 
         public void Awake()
         {
-            StartCoroutine(GetSeamothBitsASAP());
+            UWE.CoroutineHost.StartCoroutine(GetSeamothBitsASAP());
         }
 
         public IEnumerator GetSeamothBitsASAP()

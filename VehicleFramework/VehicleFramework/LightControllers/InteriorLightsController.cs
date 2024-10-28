@@ -117,7 +117,7 @@ namespace VehicleFramework
                     yield return new WaitForSeconds(1f);
                 }
             }
-            StartCoroutine(BlinkThrice());
+            UWE.CoroutineHost.StartCoroutine(BlinkThrice());
             return;
         }
 

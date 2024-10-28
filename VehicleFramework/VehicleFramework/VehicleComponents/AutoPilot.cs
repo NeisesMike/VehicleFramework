@@ -342,7 +342,7 @@ namespace VehicleFramework
                     yield return new WaitForSeconds(4.6f);
                     MainCameraControl.main.ShakeCamera(1f, 0.5f, MainCameraControl.ShakeMode.Linear, 1f);
                 }
-                StartCoroutine(ShakeCamera());
+                UWE.CoroutineHost.StartCoroutine(ShakeCamera());
                 MainCameraControl.main.ShakeCamera(0.15f, 4.5f, MainCameraControl.ShakeMode.Linear, 1f);
             }
         }
@@ -450,7 +450,7 @@ namespace VehicleFramework
             }
             StopAllCoroutines();
             timeWeStartedWaiting = Time.time;
-            StartCoroutine(ResetDangerStatusEventually());
+            UWE.CoroutineHost.StartCoroutine(ResetDangerStatusEventually());
             if (dangerStatus == DangerState.Safe)
             {
                 dangerStatus = DangerState.LeviathanNearby;

@@ -470,7 +470,7 @@ namespace VehicleFramework
             }
             if (Batteries != null && Batteries.Count() > 0)
             {
-                StartCoroutine(GiveUsABatteryOrGiveUsDeath());
+                UWE.CoroutineHost.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
             }
         }
         public void SetDockedLighting(bool docked)

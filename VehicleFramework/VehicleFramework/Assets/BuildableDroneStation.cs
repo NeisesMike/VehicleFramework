@@ -132,7 +132,7 @@ namespace VehicleFramework
                     Component.Destroy(GetComponent<Rigidbody>());
                 }
             }
-            StartCoroutine(WaitThenAct());
+            UWE.CoroutineHost.StartCoroutine(WaitThenAct());
         }
         public void Update()
         {

@@ -21,7 +21,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public void NaiveGo(Vector3 destination)
         {
-            StartCoroutine(GoStraightToDestination(destination));
+            UWE.CoroutineHost.StartCoroutine(GoStraightToDestination(destination));
         }
 
         public void FaceDestinationFrame(Vector3 dest)
@@ -82,7 +82,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 if (CheckClose(dest, 25f))
                 {
-                    yield return StartCoroutine(BreakLoop());
+                    yield return UWE.CoroutineHost.StartCoroutine(BreakLoop());
                     if(gameObject.GetComponent<Rigidbody>().velocity.magnitude < 0.1f)
                     {
                         yield break;
@@ -90,15 +90,15 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else if (CheckClose(dest, 50f))
                 {
-                    yield return StartCoroutine(ForwardLoop(0.25f));
+                    yield return UWE.CoroutineHost.StartCoroutine(ForwardLoop(0.25f));
                 }
                 else if (CheckClose(dest, 75f))
                 {
-                    yield return StartCoroutine(ForwardLoop(0.5f));
+                    yield return UWE.CoroutineHost.StartCoroutine(ForwardLoop(0.5f));
                 }
                 else
                 {
-                    yield return StartCoroutine(ForwardLoop(1f));
+                    yield return UWE.CoroutineHost.StartCoroutine(ForwardLoop(1f));
                 }
             }
         }

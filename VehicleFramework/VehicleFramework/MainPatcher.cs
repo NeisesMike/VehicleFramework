@@ -51,7 +51,7 @@ namespace VehicleFramework
 
                 yield break;
             }
-            StartCoroutine(CollectPrefabsForBuilderReference());
+            UWE.CoroutineHost.StartCoroutine(CollectPrefabsForBuilderReference());
 
             GetSprites();
 

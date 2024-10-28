@@ -96,13 +96,13 @@ namespace VehicleFramework
                 case LightClass.WhiteStrobes:
                     if (MainPatcher.VFConfig.isFlashingLightsEnabled && white == null)
                     {
-                        white = StartCoroutine(Strobe(LightClass.WhiteStrobes));
+                        white = UWE.CoroutineHost.StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
                     if (MainPatcher.VFConfig.isFlashingLightsEnabled && red == null)
                     {
-                        red = StartCoroutine(Strobe(LightClass.RedStrobes));
+                        red = UWE.CoroutineHost.StartCoroutine(Strobe(LightClass.RedStrobes));
                     }
                     break;
                 case LightClass.Positions:
@@ -115,13 +115,13 @@ namespace VehicleFramework
                 case LightClass.Ports:
                     if (port == null)
                     {
-                        port = StartCoroutine(BlinkNarySequence(2, true));
+                        port = UWE.CoroutineHost.StartCoroutine(BlinkNarySequence(2, true));
                     }
                     break;
                 case LightClass.Starboards:
                     if (starboard == null)
                     {
-                        starboard = StartCoroutine(BlinkNarySequence(2, false));
+                        starboard = UWE.CoroutineHost.StartCoroutine(BlinkNarySequence(2, false));
                     }
                     break;
             }
@@ -189,7 +189,7 @@ namespace VehicleFramework
                     starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
                 }
             }
-            StartCoroutine(ControlLights());
+            UWE.CoroutineHost.StartCoroutine(ControlLights());
         }
 
         public enum LightClass

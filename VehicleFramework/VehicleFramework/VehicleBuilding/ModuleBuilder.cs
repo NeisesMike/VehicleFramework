@@ -53,7 +53,7 @@ namespace VehicleFramework
 
         public void BuildAllSlots()
         {
-            StartCoroutine(BuildAllSlotsInternal());
+            UWE.CoroutineHost.StartCoroutine(BuildAllSlotsInternal());
         }
         public IEnumerator BuildAllSlotsInternal()
         {
@@ -119,7 +119,7 @@ namespace VehicleFramework
         }
         public void grabComponents()
         {
-            StartCoroutine(BuildGenericModulesASAP());
+            UWE.CoroutineHost.StartCoroutine(BuildGenericModulesASAP());
         }
         private IEnumerator BuildGenericModulesASAP()
         {
