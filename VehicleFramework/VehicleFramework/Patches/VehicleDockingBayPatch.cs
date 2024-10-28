@@ -67,6 +67,25 @@ namespace VehicleFramework.Patches
             }
             return true;
         }
+        public static bool IsThisDockable(VehicleDockingBay bay, GameObject nearby)
+        {
+            return
+                !IsThisASubmarineWithStandingPilot(nearby)
+                && IsThisVehicleSmallEnough(bay, nearby);
+        }
+        public static bool IsThisASubmarineWithStandingPilot(GameObject nearby)
+        {
+            VehicleTypes.Submarine mv = UWE.Utils.GetComponentInHierarchy<VehicleTypes.Submarine>(nearby.gameObject);
+            if(mv == null)
+            {
+                return false;
+            }    
+            if(mv.IsUnderCommand && !mv.IsPlayerPiloting())
+            {
+                return true;
+            }
+            return false;
+        }
         public static bool IsThisVehicleSmallEnough(VehicleDockingBay bay, GameObject nearby)
         {
             ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(nearby.gameObject);
@@ -148,33 +167,7 @@ namespace VehicleFramework.Patches
         // This patch controls whether to dock a ModVehicle. Only small ModVehicles are accepted.
         public static bool OnTriggerEnterPrefix(VehicleDockingBay __instance, Collider other)
         {
-            ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(other.gameObject);
-            if (mv == null)
-            {
-                return true;
-            }
-            if (!mv.CanMoonpoolDock)
-            {
-                return false;
-            }
-            string subRootName = __instance.subRoot.name.ToLower();
-            if (subRootName.Contains("base"))
-            {
-                return HandleMoonpool(mv);
-            }
-            else if (subRootName.Contains("cyclops"))
-            {
-                // When we can handle cyclops docking,
-                // not only can this line be uncommented,
-                // but this entire block can be replaced with 
-                // a call to IsThisVehicleSmallEnough
-                return HandleCyclops(mv);
-            }
-            else
-            {
-                Logger.Warn("Trying to dock in something that is neither a moonpool nor a cyclops. What is this?");
-                return true;
-            }
+            return IsThisDockable(__instance, other.gameObject);
         }
 
         [HarmonyPrefix]
@@ -213,14 +206,14 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleDockingBay.LaunchbayAreaEnter))]
         public static bool LaunchbayAreaEnterPrefix(VehicleDockingBay __instance, GameObject nearby)
         {
-            return IsThisVehicleSmallEnough(__instance, nearby);
+            return IsThisDockable(__instance, nearby);
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(VehicleDockingBay.LaunchbayAreaExit))]
         public static bool LaunchbayAreaExitPrefix(VehicleDockingBay __instance, GameObject nearby)
         {
-            return IsThisVehicleSmallEnough(__instance, nearby);
+            return IsThisDockable(__instance, nearby);
         }
 
     }
