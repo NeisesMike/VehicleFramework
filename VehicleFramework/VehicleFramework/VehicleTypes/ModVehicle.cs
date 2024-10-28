@@ -198,16 +198,6 @@ namespace VehicleFramework
             // Register our new vehicle with Vehicle Framework
             VehicleManager.EnrollVehicle(this);
             isInited = true;
-            IEnumerator WaitUntilReadyToSpeak()
-            {
-                while (!Admin.GameStateWatcher.IsWorldSettled)
-                {
-                    yield return null;
-                }
-                voice.NotifyReadyToSpeak();
-                yield break;
-            }
-            StartCoroutine(WaitUntilReadyToSpeak());
         }
         public override void Update()
         {

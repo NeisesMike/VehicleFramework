@@ -79,6 +79,16 @@ namespace VehicleFramework
 
             // register self with mainpatcher, for on-the-fly voice selection updating
             VoiceManager.voices.Add(this);
+            IEnumerator WaitUntilReadyToSpeak()
+            {
+                while (!Admin.GameStateWatcher.IsWorldSettled)
+                {
+                    yield return null;
+                }
+                NotifyReadyToSpeak();
+                yield break;
+            }
+            UWE.CoroutineHost.StartCoroutine(WaitUntilReadyToSpeak());
 
         }
         private void SetupSpeakers()
