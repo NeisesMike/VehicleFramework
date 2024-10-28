@@ -155,7 +155,7 @@ namespace VehicleFramework.Admin
             TechType cTT = utt.forCyclops;
             void WrappedOnAdded(AddActionParams param)
             {
-                if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                 {
                     if (param.isAdded)
                     {
@@ -186,7 +186,7 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnSelected(SelectableActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         select.OnSelected(param);
                         param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
@@ -217,7 +217,7 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnSelectedCharged(SelectableChargeableActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         selectcharge.OnSelected(param);
                         param.vehicle.energyInterface.ConsumeEnergy(selectcharge.EnergyCost);
@@ -262,7 +262,7 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnToggle(ToggleActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         if (param.active)
                         {
@@ -305,11 +305,12 @@ namespace VehicleFramework.Admin
                 TechType sTT = utt.forSeamoth;
                 TechType eTT = utt.forExosuit;
                 TechType cTT = utt.forCyclops;
+
                 void WrappedOnArmDown(ArmActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
-                        if(arm.ArmCooldowns.coolOnDown)
+                        if (arm.ArmCooldowns.coolOnDown)
                         {
                             param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
                             param.vehicle.quickSlotCooldown[param.slotID] = arm.ArmCooldowns.downCooldown;
@@ -324,7 +325,7 @@ namespace VehicleFramework.Admin
                 OnArmDownActions.Add(WrappedOnArmDown);
                 void WrappedOnArmHeld(ArmActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         if (arm.EnergyCosts.spendOnHeld)
                         {
@@ -336,7 +337,7 @@ namespace VehicleFramework.Admin
                 OnArmHeldActions.Add(WrappedOnArmHeld);
                 void WrappedOnArmUp(ArmActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         if (arm.ArmCooldowns.coolOnUp)
                         {
@@ -353,7 +354,7 @@ namespace VehicleFramework.Admin
                 OnArmUpActions.Add(WrappedOnArmUp);
                 void WrappedOnArmAlt(ArmActionParams param)
                 {
-                    if (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
                     {
                         if (arm.ArmCooldowns.coolOnUp)
                         {

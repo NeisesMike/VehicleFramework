@@ -158,6 +158,14 @@ namespace VehicleFramework.VehicleComponents
         }
         public void DoArmDown(bool isLeft)
         {
+            if(isLeft && leftArm == null)
+            {
+                return;
+            }
+            if(!isLeft && rightArm == null)
+            {
+                return;
+            }
             ArmActionParams param = GetArmActionParams(isLeft);
             if (GameInput.GetButtonDown(GameInput.Button.AltTool))
             {
@@ -170,11 +178,27 @@ namespace VehicleFramework.VehicleComponents
         }
         public void DoArmUp(bool isLeft)
         {
+            if (isLeft && leftArm == null)
+            {
+                return;
+            }
+            if (!isLeft && rightArm == null)
+            {
+                return;
+            }
             ArmActionParams param = GetArmActionParams(isLeft);
             UpgradeRegistrar.OnArmUpActions.ForEach(x => x(param));
         }
         public void DoArmHeld(bool isLeft)
         {
+            if (isLeft && leftArm == null)
+            {
+                return;
+            }
+            if (!isLeft && rightArm == null)
+            {
+                return;
+            }
             ArmActionParams param = GetArmActionParams(isLeft);
             UpgradeRegistrar.OnArmHeldActions.ForEach(x => x(param));
         }

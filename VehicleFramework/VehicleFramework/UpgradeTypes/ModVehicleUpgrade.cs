@@ -48,6 +48,10 @@ namespace VehicleFramework.UpgradeTypes
         }
         public bool HasTechType(TechType tt)
         {
+            if(tt == TechType.None)
+            {
+                return false;
+            }
             return TechTypes.forModVehicle == tt
                 || TechTypes.forSeamoth == tt
                 || TechTypes.forExosuit == tt
