@@ -76,7 +76,7 @@ namespace VehicleFramework.Patches
 	}
 
 	[HarmonyPatch(typeof(ConstructorInput))]
-	public static class ConstructorInputPatcher
+	public static class ConstructorInputFabricatorPatcher
 	{
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(ConstructorInput.OnHandClick))]

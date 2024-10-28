@@ -146,6 +146,7 @@
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\ConstructorInputPatcher.cs" />
     <Compile Include="Patches\ExosuitPatcher.cs" />
     <Compile Include="Patches\ArmsControllerPatcher.cs" />
     <Compile Include="Patches\BedPatcher.cs" />
