@@ -170,9 +170,9 @@ namespace VehicleFramework
                 gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
             }
 
-            upgradeOnAddedActions.Add(storageModuleAction);
-            upgradeOnAddedActions.Add(armorPlatingModuleAction);
-            upgradeOnAddedActions.Add(powerUpgradeModuleAction);
+            upgradeOnAddedActions.Add(StorageModuleAction);
+            upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
+            upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
 
             if (BoundingBoxCollider == null && BoundingBox != null)
             {
@@ -746,14 +746,14 @@ namespace VehicleFramework
         #endregion
 
         #region methods
-        public void storageModuleAction(int slotID, TechType techType, bool added)
+        public void StorageModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehicleStorageModule)
             {
                 SetStorageModule(slotID, added);
             }
         }
-        public void armorPlatingModuleAction(int slotID, TechType techType, bool added)
+        public void ArmorPlatingModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehicleArmorPlating)
             {
@@ -761,7 +761,7 @@ namespace VehicleFramework
                 GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
             }
         }
-        public void powerUpgradeModuleAction(int slotID, TechType techType, bool added)
+        public void PowerUpgradeModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehiclePowerUpgradeModule)
             {
