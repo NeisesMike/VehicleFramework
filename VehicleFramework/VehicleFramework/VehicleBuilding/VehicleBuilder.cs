@@ -334,6 +334,7 @@ namespace VehicleFramework
                 energyMixin.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
                 energyMixin.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
                 energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
+                energyMixin.controlledObjects = new GameObject[] { };
                 energyMixins.Add(energyMixin);
             }
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
