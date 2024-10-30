@@ -708,7 +708,7 @@ namespace VehicleFramework
         }
         #endregion
 
-        #region member_variables
+        #region member_fields
         public FMOD_CustomEmitter lightsOnSound = null;
         public FMOD_CustomEmitter lightsOffSound = null;
         public List<GameObject> lights = new List<GameObject>();
@@ -743,6 +743,7 @@ namespace VehicleFramework
         protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         public bool isScuttled = false;
+        public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
         #endregion
 
         #region methods
@@ -768,7 +769,6 @@ namespace VehicleFramework
                 _ = added ? numEfficiencyModules++ : numEfficiencyModules--;
             }
         }
-        public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
         private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
         {
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
