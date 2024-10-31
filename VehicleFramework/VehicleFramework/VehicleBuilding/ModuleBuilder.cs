@@ -19,8 +19,9 @@ namespace VehicleFramework
         public static bool haveWeCalledBuildAllSlots = false;
         public static bool slotExtenderIsPatched = false;
         public static bool slotExtenderHasGreenLight = false;
-        public static readonly string LeftArmSlotName = "VehicleArmLeft";
-        public static readonly string RightArmSlotName = "VehicleArmRight";
+        internal const string ModVehicleModulePrefix = "VehicleModule";
+        internal const string LeftArmSlotName = "VehicleArmLeft";
+        internal const string RightArmSlotName = "VehicleArmRight";
 
         public void Awake()
         {

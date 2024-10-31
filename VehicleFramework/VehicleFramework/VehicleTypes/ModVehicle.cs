@@ -732,6 +732,16 @@ namespace VehicleFramework
         public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
         #endregion
 
+        #region internal_fields
+        internal List<string> VehicleModuleSlots => GenerateModuleSlots(NumModules).ToList();
+        internal List<string> VehicleArmSlots => new List<string> { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
+        internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new Dictionary<EquipmentType, List<string>>
+                {
+                    { VehicleBuilder.ModuleType, VehicleModuleSlots },
+                    { VehicleBuilder.ArmType, VehicleArmSlots }
+                };
+        #endregion
+
         #region methods
         public void StorageModuleAction(int slotID, TechType techType, bool added)
         {
@@ -1097,6 +1107,16 @@ namespace VehicleFramework
         #endregion
 
         #region static_methods
+        private static string[] GenerateModuleSlots(int modules)
+        {
+            string[] retIDs;
+            retIDs = new string[modules];
+            for (int i = 0; i < modules; i++)
+            {
+                retIDs[i] = ModuleBuilder.ModVehicleModulePrefix + i.ToString();
+            }
+            return retIDs;
+        }
         private static string[] GenerateSlotIDs(int modules, bool arms)
         {
             string[] retIDs;
@@ -1104,7 +1124,7 @@ namespace VehicleFramework
             retIDs = new string[numUpgradesTotal];
             for (int i = 0; i < modules; i++)
             {
-                retIDs[i] = "VehicleModule" + i.ToString();
+                retIDs[i] = ModuleBuilder.ModVehicleModulePrefix + i.ToString();
             }
             if (arms || MainPatcher.VFConfig.forceArmsCompat)
             {
