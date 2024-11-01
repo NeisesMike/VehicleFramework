@@ -320,7 +320,8 @@ namespace VehicleFramework
                                 foreach (var techtype in thisStorage.Item2)
                                 {
                                     TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                    bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
+                                    System.String techTypeString = techtype.Item1.Replace("Undiscovered", ""); // fix for yet-"undiscovered" creature eggs
+                                    bool resulty = TechTypeExtensions.FromString(techTypeString, out TechType thisTT, true);
                                     if(!resulty)
                                     {
                                         continue;
