@@ -71,6 +71,67 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(Exosuit))]
     public class ExosuitPatcher
     {
+        public static void DoSlotDown(Exosuit exo, int slotID, bool isJank)
+        {
+            if (!exo.playerFullyEntered || exo.ignoreInput)
+            {
+                return;
+            }
+            if (exo.GetQuickSlotCooldown(slotID) != 1f)
+            {
+                // cooldown isn't finished!
+                return;
+            }
+            int slotIDToTest = isJank ? slotID - 2 : slotID;
+            if (!Player.main.GetQuickSlotKeyDown(slotIDToTest) && !Player.main.GetLeftHandDown())
+            {
+                // we didn't actually hit the slot button!
+                // (or hit the left mouse button!)
+                // this prevents activation on SlotNext and SlotPrev
+                return;
+            }
+            QuickSlotType quickSlotType = exo.GetQuickSlotType(slotID, out TechType techType);
+            if (quickSlotType == QuickSlotType.Selectable)
+            {
+                if (exo.ConsumeEnergy(techType))
+                {
+                    exo.OnUpgradeModuleUse(techType, slotID);
+                }
+            }
+            else if (quickSlotType == QuickSlotType.SelectableChargeable)
+            {
+                exo.quickSlotCharge[slotID] = 0f;
+            }
+        }
+        public static void DoSlotHeld(Exosuit exo, int slotID)
+        {
+            if (!exo.playerFullyEntered || exo.ignoreInput)
+            {
+                return;
+            }
+            QuickSlotType quickSlotType = exo.GetQuickSlotType(slotID, out TechType techType);
+            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            {
+                exo.ChargeModule(techType, slotID);
+            }
+        }
+        public static void DoSlotUp(Exosuit exo, int slotID)
+        {
+            if (!exo.playerFullyEntered || exo.ignoreInput)
+            {
+                return;
+            }
+            QuickSlotType quickSlotType = exo.GetQuickSlotType(slotID, out TechType techType);
+            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            {
+                if (exo.ConsumeEnergy(techType))
+                {
+                    exo.OnUpgradeModuleUse(techType, slotID);
+                }
+                exo.quickSlotCharge[slotID] = 0f;
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Exosuit.GetArmPrefab))]
         public static void ExosuitGetArmPrefabPostfix(Exosuit __instance, TechType techType, ref GameObject __result)
@@ -116,46 +177,57 @@ namespace VehicleFramework.Patches
                 __instance.MarkArmsDirty();
             }
         }
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Exosuit.SlotKeyDown))]
         public static void ExosuitSlotKeyDownPostfix(Exosuit __instance, int slotID)
         {
-            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
-            if (quickSlotType == QuickSlotType.Selectable)
-            {
-                if (__instance.ConsumeEnergy(techType))
-                {
-                    __instance.OnUpgradeModuleUse(techType, slotID);
-                }
-            }
-            else if (quickSlotType == QuickSlotType.SelectableChargeable)
-            {
-                __instance.quickSlotCharge[slotID] = 0f;
-            }
+            DoSlotDown(__instance, slotID, true);
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Exosuit.SlotKeyHeld))]
         public static void ExosuitSlotKeyHeldPostfix(Exosuit __instance, int slotID)
         {
-            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
-            if (quickSlotType == QuickSlotType.SelectableChargeable)
-            {
-                __instance.ChargeModule(techType, slotID);
-            }
+            DoSlotHeld(__instance, slotID);
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Exosuit.SlotKeyUp))]
         public static void ExosuitSlotKeyUpPostfix(Exosuit __instance, int slotID)
         {
-            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
-            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            DoSlotUp(__instance, slotID);
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Exosuit.SlotLeftDown))]
+        public static void ExosuitSlotLeftDownPostfix(Exosuit __instance)
+        {
+            if (!AvatarInputHandler.main.IsEnabled())
             {
-                if (__instance.ConsumeEnergy(techType))
-                {
-                    __instance.OnUpgradeModuleUse(techType, slotID);
-                    __instance.quickSlotCharge[slotID] = 0f;
-                }
+                return;
             }
+            int slotID = __instance.activeSlot;
+            DoSlotDown(__instance, slotID, false);
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Exosuit.SlotLeftHeld))]
+        public static void ExosuitSlotLeftHeldPostfix(Exosuit __instance)
+        {
+            if (!AvatarInputHandler.main.IsEnabled())
+            {
+                return;
+            }
+            int slotID = __instance.activeSlot;
+            DoSlotHeld(__instance, slotID);
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Exosuit.SlotLeftUp))]
+        public static void ExosuitSlotLeftUpPostfix(Exosuit __instance)
+        {
+            if (!AvatarInputHandler.main.IsEnabled())
+            {
+                return;
+            }
+            int slotID = __instance.activeSlot;
+            DoSlotUp(__instance, slotID);
         }
     }
 }
