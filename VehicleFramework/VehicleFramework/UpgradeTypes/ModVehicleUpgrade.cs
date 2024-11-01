@@ -11,6 +11,21 @@ namespace VehicleFramework.UpgradeTypes
     public abstract class ModVehicleUpgrade
     {
         public UpgradeTechTypes TechTypes { get; internal set; }
+        private TechType _unlockTechType = TechType.Fragment;
+        internal TechType UnlockTechType
+        {
+            get
+            {
+                return _unlockTechType;
+            }
+            set
+            {
+                if(_unlockTechType == TechType.Fragment)
+                {
+                    _unlockTechType = value;
+                }
+            }
+        }
         public abstract string ClassId { get; }
         public abstract string DisplayName { get; }
         public abstract string Description { get; }

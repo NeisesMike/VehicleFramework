@@ -118,12 +118,16 @@ namespace VehicleFramework.Admin
                     .SetEquipment(VehicleBuilder.ModuleType)
                     .WithQuickSlotType(upgrade.QuickSlotType);
             }
-            if (upgrade.UnlockedSprite != null && !upgrade.UnlockAtStart)
+            if (!upgrade.UnlockAtStart)
             {
-                var scanningGadget = module_CustomPrefab.SetUnlock(upgrade.UnlockWith);
-                scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+                var scanningGadget = module_CustomPrefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
+                if (upgrade.UnlockedSprite != null)
+                {
+                    scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+                }
             }
             module_CustomPrefab.Register();
+            upgrade.UnlockTechType = module_info.TechType;
             return module_info.TechType;
         }
         private static void RegisterUpgradeMethods(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaRegistered)
