@@ -16,7 +16,9 @@ namespace VehicleFramework.Assets
 {
     public struct FragmentData
     {
-        public GameObject fragment;
+        // you should set either fragment or fragments, but not both.
+        public GameObject fragment; // if you just have one fragment object
+        public List<GameObject> fragments; // if you want to supply multiple fragment objects
         public TechType toUnlock;
         public int fragmentsToScan;
         public float scanTime;
@@ -30,17 +32,17 @@ namespace VehicleFramework.Assets
     public class FragmentManager : MonoBehaviour
     {
         private static readonly List<PDAScanner.EntryData> PDAScannerData = new List<PDAScanner.EntryData>();
-        internal static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, TechType toUnlock, int numFragmentsToScan, float scanTime, string encyKey="IAmAnUnusedEncyclopediaKey")
+        internal static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, FragmentData frag)
         {
             PDAScanner.EntryData entryData = new PDAScanner.EntryData()
             {
                 key = fragmentTT,
                 locked = true,
-                totalFragments = numFragmentsToScan,
+                totalFragments = frag.fragmentsToScan,
                 destroyAfterScan = true,
-                encyclopedia = encyKey,
-                blueprint = toUnlock,
-                scanTime = scanTime,
+                encyclopedia = frag.encyKey,
+                blueprint = frag.toUnlock,
+                scanTime = frag.scanTime,
                 isFragment = true
             };
             return entryData;
@@ -52,57 +54,124 @@ namespace VehicleFramework.Assets
         /// <returns>The TechType of the new fragment.</returns>
         public static TechType RegisterFragment(FragmentData frag)
         {
-            if (frag.fragment == null)
+            if(frag.fragment == null && (frag.fragments == null || frag.fragments.Count() < 1))
             {
-                Logger.Error("RegisterFragment error: fragment was null");
+                Logger.Error("RegisterFragment error: no fragment objects were supplied");
                 return 0;
             }
-            TechType fragmentTT = RegisterFragmentGeneric(frag.fragment, frag.classID, frag.displayName, frag.description, frag.spawnLocations, frag.spawnRotations);
-            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, frag.toUnlock, frag.fragmentsToScan, frag.scanTime, frag.encyKey));
-            return fragmentTT;
-        }
-        internal static TechType RegisterFragmentGeneric(GameObject fragment, string classID, string displayName, string description, List<Vector3> spawnLocations, List<Vector3> spawnRotations = null)
-        {
-            if(spawnLocations != null && spawnRotations != null && spawnLocations.Count() != spawnRotations.Count())
+            if(frag.fragment != null && frag.fragments != null && frag.fragments.Count() > 0)
             {
-                Logger.Error("For classID: " + classID + ": Tried to register fragment with unequal number of spawn locations and rotations. Ensure there is one rotation for every location, or else don't specify any rotations.");
+                Logger.Warn("RegisterFragment warning: fragment and fragments were both supplied. Fragment will be ignored.");
+            }
+            if(frag.spawnLocations == null || frag.spawnLocations.Count < 1)
+            {
+                Logger.Error("For classID: " + frag.classID + ": Tried to register fragment without any spawn locations!");
+            }
+            if (frag.spawnLocations != null && frag.spawnRotations != null && frag.spawnLocations.Count() != frag.spawnRotations.Count())
+            {
+                Logger.Error("For classID: " + frag.classID + ": Tried to register fragment with unequal number of spawn locations and rotations. Ensure there is one rotation for every location, or else don't specify any rotations.");
                 return TechType.None;
             }
-            PrefabInfo fragmentInfo = PrefabInfo.WithTechType(classID, displayName, description);
-            CustomPrefab armFragment = new CustomPrefab(fragmentInfo);
-            fragment.AddComponent<BoxCollider>();
-            fragment.AddComponent<PrefabIdentifier>().ClassId = classID;
-            fragment.AddComponent<FragmentManager>();
-            fragment.AddComponent<LargeWorldEntity>();
-            fragment.AddComponent<SkyApplier>().enabled = true;
-            SetupScannable(fragment, fragmentInfo.TechType);
-            armFragment.SetGameObject(() => fragment);
-            List<BiomeData> useBiomes = new List<BiomeData>();
-            if (spawnLocations == null)
+            TechType fragmentTT;
+            if(frag.fragment != null && (frag.fragments == null || frag.fragments.Count() < 1))
             {
-                useBiomes = new List<BiomeData>
-                {
-                    new BiomeData { biome = BiomeType.SafeShallows_Grass, count = 4, probability = 0.01f },
-                    new BiomeData { biome = BiomeType.SafeShallows_CaveFloor, count = 1, probability = 0.02f }
-                };
-                armFragment.SetSpawns(useBiomes.ToArray()); // this creates a harmless Nautilus error
-            }
-            else if(spawnRotations == null)
-            {
-                armFragment.SetSpawns(spawnLocations.Select(x => new SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
+                CustomPrefab customPrefab = RegisterFragmentGenericSingle(frag, frag.fragment, true, out fragmentTT);
+                customPrefab.Register();
+                Logger.Log("Registered fragment: " + frag.classID);
             }
             else
             {
-                List<SpawnLocation> spawns = new List<SpawnLocation>();
-                for(int i=0; i<spawnLocations.Count(); i++)
-                {
-                    spawns.Add(new SpawnLocation(spawnLocations[i], spawnRotations[i]));
-                }
-                armFragment.SetSpawns(spawns.ToArray()); // this creates a harmless Nautilus error
+                fragmentTT = RegisterFragmentGeneric(frag);
+                Logger.Log("Registered fragment: " + frag.classID + " with " + (frag.fragments.Count() + 1).ToString() + " variations.");
             }
-            armFragment.Register();
-            Logger.Log("Registered fragment: " + classID);
-            return fragmentInfo.TechType;
+            PDAScannerData.Add(MakeGenericEntryData(fragmentTT, frag));
+            return fragmentTT;
+        }
+        internal static TechType RegisterFragmentGeneric(FragmentData frag)
+        {
+            GameObject head = frag.fragments.First();
+            List<GameObject> tail = frag.fragments;
+            tail.Remove(head);
+            TechType fragmentType;
+            List<CustomPrefab> customPrefabs = new List<CustomPrefab>();
+            customPrefabs.Add(RegisterFragmentGenericSingle(frag, head, false, out fragmentType));
+            int numberFragments = 1;
+            foreach (GameObject fragmentObject in tail)
+            {
+                Admin.Utils.ApplyMarmoset(fragmentObject);
+                PrefabInfo fragmentInfo = PrefabInfo.WithTechType(frag.classID + numberFragments.ToString(), frag.displayName, frag.description);
+                numberFragments++;
+                fragmentInfo.TechType = fragmentType;
+                CustomPrefab customFragmentPrefab = new CustomPrefab(fragmentInfo);
+                fragmentObject.EnsureComponent<BoxCollider>();
+                fragmentObject.EnsureComponent<PrefabIdentifier>().ClassId = frag.classID;
+                fragmentObject.EnsureComponent<FragmentManager>();
+                fragmentObject.EnsureComponent<LargeWorldEntity>();
+                fragmentObject.EnsureComponent<SkyApplier>().enabled = true;
+                SetupScannable(fragmentObject, fragmentInfo.TechType);
+                customFragmentPrefab.SetGameObject(() => fragmentObject);
+                customPrefabs.Add(customFragmentPrefab);
+            }
+            int numberPrefabsRegistered = 0;
+            foreach (CustomPrefab customPrefab in customPrefabs)
+            {
+                List<Vector3> spawnLocationsToUse = new List<Vector3>();
+                List<int> indexes = new List<int>();
+                int iterator = numberPrefabsRegistered;
+                while(iterator < frag.spawnLocations.Count())
+                {
+                    spawnLocationsToUse.Add(frag.spawnLocations[iterator]);
+                    indexes.Add(iterator);
+                    iterator += customPrefabs.Count();
+                }
+                if (frag.spawnRotations == null)
+                {
+                    customPrefab.SetSpawns(spawnLocationsToUse.Select(x => new SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
+                }
+                else
+                {
+                    List<SpawnLocation> spawns = new List<SpawnLocation>();
+                    for (int i = 0; i < spawnLocationsToUse.Count(); i++)
+                    {
+                        spawns.Add(new SpawnLocation(spawnLocationsToUse[i], frag.spawnRotations[indexes[i]]));
+                    }
+                    customPrefab.SetSpawns(spawns.ToArray()); // this creates a harmless Nautilus error
+                }
+                customPrefab.Register();
+                numberPrefabsRegistered++;
+            }
+            return fragmentType;
+        }
+        internal static CustomPrefab RegisterFragmentGenericSingle(FragmentData frag, GameObject fragmentObject, bool doSpawnLocations, out TechType result)
+        {
+            Admin.Utils.ApplyMarmoset(fragmentObject);
+            PrefabInfo fragmentInfo = PrefabInfo.WithTechType(frag.classID, frag.displayName, frag.description);
+            CustomPrefab customFragmentPrefab = new CustomPrefab(fragmentInfo);
+            fragmentObject.EnsureComponent<BoxCollider>();
+            fragmentObject.EnsureComponent<PrefabIdentifier>().ClassId = frag.classID;
+            fragmentObject.EnsureComponent<FragmentManager>();
+            fragmentObject.EnsureComponent<LargeWorldEntity>();
+            fragmentObject.EnsureComponent<SkyApplier>().enabled = true;
+            SetupScannable(fragmentObject, fragmentInfo.TechType);
+            customFragmentPrefab.SetGameObject(() => fragmentObject);
+            if (doSpawnLocations)
+            {
+                if (frag.spawnRotations == null)
+                {
+                    customFragmentPrefab.SetSpawns(frag.spawnLocations.Select(x => new SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
+                }
+                else
+                {
+                    List<SpawnLocation> spawns = new List<SpawnLocation>();
+                    for (int i = 0; i < frag.spawnLocations.Count(); i++)
+                    {
+                        spawns.Add(new SpawnLocation(frag.spawnLocations[i], frag.spawnRotations[i]));
+                    }
+                    customFragmentPrefab.SetSpawns(spawns.ToArray()); // this creates a harmless Nautilus error
+                }
+            }
+            result = fragmentInfo.TechType;
+            return customFragmentPrefab;
         }
         internal static void AddScannerDataEntries()
         {
@@ -132,7 +201,7 @@ namespace VehicleFramework.Assets
 
         internal static void SetupScannable(GameObject obj, TechType tt)
         {
-            var rt = obj.AddComponent<ResourceTracker>();
+            var rt = obj.EnsureComponent<ResourceTracker>();
             rt.techType = tt;
             rt.prefabIdentifier = obj.GetComponent<PrefabIdentifier>();
             rt.prefabIdentifier.Id = "";
