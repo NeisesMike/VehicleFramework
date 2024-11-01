@@ -167,7 +167,7 @@ namespace VehicleFramework.VehicleComponents
                 return;
             }
             ArmActionParams param = GetArmActionParams(isLeft);
-            if (GameInput.GetButtonDown(GameInput.Button.AltTool))
+            if (GameInput.GetButtonHeld(GameInput.Button.AltTool))
             {
                 UpgradeRegistrar.OnArmAltActions.ForEach(x => x(param));
             }
