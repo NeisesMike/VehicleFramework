@@ -116,5 +116,46 @@ namespace VehicleFramework.Patches
                 __instance.MarkArmsDirty();
             }
         }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Exosuit.SlotKeyDown))]
+        public static void ExosuitSlotKeyDownPostfix(Exosuit __instance, int slotID)
+        {
+            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
+            if (quickSlotType == QuickSlotType.Selectable)
+            {
+                if (__instance.ConsumeEnergy(techType))
+                {
+                    __instance.OnUpgradeModuleUse(techType, slotID);
+                }
+            }
+            else if (quickSlotType == QuickSlotType.SelectableChargeable)
+            {
+                __instance.quickSlotCharge[slotID] = 0f;
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Exosuit.SlotKeyHeld))]
+        public static void ExosuitSlotKeyHeldPostfix(Exosuit __instance, int slotID)
+        {
+            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
+            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            {
+                __instance.ChargeModule(techType, slotID);
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Exosuit.SlotKeyUp))]
+        public static void ExosuitSlotKeyUpPostfix(Exosuit __instance, int slotID)
+        {
+            QuickSlotType quickSlotType = __instance.GetQuickSlotType(slotID, out TechType techType);
+            if (quickSlotType == QuickSlotType.SelectableChargeable)
+            {
+                if (__instance.ConsumeEnergy(techType))
+                {
+                    __instance.OnUpgradeModuleUse(techType, slotID);
+                    __instance.quickSlotCharge[slotID] = 0f;
+                }
+            }
+        }
     }
 }
