@@ -99,7 +99,6 @@ namespace VehicleFramework
                 if (Player.main.GetVehicle() != null)
                 {
                     __instance.playerController.SetEnabled(true);
-                    __instance.mode = Player.Mode.Normal;
                     return false;
                 }
                 return true;

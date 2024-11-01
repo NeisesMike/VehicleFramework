@@ -6,6 +6,24 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(Bench))]
     public class BenchPatcher
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Bench.ExitSittingMode))]
+        public static bool BenchExitSittingModePrefix(Player player, bool skipCinematics)
+        {
+            if(VehicleTypes.Drone.mountedDrone != null)
+            {
+                if (skipCinematics || player.isUnderwater.value)
+                {
+                    Player.main.ExitLockedMode();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Bench.EnterSittingMode))]
         public static void BenchEnterSittingModePostfix()

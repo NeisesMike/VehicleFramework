@@ -123,8 +123,10 @@ namespace VehicleFramework.VehicleTypes
             GameObject.DestroyImmediate(temporaryParent);
             MainCameraControl.main.LookAt(pairedStation.transform.position);
         }
+        internal Player.Mode previousMode = Player.Mode.Normal;
         public virtual void BeginControlling()
         {
+            previousMode = Player.main.mode;
             guihand = true;
             lastSubRoot = Player.main.GetCurrentSub();
             lastVehicle = Player.main.GetVehicle();
@@ -166,6 +168,7 @@ namespace VehicleFramework.VehicleTypes
             pairedStation = null;
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
             GetComponent<ModVehicleEngine>().KillMomentum();
+            Player.main.mode = previousMode;
         }
         public void SwapToDroneCamera()
         {
