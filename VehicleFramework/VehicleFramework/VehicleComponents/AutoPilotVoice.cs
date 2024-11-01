@@ -98,23 +98,23 @@ namespace VehicleFramework
             {
                 foreach (var ps in (mv as Submarine).PilotSeats)
                 {
-                    speakers.Add(ps.Seat.EnsureComponent<AudioSource>());
+                    speakers.Add(ps.Seat.EnsureComponent<AudioSource>().Register());
                 }
                 foreach (var ps in (mv as Submarine).Hatches)
                 {
-                    speakers.Add(ps.Hatch.EnsureComponent<AudioSource>());
+                    speakers.Add(ps.Hatch.EnsureComponent<AudioSource>().Register());
                 }
                 foreach (var ps in (mv as Submarine).TetherSources)
                 {
-                    speakers.Add(ps.EnsureComponent<AudioSource>());
+                    speakers.Add(ps.EnsureComponent<AudioSource>().Register());
                 }
             }
             if (mv as Submersible != null)
             {
-                speakers.Add((mv as Submersible).PilotSeat.Seat.EnsureComponent<AudioSource>());
+                speakers.Add((mv as Submersible).PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
                 foreach (var ps in (mv as Submersible).Hatches)
                 {
-                    speakers.Add(ps.Hatch.EnsureComponent<AudioSource>());
+                    speakers.Add(ps.Hatch.EnsureComponent<AudioSource>().Register());
                 }
             }
             foreach (var sp in speakers)
@@ -185,7 +185,6 @@ namespace VehicleFramework
         {
             if (speechQueue.TryDequeue(out AudioClip clip))
             {
-                //speakers.ForEach(x => x.PlayOneShot(clip, MainPatcher.VFConfig.aiVoiceVolume / 100f));
                 foreach(var speaker in speakers)
                 {
                     speaker.volume = balance * MainPatcher.VFConfig.aiVoiceVolume / 100f;

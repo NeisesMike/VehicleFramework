@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using System.Reflection;
 using System.IO;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Patches;
 
 namespace VehicleFramework.Engines
 {
@@ -207,15 +208,16 @@ namespace VehicleFramework.Engines
             rb.centerOfMass = Vector3.zero;
             rb.angularDrag = 5f;
 
-            EngineSource1 = mv.gameObject.AddComponent<AudioSource>();
+            EngineSource1 = mv.gameObject.AddComponent<AudioSource>().Register();
             EngineSource1.loop = true;
             EngineSource1.playOnAwake = false;
             EngineSource1.priority = 0;
 
-            EngineSource2 = mv.gameObject.AddComponent<AudioSource>();
+            EngineSource2 = mv.gameObject.AddComponent<AudioSource>().Register();
             EngineSource2.loop = false;
             EngineSource2.playOnAwake = false;
             EngineSource2.priority = 0;
+
             sounds = EngineSoundsManager.GetDefaultVoice(mv);
         }
         public void OnDisable()
