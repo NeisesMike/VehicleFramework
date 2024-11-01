@@ -95,6 +95,10 @@ namespace VehicleFramework.Admin
                 Debug.Log($"Property {i}: {propertyName}, Type: {shader.GetPropertyType(i)}");
             }
         }
+        public static void ApplyMarmoset(GameObject go)
+        {
+            go.GetComponentsInChildren<MeshRenderer>(true).ForEach(x => x.materials.ForEach(y => y.shader = Shader.Find("MarmosetUBER")));
+        }
         public static void ApplyInteriorLighting()
         {
             //ListShadersInUse();

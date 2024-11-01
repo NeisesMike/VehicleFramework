@@ -37,7 +37,7 @@ namespace VehicleFramework
             CustomPrefab prefab = new CustomPrefab(Info);
             ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Wall | ConstructableFlags.Submarine;
             droneStation.AddComponent<DroneStation>();
-            droneStation.GetComponentsInChildren<MeshRenderer>(true).ForEach(x => x.materials.ForEach(y => y.shader = Shader.Find("MarmosetUBER")));
+            Admin.Utils.ApplyMarmoset(droneStation);
             PrefabUtils.AddBasicComponents(droneStation, classID, Info.TechType, LargeWorldEntity.CellLevel.Medium);
             PrefabUtils.AddConstructable(droneStation, Info.TechType, constructableFlags, droneStation.transform.Find("model").gameObject);
             prefab.SetGameObject(droneStation);
