@@ -11,20 +11,21 @@ namespace VehicleFramework.Patches
         private static List<AudioSource> audioSources = new List<AudioSource>();
         public static AudioSource Register(AudioSource source)
         {
+            audioSources.RemoveAll(item => item == null);
             audioSources.Add(source);
             return source;
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(FreezeTime.Set))]
-        public static void FreezeTimeSetPostfix(FreezeTime.Id id, float value)
+        public static void FreezeTimeSetPostfix()
         {
             if(FreezeTime.HasFreezers())
             {
-                audioSources.ForEach(x => x.Pause());
+                audioSources.ForEach(x => x?.Pause());
             }
             else
             {
-                audioSources.ForEach(x => x.UnPause());
+                audioSources.ForEach(x => x?.UnPause());
             }
         }
     }
