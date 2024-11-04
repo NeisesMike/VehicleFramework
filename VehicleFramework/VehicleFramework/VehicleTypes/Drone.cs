@@ -131,11 +131,11 @@ namespace VehicleFramework.VehicleTypes
             lastSubRoot = Player.main.GetCurrentSub();
             lastVehicle = Player.main.GetVehicle();
             Player.main.currentMountedVehicle = null;
+            SetupTemporaryParent();
+            Player.main.EnterLockedMode(temporaryParent.transform, false); // must precede SetCurrentSub, so that the player is never "Underwater" (Player.UpdateIsUnderwater)
             Player.main.SetCurrentSub(null, true);
             IsUnderCommand = true;
             Player.main.SetScubaMaskActive(false);
-            SetupTemporaryParent();
-            Player.main.EnterLockedMode(temporaryParent.transform, false);
             uGUI.main.quickSlots.SetTarget(this);
             SwapToDroneCamera();
             NotifyStatus(PlayerStatus.OnPilotBegin);
@@ -157,8 +157,9 @@ namespace VehicleFramework.VehicleTypes
         {
             base.StopPiloting();
             IsUnderCommand = false;
-            Player.main.SetCurrentSub(lastSubRoot, true);
+            Player.main.mode = previousMode;
             Player.main.currentMountedVehicle = lastVehicle;
+            Player.main.SetCurrentSub(lastSubRoot, true);
             lastVehicle = null;
             lastSubRoot = null;
             guihand = false;
@@ -168,7 +169,6 @@ namespace VehicleFramework.VehicleTypes
             pairedStation = null;
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
             GetComponent<ModVehicleEngine>().KillMomentum();
-            Player.main.mode = previousMode;
         }
         public void SwapToDroneCamera()
         {
