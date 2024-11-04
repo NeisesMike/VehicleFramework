@@ -25,39 +25,20 @@ namespace VehicleFramework
 			{
 				root.SetActive(mvflag);
 			}
-			if(droneHUD.activeSelf != droneflag)
-            {
+			if (droneHUD.activeSelf != droneflag)
+			{
 				droneHUD.SetActive(droneflag);
-            }
+			}
 			if (mvflag)
 			{
-                mv.GetHUDValues(out float num, out float num2);
-                float temperature = mv.GetTemperature();
-				int num3 = Mathf.CeilToInt(num * 100f);
-				if (lastHealth != num3)
-				{
-					lastHealth = num3;
-					textHealth.text = IntStringCache.GetStringForInt(lastHealth);
-				}
-				int num4 = Mathf.CeilToInt(num2 * 100f);
-				if (lastPower != num4)
-				{
-					lastPower = num4;
-					textPower.text = IntStringCache.GetStringForInt(lastPower);
-				}
-				temperatureSmoothValue = ((temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(temperatureSmoothValue, temperature, ref temperatureVelocity, 1f));
-				int num5 = Mathf.CeilToInt(temperatureSmoothValue);
-				if (lastTemperature != num5)
-				{
-					lastTemperature = num5;
-					textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
-					textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
-				}
+				UpdateHealth();
+				UpdatePower();
+				UpdateTemperature();
 			}
-			if(droneflag)
-            {
+			if (droneflag)
+			{
 				DroneUpdate();
-            }
+			}
 		}
 		public void DroneUpdate()
 		{
@@ -74,6 +55,38 @@ namespace VehicleFramework
 			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 		}
 
+		public void UpdateHealth()
+		{
+			Player.main.GetModVehicle().GetHUDValues(out float num, out float num2);
+			int num3 = Mathf.CeilToInt(num * 100f);
+			if (lastHealth != num3)
+			{
+				lastHealth = num3;
+				textHealth.text = IntStringCache.GetStringForInt(lastHealth);
+			}
+		}
+		public void UpdateTemperature()
+		{
+			float temperature = Player.main.GetModVehicle().GetTemperature();
+			temperatureSmoothValue = ((temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(temperatureSmoothValue, temperature, ref temperatureVelocity, 1f));
+			int num5 = Mathf.CeilToInt(temperatureSmoothValue);
+			if (lastTemperature != num5)
+			{
+				lastTemperature = num5;
+				textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
+				textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
+			}
+		}
+		public void UpdatePower()
+		{
+			Player.main.GetModVehicle().GetHUDValues(out float num, out float num2);
+			int num4 = Mathf.CeilToInt(num2 * 100f);
+			if (lastPower != num4)
+			{
+				lastPower = num4;
+				textPower.text = IntStringCache.GetStringForInt(lastPower);
+			}
+		}
 		public const float temperatureSmoothTime = 1f;
 		[AssertNotNull]
 		public GameObject root;
