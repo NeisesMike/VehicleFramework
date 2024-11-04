@@ -822,7 +822,9 @@ namespace VehicleFramework
                 Logger.Output("There is no storage expansion for slot ID: " + slotID.ToString());
                 return;
             }
-            ModularStorages[slotID].Container.SetActive(activated);
+            var modSto = ModularStorages[slotID];
+            modSto.Container.SetActive(activated);
+            modSto.Container.GetComponent<ModularStorageInput>().GetContainer().Resize(modSto.Width, modSto.Height);
         }
         public ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
         {
@@ -1043,11 +1045,28 @@ namespace VehicleFramework
                     return true;
                 }
             }
+            foreach (var container in ModularStorages?.Select(x => x.Container.GetComponent<ModularStorageInput>().GetContainer()))
+            {
+                if (container.HasRoomFor(pickup))
+                {
+                    return true;
+                }
+            }
             return false;
         }
         public bool HasInStorage(TechType techType, int count=1)
         {
             foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            {
+                if (container.Contains(techType))
+                {
+                    if (container.GetCount(techType) >= count)
+                    {
+                        return true;
+                    }
+                }
+            }
+            foreach (var container in ModularStorages?.Select(x => x.Container.GetComponent<ModularStorageInput>().GetContainer()))
             {
                 if (container.Contains(techType))
                 {
@@ -1070,6 +1089,20 @@ namespace VehicleFramework
                 return false;
             }
             foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            {
+                if (container.HasRoomFor(pickup))
+                {
+                    string arg = Language.main.Get(pickup.GetTechName());
+                    ErrorMessage.AddMessage(Language.main.GetFormat<string>("VehicleAddedToStorage", arg));
+                    uGUI_IconNotifier.main.Play(pickup.GetTechType(), uGUI_IconNotifier.AnimationType.From, null);
+                    pickup.Initialize();
+                    InventoryItem item = new InventoryItem(pickup);
+                    container.UnsafeAdd(item);
+                    pickup.PlayPickupSound();
+                    return true;
+                }
+            }
+            foreach (var container in ModularStorages?.Select(x => x.Container.GetComponent<ModularStorageInput>().GetContainer()))
             {
                 if (container.HasRoomFor(pickup))
                 {
