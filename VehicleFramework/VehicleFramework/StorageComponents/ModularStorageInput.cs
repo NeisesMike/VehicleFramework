@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class ModularStorageInput : StorageInput
+	public class ModularStorageInput : StorageInput
 	{
 		public override void OpenFromExternal()
 		{
@@ -41,6 +41,10 @@ namespace VehicleFramework
 			{
 				this.OnClosePDA(null);
 			}
+		}
+		public ItemsContainer GetContainer()
+		{
+			return mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
 		}
 	}
 }
