@@ -21,11 +21,11 @@ namespace VehicleFramework.Patches
         {
             if(FreezeTime.HasFreezers())
             {
-                audioSources.ForEach(x => x?.Pause());
+                audioSources?.ForEach(x => x?.Pause());
             }
             else
             {
-                audioSources.ForEach(x => x?.UnPause());
+                audioSources?.ForEach(x => x?.UnPause());
             }
         }
     }

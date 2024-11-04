@@ -15,7 +15,7 @@ namespace VehicleFramework.Patches
                 if (AvatarInputHandler.main.IsEnabled() && !__instance.IsPDAInUse() && __instance.grabMode == GUIHand.GrabMode.None)
                 {
                     __instance.UpdateActiveTarget();
-                    if (__instance.activeTarget.GetComponentInChildren<DroneStation>())
+                    if (__instance.activeTarget?.GetComponentInChildren<DroneStation>())
                     {
                         GUIHand.Send(__instance.activeTarget, HandTargetEventType.Hover, __instance);
                         if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
