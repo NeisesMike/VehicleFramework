@@ -34,6 +34,7 @@ namespace VehicleFramework
 				UpdateHealth();
 				UpdatePower();
 				UpdateTemperature();
+				UpdateStorage();
 			}
 			if (droneflag)
 			{
@@ -87,6 +88,12 @@ namespace VehicleFramework
 				textPower.text = IntStringCache.GetStringForInt(lastPower);
 			}
 		}
+		public void UpdateStorage()
+		{
+			Player.main.GetModVehicle().GetStorageValues(out int stored, out int capacity);
+			int ratio = (100 * stored) / capacity;
+			textStorage.text = ratio.ToString();
+		}
 		public const float temperatureSmoothTime = 1f;
 		[AssertNotNull]
 		public GameObject root;
@@ -98,6 +105,8 @@ namespace VehicleFramework
 		public TextMeshProUGUI textTemperature;
 		[AssertNotNull]
 		public TextMeshProUGUI textTemperatureSuffix;
+		[AssertNotNull]
+		public TextMeshProUGUI textStorage;
 		public int lastHealth = int.MinValue;
 		public int lastPower = int.MinValue;
 		public int lastTemperature = int.MinValue;

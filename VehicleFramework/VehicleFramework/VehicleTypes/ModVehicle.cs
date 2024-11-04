@@ -1085,6 +1085,52 @@ namespace VehicleFramework
             }
             return false;
         }
+        public void GetStorageValues(out int stored, out int capacity)
+        {
+            int retStored = 0;
+            int retCapacity = 0;
+
+            int GetModularCapacity(VehicleParts.VehicleStorage sto)
+            {
+                if (sto.Container == null || !sto.Container.activeInHierarchy || !sto.Container.activeSelf)
+                {
+                    return 0;
+                }
+                return sto.Height * sto.Width;
+            }
+            int GetModularStored(VehicleParts.VehicleStorage sto)
+            {
+                if (sto.Container == null || !sto.Container.activeInHierarchy || !sto.Container.activeSelf || sto.Container.GetComponent<SeamothStorageContainer>() == null || sto.Container.GetComponent<SeamothStorageContainer>().container == null)
+                {
+                    return 0;
+                }
+                int ret = 0;
+                var marty = (IEnumerable<InventoryItem>)sto.Container.GetComponent<ModularStorageInput>().GetContainer();
+                marty.ForEach(x => ret += x.width * x.height);
+                return ret;
+            }
+            int GetInnateStored(VehicleParts.VehicleStorage sto)
+            {
+                int ret = 0;
+                var marty = (IEnumerable<InventoryItem>)sto.Container.GetComponent<InnateStorageContainer>().container;
+                marty.ForEach(x => ret += x.width * x.height);
+                return ret;
+            }
+
+            if (InnateStorages != null)
+            {
+                InnateStorages.ForEach(x => retCapacity += (x.Height * x.Width));
+                InnateStorages.ForEach(x => retStored += GetInnateStored(x));
+            }
+            if(ModularStorages != null)
+            {
+                ModularStorages.ForEach(x => retCapacity += GetModularCapacity(x));
+                InnateStorages.ForEach(x => retStored += GetModularStored(x));
+            }
+
+            stored = retStored;
+            capacity = retCapacity;
+        }
         public void HandlePilotingAnimations()
         {
             switch (pilotingStyle)

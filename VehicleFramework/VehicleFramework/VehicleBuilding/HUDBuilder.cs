@@ -77,11 +77,30 @@ namespace VehicleFramework
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
-            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
-            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
+            var healthObject =  mvHUDElementsRoot.transform.Find("Health");
+            healthObject.localPosition = new Vector3(-56, -15, 0);
+            ret.textHealth = healthObject.GetComponent<TMPro.TextMeshProUGUI>();
+
+            var powerObject = mvHUDElementsRoot.transform.Find("Power");
+            powerObject.localPosition = new Vector3(100, 8, 0);
+            ret.textPower = powerObject.GetComponent<TMPro.TextMeshProUGUI>();
+
+            mvHUDElementsRoot.transform.Find("Temperature").localPosition = new Vector3(93, -58, 0);
             ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
 
+            var modVehicleBackground = mvHUDElementsRoot.transform.Find("Background").GetComponent<UnityEngine.UI.Image>();
+            modVehicleBackground.sprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFDroneHUDBackground.png");
+            modVehicleBackground.transform.localScale = new Vector3(1, 1.238f, 1);
+
+            GameObject exoTemp = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Exosuit/Temperature").gameObject;
+            GameObject storageCanvasObject = GameObject.Instantiate(exoTemp, mvHUDElementsRoot.transform);
+            storageCanvasObject.name = "Storage";
+            storageCanvasObject.transform.localPosition = new Vector3(125, 65, 0);
+            storageCanvasObject.transform.Find("TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>().text = "<color=#FFDC00FF>%</color>";
+            Transform storageTextObject = storageCanvasObject.transform.Find("TemperatureValue");
+            storageTextObject.name = "StorageValue";
+            ret.textStorage = storageTextObject.GetComponent<TMPro.TextMeshProUGUI>();
             // copy the CameraScannerRoom hud for now
             GameObject cameraScannerRoomObj = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/CameraScannerRoom").gameObject;
             GameObject droneHUDElementsRoot = GameObject.Instantiate(cameraScannerRoomObj, mvHUDElementsRoot.transform);
