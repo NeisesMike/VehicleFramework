@@ -14,7 +14,10 @@ namespace VehicleFramework.Patches
             {
                 if (skipCinematics || player.isUnderwater.value)
                 {
-                    Player.main.ExitLockedMode();
+                    if (player.mode == Player.Mode.LockedPiloting)
+                    {
+                        Player.main.ExitLockedMode();
+                    }
                     return true;
                 }
                 else
