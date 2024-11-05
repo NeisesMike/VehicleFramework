@@ -33,12 +33,13 @@ namespace VehicleFramework
             Other
         }
         #endregion
+
         #region abstract_members
         public abstract GameObject VehicleModel { get; } 
         public abstract GameObject CollisionModel { get; }
         #endregion
 
-        #region virtual_properties_optional
+        #region virtual_properties_static
         public virtual GameObject StorageRootObject
         {
             get
@@ -84,20 +85,6 @@ namespace VehicleFramework
         public virtual Atlas.Sprite CraftingSprite => MainPatcher.ModVehicleIcon;
         public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
         public virtual List<VehicleParts.VehicleCamera> Cameras => new List<VehicleParts.VehicleCamera>();
-        public override string[] slotIDs
-        { // You probably do not want to override this
-            get
-            {
-                if (_slotIDs == null)
-                {
-                    _slotIDs = GenerateSlotIDs(NumModules, HasArms);
-                }
-                return _slotIDs;
-            }
-        }
-        #endregion
-
-        #region virtual_properties_nonnullable_static
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => "This is a vehicle you can build at the Mobile Vehicle Bay. It can be controlled either directly or with a Drone Station.";
         public virtual Sprite EncyclopediaImage => null;
@@ -117,19 +104,7 @@ namespace VehicleFramework
         public virtual PilotingStyle pilotingStyle => PilotingStyle.Other;
         #endregion
 
-        #region virtual_properties_nonnullable_dynamic
-        public override string vehicleDefaultName
-        {
-            get
-            {
-                Language main = Language.main;
-                if (main == null)
-                {
-                    return LocalizationManager.GetString(EnglishString.Vehicle);
-                }
-                return main.Get("ModVehicle");
-            }
-        }
+        #region virtual_properties_dynamic
         public virtual bool CanLeviathanGrab { get; set; } = true;
         public virtual bool CanMoonpoolDock { get; set; } = true;
         public virtual DeathStyle OnDeathBehavior { get; set; } = DeathStyle.Sink;
@@ -137,10 +112,9 @@ namespace VehicleFramework
         public virtual Color ConstructionGhostColor { get; set; } = Color.black;
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
         public virtual bool AutoApplyShaders { get; set; } = true;
-
         #endregion
 
-        #region virtual_methods
+        #region vehicle_overrides
         public override void Awake()
         {
             energyInterface = GetComponent<EnergyInterface>();
@@ -197,24 +171,6 @@ namespace VehicleFramework
         public override void FixedUpdate()
         {
             ManagePhysics();
-        }
-        public virtual void DestroyMV()
-        {
-            pingInstance.enabled = false;
-            switch (OnDeathBehavior)
-            {
-                case DeathStyle.Explode:
-                    DeathExplodeAction();
-                    return;
-                case DeathStyle.Sink:
-                    DeathSinkAction();
-                    return;
-                case DeathStyle.Float:
-                    DeathFloatAction();
-                    return;
-                default:
-                    return;
-            }
         }
         public new virtual void OnKill()
         {
@@ -281,35 +237,6 @@ namespace VehicleFramework
             // This function locks the player in and configures several variables for that purpose
             base.EnterVehicle(player, teleport, playEnterAnimation);
         }
-        public virtual void BeginPiloting()
-        {
-            // BeginPiloting is the VF trigger to start controlling a vehicle.
-            EnterVehicle(Player.main, true);
-            uGUI.main.quickSlots.SetTarget(this);
-            NotifyStatus(PlayerStatus.OnPilotBegin);
-            if (gameObject.GetComponentInChildren<VehicleComponents.MVCameraController>() != null)
-            {
-                Logger.Output("Press " +
-                              MainPatcher.VFConfig.nextCamera +
-                              " and " +
-                              MainPatcher.VFConfig.previousCamera +
-                              " to switch cameras.\n" +
-                              "Press " +
-                              MainPatcher.VFConfig.exitCamera +
-                              " to exit cameras."
-                              , time: 2f
-                              , y: 300);
-            }
-        }
-        public virtual void StopPiloting()
-        {
-            // StopPiloting is the VF trigger to discontinue controlling a vehicle.
-            // this function
-            // called by Player.ExitLockedMode()
-            // which is triggered on button press
-            uGUI.main.quickSlots.SetTarget(null);
-            NotifyStatus(PlayerStatus.OnPilotEnd);
-        }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
@@ -341,6 +268,115 @@ namespace VehicleFramework
         {
             depth = Mathf.FloorToInt(GetComponent<CrushDamage>().GetDepth());
             crushDepth = Mathf.FloorToInt(GetComponent<CrushDamage>().crushDepth);
+        }
+        public override void SubConstructionComplete()
+        {
+            Logger.DebugLog("ModVehicle SubConstructionComplete");
+            pingInstance.enabled = true;
+            BuildBotManager.ResetGhostMaterial();
+        }
+        public override void SlotLeftDown()
+        {
+            base.SlotLeftDown();
+            GetComponent<VFArmsManager>()?.DoArmDown(true);
+        }
+        public override void SlotLeftHeld()
+        {
+            base.SlotLeftHeld();
+            GetComponent<VFArmsManager>()?.DoArmHeld(true);
+        }
+        public override void SlotLeftUp()
+        {
+            base.SlotLeftUp();
+            GetComponent<VFArmsManager>()?.DoArmUp(true);
+        }
+        public override void SlotRightDown()
+        {
+            base.SlotRightDown();
+            GetComponent<VFArmsManager>()?.DoArmDown(false);
+        }
+        public override void SlotRightHeld()
+        {
+            base.SlotRightHeld();
+            GetComponent<VFArmsManager>()?.DoArmHeld(false);
+        }
+        public override void SlotRightUp()
+        {
+            base.SlotRightUp();
+            GetComponent<VFArmsManager>()?.DoArmUp(false);
+        }
+        public override string[] slotIDs
+        { // You probably do not want to override this
+            get
+            {
+                if (_slotIDs == null)
+                {
+                    _slotIDs = GenerateSlotIDs(NumModules, HasArms);
+                }
+                return _slotIDs;
+            }
+        }
+        public override string vehicleDefaultName
+        {
+            get
+            {
+                Language main = Language.main;
+                if (main == null)
+                {
+                    return LocalizationManager.GetString(EnglishString.Vehicle);
+                }
+                return main.Get("ModVehicle");
+            }
+        }
+        #endregion
+
+        #region virtual_methods
+        public virtual void DestroyMV()
+        {
+            pingInstance.enabled = false;
+            switch (OnDeathBehavior)
+            {
+                case DeathStyle.Explode:
+                    DeathExplodeAction();
+                    return;
+                case DeathStyle.Sink:
+                    DeathSinkAction();
+                    return;
+                case DeathStyle.Float:
+                    DeathFloatAction();
+                    return;
+                default:
+                    return;
+            }
+        }
+        public virtual void BeginPiloting()
+        {
+            // BeginPiloting is the VF trigger to start controlling a vehicle.
+            EnterVehicle(Player.main, true);
+            uGUI.main.quickSlots.SetTarget(this);
+            NotifyStatus(PlayerStatus.OnPilotBegin);
+            if (gameObject.GetComponentInChildren<VehicleComponents.MVCameraController>() != null)
+            {
+                Logger.Output("Press " +
+                              MainPatcher.VFConfig.nextCamera +
+                              " and " +
+                              MainPatcher.VFConfig.previousCamera +
+                              " to switch cameras.\n" +
+                              "Press " +
+                              MainPatcher.VFConfig.exitCamera +
+                              " to exit cameras."
+                              , time: 2f
+                              , y: 300);
+            }
+        }
+        public virtual void StopPiloting()
+        {
+            // StopPiloting is the VF trigger to discontinue controlling a vehicle.
+            // this function
+            // called by Player.ExitLockedMode()
+            // which is triggered on button press
+            uGUI.main.quickSlots.SetTarget(null);
+            NotifyStatus(PlayerStatus.OnPilotEnd);
         }
         public virtual void PlayerEntry()
         {
@@ -390,12 +426,6 @@ namespace VehicleFramework
         {
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
             pingInstance.enabled = false;
-        }
-        public override void SubConstructionComplete()
-        {
-            Logger.DebugLog("ModVehicle SubConstructionComplete");
-            pingInstance.enabled = true;
-            BuildBotManager.ResetGhostMaterial();
         }
         public virtual void ForceExitLockedMode()
         {
@@ -617,39 +647,21 @@ namespace VehicleFramework
                 return false;
             }
         }
-        public override void SlotLeftDown()
-        {
-            base.SlotLeftDown();
-            GetComponent<VFArmsManager>()?.DoArmDown(true);
-        }
-        public override void SlotLeftHeld()
-        {
-            base.SlotLeftHeld();
-            GetComponent<VFArmsManager>()?.DoArmHeld(true);
-        }
-        public override void SlotLeftUp()
-        {
-            base.SlotLeftUp();
-            GetComponent<VFArmsManager>()?.DoArmUp(true);
-        }
-        public override void SlotRightDown()
-        {
-            base.SlotRightDown();
-            GetComponent<VFArmsManager>()?.DoArmDown(false);
-        }
-        public override void SlotRightHeld()
-        {
-            base.SlotRightHeld();
-            GetComponent<VFArmsManager>()?.DoArmHeld(false);
-        }
-        public override void SlotRightUp()
-        {
-            base.SlotRightUp();
-            GetComponent<VFArmsManager>()?.DoArmUp(false);
-        }
         #endregion
 
-        #region member_fields
+        #region public_fields
+        public bool IsUnderCommand
+        {// true when inside a vehicle (or piloting a drone)
+            get
+            {
+                return _IsUnderCommand;
+            }
+            protected set
+            {
+                _IsUnderCommand = value;
+                IsPlayerDry = value;
+            }
+        }
         public FMOD_CustomEmitter lightsOnSound = null;
         public FMOD_CustomEmitter lightsOffSound = null;
         public List<GameObject> lights = new List<GameObject>();
@@ -665,30 +677,21 @@ namespace VehicleFramework
         public bool isPoweredOn = true;
         public FMOD_StudioEventEmitter ambienceSound;
         public int numEfficiencyModules = 0;
-        private int numArmorModules = 0;
         public PowerManager powerMan = null;
-        private bool _IsUnderCommand = false;
-        public bool IsUnderCommand
-        {// true when inside a vehicle (or piloting a drone)
-            get
-            {
-                return _IsUnderCommand;
-            }
-            protected set
-            {
-                _IsUnderCommand = value;
-                IsPlayerDry = value;
-            }
-        }
         public bool IsPlayerDry = false;
-        protected bool IsVehicleDocked = false;
-        private string[] _slotIDs = null;
         public bool isScuttled = false;
         public bool IsUndockingAnimating = false;
         public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
         #endregion
 
         #region internal_fields
+        private bool _IsUnderCommand = false;
+        private int numArmorModules = 0;
+        protected bool IsVehicleDocked = false;
+        private string[] _slotIDs = null;
+        #endregion
+
+        #region internal_methods
         internal List<string> VehicleModuleSlots => GenerateModuleSlots(NumModules).ToList();
         internal List<string> VehicleArmSlots => new List<string> { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
         internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new Dictionary<EquipmentType, List<string>>
@@ -696,17 +699,14 @@ namespace VehicleFramework
                     { VehicleBuilder.ModuleType, VehicleModuleSlots },
                     { VehicleBuilder.ArmType, VehicleArmSlots }
                 };
-        #endregion
-
-        #region methods
-        public void StorageModuleAction(int slotID, TechType techType, bool added)
+        private void StorageModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehicleStorageModule)
             {
                 SetStorageModule(slotID, added);
             }
         }
-        public void ArmorPlatingModuleAction(int slotID, TechType techType, bool added)
+        private void ArmorPlatingModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehicleArmorPlating)
             {
@@ -714,7 +714,7 @@ namespace VehicleFramework
                 GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, (float)numArmorModules);
             }
         }
-        public void PowerUpgradeModuleAction(int slotID, TechType techType, bool added)
+        private void PowerUpgradeModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehiclePowerUpgradeModule)
             {
@@ -740,7 +740,7 @@ namespace VehicleFramework
             }
             return true;
         }
-        void HandleExtraQuickSlotInputs()
+        private void HandleExtraQuickSlotInputs()
         {
             if (Input.GetKeyDown(KeyCode.Alpha6))
             {
@@ -782,7 +782,7 @@ namespace VehicleFramework
             modSto.Container.SetActive(activated);
             modSto.Container.GetComponent<ModularStorageInput>().GetContainer().Resize(modSto.Width, modSto.Height);
         }
-        public ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
+        internal ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
         {
             switch (techType)
             {
@@ -829,15 +829,15 @@ namespace VehicleFramework
                     }
             }
         }
-        public void OnUndockingStart()
+        internal void OnUndockingStart()
         {
             IsUndockingAnimating = true;
         }
-        public void OnUndockingComplete()
+        internal void OnUndockingComplete()
         {
             IsUndockingAnimating = false;
         }
-        public void SetDockedLighting(bool docked)
+        private void SetDockedLighting(bool docked)
         {
             foreach (var renderer in GetComponentsInChildren<Renderer>())
             {
@@ -868,10 +868,44 @@ namespace VehicleFramework
                 }
             }
         }
-        public void TogglePower()
+        internal void TogglePower()
         {
             isPoweredOn = !isPoweredOn;
         }
+        private void ManagePhysics()
+        {
+            if (worldForces.IsAboveWater() != wasAboveWater)
+            {
+                PlaySplashSound();
+                wasAboveWater = worldForces.IsAboveWater();
+            }
+            if (stabilizeRoll)
+            {
+                StabilizeRoll();
+            }
+            prevVelocity = useRigidbody.velocity;
+        }
+        internal void HandlePilotingAnimations()
+        {
+            switch (pilotingStyle)
+            {
+                case PilotingStyle.Cyclops:
+                    SafeAnimator.SetBool(Player.main.armsController.animator, "cyclops_steering", IsPlayerControlling());
+                    break;
+                case PilotingStyle.Seamoth:
+                    SafeAnimator.SetBool(Player.main.armsController.animator, "in_seamoth", IsPlayerControlling());
+                    break;
+                case PilotingStyle.Prawn:
+                    SafeAnimator.SetBool(Player.main.armsController.animator, "in_exosuit", IsPlayerControlling());
+                    break;
+                default:
+                    HandleOtherPilotingAnimations(IsPlayerControlling());
+                    break;
+            }
+        }
+        #endregion
+
+        #region public_methods
         public void NotifyStatus(LightsStatus vs)
         {
             foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
@@ -1018,19 +1052,6 @@ namespace VehicleFramework
             base.GetEnergyValues(out num, out num2);
             power = ((num > 0f && num2 > 0f) ? (num / num2) : 0f);
         }
-        public void ManagePhysics()
-        {
-            if (worldForces.IsAboveWater() != wasAboveWater)
-            {
-                PlaySplashSound();
-                wasAboveWater = worldForces.IsAboveWater();
-            }
-            if (stabilizeRoll)
-            {
-                StabilizeRoll();
-            }
-            prevVelocity = useRigidbody.velocity;
-        }
         public bool HasRoomFor(Pickupable pickup)
         {
             foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
@@ -1159,25 +1180,6 @@ namespace VehicleFramework
             stored = retStored;
             capacity = retCapacity;
         }
-        public void HandlePilotingAnimations()
-        {
-            switch (pilotingStyle)
-            {
-                case PilotingStyle.Cyclops:
-                    SafeAnimator.SetBool(Player.main.armsController.animator, "cyclops_steering", IsPlayerControlling());
-                    break;
-                case PilotingStyle.Seamoth:
-                    SafeAnimator.SetBool(Player.main.armsController.animator, "in_seamoth", IsPlayerControlling());
-                    break;
-                case PilotingStyle.Prawn:
-                    SafeAnimator.SetBool(Player.main.armsController.animator, "in_exosuit", IsPlayerControlling());
-                    break;
-                default:
-                    HandleOtherPilotingAnimations(IsPlayerControlling());
-                    break;
-            }
-        }
-
         #endregion
 
         #region static_methods
@@ -1207,7 +1209,7 @@ namespace VehicleFramework
             }
             return retIDs;
         }
-        public static void MaybeControlRotation(Vehicle veh)
+        internal static void MaybeControlRotation(Vehicle veh)
         {
             ModVehicle mv = veh as ModVehicle;
             if (mv == null
