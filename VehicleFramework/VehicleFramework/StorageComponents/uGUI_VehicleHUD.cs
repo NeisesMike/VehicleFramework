@@ -91,8 +91,15 @@ namespace VehicleFramework
 		public void UpdateStorage()
 		{
 			Player.main.GetModVehicle().GetStorageValues(out int stored, out int capacity);
-			int ratio = (100 * stored) / capacity;
-			textStorage.text = ratio.ToString();
+			if (capacity > 0)
+			{
+				int ratio = (100 * stored) / capacity;
+				textStorage.text = ratio.ToString();
+			}
+			else
+			{
+				textStorage.text = 100.ToString();
+			}
 		}
 		public const float temperatureSmoothTime = 1f;
 		[AssertNotNull]
