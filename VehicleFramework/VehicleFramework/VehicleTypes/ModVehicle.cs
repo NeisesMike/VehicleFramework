@@ -34,11 +34,6 @@ namespace VehicleFramework
         }
         #endregion
         #region abstract_members
-        /* The model, collision model, storage root object, and modules root object
-         * must all be unique game objects.
-         * And since VF cannot add gameobjects to the prefab,
-         * they must be supplied for each vehicle.
-         */
         public abstract GameObject VehicleModel { get; } 
         public abstract GameObject CollisionModel { get; }
         #endregion
@@ -417,10 +412,10 @@ namespace VehicleFramework
         public virtual void OnAIBatteryReload()
         {
         }
-        // this function returns the number of seconds to wait before opening the PDA,
-        // to show off the cool animations~
         public virtual float OnStorageOpen(string name, bool open)
         {
+            // this function returns the number of seconds to wait before opening the PDA,
+            // to show off the cool animations~
             return 0;
         }
         public virtual bool GetIsUnderwater()
@@ -462,37 +457,6 @@ namespace VehicleFramework
                 UWE.CoroutineHost.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
             }
         }
-        public void SetDockedLighting(bool docked)
-        {
-            foreach (var renderer in GetComponentsInChildren<Renderer>())
-            {
-                foreach (Material mat in renderer.materials)
-                {
-                    if (renderer.gameObject.name.ToLower().Contains("light"))
-                    {
-                        continue;
-                    }
-                    if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
-                    {
-                        continue;
-                    }
-                    mat.EnableKeyword("MARMO_EMISSION");
-                    mat.SetFloat("_EmissionLMNight", docked ? 0.4f : 0f);
-                    mat.SetFloat("_EmissionLM", 0);
-                    mat.SetFloat("_GlowStrength", 0);
-                    mat.SetFloat("_GlowStrengthNight", 0);
-                    mat.SetFloat("_SpecInt", 0f);
-                    if(docked)
-                    {
-                        mat.EnableKeyword("MARMO_SPECMAP");
-                    }
-                    else
-                    {
-                        mat.DisableKeyword("MARMO_SPECMAP");
-                    }
-                }
-            }
-        }
         public virtual void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
@@ -526,15 +490,6 @@ namespace VehicleFramework
         {
             PlayerEntry();
         }
-        public bool IsUndockingAnimating = false;
-        public void OnUndockingStart()
-        {
-            IsUndockingAnimating = true;
-        }
-        public void OnUndockingComplete()
-        {
-            IsUndockingAnimating = false;
-        }
         public virtual Vector3 GetBoundingDimensions()
         {
             BoxCollider box = BoundingBoxCollider;
@@ -566,6 +521,10 @@ namespace VehicleFramework
         }
         public virtual void ScuttleVehicle()
         {
+            void OnCutOpen(Sealed sealedComp)
+            {
+                DeathExplodeAction();
+            }
             isScuttled = true;
             GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = false);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
@@ -580,10 +539,6 @@ namespace VehicleFramework
             sealedThing.openedAmount = 0;
             sealedThing.maxOpenedAmount = liveMixin.maxHealth;
             sealedThing.openedEvent.AddHandler(gameObject, new UWE.Event<Sealed>.HandleFunction(OnCutOpen));
-        }
-        private void OnCutOpen(Sealed sealedComp)
-        {
-            DeathExplodeAction();
         }
         public virtual void UnscuttleVehicle()
         {
@@ -614,31 +569,31 @@ namespace VehicleFramework
             worldForces.underwaterGravity = -1f;
             worldForces.aboveWaterGravity = 9.8f;
         }
-        IEnumerator DropLoot(Vector3 place)
-        {
-            TaskResult<GameObject> result = new TaskResult<GameObject>();
-            foreach(KeyValuePair<TechType, int> item in Recipe)
-            {
-                for (int i = 0; i < item.Value; i++)
-                {
-                    yield return null;
-                    if (UnityEngine.Random.value < 0.6f)
-                    {
-                        continue;
-                    }
-                    yield return CraftData.InstantiateFromPrefabAsync(item.Key, result, false);
-                    GameObject go = result.Get();
-                    Vector3 loc = place + 1.2f * UnityEngine.Random.onUnitSphere;
-                    Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
-                    go.transform.position = loc;
-                    go.transform.eulerAngles = rot;
-                    var rb = go.EnsureComponent<Rigidbody>();
-                    rb.isKinematic = false;
-                }
-            }
-        }
         public virtual void DeathExplodeAction()
         {
+            IEnumerator DropLoot(Vector3 place)
+            {
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                foreach (KeyValuePair<TechType, int> item in Recipe)
+                {
+                    for (int i = 0; i < item.Value; i++)
+                    {
+                        yield return null;
+                        if (UnityEngine.Random.value < 0.6f)
+                        {
+                            continue;
+                        }
+                        yield return CraftData.InstantiateFromPrefabAsync(item.Key, result, false);
+                        GameObject go = result.Get();
+                        Vector3 loc = place + 1.2f * UnityEngine.Random.onUnitSphere;
+                        Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
+                        go.transform.position = loc;
+                        go.transform.eulerAngles = rot;
+                        var rb = go.EnsureComponent<Rigidbody>();
+                        rb.isKinematic = false;
+                    }
+                }
+            }
             UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position));
             Destroy(gameObject);
         }
@@ -729,6 +684,7 @@ namespace VehicleFramework
         protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
         public bool isScuttled = false;
+        public bool IsUndockingAnimating = false;
         public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
         #endregion
 
@@ -871,6 +827,45 @@ namespace VehicleFramework
                         Logger.Error("Error: tried to get storage for unsupported TechType");
                         return null;
                     }
+            }
+        }
+        public void OnUndockingStart()
+        {
+            IsUndockingAnimating = true;
+        }
+        public void OnUndockingComplete()
+        {
+            IsUndockingAnimating = false;
+        }
+        public void SetDockedLighting(bool docked)
+        {
+            foreach (var renderer in GetComponentsInChildren<Renderer>())
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    if (renderer.gameObject.name.ToLower().Contains("light"))
+                    {
+                        continue;
+                    }
+                    if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
+                    {
+                        continue;
+                    }
+                    mat.EnableKeyword("MARMO_EMISSION");
+                    mat.SetFloat("_EmissionLMNight", docked ? 0.4f : 0f);
+                    mat.SetFloat("_EmissionLM", 0);
+                    mat.SetFloat("_GlowStrength", 0);
+                    mat.SetFloat("_GlowStrengthNight", 0);
+                    mat.SetFloat("_SpecInt", 0f);
+                    if (docked)
+                    {
+                        mat.EnableKeyword("MARMO_SPECMAP");
+                    }
+                    else
+                    {
+                        mat.DisableKeyword("MARMO_SPECMAP");
+                    }
+                }
             }
         }
         public void TogglePower()
