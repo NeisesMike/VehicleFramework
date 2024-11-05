@@ -19,7 +19,8 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(FreezeTime.Set))]
         public static void FreezeTimeSetPostfix()
         {
-            if(FreezeTime.HasFreezers())
+            audioSources?.RemoveAll(item => item == null);
+            if (FreezeTime.HasFreezers())
             {
                 audioSources?.ForEach(x => x?.Pause());
             }
