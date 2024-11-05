@@ -15,10 +15,14 @@ namespace VehicleFramework.Patches.CreaturePatches
         [HarmonyPatch(nameof(Creature.ChooseBestAction))]
         public static void ChooseBestActionPostfix(Creature __instance, ref CreatureAction __result)
         {
+            if(__result == null || __result.GetType() == null)
+            {
+                return;
+            }
             if(__instance.name.Contains("Warper") && __result.GetType().ToString().Contains("RangedAttackLastTarget"))
             {
                 VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
-                VehicleTypes.Submarine sub = Player.main.GetVehicle() as VehicleTypes.Submarine;
+                VehicleTypes.Submarine sub = Player.main?.GetVehicle() as VehicleTypes.Submarine;
                 if (drone != null || sub != null)
                 {
                     __result = new SwimRandom();
