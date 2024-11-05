@@ -756,12 +756,13 @@ namespace VehicleFramework
                 lavaLarvaTarget.attachPoints = llapList.ToArray();
             }
         }
-        public static void SetupRespawnPoint(Submarine mv)
+        public static void SetupSubRoot(Submarine mv, PowerRelay powerRelay)
         {
             var subroot = mv.gameObject.EnsureComponent<SubRoot>();
             subroot.rb = mv.useRigidbody;
             subroot.worldForces = mv.worldForces;
             subroot.modulesRoot = mv.modulesRoot.transform;
+            subroot.powerRelay = powerRelay;
             if (mv.RespawnPoint == null)
             {
                 mv.gameObject.EnsureComponent<RespawnPoint>();
@@ -826,8 +827,8 @@ namespace VehicleFramework
             {
                 SetupEngine(mv as Submarine);
                 SetupFloodLights(mv as Submarine);
-                SetupRespawnPoint(mv as Submarine); // depends on SetupWorldForces
-                mv.gameObject.AddComponent<PowerRelay>(); // See PowerRelayPatcher. Allows Submarines to recharge batteries.
+                PowerRelay powerRelay = mv.gameObject.AddComponent<PowerRelay>(); // See PowerRelayPatcher. Allows Submarines to recharge batteries.
+                SetupSubRoot(mv as Submarine, powerRelay); // depends on SetupWorldForces
             }
             if (mv as Submersible != null)
             {

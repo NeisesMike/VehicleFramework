@@ -35,6 +35,7 @@ namespace VehicleFramework.Patches
             ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
             if (mv != null)
             {
+                __instance.InvokeRepeating("UpdatePowerState", UnityEngine.Random.value, 0.5f);
                 return false;
             }
             return true;
@@ -47,6 +48,27 @@ namespace VehicleFramework.Patches
             if (mv != null)
             {
                 __result = mv.energyInterface.TotalCanProvide(out _);
+                return false;
+            }
+            return true;
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(PowerRelay.GetMaxPower))]
+        public static bool GetMaxPowerPrefix(PowerRelay __instance, ref float __result)
+        {
+            ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
+            if (mv != null && mv.energyInterface != null && mv.energyInterface.sources != null)
+            {
+                float totalCapacity = 0f;
+                for (int i = 0; i < mv.energyInterface.sources.Length; i++)
+                {
+                    EnergyMixin energyMixin = mv.energyInterface.sources[i];
+                    if (energyMixin != null)
+                    {
+                        totalCapacity += energyMixin.capacity;
+                    }
+                }
+                __result = totalCapacity;
                 return false;
             }
             return true;
