@@ -9,17 +9,49 @@ namespace VehicleFramework
 	public class uGUI_VehicleHUD : MonoBehaviour
 	{
 		public GameObject droneHUD = null;
+		private bool IsStorageHUD()
+        {
+			return textStorage != null;
+        }
+		private bool HasMvStorage(ModVehicle mv)
+        {
+			return mv.InnateStorages != null || mv.ModularStorages != null;
+        }
+		private void DeactivateAll()
+        {
+			root.SetActive(false);
+			droneHUD.SetActive(false);
+		}
 		public void Update()
 		{
-			ModVehicle mv = null;
-			PDA pda = null;
-			Player main = Player.main;
-			if (main != null)
+			if(Player.main == null)
+            {
+				DeactivateAll();
+				return;
+            }
+			ModVehicle mv = Player.main.GetModVehicle();
+			PDA pda = Player.main.GetPDA();
+			if (mv == null || pda == null)
 			{
-				mv = main.GetModVehicle();
-				pda = main.GetPDA();
+				// show nothing if we're not in an MV
+				// or if PDA isn't available
+				DeactivateAll();
+				return;
 			}
-			bool mvflag = mv != null && (pda == null || !pda.isInUse);
+			if (HasMvStorage(mv) && !IsStorageHUD())
+			{
+				// use storage HUD, normal HUD returns
+				DeactivateAll();
+				return;
+			}
+			if (!HasMvStorage(mv) && IsStorageHUD())
+			{
+				// use normal HUD, storage HUD returns
+				DeactivateAll();
+				return;
+			}
+
+			bool mvflag = !pda.isInUse;
 			bool droneflag = mvflag && (VehicleTypes.Drone.mountedDrone != null);
 			if (root.activeSelf != mvflag)
 			{
@@ -55,7 +87,6 @@ namespace VehicleFramework
 			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
 			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 		}
-
 		public void UpdateHealth()
 		{
 			Player.main.GetModVehicle().GetHUDValues(out float num, out float num2);
@@ -90,6 +121,10 @@ namespace VehicleFramework
 		}
 		public void UpdateStorage()
 		{
+			if(textStorage == null)
+            {
+				return;
+            }
 			Player.main.GetModVehicle().GetStorageValues(out int stored, out int capacity);
 			if (capacity > 0)
 			{

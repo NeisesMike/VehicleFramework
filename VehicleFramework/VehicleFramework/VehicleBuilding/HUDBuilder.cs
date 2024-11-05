@@ -65,19 +65,41 @@ namespace VehicleFramework
             }
             else
             {
-                BuildNormalHUD();
+                BuildHUDs();
             }
         }
+        public static void BuildHUDs()
+        {
+            BuildNormalHUD();
+            BuildStorageHUD();
+        }
+
         public static void BuildNormalHUD()
         {
             // copy the seamoth hud for now
-            GameObject seamothHUDElementsRoot= uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Seamoth").gameObject;
+            GameObject seamothHUDElementsRoot = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Seamoth").gameObject;
             GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
             mvHUDElementsRoot.name = "ModVehicle";
 
-            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
+            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
-            var healthObject =  mvHUDElementsRoot.transform.Find("Health");
+            ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
+
+            BuildDroneHUD(ret, mvHUDElementsRoot);
+        }
+        public static void BuildStorageHUD()
+        {
+            // copy the seamoth hud for now
+            GameObject seamothHUDElementsRoot = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Seamoth").gameObject;
+            GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
+            mvHUDElementsRoot.name = "ModVehicleStorage";
+
+            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
+            ret.root = mvHUDElementsRoot;
+            var healthObject = mvHUDElementsRoot.transform.Find("Health");
             healthObject.localPosition = new Vector3(-56, -15, 0);
             ret.textHealth = healthObject.GetComponent<TMPro.TextMeshProUGUI>();
 
@@ -101,9 +123,14 @@ namespace VehicleFramework
             Transform storageTextObject = storageCanvasObject.transform.Find("TemperatureValue");
             storageTextObject.name = "StorageValue";
             ret.textStorage = storageTextObject.GetComponent<TMPro.TextMeshProUGUI>();
+
+            BuildDroneHUD(ret, mvHUDElementsRoot);
+        }
+        public static void BuildDroneHUD(uGUI_VehicleHUD ret, GameObject hudRoot)
+        {
             // copy the CameraScannerRoom hud for now
             GameObject cameraScannerRoomObj = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/CameraScannerRoom").gameObject;
-            GameObject droneHUDElementsRoot = GameObject.Instantiate(cameraScannerRoomObj, mvHUDElementsRoot.transform);
+            GameObject droneHUDElementsRoot = GameObject.Instantiate(cameraScannerRoomObj, hudRoot.transform);
             droneHUDElementsRoot.name = "VFDrone";
 
             GameObject.Destroy(droneHUDElementsRoot.transform.Find("HealthBackground").gameObject);
@@ -111,7 +138,6 @@ namespace VehicleFramework
             GameObject.Destroy(droneHUDElementsRoot.transform.Find("PowerBackground").gameObject);
             droneHUDElementsRoot.transform.localPosition = new Vector3(-730.410f, 334.763f, 0f);
             ret.droneHUD = droneHUDElementsRoot;
-
         }
         public static void BuildVRHUD(GameObject VRVehicleCanvas)
         {
