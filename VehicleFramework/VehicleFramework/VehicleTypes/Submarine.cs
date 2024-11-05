@@ -435,12 +435,14 @@ namespace VehicleFramework.VehicleTypes
             ActualEditScreen.name = "EditScreen";
             ActualEditScreen.SetActive(true);
             ActualEditScreen.transform.Find("Inactive").gameObject.SetActive(false);
+            Vector3 originalLocalScale = ActualEditScreen.transform.localScale;
 
 
             GameObject frame = ColorPicker;
             ActualEditScreen.transform.SetParent(frame.transform);
             ActualEditScreen.transform.localPosition = new Vector3(.15f, .28f, 0.01f);
             ActualEditScreen.transform.localEulerAngles = new Vector3(0, 180, 0);
+            ActualEditScreen.transform.localScale = originalLocalScale;
 
             var but = ActualEditScreen.transform.Find("Active/BaseTab");
             but.name = "MainExterior";
