@@ -63,5 +63,11 @@ namespace VehicleFramework
         [Toggle("Force Arms Compat", Tooltip = "Force arm slots onto every vehicle. Otherwise, only already-setup vehicles will accept arm upgrades. Requires game reboot to take effect. Be careful when disabling this in the middle of a save.")]
         public bool forceArmsCompat = false;
 
+        public const string StorageNone = "None";
+        public const string StorageDrone = "Drones";
+        public const string StorageAll = "All";
+        [Choice("Storage HUD", Options = new[] { StorageAll, StorageDrone, StorageNone }, Tooltip = "Display storage HUD for vehicles with storage, only for drones, or never.")]
+        public string storageHudChoice = StorageAll;
+
     }
 }

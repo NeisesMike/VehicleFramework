@@ -16,11 +16,62 @@ namespace VehicleFramework
 		private bool HasMvStorage(ModVehicle mv)
         {
 			return mv.InnateStorages != null || mv.ModularStorages != null;
-        }
+		}
+		private bool IsDrone()
+		{
+			return VehicleTypes.Drone.mountedDrone != null;
+		}
 		private void DeactivateAll()
         {
 			root.SetActive(false);
 			droneHUD.SetActive(false);
+		}
+		private bool ShouldIDie(ModVehicle mv, PDA pda)
+		{
+			if (mv == null || pda == null)
+			{
+				// show nothing if we're not in an MV
+				// or if PDA isn't available
+				return true;
+			}
+			if (IsStorageHUD())
+			{
+				if (!HasMvStorage(mv))
+				{
+					return true;
+				}
+				switch (MainPatcher.VFConfig.storageHudChoice)
+				{
+					case VehicleFrameworkConfig.StorageAll:
+						return false;
+					case VehicleFrameworkConfig.StorageDrone:
+						return !IsDrone();
+					case VehicleFrameworkConfig.StorageNone:
+						return true;
+					default:
+						Logger.Warn("Unknown Storage HUD Choice!");
+						return true;
+				}
+			}
+			else
+			{
+				if (HasMvStorage(mv))
+				{
+					switch (MainPatcher.VFConfig.storageHudChoice)
+					{
+						case VehicleFrameworkConfig.StorageAll:
+							return true;
+						case VehicleFrameworkConfig.StorageDrone:
+							return IsDrone();
+						case VehicleFrameworkConfig.StorageNone:
+							return false;
+						default:
+							Logger.Warn("Unknown Storage HUD Choice!");
+							return true;
+					}
+				}
+				return false;
+			}
 		}
 		public void Update()
 		{
@@ -31,25 +82,11 @@ namespace VehicleFramework
             }
 			ModVehicle mv = Player.main.GetModVehicle();
 			PDA pda = Player.main.GetPDA();
-			if (mv == null || pda == null)
-			{
-				// show nothing if we're not in an MV
-				// or if PDA isn't available
+			if(ShouldIDie(mv, pda))
+            {
 				DeactivateAll();
 				return;
-			}
-			if (HasMvStorage(mv) && !IsStorageHUD())
-			{
-				// use storage HUD, normal HUD returns
-				DeactivateAll();
-				return;
-			}
-			if (!HasMvStorage(mv) && IsStorageHUD())
-			{
-				// use normal HUD, storage HUD returns
-				DeactivateAll();
-				return;
-			}
+            }
 
 			bool mvflag = !pda.isInUse;
 			bool droneflag = mvflag && (VehicleTypes.Drone.mountedDrone != null);
