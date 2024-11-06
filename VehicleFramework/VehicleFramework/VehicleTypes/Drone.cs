@@ -83,16 +83,6 @@ namespace VehicleFramework.VehicleTypes
         }
         public SubRoot lastSubRoot = null;
         public Vehicle lastVehicle = null;
-        private IEnumerator MaybeToggleCyclopsCollision(VehicleDockingBay bay)
-        {
-            if (bay.subRoot.name.ToLower().Contains("cyclops"))
-            {
-                bay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(false);
-                yield return new WaitForSeconds(2f);
-                bay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
-            }
-            yield break;
-        }
         private Coroutine CheckingPower = null;
         private IEnumerator CheckPower()
         {
@@ -141,13 +131,7 @@ namespace VehicleFramework.VehicleTypes
             NotifyStatus(PlayerStatus.OnPilotBegin);
             if (IsVehicleDocked)
             {
-                VehicleDockingBay thisBay = transform.parent.gameObject.GetComponentsInChildren<VehicleDockingBay>().Where(x=>x.dockedVehicle == this).First();
-                UWE.CoroutineHost.StartCoroutine(MaybeToggleCyclopsCollision(thisBay));
-                thisBay.vehicle_docked_param = false;
-                UWE.CoroutineHost.StartCoroutine(Undock(Player.main, thisBay.transform.position.y));
-                SkyEnvironmentChanged.Broadcast(gameObject, (GameObject)null);
-                thisBay.dockedVehicle = null;
-                OnVehicleUndocked();
+                this.Undock();
             }
             mountedDrone = this;
             CheckingPower = UWE.CoroutineHost.StartCoroutine(CheckPower());

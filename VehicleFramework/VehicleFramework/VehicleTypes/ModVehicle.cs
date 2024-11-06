@@ -163,6 +163,10 @@ namespace VehicleFramework
         {
             if (isScuttled)
             {
+                if(IsVehicleDocked)
+                {
+                    this.Undock();
+                }
                 return;
             }
             base.Update();
