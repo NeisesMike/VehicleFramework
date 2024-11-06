@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.OnHandClick))]
         public static bool OnHandClickPrefix(Vehicle __instance)
         {
-            if(VehicleTypes.Drone.mountedDrone != null || (__instance as ModVehicle) != null)
+            if (VehicleTypes.Drone.mountedDrone != null || (__instance as ModVehicle) != null)
             {
                 return false;
             }
@@ -35,14 +36,14 @@ namespace VehicleFramework
             ModVehicle mv = __instance as ModVehicle;
             if (mv == null)
             {
-                if(VehicleTypes.Drone.mountedDrone != null)
+                if (VehicleTypes.Drone.mountedDrone != null)
                 {
                     return false;
                 }
             }
             else
             {
-                if(mv.isScuttled)
+                if (mv.isScuttled)
                 {
                     float now = mv.GetComponent<Sealed>().openedAmount;
                     float max = mv.GetComponent<Sealed>().maxOpenedAmount;
@@ -99,7 +100,7 @@ namespace VehicleFramework
                 return;
             }
 
-            foreach(var tmp in ((ModVehicle)__instance).InnateStorages)
+            foreach (var tmp in ((ModVehicle)__instance).InnateStorages)
             {
                 containers.Add(tmp.Container.GetComponent<InnateStorageContainer>().container);
             }
@@ -114,7 +115,7 @@ namespace VehicleFramework
             {
                 return;
             }
-            if(!mv.isPoweredOn)
+            if (!mv.isPoweredOn)
             {
                 __result = false;
             }
@@ -144,7 +145,7 @@ namespace VehicleFramework
             newCodes[1] = CodeInstruction.Call(typeof(ModVehicle), nameof(ModVehicle.MaybeControlRotation));
             for (int i = 0; i < codes.Count; i++)
             {
-                newCodes[i+2] = codes[i];
+                newCodes[i + 2] = codes[i];
             }
             return newCodes.AsEnumerable();
         }
@@ -160,6 +161,23 @@ namespace VehicleFramework
             }
             __result = Player.main.GetMode() == Player.Mode.LockedPiloting && mv.IsUnderCommand;
             return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Vehicle.ReAttach))]
+        public static bool VehicleReAttachPrefix(Vehicle __instance)
+        {
+            IEnumerator NotifyDockingBay(Transform baseCell)
+            {
+                while (baseCell.Find("BaseMoonpool(Clone)") == null)
+                {
+                    yield return null;
+                }
+                VehicleDockingBay thisBay = baseCell.GetComponentInChildren<VehicleDockingBay>(true);
+                thisBay.DockVehicle(__instance, false);
+            }
+            UWE.CoroutineHost.StartCoroutine(NotifyDockingBay(__instance.transform.parent.Find("BaseCell(Clone)")));
+            return true;
         }
     }
 
