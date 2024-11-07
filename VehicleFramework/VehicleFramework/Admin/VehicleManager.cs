@@ -90,6 +90,7 @@ namespace VehicleFramework
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
             data.IsPlayerControlling = SaveManager.SerializePlayerControlling();
             data.SubNames = SaveManager.SerializeSubName();
+            data.HasVehicleTechTypes = SaveManager.SerializeHasVehicleTechTypes();
         }
         public static IEnumerator LoadVehicle(ModVehicle mv)
         {

@@ -153,6 +153,7 @@ namespace VehicleFramework
             // lost this in the update to Nautilus. We're no longer tracking our own tech type IDs or anything,
             // so I'm not able to provide the value easily here. Not even sure what a GameInfoIcon is :shrug:
             gameObject.EnsureComponent<GameInfoIcon>().techType = TechType;
+            GameInfoIcon.Add(TechType);
             powerMan = gameObject.EnsureComponent<PowerManager>();
 
             // Register our new vehicle with Vehicle Framework

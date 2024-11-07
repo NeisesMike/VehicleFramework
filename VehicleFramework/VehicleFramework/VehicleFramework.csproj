@@ -146,6 +146,8 @@
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\SaveLoadManagerPatcher.cs" />
+    <Compile Include="Patches\MainMenuLoadPanelPatcher.cs" />
     <Compile Include="Patches\BlockSeamothPatcher.cs" />
     <Compile Include="Patches\FreezeTimePatcher.cs" />
     <Compile Include="Patches\BenchPatcher.cs" />
