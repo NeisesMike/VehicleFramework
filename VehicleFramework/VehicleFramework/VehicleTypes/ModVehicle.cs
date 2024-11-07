@@ -178,6 +178,7 @@ namespace VehicleFramework
         }
         public new virtual void OnKill()
         {
+            liveMixin.health = 0;
             if (IsUnderCommand && VehicleTypes.Drone.mountedDrone == null)
             {
                 Player.main.playerController.SetEnabled(true);
@@ -515,7 +516,10 @@ namespace VehicleFramework
         public virtual void OnVehicleUndocked()
         {
             // The Moonpool invokes this once upon vehicle exit from the dock
-            OnPlayerUndocked();
+            if (!isScuttled)
+            {
+                OnPlayerUndocked();
+            }
             IsVehicleDocked = false;
             useRigidbody.detectCollisions = true;
             SetDockedLighting(false);

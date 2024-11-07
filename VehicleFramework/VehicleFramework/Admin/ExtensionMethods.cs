@@ -35,7 +35,7 @@ namespace VehicleFramework
             }
             UWE.CoroutineHost.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
             thisBay.vehicle_docked_param = false;
-            UWE.CoroutineHost.StartCoroutine(vehicle.Undock(Player.main, thisBay.transform.position.y));
+            UWE.CoroutineHost.StartCoroutine(vehicle.Undock(vehicle.liveMixin.IsAlive() ? Player.main : null, thisBay.transform.position.y));
             SkyEnvironmentChanged.Broadcast(vehicle.gameObject, (GameObject)null);
             thisBay.dockedVehicle = null;
             if(vehicle is ModVehicle)
