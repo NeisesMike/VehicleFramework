@@ -169,12 +169,16 @@ namespace VehicleFramework
         {
             IEnumerator NotifyDockingBay(Transform baseCell)
             {
-                while (baseCell.Find("BaseMoonpool(Clone)") == null)
+                while (baseCell?.Find("BaseMoonpool(Clone)") == null)
                 {
+                    if(baseCell == null)
+                    {
+                        yield break;
+                    }
                     yield return null;
                 }
-                VehicleDockingBay thisBay = baseCell.GetComponentInChildren<VehicleDockingBay>(true);
-                thisBay.DockVehicle(__instance, false);
+                VehicleDockingBay thisBay = baseCell?.GetComponentInChildren<VehicleDockingBay>(true);
+                thisBay?.DockVehicle(__instance, false);
             }
             UWE.CoroutineHost.StartCoroutine(NotifyDockingBay(__instance.transform.parent.Find("BaseCell(Clone)")));
             return true;
