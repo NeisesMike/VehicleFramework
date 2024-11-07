@@ -55,6 +55,7 @@ namespace VehicleFramework.VehicleComponents
         {
             mv = GetComponent<ModVehicle>();
             UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
+            TryMagnets(true, CheckPlacement());
         }
         public IEnumerator FindStoreInfoIdentifier()
         {
