@@ -162,8 +162,10 @@ namespace VehicleFramework
         }
         public static void GetAssets()
         {
-            Assets.VehicleAssets DSAssets = Assets.AssetBundleInterface.GetVehicleAssetsFromBundle("modvehiclepingsprite", "", "ModVehicleSpriteAtlas", "ModVehiclePingSprite", "", "", "");
-            VehicleManager.defaultPingSprite = DSAssets.ping;
+            Assets.VehicleAssets DSAssets = Assets.AssetBundleInterface.GetVehicleAssetsFromBundle("modvehiclepingsprite");
+            VehicleManager.defaultPingSprite = Assets.AssetBundleInterface.LoadAdditionalSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
+            VehicleManager.defaultSaveFileSprite = Assets.AssetBundleInterface.LoadAdditionalRawSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
+            DSAssets.Close();
         }
         public static void SetupDefaultAssets()
         {

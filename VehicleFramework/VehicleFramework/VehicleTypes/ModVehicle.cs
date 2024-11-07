@@ -73,6 +73,7 @@ namespace VehicleFramework
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
         public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;
+        public virtual Sprite SaveFileSprite => VehicleManager.defaultSaveFileSprite;
         public virtual List<GameObject> WaterClipProxies => new List<GameObject>();
         public virtual List<VehicleParts.VehicleStorage> InnateStorages => new List<VehicleParts.VehicleStorage>();
         public virtual List<VehicleParts.VehicleStorage> ModularStorages => new List<VehicleParts.VehicleStorage>();
