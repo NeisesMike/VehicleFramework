@@ -70,6 +70,10 @@ namespace VehicleFramework
         {
             while (true)
             {
+                if(transform == null)
+                {
+                    break;
+                }
                 if (transform.position.y < (scuttlePosition.y - 20)) // why 20?
                 {
                     Logger.Log("Moving wreck to " + scuttlePosition.ToString());

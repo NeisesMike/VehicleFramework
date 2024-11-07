@@ -560,6 +560,10 @@ namespace VehicleFramework
         }
         public virtual void ScuttleVehicle()
         {
+            if(isScuttled)
+            {
+                return;
+            }
             void OnCutOpen(Sealed sealedComp)
             {
                 DeathExplodeAction();
@@ -574,7 +578,7 @@ namespace VehicleFramework
             headlights.isLive = false;
             isPoweredOn = false;
             gameObject.EnsureComponent<Scuttler>().Scuttle();
-            var sealedThing = gameObject.AddComponent<Sealed>();
+            var sealedThing = gameObject.EnsureComponent<Sealed>();
             sealedThing.openedAmount = 0;
             sealedThing.maxOpenedAmount = liveMixin.maxHealth;
             sealedThing.openedEvent.AddHandler(gameObject, new UWE.Event<Sealed>.HandleFunction(OnCutOpen));
@@ -610,7 +614,7 @@ namespace VehicleFramework
         }
         public virtual void DeathExplodeAction()
         {
-            IEnumerator DropLoot(Vector3 place)
+            IEnumerator DropLoot(Vector3 place, GameObject root)
             {
                 TaskResult<GameObject> result = new TaskResult<GameObject>();
                 foreach (KeyValuePair<TechType, int> item in Recipe)
@@ -632,9 +636,13 @@ namespace VehicleFramework
                         rb.isKinematic = false;
                     }
                 }
+                while (root != null)
+                {
+                    Destroy(root);
+                    yield return null;
+                }
             }
-            UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position));
-            Destroy(gameObject);
+            UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position, gameObject));
         }
         public virtual void HandleOtherPilotingAnimations(bool isPiloting){}
         public virtual bool IsPlayerControlling()
