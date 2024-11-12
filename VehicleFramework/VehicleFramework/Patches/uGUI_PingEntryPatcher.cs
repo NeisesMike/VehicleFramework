@@ -41,5 +41,25 @@ namespace VehicleFramework
             }
             return newCodes.AsEnumerable();
         }
+
+        // This prefix ensures ModVehicles have their names displayed correctly in the ping tab.
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(uGUI_PingEntry.UpdateLabel))]
+        public static bool uGUI_PingEntryUpdateLabelPrefix(uGUI_PingEntry __instance, PingType type, string name)
+        {
+            if(VehicleManager.mvPings.Select(x=>x.pingType).Contains(type))
+            {
+                foreach (var mvType in VehicleManager.vehicleTypes)
+                {
+                    if (mvType.pt == type)
+                    {
+                        __instance.label.text = string.Format("{0} - {1}", mvType.name, name); ;
+                        break;
+                    }
+                }
+                return false;
+            }
+            return true;
+        }
     }
 }
