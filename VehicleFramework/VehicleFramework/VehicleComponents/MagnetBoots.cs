@@ -15,14 +15,13 @@ namespace VehicleFramework.VehicleComponents
             public Transform target;
             public Vector3 location;
         }
-        private ModVehicle mv;
+        private ModVehicle mv => GetComponent<ModVehicle>();
         private Vector3 attachmentOffset = Vector3.zero;
         private bool IsAttached = false;
         private Transform attachedPlatform = null;
         public Action Attach = null;
         public Action Detach = null;
-        public float MagnetDistance = 5f;
-        public float AttachDistance = 2f;
+        public float MagnetDistance = 1f;
         public bool recharges = true;
         public float rechargeRate = 0.5f; // transfer 0.5 energy per second
         public void HandleAttachment(bool isAttached, Transform platform = null)
@@ -53,9 +52,20 @@ namespace VehicleFramework.VehicleComponents
         }
         public void Start()
         {
-            mv = GetComponent<ModVehicle>();
+            if(mv is VehicleTypes.Submarine)
+            {
+                Logger.Output("Submarines cannot use MagnetBoots!");
+                DestroyImmediate(this);
+                return;
+            }
+            if(mv?.BoundingBoxCollider == null)
+            {
+                Logger.Output("This vehicle requires a BoundingBoxCollider to use MagnetBoots!");
+                DestroyImmediate(this);
+                return;
+            }
             UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
-            TryMagnets(true, CheckPlacement());
+            TryMagnets(true, CheckPlacement(), false);
         }
         public IEnumerator FindStoreInfoIdentifier()
         {
@@ -82,8 +92,10 @@ namespace VehicleFramework.VehicleComponents
         }
         public MagnetStruct CheckPlacement()
         {
-            RaycastHit[] allHits = Physics.RaycastAll(transform.position, -transform.up, MagnetDistance);
-            var orderedHits = allHits.OrderBy(x => (x.point - transform.position).sqrMagnitude);
+            RaycastHit[] allHits = Physics.BoxCastAll(mv.BoundingBoxCollider.bounds.center, mv.GetBoundingDimensions() / 2f, -transform.up, transform.rotation, MagnetDistance);
+            var orderedHits = allHits
+                .Where(x=>!Admin.Utils.IsThisGameObjectAncestor(x.collider.transform, gameObject))
+                .OrderBy(x => (x.point - transform.position).sqrMagnitude);
             foreach (var hit in orderedHits)
             {
                 Base baseTarget = UWE.Utils.GetComponentInHierarchy<Base>(hit.collider.gameObject);
@@ -116,7 +128,7 @@ namespace VehicleFramework.VehicleComponents
             }
             return default;
         }
-        public void TryMagnets(bool isKeyed, MagnetStruct magnetData)
+        public void TryMagnets(bool isKeyed, MagnetStruct magnetData, bool verbose=true)
         {
             if(isKeyed)
             {
@@ -125,7 +137,7 @@ namespace VehicleFramework.VehicleComponents
                     ParentSelfToTarget(magnetData);
                     Player.main.ExitLockedMode();
                 }
-                else
+                else if(verbose)
                 {
                     Logger.Output("No attachable surface nearby.");
                 }
@@ -133,12 +145,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public void ParentSelfToTarget(MagnetStruct magnetData)
         {
-            Vector3 hitLocation = magnetData.location;
-            Vector3 myLocation = transform.position;
-            float currentDistance = Vector3.Distance(hitLocation, myLocation);
-            float ratio = AttachDistance / currentDistance;
-            mv.transform.position = Vector3.Lerp(myLocation, hitLocation, ratio);
-            mv.transform.SetParent(magnetData.target);
+            transform.SetParent(magnetData.target);
             attachmentOffset = transform.localPosition;
             HandleAttachment(true, magnetData.target);
         }

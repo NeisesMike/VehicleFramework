@@ -121,6 +121,18 @@ namespace VehicleFramework.Admin
             }
             return IsAnAncestorTheCurrentMountedVehicle(current.parent);
         }
+        public static bool IsThisGameObjectAncestor(Transform current, GameObject ancestor)
+        {
+            if (current == null || ancestor == null)
+            {
+                return false;
+            }
+            if(current.gameObject == ancestor)
+            {
+                return true;
+            }
+            return IsThisGameObjectAncestor(current.parent, ancestor);
+        }
         public static void RegisterDepthModules()
         {
             UpgradeCompat compat = new UpgradeCompat
