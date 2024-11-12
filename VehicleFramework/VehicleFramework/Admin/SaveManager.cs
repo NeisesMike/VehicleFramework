@@ -590,7 +590,7 @@ namespace VehicleFramework
                 }
                 try
                 {
-                    allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, (mv as Submarine).NowVehicleName, ExtractFloats((mv as Submarine).ExteriorMainColor), ExtractFloats((mv as Submarine).ExteriorPrimaryAccent), ExtractFloats((mv as Submarine).ExteriorSecondaryAccent), ExtractFloats((mv as Submarine).ExteriorNameLabel), (mv as Submarine).IsDefaultTexture));
+                    allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, mv.GetName(), ExtractFloats((mv as Submarine).ExteriorMainColor), ExtractFloats((mv as Submarine).ExteriorPrimaryAccent), ExtractFloats((mv as Submarine).ExteriorSecondaryAccent), ExtractFloats((mv as Submarine).ExteriorNameLabel), (mv as Submarine).IsDefaultTexture));
 
                 }
                 catch (Exception e)
@@ -624,12 +624,11 @@ namespace VehicleFramework
                         }
                         active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = vehicle.Item2;
                         active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = vehicle.Item2;
-                        mv.NowVehicleName = vehicle.Item2;
-                        mv.vehicleName = vehicle.Item2;
+                        mv.SetName(vehicle.Item2);
                         if (vehicle.Item7)
                         {
                             mv.PaintVehicleDefaultStyle(vehicle.Item2);
-                            mv.OnNameChangeMaybe(vehicle.Item2);
+                            mv.OnNameChange(vehicle.Item2);
                         }
                         else
                         {

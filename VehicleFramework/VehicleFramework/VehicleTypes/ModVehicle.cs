@@ -1198,6 +1198,11 @@ namespace VehicleFramework
             stored = retStored;
             capacity = retCapacity;
         }
+        public void SetName(string name)
+        {
+            vehicleName = name;
+            subName.SetName(name);
+        }
         #endregion
 
         #region static_methods

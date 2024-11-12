@@ -89,10 +89,6 @@ namespace VehicleFramework.VehicleTypes
                     ActualEditScreen = ColorPicker.transform.Find("EditScreen").gameObject;
                 }
             }
-            // Ensure our name is still good
-            vehicleName = OGVehicleName;
-            NowVehicleName = OGVehicleName;
-
         }
         public bool IsPlayerInside()
         {
@@ -220,20 +216,20 @@ namespace VehicleFramework.VehicleTypes
         public override void SubConstructionBeginning()
         {
             base.SubConstructionBeginning();
-            PaintVehicleDefaultStyle(OGVehicleName);
+            PaintVehicleDefaultStyle(GetName());
         }
         public override void SubConstructionComplete()
         {
             if (!pingInstance.enabled)
             {
                 base.SubConstructionComplete();
-                PaintNameDefaultStyle(OGVehicleName);
-                // Setup the color picker with the odyssey's name
+                PaintNameDefaultStyle(GetName());
+                // Setup the color picker with the submarine's name
                 var active = transform.Find("ColorPicker/EditScreen/Active");
                 if (active)
                 {
-                    active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = NowVehicleName;
-                    active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = NowVehicleName;
+                    active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = GetName();
+                    active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = GetName();
                 }
                 UWE.CoroutineHost.StartCoroutine(TrySpawnFabricator());
             }
@@ -274,7 +270,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public virtual void PaintNameDefaultStyle(string name)
         {
-            OnNameChangeMaybe(name);
+            OnNameChange(name);
         }
         public virtual void PaintVehicleDefaultStyle(string name)
         {
@@ -297,7 +293,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public virtual void PaintVehicleName(string name, Color nameColor, Color hullColor)
         {
-            OnNameChangeMaybe(name);
+            OnNameChange(name);
         }
 
 
@@ -312,9 +308,6 @@ namespace VehicleFramework.VehicleTypes
         protected Color OldExteriorPrimaryAccent;
         protected Color OldExteriorSecondaryAccent;
         protected Color OldExteriorNameLabel;
-        protected string OGVehicleName;
-        public string NowVehicleName;
-        protected string OldVehicleName;
         public bool IsDefaultTexture = true;
         public virtual void SetColorPickerUIColor(string name, Color col)
         {
@@ -363,22 +356,14 @@ namespace VehicleFramework.VehicleTypes
             }
             ActualEditScreen.transform.Find("Active/MainExterior/SelectedColor").GetComponent<Image>().color = ExteriorMainColor;
         }
-        public virtual void OnNameChangeMaybe(string e)
+        public virtual void OnNameChange(string e) // why is this independent from OnNameChange?
         {
-            if (NowVehicleName != e)
+            if (vehicleName != e)
             {
-                OldVehicleName = NowVehicleName;
-                NowVehicleName = e;
-                vehicleName = e;
+                SetName(e);
             }
         }
-        public virtual void OnNameChange(string e)
-        {
-            OldVehicleName = NowVehicleName;
-            NowVehicleName = e;
-            vehicleName = e;
-        }
-        public virtual void OnColorSubmit()
+        public virtual void OnColorSubmit() // called by color picker submit button
         {
             if (ExteriorMainColor != OldExteriorMainColor)
             {
@@ -394,11 +379,11 @@ namespace VehicleFramework.VehicleTypes
             }
             if (IsDefaultTexture)
             {
-                PaintVehicleDefaultStyle(NowVehicleName);
+                PaintVehicleDefaultStyle(GetName());
             }
             else
             {
-                PaintVehicleName(NowVehicleName, ExteriorNameLabel, ExteriorMainColor);
+                PaintVehicleName(GetName(), ExteriorNameLabel, ExteriorMainColor);
             }
             return;
         }
