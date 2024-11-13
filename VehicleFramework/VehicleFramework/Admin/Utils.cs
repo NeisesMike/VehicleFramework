@@ -159,45 +159,31 @@ namespace VehicleFramework.Admin
                 Subtitles.Add("This upgrade is not compatible with this vehicle.");
                 return;
             }
+            ModVehicle mv = param.vehicle.GetComponent<ModVehicle>();
             // Iterate over all upgrade modules,
             // in order to determine our max depth module level
             int maxDepthModuleLevel = 0;
-            List<string> upgradeSlots = new List<string>();
-            param.vehicle.upgradesInput.equipment.GetSlots(VehicleBuilder.ModuleType, upgradeSlots);
-            foreach (String slot in upgradeSlots)
+            List<string> upgrades = mv.GetCurrentUpgrades();
+            foreach (String upgrade in upgrades)
             {
-                InventoryItem upgrade = param.vehicle.upgradesInput.equipment.GetItemInSlot(slot);
-                if (upgrade != null)
+                if (string.Equals(upgrade, "ModVehicleDepthModule1(Clone)", StringComparison.OrdinalIgnoreCase))
                 {
-                    //Logger.Log(slot + " : " + upgrade.item.name);
-                    if (upgrade.item.name == "ModVehicleDepthModule1(Clone)")
-                    {
-                        if (maxDepthModuleLevel < 1)
-                        {
-                            maxDepthModuleLevel = 1;
-                        }
-                    }
-                    else if (upgrade.item.name == "ModVehicleDepthModule2(Clone)")
-                    {
-                        if (maxDepthModuleLevel < 2)
-                        {
-                            maxDepthModuleLevel = 2;
-                        }
-                    }
-                    else if (upgrade.item.name == "ModVehicleDepthModule3(Clone)")
-                    {
-                        if (maxDepthModuleLevel < 3)
-                        {
-                            maxDepthModuleLevel = 3;
-                        }
-                    }
+                    maxDepthModuleLevel = maxDepthModuleLevel < 1 ? 1 : maxDepthModuleLevel;
+                }
+                else if (string.Equals(upgrade, "ModVehicleDepthModule2(Clone)", StringComparison.OrdinalIgnoreCase))
+                {
+                    maxDepthModuleLevel = maxDepthModuleLevel < 2 ? 2 : maxDepthModuleLevel;
+                }
+                else if (string.Equals(upgrade, "ModVehicleDepthModule3(Clone)", StringComparison.OrdinalIgnoreCase))
+                {
+                    maxDepthModuleLevel = maxDepthModuleLevel < 3 ? 3 : maxDepthModuleLevel;
                 }
             }
             int extraDepthToAdd = 0;
-            extraDepthToAdd = maxDepthModuleLevel > 0 ? extraDepthToAdd += param.vehicle.GetComponent<ModVehicle>().CrushDepthUpgrade1 : extraDepthToAdd;
-            extraDepthToAdd = maxDepthModuleLevel > 1 ? extraDepthToAdd += param.vehicle.GetComponent<ModVehicle>().CrushDepthUpgrade2 : extraDepthToAdd;
-            extraDepthToAdd = maxDepthModuleLevel > 2 ? extraDepthToAdd += param.vehicle.GetComponent<ModVehicle>().CrushDepthUpgrade3 : extraDepthToAdd;
-            param.vehicle.GetComponent<CrushDamage>().SetExtraCrushDepth(extraDepthToAdd);
+            extraDepthToAdd = maxDepthModuleLevel > 0 ? extraDepthToAdd += mv.CrushDepthUpgrade1 : extraDepthToAdd;
+            extraDepthToAdd = maxDepthModuleLevel > 1 ? extraDepthToAdd += mv.CrushDepthUpgrade2 : extraDepthToAdd;
+            extraDepthToAdd = maxDepthModuleLevel > 2 ? extraDepthToAdd += mv.CrushDepthUpgrade3 : extraDepthToAdd;
+            mv.GetComponent<CrushDamage>().SetExtraCrushDepth(extraDepthToAdd);
         }
         public static TechType GetTechTypeFromVehicleName(string name)
         {
