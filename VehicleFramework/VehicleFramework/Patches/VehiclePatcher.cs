@@ -177,8 +177,15 @@ namespace VehicleFramework
                     }
                     yield return null;
                 }
-                VehicleDockingBay thisBay = baseCell?.GetComponentInChildren<VehicleDockingBay>(true);
-                thisBay?.DockVehicle(__instance, false);
+                var thisBasesBays = baseCell?.GetAllComponentsInChildren<VehicleDockingBay>();
+                const float expectedMaxDistance = 5f;
+                foreach (VehicleDockingBay bay in thisBasesBays)
+                {
+                    if(Vector3.Distance(__instance.transform.position, bay.transform.position) < expectedMaxDistance)
+                    {
+                        bay?.DockVehicle(__instance, false);
+                    }
+                }
             }
             UWE.CoroutineHost.StartCoroutine(NotifyDockingBay(__instance.transform.parent.Find("BaseCell(Clone)")));
             return true;
