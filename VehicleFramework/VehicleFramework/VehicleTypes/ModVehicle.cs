@@ -141,6 +141,10 @@ namespace VehicleFramework
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
             }
             VehicleBuilder.SetupCameraController(this);
+            if(Engine == null)
+            {
+                Engine = GetComponent<ModVehicleEngine>();
+            }
             base.LazyInitialize();
         }
         public override void Start()
