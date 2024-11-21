@@ -97,11 +97,11 @@ namespace VehicleFramework.Admin
             UpgradeTechTypes depth1 = UpgradeRegistrar.RegisterUpgrade(new DepthModules.DepthModule1(), compat);
 
             var depthmodule2 = new DepthModules.DepthModule2();
-            depthmodule2.ExtendRecipe(new Assets.Ingredient(depth1.forModVehicle, 1));
+            depthmodule2.ExtendRecipe(depth1);
             UpgradeTechTypes depth2 = UpgradeRegistrar.RegisterUpgrade(depthmodule2, compat);
 
             var depthmodule3 = new DepthModules.DepthModule3();
-            depthmodule3.ExtendRecipe(new Assets.Ingredient(depth2.forModVehicle, 1));
+            depthmodule3.ExtendRecipe(depth2);
             UpgradeTechTypes depth3 = UpgradeRegistrar.RegisterUpgrade(depthmodule3, compat);
         }
         public static void EvaluateDepthModules(AddActionParams param)

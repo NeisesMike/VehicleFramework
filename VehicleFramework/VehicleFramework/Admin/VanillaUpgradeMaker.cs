@@ -12,23 +12,11 @@ namespace VehicleFramework.Admin
 {
     internal static class VanillaUpgradeMaker
     {
-        internal static CustomPrefab CreateModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, PrefabInfo info, CraftTreeHandler.UpgradeType path)
+        internal static CustomPrefab CreateModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, PrefabInfo info)
         {
             CustomPrefab prefab = new CustomPrefab(info);
             var clone = new CloneTemplate(info, TechType.SeamothElectricalDefense);
             prefab.SetGameObject(clone);
-            Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
-            moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe());
-            string[] steps = CraftTreeHandler.UpgradeTypeToPath(path);
-            if(upgrade.TabName.Length > 0)
-            {
-                steps = steps.Append(upgrade.TabName).ToArray();
-            }
-            prefab
-                .SetRecipe(moduleRecipe)
-                .WithFabricatorType(CraftTree.Type.Workbench)
-                .WithStepsToFabricatorTab(steps)
-                .WithCraftingTime(upgrade.CraftingTime);
             if (!isPdaSetup)
             {
                 prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
@@ -39,6 +27,23 @@ namespace VehicleFramework.Admin
                 scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
             }
             return prefab;
+        }
+
+        private static CustomPrefab AddRecipe(this CustomPrefab customPrefab, ModVehicleUpgrade upgrade, VehicleType vType)
+        {
+            Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
+            moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(vType));
+            string[] steps = CraftTreeHandler.UpgradeTypeToPath(vType);
+            if (upgrade.TabName.Length > 0)
+            {
+                steps = steps.Append(upgrade.TabName).ToArray();
+            }
+            customPrefab
+                .SetRecipe(moduleRecipe)
+                .WithFabricatorType(CraftTree.Type.Workbench)
+                .WithStepsToFabricatorTab(steps)
+                .WithCraftingTime(upgrade.CraftingTime);
+            return customPrefab;
         }
 
         #region CreationMethods
@@ -204,9 +209,10 @@ namespace VehicleFramework.Admin
         #endregion
 
         #region PassiveModules
-        internal static TechType CreatePassiveModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, CraftTreeHandler.UpgradeType path)
+        internal static TechType CreatePassiveModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, VehicleType vType)
         {
-            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info, path);
+            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info)
+                .AddRecipe(upgrade, vType);
             UpgradeModuleGadget gadget = prefab.SetVehicleUpgradeModule(equipType, QuickSlotType.Passive);
             AddPassiveActions(gadget, upgrade, info);
             prefab.Register();
@@ -218,28 +224,29 @@ namespace VehicleFramework.Admin
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Seamoth", "Seamoth " + upgrade.DisplayName, "An upgrade for the Seamoth. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forSeamoth = prefabInfo.TechType;
-            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, CraftTreeHandler.UpgradeType.Seamoth);
+            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, VehicleType.Seamoth);
         }
         internal static void CreatePassiveModuleExosuit(ModVehicleUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Exosuit", "Exosuit " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forExosuit = prefabInfo.TechType;
-            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, CraftTreeHandler.UpgradeType.Exosuit);
+            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, VehicleType.Prawn);
         }
         internal static void CreatePassiveModuleCyclops(ModVehicleUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, CraftTreeHandler.UpgradeType.Cyclops);
+            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, VehicleType.Cyclops);
         }
         #endregion
 
         #region SelectModules
-        internal static TechType CreateSelectModuleVanilla(SelectableUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, CraftTreeHandler.UpgradeType path)
+        internal static TechType CreateSelectModuleVanilla(SelectableUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, VehicleType vType)
         {
-            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info, path);
+            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info)
+                .AddRecipe(upgrade, vType);
             UpgradeModuleGadget gadget = prefab.SetVehicleUpgradeModule(equipType, QuickSlotType.Selectable);
             AddPassiveActions(gadget, upgrade, info);
             AddSelectActions(gadget, upgrade, info);
@@ -252,28 +259,29 @@ namespace VehicleFramework.Admin
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Seamoth", "Seamoth " + upgrade.DisplayName, "An upgrade for the Seamoth. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forSeamoth = prefabInfo.TechType;
-            CreateSelectModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, CraftTreeHandler.UpgradeType.Seamoth);
+            CreateSelectModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, VehicleType.Seamoth);
         }
         internal static void CreateSelectModuleExosuit(SelectableUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Exosuit", "Exosuit " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forExosuit = prefabInfo.TechType;
-            CreateSelectModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, CraftTreeHandler.UpgradeType.Exosuit);
+            CreateSelectModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, VehicleType.Prawn);
         }
         internal static void CreateSelectModuleCyclops(SelectableUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            CreateSelectModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, CraftTreeHandler.UpgradeType.Cyclops);
+            CreateSelectModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, VehicleType.Cyclops);
         }
         #endregion
 
         #region ChargeModules
-        internal static TechType CreateChargeModuleVanilla(SelectableChargeableUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, CraftTreeHandler.UpgradeType path)
+        internal static TechType CreateChargeModuleVanilla(SelectableChargeableUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, VehicleType vType)
         {
-            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info, path);
+            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info)
+                .AddRecipe(upgrade, vType);
             UpgradeModuleGadget gadget = prefab.SetVehicleUpgradeModule(equipType, QuickSlotType.SelectableChargeable);
             AddPassiveActions(gadget, upgrade, info);
             AddChargeActions(gadget, upgrade, info);
@@ -286,28 +294,29 @@ namespace VehicleFramework.Admin
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Seamoth", "Seamoth " + upgrade.DisplayName, "An upgrade for the Seamoth. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forSeamoth = prefabInfo.TechType;
-            CreateChargeModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, CraftTreeHandler.UpgradeType.Seamoth);
+            CreateChargeModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, VehicleType.Seamoth);
         }
         internal static void CreateChargeModuleExosuit(SelectableChargeableUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Exosuit", "Exosuit " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forExosuit = prefabInfo.TechType;
-            CreateChargeModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, CraftTreeHandler.UpgradeType.Exosuit);
+            CreateChargeModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, VehicleType.Prawn);
         }
         internal static void CreateChargeModuleCyclops(SelectableChargeableUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            CreateChargeModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, CraftTreeHandler.UpgradeType.Cyclops);
+            CreateChargeModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, VehicleType.Cyclops);
         }
         #endregion
 
         #region ToggleModules
-        internal static TechType CreateToggleModuleVanilla(ToggleableUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, CraftTreeHandler.UpgradeType path)
+        internal static TechType CreateToggleModuleVanilla(ToggleableUpgrade upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, VehicleType vType)
         {
-            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info, path);
+            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info)
+                .AddRecipe(upgrade, vType);
             UpgradeModuleGadget gadget = prefab.SetVehicleUpgradeModule(equipType, QuickSlotType.Toggleable);
             AddPassiveActions(gadget, upgrade, info);
             AddToggleActions(gadget, upgrade, info);
@@ -320,28 +329,29 @@ namespace VehicleFramework.Admin
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Seamoth", "Seamoth " + upgrade.DisplayName, "An upgrade for the Seamoth. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forSeamoth = prefabInfo.TechType;
-            CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, CraftTreeHandler.UpgradeType.Seamoth);
+            CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.SeamothModule, VehicleType.Seamoth);
         }
         internal static void CreateToggleModuleExosuit(ToggleableUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Exosuit", "Exosuit " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forExosuit = prefabInfo.TechType;
-            CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, CraftTreeHandler.UpgradeType.Exosuit);
+            CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitModule, VehicleType.Prawn);
         }
         internal static void CreateToggleModuleCyclops(ToggleableUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, CraftTreeHandler.UpgradeType.Cyclops);
+            CreateToggleModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, VehicleType.Cyclops);
         }
         #endregion
 
         #region ArmModules
-        internal static TechType CreateArmModuleVanilla(ModVehicleArm upgrade, bool isPdaSetup, PrefabInfo info, EquipmentType equipType, CraftTreeHandler.UpgradeType path)
+        internal static TechType CreateArmModuleVanilla(ModVehicleArm upgrade, bool isPdaSetup, PrefabInfo info, VehicleType vType)
         {
-            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info, path);
+            CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info)
+                .AddRecipe(upgrade, vType);
             EquipmentGadget gadget = prefab.SetEquipment(EquipmentType.ExosuitArm)
                 .WithQuickSlotType(QuickSlotType.Selectable);
             prefab.Register();
@@ -353,7 +363,7 @@ namespace VehicleFramework.Admin
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Exosuit", "Exosuit " + upgrade.DisplayName, "An arm for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forExosuit = prefabInfo.TechType;
-            CreateArmModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.ExosuitArm, CraftTreeHandler.UpgradeType.Exosuit);
+            CreateArmModuleVanilla(upgrade, isPdaSetup, prefabInfo, VehicleType.Prawn);
         }
         #endregion
     }

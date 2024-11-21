@@ -26,6 +26,13 @@ namespace VehicleFramework.Admin
         public TechType forExosuit;
         public TechType forCyclops;
     }
+    public enum VehicleType
+    {
+        ModVehicle,
+        Seamoth,
+        Prawn,
+        Cyclops
+    }
     public static class UpgradeRegistrar
     {
         internal static List<Action<AddActionParams>> OnAddActions = new List<Action<AddActionParams>>();
@@ -89,7 +96,7 @@ namespace VehicleFramework.Admin
                 Logger.Error("ModVehicleUpgrade cannot have empty class ID!");
                 return false;
             }
-            if(upgrade.GetRecipe().Count == 0)
+            if(upgrade.GetRecipe(VehicleType.ModVehicle).Count == 0)
             {
                 Logger.Error("ModVehicleUpgrade cannot have empty recipe!");
                 return false;
@@ -107,7 +114,7 @@ namespace VehicleFramework.Admin
         private static TechType RegisterModVehicleUpgrade(ModVehicleUpgrade upgrade)
         {
             Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
-            moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe());
+            moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(VehicleType.ModVehicle));
             PrefabInfo module_info = PrefabInfo
                 .WithTechType(upgrade.ClassId, upgrade.DisplayName, upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
@@ -117,7 +124,7 @@ namespace VehicleFramework.Admin
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = upgrade.Color))
             };
             module_CustomPrefab.SetGameObject(moduleTemplate);
-            string[] steps = CraftTreeHandler.UpgradeTypeToPath(CraftTreeHandler.UpgradeType.ModVehicle);
+            string[] steps = CraftTreeHandler.UpgradeTypeToPath(VehicleType.ModVehicle);
             if (upgrade.TabName.Length > 0)
             {
                 steps = steps.Append(upgrade.TabName).ToArray();
