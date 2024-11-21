@@ -879,16 +879,16 @@ namespace VehicleFramework
             foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true))
             {
                 // skip some materials
-                if (renderer.gameObject.name.ToLower().Contains("light"))
-                {
-                    continue;
-                }
                 if (renderer.gameObject.GetComponent<Skybox>())
                 {
                     // I feel okay using Skybox as the designated "don't apply marmoset to me" component.
                     // I think there's no reason a vehicle should have a skybox anywhere.
                     // And if there is, I'm sure that developer can work around this.
                     Component.DestroyImmediate(renderer.gameObject.GetComponent<Skybox>());
+                    continue;
+                }
+                if (renderer.gameObject.name.ToLower().Contains("light"))
+                {
                     continue;
                 }
                 if (mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
