@@ -57,6 +57,9 @@ namespace VehicleFramework
         [Keybind("Magnet Boots", Tooltip = "Certain vehicles can cling to exterior surfaces, such as bases or other Submarines.")]
         public KeyCode magnetBoots = KeyCode.G;
 
+        [Keybind("Toggle Headlights")]
+        public KeyCode headlightsButton = KeyCode.Mouse1;
+
         [Toggle("Fragment Experience", Tooltip = "Enable scannable fragments. Leave unchecked if adding this mod to an existing world. Requires Subnautica reboot when changed.")]
         public bool isFragmentExperience = true;
 
