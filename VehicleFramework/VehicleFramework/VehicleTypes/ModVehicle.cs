@@ -118,6 +118,8 @@ namespace VehicleFramework
         #region vehicle_overrides
         public override void Awake()
         {
+            // Register our new vehicle with Vehicle Framework
+            VehicleManager.EnrollVehicle(this);
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
 
@@ -159,9 +161,6 @@ namespace VehicleFramework
             gameObject.EnsureComponent<GameInfoIcon>().techType = TechType;
             GameInfoIcon.Add(TechType);
             powerMan = gameObject.EnsureComponent<PowerManager>();
-
-            // Register our new vehicle with Vehicle Framework
-            VehicleManager.EnrollVehicle(this);
             isInited = true;
         }
         public override void Update()
