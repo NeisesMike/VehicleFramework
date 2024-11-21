@@ -11,42 +11,6 @@ namespace VehicleFramework.Admin
 {
     public static class Utils
     {
-        internal enum UpgradePath
-        {
-            ModVehicle,
-            Seamoth,
-            Exosuit,
-            Cyclops
-        }
-        internal static string UpgradePathToString(UpgradePath path)
-        {
-            switch (path)
-            {
-                case UpgradePath.ModVehicle:
-                    return "MVCM";
-                case UpgradePath.Seamoth:
-                    return "VVSM";
-                case UpgradePath.Exosuit:
-                    return "VVEM";
-                case UpgradePath.Cyclops:
-                    return "VVCM";
-                default:
-                    return "ERROR";
-            }
-        }
-        internal static void AddFabricatorMenus()
-        {
-            // patch in the crafting node for the vehicle upgrade menu
-            string[] mvUpgradesPath = { "MVUM" };
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, mvUpgradesPath[0], LocalizationManager.GetString(EnglishString.MVModules), MainPatcher.ModVehicleIcon);
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, "MVDM", LocalizationManager.GetString(EnglishString.MVDepthModules), MainPatcher.ModVehicleIcon, mvUpgradesPath);
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradePathToString(UpgradePath.ModVehicle), "Mod Vehicle Common Modules", MainPatcher.ModVehicleIcon, mvUpgradesPath);
-            string[] vanillaUpgradesPath = { "VVUM" };
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, vanillaUpgradesPath[0], "Vanilla Vehicle Modules", MainPatcher.ModVehicleIcon);
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradePathToString(UpgradePath.Seamoth), "VF Seamoth Modules", MainPatcher.ModVehicleIcon, vanillaUpgradesPath);
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradePathToString(UpgradePath.Exosuit), "VF Exosuit Modules", MainPatcher.ModVehicleIcon, vanillaUpgradesPath);
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradePathToString(UpgradePath.Cyclops), "VF Cyclops Modules", MainPatcher.ModVehicleIcon, vanillaUpgradesPath);
-        }
         public static Shader StoreShader(List<MeshRenderer> rends)
         {
             Shader m_ShaderMemory = null;

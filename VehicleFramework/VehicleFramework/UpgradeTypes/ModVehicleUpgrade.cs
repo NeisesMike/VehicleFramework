@@ -38,8 +38,8 @@ namespace VehicleFramework.UpgradeTypes
         public virtual TechType UnlockWith => TechType.Workbench;
         public virtual string UnlockedMessage => "New vehicle upgrade acquired";
         public virtual Sprite UnlockedSprite => null;
-        public virtual string TabName => Admin.Utils.UpgradePathToString(Admin.Utils.UpgradePath.ModVehicle);
-        public virtual string[] StepsToFabricatorTab => new string[] { "MVUM", TabName };
+        public virtual string TabName => "";
+        public virtual string TabDisplayName => "";
         public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {

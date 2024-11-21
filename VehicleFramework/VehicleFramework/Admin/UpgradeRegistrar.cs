@@ -40,6 +40,10 @@ namespace VehicleFramework.Admin
         public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default(UpgradeCompat), bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
+            if (upgrade.TabName != "")
+            {
+                AddCraftingTabs(upgrade.TabName, upgrade.TabDisplayName, null);
+            }
             bool result = ValidateModVehicleUpgrade(upgrade, compat);
             if(result)
             {
@@ -59,6 +63,19 @@ namespace VehicleFramework.Admin
                 Logger.Error("Failed to register upgrade: " + upgrade.ClassId);
                 return default;
             }
+        }
+        private static void AddCraftingTabs(string tabName, string tabDisplayName, Atlas.Sprite displayIcon=null)
+        {
+            Atlas.Sprite usedIcon = displayIcon;
+            if(usedIcon == null)
+            {
+                usedIcon = MainPatcher.ModVehicleIcon;
+            }
+            CraftTreeHandler.AddCraftTreeNodesVF(
+                tabName,
+                tabDisplayName,
+                usedIcon
+            );
         }
         private static bool ValidateModVehicleUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat)
         {
@@ -100,11 +117,16 @@ namespace VehicleFramework.Admin
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = upgrade.Color))
             };
             module_CustomPrefab.SetGameObject(moduleTemplate);
+            string[] steps = CraftTreeHandler.UpgradeTypeToPath(CraftTreeHandler.UpgradeType.ModVehicle);
+            if (upgrade.TabName.Length > 0)
+            {
+                steps = steps.Append(upgrade.TabName).ToArray();
+            }
             module_CustomPrefab
                 .SetRecipe(moduleRecipe)
                 .WithCraftingTime(upgrade.CraftingTime)
                 .WithFabricatorType(upgrade.FabricatorType)
-                .WithStepsToFabricatorTab(upgrade.StepsToFabricatorTab);
+                .WithStepsToFabricatorTab(steps);
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
             if (upgrade as ModVehicleArm != null)
             {

@@ -55,7 +55,7 @@ namespace VehicleFramework
 
             GetSprites();
 
-            Admin.Utils.AddFabricatorMenus();
+            Admin.CraftTreeHandler.AddFabricatorMenus();
 
             VehicleFramework.Admin.Utils.RegisterDepthModules();
 
