@@ -94,7 +94,7 @@ namespace VehicleFramework.VehicleComponents
         {
             RaycastHit[] allHits = Physics.BoxCastAll(mv.BoundingBoxCollider.bounds.center, mv.GetBoundingDimensions() / 2f, -transform.up, transform.rotation, MagnetDistance);
             var orderedHits = allHits
-                .Where(x=>!Admin.Utils.IsThisGameObjectAncestor(x.collider.transform, gameObject))
+                .Where(x=>!x.collider.transform.IsGameObjectAncestor(gameObject))
                 .OrderBy(x => (x.point - transform.position).sqrMagnitude);
             foreach (var hit in orderedHits)
             {

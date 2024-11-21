@@ -85,18 +85,6 @@ namespace VehicleFramework.Admin
             }
             return IsAnAncestorTheCurrentMountedVehicle(current.parent);
         }
-        public static bool IsThisGameObjectAncestor(Transform current, GameObject ancestor)
-        {
-            if (current == null || ancestor == null)
-            {
-                return false;
-            }
-            if(current.gameObject == ancestor)
-            {
-                return true;
-            }
-            return IsThisGameObjectAncestor(current.parent, ancestor);
-        }
         public static void RegisterDepthModules()
         {
             UpgradeCompat compat = new UpgradeCompat
@@ -162,14 +150,6 @@ namespace VehicleFramework.Admin
                 VehicleManager.vehicleTypes.ForEach(x => Logger.Log(x.name));
                 return 0;
             }
-        }
-        public static bool IsPilotingCyclops()
-        {
-            return IsInCyclops() && Player.main.mode == Player.Mode.Piloting;
-        }
-        public static bool IsInCyclops()
-        {
-            return Player.main.currentSub != null && Player.main.currentSub.name.ToLower().Contains("cyclops");
         }
         public static void EnableSimpleEmission(Material mat)
         {
