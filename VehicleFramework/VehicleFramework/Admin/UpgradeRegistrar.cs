@@ -49,7 +49,7 @@ namespace VehicleFramework.Admin
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
             if (upgrade.TabName != "")
             {
-                AddCraftingTabs(upgrade.TabName, upgrade.TabDisplayName, null);
+                AddCraftingTabs(upgrade.TabName, upgrade.TabDisplayName, upgrade.TabIcon);
             }
             bool result = ValidateModVehicleUpgrade(upgrade, compat);
             if(result)
@@ -71,7 +71,7 @@ namespace VehicleFramework.Admin
                 return default;
             }
         }
-        private static void AddCraftingTabs(string tabName, string tabDisplayName, Atlas.Sprite displayIcon=null)
+        private static void AddCraftingTabs(string tabName, string tabDisplayName, Atlas.Sprite displayIcon)
         {
             Atlas.Sprite usedIcon = displayIcon;
             if(usedIcon == null)

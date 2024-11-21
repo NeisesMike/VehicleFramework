@@ -40,6 +40,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual Sprite UnlockedSprite => null;
         public virtual string TabName => "";
         public virtual string TabDisplayName => "";
+        public virtual Atlas.Sprite TabIcon => MainPatcher.UpgradeIcon;
         public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {
