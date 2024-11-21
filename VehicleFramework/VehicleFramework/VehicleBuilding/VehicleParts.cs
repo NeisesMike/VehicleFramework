@@ -49,6 +49,41 @@ namespace VehicleFramework.VehicleParts
             Width = iWidth;
         }
     }
+    public struct VehicleFloaters
+    {
+        public GameObject Floater;
+        public float Pressure;
+        public int FloaterTankFillPercentage;
+        public VehicleFloaters(GameObject iFloater, float iPressure, int iFloatTankFillPercentage)
+        {
+            Floater = iFloater;
+            Pressure = iPressure;
+            FloaterTankFillPercentage = iFloatTankFillPercentage;
+        }
+    }
+    public struct VehicleWeights
+    {
+        public GameObject Weights;
+        public float Mass;
+        public VehicleWeights(GameObject iWeight, float iMass)
+        {
+            Weights = iWeight;
+            Mass = iMass;
+        }
+    }
+    public struct VehicleAnchor
+    {
+        public GameObject Anchor;
+        public float AnchorLength;
+        public int AnchorSpeed;
+        public VehicleAnchor(GameObject iAnchor, float iAnchorLength, int IAnchorSpeed)
+        {
+            Anchor = iAnchor;
+            AnchorLength = iAnchorLength;
+            AnchorSpeed = IAnchorSpeed;
+        }
+    }
+}
     public struct VehicleUpgrades
     {
         public GameObject Interface;

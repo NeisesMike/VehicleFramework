@@ -12,6 +12,9 @@ namespace VehicleFramework.VehicleTypes
     {
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
+        public abstract List<VehicleParts.VehicleFloaters> VehicleFloaters { get; }
+        public abstract List<VehicleParts.VehicleWeights> VehicleWeights { get; }
+        public abstract List<VehicleParts.VehicleAnchor> VehicleAnchors { get; }
         public virtual GameObject SteeringWheelLeftHandTarget { get; }
         public virtual GameObject SteeringWheelRightHandTarget { get; }
         protected bool isPlayerInside = false;
