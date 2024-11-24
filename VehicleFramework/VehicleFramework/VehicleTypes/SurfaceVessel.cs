@@ -8,7 +8,7 @@ using VehicleFramework.Engines;
 
 namespace VehicleFramework.VehicleTypes
 {
-    public abstract class Skimmer : ModVehicle
+    public abstract class SurfaceVessel : ModVehicle
     {
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; }
