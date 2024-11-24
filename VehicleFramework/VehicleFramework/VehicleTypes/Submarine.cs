@@ -78,17 +78,29 @@ namespace VehicleFramework.VehicleTypes
 
             // now that we're in-game, load the color picker
             // we can't do this before we're in-game because not all assets are ready before the game is started
-            if (!(ColorPicker is null))
+            if (ColorPicker != null)
             {
-                if (ColorPicker.transform.Find("EditScreen") is null)
+                if (ColorPicker.transform.Find("EditScreen") == null)
                 {
                     UWE.CoroutineHost.StartCoroutine(SetupColorPicker());
                 }
                 else
                 {
-                    ActualEditScreen = ColorPicker.transform.Find("EditScreen").gameObject;
+                    EnsureColorPickerEnabled();
                 }
             }
+        }
+        private void EnsureColorPickerEnabled()
+        {
+            ActualEditScreen = ColorPicker?.transform.Find("EditScreen")?.gameObject;
+            if(ActualEditScreen == null)
+            {
+                return;
+            }
+            // why is canvas sometimes disabled, and Active is sometimes inactive?
+            // Don't know!
+            ActualEditScreen.GetComponent<Canvas>().enabled = true;
+            ActualEditScreen.transform.Find("Active").gameObject.SetActive(true);
         }
         public bool IsPlayerInside()
         {
@@ -201,6 +213,7 @@ namespace VehicleFramework.VehicleTypes
                     Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
                 }
             }
+            EnsureColorPickerEnabled();
         }
         public override void PlayerExit()
         {
@@ -456,6 +469,8 @@ namespace VehicleFramework.VehicleTypes
             ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.AddListener(new UnityAction(OnColorSubmit));
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.RemoveAllListeners();
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new UnityAction<string>(OnNameChange));
+
+            EnsureColorPickerEnabled();
             yield break;
         }
 

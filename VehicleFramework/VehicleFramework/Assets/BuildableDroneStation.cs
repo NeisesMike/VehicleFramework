@@ -136,7 +136,7 @@ namespace VehicleFramework
         }
         public void Update()
         {
-            GetComponentInChildren<Collider>().enabled = !Admin.Utils.IsPilotingCyclops();
+            GetComponentInChildren<Collider>().enabled = !Player.main.IsPilotingCyclops();
         }
         public static void FastenConnection(DroneStation station, Drone drone)
         {

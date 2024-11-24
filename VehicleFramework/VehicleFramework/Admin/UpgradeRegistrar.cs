@@ -26,6 +26,13 @@ namespace VehicleFramework.Admin
         public TechType forExosuit;
         public TechType forCyclops;
     }
+    public enum VehicleType
+    {
+        ModVehicle,
+        Seamoth,
+        Prawn,
+        Cyclops
+    }
     public static class UpgradeRegistrar
     {
         internal static List<Action<AddActionParams>> OnAddActions = new List<Action<AddActionParams>>();
@@ -40,6 +47,10 @@ namespace VehicleFramework.Admin
         public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default(UpgradeCompat), bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
+            if (upgrade.TabName != "")
+            {
+                AddCraftingTabs(upgrade.TabName, upgrade.TabDisplayName, upgrade.TabIcon);
+            }
             bool result = ValidateModVehicleUpgrade(upgrade, compat);
             if(result)
             {
@@ -60,6 +71,19 @@ namespace VehicleFramework.Admin
                 return default;
             }
         }
+        private static void AddCraftingTabs(string tabName, string tabDisplayName, Atlas.Sprite displayIcon)
+        {
+            Atlas.Sprite usedIcon = displayIcon;
+            if(usedIcon == null)
+            {
+                usedIcon = MainPatcher.ModVehicleIcon;
+            }
+            CraftTreeHandler.AddCraftTreeNodesVF(
+                tabName,
+                tabDisplayName,
+                usedIcon
+            );
+        }
         private static bool ValidateModVehicleUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat)
         {
             if(compat.skipModVehicle && compat.skipSeamoth && compat.skipExosuit && compat.skipCyclops)
@@ -72,7 +96,7 @@ namespace VehicleFramework.Admin
                 Logger.Error("ModVehicleUpgrade cannot have empty class ID!");
                 return false;
             }
-            if(upgrade.GetRecipe().Count == 0)
+            if(upgrade.GetRecipe(VehicleType.ModVehicle).Count == 0)
             {
                 Logger.Error("ModVehicleUpgrade cannot have empty recipe!");
                 return false;
@@ -90,7 +114,7 @@ namespace VehicleFramework.Admin
         private static TechType RegisterModVehicleUpgrade(ModVehicleUpgrade upgrade)
         {
             Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
-            moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe());
+            moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(VehicleType.ModVehicle));
             PrefabInfo module_info = PrefabInfo
                 .WithTechType(upgrade.ClassId, upgrade.DisplayName, upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
@@ -100,11 +124,16 @@ namespace VehicleFramework.Admin
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = upgrade.Color))
             };
             module_CustomPrefab.SetGameObject(moduleTemplate);
+            string[] steps = CraftTreeHandler.UpgradeTypeToPath(VehicleType.ModVehicle);
+            if (upgrade.TabName.Length > 0)
+            {
+                steps = steps.Append(upgrade.TabName).ToArray();
+            }
             module_CustomPrefab
                 .SetRecipe(moduleRecipe)
                 .WithCraftingTime(upgrade.CraftingTime)
                 .WithFabricatorType(upgrade.FabricatorType)
-                .WithStepsToFabricatorTab(upgrade.StepsToFabricatorTab);
+                .WithStepsToFabricatorTab(steps);
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
             if (upgrade as ModVehicleArm != null)
             {

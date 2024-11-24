@@ -15,8 +15,8 @@ namespace VehicleFramework
         {
             return 
                 VehicleTypes.Drone.mountedDrone
-                ?? Player.main.GetVehicle() as ModVehicle
-                ?? Player.main.currentSub?.GetComponent<ModVehicle>();
+                ?? player.GetVehicle() as ModVehicle
+                ?? player.currentSub?.GetComponent<ModVehicle>();
         }
         public static List<string> GetCurrentUpgrades(this Vehicle vehicle)
         {
@@ -52,6 +52,26 @@ namespace VehicleFramework
                 bay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
             }
             yield break;
+        }
+        public static bool IsPilotingCyclops(this Player player)
+        {
+            return player.IsInCyclops() && player.mode == Player.Mode.Piloting;
+        }
+        public static bool IsInCyclops(this Player player)
+        {
+            return player.currentSub != null && player.currentSub.name.ToLower().Contains("cyclops");
+        }
+        public static bool IsGameObjectAncestor(this Transform current, GameObject ancestor)
+        {
+            if (current == null || ancestor == null)
+            {
+                return false;
+            }
+            if (current.gameObject == ancestor)
+            {
+                return true;
+            }
+            return current.parent.IsGameObjectAncestor(ancestor);
         }
     }
 }

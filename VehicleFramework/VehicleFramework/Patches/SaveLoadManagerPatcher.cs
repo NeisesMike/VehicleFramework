@@ -62,7 +62,7 @@ namespace VehicleFramework.Patches
             }
             catch
             {
-                Logger.Warn("Could not read json file!");
+                Logger.DebugLog("Could not read json file!");
             }
         }
     }

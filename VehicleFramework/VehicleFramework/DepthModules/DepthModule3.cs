@@ -20,6 +20,7 @@ namespace VehicleFramework.DepthModules
                     new Assets.Ingredient(TechType.Kyanite, 3)
                 };
         public override string TabName => "MVDM";
+        public override string TabDisplayName => "Depth Modules";
         public override void OnAdded(AddActionParams param)
         {
             VehicleFramework.Admin.Utils.EvaluateDepthModules(param);

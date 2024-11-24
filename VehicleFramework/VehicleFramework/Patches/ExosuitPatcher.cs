@@ -77,6 +77,12 @@ namespace VehicleFramework.Patches
             {
                 return;
             }
+            if(slotID < 0)
+            {
+                // Usually this means slotID was -1,
+                // which means there was no active slot.
+                return;
+            }
             if (exo.GetQuickSlotCooldown(slotID) != 1f)
             {
                 // cooldown isn't finished!

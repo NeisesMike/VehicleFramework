@@ -131,6 +131,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CraftTreeHandler.cs" />
     <Compile Include="Admin\ExtensionMethods.cs" />
     <Compile Include="Admin\VanillaUpgradeMaker.cs" />
     <Compile Include="Admin\UpgradeRegistrar.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\PingInstancePatcher.cs" />
     <Compile Include="Patches\SaveLoadManagerPatcher.cs" />
     <Compile Include="Patches\MainMenuLoadPanelPatcher.cs" />
     <Compile Include="Patches\BlockSeamothPatcher.cs" />
