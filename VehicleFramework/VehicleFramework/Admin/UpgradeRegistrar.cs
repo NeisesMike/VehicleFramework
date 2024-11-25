@@ -155,7 +155,7 @@ namespace VehicleFramework.Admin
                     scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
                 }
             }
-            module_CustomPrefab.Register();
+            module_CustomPrefab.Register(); // this line causes PDA voice lag by 1.5 seconds ???????
             upgrade.UnlockTechType = module_info.TechType;
             return module_info.TechType;
         }

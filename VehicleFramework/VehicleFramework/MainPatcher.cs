@@ -57,7 +57,7 @@ namespace VehicleFramework
 
             Admin.CraftTreeHandler.AddFabricatorMenus();
 
-            //Admin.Utils.RegisterDepthModules(); // this line causes PDA voice lag by 1.5 seconds ???????
+            Admin.Utils.RegisterDepthModules();
 
             UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
             UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());
