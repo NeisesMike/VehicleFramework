@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 namespace VehicleFramework
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
+    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, "1.0.0.32")]
     public class MainPatcher : BaseUnityPlugin
     {
         internal static VehicleFrameworkConfig VFConfig { get; private set; }
