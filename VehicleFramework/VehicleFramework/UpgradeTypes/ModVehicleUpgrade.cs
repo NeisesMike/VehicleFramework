@@ -95,5 +95,13 @@ namespace VehicleFramework.UpgradeTypes
                 || TechTypes.forExosuit == tt
                 || TechTypes.forCyclops == tt;
         }
+        public int GetNumberInstalled(Vehicle vehicle)
+        {
+            if (vehicle == null)
+            {
+                return 0;
+            }
+            return vehicle.GetCurrentUpgrades().Where(x => x.Contains(ClassId)).Count();
+        }
     }
 }
