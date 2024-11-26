@@ -161,6 +161,7 @@
     <Compile Include="Patches\ArmsControllerPatcher.cs" />
     <Compile Include="Patches\BedPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\BetterVehicleStoragePatcher.cs" />
+    <Compile Include="Patches\uGUI_CraftingMenuPatcher.cs" />
     <Compile Include="Patches\uGUI_PingEntryPatcher.cs" />
     <Compile Include="SaveData.cs" />
     <Compile Include="UpgradeTypes\ToggleableUpgrade.cs" />
