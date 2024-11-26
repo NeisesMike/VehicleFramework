@@ -44,11 +44,11 @@ namespace VehicleFramework.UpgradeTypes
         public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {
-            Logger.Log("Adding " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Adding " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
         public virtual void OnRemoved(AddActionParams param)
         {
-            Logger.Log("Removing " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Removing " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
         private readonly List<UpgradeTechTypes> RecipeExtensions = new List<UpgradeTechTypes>();
         private readonly List<Assets.Ingredient> SimpleRecipeExtensions = new List<Assets.Ingredient>();
