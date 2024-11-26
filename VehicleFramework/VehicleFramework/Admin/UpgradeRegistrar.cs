@@ -190,18 +190,25 @@ namespace VehicleFramework.Admin
             {
                 if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                 {
-                    if (param.isAdded)
+                    if (param.vehicle != null)
                     {
-                        upgrade.OnAdded(param);
+                        if (param.isAdded)
+                        {
+                            upgrade.OnAdded(param);
+                        }
+                        else
+                        {
+                            upgrade.OnRemoved(param);
+                        }
+                        if (upgrade as ModVehicleArm != null && param.vehicle as ModVehicle != null)
+                        {
+                            var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
+                            armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID);
+                        }
                     }
-                    else
+                    else if(param.cyclops != null)
                     {
-                        upgrade.OnRemoved(param);
-                    }
-                    if (upgrade as ModVehicleArm != null && param.vehicle as ModVehicle != null)
-                    {
-                        var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
-                        armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID);
+                        upgrade.OnCyclops(param);
                     }
                 }
             }

@@ -147,6 +147,7 @@
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\CyclopsUpgradesPatcher.cs" />
     <Compile Include="Patches\FreecamControllerPatcher.cs" />
     <Compile Include="Patches\PingInstancePatcher.cs" />
     <Compile Include="Patches\SaveLoadManagerPatcher.cs" />

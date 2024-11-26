@@ -50,6 +50,10 @@ namespace VehicleFramework.UpgradeTypes
         {
             Logger.DebugLog("Removing " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
+        public virtual void OnCyclops(AddActionParams param)
+        {
+            Logger.Log("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
+        }
         private readonly List<UpgradeTechTypes> RecipeExtensions = new List<UpgradeTechTypes>();
         private readonly List<Assets.Ingredient> SimpleRecipeExtensions = new List<Assets.Ingredient>();
         public List<CraftData.Ingredient> GetRecipe(VehicleType type)

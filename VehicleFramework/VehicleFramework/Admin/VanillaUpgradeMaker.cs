@@ -62,7 +62,7 @@ namespace VehicleFramework.Admin
             }
             if (!compat.skipCyclops)
             {
-                //CreatePassiveModuleCyclops(upgrade, ref utt);
+                CreatePassiveModuleCyclops(upgrade, ref utt, isPdaRegistered);
             }
         }
         internal static void CreateSelectModule(SelectableUpgrade select, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
@@ -238,7 +238,22 @@ namespace VehicleFramework.Admin
             var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, VehicleType.Cyclops);
+            CustomPrefab prefab = new CustomPrefab(prefabInfo);
+            var clone = new CloneTemplate(prefabInfo, TechType.SeamothElectricalDefense);
+            prefab.SetGameObject(clone);
+            if (!isPdaSetup)
+            {
+                prefab.SetPdaGroupCategory(TechGroup.Cyclops, TechCategory.CyclopsUpgrades);
+            }
+            if (upgrade.UnlockedSprite != null && !upgrade.UnlockAtStart)
+            {
+                var scanningGadget = prefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
+                scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+            }
+            prefab.AddRecipe(upgrade, VehicleType.Cyclops);
+            prefab.SetEquipment(EquipmentType.CyclopsModule);
+            prefab.Register();
+            upgrade.UnlockTechType = prefabInfo.TechType;
         }
         #endregion
 

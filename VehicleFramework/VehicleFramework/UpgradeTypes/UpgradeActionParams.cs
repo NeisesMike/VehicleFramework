@@ -10,6 +10,7 @@ namespace VehicleFramework.UpgradeTypes
     public struct AddActionParams
     {
         public Vehicle vehicle;
+        public SubRoot cyclops;
         public int slotID;
         public TechType techType;
         public bool isAdded;
@@ -17,6 +18,7 @@ namespace VehicleFramework.UpgradeTypes
     public struct ToggleActionParams
     {
         public Vehicle vehicle;
+        public SubRoot cyclops;
         public int slotID;
         public TechType techType;
         public bool active;
@@ -24,6 +26,7 @@ namespace VehicleFramework.UpgradeTypes
     public struct SelectableChargeableActionParams
     {
         public Vehicle vehicle;
+        public SubRoot cyclops;
         public int slotID;
         public TechType techType;
         public float charge;
@@ -32,12 +35,14 @@ namespace VehicleFramework.UpgradeTypes
     public struct SelectableActionParams
     {
         public Vehicle vehicle;
+        public SubRoot cyclops;
         public int slotID;
         public TechType techType;
     }
     public struct ArmActionParams
     {
         public Vehicle vehicle;
+        public SubRoot cyclops;
         public int slotID;
         public TechType techType;
         public GameObject arm;
