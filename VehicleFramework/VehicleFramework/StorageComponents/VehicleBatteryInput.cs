@@ -10,7 +10,7 @@ namespace VehicleFramework
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{
 		public EnergyMixin mixin;
-		public EnglishString tooltip;
+		internal EnglishString tooltip;
 
 		public void OnHandHover(GUIHand hand)
 		{
