@@ -31,6 +31,12 @@ namespace VehicleFramework
         {
             VehicleFramework.Admin.GameStateWatcher.IsPlayerAwaked = true;
             VehicleFramework.Assets.FragmentManager.AddScannerDataEntries();
+            HUDBuilder.DecideBuildHUD();
+
+            // Setup build bot paths.
+            // We have to do this at game-start time,
+            // because the new objects we create are wiped on scene-change.
+            UWE.CoroutineHost.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
             return;
         }
         [HarmonyPostfix]
@@ -54,12 +60,6 @@ namespace VehicleFramework
             */
 
 
-            HUDBuilder.DecideBuildHUD();
-
-            // Setup build bot paths.
-            // We have to do this at game-start time,
-            // because the new objects we create are wiped on scene-change.
-            UWE.CoroutineHost.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
             MainPatcher.VFPlayerStartActions.ForEach(x => x(__instance));
             VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted = true;
             return;

@@ -118,35 +118,30 @@ namespace VehicleFramework
         #region vehicle_overrides
         public override void Awake()
         {
-            // Register our new vehicle with Vehicle Framework
-            VehicleManager.EnrollVehicle(this);
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
-
+            VehicleManager.EnrollVehicle(this); // Register our new vehicle with Vehicle Framework
+            upgradeOnAddedActions.Add(StorageModuleAction);
+            upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
+            upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
             if (HeadLights != null)
             {
                 headlights = gameObject.EnsureComponent<HeadLightsController>();
             }
             gameObject.EnsureComponent<AutoPilot>();
-
             if (UseDefaultDamageTracker)
             {
                 gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
             }
-
-            upgradeOnAddedActions.Add(StorageModuleAction);
-            upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
-            upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
-
             if (BoundingBoxCollider == null && BoundingBox != null)
             {
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
             }
-            VehicleBuilder.SetupCameraController(this);
             if(Engine == null)
             {
                 Engine = GetComponent<ModVehicleEngine>();
             }
+            VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
         }
         public override void Start()
