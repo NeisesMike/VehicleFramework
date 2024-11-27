@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using System.Reflection;
 
-namespace VehicleFramework
+namespace VehicleFramework.Localization
 {
     public enum EnglishString
     {

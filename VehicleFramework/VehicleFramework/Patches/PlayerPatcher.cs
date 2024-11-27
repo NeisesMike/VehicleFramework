@@ -14,6 +14,7 @@ using System.Reflection.Emit;
 using Nautilus.Utility;
 using UWE;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework
 { 

@@ -9,6 +9,7 @@ using VehicleFramework.Admin;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {

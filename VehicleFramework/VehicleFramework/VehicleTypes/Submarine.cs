@@ -8,6 +8,7 @@ using UnityEngine;
 using VehicleFramework.Engines;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework.VehicleTypes
 {

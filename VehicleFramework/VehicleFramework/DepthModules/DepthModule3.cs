@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VehicleFramework.UpgradeTypes;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework.DepthModules
 {

@@ -19,6 +19,7 @@ using Nautilus.Utility;
 
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
