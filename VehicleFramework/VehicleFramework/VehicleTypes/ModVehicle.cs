@@ -663,6 +663,10 @@ namespace VehicleFramework
                 return false;
             }
         }
+        public virtual void OnFinishedLoading()
+        {
+
+        }
         #endregion
 
         #region public_fields
