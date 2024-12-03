@@ -59,7 +59,7 @@ namespace VehicleFramework.VehicleTypes
             if(IsUnderCommand && GameInput.GetButtonDown(AutoHomeButton) && pairedStation != null)
             {
                 Vector3 destination = pairedStation.transform.position;
-                Player.main.ExitLockedMode();
+                DeselectSlots();
                 GetComponent<VehicleComponents.AutoPilotNavigator>().NaiveGo(destination);
             }
         }
@@ -90,7 +90,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 yield return new WaitForSeconds(1f);
             }
-            Player.main.ExitLockedMode();
+            DeselectSlots();
             Logger.Output("Disconnected: Low Power", time:5f, y:150);
             yield break;
         }
@@ -169,7 +169,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
         {
-            Player.main.ExitLockedMode();
+            DeselectSlots();
         }
         public override System.Collections.IEnumerator Undock(Player player, float yUndockedPosition)
         {
@@ -198,7 +198,7 @@ namespace VehicleFramework.VehicleTypes
             base.ScuttleVehicle();
             if (mountedDrone == this)
             {
-                Player.main.ExitLockedMode();
+                DeselectSlots();
             }
         }
     }

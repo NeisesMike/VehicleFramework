@@ -135,7 +135,7 @@ namespace VehicleFramework.VehicleComponents
                 if (magnetData.target)
                 {
                     ParentSelfToTarget(magnetData);
-                    Player.main.ExitLockedMode();
+                    mv.DeselectSlots();
                 }
                 else if(verbose)
                 {

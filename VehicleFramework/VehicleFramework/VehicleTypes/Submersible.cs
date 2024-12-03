@@ -70,9 +70,6 @@ namespace VehicleFramework.VehicleTypes
                 // So we'll return if the player is within a Cyclops.
                 return;
             }
-            // this function
-            // called by Player.ExitLockedMode()
-            // which is triggered on button press
             UWE.CoroutineHost.StartCoroutine(StandUpFromChair());
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
