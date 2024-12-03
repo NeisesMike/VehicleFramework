@@ -12,6 +12,7 @@ namespace VehicleFramework.Admin
 {
     internal static class VanillaUpgradeMaker
     {
+        public static List<TechType> CyclopsUpgradeTechTypes = new List<TechType>();
         internal static CustomPrefab CreateModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, PrefabInfo info)
         {
             CustomPrefab prefab = new CustomPrefab(info);
@@ -254,6 +255,7 @@ namespace VehicleFramework.Admin
             prefab.SetEquipment(EquipmentType.CyclopsModule);
             prefab.Register();
             upgrade.UnlockTechType = prefabInfo.TechType;
+            CyclopsUpgradeTechTypes.Add(upgrade.UnlockTechType);
         }
         #endregion
 
