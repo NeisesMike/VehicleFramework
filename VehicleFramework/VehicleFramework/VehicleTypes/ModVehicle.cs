@@ -905,6 +905,7 @@ namespace VehicleFramework
                 StabilizeRoll();
             }
             prevVelocity = useRigidbody.velocity;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, teleporting, true);
         }
         internal void HandlePilotingAnimations()
         {
