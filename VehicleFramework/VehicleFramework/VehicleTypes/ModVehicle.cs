@@ -442,6 +442,7 @@ namespace VehicleFramework
             IsUnderCommand = false;
             Player.main.SetCurrentSub(null);
             NotifyStatus(PlayerStatus.OnPlayerExit);
+            Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
         }
         public virtual void SubConstructionBeginning()
         {

@@ -65,6 +65,18 @@ namespace VehicleFramework
             VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted = true;
             return;
         }
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Player.TryEject))]
+        public static bool PlayerTryEjectPrefix(Player __instance)
+        {
+            // Player.TryEject does not serve ModVehicles.
+            // The only reason it gets called at all, for a ModVehicle,
+            // is for compatibility with DeathRun remade,
+            // which spends energy on Player.TryEject.
+            // So we'll gut it and call it at the appropriate time,
+            // so that the DeathRun functionality can exist.
+            return __instance.GetModVehicle() == null;
+        }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Player.GetDepthClass))]
