@@ -111,6 +111,7 @@ namespace VehicleFramework
         public virtual Color ConstructionGhostColor { get; set; } = Color.black;
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
         public virtual bool AutoApplyShaders { get; set; } = true;
+        public virtual List<TMPro.TextMeshProUGUI> SubNameDecals => null;
         #endregion
 
         #region vehicle_overrides
