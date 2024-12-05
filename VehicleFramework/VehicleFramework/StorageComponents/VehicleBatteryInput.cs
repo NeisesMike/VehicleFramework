@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VehicleFramework.Localization;
+﻿using VehicleFramework.Localization;
+using UnityEngine;
 
 namespace VehicleFramework
 {
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{
 		public EnergyMixin mixin;
+
+		// need this SerializeField attribute or else assignment in
+		// VehicleBuilder is not propogated to instances
+		[SerializeField]
 		internal EnglishString tooltip;
 
 		public void OnHandHover(GUIHand hand)
