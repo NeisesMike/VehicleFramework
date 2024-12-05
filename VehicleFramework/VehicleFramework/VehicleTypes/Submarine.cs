@@ -217,7 +217,6 @@ namespace VehicleFramework.VehicleTypes
             isPlayerInside = false;
             base.PlayerExit();
             //Player.main.currentSub = null;
-            Player.main.currentMountedVehicle = null;
             if (!IsVehicleDocked)
             {
                 Player.main.transform.SetParent(null);

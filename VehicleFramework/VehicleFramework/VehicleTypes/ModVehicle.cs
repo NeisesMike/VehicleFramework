@@ -441,7 +441,14 @@ namespace VehicleFramework
                 }
             }
             IsUnderCommand = false;
-            Player.main.SetCurrentSub(null);
+            if(Player.main.GetCurrentSub() == GetComponent<SubRoot>())
+            {
+                Player.main.SetCurrentSub(null);
+            }
+            if(Player.main.GetVehicle() == this)
+            {
+                Player.main.currentMountedVehicle = null;
+            }
             NotifyStatus(PlayerStatus.OnPlayerExit);
             Player.main.transform.SetParent(null);
             Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
@@ -944,6 +951,18 @@ namespace VehicleFramework
                     break;
             }
         }
+        private void MyExitLockedMode()
+        {
+            GameInput.ClearInput();
+            Player.main.transform.parent = null;
+            Player.main.transform.localScale = Vector3.one;
+            Player.main.currentMountedVehicle = null;
+            Player.main.playerController.SetEnabled(true);
+            Player.main.mode = Player.Mode.Normal;
+            Player.main.playerModeChanged.Trigger(Player.main.mode);
+            Player.main.sitting = false;
+            Player.main.playerController.ForceControllerSize();
+        }
         private void DoExitRoutines()
         {
             Player myPlayer = Player.main;
@@ -971,7 +990,7 @@ namespace VehicleFramework
                     myPlayer.playerController.SetEnabled(true);
                     return;
                 }
-                Player.main.ExitLockedMode();
+                MyExitLockedMode();
                 return;
             }
             else if (mvSubmersible != null)
@@ -1038,7 +1057,7 @@ namespace VehicleFramework
                 mvSubmarine.StopPiloting();
                 return;
             }
-            Player.main.ExitLockedMode();
+            MyExitLockedMode();
             return;
         }
         #endregion

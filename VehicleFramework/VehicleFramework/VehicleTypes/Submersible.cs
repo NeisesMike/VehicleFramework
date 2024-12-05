@@ -99,8 +99,6 @@ namespace VehicleFramework.VehicleTypes
         {
             base.PlayerExit();
             Logger.DebugLog("start submersible player exit");
-            Player.main.currentSub = null;
-            Player.main.currentMountedVehicle = null;
             Logger.DebugLog("end submersible player exit");
             if (!IsVehicleDocked)
             {
