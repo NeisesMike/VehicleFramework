@@ -693,6 +693,15 @@ namespace VehicleFramework
         {
 
         }
+        public virtual void SetBaseColor(Vector3 hsb, Color color)
+        {
+        }
+        public virtual void SetInteriorColor(Vector3 hsb, Color color)
+        {
+        }
+        public virtual void SetStripeColor(Vector3 hsb, Color color)
+        {
+        }
         #endregion
 
         #region public_fields
