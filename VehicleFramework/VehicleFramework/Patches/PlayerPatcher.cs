@@ -14,6 +14,7 @@ using System.Reflection.Emit;
 using Nautilus.Utility;
 using UWE;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework
 { 
@@ -31,6 +32,12 @@ namespace VehicleFramework
         {
             VehicleFramework.Admin.GameStateWatcher.IsPlayerAwaked = true;
             VehicleFramework.Assets.FragmentManager.AddScannerDataEntries();
+            HUDBuilder.DecideBuildHUD();
+
+            // Setup build bot paths.
+            // We have to do this at game-start time,
+            // because the new objects we create are wiped on scene-change.
+            UWE.CoroutineHost.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
             return;
         }
         [HarmonyPostfix]
@@ -54,119 +61,23 @@ namespace VehicleFramework
             */
 
 
-            HUDBuilder.DecideBuildHUD();
-
-            // Setup build bot paths.
-            // We have to do this at game-start time,
-            // because the new objects we create are wiped on scene-change.
-            UWE.CoroutineHost.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
             MainPatcher.VFPlayerStartActions.ForEach(x => x(__instance));
             VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted = true;
             return;
         }
-
-
         [HarmonyPrefix]
-        [HarmonyPatch(nameof(Player.ExitLockedMode))]
-        public static bool ExitLockedModePrefix(Player __instance, ref Player.Mode ___mode)
+        [HarmonyPatch(nameof(Player.TryEject))]
+        public static bool PlayerTryEjectPrefix(Player __instance)
         {
-            /*
-             * This patch ensures we exit piloting mode correctly.
-             */
-            ModVehicle mv = __instance.GetModVehicle();
-            if(mv == null)
-            {
-                return true;
-            }
-            mv.GetComponent<VehicleComponents.MVCameraController>()?.ResetCamera();
-            void DoExitActions(ref Player.Mode mode)
-            {
-                GameInput.ClearInput();
-                __instance.playerController.SetEnabled(true);
-                mode = Player.Mode.Normal;
-                __instance.playerModeChanged.Trigger(mode);
-                __instance.sitting = false;
-                __instance.playerController.ForceControllerSize();
-                __instance.transform.parent = null;
-            }
-            VehicleTypes.Submersible mvSubmersible = mv as VehicleTypes.Submersible;
-            VehicleTypes.Walker mvWalker = mv as VehicleTypes.Walker;
-            VehicleTypes.Skimmer mvSkimmer = mv as VehicleTypes.Skimmer;
-            VehicleTypes.Submarine mvSubmarine = mv as VehicleTypes.Submarine;
-            if (Drone.mountedDrone != null)
-            {
-                Drone.mountedDrone.StopControlling();
-                if (Player.main.GetVehicle() != null)
-                {
-                    __instance.playerController.SetEnabled(true);
-                    return false;
-                }
-                return true;
-            }
-            else if (mvSubmersible != null)
-            {
-                // exit locked mode
-                DoExitActions(ref ___mode);
-                mvSubmersible.StopPiloting();
-                return false;
-            }
-            else if (mvWalker != null)
-            {
-                DoExitActions(ref ___mode);
-                mvWalker.StopPiloting();
-                return false;
-            }
-            else if (mvSkimmer != null)
-            {
-                DoExitActions(ref ___mode);
-                mvSkimmer.StopPiloting();
-                return false;
-            }
-            else if (mvSubmarine != null)
-            {
-                // check if we're level by comparing pitch and roll
-                float roll = mvSubmarine.transform.rotation.eulerAngles.z;
-                float rollDelta = roll >= 180 ? 360 - roll : roll;
-                float pitch = mvSubmarine.transform.rotation.eulerAngles.x;
-                float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
-
-                if (rollDelta > mvSubmarine.ExitRollLimit || pitchDelta > mvSubmarine.ExitPitchLimit)
-                {
-                    if (HUDBuilder.IsVR)
-                    {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 250, 250);
-                    }
-                    else
-                    {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 500, 0);
-                    }
-                    return false;
-                }
-                else if (mvSubmarine.useRigidbody.velocity.magnitude > mvSubmarine.ExitVelocityLimit)
-                {
-                    if (HUDBuilder.IsVR)
-                    {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 250, 250);
-                    }
-                    else
-                    {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 500, 0);
-                    }
-                    return false;
-                }
-
-                mvSubmarine.Engine.KillMomentum();
-                // teleport the player to a walking position, just behind the chair
-                Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
-
-                DoExitActions(ref ___mode);
-                mvSubmarine.StopPiloting();
-                return false;
-            }
-
-            return true;
-
+            // Player.TryEject does not serve ModVehicles.
+            // The only reason it gets called at all, for a ModVehicle,
+            // is for compatibility with DeathRun remade,
+            // which spends energy on Player.TryEject.
+            // So we'll gut it and call it at the appropriate time,
+            // so that the DeathRun functionality can exist.
+            return __instance.GetModVehicle() == null;
         }
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Player.GetDepthClass))]
         public static bool GetDepthClass(Player __instance, ref Ocean.DepthClass __result)

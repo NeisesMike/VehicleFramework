@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework.Admin;
-using VehicleFramework.UpgradeTypes;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
+using VehicleFramework.Localization;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -113,40 +111,36 @@ namespace VehicleFramework
         public virtual Color ConstructionGhostColor { get; set; } = Color.black;
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
         public virtual bool AutoApplyShaders { get; set; } = true;
+        public virtual List<TMPro.TextMeshProUGUI> SubNameDecals => null;
         #endregion
 
         #region vehicle_overrides
         public override void Awake()
         {
-            // Register our new vehicle with Vehicle Framework
-            VehicleManager.EnrollVehicle(this);
             energyInterface = GetComponent<EnergyInterface>();
             base.Awake();
-
+            VehicleManager.EnrollVehicle(this); // Register our new vehicle with Vehicle Framework
+            upgradeOnAddedActions.Add(StorageModuleAction);
+            upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
+            upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
             if (HeadLights != null)
             {
                 headlights = gameObject.EnsureComponent<HeadLightsController>();
             }
             gameObject.EnsureComponent<AutoPilot>();
-
             if (UseDefaultDamageTracker)
             {
                 gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
             }
-
-            upgradeOnAddedActions.Add(StorageModuleAction);
-            upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
-            upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
-
             if (BoundingBoxCollider == null && BoundingBox != null)
             {
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
             }
-            VehicleBuilder.SetupCameraController(this);
             if(Engine == null)
             {
                 Engine = GetComponent<ModVehicleEngine>();
             }
+            VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
         }
         public override void Start()
@@ -284,6 +278,28 @@ namespace VehicleFramework
             pingInstance.enabled = true;
             BuildBotManager.ResetGhostMaterial();
         }
+        public override void DeselectSlots() // This happens when you press the Exit button while having a "currentMountedVehicle."
+        {
+            if (ignoreInput)
+            {
+                return;
+            }
+            int i = 0;
+            int num = slotIDs.Length;
+            while (i < num)
+            {
+                QuickSlotType quickSlotType = GetQuickSlotType(i, out _);
+                if (quickSlotType == QuickSlotType.Toggleable || quickSlotType == QuickSlotType.Selectable || quickSlotType == QuickSlotType.SelectableChargeable)
+                {
+                    ToggleSlot(i, false);
+                }
+                quickSlotCharge[i] = 0f;
+                i++;
+            }
+            activeSlot = -1;
+            NotifySelectSlot(activeSlot);
+            DoExitRoutines();
+        }
         public override void SlotLeftDown()
         {
             base.SlotLeftDown();
@@ -381,9 +397,6 @@ namespace VehicleFramework
         public virtual void StopPiloting()
         {
             // StopPiloting is the VF trigger to discontinue controlling a vehicle.
-            // this function
-            // called by Player.ExitLockedMode()
-            // which is triggered on button press
             uGUI.main.quickSlots.SetTarget(null);
             NotifyStatus(PlayerStatus.OnPilotEnd);
         }
@@ -430,6 +443,8 @@ namespace VehicleFramework
             IsUnderCommand = false;
             Player.main.SetCurrentSub(null);
             NotifyStatus(PlayerStatus.OnPlayerExit);
+            Player.main.transform.SetParent(null);
+            Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
         }
         public virtual void SubConstructionBeginning()
         {
@@ -666,6 +681,10 @@ namespace VehicleFramework
             {
                 return false;
             }
+        }
+        public virtual void OnFinishedLoading()
+        {
+
         }
         #endregion
 
@@ -905,6 +924,7 @@ namespace VehicleFramework
                 StabilizeRoll();
             }
             prevVelocity = useRigidbody.velocity;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, teleporting, true);
         }
         internal void HandlePilotingAnimations()
         {
@@ -923,6 +943,103 @@ namespace VehicleFramework
                     HandleOtherPilotingAnimations(IsPlayerControlling());
                     break;
             }
+        }
+        private void DoExitRoutines()
+        {
+            Player myPlayer = Player.main;
+            Player.Mode myMode = myPlayer.mode;
+            GetComponent<MVCameraController>()?.ResetCamera();
+            void DoExitActions(ref Player.Mode mode)
+            {
+                GameInput.ClearInput();
+                myPlayer.playerController.SetEnabled(true);
+                mode = Player.Mode.Normal;
+                myPlayer.playerModeChanged.Trigger(mode);
+                myPlayer.sitting = false;
+                myPlayer.playerController.ForceControllerSize();
+                myPlayer.transform.parent = null;
+            }
+            Submersible mvSubmersible = this as Submersible;
+            Walker mvWalker = this as Walker;
+            Skimmer mvSkimmer = this as Skimmer;
+            Submarine mvSubmarine = this as Submarine;
+            if (Drone.mountedDrone != null)
+            {
+                Drone.mountedDrone.StopControlling();
+                if (Player.main.GetVehicle() != null)
+                {
+                    myPlayer.playerController.SetEnabled(true);
+                    return;
+                }
+                Player.main.ExitLockedMode();
+                return;
+            }
+            else if (mvSubmersible != null)
+            {
+                // exit locked mode
+                DoExitActions(ref myMode);
+                myPlayer.mode = myMode;
+                mvSubmersible.StopPiloting();
+                return;
+            }
+            else if (mvWalker != null)
+            {
+                DoExitActions(ref myMode);
+                myPlayer.mode = myMode;
+                mvWalker.StopPiloting();
+                return;
+            }
+            else if (mvSkimmer != null)
+            {
+                DoExitActions(ref myMode);
+                myPlayer.mode = myMode;
+                mvSkimmer.StopPiloting();
+                return;
+            }
+            else if (mvSubmarine != null)
+            {
+                // check if we're level by comparing pitch and roll
+                float roll = mvSubmarine.transform.rotation.eulerAngles.z;
+                float rollDelta = roll >= 180 ? 360 - roll : roll;
+                float pitch = mvSubmarine.transform.rotation.eulerAngles.x;
+                float pitchDelta = pitch >= 180 ? 360 - pitch : pitch;
+
+                if (rollDelta > mvSubmarine.ExitRollLimit || pitchDelta > mvSubmarine.ExitPitchLimit)
+                {
+                    if (HUDBuilder.IsVR)
+                    {
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 250, 250);
+                    }
+                    else
+                    {
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 500, 0);
+                    }
+                    return;
+                }
+                else if (mvSubmarine.useRigidbody.velocity.magnitude > mvSubmarine.ExitVelocityLimit)
+                {
+                    if (HUDBuilder.IsVR)
+                    {
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 250, 250);
+                    }
+                    else
+                    {
+                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 500, 0);
+                    }
+                    return;
+                }
+
+                mvSubmarine.Engine.KillMomentum();
+                // teleport the player to a walking position, just behind the chair
+                Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
+
+                DoExitActions(ref myMode);
+                myPlayer.mode = myMode;
+                mvSubmarine.StopPiloting();
+                return;
+            }
+            Player.main.ExitLockedMode();
+            return;
         }
         #endregion
 

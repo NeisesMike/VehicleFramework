@@ -38,7 +38,7 @@ namespace VehicleFramework
             {
                 if (go.name == "VRVehicleCanvas")
                 {
-                    if (go.transform.Find("ModVehicle") is null)
+                    if (go.transform.Find("ModVehicle") == null)
                     {
                         VRVehicleCanvas = go;
                     }
@@ -58,10 +58,13 @@ namespace VehicleFramework
         public static void DecideBuildHUD()
         {
             GameObject VRVehicleCanvas = TryGetVRVehicleCanvas();
-            if(VRVehicleCanvas)
+            if(UnityEngine.XR.XRSettings.enabled)
             {
                 IsVR = true;
-                BuildVRHUD(VRVehicleCanvas);
+                if(VRVehicleCanvas != null)
+                {
+                    BuildVRHUD(VRVehicleCanvas);
+                }
             }
             else
             {

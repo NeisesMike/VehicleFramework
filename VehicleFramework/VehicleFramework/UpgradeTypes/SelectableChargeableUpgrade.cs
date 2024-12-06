@@ -15,7 +15,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual float EnergyCost => 0;
         public virtual void OnSelected(SelectableChargeableActionParams param)
         {
-            Logger.Log("Selecting-Charging " + ClassId + " on ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Selecting-Charging " + ClassId + " on ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
     }
 }

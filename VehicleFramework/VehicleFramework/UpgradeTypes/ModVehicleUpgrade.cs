@@ -44,11 +44,15 @@ namespace VehicleFramework.UpgradeTypes
         public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {
-            Logger.Log("Adding " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Adding " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
         public virtual void OnRemoved(AddActionParams param)
         {
-            Logger.Log("Removing " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Removing " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+        }
+        public virtual void OnCyclops(AddActionParams param)
+        {
+            Logger.Log("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
         }
         private readonly List<UpgradeTechTypes> RecipeExtensions = new List<UpgradeTechTypes>();
         private readonly List<Assets.Ingredient> SimpleRecipeExtensions = new List<Assets.Ingredient>();
@@ -94,6 +98,14 @@ namespace VehicleFramework.UpgradeTypes
                 || TechTypes.forSeamoth == tt
                 || TechTypes.forExosuit == tt
                 || TechTypes.forCyclops == tt;
+        }
+        public int GetNumberInstalled(Vehicle vehicle)
+        {
+            if (vehicle == null)
+            {
+                return 0;
+            }
+            return vehicle.GetCurrentUpgrades().Where(x => x.Contains(ClassId)).Count();
         }
     }
 }

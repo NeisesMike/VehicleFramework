@@ -8,6 +8,7 @@ using UnityEngine;
 using VehicleFramework.Engines;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -154,10 +155,6 @@ namespace VehicleFramework.VehicleTypes
                 return;
             }
             base.StopPiloting();
-            // this function
-            // called by Player.ExitLockedMode()
-            // which is triggered on button press
-            //StartCoroutine(StandUpFromChair());
             isPilotSeated = false;
             Player.main.SetScubaMaskActive(false);
             Player.main.armsController.ikToggleTime = 0.5f;

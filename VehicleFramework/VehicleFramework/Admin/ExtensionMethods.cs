@@ -22,6 +22,10 @@ namespace VehicleFramework
         {
             return vehicle.modules.equipment.Select(x => x.Value).Where(x => x != null && x.item != null).Select(x=>x.item.name).ToList();
         }
+        public static List<string> GetCurrentUpgrades(this SubRoot subroot)
+        {
+            return subroot.upgradeConsole.modules.equipment.Select(x => x.Value).Where(x => x != null && x.item != null).Select(x => x.item.name).ToList();
+        }
         public static AudioSource Register(this AudioSource source)
         {
             return FreezeTimePatcher.Register(source);

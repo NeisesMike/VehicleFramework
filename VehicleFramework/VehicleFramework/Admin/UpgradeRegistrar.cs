@@ -155,7 +155,7 @@ namespace VehicleFramework.Admin
                     scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
                 }
             }
-            module_CustomPrefab.Register();
+            module_CustomPrefab.Register(); // this line causes PDA voice lag by 1.5 seconds ???????
             upgrade.UnlockTechType = module_info.TechType;
             return module_info.TechType;
         }
@@ -188,20 +188,27 @@ namespace VehicleFramework.Admin
             TechType cTT = utt.forCyclops;
             void WrappedOnAdded(AddActionParams param)
             {
-                if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                 {
-                    if (param.isAdded)
+                    if (param.vehicle != null)
                     {
-                        upgrade.OnAdded(param);
+                        if (param.isAdded)
+                        {
+                            upgrade.OnAdded(param);
+                        }
+                        else
+                        {
+                            upgrade.OnRemoved(param);
+                        }
+                        if (upgrade as ModVehicleArm != null && param.vehicle as ModVehicle != null)
+                        {
+                            var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
+                            armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID);
+                        }
                     }
-                    else
+                    else if(param.cyclops != null)
                     {
-                        upgrade.OnRemoved(param);
-                    }
-                    if (upgrade as ModVehicleArm != null && param.vehicle as ModVehicle != null)
-                    {
-                        var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
-                        armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID);
+                        upgrade.OnCyclops(param);
                     }
                 }
             }
@@ -219,7 +226,7 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnSelected(SelectableActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         select.OnSelected(param);
                         param.vehicle.quickSlotTimeUsed[param.slotID] = Time.time;
@@ -250,7 +257,7 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnSelectedCharged(SelectableChargeableActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         selectcharge.OnSelected(param);
                         param.vehicle.energyInterface.ConsumeEnergy(selectcharge.EnergyCost);
@@ -295,7 +302,7 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnToggle(ToggleActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         if (param.active)
                         {
@@ -341,7 +348,7 @@ namespace VehicleFramework.Admin
 
                 void WrappedOnArmDown(ArmActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         if (arm.ArmCooldowns.coolOnDown)
                         {
@@ -358,7 +365,7 @@ namespace VehicleFramework.Admin
                 OnArmDownActions.Add(WrappedOnArmDown);
                 void WrappedOnArmHeld(ArmActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         if (arm.EnergyCosts.spendOnHeld)
                         {
@@ -370,7 +377,7 @@ namespace VehicleFramework.Admin
                 OnArmHeldActions.Add(WrappedOnArmHeld);
                 void WrappedOnArmUp(ArmActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         if (arm.ArmCooldowns.coolOnUp)
                         {
@@ -387,7 +394,7 @@ namespace VehicleFramework.Admin
                 OnArmUpActions.Add(WrappedOnArmUp);
                 void WrappedOnArmAlt(ArmActionParams param)
                 {
-                    if (param.techType != TechType.None && param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT)
+                    if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
                         if (arm.ArmCooldowns.coolOnUp)
                         {

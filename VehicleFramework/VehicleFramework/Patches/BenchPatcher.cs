@@ -16,7 +16,7 @@ namespace VehicleFramework.Patches
                 {
                     if (player.mode == Player.Mode.LockedPiloting)
                     {
-                        Player.main.ExitLockedMode();
+                        VehicleTypes.Drone.mountedDrone.DeselectSlots();
                     }
                     return true;
                 }

@@ -16,7 +16,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual float EnergyCostPerActivation => 0;
         public virtual void OnRepeat(ToggleActionParams param)
         {
-            Logger.Log("Selecting " + ClassId + " on ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Selecting " + ClassId + " on ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
         }
     }
 }

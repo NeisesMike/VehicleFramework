@@ -12,6 +12,7 @@ namespace VehicleFramework.Admin
 {
     internal static class VanillaUpgradeMaker
     {
+        public static List<TechType> CyclopsUpgradeTechTypes = new List<TechType>();
         internal static CustomPrefab CreateModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, PrefabInfo info)
         {
             CustomPrefab prefab = new CustomPrefab(info);
@@ -62,7 +63,7 @@ namespace VehicleFramework.Admin
             }
             if (!compat.skipCyclops)
             {
-                //CreatePassiveModuleCyclops(upgrade, ref utt);
+                CreatePassiveModuleCyclops(upgrade, ref utt, isPdaRegistered);
             }
         }
         internal static void CreateSelectModule(SelectableUpgrade select, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
@@ -235,10 +236,26 @@ namespace VehicleFramework.Admin
         }
         internal static void CreatePassiveModuleCyclops(ModVehicleUpgrade upgrade, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
-            var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description)
+            var prefabInfo = PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Exosuit. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            CreatePassiveModuleVanilla(upgrade, isPdaSetup, prefabInfo, EquipmentType.CyclopsModule, VehicleType.Cyclops);
+            CustomPrefab prefab = new CustomPrefab(prefabInfo);
+            var clone = new CloneTemplate(prefabInfo, TechType.SeamothElectricalDefense);
+            prefab.SetGameObject(clone);
+            if (!isPdaSetup)
+            {
+                prefab.SetPdaGroupCategory(TechGroup.Cyclops, TechCategory.CyclopsUpgrades);
+            }
+            if (upgrade.UnlockedSprite != null && !upgrade.UnlockAtStart)
+            {
+                var scanningGadget = prefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
+                scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+            }
+            prefab.AddRecipe(upgrade, VehicleType.Cyclops);
+            prefab.SetEquipment(EquipmentType.CyclopsModule);
+            prefab.Register();
+            upgrade.UnlockTechType = prefabInfo.TechType;
+            CyclopsUpgradeTechTypes.Add(upgrade.UnlockTechType);
         }
         #endregion
 

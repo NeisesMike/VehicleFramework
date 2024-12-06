@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{
 		public EnergyMixin mixin;
-		public EnglishString tooltip;
+		internal EnglishString tooltip;
 
 		public void OnHandHover(GUIHand hand)
 		{
