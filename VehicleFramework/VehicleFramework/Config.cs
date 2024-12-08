@@ -7,6 +7,9 @@ namespace VehicleFramework
     [Menu("Vehicle Framework Options")]
     public class VehicleFrameworkConfig : ConfigFile
     {
+        [Toggle("Crafting Menu Fix", Tooltip = "Nautilus-33 allows some crafting tabs to be completely obscured by others. If you're having trouble, enable this.")]
+        public bool isCraftingMenuFix = false;
+
         [Toggle("Flashing Lights")]
         public bool isFlashingLightsEnabled = false;
 
