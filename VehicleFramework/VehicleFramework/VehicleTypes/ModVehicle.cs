@@ -276,6 +276,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
             pingInstance.enabled = true;
+            worldForces.handleGravity = true;
             BuildBotManager.ResetGhostMaterial();
         }
         public override void DeselectSlots() // This happens when you press the Exit button while having a "currentMountedVehicle."
@@ -457,6 +458,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
             pingInstance.enabled = false;
+            worldForces.handleGravity = false;
         }
         public virtual void ForceExitLockedMode()
         {
