@@ -115,6 +115,26 @@ namespace VehicleFramework.Assets
             Logger.Error("In AssetBundle " + bundleName + ", failed to get GameObject " + gameObjectName);
             return null;
         }
+        internal AudioClip GetAudioClip(string prefabName, string clipName)
+        {
+            foreach (System.Object obj in objectArray)
+            {
+                if (obj.ToString().Contains(prefabName))
+                {
+                    GameObject thisGO = (GameObject)obj;
+                    var sources = thisGO.GetComponents<AudioSource>();
+                    foreach(AudioSource source in sources)
+                    {
+                        if(source.clip.name == clipName)
+                        {
+                            return source.clip;
+                        }
+                    }
+                }
+            }
+            Logger.Error("In AssetBundle " + bundleName + ", failed to get AudioClip " + clipName + " from prefab " + prefabName);
+            return null;
+        }
         public static VehicleAssets GetVehicleAssetsFromBundle(string bundleName, string modelName = "", string spriteAtlasName = "", string pingSpriteName = "", string crafterSpriteName = "", string fragmentName = "", string unlockName = "")
         {
             string directoryPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
@@ -158,6 +178,10 @@ namespace VehicleFramework.Assets
         public static Sprite LoadAdditionalRawSprite(AssetBundleInterface abi, string SpriteAtlasName, string SpriteName)
         {
             return abi.GetRawSprite(SpriteAtlasName, SpriteName);
+        }
+        public static AudioClip LoadAudioClip(AssetBundleInterface abi, string prefabName, string clipName)
+        {
+            return abi.GetAudioClip(prefabName, clipName);
         }
         public void CloseBundle()
         {
