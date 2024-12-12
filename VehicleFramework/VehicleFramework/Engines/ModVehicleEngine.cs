@@ -248,19 +248,9 @@ namespace VehicleFramework.Engines
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater() || CanMoveAboveWater)
             {
-                if (mv.CanPilot() && mv.IsUnderCommand && !isFreecam)
+                if (mv.CanPilot() && mv.IsPlayerControlling() && !isFreecam)
                 {
-                    if (mv as Submarine != null)
-                    {
-                        if(mv.IsPlayerControlling())
-                        {
-                            moveDirection = DoMoveAction();
-                        }
-                    }
-                    else
-                    {
-                        moveDirection = DoMoveAction();
-                    }
+                    moveDirection = DoMoveAction();
                 }
                 // Execute a state-based physics move
                 ExecutePhysicsMove();
