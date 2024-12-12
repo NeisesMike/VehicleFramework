@@ -203,10 +203,10 @@ namespace VehicleFramework.Engines
 
         public override void DrainPower(Vector3 moveDirection)
         {
-            float scalarFactor = 0.32f;
+            float scalarFactor = 0.28f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-            mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+            mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
     }
 }
