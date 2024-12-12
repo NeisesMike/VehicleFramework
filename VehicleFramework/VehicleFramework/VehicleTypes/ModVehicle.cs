@@ -483,8 +483,7 @@ namespace VehicleFramework
         }
         public virtual bool GetIsUnderwater()
         {
-            // TODO: justify this constant
-            return transform.position.y < 0.75f;
+            return !worldForces.IsAboveWater();
         }
         public virtual void OnCraftEnd(TechType techType)
         {
