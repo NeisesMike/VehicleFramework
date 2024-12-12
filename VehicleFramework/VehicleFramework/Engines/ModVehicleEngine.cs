@@ -323,9 +323,16 @@ namespace VehicleFramework.Engines
         }
         public virtual void ExecutePhysicsMove()
         {
-            rb.AddForce(damageModifier * mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(damageModifier * mv.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(damageModifier * mv.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            Vector3 tsm = Vector3.one;
+            // Thank you to MrPurple6411 for this snip regarding VehicleAccelerationModifier
+            var modifiers = base.gameObject.GetComponentsInChildren<VehicleAccelerationModifier>();
+            foreach (var modifier in modifiers)
+            {
+                modifier.ModifyAcceleration(ref tsm);
+            }
+            rb.AddForce(tsm.z * damageModifier * mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(tsm.x * damageModifier * mv.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(tsm.y * damageModifier * mv.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
         public enum ForceDirection
         {
