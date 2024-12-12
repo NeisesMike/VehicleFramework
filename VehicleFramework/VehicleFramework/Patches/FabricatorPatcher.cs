@@ -24,7 +24,7 @@ namespace VehicleFramework.Patches
 				hasFuel = true,
 				isPowered = true
 			};
-			__result = mv.GetComponent<PowerManager>().EvaluatePowerStatus() == goodPS;
+			__result = mv.powerMan.EvaluatePowerStatus() == goodPS;
 			return false;
 		}
 	}
