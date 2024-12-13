@@ -20,10 +20,7 @@ namespace VehicleFramework
 
         public IEnumerator GetSeamothBitsASAP()
         {
-            if (SeamothHelper.request.Get() is null)
-            {
-                yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
-            }
+            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
 
             slots = new List<VehicleUpgradeConsoleInput.Slot>();
             GameObject module = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;
@@ -33,18 +30,16 @@ namespace VehicleFramework
                 {
                     GameObject.Destroy(tran.gameObject);
                 }
-
                 GameObject model = GameObject.Instantiate(module, proxies[i]);
                 model.transform.localPosition = Vector3.zero;
                 model.transform.localRotation = Quaternion.identity;
                 model.transform.localScale = Vector3.one;
-
                 VehicleUpgradeConsoleInput.Slot slot;
-                slot.id = "ModVehicleModule" + i;
+                slot.id = ModuleBuilder.ModVehicleModulePrefix + i;
                 slot.model = model;
                 slots.Add(slot);
             }
-            GetComponentInParent<ModVehicle>().GetComponentInChildren<VehicleUpgradeConsoleInput>().slots = slots.ToArray();
+            GetComponentInChildren<VehicleUpgradeConsoleInput>().slots = slots.ToArray();
         }
 
     }

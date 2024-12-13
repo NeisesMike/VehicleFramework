@@ -24,10 +24,7 @@ namespace VehicleFramework.StorageComponents
                 // no...
                 yield break;
             }
-            if(SeamothHelper.request.Get() is null)
-            {
-                yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
-            }
+            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
 
             mixin.batteryModels = new EnergyMixin.BatteryModels[seamothEnergyMixin.batteryModels.Length];

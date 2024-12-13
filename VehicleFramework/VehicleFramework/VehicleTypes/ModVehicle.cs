@@ -142,6 +142,7 @@ namespace VehicleFramework
             }
             VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
+            Upgrades.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
         }
         public override void Start()
         {
