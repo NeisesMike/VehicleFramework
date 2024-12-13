@@ -27,6 +27,7 @@ namespace VehicleFramework.Patches
 
         private static void SetSubNameDecalsWithColor(ModVehicle mv, Vector3 hsb, Color color)
         {
+            mv.nameColor = color;
             SetSubNameDecals(mv);
             foreach (var tmprougui in mv.SubNameDecals)
             {

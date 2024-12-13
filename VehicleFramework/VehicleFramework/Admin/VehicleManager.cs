@@ -108,12 +108,11 @@ namespace VehicleFramework
             Coroutine db = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
             Coroutine dms = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData, mv));
+            Coroutine da = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv as Submarine));
             Coroutine dbb = null;
-            Coroutine da = null;
             if (mv as Submarine != null)
             {
                 dbb = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv as Submarine));
-                da = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv as Submarine));
             }
             Coroutine dpi = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv));
             Coroutine dpc = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.VehicleSaveData, mv));
@@ -128,13 +127,10 @@ namespace VehicleFramework
             yield return dpi;
             yield return dpc;
             yield return dsn;
-            if(dbb != null)
+            yield return da;
+            if (dbb != null)
             {
                 yield return dbb;
-            }
-            if (da != null)
-            {
-                yield return da;
             }
             mv.OnFinishedLoading();
         }

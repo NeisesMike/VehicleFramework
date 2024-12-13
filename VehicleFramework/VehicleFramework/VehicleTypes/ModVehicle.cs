@@ -696,12 +696,15 @@ namespace VehicleFramework
         }
         public virtual void SetBaseColor(Vector3 hsb, Color color)
         {
+            baseColor = color;
         }
         public virtual void SetInteriorColor(Vector3 hsb, Color color)
         {
+            interiorColor = color;
         }
         public virtual void SetStripeColor(Vector3 hsb, Color color)
         {
+            stripeColor = color;
         }
         #endregion
 
@@ -746,6 +749,10 @@ namespace VehicleFramework
         private int numArmorModules = 0;
         protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
+        protected internal Color baseColor = Color.white;
+        protected internal Color interiorColor = Color.white;
+        protected internal Color stripeColor = Color.white;
+        protected internal Color nameColor = Color.black;
         #endregion
 
         #region internal_methods
