@@ -16,14 +16,17 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(uGUI_QuickSlots.HandleInput))]
         public static bool HandleInputPrefix()
         {
-            Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
-            if(target == null)
+            if (!Builder.isPlacing) // SnapBuilder compat
             {
-                return true;
-            }
-            if (target.name.Contains("DroneStation") || (target.transform.parent != null && target.transform.parent.name.Contains("DroneStation")))
-            {
-                return false;
+                Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
+                if (target == null)
+                {
+                    return true;
+                }
+                if (target.name.Contains("DroneStation") || (target.transform.parent != null && target.transform.parent.name.Contains("DroneStation")))
+                {
+                    return false;
+                }
             }
             return true;
         }
