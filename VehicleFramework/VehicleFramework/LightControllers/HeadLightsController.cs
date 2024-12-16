@@ -35,7 +35,10 @@ namespace VehicleFramework
             {
                 return;
             }
-            if (mv.IsUnderCommand && GameInput.GetKeyDown(MainPatcher.VFConfig.headlightsButton) && !Player.main.GetPDA().isInUse)
+            bool isHeadlightsButtonPressed = GameInput.GetKeyDown(MainPatcher.VFConfig.headlightsButton);
+            isHeadlightsButtonPressed |= GameInput.GetButtonDown(GameInput.Button.LeftHand) && MainPatcher.VFConfig.leftTriggerHeadlights;
+            isHeadlightsButtonPressed |= GameInput.GetButtonDown(GameInput.Button.RightHand) && MainPatcher.VFConfig.rightTriggerHeadlights;
+            if (mv.IsUnderCommand && isHeadlightsButtonPressed && !Player.main.GetPDA().isInUse)
             {
                 ToggleHeadlights();
             }

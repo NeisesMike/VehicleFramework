@@ -63,6 +63,12 @@ namespace VehicleFramework
         [Keybind("Toggle Headlights")]
         public KeyCode headlightsButton = KeyCode.Mouse1;
 
+        [Toggle("Gamepad Left Trigger for Headlights", Tooltip = "Enable this if you want to toggle the headlights using left trigger (same input as left mouse button).")]
+        public bool leftTriggerHeadlights = true;
+
+        [Toggle("Gamepad Right Trigger for Headlights", Tooltip = "Enable this if you want to toggle the headlights using right trigger (same input as right mouse button).")]
+        public bool rightTriggerHeadlights = true;
+
         [Toggle("Fragment Experience", Tooltip = "Enable scannable fragments. Leave unchecked if adding this mod to an existing world. Requires Subnautica reboot when changed.")]
         public bool isFragmentExperience = true;
 
