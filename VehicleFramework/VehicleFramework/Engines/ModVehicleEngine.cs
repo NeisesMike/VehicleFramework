@@ -235,42 +235,18 @@ namespace VehicleFramework.Engines
             {
                 isFreecam = true;
             }
-            Vector3 DoMoveAction()
-            {
-                // Get Input Vector
-                Vector3 innerMoveDirection = GameInput.GetMoveDirection();
-                // Apply controls to the vehicle state
-                ApplyPlayerControls(innerMoveDirection);
-                // Drain power based on Input Vector (and modifiers)
-                // TODO: DrainPower with ApplyPlayerControls...
-                // or would it be better with ExecutePhysicsMove...?
-                DrainPower(innerMoveDirection);
-                return innerMoveDirection;
-            }
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater() || CanMoveAboveWater)
             {
                 if (mv.CanPilot() && mv.IsPlayerControlling() && !isFreecam)
                 {
-                    moveDirection = DoMoveAction();
+                    moveDirection = GameInput.GetMoveDirection();
+                    ApplyPlayerControls(moveDirection);
+                    DrainPower(moveDirection);
                 }
-                // Execute a state-based physics move
                 ExecutePhysicsMove();
-                if (moveDirection == Vector3.zero)
-                {
-                    UpdateEngineHum(-3);
-                }
-                else
-                {
-                    UpdateEngineHum(moveDirection.magnitude);
-                }
-                PlayEngineHum();
-                PlayEngineWhistle(moveDirection);
             }
-            else
-            {
-                UpdateEngineHum(-3);
-            }
+            DoEngineSounds(moveDirection);
             ApplyDrag(moveDirection);
         }
         #endregion
@@ -433,6 +409,38 @@ namespace VehicleFramework.Engines
             ForwardMomentum = 0f;
             RightMomentum = 0f;
             UpMomentum = 0f;
+        }
+        public virtual void DoEngineSounds(Vector3 moveDirection)
+        {
+            if (mv.GetIsUnderwater() || CanMoveAboveWater)
+            {
+                if (moveDirection == Vector3.zero)
+                {
+                    UpdateEngineHum(-3);
+                }
+                else
+                {
+                    UpdateEngineHum(moveDirection.magnitude);
+                }
+                PlayEngineHum();
+                PlayEngineWhistle(moveDirection);
+            }
+            else
+            {
+                UpdateEngineHum(-3);
+            }
+            /* is this not simpler?
+            if (moveDirection == Vector3.zero)
+            {
+                UpdateEngineHum(-3);
+            }
+            else
+            {
+                UpdateEngineHum(moveDirection.magnitude);
+            }
+            PlayEngineHum();
+            PlayEngineWhistle(moveDirection);
+            */
         }
         #endregion
 
