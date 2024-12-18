@@ -64,7 +64,7 @@ namespace VehicleFramework
         public KeyCode headlightsButton = KeyCode.Mouse1;
 
         [Toggle("Gamepad Left Trigger for Headlights", Tooltip = "Enable this if you want to toggle the headlights using left trigger (same input as left mouse button).")]
-        public bool leftTriggerHeadlights = true;
+        public bool leftTriggerHeadlights = false;
 
         [Toggle("Gamepad Right Trigger for Headlights", Tooltip = "Enable this if you want to toggle the headlights using right trigger (same input as right mouse button).")]
         public bool rightTriggerHeadlights = true;
