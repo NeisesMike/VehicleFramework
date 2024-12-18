@@ -37,6 +37,10 @@ namespace VehicleFramework.VehicleComponents
         public IEnumerator GoStraightToDestination(Vector3 dest)
         {
             ModVehicleEngine engine = GetComponent<ModVehicleEngine>();
+            if(engine == null)
+            {
+                yield break;
+            }
             IEnumerator ForwardLoop(float power)
             {
                 float now = Time.time;
