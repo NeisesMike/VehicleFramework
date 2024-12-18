@@ -121,6 +121,7 @@ namespace VehicleFramework
 
                 Logger.Log("Finished " + mv.gameObject.name + " registration.");
             }
+            BuildableDroneStation.TryRegister(mv);
             yield break;
         }
         public static IEnumerator RegisterVehicle(ModVehicle mv)
