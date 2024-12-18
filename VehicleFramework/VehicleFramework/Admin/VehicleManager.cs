@@ -22,7 +22,7 @@ namespace VehicleFramework
         public static Atlas.Sprite defaultPingSprite = null;
         public static Sprite defaultSaveFileSprite = null;
         public static Dictionary<TechType, int> defaultRecipe = new Dictionary<TechType, int>();
-        public static ModVehicleEngine defaultEngine = null;
+        public static VFEngine defaultEngine = null;
         public static bool isWorldLoaded = false;
 
         public static void PatchCraftable(ref VehicleEntry ve, bool verbose)

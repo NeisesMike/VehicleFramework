@@ -31,7 +31,7 @@ namespace VehicleFramework.VehicleTypes
                 if(value)
                 {
                     UWE.CoroutineHost.StartCoroutine(EstablishConnection());
-                    GetComponent<ModVehicleEngine>().enabled = false;
+                    GetComponent<VFEngine>().enabled = false;
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace VehicleFramework.VehicleTypes
                 yield return null;
             }
             IsConnecting = false;
-            GetComponent<ModVehicleEngine>().enabled = true;
+            GetComponent<VFEngine>().enabled = true;
         }
         public override void Awake()
         {
@@ -152,7 +152,7 @@ namespace VehicleFramework.VehicleTypes
             mountedDrone = null;
             pairedStation = null;
             UWE.CoroutineHost.StopCoroutine(CheckingPower);
-            GetComponent<ModVehicleEngine>().KillMomentum();
+            GetComponent<VFEngine>().KillMomentum();
         }
         public void SwapToDroneCamera()
         {

@@ -13,47 +13,30 @@ namespace VehicleFramework.Engines
         public virtual float Buoyancy => 5f;
         public virtual float ForeAftStability => 10f;
         public virtual float PortStarboardStability => 10f;
-        public virtual bool IsTrackingSurface()
-        {
-            return true;
-        }
-
         public override bool CanMoveAboveWater => true;
         public override bool CanRotateAboveWater => true;
 
-        public override void ApplyPlayerControls(Vector3 moveDirection)
+        public override void Awake()
         {
-            if (Player.main.GetPDA().isOpen)
-            {
-                return;
-            }
-
-            // Thank you to MrPurple6411 for this snip regarding VehicleAccelerationModifier
-            var modifiers = base.gameObject.GetComponentsInChildren<VehicleAccelerationModifier>();
-            foreach (var modifier in modifiers)
-            {
-                modifier.ModifyAcceleration(ref moveDirection);
-            }
-
-            // Control velocity
-            UpdateRightMomentum(moveDirection.x);
-            UpdateForwardMomentum(moveDirection.z);
-            // don't take any up-down inputs!
-            return;
+            base.Awake();
+            GetComponent<WorldForces>().handleGravity = false;
         }
-
         public override void ControlRotation()
         {
             float yawFactor = 1.4f;
             Vector2 mouseDir = GameInput.GetLookDelta();
             float xRot = mouseDir.x;
-            rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+            RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
             // don't accept pitch inputs!
         }
-
-        public override void FixedUpdate()
+        protected override void MoveWithInput(Vector3 moveDirection)
         {
-            base.FixedUpdate();
+            UpdateRightMomentum(moveDirection.x);
+            UpdateForwardMomentum(moveDirection.z);
+            return;
+        }
+        protected override void DoFixedUpdate()
+        {
             if (IsTrackingSurface())
             {
                 Vector3 targetPosition = new Vector3(transform.position.x, WaterLine, transform.position.z);
@@ -66,11 +49,9 @@ namespace VehicleFramework.Engines
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetPortStarboardRotation, Time.fixedDeltaTime * PortStarboardStability);
             }
         }
-
-        public override void Awake()
+        public virtual bool IsTrackingSurface()
         {
-            base.Awake();
-            GetComponent<WorldForces>().handleGravity = false;
+            return true;
         }
     }
 }

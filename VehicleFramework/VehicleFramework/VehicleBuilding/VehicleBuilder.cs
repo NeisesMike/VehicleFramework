@@ -542,33 +542,45 @@ namespace VehicleFramework
         }
         public static void SetupEngine(Submarine mv)
         {
-            if(mv.Engine == null)
+            if(mv.VFEngine == null)
             {
-                mv.Engine = mv.gameObject.AddComponent<OdysseyEngine>();
+                if(mv.Engine == null)
+                {
+                    mv.VFEngine = mv.gameObject.AddComponent<OdysseyEngine>();
+                }
+                else
+                {
+                    mv.VFEngine = mv.Engine;
+                }
             }
-            // Add the engine (physics control)
-            mv.Engine.mv = mv;
-            mv.Engine.rb = mv.useRigidbody;
         }
         public static void SetupEngine(Submersible mv)
         {
-            if (mv.Engine == null)
+            if (mv.VFEngine == null)
             {
-                mv.Engine = mv.gameObject.AddComponent<CricketEngine>();
+                if (mv.Engine == null)
+                {
+                    mv.VFEngine = mv.gameObject.AddComponent<CricketEngine>();
+                }
+                else
+                {
+                    mv.VFEngine = mv.Engine;
+                }
             }
-            // Add the engine (physics control)
-            mv.Engine.mv = mv;
-            mv.Engine.rb = mv.useRigidbody;
         }
         public static void SetupEngine(Drone mv)
         {
-            if (mv.Engine == null)
+            if (mv.VFEngine == null)
             {
-                mv.Engine = mv.gameObject.AddComponent<CricketEngine>();
+                if (mv.Engine == null)
+                {
+                    mv.VFEngine = mv.gameObject.AddComponent<CricketEngine>();
+                }
+                else
+                {
+                    mv.VFEngine = mv.Engine;
+                }
             }
-            // Add the engine (physics control)
-            mv.Engine.mv = mv;
-            mv.Engine.rb = mv.useRigidbody;
         }
         public static void SetupWorldForces(ModVehicle mv)
         {

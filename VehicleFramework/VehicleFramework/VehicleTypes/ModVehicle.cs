@@ -66,6 +66,7 @@ namespace VehicleFramework
         }
         public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
+        public virtual VFEngine VFEngine { get; set; }
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
@@ -136,9 +137,9 @@ namespace VehicleFramework
             {
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
             }
-            if(Engine == null)
+            if(VFEngine == null)
             {
-                Engine = GetComponent<ModVehicleEngine>();
+                VFEngine = GetComponent<VFEngine>();
             }
             VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
@@ -596,7 +597,7 @@ namespace VehicleFramework
                 DeathExplodeAction();
             }
             isScuttled = true;
-            GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = false);
+            GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = false);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = false);
@@ -613,7 +614,7 @@ namespace VehicleFramework
         public virtual void UnscuttleVehicle()
         {
             isScuttled = false;
-            GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = true);
+            GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = true);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
@@ -1066,7 +1067,7 @@ namespace VehicleFramework
                     return;
                 }
 
-                mvSubmarine.Engine.KillMomentum();
+                mvSubmarine.VFEngine.KillMomentum();
                 // teleport the player to a walking position, just behind the chair
                 Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
 
@@ -1395,15 +1396,15 @@ namespace VehicleFramework
             if (mv == null
                 || !veh.GetPilotingMode()
                 || !mv.IsUnderCommand
-                || mv.GetComponent<ModVehicleEngine>() == null
-                || !veh.GetComponent<ModVehicleEngine>().enabled
+                || mv.GetComponent<VFEngine>() == null
+                || !veh.GetComponent<VFEngine>().enabled
                 || Player.main.GetPDA().isOpen
                 || (AvatarInputHandler.main && !AvatarInputHandler.main.IsEnabled())
                 || !mv.energyInterface.hasCharge)
             {
                 return;
             }
-            mv.GetComponent<ModVehicleEngine>().ControlRotation();
+            mv.GetComponent<VFEngine>().ControlRotation();
         }
         public static EnergyMixin GetEnergyMixinFromVehicle(Vehicle veh)
         {

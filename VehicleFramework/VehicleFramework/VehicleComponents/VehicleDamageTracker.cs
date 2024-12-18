@@ -178,23 +178,23 @@ namespace VehicleFramework.VehicleComponents
         {
             if (damage == 0)
             {
-                mv.GetComponent<Engines.ModVehicleEngine>().damageModifier = 1;
+                mv.GetComponent<Engines.VFEngine>().DamageModifier = 1;
             }
             else if (damage == 1)
             {
-                mv.GetComponent<Engines.ModVehicleEngine>().damageModifier = 0.8f;
+                mv.GetComponent<Engines.VFEngine>().DamageModifier = 0.8f;
             }
             else if (damage == 2)
             {
-                mv.GetComponent<Engines.ModVehicleEngine>().damageModifier = 0.4f;
+                mv.GetComponent<Engines.VFEngine>().DamageModifier = 0.4f;
             }
             else if (damage == 3)
             {
-                mv.GetComponent<Engines.ModVehicleEngine>().damageModifier = 0.1f;
+                mv.GetComponent<Engines.VFEngine>().DamageModifier = 0.1f;
             }
             else
             {
-                mv.GetComponent<Engines.ModVehicleEngine>().damageModifier = 1;
+                mv.GetComponent<Engines.VFEngine>().DamageModifier = 1;
             }
         }
         public static void SimpleManageLightsDamageState(ModVehicle mv, int damage)
