@@ -36,7 +36,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual float ExitRollLimit => 4f;
         public virtual float ExitVelocityLimit => 0.5f;
         public virtual GameObject RespawnPoint => null;
-        public virtual bool doesAutolevel => true;
+        public virtual bool DoesAutolevel => true;
 
 
         public ControlPanel controlPanelLogic;
