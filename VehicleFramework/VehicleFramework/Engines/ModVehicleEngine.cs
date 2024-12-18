@@ -31,17 +31,19 @@ namespace VehicleFramework.Engines
                 EngineSource2.clip = value.whistle;
             }
         }
+        private AudioSource EngineSource1;
+        private AudioSource EngineSource2;
 
-
+        #region public_fields
         public float WhistleFactor = 0.4f;
         public float HumFactor = 1f;
         public bool blockVoiceChange => false;
         public virtual bool CanMoveAboveWater { get; set; } = false;
         public virtual bool CanRotateAboveWater { get; set; } = false;
-
-
         public float damageModifier { get; set; } = 1f;
+        #endregion
 
+        #region protected_fields
         protected virtual float FORWARD_TOP_SPEED => 1000;
         protected virtual float REVERSE_TOP_SPEED => 1000;
         protected virtual float STRAFE_MAX_SPEED => 1000;
@@ -194,9 +196,9 @@ namespace VehicleFramework.Engines
             EngineHum += inputMagnitude * Time.deltaTime;
         }
         protected bool isReadyToWhistle = true;
-        private AudioSource EngineSource1;
-        private AudioSource EngineSource2;
+        #endregion
 
+        #region unity_signals
         public virtual void Awake()
         {
             // register self with mainpatcher, for on-the-fly voice selection updating
@@ -271,6 +273,9 @@ namespace VehicleFramework.Engines
             }
             ApplyDrag(moveDirection);
         }
+        #endregion
+
+        #region virtual_methods
         protected virtual float DragThresholdSpeed
         {
             get
@@ -333,13 +338,6 @@ namespace VehicleFramework.Engines
             rb.AddForce(tsm.z * damageModifier * mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             rb.AddForce(tsm.x * damageModifier * mv.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             rb.AddForce(tsm.y * damageModifier * mv.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-        }
-        public enum ForceDirection
-        {
-            forward,
-            backward,
-            strafe,
-            updown
         }
         public virtual void ApplyPlayerControls(Vector3 moveDirection)
         {
@@ -430,7 +428,15 @@ namespace VehicleFramework.Engines
                 }
             }
         }
+        public virtual void KillMomentum()
+        {
+            ForwardMomentum = 0f;
+            RightMomentum = 0f;
+            UpMomentum = 0f;
+        }
+        #endregion
 
+        #region methods
         public float GetTimeToStop()
         {
             float timeToXStop = Mathf.Log(0.05f * STRAFE_MAX_SPEED / RightMomentum) / (Mathf.Log(.25f));
@@ -438,13 +444,6 @@ namespace VehicleFramework.Engines
             float timeToZStop = Mathf.Log(0.05f * FORWARD_TOP_SPEED / ForwardMomentum) / (Mathf.Log(.25f));
             return Mathf.Max(timeToXStop,timeToYStop,timeToZStop);
         }
-        public virtual void KillMomentum()
-        {
-            ForwardMomentum = 0f;
-            RightMomentum = 0f;
-            UpMomentum = 0f;
-        }
-
         public void SetVoice(EngineSounds inputVoice)
         {
             if (!blockVoiceChange)
@@ -459,7 +458,6 @@ namespace VehicleFramework.Engines
                 sounds = EngineSoundsManager.GetVoice(EngineSoundsManager.GetKnownVoice(voiceName));
             }
         }
+        #endregion
     }
 }
-        
-
