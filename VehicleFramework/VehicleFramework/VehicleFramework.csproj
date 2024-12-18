@@ -203,7 +203,6 @@
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
     <Compile Include="UpgradeTypes\UpgradeActionParams.cs" />
-    <Compile Include="VehicleBuilding\ColliderState.cs" />
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
     <Compile Include="VehicleComponents\ForeverBattery.cs" />
     <Compile Include="VehicleComponents\MagnetBoots.cs" />
@@ -218,7 +217,6 @@
     <Compile Include="VehicleTypes\Submarine.cs" />
     <Compile Include="VehicleTypes\Submersible.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
-    <Compile Include="Admin\VehicleBlueprint.cs" />
     <Compile Include="VehicleBuilding\VehiclePrepper.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
