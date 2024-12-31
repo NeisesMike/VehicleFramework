@@ -43,10 +43,10 @@ namespace VehicleFramework.Engines
              * instead of enginePowerConsumption, we have upgradeModifier, but they are similar if not identical
              * so the power consumption is similar to that of a seamoth.
              */
-            float scalarFactor = 0.1f;
+            float scalarFactor = 0.08f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-            mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
+            mv.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
     }
 }

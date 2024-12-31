@@ -584,14 +584,16 @@ namespace VehicleFramework
                 {
                     continue;
                 }
-                if (mv as Submarine is null)
-                {
-                    continue;
-                }
                 try
                 {
-                    allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, mv.GetName(), ExtractFloats((mv as Submarine).ExteriorMainColor), ExtractFloats((mv as Submarine).ExteriorPrimaryAccent), ExtractFloats((mv as Submarine).ExteriorSecondaryAccent), ExtractFloats((mv as Submarine).ExteriorNameLabel), (mv as Submarine).IsDefaultTexture));
-
+                    if (mv is Submarine && (mv as Submarine).ColorPicker != null)
+                    {
+                        allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, mv.GetName(), ExtractFloats((mv as Submarine).ExteriorMainColor), ExtractFloats((mv as Submarine).ExteriorPrimaryAccent), ExtractFloats((mv as Submarine).ExteriorSecondaryAccent), ExtractFloats((mv as Submarine).ExteriorNameLabel), (mv as Submarine).IsDefaultTexture));
+                    }
+                    else
+                    {
+                        allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, mv.GetName(), ExtractFloats(mv.baseColor), ExtractFloats(mv.interiorColor), ExtractFloats(mv.stripeColor), ExtractFloats(mv.nameColor), false));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -601,7 +603,7 @@ namespace VehicleFramework
             }
             return allVehiclesAesthetics;
         }
-        internal static IEnumerator DeserializeAesthetics(SaveData data, Submarine mv)
+        internal static IEnumerator DeserializeAesthetics(SaveData data, ModVehicle mv)
         {
             if (data == null || mv == null || data.AllVehiclesAesthetics == null)
             {
@@ -617,43 +619,59 @@ namespace VehicleFramework
                 {
                     try
                     {
-                        var active = mv.ColorPicker?.transform.Find("EditScreen/Active");
-                        if (active is null)
+                        if (mv is Submarine && (mv as Submarine).ColorPicker != null)
                         {
-                            continue;
-                        }
-                        active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = vehicle.Item2;
-                        active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = vehicle.Item2;
-                        mv.SetName(vehicle.Item2);
-                        if (vehicle.Item7)
-                        {
-                            mv.PaintVehicleDefaultStyle(vehicle.Item2);
-                            mv.OnNameChange(vehicle.Item2);
+                            Submarine mvSub = mv as Submarine;
+                            var active = mvSub.ColorPicker?.transform.Find("EditScreen/Active");
+                            if (active is null)
+                            {
+                                continue;
+                            }
+                            active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = vehicle.Item2;
+                            active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = vehicle.Item2;
+                            mvSub.SetName(vehicle.Item2);
+                            if (vehicle.Item7)
+                            {
+                                mvSub.PaintVehicleDefaultStyle(vehicle.Item2);
+                                mvSub.OnNameChange(vehicle.Item2);
+                            }
+                            else
+                            {
+                                mvSub.ExteriorMainColor = SynthesizeColor(vehicle.Item3);
+                                mvSub.ExteriorPrimaryAccent = SynthesizeColor(vehicle.Item4);
+                                mvSub.ExteriorSecondaryAccent = SynthesizeColor(vehicle.Item5);
+                                mvSub.ExteriorNameLabel = SynthesizeColor(vehicle.Item6);
+                                mvSub.PaintVehicleSection("ExteriorMainColor", mvSub.ExteriorMainColor);
+                                mvSub.PaintVehicleSection("ExteriorPrimaryAccent", mvSub.ExteriorPrimaryAccent);
+                                mvSub.PaintVehicleSection("ExteriorSecondaryAccent", mvSub.ExteriorSecondaryAccent);
+                                mvSub.PaintVehicleName(vehicle.Item2, mvSub.ExteriorNameLabel, mvSub.ExteriorMainColor);
+
+                                mvSub.IsDefaultTexture = false;
+
+                                //var colorPicker = mvSub.transform.Find("ColorPicker/EditScreen/Active/ColorPicker").GetComponentInChildren<uGUI_ColorPicker>();
+                                //Color.RGBToHSV(mvSub.ExteriorMainColor, out colorPicker._hue, out colorPicker._saturation, out colorPicker._brightness);
+
+                                active.transform.Find("MainExterior/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorMainColor;
+                                active.transform.Find("PrimaryAccent/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorPrimaryAccent;
+                                active.transform.Find("SecondaryAccent/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorSecondaryAccent;
+                                active.transform.Find("NameLabel/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorNameLabel;
+                            }
                         }
                         else
                         {
-                            mv.ExteriorMainColor = SynthesizeColor(vehicle.Item3);
-                            mv.ExteriorPrimaryAccent = SynthesizeColor(vehicle.Item4);
-                            mv.ExteriorSecondaryAccent = SynthesizeColor(vehicle.Item5);
-                            mv.ExteriorNameLabel = SynthesizeColor(vehicle.Item6);
-                            mv.PaintVehicleSection("ExteriorMainColor", mv.ExteriorMainColor);
-                            mv.PaintVehicleSection("ExteriorPrimaryAccent", mv.ExteriorPrimaryAccent);
-                            mv.PaintVehicleSection("ExteriorSecondaryAccent", mv.ExteriorSecondaryAccent);
-                            mv.PaintVehicleName(vehicle.Item2, mv.ExteriorNameLabel, mv.ExteriorMainColor);
+                            mv.baseColor = SynthesizeColor(vehicle.Item3);
+                            mv.interiorColor = SynthesizeColor(vehicle.Item4);
+                            mv.stripeColor = SynthesizeColor(vehicle.Item5);
+                            mv.nameColor = SynthesizeColor(vehicle.Item6);
 
-                            mv.IsDefaultTexture = false;
-
-                            //var colorPicker = mv.transform.Find("ColorPicker/EditScreen/Active/ColorPicker").GetComponentInChildren<uGUI_ColorPicker>();
-                            //Color.RGBToHSV(mv.ExteriorMainColor, out colorPicker._hue, out colorPicker._saturation, out colorPicker._brightness);
-
-                            active.transform.Find("MainExterior/SelectedColor").GetComponent<Image>().color = mv.ExteriorMainColor;
-                            active.transform.Find("PrimaryAccent/SelectedColor").GetComponent<Image>().color = mv.ExteriorPrimaryAccent;
-                            active.transform.Find("SecondaryAccent/SelectedColor").GetComponent<Image>().color = mv.ExteriorSecondaryAccent;
-                            active.transform.Find("NameLabel/SelectedColor").GetComponent<Image>().color = mv.ExteriorNameLabel;
+                            mv.subName.SetColor(0, Vector3.zero, mv.baseColor);
+                            mv.subName.SetColor(1, Vector3.zero, mv.nameColor);
+                            mv.subName.SetColor(2, Vector3.zero, mv.interiorColor);
+                            mv.subName.SetColor(3, Vector3.zero, mv.stripeColor);
                         }
                         break;
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logger.Error("Failed to load color details for " + mv.name + " : " + mv.subName.hullName.text);
                         Logger.Log(e.Message);

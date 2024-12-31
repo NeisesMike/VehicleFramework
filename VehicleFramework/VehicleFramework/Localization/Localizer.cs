@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace VehicleFramework.Localization
 {
-    internal enum EnglishString
+    public enum EnglishString
     {
         EmptyHover,
         HeadLightsHover,

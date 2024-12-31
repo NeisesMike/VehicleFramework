@@ -119,6 +119,11 @@ namespace VehicleFramework.Patches
             {
                 Moonpool moonpool = dock.GetComponentInParent<Moonpool>();
                 CyclopsMotorMode cmm = dock.GetComponentInParent<CyclopsMotorMode>();
+                if (mv.IsUnderCommand)
+                {
+                    Player.main.SetCurrentSub(dock.GetSubRoot(), true);
+                    Player.main.ToNormalMode(false);
+                }
                 if (moonpool != null || cmm != null)
                 {
                     Transform playerSpawn = dock.transform.Find("playerSpawn");
@@ -128,11 +133,6 @@ namespace VehicleFramework.Patches
                 {
                     Logger.Warn("Vehicle Framework is not aware of this dock. The player is probably in a weird position now.");
                     mv.OnVehicleDocked(vehicle, Vector3.zero);
-                }
-                if (mv.IsUnderCommand)
-                {
-                    Player.main.SetCurrentSub(dock.GetSubRoot(), true);
-                    Player.main.ToNormalMode(false);
                 }
             }
         }

@@ -93,6 +93,16 @@ namespace VehicleFramework
             };
             FragmentManager.RegisterFragment(fragmentData);
         }
+
+        private static bool isRegistered = false;
+        internal static void TryRegister(ModVehicle mv)
+        {
+            if(!isRegistered && mv is Drone)
+            {
+                Register();
+                isRegistered = true;
+            }
+        }
     }
 
     public class DroneStation : HandTarget, IHandTarget

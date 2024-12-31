@@ -10,6 +10,10 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(uGUI_CraftingMenu.Expand))]
         public static void uGUI_CraftingMenuExpandPostfix(uGUI_CraftingMenu __instance, uGUI_CraftingMenu.Node node)
         {
+            if(!MainPatcher.VFConfig.isCraftingMenuFix)
+            {
+                return;
+            }
             uGUI_CraftingMenu.Node parent = node.parent as uGUI_CraftingMenu.Node;
             if (node.parent == null)
             {

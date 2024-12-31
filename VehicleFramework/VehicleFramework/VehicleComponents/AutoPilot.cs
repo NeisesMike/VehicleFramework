@@ -117,7 +117,7 @@ namespace VehicleFramework
             {
                 MaybeRefillOxygen();
             }
-            if (mv as Submarine != null)
+            if (mv as Submarine != null && (mv as Submarine).DoesAutolevel && mv.VFEngine is Engines.ModVehicleEngine)
             {
                 MaybeAutoLevel(mv as Submarine);
                 CheckForDoubleTap(mv as Submarine);

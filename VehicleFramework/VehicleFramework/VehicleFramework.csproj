@@ -152,8 +152,11 @@
     <Compile Include="DepthModules\DepthModule3.cs" />
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
+    <Compile Include="Engines\VFEngine.cs" />
+    <Compile Include="Engines\SurfaceVessel.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\CompatibilityPatches\SilencePatcher.cs" />
     <Compile Include="Patches\SubNamePatcher.cs" />
     <Compile Include="Patches\CyclopsUpgradesPatcher.cs" />
     <Compile Include="Patches\FreecamControllerPatcher.cs" />
@@ -208,7 +211,6 @@
     <Compile Include="PluginInfo.cs" />
     <Compile Include="StorageComponents\BatteryProxy.cs" />
     <Compile Include="UpgradeTypes\UpgradeActionParams.cs" />
-    <Compile Include="VehicleBuilding\ColliderState.cs" />
     <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
     <Compile Include="VehicleComponents\ForeverBattery.cs" />
     <Compile Include="VehicleComponents\MagnetBoots.cs" />
@@ -223,7 +225,6 @@
     <Compile Include="VehicleTypes\Submarine.cs" />
     <Compile Include="VehicleTypes\Submersible.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
-    <Compile Include="Admin\VehicleBlueprint.cs" />
     <Compile Include="VehicleBuilding\VehiclePrepper.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />

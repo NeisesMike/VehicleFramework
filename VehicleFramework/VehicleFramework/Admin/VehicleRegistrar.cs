@@ -121,6 +121,7 @@ namespace VehicleFramework
 
                 Logger.Log("Finished " + mv.gameObject.name + " registration.");
             }
+            BuildableDroneStation.TryRegister(mv);
             yield break;
         }
         public static IEnumerator RegisterVehicle(ModVehicle mv)
@@ -298,7 +299,7 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.LeviathanGrabPoint was provided. This is where leviathans attach to the vehicle. The root object will be used instead.");
                 }
-                if (mv.Engine is null)
+                if (mv.VFEngine == null && mv.Engine == null)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. A default engine will be chosen.");
                 }

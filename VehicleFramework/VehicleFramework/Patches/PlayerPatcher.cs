@@ -213,5 +213,19 @@ namespace VehicleFramework
 
             return true;
         }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Player.ExitLockedMode))]
+        public static bool PlayerExitLockedModePostfix(Player __instance)
+        {
+            // if we're in an MV, do our special way of exiting a vehicle instead
+            ModVehicle mv = __instance.GetModVehicle();
+            if (mv == null)
+            {
+                return true;
+            }
+            mv.DeselectSlots();
+            return false;
+        }
     }
 }

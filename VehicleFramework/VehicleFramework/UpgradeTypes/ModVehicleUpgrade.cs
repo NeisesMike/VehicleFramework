@@ -52,7 +52,7 @@ namespace VehicleFramework.UpgradeTypes
         }
         public virtual void OnCyclops(AddActionParams param)
         {
-            Logger.Log("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
+            Logger.DebugLog("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
         }
         private readonly List<UpgradeTechTypes> RecipeExtensions = new List<UpgradeTechTypes>();
         private readonly List<Assets.Ingredient> SimpleRecipeExtensions = new List<Assets.Ingredient>();

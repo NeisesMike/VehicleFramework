@@ -32,20 +32,26 @@ namespace VehicleFramework
         }
         public static void Undock(this Vehicle vehicle)
         {
-            VehicleDockingBay thisBay = vehicle.transform.parent?.gameObject?.GetComponentsInChildren<VehicleDockingBay>()?.Where(x => x.dockedVehicle == vehicle)?.First();
-            if(thisBay == null)
+            void UndockModVehicle(Vehicle thisVehicle)
             {
+                if (vehicle is ModVehicle)
+                {
+                    (vehicle as ModVehicle).OnVehicleUndocked();
+                }
+            }
+            var theseBays = vehicle.transform.parent?.gameObject?.GetComponentsInChildren<VehicleDockingBay>()?.Where(x => x.dockedVehicle == vehicle);
+            if(theseBays == null || theseBays.Count() == 0)
+            {
+                UndockModVehicle(vehicle);
                 return;
             }
+            VehicleDockingBay thisBay = theseBays.First();
             UWE.CoroutineHost.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
             thisBay.vehicle_docked_param = false;
             UWE.CoroutineHost.StartCoroutine(vehicle.Undock(vehicle.liveMixin.IsAlive() ? Player.main : null, thisBay.transform.position.y));
             SkyEnvironmentChanged.Broadcast(vehicle.gameObject, (GameObject)null);
             thisBay.dockedVehicle = null;
-            if(vehicle is ModVehicle)
-            {
-                (vehicle as ModVehicle).OnVehicleUndocked();
-            }
+            UndockModVehicle(vehicle);
         }
         public static IEnumerator MaybeToggleCyclopsCollision(this VehicleDockingBay bay)
         {

@@ -26,7 +26,6 @@ namespace VehicleFramework
             GetAssets();
             SetupDefaultAssets();
             PrePatch();
-            BuildableDroneStation.Register();
         }
         public void Start()
         {

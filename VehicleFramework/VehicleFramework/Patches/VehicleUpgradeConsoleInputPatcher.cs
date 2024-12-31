@@ -30,6 +30,7 @@ namespace VehicleFramework.Patches
         {
             if (__instance.GetComponentInParent<ModVehicle>() != null)
             {
+                __instance.slots = __instance.GetComponentInChildren<UpgradeProxy>().slots.ToArray();
                 for (int i = 0; i < __instance.slots.Length; i++)
                 {
                     VehicleUpgradeConsoleInput.Slot slot = __instance.slots[i];
@@ -37,7 +38,6 @@ namespace VehicleFramework.Patches
                     if (model != null)
                     {
                         bool active = __instance.equipment != null && __instance.equipment.GetTechTypeInSlot(slot.id) > TechType.None;
-                        //Logger.Log((__instance.equipment.GetTechTypeInSlot(slot.id)).ToString()); // always returns none
                         model.SetActive(active);
                     }
                 }

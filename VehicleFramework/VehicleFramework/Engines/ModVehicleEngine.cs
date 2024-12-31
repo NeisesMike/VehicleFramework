@@ -13,10 +13,10 @@ using VehicleFramework.Patches;
 
 namespace VehicleFramework.Engines
 {
-    public abstract class ModVehicleEngine : MonoBehaviour
+    public abstract class ModVehicleEngine : VFEngine
     {
-        public ModVehicle mv;
-        public Rigidbody rb;
+        public ModVehicle mv = null;
+        public Rigidbody rb = null;
         private EngineSounds _sounds = null;
         public EngineSounds sounds
         {
@@ -31,17 +31,18 @@ namespace VehicleFramework.Engines
                 EngineSource2.clip = value.whistle;
             }
         }
+        private AudioSource EngineSource1;
+        private AudioSource EngineSource2;
 
-
+        #region public_fields
         public float WhistleFactor = 0.4f;
         public float HumFactor = 1f;
         public bool blockVoiceChange => false;
         public virtual bool CanMoveAboveWater { get; set; } = false;
         public virtual bool CanRotateAboveWater { get; set; } = false;
+        #endregion
 
-
-        public float damageModifier { get; set; } = 1f;
-
+        #region protected_fields
         protected virtual float FORWARD_TOP_SPEED => 1000;
         protected virtual float REVERSE_TOP_SPEED => 1000;
         protected virtual float STRAFE_MAX_SPEED => 1000;
@@ -57,7 +58,7 @@ namespace VehicleFramework.Engines
         {
             get
             {
-                if (mv.GetIsUnderwater())
+                if (MV.GetIsUnderwater())
                 {
                     return waterDragDecay;
                 }
@@ -194,37 +195,37 @@ namespace VehicleFramework.Engines
             EngineHum += inputMagnitude * Time.deltaTime;
         }
         protected bool isReadyToWhistle = true;
-        private AudioSource EngineSource1;
-        private AudioSource EngineSource2;
+        #endregion
 
+        #region unity_signals
         public virtual void Awake()
         {
+            mv = GetComponent<ModVehicle>();
+            rb = GetComponent<Rigidbody>();
             // register self with mainpatcher, for on-the-fly voice selection updating
             EngineSoundsManager.engines.Add(this);
         }
-        // Start is called before the first frame update
-        public virtual void Start()
+        public override void Start()
         {
-            rb.centerOfMass = Vector3.zero;
-            rb.angularDrag = 5f;
-
-            EngineSource1 = mv.gameObject.AddComponent<AudioSource>().Register();
+            base.Start();
+            EngineSource1 = MV.gameObject.AddComponent<AudioSource>().Register();
             EngineSource1.loop = true;
             EngineSource1.playOnAwake = false;
             EngineSource1.priority = 0;
 
-            EngineSource2 = mv.gameObject.AddComponent<AudioSource>().Register();
+            EngineSource2 = MV.gameObject.AddComponent<AudioSource>().Register();
             EngineSource2.loop = false;
             EngineSource2.playOnAwake = false;
             EngineSource2.priority = 0;
 
-            sounds = EngineSoundsManager.GetDefaultVoice(mv);
+            sounds = EngineSoundsManager.GetDefaultVoice(MV);
         }
         public void OnDisable()
         {
             EngineSource1?.Stop();
             EngineSource2?.Stop();
         }
+        /*
         public virtual void FixedUpdate()
         {
             var fcc = MainCameraControl.main.GetComponent<FreecamController>();
@@ -233,54 +234,86 @@ namespace VehicleFramework.Engines
             {
                 isFreecam = true;
             }
-            Vector3 DoMoveAction()
-            {
-                // Get Input Vector
-                Vector3 innerMoveDirection = GameInput.GetMoveDirection();
-                // Apply controls to the vehicle state
-                ApplyPlayerControls(innerMoveDirection);
-                // Drain power based on Input Vector (and modifiers)
-                // TODO: DrainPower with ApplyPlayerControls...
-                // or would it be better with ExecutePhysicsMove...?
-                DrainPower(innerMoveDirection);
-                return innerMoveDirection;
-            }
             Vector3 moveDirection = Vector3.zero;
             if (mv.GetIsUnderwater() || CanMoveAboveWater)
             {
-                if (mv.CanPilot() && mv.IsUnderCommand && !isFreecam)
+                if (mv.CanPilot() && mv.IsPlayerControlling() && !isFreecam)
                 {
-                    if (mv as Submarine != null)
-                    {
-                        if(mv.IsPlayerControlling())
-                        {
-                            moveDirection = DoMoveAction();
-                        }
-                    }
-                    else
-                    {
-                        moveDirection = DoMoveAction();
-                    }
+                    moveDirection = GameInput.GetMoveDirection();
+                    ApplyPlayerControls(moveDirection);
+                    DrainPower(moveDirection);
                 }
-                // Execute a state-based physics move
                 ExecutePhysicsMove();
-                if (moveDirection == Vector3.zero)
-                {
-                    UpdateEngineHum(-3);
-                }
-                else
-                {
-                    UpdateEngineHum(moveDirection.magnitude);
-                }
-                PlayEngineHum();
-                PlayEngineWhistle(moveDirection);
             }
-            else
-            {
-                UpdateEngineHum(-3);
-            }
+            DoEngineSounds(moveDirection);
             ApplyDrag(moveDirection);
         }
+        */
+        #endregion
+
+        #region overridden_methods
+        protected override bool CanMove()
+        {
+            return MV.GetIsUnderwater() || CanMoveAboveWater;
+        }
+        protected override bool CanRotate()
+        {
+            return MV.GetIsUnderwater() || CanRotateAboveWater;
+        }
+        protected override void DoMovement()
+        {
+            ExecutePhysicsMove();
+        }
+        protected override void DoFixedUpdate()
+        {
+            Vector3 moveDirection = GameInput.GetMoveDirection();
+            DoEngineSounds(moveDirection);
+            ApplyDrag(moveDirection);
+        }
+        protected override void MoveWithInput(Vector3 moveInput)
+        {
+            UpdateRightMomentum(moveInput.x);
+            UpdateUpMomentum(moveInput.y);
+            UpdateForwardMomentum(moveInput.z);
+            return;
+        }
+        public override void DrainPower(Vector3 moveDirection)
+        {
+            /* Rationale for these values
+             * Seamoth spends this on Update
+             * base.ConsumeEngineEnergy(Time.deltaTime * this.enginePowerConsumption * vector.magnitude);
+             * where vector.magnitude in [0,3];
+             * instead of enginePowerConsumption, we have upgradeModifier, but they are similar if not identical
+             * so the power consumption is similar to that of a seamoth.
+             */
+            float scalarFactor = 1.0f;
+            float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
+            float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+            MV.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
+        }
+        public override void KillMomentum()
+        {
+            ForwardMomentum = 0f;
+            RightMomentum = 0f;
+            UpMomentum = 0f;
+        }
+        public override void ControlRotation()
+        {
+            if (CanRotate())
+            {
+                // Control rotation
+                float pitchFactor = 1.4f;
+                float yawFactor = 1.4f;
+                Vector2 mouseDir = GameInput.GetLookDelta();
+                float xRot = mouseDir.x;
+                float yRot = mouseDir.y;
+                RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+                RB.AddTorque(MV.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+            }
+        }
+        #endregion
+
+        #region virtual_methods
         protected virtual float DragThresholdSpeed
         {
             get
@@ -300,7 +333,7 @@ namespace VehicleFramework.Engines
             bool isForward = move.z != 0;
             bool isRight = move.x != 0;
             bool isUp = move.y != 0;
-            bool activated = isForward || isRight || isUp || mv.worldForces.IsAboveWater();
+            bool activated = isForward || isRight || isUp || MV.worldForces.IsAboveWater();
 
             if (!isForward)
             {
@@ -323,81 +356,33 @@ namespace VehicleFramework.Engines
                     UpMomentum -= DragDecay * UpMomentum * Time.deltaTime;
                 }
             }
-            if(!activated && rb.velocity.magnitude < DragThresholdSpeed)
+            if(!activated && RB.velocity.magnitude < DragThresholdSpeed)
             {
                 ForwardMomentum = 0;
                 RightMomentum = 0;
                 UpMomentum = 0;
-                rb.velocity = Vector3.zero;
+                RB.velocity = Vector3.zero;
             }
         }
-        public virtual void ExecutePhysicsMove()
+        public virtual void ExecutePhysicsMove() // public just for AircraftLib
         {
-            rb.AddForce(damageModifier * mv.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(damageModifier * mv.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            rb.AddForce(damageModifier * mv.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
-        }
-        public enum ForceDirection
-        {
-            forward,
-            backward,
-            strafe,
-            updown
-        }
-        public virtual void ApplyPlayerControls(Vector3 moveDirection)
-        {
-            if(Player.main.GetPDA().isOpen)
-            {
-                return;
-            }
-
+            Vector3 tsm = Vector3.one;
             // Thank you to MrPurple6411 for this snip regarding VehicleAccelerationModifier
             var modifiers = base.gameObject.GetComponentsInChildren<VehicleAccelerationModifier>();
             foreach (var modifier in modifiers)
             {
-                modifier.ModifyAcceleration(ref moveDirection);
+                modifier.ModifyAcceleration(ref tsm);
             }
-
-            // Control velocity
-            UpdateRightMomentum(moveDirection.x);
-            UpdateUpMomentum(moveDirection.y);
-            UpdateForwardMomentum(moveDirection.z);
-            return;
+            RB.AddForce(tsm.z * DamageModifier * MV.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            RB.AddForce(tsm.x * DamageModifier * MV.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            RB.AddForce(tsm.y * DamageModifier * MV.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
-        public virtual void ControlRotation()
-        {
-            if (mv.GetIsUnderwater() || CanRotateAboveWater)
-            {
-                // Control rotation
-                float pitchFactor = 1.4f;
-                float yawFactor = 1.4f;
-                Vector2 mouseDir = GameInput.GetLookDelta();
-                float xRot = mouseDir.x;
-                float yRot = mouseDir.y;
-                rb.AddTorque(mv.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-                rb.AddTorque(mv.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
-            }
-        }
-        public virtual void DrainPower(Vector3 moveDirection)
-        {
-            /* Rationale for these values
-             * Seamoth spends this on Update
-             * base.ConsumeEngineEnergy(Time.deltaTime * this.enginePowerConsumption * vector.magnitude);
-             * where vector.magnitude in [0,3];
-             * instead of enginePowerConsumption, we have upgradeModifier, but they are similar if not identical
-             * so the power consumption is similar to that of a seamoth.
-             */
-            float scalarFactor = 1.0f;
-            float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
-            float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
-            mv.GetComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
-        }
-        public virtual void PlayEngineHum()
+        protected virtual void PlayEngineHum()
         {
             EngineSource1.volume = EngineHum / 10f * (MainPatcher.VFConfig.engineVolume / 100) * HumFactor;
-            if (mv.IsPowered())
+            if (MV.IsPowered())
             {
-                if (!EngineSource1.isPlaying && rb.velocity.magnitude > 0.2f) // why 0.2f ?
+                if (!EngineSource1.isPlaying && RB.velocity.magnitude > 0.2f) // why 0.2f ?
                 {
                     EngineSource1.Play();
                 }
@@ -407,7 +392,7 @@ namespace VehicleFramework.Engines
                 EngineSource1.Stop();
             }
         }
-        public virtual void PlayEngineWhistle(Vector3 moveDirection)
+        protected virtual void PlayEngineWhistle(Vector3 moveDirection)
         {
             if (gameObject.GetComponent<Rigidbody>().velocity.magnitude < 1)
             {
@@ -433,7 +418,42 @@ namespace VehicleFramework.Engines
                 }
             }
         }
+        protected virtual void DoEngineSounds(Vector3 moveDirection)
+        {
+            if(CanMove() && CanTakeInputs())
+            {
+                UpdateEngineHum(moveDirection.magnitude);
+                PlayEngineWhistle(moveDirection);
+            }
+            else
+            {
+                UpdateEngineHum(-3);
+            }
+            PlayEngineHum();
 
+            /*
+            if (CanMove())
+            {
+                if (moveDirection == Vector3.zero)
+                {
+                    UpdateEngineHum(-3);
+                }
+                else
+                {
+                    UpdateEngineHum(moveDirection.magnitude);
+                }
+                PlayEngineHum();
+                PlayEngineWhistle(moveDirection);
+            }
+            else
+            {
+                UpdateEngineHum(-3);
+            }
+            */
+        }
+        #endregion
+
+        #region methods
         public float GetTimeToStop()
         {
             float timeToXStop = Mathf.Log(0.05f * STRAFE_MAX_SPEED / RightMomentum) / (Mathf.Log(.25f));
@@ -441,13 +461,6 @@ namespace VehicleFramework.Engines
             float timeToZStop = Mathf.Log(0.05f * FORWARD_TOP_SPEED / ForwardMomentum) / (Mathf.Log(.25f));
             return Mathf.Max(timeToXStop,timeToYStop,timeToZStop);
         }
-        public virtual void KillMomentum()
-        {
-            ForwardMomentum = 0f;
-            RightMomentum = 0f;
-            UpMomentum = 0f;
-        }
-
         public void SetVoice(EngineSounds inputVoice)
         {
             if (!blockVoiceChange)
@@ -462,7 +475,6 @@ namespace VehicleFramework.Engines
                 sounds = EngineSoundsManager.GetVoice(EngineSoundsManager.GetKnownVoice(voiceName));
             }
         }
+        #endregion
     }
 }
-        
-

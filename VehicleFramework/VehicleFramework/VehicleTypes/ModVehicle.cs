@@ -66,6 +66,7 @@ namespace VehicleFramework
         }
         public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
+        public virtual VFEngine VFEngine { get; set; }
         public virtual ModVehicleEngine Engine { get; set; }
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
@@ -136,12 +137,13 @@ namespace VehicleFramework
             {
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
             }
-            if(Engine == null)
+            if(VFEngine == null)
             {
-                Engine = GetComponent<ModVehicleEngine>();
+                VFEngine = GetComponent<VFEngine>();
             }
             VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
+            Upgrades.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
         }
         public override void Start()
         {
@@ -276,6 +278,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
             pingInstance.enabled = true;
+            worldForces.handleGravity = true;
             BuildBotManager.ResetGhostMaterial();
         }
         public override void DeselectSlots() // This happens when you press the Exit button while having a "currentMountedVehicle."
@@ -441,7 +444,14 @@ namespace VehicleFramework
                 }
             }
             IsUnderCommand = false;
-            Player.main.SetCurrentSub(null);
+            if(Player.main.GetCurrentSub() == GetComponent<SubRoot>())
+            {
+                Player.main.SetCurrentSub(null);
+            }
+            if(Player.main.GetVehicle() == this)
+            {
+                Player.main.currentMountedVehicle = null;
+            }
             NotifyStatus(PlayerStatus.OnPlayerExit);
             Player.main.transform.SetParent(null);
             Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
@@ -450,6 +460,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
             pingInstance.enabled = false;
+            worldForces.handleGravity = false;
         }
         public virtual void ForceExitLockedMode()
         {
@@ -474,8 +485,7 @@ namespace VehicleFramework
         }
         public virtual bool GetIsUnderwater()
         {
-            // TODO: justify this constant
-            return transform.position.y < 0.75f;
+            return !worldForces.IsAboveWater();
         }
         public virtual void OnCraftEnd(TechType techType)
         {
@@ -587,7 +597,7 @@ namespace VehicleFramework
                 DeathExplodeAction();
             }
             isScuttled = true;
-            GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = false);
+            GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = false);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = false);
@@ -604,7 +614,7 @@ namespace VehicleFramework
         public virtual void UnscuttleVehicle()
         {
             isScuttled = false;
-            GetComponentsInChildren<ModVehicleEngine>().ForEach(x => x.enabled = true);
+            GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = true);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
@@ -686,6 +696,18 @@ namespace VehicleFramework
         {
 
         }
+        public virtual void SetBaseColor(Vector3 hsb, Color color)
+        {
+            baseColor = color;
+        }
+        public virtual void SetInteriorColor(Vector3 hsb, Color color)
+        {
+            interiorColor = color;
+        }
+        public virtual void SetStripeColor(Vector3 hsb, Color color)
+        {
+            stripeColor = color;
+        }
         #endregion
 
         #region public_fields
@@ -729,6 +751,10 @@ namespace VehicleFramework
         private int numArmorModules = 0;
         protected bool IsVehicleDocked = false;
         private string[] _slotIDs = null;
+        protected internal Color baseColor = Color.white;
+        protected internal Color interiorColor = Color.white;
+        protected internal Color stripeColor = Color.white;
+        protected internal Color nameColor = Color.black;
         #endregion
 
         #region internal_methods
@@ -944,6 +970,18 @@ namespace VehicleFramework
                     break;
             }
         }
+        private void MyExitLockedMode()
+        {
+            GameInput.ClearInput();
+            Player.main.transform.parent = null;
+            Player.main.transform.localScale = Vector3.one;
+            Player.main.currentMountedVehicle = null;
+            Player.main.playerController.SetEnabled(true);
+            Player.main.mode = Player.Mode.Normal;
+            Player.main.playerModeChanged.Trigger(Player.main.mode);
+            Player.main.sitting = false;
+            Player.main.playerController.ForceControllerSize();
+        }
         private void DoExitRoutines()
         {
             Player myPlayer = Player.main;
@@ -971,7 +1009,7 @@ namespace VehicleFramework
                     myPlayer.playerController.SetEnabled(true);
                     return;
                 }
-                Player.main.ExitLockedMode();
+                MyExitLockedMode();
                 return;
             }
             else if (mvSubmersible != null)
@@ -1029,7 +1067,7 @@ namespace VehicleFramework
                     return;
                 }
 
-                mvSubmarine.Engine.KillMomentum();
+                mvSubmarine.VFEngine.KillMomentum();
                 // teleport the player to a walking position, just behind the chair
                 Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
 
@@ -1038,7 +1076,7 @@ namespace VehicleFramework
                 mvSubmarine.StopPiloting();
                 return;
             }
-            Player.main.ExitLockedMode();
+            MyExitLockedMode();
             return;
         }
         #endregion
@@ -1358,15 +1396,15 @@ namespace VehicleFramework
             if (mv == null
                 || !veh.GetPilotingMode()
                 || !mv.IsUnderCommand
-                || mv.GetComponent<ModVehicleEngine>() == null
-                || !veh.GetComponent<ModVehicleEngine>().enabled
+                || mv.GetComponent<VFEngine>() == null
+                || !veh.GetComponent<VFEngine>().enabled
                 || Player.main.GetPDA().isOpen
                 || (AvatarInputHandler.main && !AvatarInputHandler.main.IsEnabled())
                 || !mv.energyInterface.hasCharge)
             {
                 return;
             }
-            mv.GetComponent<ModVehicleEngine>().ControlRotation();
+            mv.GetComponent<VFEngine>().ControlRotation();
         }
         public static EnergyMixin GetEnergyMixinFromVehicle(Vehicle veh)
         {
