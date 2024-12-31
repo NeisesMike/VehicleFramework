@@ -37,6 +37,7 @@ namespace VehicleFramework.VehicleParts
             SurfaceExitLocation = iSurfaceExit;
         }
     }
+
     public struct VehicleStorage
     {
         public GameObject Container;
@@ -49,28 +50,7 @@ namespace VehicleFramework.VehicleParts
             Width = iWidth;
         }
     }
-    public struct VehicleFloaters
-    {
-        public GameObject Floater;
-        public float Pressure;
-        public int FloaterTankFillPercentage;
-        public VehicleFloaters(GameObject iFloater, float iPressure, int iFloatTankFillPercentage)
-        {
-            Floater = iFloater;
-            Pressure = iPressure;
-            FloaterTankFillPercentage = iFloatTankFillPercentage;
-        }
-    }
-    public struct VehicleWeights
-    {
-        public GameObject Weights;
-        public float Mass;
-        public VehicleWeights(GameObject iWeight, float iMass)
-        {
-            Weights = iWeight;
-            Mass = iMass;
-        }
-    }
+
     public struct VehicleAnchor
     {
         public GameObject Anchor;

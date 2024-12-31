@@ -221,7 +221,6 @@
     <Compile Include="VehicleComponents\VFArm.cs" />
     <Compile Include="VehicleComponents\VFArmsManager.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
-    <Compile Include="VehicleTypes\Skimmer.cs" />
     <Compile Include="VehicleTypes\Submarine.cs" />
     <Compile Include="VehicleTypes\Submersible.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
@@ -274,6 +273,7 @@
     <Compile Include="Interfaces\IVehicleStatusListener.cs" />
     <Compile Include="Admin\VehicleManager.cs" />
     <Compile Include="VehicleBuilding\VehicleParts.cs" />
+    <Compile Include="VehicleTypes\SurfaceVessel.cs" />
     <Compile Include="VehicleTypes\Walker.cs" />
   </ItemGroup>
   <ItemGroup />
