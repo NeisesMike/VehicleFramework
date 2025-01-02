@@ -846,7 +846,10 @@ namespace VehicleFramework
             }
             var modSto = ModularStorages[slotID];
             modSto.Container.SetActive(activated);
-            modSto.Container.GetComponent<ModularStorageInput>().GetContainer().Resize(modSto.Width, modSto.Height);
+            if (activated)
+            {
+                modSto.Container.GetComponent<ModularStorageInput>().GetContainer().Resize(modSto.Width, modSto.Height);
+            }
         }
         internal ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
         {
