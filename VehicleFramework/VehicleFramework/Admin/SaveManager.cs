@@ -50,7 +50,7 @@ namespace VehicleFramework
         {
             // the following floats we compare should in reality be the same
             // but anyways there's probably no closer mod vehicle than 1 meter
-            return Vector3.Distance(mv.transform.position, location) < 3;
+            return Vector3.Distance(mv.transform.position, location) < 2;
         }
         internal static List<Tuple<Vector3, Dictionary<string, techtype>>> SerializeUpgrades()
         {
@@ -267,7 +267,7 @@ namespace VehicleFramework
                 {
                     foreach (InnateStorageContainer vsc in mv.GetComponentsInChildren<InnateStorageContainer>())
                     {
-                        Vector3 thisLocalPos = vsc.transform.position;
+                        Vector3 thisLocalPos = mv.transform.InverseTransformPoint(vsc.transform.position);
                         batteries thisContents = new batteries();
                         foreach (var item in vsc.container.ToList())
                         {
@@ -314,63 +314,30 @@ namespace VehicleFramework
                         foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
                         {
                             isStorageMatched = false;
-                            if (Vector3.Distance(isc.transform.position, thisStorage.Item1) < 0.05f) // this is a weird amount of drift, but I'm afraid to use ==
+                            Vector3 thisLocalPos = mv.transform.InverseTransformPoint(isc.transform.position);
+                            if (Vector3.Distance(thisLocalPos, thisStorage.Item1) < 0.05f) // this is a weird amount of drift, but I'm afraid to use ==
                             {
                                 isStorageMatched = true;
-                                foreach (var techtype in thisStorage.Item2)
-                                {
-                                    TaskResult<GameObject> result = new TaskResult<GameObject>();
-                                    System.String techTypeString = techtype.Item1.Replace("Undiscovered", ""); // fix for yet-"undiscovered" creature eggs
-                                    bool resulty = TechTypeExtensions.FromString(techTypeString, out TechType thisTT, true);
-                                    if(!resulty)
-                                    {
-                                        continue;
-                                    }
-                                    yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
-                                    GameObject thisItem = result.Get();
-                                    if (techtype.Item2 >= 0)
-                                    {
-                                        // check whether we *are* a battery xor we *have* a battery
-                                        if (thisItem.GetComponent<Battery>() != null && thisItem.GetComponentInChildren<Battery>() != null)
-                                        {
-                                            // we are a battery
-                                            thisItem.GetComponentInChildren<Battery>().charge = techtype.Item2;
-                                        }
-                                        else
-                                        {
-                                            // we have a battery (we are a tool)
-                                            // Thankfully we have this naming convention
-                                            Transform batSlot = thisItem.transform.Find("BatterySlot");
-                                            if (batSlot == null)
-                                            {
-                                                Logger.Warn("Failed to load innate storage item : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                                                continue;
-                                            }
-                                            result = new TaskResult<GameObject>();
-                                            yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
-                                            GameObject newBat = result.Get();
-                                            if (newBat.GetComponent<Battery>() != null)
-                                            {
-                                                newBat.GetComponent<Battery>().charge = techtype.Item2;
-                                                Logger.Warn("Failed to load innate storage battery : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                                            }
-                                            newBat.transform.SetParent(batSlot);
-                                            newBat.SetActive(false);
-                                        }
-                                    }
-                                    thisItem.transform.SetParent(mv.StorageRootObject.transform);
-                                    try
-                                    {
-                                        isc.container.AddItem(thisItem.GetComponent<Pickupable>());
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Logger.Error("Failed to add storage item to modular storage : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                                        Logger.Log(e.Message);
-                                    }
-                                    thisItem.SetActive(false);
-                                }
+                                yield return UWE.CoroutineHost.StartCoroutine(LoadThisStorage(mv, thisStorage.Item2, isc));
                                 break;
+                            }
+                        }
+                        if (!isStorageMatched)
+                        {
+                            Logger.Warn("Failed to normally restore the contents of the " + mv.name + ". Trying the old method.");
+                            foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
+                            {
+                                isStorageMatched = false;
+                                if (Vector3.Distance(isc.transform.position, thisStorage.Item1) < 0.1f) // this is a weird amount of drift, but I'm afraid to use ==
+                                {
+                                    isStorageMatched = true;
+                                    yield return UWE.CoroutineHost.StartCoroutine(LoadThisStorage(mv, thisStorage.Item2, isc));
+                                    break;
+                                }
+                            }
+                            if(isStorageMatched)
+                            {
+                                Logger.Log("Successfully loaded contents. Will update the save data schema on next save.");
                             }
                         }
                         if (!isStorageMatched)
@@ -788,6 +755,67 @@ namespace VehicleFramework
             {
                 Logger.Error("Failed to deserialize HasVehicleTechTypes!");
             }
+        }
+
+
+        internal static IEnumerator LoadThisStorage(ModVehicle mv, batteries thisStorage, InnateStorageContainer matchedContainer)
+        {
+            foreach (var techtype in thisStorage)
+            {
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                System.String techTypeString = techtype.Item1.Replace("Undiscovered", ""); // fix for yet-"undiscovered" creature eggs
+                bool resulty = TechTypeExtensions.FromString(techTypeString, out TechType thisTT, true);
+                if (!resulty)
+                {
+                    continue;
+                }
+                yield return CraftData.InstantiateFromPrefabAsync(thisTT, result, false);
+                GameObject thisItem = result.Get();
+                if (techtype.Item2 >= 0)
+                {
+                    // check whether we *are* a battery xor we *have* a battery
+                    if (thisItem.GetComponent<Battery>() != null && thisItem.GetComponentInChildren<Battery>() != null)
+                    {
+                        // we are a battery
+                        thisItem.GetComponentInChildren<Battery>().charge = techtype.Item2;
+                    }
+                    else
+                    {
+                        // we have a battery (we are a tool)
+                        // Thankfully we have this naming convention
+                        Transform batSlot = thisItem.transform.Find("BatterySlot");
+                        if (batSlot == null)
+                        {
+                            Logger.Warn("Failed to load innate storage item : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                            continue;
+                        }
+                        result = new TaskResult<GameObject>();
+                        yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
+                        GameObject newBat = result.Get();
+                        if (newBat.GetComponent<Battery>() != null)
+                        {
+                            newBat.GetComponent<Battery>().charge = techtype.Item2;
+                            Logger.Warn("Failed to load innate storage battery : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                        }
+                        newBat.transform.SetParent(batSlot);
+                        newBat.SetActive(false);
+                    }
+                }
+                thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                try
+                {
+                    matchedContainer.container.AddItem(thisItem.GetComponent<Pickupable>());
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("Failed to add storage item to modular storage : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                    Logger.Log(e.Message);
+                }
+                thisItem.SetActive(false);
+            }
+
+
+
         }
     }
 }
