@@ -216,7 +216,7 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Player.ExitLockedMode))]
-        public static bool PlayerExitLockedModePostfix(Player __instance)
+        public static bool PlayerExitLockedModePrefix(Player __instance)
         {
             // if we're in an MV, do our special way of exiting a vehicle instead
             ModVehicle mv = __instance.GetModVehicle();
@@ -226,6 +226,20 @@ namespace VehicleFramework
             }
             mv.DeselectSlots();
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Player.OnKill))]
+        public static void PlayerOnKillPostfix(Player __instance)
+        {
+            // if we're in an MV, do our special way of exiting a vehicle instead
+            ModVehicle mv = __instance.GetModVehicle();
+            if (mv == null)
+            {
+                return;
+            }
+            mv.StopPiloting();
+            mv.PlayerExit();
         }
     }
 }
