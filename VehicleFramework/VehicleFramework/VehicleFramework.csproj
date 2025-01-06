@@ -141,6 +141,7 @@
     <Compile Include="Assets\BuildableDroneStation.cs" />
     <Compile Include="Assets\IngredientStruct.cs" />
     <Compile Include="Assets\SpriteHelper.cs" />
+    <Compile Include="Assets\StaticAssets.cs" />
     <Compile Include="Assets\VanillaVehicleHelpers.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="DepthModules\DepthModule3.cs" />

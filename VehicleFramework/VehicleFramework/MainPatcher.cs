@@ -16,15 +16,10 @@ namespace VehicleFramework
     {
         internal static VehicleFrameworkConfig VFConfig { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
-        internal static Atlas.Sprite ModVehicleIcon { get; private set; }
-        internal static Atlas.Sprite UpgradeIcon { get; private set; }
-        internal static Atlas.Sprite DepthIcon { get; private set; }
-        internal static Atlas.Sprite ArmIcon { get; private set; }
+        public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
         public void Awake()
         {
             VehicleFramework.Logger.MyLog = base.Logger;
-            GetAssets();
-            SetupDefaultAssets();
             PrePatch();
         }
         public void Start()
@@ -32,32 +27,21 @@ namespace VehicleFramework
             Patch();
             PostPatch();
         }
-        public void GetSprites()
-        {
-            ModVehicleIcon = Assets.SpriteHelper.GetSpriteInternal("ModVehicleIcon.png");
-            ArmIcon = Assets.SpriteHelper.GetSpriteInternal("ArmUpgradeIcon.png");
-            UpgradeIcon = Assets.SpriteHelper.GetSpriteInternal("UpgradeIcon.png");
-            DepthIcon = Assets.SpriteHelper.GetSpriteInternal("DepthIcon.png");
-        }
         public void PrePatch()
         {
+            Assets.StaticAssets.SetupDefaultAssets();
             VFConfig = OptionsPanelHandler.RegisterModOptions<VehicleFrameworkConfig>();
             IEnumerator CollectPrefabsForBuilderReference()
             {
                 CoroutineTask<GameObject> request = CraftData.GetPrefabForTechTypeAsync(TechType.BaseUpgradeConsole, true);
                 yield return request;
                 VehicleBuilder.upgradeconsole = request.GetResult();
-
                 yield break;
             }
             UWE.CoroutineHost.StartCoroutine(CollectPrefabsForBuilderReference());
-
-            GetSprites();
-
+            Assets.StaticAssets.GetSprites();
             Admin.CraftTreeHandler.AddFabricatorMenus();
-
             Admin.Utils.RegisterDepthModules();
-
             UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
             UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());
         }
@@ -159,24 +143,5 @@ namespace VehicleFramework
         {
             //VehicleBuilder.ScatterDataBoxes(craftables);
         }
-        public static void GetAssets()
-        {
-            Assets.VehicleAssets DSAssets = Assets.AssetBundleInterface.GetVehicleAssetsFromBundle("modvehiclepingsprite");
-            VehicleManager.defaultPingSprite = Assets.AssetBundleInterface.LoadAdditionalSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
-            VehicleManager.defaultSaveFileSprite = Assets.AssetBundleInterface.LoadAdditionalRawSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
-            DSAssets.Close();
-        }
-        public static void SetupDefaultAssets()
-        {
-            VehicleManager.defaultRecipe.Add(TechType.PlasteelIngot, 1);
-            VehicleManager.defaultRecipe.Add(TechType.Lubricant, 1);
-            VehicleManager.defaultRecipe.Add(TechType.ComputerChip, 1);
-            VehicleManager.defaultRecipe.Add(TechType.AdvancedWiringKit, 1);
-            VehicleManager.defaultRecipe.Add(TechType.Lead, 2);
-            VehicleManager.defaultRecipe.Add(TechType.EnameledGlass, 2);
-
-            VehicleManager.defaultEngine = new Engines.AtramaEngine();
-        }
-        public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
     }
 }

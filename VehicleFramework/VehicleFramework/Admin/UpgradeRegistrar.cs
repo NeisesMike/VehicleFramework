@@ -2,6 +2,7 @@
 using System.Linq;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.VehicleComponents;
+using VehicleFramework.Assets;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
@@ -76,7 +77,7 @@ namespace VehicleFramework.Admin
             Atlas.Sprite usedIcon = displayIcon;
             if(usedIcon == null)
             {
-                usedIcon = MainPatcher.ModVehicleIcon;
+                usedIcon = StaticAssets.ModVehicleIcon;
             }
             CraftTreeHandler.AddCraftTreeNodesVF(
                 tabName,

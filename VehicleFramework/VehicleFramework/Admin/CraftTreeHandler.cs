@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VehicleFramework.Localization;
+using VehicleFramework.Assets;
 
 namespace VehicleFramework.Admin
 {
@@ -61,15 +62,15 @@ namespace VehicleFramework.Admin
         internal static void AddFabricatorMenus()
         {
             //Add root VF tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, rootVehicleFrameworkTab[0], "VF Upgrades", MainPatcher.ModVehicleIcon);
+            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, rootVehicleFrameworkTab[0], "VF Upgrades", StaticAssets.ModVehicleIcon);
             // add MV tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), LocalizationManager.GetString(EnglishString.MVModules), MainPatcher.ModVehicleIcon, rootVehicleFrameworkTab);
+            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), LocalizationManager.GetString(EnglishString.MVModules), StaticAssets.ModVehicleIcon, rootVehicleFrameworkTab);
             // add seamoth tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Seamoth).Last(), "Seamoth Upgrades", MainPatcher.ModVehicleIcon, rootVehicleFrameworkTab);
+            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Seamoth).Last(), "Seamoth Upgrades", StaticAssets.ModVehicleIcon, rootVehicleFrameworkTab);
             // add prawn tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Prawn).Last(), "Prawn Upgrades", MainPatcher.ModVehicleIcon, rootVehicleFrameworkTab);
+            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Prawn).Last(), "Prawn Upgrades", StaticAssets.ModVehicleIcon, rootVehicleFrameworkTab);
             // add cyclops tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Cyclops).Last(), "Cyclops Upgrades", MainPatcher.ModVehicleIcon, rootVehicleFrameworkTab);
+            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Cyclops).Last(), "Cyclops Upgrades", StaticAssets.ModVehicleIcon, rootVehicleFrameworkTab);
         }
     }
 }

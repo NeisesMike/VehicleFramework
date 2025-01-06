@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Admin;
+using VehicleFramework.Assets;
 
 namespace VehicleFramework.UpgradeTypes
 {
@@ -34,13 +35,13 @@ namespace VehicleFramework.UpgradeTypes
         public virtual Color Color => Color.red;
         public virtual float CraftingTime => 3f;
         public virtual CraftTree.Type FabricatorType => CraftTree.Type.Workbench;
-        public virtual Atlas.Sprite Icon => MainPatcher.UpgradeIcon;
+        public virtual Atlas.Sprite Icon => StaticAssets.UpgradeIcon;
         public virtual TechType UnlockWith => TechType.Workbench;
         public virtual string UnlockedMessage => "New vehicle upgrade acquired";
         public virtual Sprite UnlockedSprite => null;
         public virtual string TabName => "";
         public virtual string TabDisplayName => "";
-        public virtual Atlas.Sprite TabIcon => MainPatcher.UpgradeIcon;
+        public virtual Atlas.Sprite TabIcon => StaticAssets.UpgradeIcon;
         public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {

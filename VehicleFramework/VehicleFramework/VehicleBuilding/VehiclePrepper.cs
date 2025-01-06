@@ -7,6 +7,7 @@ using System.Reflection;
 using System.IO;
 using Nautilus.Utility;
 using Nautilus.Crafting;
+using VehicleFramework.Assets;
 
 namespace VehicleFramework
 {
@@ -16,7 +17,7 @@ namespace VehicleFramework
         public static TechType RegisterVehicle(VehicleEntry vehicle)
         {
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
-            vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? MainPatcher.ModVehicleIcon);
+            vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
             if (vehicle.mv.EncyclopediaEntry != null && vehicle.mv.EncyclopediaEntry.Length > 0)
             {
                 PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData

@@ -7,6 +7,7 @@ using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
 using VehicleFramework.Localization;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Assets;
 
 namespace VehicleFramework
 {
@@ -82,7 +83,7 @@ namespace VehicleFramework
         public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new List<VehicleParts.VehicleBattery>();
         public virtual Sprite UnlockedSprite => null;
         public virtual GameObject LeviathanGrabPoint => gameObject;
-        public virtual Atlas.Sprite CraftingSprite => MainPatcher.ModVehicleIcon;
+        public virtual Atlas.Sprite CraftingSprite => StaticAssets.ModVehicleIcon;
         public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
         public virtual List<VehicleParts.VehicleCamera> Cameras => new List<VehicleParts.VehicleCamera>();
         public virtual string Description => "A vehicle";
