@@ -19,6 +19,9 @@ namespace VehicleFramework
 
         /*
          * This collection of patches ensures our new upgrade slots interact nicely with the base game's Equipment class.
+         * 
+         * At first glance, it appears problematic that I overwrite Equipment.typeToSlots,
+         * but typeToSlots is an instance field, and I only overwrite it for ModVehicles.
          */
 
         [HarmonyPrefix]
