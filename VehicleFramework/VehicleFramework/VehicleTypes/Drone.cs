@@ -91,7 +91,7 @@ namespace VehicleFramework.VehicleTypes
                 yield return new WaitForSeconds(1f);
             }
             DeselectSlots();
-            Logger.Output("Disconnected: Low Power", time:5f, y:150);
+            Logger.PDANote("Disconnected: Low Power", 3f);
             yield break;
         }
         private GameObject temporaryParent = null;
@@ -157,9 +157,9 @@ namespace VehicleFramework.VehicleTypes
         public void SwapToDroneCamera()
         {
             camControl.MovePlayerCameraToTransform(CameraLocation);
-            Logger.Output("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.", y: 25);
+            Logger.PDANote("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.");
             string text3 = uGUI.FormatButton(AutoHomeButton, false, " / ", false);
-            Logger.Output("Press " + text3 + " to return home.", y: -25);
+            Logger.PDANote("Press " + text3 + " to return home.");
             Player.main.SetHeadVisible(true);
         }
         public void SwapToPlayerCamera()

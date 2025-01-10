@@ -139,7 +139,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else if(verbose)
                 {
-                    Logger.Output("No attachable surface nearby.");
+                    Logger.PDANote("No attachable surface nearby.");
                 }
             }
         }

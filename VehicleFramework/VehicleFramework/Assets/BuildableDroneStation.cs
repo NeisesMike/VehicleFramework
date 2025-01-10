@@ -108,7 +108,6 @@ namespace VehicleFramework
     public class DroneStation : HandTarget, IHandTarget
     {
         public static DroneStation BroadcastingStation = null;
-        private BasicText currentLog = null;
         private Drone _pairedDrone = null;
         public Drone pairedDrone
         {
@@ -327,8 +326,7 @@ namespace VehicleFramework
             }
             ret += "Making drone visible on HUD for one minute.\n";
 
-            currentLog?.Hide();
-            currentLog = Logger.Output(ret, 8);
+            Logger.PDANote(ret, 8);
         }
     }
 }

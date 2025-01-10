@@ -386,16 +386,14 @@ namespace VehicleFramework
             NotifyStatus(PlayerStatus.OnPilotBegin);
             if (gameObject.GetComponentInChildren<VehicleComponents.MVCameraController>() != null)
             {
-                Logger.Output("Press " +
+                Logger.PDANote("Press " +
                               MainPatcher.VFConfig.nextCamera +
                               " and " +
                               MainPatcher.VFConfig.previousCamera +
                               " to switch cameras.\n" +
                               "Press " +
                               MainPatcher.VFConfig.exitCamera +
-                              " to exit cameras."
-                              , time: 2f
-                              , y: 300);
+                              " to exit cameras.");
             }
         }
         public virtual void StopPiloting()
@@ -1050,11 +1048,11 @@ namespace VehicleFramework
                 {
                     if (HUDBuilder.IsVR)
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 250, 250);
+                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString());
                     }
                     else
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString(), 3, 500, 0);
+                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString());
                     }
                     return;
                 }
@@ -1062,11 +1060,11 @@ namespace VehicleFramework
                 {
                     if (HUDBuilder.IsVR)
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 250, 250);
+                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString());
                     }
                     else
                     {
-                        Logger.Output(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString(), 3, 500, 0);
+                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString());
                     }
                     return;
                 }

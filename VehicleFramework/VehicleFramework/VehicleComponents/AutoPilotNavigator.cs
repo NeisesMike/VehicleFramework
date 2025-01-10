@@ -81,7 +81,7 @@ namespace VehicleFramework.VehicleComponents
                 FaceDestinationFrame(dest);
                 if (CheckClose(dest, 5f))
                 {
-                    Logger.Output("Autopilot navigation stopped.\nPath not clear.");
+                    Logger.PDANote("Autopilot navigation stopped.\nPath not clear.");
                     break;
                 }
                 if (CheckClose(dest, 25f))
