@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
+using System.Reflection.Emit;
 
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(VehicleUpgradeConsoleInput))]
     class VehicleUpgradeConsoleInputPatcher
     {
-        [HarmonyPrefix]
+        [HarmonyTranspiler]
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandClick))]
-        public static bool OnHandClickPrefix(VehicleUpgradeConsoleInput __instance)
+        public static IEnumerable<CodeInstruction> VehicleUpgradeConsoleInputOnHandClickHarmonyTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            return VehicleTypes.Drone.mountedDrone == null;
+            return DroneTranspilerHelper.SkipForDrones(instructions, generator);
         }
-        [HarmonyPrefix]
+        [HarmonyTranspiler]
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandHover))]
-        public static bool OnHandHoverPrefix(VehicleUpgradeConsoleInput __instance)
+        public static IEnumerable<CodeInstruction> VehicleUpgradeConsoleInputOnHandHoverHarmonyTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            return VehicleTypes.Drone.mountedDrone == null;
+            return DroneTranspilerHelper.SkipForDrones(instructions, generator);
         }
 
         [HarmonyPostfix]
