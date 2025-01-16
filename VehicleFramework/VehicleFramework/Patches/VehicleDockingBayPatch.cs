@@ -233,13 +233,11 @@ namespace VehicleFramework.Patches
 
             var newInstructions = new CodeMatcher(instructions)
                 .MatchStartForward(startCinematicMatch)
-                .RemoveInstruction()
-                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
-                .Insert(Transpilers.EmitDelegate<Action<PlayerCinematicController, Player, Vehicle>>(MaybeStartCinematicMode))
-                .MatchStartForward(startCinematicMatch)
-                .RemoveInstruction()
-                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
-                .Insert(Transpilers.EmitDelegate<Action<PlayerCinematicController, Player, Vehicle>>(MaybeStartCinematicMode));
+                .Repeat(x =>
+                    x.RemoveInstruction()
+                    .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
+                    .Insert(Transpilers.EmitDelegate<Action<PlayerCinematicController, Player, Vehicle>>(MaybeStartCinematicMode))
+                );
 
             return newInstructions.InstructionEnumeration();
         }
