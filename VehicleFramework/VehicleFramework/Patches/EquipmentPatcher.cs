@@ -26,104 +26,104 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.SetLabel))]
-        public static bool SetLabelPrefix(Equipment __instance, string l, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static void SetLabelPrefix(Equipment __instance, string l, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (!l.Contains("VehicleModule") && !l.Contains("VehicleArm"))
             {
-                return true;
+                return;
             }
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                return true;
+                return;
             }
             ___typeToSlots = mv.VehicleTypeToSlots;
-            return true;
+            return;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.AddSlot))]
-        public static bool AddSlotPrefix(Equipment __instance, string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static void AddSlotPrefix(Equipment __instance, string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
             {
-                return true;
+                return;
             }
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                return true;
+                return;
             }
             ___typeToSlots = mv.VehicleTypeToSlots;
-            return true;
+            return;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.GetCompatibleSlotDefault))]
-        public static bool GetCompatibleSlotDefaultPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static void GetCompatibleSlotDefaultPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
             {
-                return true;
+                return;
             }
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if(mv == null)
             {
-                return true;
+                return;
             }
             ___typeToSlots = mv.VehicleTypeToSlots;
-            return true;
+            return;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.GetFreeSlot))]
-        public static bool GetFreeSlotPrefix(Equipment __instance, EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static void GetFreeSlotPrefix(Equipment __instance, EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (type != VehicleBuilder.ModuleType && type != VehicleBuilder.ArmType)
             {
-                return true;
+                return;
             }
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                return true;
+                return;
             }
             ___typeToSlots = mv.VehicleTypeToSlots;
-            return true;
+            return;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.GetSlots))]
-        public static bool GetSlotsPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static void GetSlotsPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
             {
-                return true;
+                return;
             }
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                return true;
+                return;
             }
             ___typeToSlots = mv.VehicleTypeToSlots;
-            return true;
+            return;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.RemoveSlot))]
-        public static bool RemoveSlot(Equipment __instance, string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static void RemoveSlot(Equipment __instance, string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
             if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
             {
-                return true;
+                return;
             }
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                return true;
+                return;
             }
             ___typeToSlots = mv.VehicleTypeToSlots;
-            return true;
+            return;
         }
 
         [HarmonyPrefix]
