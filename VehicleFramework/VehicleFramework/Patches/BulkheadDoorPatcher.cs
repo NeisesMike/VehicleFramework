@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using System.Reflection.Emit;
-using UnityEngine;
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(BulkheadDoor))]
     public class BulkheadDoorPatcher
     {
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(BulkheadDoor.OnHandClick))]
-        public static bool OnHandClickPrefix(BulkheadDoor __instance)
-        {
-            return VehicleTypes.Drone.mountedDrone == null;
-        }
-        [HarmonyPrefix]
+        [HarmonyTranspiler]
         [HarmonyPatch(nameof(BulkheadDoor.OnHandHover))]
-        public static bool OnHandHoverPrefix(BulkheadDoor __instance)
+        public static IEnumerable<CodeInstruction> BulkheadDoorOnHandHoverTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            return VehicleTypes.Drone.mountedDrone == null;
+            return DroneTranspilerHelper.SkipForDrones(instructions, generator);
+        }
+
+        [HarmonyTranspiler]
+        [HarmonyPatch(nameof(BulkheadDoor.OnHandClick))]
+        public static IEnumerable<CodeInstruction> BulkheadDoorOnHandClickTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            return DroneTranspilerHelper.SkipForDrones(instructions, generator);
         }
     }
 }
