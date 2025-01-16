@@ -225,8 +225,9 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(VehicleDockingBay))]
     public static class VehicleDockingBayPatch2
     {
+        [HarmonyTranspiler]
         [HarmonyPatch(nameof(VehicleDockingBay.LateUpdate))]
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> VehicleDockingBayLateUpdateTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             CodeMatch startCinematicMatch = new CodeMatch(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("StartCinematicMode"));
 
