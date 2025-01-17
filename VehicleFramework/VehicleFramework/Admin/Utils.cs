@@ -151,7 +151,7 @@ namespace VehicleFramework.Admin
                 return 0;
             }
         }
-        public static void EnableSimpleEmission(Material mat)
+        public static void EnableSimpleEmission(Material mat, float dayAmount = 1f, float nightAmount = 1f)
         {
             // This is the minumum requirement for emission under the marmosetuber shader.
             // No guarantees this will work well, but it's a good starting place.
@@ -161,8 +161,8 @@ namespace VehicleFramework.Admin
             mat.EnableKeyword("MARMO_SPECMAP");
             mat.SetFloat("_GlowStrength", 0);
             mat.SetFloat("_GlowStrengthNight", 0);
-            mat.SetFloat("_EmissionLM", 1);
-            mat.SetFloat("_EmissionLMNight", 1);
+            mat.SetFloat("_EmissionLM", dayAmount);
+            mat.SetFloat("_EmissionLMNight", nightAmount);
         }
     }
 }
