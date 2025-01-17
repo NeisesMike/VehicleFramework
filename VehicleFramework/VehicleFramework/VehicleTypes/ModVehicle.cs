@@ -361,24 +361,6 @@ namespace VehicleFramework
         #endregion
 
         #region virtual_methods
-        public virtual void DestroyMV()
-        {
-            pingInstance.enabled = false;
-            switch (OnDeathBehavior)
-            {
-                case DeathStyle.Explode:
-                    DeathExplodeAction();
-                    return;
-                case DeathStyle.Sink:
-                    DeathSinkAction();
-                    return;
-                case DeathStyle.Float:
-                    DeathFloatAction();
-                    return;
-                default:
-                    return;
-            }
-        }
         public virtual void BeginPiloting()
         {
             // BeginPiloting is the VF trigger to start controlling a vehicle.
@@ -589,15 +571,27 @@ namespace VehicleFramework
             // There is also "exosuit_docked"
             SafeAnimator.SetBool(moonpool.animator, "seamoth_docked", moonpool.vehicle_docked_param && moonpool.dockedVehicle != null);
         }
+        public virtual void DestroyMV()
+        {
+            DeathAction();
+            ScuttleVehicle();
+        }
+        public virtual void DeathAction()
+        {
+            worldForces.enabled = true;
+            worldForces.handleGravity = true;
+            worldForces.underwaterGravity = 1.5f;
+        }
         public virtual void ScuttleVehicle()
         {
             if(isScuttled)
             {
                 return;
             }
+            pingInstance.enabled = false;
             void OnCutOpen(Sealed sealedComp)
             {
-                DeathExplodeAction();
+                OnSalvage();
             }
             isScuttled = true;
             foreach (var component in GetComponentsInChildren<IScuttleListener>())
@@ -614,7 +608,7 @@ namespace VehicleFramework
             gameObject.EnsureComponent<Scuttler>().Scuttle();
             var sealedThing = gameObject.EnsureComponent<Sealed>();
             sealedThing.openedAmount = 0;
-            sealedThing.maxOpenedAmount = liveMixin.maxHealth;
+            sealedThing.maxOpenedAmount = liveMixin.maxHealth / 5f;
             sealedThing.openedEvent.AddHandler(gameObject, new UWE.Event<Sealed>.HandleFunction(OnCutOpen));
         }
         public virtual void UnscuttleVehicle()
@@ -633,23 +627,7 @@ namespace VehicleFramework
             isPoweredOn = true;
             gameObject.EnsureComponent<Scuttler>().Unscuttle();
         }
-        public virtual void DeathSinkAction()
-        {
-            ScuttleVehicle();
-            worldForces.enabled = true;
-            worldForces.handleGravity = true;
-            worldForces.underwaterGravity = 1.5f;
-        }
-        public virtual void DeathFloatAction()
-        {
-            ScuttleVehicle();
-            // set to buoyant, recalling that the ocean surface is the plane y=0
-            worldForces.enabled = true;
-            worldForces.handleGravity = true;
-            worldForces.underwaterGravity = -1f;
-            worldForces.aboveWaterGravity = 9.8f;
-        }
-        public virtual void DeathExplodeAction()
+        public virtual void OnSalvage()
         {
             IEnumerator DropLoot(Vector3 place, GameObject root)
             {
