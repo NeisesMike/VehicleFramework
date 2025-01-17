@@ -1,20 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using HarmonyLib;
-using System.IO;
 using UnityEngine;
-using System.Reflection;
-
-using System.Reflection.Emit;
-
-using Nautilus.Utility;
-using UWE;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Localization;
 
 namespace VehicleFramework
 { 
@@ -30,6 +17,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Player.Awake))]
         public static void AwakePostfix(Player __instance)
         {
+            new GameObject().AddComponent<Admin.ConsoleCommands>();
             VehicleFramework.Admin.GameStateWatcher.IsPlayerAwaked = true;
             VehicleFramework.Assets.FragmentManager.AddScannerDataEntries();
             HUDBuilder.DecideBuildHUD();
