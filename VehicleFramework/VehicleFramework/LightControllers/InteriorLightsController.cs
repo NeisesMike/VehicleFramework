@@ -8,15 +8,17 @@ namespace VehicleFramework
         private Submarine MV => GetComponent<Submarine>();
         protected override void HandleLighting(bool active)
         {
-            if (active)
+            MV.InteriorLights.ForEach(x => x.enabled = active);
+            foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
             {
-                MV.InteriorLights.ForEach(x => x.enabled = true);
-                MV.NotifyStatus(LightsStatus.OnInteriorLightsOn);
-            }
-            else
-            {
-                MV.InteriorLights.ForEach(x => x.enabled = false);
-                MV.NotifyStatus(LightsStatus.OnInteriorLightsOff);
+                if (active)
+                {
+                    component.OnInteriorLightsOn();
+                }
+                else
+                {
+                    component.OnInteriorLightsOff();
+                }
             }
         }
 

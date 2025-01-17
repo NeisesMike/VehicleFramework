@@ -16,7 +16,6 @@ namespace VehicleFramework
                 EnableLightClass(LightClass.Positions);
                 EnableLightClass(LightClass.Ports);
                 EnableLightClass(LightClass.Starboards);
-                MV.NotifyStatus(LightsStatus.OnNavLightsOn);
             }
             else
             {
@@ -24,7 +23,17 @@ namespace VehicleFramework
                 {
                     DisableLightClass(lc);
                 }
-                MV.NotifyStatus(LightsStatus.OnNavLightsOff);
+            }
+            foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
+            {
+                if (active)
+                {
+                    component.OnNavLightsOn();
+                }
+                else
+                {
+                    component.OnNavLightsOff();
+                }
             }
         }
 

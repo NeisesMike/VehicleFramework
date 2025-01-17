@@ -8,13 +8,16 @@ namespace VehicleFramework
         protected override void HandleLighting(bool active)
         {
             MV.HeadLights.ForEach(x => x.Light.SetActive(active));
-            if (active)
+            foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
             {
-                MV.NotifyStatus(LightsStatus.OnHeadLightsOn);
-            }
-            else
-            {
-                MV.NotifyStatus(LightsStatus.OnHeadLightsOff);
+                if (active)
+                {
+                    component.OnHeadLightsOn();
+                }
+                else
+                {
+                    component.OnHeadLightsOff();
+                }
             }
         }
 

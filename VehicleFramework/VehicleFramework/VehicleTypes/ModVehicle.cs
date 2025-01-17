@@ -1094,42 +1094,6 @@ namespace VehicleFramework
         #endregion
 
         #region public_methods
-        public void NotifyStatus(LightsStatus vs)
-        {
-            foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
-            {
-                switch (vs)
-                {
-                    case LightsStatus.OnHeadLightsOn:
-                        component.OnHeadLightsOn();
-                        break;
-                    case LightsStatus.OnHeadLightsOff:
-                        component.OnHeadLightsOff();
-                        break;
-                    case LightsStatus.OnInteriorLightsOn:
-                        component.OnInteriorLightsOn();
-                        break;
-                    case LightsStatus.OnInteriorLightsOff:
-                        component.OnInteriorLightsOff();
-                        break;
-                    case LightsStatus.OnFloodLightsOn:
-                        component.OnFloodLightsOn();
-                        break;
-                    case LightsStatus.OnFloodLightsOff:
-                        component.OnFloodLightsOff();
-                        break;
-                    case LightsStatus.OnNavLightsOn:
-                        component.OnNavLightsOn();
-                        break;
-                    case LightsStatus.OnNavLightsOff:
-                        component.OnNavLightsOff();
-                        break;
-                    default:
-                        Logger.Error("Error: tried to notify using an invalid status");
-                        break;
-                }
-            }
-        }
         public void NotifyStatus(VehicleStatus vs)
         {
             foreach (var component in GetComponentsInChildren<IVehicleStatusListener>())

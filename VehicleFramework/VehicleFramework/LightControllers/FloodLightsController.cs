@@ -17,7 +17,6 @@ namespace VehicleFramework
                     .Where(x => x != null)
                     .SelectMany(x => x.materials)
                     .ForEach(x => Admin.Utils.EnableSimpleEmission(x, 10, 10));
-                MV.NotifyStatus(LightsStatus.OnFloodLightsOn);
             }
             else
             {
@@ -26,7 +25,17 @@ namespace VehicleFramework
                     .Where(x => x != null)
                     .SelectMany(x => x.materials)
                     .ForEach(x => Admin.Utils.EnableSimpleEmission(x, 0, 0));
-                MV.NotifyStatus(LightsStatus.OnFloodLightsOff);
+            }
+            foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
+            {
+                if (active)
+                {
+                    component.OnFloodLightsOn();
+                }
+                else
+                {
+                    component.OnFloodLightsOff();
+                }
             }
         }
         protected override void HandleSound(bool playSound)
