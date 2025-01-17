@@ -1094,24 +1094,6 @@ namespace VehicleFramework
         #endregion
 
         #region public_methods
-        public void NotifyStatus(VehicleStatus vs)
-        {
-            foreach (var component in GetComponentsInChildren<IVehicleStatusListener>())
-            {
-                switch (vs)
-                {
-                    case VehicleStatus.OnTakeDamage:
-                        component.OnTakeDamage();
-                        break;
-                    case VehicleStatus.OnNearbyLeviathan:
-                        component.OnNearbyLeviathan();
-                        break;
-                    default:
-                        Logger.Error("Error: tried to notify using an invalid status");
-                        break;
-                }
-            }
-        }
         public void NotifyStatus(PlayerStatus vs)
         {
             foreach (var component in GetComponentsInChildren<IPlayerListener>())
