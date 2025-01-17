@@ -9,11 +9,11 @@ using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
-    public class PilotingTrigger : HandTarget, IHandTarget
+    public class PilotingTrigger : HandTarget, IHandTarget, IScuttleListener
     {
         public ModVehicle mv;
         public Transform exit;
-        public bool isLive = true;
+        private bool isLive = true;
         void IHandTarget.OnHandClick(GUIHand hand)
         {
             if (!mv.GetPilotingMode() && mv.IsPowered() && isLive)
@@ -33,6 +33,16 @@ namespace VehicleFramework
                 HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
                 HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.StartPiloting));
             }
+        }
+
+        void IScuttleListener.OnScuttle()
+        {
+            isLive = false;
+        }
+
+        void IScuttleListener.OnUnscuttle()
+        {
+            isLive = true;
         }
     }
 }

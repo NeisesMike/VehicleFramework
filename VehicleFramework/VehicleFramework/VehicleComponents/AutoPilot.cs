@@ -11,8 +11,8 @@ using VehicleFramework.VehicleComponents;
 
 namespace VehicleFramework
 {
-    public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener
-	{
+    public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener, IScuttleListener
+    {
 		public ModVehicle mv;
         public EnergyInterface aiEI;
         public AutoPilotVoice apVoice;
@@ -488,6 +488,16 @@ namespace VehicleFramework
                     apVoice.EnqueueClip(apVoice.voice.UhOh);
                 }
             }
+        }
+
+        void IScuttleListener.OnScuttle()
+        {
+            enabled = false;
+        }
+
+        void IScuttleListener.OnUnscuttle()
+        {
+            enabled = true;
         }
     }
 }

@@ -191,12 +191,6 @@ namespace VehicleFramework
                 Player.main.transform.parent = null;
                 StopPiloting();
             }
-            if (destructionEffect)
-            {
-                GameObject gameObject = Instantiate<GameObject>(destructionEffect);
-                gameObject.transform.position = transform.position;
-                gameObject.transform.rotation = transform.rotation;
-            }
             DestroyMV();
         }
         public override void OnUpgradeModuleToggle(int slotID, bool active)
@@ -598,12 +592,7 @@ namespace VehicleFramework
             {
                 (component as IScuttleListener).OnScuttle();
             }
-            GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = false);
-            GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
-            GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = false);
-            GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = false);
             WaterClipProxies?.ForEach(x => x.SetActive(false));
-            voice.enabled = false;
             isPoweredOn = false;
             gameObject.EnsureComponent<Scuttler>().Scuttle();
             var sealedThing = gameObject.EnsureComponent<Sealed>();
@@ -618,12 +607,7 @@ namespace VehicleFramework
             {
                 (component as IScuttleListener).OnUnscuttle();
             }
-            GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = true);
-            GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
-            GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
-            GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
             WaterClipProxies?.ForEach(x => x.SetActive(true));
-            voice.enabled = true;
             isPoweredOn = true;
             gameObject.EnsureComponent<Scuttler>().Unscuttle();
         }

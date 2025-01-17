@@ -13,7 +13,7 @@ using VehicleFramework.Patches;
 
 namespace VehicleFramework.Engines
 {
-    public abstract class VFEngine : MonoBehaviour
+    public abstract class VFEngine : MonoBehaviour, IScuttleListener
     {
         protected ModVehicle MV => GetComponent<ModVehicle>();
         protected Rigidbody RB => MV.useRigidbody;
@@ -113,5 +113,14 @@ namespace VehicleFramework.Engines
             return;
         } // public for historical reasons
         #endregion
+        void IScuttleListener.OnScuttle()
+        {
+            enabled = false;
+        }
+
+        void IScuttleListener.OnUnscuttle()
+        {
+            enabled = true;
+        }
     }
 }

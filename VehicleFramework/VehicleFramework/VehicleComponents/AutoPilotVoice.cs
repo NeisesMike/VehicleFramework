@@ -12,7 +12,7 @@ using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
-    public class AutoPilotVoice : MonoBehaviour
+    public class AutoPilotVoice : MonoBehaviour, IScuttleListener
     {
         public ModVehicle mv;
         public EnergyInterface aiEI;
@@ -210,6 +210,15 @@ namespace VehicleFramework
         public void NotifyReadyToSpeak()
         {
             isReadyToSpeak = true;
+        }
+        void IScuttleListener.OnScuttle()
+        {
+            enabled = false;
+        }
+
+        void IScuttleListener.OnUnscuttle()
+        {
+            enabled = true;
         }
     }
 }
