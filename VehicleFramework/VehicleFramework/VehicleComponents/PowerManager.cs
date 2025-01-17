@@ -40,31 +40,8 @@ namespace VehicleFramework
         private bool isInteriorLightsOn = false;
         private bool isAutoLeveling = false;
         private bool isAutoPiloting = false;
-        private ModVehicle _mv;
-        private ModVehicle mv
-        {
-            get
-            {
-                if(_mv==null)
-                {
-                    _mv = GetComponent<ModVehicle>();
-                }
-                return _mv;
-            }
-        }
-        private EnergyInterface _ei = null;
-        private EnergyInterface ei
-        {
-            get
-            {
-                if (_ei == null)
-                {
-                    _ei = GetComponent<EnergyInterface>();
-                }
-                return _ei;
-            }
-        }
-
+        private ModVehicle mv => GetComponent<ModVehicle>();
+        private EnergyInterface ei => GetComponent<EnergyInterface>();
 
         private PowerEvent EvaluatePowerEvent()
         {
@@ -89,17 +66,11 @@ namespace VehicleFramework
         public PowerStatus EvaluatePowerStatus()
         {
             mv.energyInterface.GetValues(out float charge, out _);
-            PowerStatus thisStatus = new PowerStatus();
-            thisStatus.isPowered = mv.isPoweredOn;
-            if(charge > 0)
+            return new PowerStatus
             {
-                thisStatus.hasFuel = true;
-            }
-            else
-            {
-                thisStatus.hasFuel = false;
-            }
-            return thisStatus;
+                isPowered = mv.isPoweredOn,
+                hasFuel = charge > 0
+            };
         }
         public float TrySpendEnergy(float val)
         {
@@ -149,50 +120,88 @@ namespace VehicleFramework
                 TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
         }
-        public void Start()
-        {
-        }
         public void Update()
         {
             AccountForTheTypicalDrains();
 
-            // check battery thresholds, and make notifications as appropriate
-            PowerEvent thisPS = EvaluatePowerEvent();
-            if(thisPS != latestPowerEvent)
+            PowerEvent currentPowerEvent = EvaluatePowerEvent();
+            PowerStatus currentPowerStatus = EvaluatePowerStatus();
+
+            if (currentPowerStatus != lastStatus)
             {
-                latestPowerEvent = thisPS;
-                mv.NotifyStatus(latestPowerEvent);
+                NotifyPowerChanged(currentPowerStatus.hasFuel, currentPowerStatus.isPowered);
+                NotifyBatteryChanged(currentPowerStatus, lastStatus);
+                lastStatus = currentPowerStatus;
+                latestPowerEvent = currentPowerEvent;
+                return;
             }
 
-            // Update the current power status,
-            // first sending notifications if necessary
-            PowerStatus currentStatus = EvaluatePowerStatus();
-            if(currentStatus != lastStatus)
+            if (currentPowerStatus.hasFuel && currentPowerStatus.isPowered)
             {
-                if (lastStatus.isPowered != currentStatus.isPowered)
+                if (currentPowerEvent != latestPowerEvent)
                 {
-                    if (currentStatus.isPowered)
+                    latestPowerEvent = currentPowerEvent;
+                    NotifyPowerStatus(currentPowerEvent);
+                }
+            }
+        }
+        private void NotifyPowerChanged(bool isBatteryCharged, bool isSwitchedOn)
+        {
+            foreach (var component in GetComponentsInChildren<IPowerChanged>())
+            {
+                (component as IPowerChanged).OnPowerChanged(isBatteryCharged, isSwitchedOn);
+            }
+        }
+        private void NotifyPowerStatus(PowerEvent newEvent)
+        {
+            foreach (var component in GetComponentsInChildren<IPowerListener>())
+            {
+                switch (newEvent)
+                {
+                    case PowerEvent.OnBatterySafe:
+                        component.OnBatterySafe();
+                        break;
+                    case PowerEvent.OnBatteryLow:
+                        component.OnBatteryLow();
+                        break;
+                    case PowerEvent.OnBatteryNearlyEmpty:
+                        component.OnBatteryNearlyEmpty();
+                        break;
+                    case PowerEvent.OnBatteryDepleted:
+                        component.OnBatteryDepleted();
+                        break;
+                    default:
+                        Logger.Error("Error: tried to notify using an invalid status");
+                        break;
+                }
+            }
+        }
+        private void NotifyBatteryChanged(PowerStatus newPS, PowerStatus oldPS)
+        {
+            foreach (var component in GetComponentsInChildren<IPowerListener>())
+            {
+                if (oldPS.isPowered != newPS.isPowered)
+                {
+                    if (newPS.isPowered)
                     {
-                        mv.NotifyStatus(PowerEvent.OnPowerUp);
+                        (component as IPowerListener).OnPowerUp();
                     }
                     else
                     {
-                        mv.NotifyStatus(PowerEvent.OnPowerDown);
+                        (component as IPowerListener).OnPowerDown();
                     }
                 }
-                if (lastStatus.hasFuel != currentStatus.hasFuel)
+                if (oldPS.hasFuel != newPS.hasFuel)
                 {
-                    if (currentStatus.hasFuel)
+                    if (newPS.hasFuel)
                     {
-                        mv.isPoweredOn = true;
-                        mv.NotifyStatus(PowerEvent.OnBatteryRevive);
+                        (component as IPowerListener).OnBatteryRevive();
                     }
                     else
                     {
-                        mv.NotifyStatus(PowerEvent.OnBatteryDead);
+                        (component as IPowerListener).OnBatteryDead();
                     }
                 }
-                lastStatus = currentStatus;
             }
         }
         void IAutoPilotListener.OnAutoLevelBegin()

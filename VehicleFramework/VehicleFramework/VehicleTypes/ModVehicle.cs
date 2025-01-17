@@ -125,10 +125,10 @@ namespace VehicleFramework
             upgradeOnAddedActions.Add(StorageModuleAction);
             upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
             upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
-            if (HeadLights != null)
-            {
-                headlights = gameObject.EnsureComponent<HeadLightsController>();
-            }
+
+            headlights = gameObject.AddComponent<HeadLightsController>();
+            gameObject.AddComponent<VolumetricLightController>();
+
             gameObject.EnsureComponent<AutoPilot>();
             if (UseDefaultDamageTracker)
             {
@@ -524,7 +524,10 @@ namespace VehicleFramework
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
             IsVehicleDocked = true;
-            headlights.DisableHeadlights();
+            if(headlights.IsLightsOn)
+            {
+                headlights.Toggle();
+            }
             if (IsUnderCommand)
             {
                 OnPlayerDocked(vehicle, exitLocation);
@@ -602,7 +605,6 @@ namespace VehicleFramework
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = false);
             WaterClipProxies?.ForEach(x => x.SetActive(false));
             voice.enabled = false;
-            headlights.isLive = false;
             isPoweredOn = false;
             gameObject.EnsureComponent<Scuttler>().Scuttle();
             var sealedThing = gameObject.EnsureComponent<Sealed>();
@@ -619,7 +621,6 @@ namespace VehicleFramework
             GetComponentsInChildren<AutoPilot>().ForEach(x => x.enabled = true);
             WaterClipProxies?.ForEach(x => x.SetActive(true));
             voice.enabled = true;
-            headlights.isLive = true;
             isPoweredOn = true;
             gameObject.EnsureComponent<Scuttler>().Unscuttle();
         }
@@ -1131,42 +1132,6 @@ namespace VehicleFramework
                         break;
                     case VehicleStatus.OnNearbyLeviathan:
                         component.OnNearbyLeviathan();
-                        break;
-                    default:
-                        Logger.Error("Error: tried to notify using an invalid status");
-                        break;
-                }
-            }
-        }
-        public void NotifyStatus(PowerEvent vs)
-        {
-            foreach (var component in GetComponentsInChildren<IPowerListener>())
-            {
-                switch (vs)
-                {
-                    case PowerEvent.OnPowerUp:
-                        component.OnPowerUp();
-                        break;
-                    case PowerEvent.OnPowerDown:
-                        component.OnPowerDown();
-                        break;
-                    case PowerEvent.OnBatteryDead:
-                        component.OnBatteryDead();
-                        break;
-                    case PowerEvent.OnBatteryRevive:
-                        component.OnBatteryRevive();
-                        break;
-                    case PowerEvent.OnBatterySafe:
-                        component.OnBatterySafe();
-                        break;
-                    case PowerEvent.OnBatteryLow:
-                        component.OnBatteryLow();
-                        break;
-                    case PowerEvent.OnBatteryNearlyEmpty:
-                        component.OnBatteryNearlyEmpty();
-                        break;
-                    case PowerEvent.OnBatteryDepleted:
-                        component.OnBatteryDepleted();
                         break;
                     default:
                         Logger.Error("Error: tried to notify using an invalid status");

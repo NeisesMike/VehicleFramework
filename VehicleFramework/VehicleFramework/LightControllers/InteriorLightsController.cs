@@ -1,139 +1,34 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VehicleFramework.VehicleTypes;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
-    public class InteriorLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener, IPlayerListener
+    public class InteriorLightsController : BaseLightController, IPlayerListener
     {
-		private Submarine mv;
-        private bool _isInteriorLightsOn = false;
-        public bool isInteriorLightsOn
+        private Submarine MV => GetComponent<Submarine>();
+        protected override void HandleLighting(bool active)
         {
-            get
+            if (active)
             {
-                return _isInteriorLightsOn;
-            }
-            private set
-            {
-                _isInteriorLightsOn = value;
-            }
-        }
-
-        public void Awake()
-        {
-            mv = GetComponent<Submarine>();
-        }
-
-        public void ToggleInteriorLighting()
-        {
-            if (mv.IsPowered())
-            {
-                if (isInteriorLightsOn)
-                {
-                    DisableInteriorLighting();
-                    isInteriorLightsOn = false;
-                    mv.NotifyStatus(LightsStatus.OnInteriorLightsOff);
-                }
-                else
-                {
-                    EnableInteriorLighting();
-                    isInteriorLightsOn = true;
-                    mv.NotifyStatus(LightsStatus.OnInteriorLightsOn);
-                }
+                MV.InteriorLights.ForEach(x => x.enabled = true);
+                MV.NotifyStatus(LightsStatus.OnInteriorLightsOn);
             }
             else
             {
-                DisableInteriorLighting();
-            }
-        }
-        public void EnableInteriorLighting()
-        {
-            mv.InteriorLights.ForEach(x => x.enabled = true);
-        }
-        public void DisableInteriorLighting()
-        {
-            mv.InteriorLights.ForEach(x => x.enabled = false);
-        }
-
-        void IPowerListener.OnPowerUp()
-        {
-            EnableInteriorLighting();
-        }
-
-        void IPowerListener.OnPowerDown()
-        {
-            DisableInteriorLighting();
-        }
-
-        void IPowerListener.OnBatterySafe()
-        {
-            //EnableInteriorLighting();
-        }
-
-        void IPowerListener.OnBatteryLow()
-        {
-            //EnableInteriorLighting();
-        }
-
-        void IPowerListener.OnBatteryNearlyEmpty()
-        {
-            DisableInteriorLighting();
-        }
-
-        void IPowerListener.OnBatteryDepleted()
-        {
-            DisableInteriorLighting();
-        }
-
-        void IPowerListener.OnBatteryDead()
-        {
-            DisableInteriorLighting();
-        }
-
-        void IPowerListener.OnBatteryRevive()
-        {
-            EnableInteriorLighting();
-        }
-        void IVehicleStatusListener.OnNearbyLeviathan()
-        {
-            if (isInteriorLightsOn)
-            {
-                ToggleInteriorLighting();
+                MV.InteriorLights.ForEach(x => x.enabled = false);
+                MV.NotifyStatus(LightsStatus.OnInteriorLightsOff);
             }
         }
 
-        void IVehicleStatusListener.OnTakeDamage()
+        protected override void HandleSound(bool playSound)
         {
-            IEnumerator BlinkThrice()
-            {
-                for(int i=0; i<4; i++)
-                {
-                    ToggleInteriorLighting();
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-            UWE.CoroutineHost.StartCoroutine(BlinkThrice());
             return;
         }
-
-        void IPlayerListener.OnPlayerEntry()
+        protected virtual void Awake()
         {
-            if(!isInteriorLightsOn)
+            if (MV.InteriorLights == null || MV.InteriorLights.Count < 1)
             {
-                ToggleInteriorLighting();
-            }
-        }
-
-        void IPlayerListener.OnPlayerExit()
-        {
-            if (isInteriorLightsOn)
-            {
-                ToggleInteriorLighting();
+                Component.DestroyImmediate(this);
             }
         }
 
@@ -143,6 +38,22 @@ namespace VehicleFramework
 
         void IPlayerListener.OnPilotEnd()
         {
+        }
+
+        void IPlayerListener.OnPlayerEntry()
+        {
+            if(!IsLightsOn)
+            {
+                Toggle();
+            }
+        }
+
+        void IPlayerListener.OnPlayerExit()
+        {
+            if (IsLightsOn)
+            {
+                Toggle();
+            }
         }
     }
 }

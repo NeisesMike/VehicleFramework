@@ -199,19 +199,6 @@ namespace VehicleFramework.VehicleComponents
         }
         public static void SimpleManageLightsDamageState(ModVehicle mv, int damage)
         {
-            if (damage == 0)
-            {
-                mv.GetComponent<HeadLightsController>().isDamaged = false;
-            }
-            else if (damage == 1)
-            {
-                mv.GetComponent<HeadLightsController>().DisableHeadlights();
-                mv.GetComponent<HeadLightsController>().isDamaged = true;
-            }
-            else
-            {
-                mv.GetComponent<HeadLightsController>().isDamaged = false;
-            }
         }
         public static void SimpleManageUpgradesDamageState(ModVehicle mv, int damage)
         {

@@ -2,40 +2,106 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class NavigationLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
+    public class NavigationLightsController : BaseLightController
     {
-        private bool _isNavLightsEnabled = false;
-        public bool isNavLightsEnabled
+        VehicleTypes.Submarine MV => GetComponent<VehicleTypes.Submarine>();
+        protected override void HandleLighting(bool active)
         {
-            get
+            if(active)
             {
-                return _isNavLightsEnabled;
+                EnableLightClass(LightClass.Positions);
+                EnableLightClass(LightClass.Ports);
+                EnableLightClass(LightClass.Starboards);
+                MV.NotifyStatus(LightsStatus.OnNavLightsOn);
             }
-            private set
+            else
             {
-                _isNavLightsEnabled = value;
+                foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
+                {
+                    DisableLightClass(lc);
+                }
+                MV.NotifyStatus(LightsStatus.OnNavLightsOff);
             }
         }
 
-        private VehicleTypes.Submarine mv;
-        private List<Material> positionMats = new List<Material>();
-        private List<Material> portMats = new List<Material>();
-        private List<Material> starboardMats = new List<Material>();
+        protected override void HandleSound(bool playSound)
+        {
+            return;
+        }
 
-        private List<Material> whiteStrobeMats = new List<Material>();
-        private List<Material> redStrobeMats = new List<Material>();
-        private List<Light> whiteStrobeLights = new List<Light>();
-        private List<Light> redStrobeLights = new List<Light>();
-
-        public const float lightBrightness = 1f;
-        public const float strobeBrightness = 30f;
-
+        protected virtual void Awake()
+        {
+            bool noPort = MV.NavigationPortLights == null || MV.NavigationPortLights.Count < 1;
+            bool noStar = MV.NavigationStarboardLights == null || MV.NavigationStarboardLights.Count < 1;
+            bool noPosi = MV.NavigationPositionLights == null || MV.NavigationPositionLights.Count < 1;
+            bool noReds = MV.NavigationRedStrobeLights == null || MV.NavigationRedStrobeLights.Count < 1;
+            bool noWhit = MV.NavigationWhiteStrobeLights == null || MV.NavigationWhiteStrobeLights.Count < 1;
+            if (noPort && noStar && noPosi && noReds && noWhit)
+            {
+                Component.DestroyImmediate(this);
+            }
+        }
+        protected void Start()
+        {
+            rb = GetComponent<Rigidbody>();
+            if (MV.NavigationPositionLights != null)
+            {
+                foreach (GameObject lightObj in MV.NavigationPositionLights)
+                {
+                    positionMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                }
+                BlinkOn(positionMats, Color.white);
+            }
+            if (MV.NavigationRedStrobeLights != null)
+            {
+                foreach (GameObject lightObj in MV.NavigationRedStrobeLights)
+                {
+                    redStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                    Light light = lightObj.EnsureComponent<Light>();
+                    light.enabled = false;
+                    light.color = Color.red;
+                    light.type = LightType.Point;
+                    light.intensity = 1f;
+                    light.range = 80f;
+                    light.shadows = LightShadows.Hard;
+                    redStrobeLights.Add(light);
+                }
+            }
+            if (MV.NavigationWhiteStrobeLights != null)
+            {
+                foreach (GameObject lightObj in MV.NavigationWhiteStrobeLights)
+                {
+                    whiteStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                    Light light = lightObj.EnsureComponent<Light>();
+                    light.enabled = false;
+                    light.color = Color.white;
+                    light.type = LightType.Point;
+                    light.intensity = 0.5f;
+                    light.range = 80f;
+                    light.shadows = LightShadows.Hard;
+                    whiteStrobeLights.Add(light);
+                }
+            }
+            if (MV.NavigationPortLights != null)
+            {
+                foreach (GameObject lightObj in MV.NavigationPortLights)
+                {
+                    portMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                }
+            }
+            if (MV.NavigationStarboardLights != null)
+            {
+                foreach (GameObject lightObj in MV.NavigationStarboardLights)
+                {
+                    starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+                }
+            }
+            UWE.CoroutineHost.StartCoroutine(ControlLights());
+        }
 
         Rigidbody rb = null;
         bool position = false;
@@ -43,6 +109,24 @@ namespace VehicleFramework
         Coroutine red = null;
         Coroutine port = null;
         Coroutine starboard = null;
+        public const float lightBrightness = 1f;
+        public const float strobeBrightness = 30f;
+        private List<Material> positionMats = new List<Material>();
+        private List<Material> portMats = new List<Material>();
+        private List<Material> starboardMats = new List<Material>();
+        private List<Material> whiteStrobeMats = new List<Material>();
+        private List<Material> redStrobeMats = new List<Material>();
+        private List<Light> whiteStrobeLights = new List<Light>();
+        private List<Light> redStrobeLights = new List<Light>();
+
+        private enum LightClass
+        {
+            WhiteStrobes,
+            RedStrobes,
+            Positions,
+            Ports,
+            Starboards
+        }
 
         private void DisableLightClass(LightClass lc)
         {
@@ -126,157 +210,10 @@ namespace VehicleFramework
                     break;
             }
         }
-
-
-        public bool GetNavLightsEnabled()
-        {
-            return isNavLightsEnabled;
-        }
-
-        public void Start()
-        {
-            rb = GetComponent<Rigidbody>();
-            mv = GetComponent<VehicleTypes.Submarine>();
-            if (mv.NavigationPositionLights != null)
-            {
-                foreach (GameObject lightObj in mv.NavigationPositionLights)
-                {
-                    positionMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                }
-                BlinkOn(positionMats, Color.white);
-            }
-            if (mv.NavigationRedStrobeLights != null)
-            {
-                foreach (GameObject lightObj in mv.NavigationRedStrobeLights)
-                {
-                    redStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                    Light light = lightObj.EnsureComponent<Light>();
-                    light.enabled = false;
-                    light.color = Color.red;
-                    light.type = LightType.Point;
-                    light.intensity = 1f;
-                    light.range = 80f;
-                    light.shadows = LightShadows.Hard;
-                    redStrobeLights.Add(light);
-                }
-            }
-            if (mv.NavigationWhiteStrobeLights != null)
-            {
-                foreach (GameObject lightObj in mv.NavigationWhiteStrobeLights)
-                {
-                    whiteStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                    Light light = lightObj.EnsureComponent<Light>();
-                    light.enabled = false;
-                    light.color = Color.white;
-                    light.type = LightType.Point;
-                    light.intensity = 0.5f;
-                    light.range = 80f;
-                    light.shadows = LightShadows.Hard;
-                    whiteStrobeLights.Add(light);
-                }
-            }
-            if (mv.NavigationPortLights != null)
-            {
-                foreach (GameObject lightObj in mv.NavigationPortLights)
-                {
-                    portMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                }
-            }
-            if (mv.NavigationStarboardLights != null)
-            {
-                foreach (GameObject lightObj in mv.NavigationStarboardLights)
-                {
-                    starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                }
-            }
-            UWE.CoroutineHost.StartCoroutine(ControlLights());
-        }
-
-        public enum LightClass
-        {
-            WhiteStrobes,
-            RedStrobes,
-            Positions,
-            Ports,
-            Starboards
-        }
-        public void DisableNavLights()
-        {
-            foreach (LightClass lc in Enum.GetValues(typeof(LightClass)).Cast<LightClass>())
-            {
-                DisableLightClass(lc);
-            }
-            isNavLightsEnabled = false;
-            mv.NotifyStatus(LightsStatus.OnNavLightsOff);
-        }
-        public void EnableNavLights()
-        {
-            EnableLightClass(LightClass.Positions);
-            EnableLightClass(LightClass.Ports);
-            EnableLightClass(LightClass.Starboards);
-            isNavLightsEnabled = true;
-            mv.NotifyStatus(LightsStatus.OnNavLightsOn);
-        }
-        public void ToggleNavLights()
-        {
-            if (mv.IsPowered())
-            {
-                if (isNavLightsEnabled)
-                {
-                    DisableNavLights();
-                    mv.NotifyStatus(LightsStatus.OnNavLightsOff);
-                }
-                else
-                {
-                    EnableNavLights();
-                    mv.NotifyStatus(LightsStatus.OnNavLightsOn);
-                }
-            }
-        }
-        private IEnumerator ControlLights()
-        {
-            while(true)
-            {
-                if(isNavLightsEnabled && mv.IsPowered())
-                {
-                    EnableLightClass(LightClass.Positions);
-                    EnableLightClass(LightClass.Ports);
-                    EnableLightClass(LightClass.Starboards);
-                    if (white == null && 10f <= rb.velocity.magnitude)
-                    {
-                        EnableLightClass(LightClass.WhiteStrobes);
-                    }
-                    else if (3f < rb.velocity.magnitude && rb.velocity.magnitude < 10f)
-                    {
-                        DisableLightClass(LightClass.WhiteStrobes);
-                        DisableLightClass(LightClass.RedStrobes);
-                    }
-                    else if (red == null && 0.001f < rb.velocity.magnitude && rb.velocity.magnitude <= 3f)
-                    {
-                        EnableLightClass(LightClass.RedStrobes);
-                    }
-                    else
-                    {
-                        DisableLightClass(LightClass.WhiteStrobes);
-                        DisableLightClass(LightClass.RedStrobes);
-                    }
-                }
-                else
-                {
-                    DisableLightClass(LightClass.Ports);
-                    DisableLightClass(LightClass.Starboards);
-                    DisableLightClass(LightClass.WhiteStrobes);
-                    DisableLightClass(LightClass.RedStrobes);
-                    DisableLightClass(LightClass.WhiteStrobes);
-                    DisableLightClass(LightClass.Positions);
-                }    
-                yield return new WaitForSeconds(1f);
-            }
-        }
-
         private void BlinkThisLightOn(Material mat, Color col)
         {
             mat.EnableKeyword("MARMO_EMISSION");
+            mat.EnableKeyword("MARMO_SPECMAP");
             mat.SetFloat("_GlowStrength", lightBrightness);
             mat.SetFloat("_GlowStrengthNight", lightBrightness);
             mat.SetColor("_Color", col);
@@ -285,6 +222,7 @@ namespace VehicleFramework
         private void BlinkThisStrobeOn(Material mat, Color col)
         {
             mat.EnableKeyword("MARMO_EMISSION");
+            mat.EnableKeyword("MARMO_SPECMAP");
             mat.SetFloat("_GlowStrength", strobeBrightness);
             mat.SetFloat("_GlowStrengthNight", strobeBrightness);
             mat.SetColor("_Color", col);
@@ -294,35 +232,19 @@ namespace VehicleFramework
         {
             mat.DisableKeyword("MARMO_EMISSION");
         }
-        public void BlinkOn(List<Material> mats, Color col)
+        private void BlinkOn(List<Material> mats, Color col)
         {
             foreach (Material mat in mats)
             {
                 BlinkThisLightOn(mat, col);
             }
         }
-        public void BlinkOff(List<Material> mats)
+        private void BlinkOff(List<Material> mats)
         {
             foreach (Material mat in mats)
             {
                 BlinkThisLightOff(mat);
             }
-        }
-        public void BlinkAllLightsOn(Color col)
-        {
-            BlinkOn(positionMats, Color.white);
-            BlinkOn(whiteStrobeMats, Color.white);
-            BlinkOn(redStrobeMats, Color.red);
-            BlinkOn(portMats, Color.red);
-            BlinkOn(starboardMats, Color.green);
-        }
-        public void BlinkAllLightsOff()
-        {
-            BlinkOff(positionMats);
-            BlinkOff(redStrobeMats);
-            BlinkOff(whiteStrobeMats);
-            BlinkOff(portMats);
-            BlinkOff(starboardMats);
         }
         private void KillStrobes(LightClass lc)
         {
@@ -366,7 +288,7 @@ namespace VehicleFramework
                     break;
             }
         }
-        public void BlinkOnStrobe(LightClass lc)
+        private void BlinkOnStrobe(LightClass lc)
         {
             switch (lc)
             {
@@ -388,7 +310,7 @@ namespace VehicleFramework
             }
             PowerStrobes(lc);
         }
-        public void BlinkOffStrobe(LightClass lc)
+        private void BlinkOffStrobe(LightClass lc)
         {
             KillStrobes(lc);
             switch (lc)
@@ -404,7 +326,7 @@ namespace VehicleFramework
                     break;
             }
         }
-        public IEnumerator Strobe(LightClass lc)
+        private IEnumerator Strobe(LightClass lc)
         {
             while (true)
             {
@@ -414,54 +336,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(2.99f);
             }
         }
-        public IEnumerator BlinkSingleSequence()
-        {
-            while (true)
-            {
-                for (int i = 0; i < portMats.Count + 1; i++)
-                {
-                    if (i < portMats.Count)
-                    {
-                        BlinkThisLightOn(portMats[i], Color.red);
-                        BlinkThisLightOn(starboardMats[i], Color.green);
-                    }
-                    if (0 <= i - 1)
-                    {
-                        BlinkThisLightOff(portMats[i - 1]);
-                        BlinkThisLightOff(starboardMats[i - 1]);
-                    }
-                    yield return new WaitForSeconds(0.1f);
-                }
-                yield return new WaitForSeconds(1.0f - 0.1f * portMats.Count);
-            }
-        }
-        public IEnumerator BlinkDoubleSequence()
-        {
-            while (true)
-            {
-                for (int i = 0; i < portMats.Count + 2; i++)
-                {
-                    if (0 <= i - 2)
-                    {
-                        BlinkThisLightOff(portMats[(i - 2) % portMats.Count]);
-                        BlinkThisLightOff(starboardMats[(i - 2) % portMats.Count]);
-                    }
-                    if (0 <= i - 1 && i - 1 < portMats.Count)
-                    {
-                        BlinkThisLightOn(portMats[i - 1], Color.red);
-                        BlinkThisLightOn(starboardMats[i - 1], Color.green);
-                    }
-                    if (i < portMats.Count)
-                    {
-                        BlinkThisLightOn(portMats[i], Color.red);
-                        BlinkThisLightOn(starboardMats[i], Color.green);
-                    }
-                    yield return new WaitForSeconds(0.1f);
-                }
-                yield return new WaitForSeconds(1.0f - 0.1f * portMats.Count);
-            }
-        }
-        public IEnumerator BlinkNarySequence(int n, bool isPortSide)
+        private IEnumerator BlinkNarySequence(int n, bool isPortSide)
         {
             int m;
             if (isPortSide)
@@ -479,11 +354,11 @@ namespace VehicleFramework
             int sequenceLength = m == 0 ? 0 : m + 2 * n;
             while (true)
             {
-                for (int i = 0; i < sequenceLength-n; i++)
+                for (int i = 0; i < sequenceLength - n; i++)
                 {
                     if (0 <= i && i < m)
                     {
-                        if(isPortSide)
+                        if (isPortSide)
                         {
                             BlinkThisLightOn(portMats[i], Color.red);
                         }
@@ -516,57 +391,45 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(0.75f);
             }
         }
-
-        void IPowerListener.OnPowerUp()
+        private IEnumerator ControlLights()
         {
-            EnableNavLights();
-        }
-
-        void IPowerListener.OnPowerDown()
-        {
-            DisableNavLights();
-        }
-
-        void IPowerListener.OnBatterySafe()
-        {
-            //EnableNavLights();
-        }
-
-        void IPowerListener.OnBatteryLow()
-        {
-            //EnableNavLights();
-        }
-
-        void IPowerListener.OnBatteryNearlyEmpty()
-        {
-            DisableNavLights();
-        }
-
-        void IPowerListener.OnBatteryDepleted()
-        {
-            DisableNavLights();
-        }
-
-        void IPowerListener.OnBatteryDead()
-        {
-            DisableNavLights();
-        }
-
-        void IPowerListener.OnBatteryRevive()
-        {
-            EnableNavLights();
-        }
-        void IVehicleStatusListener.OnNearbyLeviathan()
-        {
-            if (isNavLightsEnabled)
+            while (true)
             {
-                ToggleNavLights();
+                if (IsLightsOn)
+                {
+                    EnableLightClass(LightClass.Positions);
+                    EnableLightClass(LightClass.Ports);
+                    EnableLightClass(LightClass.Starboards);
+                    if (white == null && 10f <= rb.velocity.magnitude)
+                    {
+                        EnableLightClass(LightClass.WhiteStrobes);
+                    }
+                    else if (3f < rb.velocity.magnitude && rb.velocity.magnitude < 10f)
+                    {
+                        DisableLightClass(LightClass.WhiteStrobes);
+                        DisableLightClass(LightClass.RedStrobes);
+                    }
+                    else if (red == null && 0.001f < rb.velocity.magnitude && rb.velocity.magnitude <= 3f)
+                    {
+                        EnableLightClass(LightClass.RedStrobes);
+                    }
+                    else
+                    {
+                        DisableLightClass(LightClass.WhiteStrobes);
+                        DisableLightClass(LightClass.RedStrobes);
+                    }
+                }
+                else
+                {
+                    DisableLightClass(LightClass.Ports);
+                    DisableLightClass(LightClass.Starboards);
+                    DisableLightClass(LightClass.WhiteStrobes);
+                    DisableLightClass(LightClass.RedStrobes);
+                    DisableLightClass(LightClass.WhiteStrobes);
+                    DisableLightClass(LightClass.Positions);
+                }
+                yield return new WaitForSeconds(1f);
             }
-        }
-
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-            return;
         }
     }
 }

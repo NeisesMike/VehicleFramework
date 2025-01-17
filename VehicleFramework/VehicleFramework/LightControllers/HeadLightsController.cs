@@ -1,177 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace VehicleFramework
 {
-    public class HeadLightsController : MonoBehaviour, IPowerListener, IPlayerListener
-	{
-        private ModVehicle mv;
-        private bool _isHeadlightsOn = false;
-        public bool isHeadlightsOn
+    public class HeadLightsController : BaseLightController
+    {
+        private ModVehicle MV => GetComponent<ModVehicle>();
+        protected override void HandleLighting(bool active)
         {
-            get
+            MV.HeadLights.ForEach(x => x.Light.SetActive(active));
+            if (active)
             {
-                return _isHeadlightsOn;
+                MV.NotifyStatus(LightsStatus.OnHeadLightsOn);
             }
-            private set
+            else
             {
-                _isHeadlightsOn = value;
+                MV.NotifyStatus(LightsStatus.OnHeadLightsOff);
             }
-        }
-        public bool isLive = true;
-        public bool isDamaged = false;
-        public void Awake()
-        {
-            mv = GetComponent<ModVehicle>();
         }
 
-        public virtual void Update()
+        protected override void HandleSound(bool turnOn)
         {
-            if(mv as VehicleTypes.Submarine != null && !mv.IsPlayerControlling())
+            if(turnOn)
             {
-                return;
+                MV.lightsOnSound.Stop();
+                MV.lightsOnSound.Play();
             }
+            else
+            {
+                MV.lightsOffSound.Stop();
+                MV.lightsOffSound.Play();
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (MV.HeadLights == null || MV.HeadLights.Count < 1)
+            {
+                Component.DestroyImmediate(this);
+            }
+        }
+
+        protected virtual void Update()
+        {
             bool isHeadlightsButtonPressed = GameInput.GetKeyDown(MainPatcher.VFConfig.headlightsButton);
             isHeadlightsButtonPressed |= GameInput.GetButtonDown(GameInput.Button.LeftHand) && MainPatcher.VFConfig.leftTriggerHeadlights;
             isHeadlightsButtonPressed |= GameInput.GetButtonDown(GameInput.Button.RightHand) && MainPatcher.VFConfig.rightTriggerHeadlights;
-            if (mv.IsUnderCommand && isHeadlightsButtonPressed && !Player.main.GetPDA().isInUse)
+            if (MV.IsPlayerControlling() && isHeadlightsButtonPressed && !Player.main.GetPDA().isInUse)
             {
-                ToggleHeadlights();
+                Toggle();
             }
-        }
-        public void EnableHeadlights()
-        {
-            if (isLive && !isDamaged)
-            {
-                SetHeadLightsActive(true);
-                if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
-                {
-                    mv.lightsOnSound.Stop();
-                    mv.lightsOnSound.Play();
-                }
-                isHeadlightsOn = true;
-            }
-        }
-        public void DisableHeadlights()
-        {
-            if (isLive && !isDamaged)
-            {
-                SetHeadLightsActive(false);
-                if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
-                {
-                    mv.lightsOffSound.Stop();
-                    mv.lightsOffSound.Play();
-                }
-                isHeadlightsOn = false;
-            }
-        }
-        public void ToggleHeadlights()
-        {
-            if (mv.IsPowered())
-            {
-                if (isHeadlightsOn)
-                {
-                    DisableHeadlights();
-                }
-                else
-                {
-                    EnableHeadlights();
-                }
-            }
-            else
-            {
-                isHeadlightsOn = false;
-            }
-        }
-        public void UpdateVolumetricLights()
-        {
-            if (!isHeadlightsOn || !isLive || !mv.IsPowered() || mv.IsUnderCommand || isDamaged ||
-                ((mv as VehicleTypes.Submarine != null) && (mv as VehicleTypes.Submarine).IsPlayerInside())
-                )
-            {
-                mv.volumetricLights.ForEach(x => x.SetActive(false));
-            }
-            else
-            {
-                mv.volumetricLights.ForEach(x => x.SetActive(true));
-            }
-        }
-        public void SetHeadLightsActive(bool enabled)
-        {
-            if (isLive && !isDamaged)
-            {
-                foreach (GameObject light in mv.lights)
-                {
-                    light.SetActive(enabled && mv.IsPowered());
-                }
-                UpdateVolumetricLights();
-                if (enabled)
-                {
-                    mv.NotifyStatus(LightsStatus.OnHeadLightsOn);
-                }
-                else
-                {
-                    mv.NotifyStatus(LightsStatus.OnHeadLightsOff);
-                }
-            }
-        }
-
-        void IPowerListener.OnPowerUp()
-        {
-        }
-
-        void IPowerListener.OnPowerDown()
-        {
-            DisableHeadlights();
-        }
-
-        void IPowerListener.OnBatterySafe()
-        {
-        }
-
-        void IPowerListener.OnBatteryLow()
-        {
-        }
-
-        void IPowerListener.OnBatteryNearlyEmpty()
-        {
-        }
-
-        void IPowerListener.OnBatteryDepleted()
-        {
-            DisableHeadlights();
-        }
-
-        void IPlayerListener.OnPlayerEntry()
-        {
-            UpdateVolumetricLights();
-        }
-
-        void IPlayerListener.OnPlayerExit()
-        {
-            UpdateVolumetricLights();
-        }
-
-        void IPlayerListener.OnPilotBegin()
-        {
-            //EnableHeadlights();
-        }
-
-        void IPlayerListener.OnPilotEnd()
-        {
-        }
-
-        void IPowerListener.OnBatteryDead()
-        {
-            DisableHeadlights();
-        }
-
-        void IPowerListener.OnBatteryRevive()
-        {
         }
     }
 }

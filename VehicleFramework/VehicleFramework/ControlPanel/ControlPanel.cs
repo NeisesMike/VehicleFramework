@@ -94,7 +94,10 @@ namespace VehicleFramework
         }
         public void HeadlightsClick()
         {
-            mv.headlights.ToggleHeadlights();
+            if (mv.headlights != null)
+            {
+                mv.headlights.Toggle();
+            }
         }
         public void HeadLightsHover()
         {
@@ -103,11 +106,10 @@ namespace VehicleFramework
         }
         public void FloodLightsClick()
         {
-            if (mv.floodlights is null)
+            if (mv.floodlights != null)
             {
-                return;
+                mv.floodlights.Toggle();
             }
-            mv.floodlights.ToggleFloodLights();
         }
         public void FloodLightsHover()
         {
@@ -116,12 +118,10 @@ namespace VehicleFramework
         }
         public void NavLightsClick()
         {
-            if (mv.navlights is null)
+            if (mv.navlights != null)
             {
-                return;
+                mv.navlights.Toggle();
             }
-            SetButtonLightingActive(buttonNavLights, mv.navlights.GetNavLightsEnabled());
-            mv.navlights.ToggleNavLights();
         }
         public void NavLightsHover()
         {
@@ -130,11 +130,10 @@ namespace VehicleFramework
         }
         public void InteriorLightsClick()
         {
-            if(mv.interiorlights is null)
+            if(mv.interiorlights != null)
             {
-                return;
+                mv.interiorlights.Toggle();
             }
-            mv.interiorlights.ToggleInteriorLighting();
         }
         public void InteriorLightsHover()
         {

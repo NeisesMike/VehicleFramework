@@ -58,19 +58,9 @@ namespace VehicleFramework.VehicleTypes
         public override void Awake()
         {
             base.Awake();
-
-            if(FloodLights != null)
-            {
-                floodlights = gameObject.EnsureComponent<FloodLightsController>();
-            }
-            if (InteriorLights != null)
-            {
-                interiorlights = gameObject.EnsureComponent<InteriorLightsController>();
-            }
-            if (NavigationPortLights != null || NavigationStarboardLights != null || NavigationRedStrobeLights != null || NavigationWhiteStrobeLights != null || NavigationPositionLights != null)
-            {
-                navlights = gameObject.EnsureComponent<NavigationLightsController>();
-            }
+            floodlights = gameObject.AddComponent<FloodLightsController>();
+            interiorlights = gameObject.AddComponent<InteriorLightsController>();
+            navlights = gameObject.AddComponent<NavigationLightsController>();
             gameObject.EnsureComponent<TetherSource>().mv = this;
             controlPanelLogic?.Init();
         }

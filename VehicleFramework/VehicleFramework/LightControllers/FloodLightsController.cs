@@ -1,163 +1,53 @@
-﻿using System;
+﻿using System.Linq;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
-    public class FloodLightsController : MonoBehaviour, IPowerListener, IVehicleStatusListener
+    public class FloodLightsController : BaseLightController
     {
-		private VehicleTypes.Submarine mv;
-        private bool _isFloodLightsOn = false;
-        public bool isFloodLightsOn
+        private Submarine MV => GetComponent<Submarine>();
+        protected override void HandleLighting(bool active)
         {
-            get
+            MV.FloodLights.ForEach(x => x.Light.SetActive(active));
+            if (active)
             {
-                return _isFloodLightsOn;
-            }
-            private set
-            {
-                _isFloodLightsOn = value;
-            }
-        }
-
-        public void Awake()
-        {
-            mv = GetComponent<VehicleTypes.Submarine>();
-        }
-
-        public void EnableFloodLights()
-        {
-            SetFloodLampsActive(true);
-            if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
-            {
-                mv.lightsOnSound.Stop();
-                mv.lightsOnSound.Play();
-            }
-            isFloodLightsOn = true;
-        }
-        public void DisableFloodLights()
-        {
-            SetFloodLampsActive(false);
-            if (VehicleManager.isWorldLoaded && mv.GetComponent<PingInstance>().enabled)
-            {
-                mv.lightsOffSound.Stop();
-                mv.lightsOffSound.Play();
-            }
-            isFloodLightsOn = false;
-        }
-        public void ToggleFloodLights()
-        {
-            if (mv.IsPowered())
-            {
-                if (isFloodLightsOn)
-                {
-                    DisableFloodLights();
-                }
-                else
-                {
-                    EnableFloodLights();
-                }
+                MV.FloodLights
+                    .Select(x => x.Light.GetComponent<MeshRenderer>())
+                    .Where(x => x != null)
+                    .SelectMany(x => x.materials)
+                    .ForEach(x => Admin.Utils.EnableSimpleEmission(x, 10, 10));
+                MV.NotifyStatus(LightsStatus.OnFloodLightsOn);
             }
             else
             {
-                isFloodLightsOn = false;
+                MV.FloodLights
+                    .Select(x => x.Light.GetComponent<MeshRenderer>())
+                    .Where(x => x != null)
+                    .SelectMany(x => x.materials)
+                    .ForEach(x => Admin.Utils.EnableSimpleEmission(x, 0, 0));
+                MV.NotifyStatus(LightsStatus.OnFloodLightsOff);
             }
         }
-        public void SetFloodLampsActive(bool enabled)
+        protected override void HandleSound(bool playSound)
         {
-            foreach (var light in mv.FloodLights)
+            if (playSound)
             {
-                light.Light.SetActive(enabled && mv.IsPowered());
-            }
-            if (enabled)
-            {
-                EnableFloodLampEmission();
-                mv.NotifyStatus(LightsStatus.OnFloodLightsOn);
+                MV.lightsOnSound.Stop();
+                MV.lightsOnSound.Play();
             }
             else
             {
-                DisableFloodLampEmission();
-                mv.NotifyStatus(LightsStatus.OnFloodLightsOff);
+                MV.lightsOffSound.Stop();
+                MV.lightsOffSound.Play();
             }
         }
-        public void EnableFloodLampEmission()
+        protected virtual void Awake()
         {
-            foreach (var vlight in mv.FloodLights)
+            if (MV.FloodLights == null || MV.FloodLights.Count < 1)
             {
-                if (vlight.Light.GetComponent<MeshRenderer>() != null)
-                {
-                    foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
-                    {
-                        mat.EnableKeyword("MARMO_EMISSION");
-                        mat.SetFloat("_EmissionLM", 10f);
-                        mat.SetFloat("_EmissionLMNight", 10f);
-                        mat.SetFloat("_GlowStrength", 0f);
-                        mat.SetFloat("_GlowStrengthNight", 0f);
-                    }
-                }
+                Component.DestroyImmediate(this);
             }
-        }
-
-        public void DisableFloodLampEmission()
-        {
-            foreach (var vlight in mv.FloodLights)
-            {
-                if (vlight.Light.GetComponent<MeshRenderer>() != null)
-                {
-                    foreach (Material mat in vlight.Light.GetComponent<MeshRenderer>().materials)
-                    {
-                        mat.DisableKeyword("MARMO_EMISSION");
-                    }
-                }
-            }
-        }
-
-        void IPowerListener.OnPowerUp()
-        {
-        }
-
-        void IPowerListener.OnPowerDown()
-        {
-            DisableFloodLights();
-        }
-
-        void IPowerListener.OnBatterySafe()
-        {
-        }
-
-        void IPowerListener.OnBatteryLow()
-        {
-            DisableFloodLights();
-        }
-
-        void IPowerListener.OnBatteryNearlyEmpty()
-        {
-            DisableFloodLights();
-        }
-
-        void IPowerListener.OnBatteryDepleted()
-        {
-            DisableFloodLights();
-        }
-
-        void IPowerListener.OnBatteryDead()
-        {
-            DisableFloodLights();
-        }
-
-        void IPowerListener.OnBatteryRevive()
-        {
-        }
-        void IVehicleStatusListener.OnNearbyLeviathan()
-        {
-            if (isFloodLightsOn)
-            {
-                ToggleFloodLights();
-            }
-        }
-
-        void IVehicleStatusListener.OnTakeDamage()
-        {
-            return;
         }
     }
 }
