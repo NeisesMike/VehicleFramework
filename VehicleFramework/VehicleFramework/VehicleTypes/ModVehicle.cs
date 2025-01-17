@@ -599,6 +599,10 @@ namespace VehicleFramework
                 DeathExplodeAction();
             }
             isScuttled = true;
+            foreach (var component in GetComponentsInChildren<IScuttleListener>())
+            {
+                (component as IScuttleListener).OnScuttle();
+            }
             GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = false);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = false);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = false);
@@ -615,6 +619,10 @@ namespace VehicleFramework
         public virtual void UnscuttleVehicle()
         {
             isScuttled = false;
+            foreach (var component in GetComponentsInChildren<IScuttleListener>())
+            {
+                (component as IScuttleListener).OnUnscuttle();
+            }
             GetComponentsInChildren<VFEngine>().ForEach(x => x.enabled = true);
             GetComponentsInChildren<PilotingTrigger>().ForEach(x => x.isLive = true);
             GetComponentsInChildren<TetherSource>().ForEach(x => x.isLive = true);
