@@ -69,14 +69,14 @@ namespace VehicleFramework
                 {
                     if (!_autoLeveling)
                     {
-                        mv.NotifyStatus(AutoPilotStatus.OnAutoLevelBegin);
+                        NotifyStatus(AutoPilotStatus.OnAutoLevelBegin);
                     }
                 }
                 else
                 {
                     if (_autoLeveling)
                     {
-                        mv.NotifyStatus(AutoPilotStatus.OnAutoLevelEnd);
+                        NotifyStatus(AutoPilotStatus.OnAutoLevelEnd);
                     }
                 }
                 _autoLeveling = value;
@@ -282,6 +282,31 @@ namespace VehicleFramework
                 float amount = Mathf.Min(num2 - num, mv.oxygenPerSecond * Time.deltaTime) * mv.oxygenEnergyCost;
                 float secondsToAdd = mv.AIEnergyInterface.ConsumeEnergy(amount) / mv.oxygenEnergyCost;
                 oxygenMgr.AddOxygen(secondsToAdd);
+            }
+        }
+
+        public void NotifyStatus(AutoPilotStatus vs)
+        {
+            foreach (var component in GetComponentsInChildren<IAutoPilotListener>())
+            {
+                switch (vs)
+                {
+                    case AutoPilotStatus.OnAutoLevelBegin:
+                        component.OnAutoLevelBegin();
+                        break;
+                    case AutoPilotStatus.OnAutoLevelEnd:
+                        component.OnAutoLevelEnd();
+                        break;
+                    case AutoPilotStatus.OnAutoPilotBegin:
+                        component.OnAutoPilotBegin();
+                        break;
+                    case AutoPilotStatus.OnAutoPilotEnd:
+                        component.OnAutoPilotEnd();
+                        break;
+                    default:
+                        Logger.Error("Error: tried to notify using an invalid status");
+                        break;
+                }
             }
         }
 

@@ -1120,30 +1120,6 @@ namespace VehicleFramework
                 }
             }
         }
-        public void NotifyStatus(AutoPilotStatus vs)
-        {
-            foreach (var component in GetComponentsInChildren<IAutoPilotListener>())
-            {
-                switch (vs)
-                {
-                    case AutoPilotStatus.OnAutoLevelBegin:
-                        component.OnAutoLevelBegin();
-                        break;
-                    case AutoPilotStatus.OnAutoLevelEnd:
-                        component.OnAutoLevelEnd();
-                        break;
-                    case AutoPilotStatus.OnAutoPilotBegin:
-                        component.OnAutoPilotBegin();
-                        break;
-                    case AutoPilotStatus.OnAutoPilotEnd:
-                        component.OnAutoPilotEnd();
-                        break;
-                    default:
-                        Logger.Error("Error: tried to notify using an invalid status");
-                        break;
-                }
-            }
-        }
         public void NotifyStatus(VehicleStatus vs)
         {
             foreach (var component in GetComponentsInChildren<IVehicleStatusListener>())
