@@ -103,6 +103,7 @@ namespace VehicleFramework
         public virtual int CrushPeriod => 1;
         public virtual bool UseDefaultDamageTracker => false;
         public virtual PilotingStyle pilotingStyle => PilotingStyle.Other;
+        public virtual List<Collider> DenyBuildingColliders => new List<Collider>();
         #endregion
 
         #region virtual_properties_dynamic

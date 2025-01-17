@@ -790,6 +790,11 @@ namespace VehicleFramework
             var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
             mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
         }
+        public static void SetupDenyBuildingTags(ModVehicle mv)
+        {
+            mv.DenyBuildingColliders
+                .ForEach(x => x.tag = "DenyBuilding");
+        }
 
         #endregion
         public static bool Instrument(ModVehicle mv, PingType pingType)
