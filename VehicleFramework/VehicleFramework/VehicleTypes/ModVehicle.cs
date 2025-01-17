@@ -127,6 +127,7 @@ namespace VehicleFramework
             upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
             upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
 
+            VehicleBuilder.SetupVolumetricLights(this);
             headlights = gameObject.AddComponent<HeadLightsController>();
             gameObject.AddComponent<VolumetricLightController>();
 
@@ -501,16 +502,16 @@ namespace VehicleFramework
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
             IsVehicleDocked = true;
-            if(headlights.IsLightsOn)
-            {
-                headlights.Toggle();
-            }
             if (IsUnderCommand)
             {
                 OnPlayerDocked(vehicle, exitLocation);
             }
             useRigidbody.detectCollisions = false;
             SetDockedLighting(true);
+            foreach (var component in GetComponentsInChildren<IDockListener>())
+            {
+                (component as IDockListener).OnDock();
+            }
         }
         public virtual void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
         {
@@ -531,6 +532,10 @@ namespace VehicleFramework
             IsVehicleDocked = false;
             useRigidbody.detectCollisions = true;
             SetDockedLighting(false);
+            foreach (var component in GetComponentsInChildren<IDockListener>())
+            {
+                (component as IDockListener).OnUndock();
+            }
         }
         public virtual void OnPlayerUndocked()
         {

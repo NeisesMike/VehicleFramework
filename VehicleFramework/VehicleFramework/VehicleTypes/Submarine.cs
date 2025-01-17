@@ -488,18 +488,12 @@ namespace VehicleFramework.VehicleTypes
         public override void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
         {
             base.OnVehicleDocked(vehicle, exitLocation);
-            Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = false);
-            PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = false);
-            GetComponent<TetherSource>().isLive = false;
             EnableFabricator(false);
         }
         public override void OnVehicleUndocked()
         {
-            Hatches.ForEach(x => x.Hatch.GetComponent<VehicleHatch>().isLive = true);
-            PilotSeats.ForEach(x => x.Seat.GetComponent<PilotingTrigger>().isLive = true);
-            GetComponent<TetherSource>().isLive = true;
-            EnableFabricator(true);
             base.OnVehicleUndocked();
+            EnableFabricator(true);
         }
         public override void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
         {

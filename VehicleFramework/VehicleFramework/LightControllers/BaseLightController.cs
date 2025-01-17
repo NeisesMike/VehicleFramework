@@ -2,9 +2,10 @@
 
 namespace VehicleFramework
 {
-    public abstract class BaseLightController : MonoBehaviour, IPowerChanged, IScuttleListener
+    public abstract class BaseLightController : MonoBehaviour, IPowerChanged, IScuttleListener, IDockListener
     {
         private bool canLightsBeEnabled = true;
+        private bool isDocked = false;
         private bool isScuttled = false;
         private bool _isLightsOn = false;
         public bool IsLightsOn
@@ -16,7 +17,7 @@ namespace VehicleFramework
             private set
             {
                 bool oldValue = _isLightsOn;
-                if (canLightsBeEnabled && !isScuttled)
+                if (canLightsBeEnabled && !isScuttled && !isDocked)
                 {
                     _isLightsOn = value;
                 }
@@ -51,6 +52,16 @@ namespace VehicleFramework
         void IScuttleListener.OnUnscuttle()
         {
             isScuttled = false;
+            IsLightsOn = IsLightsOn;
+        }
+        void IDockListener.OnDock()
+        {
+            isDocked = true;
+            IsLightsOn = IsLightsOn;
+        }
+        void IDockListener.OnUndock()
+        {
+            isDocked = false;
             IsLightsOn = IsLightsOn;
         }
     }

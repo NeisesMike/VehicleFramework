@@ -9,7 +9,7 @@ using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
-    public class PilotingTrigger : HandTarget, IHandTarget, IScuttleListener
+    public class PilotingTrigger : HandTarget, IHandTarget, IScuttleListener, IDockListener
     {
         public ModVehicle mv;
         public Transform exit;
@@ -41,6 +41,16 @@ namespace VehicleFramework
         }
 
         void IScuttleListener.OnUnscuttle()
+        {
+            isLive = true;
+        }
+
+        void IDockListener.OnDock()
+        {
+            isLive = false;
+        }
+
+        void IDockListener.OnUndock()
         {
             isLive = true;
         }

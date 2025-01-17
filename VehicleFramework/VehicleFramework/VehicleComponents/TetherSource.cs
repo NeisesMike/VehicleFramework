@@ -16,7 +16,7 @@ namespace VehicleFramework
      * A player will "leash" to them when close enough,
      * which ensures the player's entry is recognized no matter what (warp in).
      */
-    public class TetherSource : MonoBehaviour, IScuttleListener
+    public class TetherSource : MonoBehaviour, IScuttleListener, IDockListener
     {
         public Submarine mv = null;
         private bool isLive = true;
@@ -175,6 +175,16 @@ namespace VehicleFramework
         }
 
         void IScuttleListener.OnUnscuttle()
+        {
+            isLive = true;
+        }
+
+        void IDockListener.OnDock()
+        {
+            isLive = false;
+        }
+
+        void IDockListener.OnUndock()
         {
             isLive = true;
         }

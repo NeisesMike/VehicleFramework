@@ -10,9 +10,9 @@ using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
-	public class VehicleHatch : HandTarget, IHandTarget
+	public class VehicleHatch : HandTarget, IHandTarget, IDockListener
 	{
-		public bool isLive = true;
+		private bool isLive = true;
 		public ModVehicle mv;
 		public Transform EntryLocation;
 		public Transform ExitLocation;
@@ -107,6 +107,16 @@ namespace VehicleFramework
 				tryCount++;
 				yield return null;
 			}
+		}
+
+		void IDockListener.OnDock()
+		{
+			isLive = false;
+		}
+
+		void IDockListener.OnUndock()
+		{
+			isLive = true;
 		}
 	}
 }
