@@ -36,6 +36,7 @@ namespace VehicleFramework.Admin
     }
     public static class UpgradeRegistrar
     {
+        public static Dictionary<string, Sprite> UpgradeIcons = new Dictionary<string, Sprite>(); // indexed by upgrade.ClassId
         internal static List<Action<AddActionParams>> OnAddActions = new List<Action<AddActionParams>>();
         internal static List<Action<ToggleActionParams>> OnToggleActions = new List<Action<ToggleActionParams>>();
         internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new List<Action<SelectableChargeableActionParams>>();
@@ -55,6 +56,7 @@ namespace VehicleFramework.Admin
             bool result = ValidateModVehicleUpgrade(upgrade, compat);
             if(result)
             {
+                UpgradeIcons.Add(upgrade.ClassId, SpriteHelper.CreateSpriteFromAtlasSprite(upgrade.Icon));
                 UpgradeTechTypes utt = new UpgradeTechTypes();
                 bool isPdaRegistered = false;
                 if (!compat.skipModVehicle)

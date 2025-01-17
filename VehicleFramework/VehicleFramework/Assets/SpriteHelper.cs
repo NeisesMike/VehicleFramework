@@ -35,5 +35,10 @@ namespace VehicleFramework.Assets
             SpriteTexture.LoadImage(spriteBytes);
             return Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         }
+        public static Sprite CreateSpriteFromAtlasSprite(Atlas.Sprite sprite)
+        {
+            Texture2D texture = sprite.texture;
+            return Sprite.Create(texture, new Rect(0f, 0f, (float)texture.width, (float)texture.height), Vector2.one * 0.5f);
+        }
     }
 }
