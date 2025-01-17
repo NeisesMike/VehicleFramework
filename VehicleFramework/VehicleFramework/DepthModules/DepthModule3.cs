@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.Localization;
 
@@ -20,15 +16,16 @@ namespace VehicleFramework.DepthModules
                     new Assets.Ingredient(TechType.EnameledGlass, 3),
                     new Assets.Ingredient(TechType.Kyanite, 3)
                 };
+        public override Atlas.Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override string TabName => "MVDM";
         public override string TabDisplayName => "Depth Modules";
         public override void OnAdded(AddActionParams param)
         {
-            VehicleFramework.Admin.Utils.EvaluateDepthModules(param);
+            Admin.Utils.EvaluateDepthModules(param);
         }
         public override void OnRemoved(AddActionParams param)
         {
-            VehicleFramework.Admin.Utils.EvaluateDepthModules(param);
+            Admin.Utils.EvaluateDepthModules(param);
         }
     }
 }
