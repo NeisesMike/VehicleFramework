@@ -44,44 +44,13 @@ namespace VehicleFramework
     }
     public static class VoiceManager
     {
+        #region public_api
+        // voice that are in-play
         public static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
-
-        // voice names : voices
-        private static Dictionary<string, VehicleVoice> vehicleVoices = new Dictionary<string, VehicleVoice>();
-        // vehicle names : voice names
-        private static Dictionary<string, string> defaultVoices = new Dictionary<string, string>();
         public static AudioClip silence;
         public static VehicleVoice silentVoice = new VehicleVoice();
-        public static void RegisterVoice(string name, VehicleVoice voice)
-        {
-            RegisterVoice(name, voice, false);
-        }
-        public static void RegisterVoice(string name, VehicleVoice voice, bool verbose)
-        {
-            try
-            {
-                vehicleVoices.Add(name, voice);
-            }
-            catch (ArgumentException e)
-            {
-                Logger.Warn("Tried to register a voice using a name that already exists: " + name + ". " + e.Message);
-                return;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Failed to register a voice: " + e.Message);
-                return;
-            }
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Successfully registered voice: " + name);
-        }
-        public static IEnumerator RegisterVoice(string name, string voicepath="")
-        {
-            yield return LoadVoiceClips(name, vehicleVoice =>
-            {
-                // Once the voice is loaded, store it in the dictionary
-                RegisterVoice(name, vehicleVoice);
-            }, voicepath);
-        }
+        public const string DefaultVoicePath = "AutoPilotVoices";
+
         public static VehicleVoice GetVoice(string name)
         {
             try
@@ -102,7 +71,7 @@ namespace VehicleFramework
             }
             return silentVoice;
         }
-        public static void RegisterDefault(ModVehicle mv, string voice)
+        public static void RegisterDefaultVoice(this ModVehicle mv, string voice)
         {
             try
             {
@@ -117,11 +86,124 @@ namespace VehicleFramework
                 Logger.Error("Failed to register a default voice: " + e.Message);
             }
         }
-        public static void RegisterDefault(ModVehicle mv, KnownVoices voice)
+        public static void RegisterDefaultVoice(this ModVehicle mv, KnownVoices voice)
         {
-            RegisterDefault(mv, GetKnownVoice(voice));
+            RegisterDefaultVoice(mv, GetKnownVoice(voice));
         }
-        public static VehicleVoice GetDefaultVoice(ModVehicle mv)
+        public static IEnumerator RegisterVoice(string name, string absolutePath = "")
+        {
+            string modPath;
+            if (absolutePath == "")
+            {
+                modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            }
+            else
+            {
+                modPath = absolutePath;
+            }
+            string autoPilotVoicesFolder = Path.Combine(modPath, DefaultVoicePath);
+            
+            if(!CheckForVoiceClips(Path.Combine(autoPilotVoicesFolder, name)))
+            {
+                Logger.Error(
+                    "Voice Registration Error: " +
+                    "Couldn't find voice files at this path: " + autoPilotVoicesFolder + "\n"
+                    + "This method takes the absolute path to the folder containing the AutoPilotVoices folder.\n"
+                    + "This AutoPilotVoices folder should contain a folder named " + name + " that contains the voice files.\n"
+                    + "You can use RegisterVoiceWithRelativePath to avoid this naming convention."
+                    );
+                yield break;
+            }
+
+            yield return LoadVoiceClips(name, vehicleVoice =>
+            {
+                // Once the voice is loaded, store it in the dictionary
+                RegisterVoice(name, vehicleVoice);
+            }, autoPilotVoicesFolder);
+        }
+        public static IEnumerator RegisterVoiceWithRelativePath(string name, string relativePathToVoice = DefaultVoicePath)
+        {
+            string autoPilotVoicesFolder = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                relativePathToVoice);
+
+            if (!CheckForVoiceClips(Path.Combine(autoPilotVoicesFolder, name)))
+            {
+                Logger.Error(
+                    "Voice Registration Error: " +
+                    "Couldn't find voice files at this path: " + autoPilotVoicesFolder + "\n"
+                    + "This method takes the relative path from your mod to the folder containing the voice folder named " + name + ".\n"
+                    );
+                yield break;
+            }
+
+            yield return LoadVoiceClips(name, vehicleVoice =>
+            {
+                // Once the voice is loaded, store it in the dictionary
+                RegisterVoice(name, vehicleVoice);
+            }, autoPilotVoicesFolder);
+        }
+        public static void LogAllAvailableVoices()
+        {
+            Logger.Log("Voices available:");
+            vehicleVoices.Select(x => x.Key).ForEach(x => Logger.Log(x));
+            /*
+            foreach (var but in voices)
+            {
+                Logger.Log(but.name);
+            }
+            */
+        }
+        #endregion
+
+        #region internal
+        private static readonly string[] clipNames = {
+            "BatteriesDepleted",
+            "BatteriesNearlyEmpty",
+            "PowerLow",
+            "EnginePoweringDown",
+            "EnginePoweringUp",
+            "Goodbye",
+            "HullFailureImminent",
+            "HullIntegrityCritical",
+            "HullIntegrityLow",
+            "Leveling",
+            "WelcomeAboard",
+            "OxygenProductionOffline",
+            "WelcomeAboardAllSystemsOnline",
+            "MaximumDepthReached",
+            "PassingSafeDepth",
+            "LeviathanDetected",
+            "UhOh"
+        };
+        // voice names : voices
+        private static Dictionary<string, VehicleVoice> vehicleVoices = new Dictionary<string, VehicleVoice>();
+        // vehicle names : voice names
+        private static Dictionary<string, string> defaultVoices = new Dictionary<string, string>();
+        private static void RegisterVoice(string name, VehicleVoice voice)
+        {
+            RegisterVoice(name, voice, false);
+        }
+        private static void RegisterVoice(string name, VehicleVoice voice, bool verbose)
+        {
+            try
+            {
+                vehicleVoices.Add(name, voice);
+            }
+            catch (ArgumentException e)
+            {
+                Logger.Warn("Tried to register a voice using a name that already exists: " + name + ". " + e.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to register a voice: " + e.Message);
+                return;
+            }
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Successfully registered voice: " + name);
+        }
+        internal static VehicleVoice GetDefaultVoice(ModVehicle mv)
         {
             string defaultOption = "";
             try
@@ -164,7 +246,7 @@ namespace VehicleFramework
         exit:
             return GetVoice(MainPatcher.VFConfig.voiceChoice);
         }
-        public static IEnumerator LoadAllVoices()
+        internal static IEnumerator LoadAllVoices()
         {
             GetSilence();
             yield return RegisterVoice(GetKnownVoice(KnownVoices.ShirubaFoxy));
@@ -174,10 +256,10 @@ namespace VehicleFramework
             yield return RegisterVoice(GetKnownVoice(KnownVoices.Salli));
             yield return RegisterVoice(GetKnownVoice(KnownVoices.Turtle));
         }
-        public static IEnumerator GetSilence()
+        internal static IEnumerator GetSilence()
         {
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string autoPilotVoicesFolder = Path.Combine(modPath, "AutoPilotVoices");
+            string autoPilotVoicesFolder = Path.Combine(modPath, DefaultVoicePath);
             UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("file://" + autoPilotVoicesFolder + "/Silence.ogg", AudioType.OGGVORBIS);
             yield return www.SendWebRequest();
             if (www.isHttpError || www.isNetworkError)
@@ -210,53 +292,19 @@ namespace VehicleFramework
 
             yield break;
         }
-        public static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string voicepath)
+        private static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string autoPilotVoicesFolder)
         {
-            yield return LoadVoiceClips(voice, onComplete, voicepath, false);
+            string autoPilotVoicePath = Path.Combine(autoPilotVoicesFolder, voice) + "/";
+            yield return LoadVoiceClips(voice, onComplete, autoPilotVoicePath, false);
         }
         // Method signature with a callback to return the VehicleVoice instance
-        public static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string voicepath, bool verbose)
+        private static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string inputPath, bool verbose)
         {
             VehicleVoice returnVoice = new VehicleVoice();
-            string modPath = "";
-            if (voicepath == "")
-            {
-                modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            }
-            else
-            {
-                modPath = voicepath;
-            }
-            string autoPilotVoicesFolder = Path.Combine(modPath, "AutoPilotVoices");
-            string autoPilotVoicePath = Path.Combine(autoPilotVoicesFolder, voice) + "/";
-
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "AutoPilot Voice Path is : " + autoPilotVoicePath);
-
-            // List of clip names to load, corresponding to their fields in VehicleVoice
-            string[] clipNames = {
-            "BatteriesDepleted",
-            "BatteriesNearlyEmpty",
-            "PowerLow",
-            "EnginePoweringDown",
-            "EnginePoweringUp",
-            "Goodbye",
-            "HullFailureImminent",
-            "HullIntegrityCritical",
-            "HullIntegrityLow",
-            "Leveling",
-            "WelcomeAboard",
-            "OxygenProductionOffline",
-            "WelcomeAboardAllSystemsOnline",
-            "MaximumDepthReached",
-            "PassingSafeDepth",
-            "LeviathanDetected",
-            "UhOh"
-        };
-
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "AutoPilot Voice Path is : " + inputPath);
             foreach (string clipName in clipNames)
             {
-                string path = "file://" + autoPilotVoicePath + clipName + ".ogg";
+                string path = "file://" + inputPath + clipName + ".ogg";
                 yield return LoadAudioClip(path, clip =>
                 {
                     // Use reflection to set the clip dynamically based on its name
@@ -270,8 +318,15 @@ namespace VehicleFramework
                     typeof(VehicleVoice).GetField(clipName).SetValue(returnVoice, silence);
                 });
             }
-
             onComplete?.Invoke(returnVoice);
+        }
+        private static bool CheckForVoiceClips(string voicePath)
+        {
+            foreach (string clipName in clipNames)
+            {
+                string path = "file://" + voicePath + clipName + ".ogg";
+            }
+            return true;
         }
         private static IEnumerator LoadAudioClip(string filePath, Action<AudioClip> onSuccess, Action onError)
         {
@@ -300,7 +355,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public static string GetKnownVoice(KnownVoices name)
+        internal static string GetKnownVoice(KnownVoices name)
         {
             switch (name)
             {
@@ -321,14 +376,6 @@ namespace VehicleFramework
             }
             return "The KnownVoices enum is likely outdated";
         }
-        public static void LogAllAvailableVoices()
-        {
-            Logger.Log("Voices available:");
-            vehicleVoices.Select(x => x.Key).ForEach(x => Logger.Log(x));
-            foreach(var but in voices)
-            {
-                Logger.Log(but.name);
-            }
-        }
+        #endregion
     }
 }
