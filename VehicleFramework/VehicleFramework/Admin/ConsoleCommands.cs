@@ -15,6 +15,7 @@ namespace VehicleFramework.Admin
 			DevConsole.RegisterConsoleCommand(this, "givevfcyclopsupgrades", false, false);
 			DevConsole.RegisterConsoleCommand(this, "logvfupgrades", false, false);
 			DevConsole.RegisterConsoleCommand(this, "logvfvehicles", false, false);
+			DevConsole.RegisterConsoleCommand(this, "logvfvoices", false, false);
 			DevConsole.RegisterConsoleCommand(this, "vfspawncodes", false, false);
 		}
 		public void OnConsoleCommand_givevfupgrades(NotificationCenter.Notification _)
@@ -52,6 +53,10 @@ namespace VehicleFramework.Admin
 		public void OnConsoleCommand_logvfvehicles(NotificationCenter.Notification _)
 		{
 			VehicleManager.vehicleTypes.Select(x => x.techType).ForEach(x => Logger.Log(x.AsString()));
+		}
+		public void OnConsoleCommand_logvfvoices(NotificationCenter.Notification _)
+		{
+			VoiceManager.LogAllAvailableVoices();
 		}
 		public void OnConsoleCommand_vfspawncodes(NotificationCenter.Notification _)
 		{
