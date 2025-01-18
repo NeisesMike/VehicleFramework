@@ -419,9 +419,6 @@ namespace VehicleFramework
         public static void SetupHeadLights(ModVehicle mv)
         {
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
-            Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
-            MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
-            MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
             if (mv.HeadLights != null)
             {
                 foreach (VehicleParts.VehicleFloodLight pc in mv.HeadLights)
@@ -436,33 +433,6 @@ namespace VehicleFramework
                     thisLight.range = pc.Range;
                     thisLight.shadows = LightShadows.Hard;
                     thisLight.gameObject.SetActive(false);
-
-                    GameObject volumetricLight = pc.Light.transform.Find("VolumetricLight").gameObject;
-                    volumetricLight.transform.localPosition = Vector3.zero;
-                    volumetricLight.transform.localEulerAngles = Vector3.zero;
-                    volumetricLight.transform.parent = pc.Light.transform;
-                    volumetricLight.transform.localScale = seamothVL.localScale;
-
-                    var lvlMeshFilter = volumetricLight.AddComponent<MeshFilter>();
-                    lvlMeshFilter.mesh = seamothVLMF.mesh;
-                    lvlMeshFilter.sharedMesh = seamothVLMF.sharedMesh;
-
-                    var lvlMeshRenderer = volumetricLight.AddComponent<MeshRenderer>();
-                    lvlMeshRenderer.material = seamothVLMR.material;
-                    lvlMeshRenderer.sharedMaterial = seamothVLMR.sharedMaterial;
-                    lvlMeshRenderer.shadowCastingMode = seamothVLMR.shadowCastingMode;
-                    lvlMeshRenderer.renderingLayerMask = seamothVLMR.renderingLayerMask;
-
-                    var leftVFX = CopyComponent(seamothHeadLight.GetComponent<VFXVolumetricLight>(), pc.Light);
-                    leftVFX.lightSource = thisLight;
-                    leftVFX.color = pc.Color;
-                    leftVFX.volumGO = volumetricLight;
-                    leftVFX.volumRenderer = lvlMeshRenderer;
-                    leftVFX.volumMeshFilter = lvlMeshFilter;
-                    leftVFX.angle = (int)pc.Angle;
-                    leftVFX.range = pc.Range;
-                    mv.lights.Add(pc.Light);
-                    mv.volumetricLights.Add(volumetricLight);
 
                     var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
                     RLS.hostLight = thisLight;
@@ -493,6 +463,42 @@ namespace VehicleFramework
                     var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
                     RLS.hostLight = thisLight;
                 }
+            }
+        }
+        public static void SetupVolumetricLights(ModVehicle mv)
+        {
+            GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
+            Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
+            MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
+            MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
+            foreach (VehicleParts.VehicleFloodLight pc in mv.HeadLights)
+            {
+                GameObject volumetricLight = new GameObject("VolumetricLight");
+                volumetricLight.transform.SetParent(pc.Light.transform);
+                volumetricLight.transform.localPosition = Vector3.zero;
+                volumetricLight.transform.localEulerAngles = Vector3.zero;
+                volumetricLight.transform.localScale = seamothVL.localScale;
+
+                var lvlMeshFilter = volumetricLight.AddComponent<MeshFilter>();
+                lvlMeshFilter.mesh = seamothVLMF.mesh;
+                lvlMeshFilter.sharedMesh = seamothVLMF.sharedMesh;
+
+                var lvlMeshRenderer = volumetricLight.AddComponent<MeshRenderer>();
+                lvlMeshRenderer.material = seamothVLMR.material;
+                lvlMeshRenderer.sharedMaterial = seamothVLMR.sharedMaterial;
+                lvlMeshRenderer.shadowCastingMode = seamothVLMR.shadowCastingMode;
+                lvlMeshRenderer.renderingLayerMask = seamothVLMR.renderingLayerMask;
+
+                var leftVFX = CopyComponent(seamothHeadLight.GetComponent<VFXVolumetricLight>(), pc.Light);
+                leftVFX.lightSource = pc.Light.GetComponent<Light>();
+                leftVFX.color = pc.Color;
+                leftVFX.volumGO = volumetricLight;
+                leftVFX.volumRenderer = lvlMeshRenderer;
+                leftVFX.volumMeshFilter = lvlMeshFilter;
+                leftVFX.angle = (int)pc.Angle;
+                leftVFX.range = pc.Range;
+                mv.lights.Add(pc.Light);
+                mv.volumetricLights.Add(volumetricLight);
             }
         }
         public static void SetupLiveMixin(ModVehicle mv)
