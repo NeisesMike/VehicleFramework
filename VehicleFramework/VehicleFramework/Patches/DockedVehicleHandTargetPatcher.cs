@@ -103,7 +103,7 @@ namespace VehicleFramework.Patches
             __instance.dockingBay.OnUndockingStart();
             __instance.dockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
 
-            mv.OnUndockingStart();
+            mv.IsUndockingAnimating = true;
             string subRootName = __instance.dockingBay.subRoot.name.ToLower();
             if (subRootName.Contains("cyclops"))
             {
@@ -117,7 +117,7 @@ namespace VehicleFramework.Patches
             }
             __instance.dockingBay.dockedVehicle = null;
 
-            mv.OnUndockingComplete();
+            mv.IsUndockingAnimating = false;
             if (subRootName.Contains("cyclops"))
             {
                 IEnumerator ReEnableCollisionsInAMoment()

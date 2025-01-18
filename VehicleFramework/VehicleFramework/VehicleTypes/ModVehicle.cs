@@ -68,7 +68,7 @@ namespace VehicleFramework
         public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
         public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
         public virtual VFEngine VFEngine { get; set; }
-        public virtual ModVehicleEngine Engine { get; set; }
+        public virtual ModVehicleEngine Engine { get; set; } // prefer to use VFEngine.
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
@@ -109,7 +109,6 @@ namespace VehicleFramework
         #region virtual_properties_dynamic
         public virtual bool CanLeviathanGrab { get; set; } = true;
         public virtual bool CanMoonpoolDock { get; set; } = true;
-        public virtual DeathStyle OnDeathBehavior { get; set; } = DeathStyle.Sink;
         public virtual float TimeToConstruct { get; set; } = 15f; // Seamoth : 10 seconds, Cyclops : 20, Rocket Base : 25
         public virtual Color ConstructionGhostColor { get; set; } = Color.black;
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
@@ -229,15 +228,6 @@ namespace VehicleFramework
 
             VehicleFramework.Patches.CompatibilityPatches.BetterVehicleStoragePatcher.TryUseBetterVehicleStorage(this, slotID, techType);
             base.OnUpgradeModuleUse(techType, slotID);
-        }
-        public override void OnPilotModeBegin()
-        {
-            base.OnPilotModeBegin();
-        }
-        public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
-        {
-            // This function locks the player in and configures several variables for that purpose
-            base.EnterVehicle(player, teleport, playEnterAnimation);
         }
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
@@ -438,18 +428,6 @@ namespace VehicleFramework
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
             pingInstance.enabled = false;
             worldForces.handleGravity = false;
-        }
-        public virtual void ForceExitLockedMode()
-        {
-            // handle warper specially
-            GameInput.ClearInput();
-            Player.main.playerController.SetEnabled(true);
-            Player.main.mode = Player.Mode.Normal;
-            Player.main.playerModeChanged.Trigger(Player.main.mode);
-            Player.main.sitting = false;
-            Player.main.playerController.ForceControllerSize();
-            Player.main.transform.parent = null;
-            StopPiloting();
         }
         public virtual void OnAIBatteryReload()
         {
@@ -873,14 +851,6 @@ namespace VehicleFramework
                         return null;
                     }
             }
-        }
-        internal void OnUndockingStart()
-        {
-            IsUndockingAnimating = true;
-        }
-        internal void OnUndockingComplete()
-        {
-            IsUndockingAnimating = false;
         }
         private void SetDockedLighting(bool docked)
         {
