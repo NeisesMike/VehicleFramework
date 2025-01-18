@@ -11,10 +11,9 @@ using VehicleFramework.Assets;
 
 namespace VehicleFramework
 {
-    static class VehiclePrepper
-    { 
-        //public static TechType RegisterVehicle(string classId, string displayName, string description, Dictionary<TechType,int> recipe, string encyEntry)
-        public static TechType RegisterVehicle(VehicleEntry vehicle)
+    internal static class VehicleNautilusInterface
+    {
+        internal static TechType RegisterVehicle(VehicleEntry vehicle)
         {
             PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
@@ -59,6 +58,14 @@ namespace VehicleFramework
             }
             module_CustomPrefab.Register();
             return vehicle_info.TechType;
+        }
+
+        internal static void PatchCraftable(ref VehicleEntry ve, bool verbose)
+        {
+            TechType techType = VehicleNautilusInterface.RegisterVehicle(ve);
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + ve.name + " Craftable");
+            VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
+            VehicleManager.vehicleTypes.Add(newVE);
         }
 
     }

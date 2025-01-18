@@ -24,14 +24,6 @@ namespace VehicleFramework
         public static Dictionary<TechType, int> defaultRecipe = new Dictionary<TechType, int>();
         public static VFEngine defaultEngine = null;
         public static bool isWorldLoaded = false;
-
-        public static void PatchCraftable(ref VehicleEntry ve, bool verbose)
-        {
-            TechType techType = VehiclePrepper.RegisterVehicle(ve);
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + ve.name + " Craftable");
-            VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
-            VehicleManager.vehicleTypes.Add(newVE);
-        }
         public static PingType RegisterPingType(PingType pt)
         {
             return RegisterPingType(pt, false);

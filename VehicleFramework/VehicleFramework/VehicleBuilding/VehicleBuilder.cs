@@ -75,7 +75,7 @@ namespace VehicleFramework
             VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite ?? VehicleManager.defaultPingSprite);
             VehicleManager.VehiclesPrefabricated++;
             numVehicleTypes++;
-            VehicleManager.PatchCraftable(ref ve, verbose);
+            VehicleNautilusInterface.PatchCraftable(ref ve, verbose);
         }
 
         #region setup_funcs

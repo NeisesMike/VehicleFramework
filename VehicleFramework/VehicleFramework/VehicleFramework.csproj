@@ -226,7 +226,7 @@
     <Compile Include="VehicleTypes\Submarine.cs" />
     <Compile Include="VehicleTypes\Submersible.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
-    <Compile Include="VehicleBuilding\VehiclePrepper.cs" />
+    <Compile Include="VehicleBuilding\VehicleNautilusInterface.cs" />
     <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
     <Compile Include="Interfaces\IAutoPilotListener.cs" />
     <Compile Include="Interfaces\IPlayerListener.cs" />
