@@ -190,8 +190,10 @@ namespace VehicleFramework
                 Player.main.playerController.ForceControllerSize();
                 Player.main.transform.parent = null;
                 StopPiloting();
+                PlayerExit();
             }
             DestroyMV();
+            PlayerEntry();
         }
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
