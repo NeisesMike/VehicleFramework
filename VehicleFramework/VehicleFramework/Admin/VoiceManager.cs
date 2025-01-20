@@ -75,7 +75,7 @@ namespace VehicleFramework
         {
             try
             {
-                defaultVoices.Add(mv.name, voice);
+                defaultVoices.Add(mv.vehicleDefaultName, voice);
             }
             catch (ArgumentException e)
             {
@@ -90,59 +90,60 @@ namespace VehicleFramework
         {
             RegisterDefaultVoice(mv, GetKnownVoice(voice));
         }
-        public static IEnumerator RegisterVoice(string name, string absolutePath = "")
+        public static IEnumerator RegisterVoice(string name, string conventionalPath = "")
         {
             string modPath;
-            if (absolutePath == "")
+            if (conventionalPath == "")
             {
                 modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
             }
             else
             {
-                modPath = absolutePath;
+                modPath = conventionalPath;
             }
-            string autoPilotVoicesFolder = Path.Combine(modPath, DefaultVoicePath);
-            
-            if(!CheckForVoiceClips(Path.Combine(autoPilotVoicesFolder, name)))
+            string folderWithVoiceFiles = Path.Combine(modPath, DefaultVoicePath, name);
+            if(!CheckForVoiceClips(folderWithVoiceFiles))
             {
                 Logger.Error(
                     "Voice Registration Error: " +
-                    "Couldn't find voice files at this path: " + autoPilotVoicesFolder + "\n"
+                    "Couldn't find voice files at this path: " + folderWithVoiceFiles + "\n"
                     + "This method takes the absolute path to the folder containing the AutoPilotVoices folder.\n"
                     + "This AutoPilotVoices folder should contain a folder named " + name + " that contains the voice files.\n"
-                    + "You can use RegisterVoiceWithRelativePath to avoid this naming convention."
+                    + "You can use RegisterVoiceWithRelativePath or RegisterVoiceAbsolute to avoid this old naming convention."
                     );
                 yield break;
             }
 
-            yield return LoadVoiceClips(name, vehicleVoice =>
+            yield return LoadVoiceClips(vehicleVoice =>
             {
                 // Once the voice is loaded, store it in the dictionary
                 RegisterVoice(name, vehicleVoice);
-            }, autoPilotVoicesFolder);
+            }, folderWithVoiceFiles);
         }
-        public static IEnumerator RegisterVoiceWithRelativePath(string name, string relativePathToVoice = DefaultVoicePath)
+        public static void RegisterVoiceWithRelativePath(string name, string relativePathToFolderWithVoiceFiles)
         {
-            string autoPilotVoicesFolder = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                relativePathToVoice);
-
-            if (!CheckForVoiceClips(Path.Combine(autoPilotVoicesFolder, name)))
+            string folderWithVoiceFiles = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetCallingAssembly().Location),
+                relativePathToFolderWithVoiceFiles);
+            UWE.CoroutineHost.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles));
+        }
+        private static IEnumerator RegisterVoiceAbsolute(string name, string absolutePath)
+        {
+            if (!CheckForVoiceClips(absolutePath))
             {
                 Logger.Error(
                     "Voice Registration Error: " +
-                    "Couldn't find voice files at this path: " + autoPilotVoicesFolder + "\n"
-                    + "This method takes the relative path from your mod to the folder containing the voice folder named " + name + ".\n"
+                    "Couldn't find voice files at this path: " + absolutePath + "\n"
+                    + "This method takes the relative path from your mod to the folder containing the voice sound files."
                     );
                 yield break;
             }
 
-            yield return LoadVoiceClips(name, vehicleVoice =>
+            yield return LoadVoiceClips(vehicleVoice =>
             {
                 // Once the voice is loaded, store it in the dictionary
                 RegisterVoice(name, vehicleVoice);
-            }, autoPilotVoicesFolder);
+            }, absolutePath);
         }
         public static void LogAllAvailableVoices()
         {
@@ -208,7 +209,7 @@ namespace VehicleFramework
             string defaultOption = "";
             try
             {
-                defaultOption = defaultVoices[mv.name];
+                defaultOption = defaultVoices[mv.vehicleDefaultName];
             }
             catch (KeyNotFoundException e)
             {
@@ -292,13 +293,13 @@ namespace VehicleFramework
 
             yield break;
         }
-        private static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string autoPilotVoicesFolder)
+        private static IEnumerator LoadVoiceClips(Action<VehicleVoice> onComplete, string autoPilotVoicesFolder)
         {
-            string autoPilotVoicePath = Path.Combine(autoPilotVoicesFolder, voice) + "/";
-            yield return LoadVoiceClips(voice, onComplete, autoPilotVoicePath, false);
+            string autoPilotVoicePath = autoPilotVoicesFolder + "/";
+            yield return LoadVoiceClips(onComplete, autoPilotVoicePath, false);
         }
         // Method signature with a callback to return the VehicleVoice instance
-        private static IEnumerator LoadVoiceClips(string voice, Action<VehicleVoice> onComplete, string inputPath, bool verbose)
+        private static IEnumerator LoadVoiceClips(Action<VehicleVoice> onComplete, string inputPath, bool verbose)
         {
             VehicleVoice returnVoice = new VehicleVoice();
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "AutoPilot Voice Path is : " + inputPath);
@@ -324,7 +325,13 @@ namespace VehicleFramework
         {
             foreach (string clipName in clipNames)
             {
-                string path = "file://" + voicePath + clipName + ".ogg";
+                //string path = "file://" + Path.Combine(voicePath, clipName) + ".ogg";
+                string path = Path.Combine(voicePath, clipName) + ".ogg";
+                if (!File.Exists(path))
+                {
+                    Logger.Error("Voice Registration Error: clip not found: " + path);
+                    return false;  // Return false if any clip is missing
+                }
             }
             return true;
         }
