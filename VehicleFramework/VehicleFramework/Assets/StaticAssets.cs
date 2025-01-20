@@ -1,8 +1,6 @@
-﻿using System;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VehicleFramework.Engines;
 
 namespace VehicleFramework.Assets
 {
@@ -12,6 +10,10 @@ namespace VehicleFramework.Assets
         internal static Atlas.Sprite UpgradeIcon { get; private set; }
         internal static Atlas.Sprite DepthIcon { get; private set; }
         internal static Atlas.Sprite ArmIcon { get; private set; }
+        internal static Atlas.Sprite DefaultPingSprite { get; private set; }
+        internal static Sprite DefaultSaveFileSprite { get; private set; }
+        internal static Dictionary<TechType, int> DefaultRecipe { get; private set; }
+        internal static VFEngine DefaultEngine { get; private set; }
         public static void GetSprites()
         {
             ModVehicleIcon = Assets.SpriteHelper.GetSpriteInternal("ModVehicleIcon.png");
@@ -20,20 +22,21 @@ namespace VehicleFramework.Assets
             DepthIcon = Assets.SpriteHelper.GetSpriteInternal("DepthIcon.png");
 
             Assets.VehicleAssets DSAssets = Assets.AssetBundleInterface.GetVehicleAssetsFromBundle("modvehiclepingsprite");
-            VehicleManager.defaultPingSprite = Assets.AssetBundleInterface.LoadAdditionalSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
-            VehicleManager.defaultSaveFileSprite = Assets.AssetBundleInterface.LoadAdditionalRawSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
+            DefaultPingSprite = Assets.AssetBundleInterface.LoadAdditionalSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
+            DefaultSaveFileSprite = Assets.AssetBundleInterface.LoadAdditionalRawSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
             DSAssets.Close();
         }
         public static void SetupDefaultAssets()
         {
-            VehicleManager.defaultRecipe.Add(TechType.PlasteelIngot, 1);
-            VehicleManager.defaultRecipe.Add(TechType.Lubricant, 1);
-            VehicleManager.defaultRecipe.Add(TechType.ComputerChip, 1);
-            VehicleManager.defaultRecipe.Add(TechType.AdvancedWiringKit, 1);
-            VehicleManager.defaultRecipe.Add(TechType.Lead, 2);
-            VehicleManager.defaultRecipe.Add(TechType.EnameledGlass, 2);
+            DefaultRecipe = new Dictionary<TechType, int>();
+            DefaultRecipe.Add(TechType.PlasteelIngot, 1);
+            DefaultRecipe.Add(TechType.Lubricant, 1);
+            DefaultRecipe.Add(TechType.ComputerChip, 1);
+            DefaultRecipe.Add(TechType.AdvancedWiringKit, 1);
+            DefaultRecipe.Add(TechType.Lead, 2);
+            DefaultRecipe.Add(TechType.EnameledGlass, 2);
 
-            VehicleManager.defaultEngine = new Engines.AtramaEngine();
+            DefaultEngine = new Engines.AtramaEngine();
         }
     }
 }

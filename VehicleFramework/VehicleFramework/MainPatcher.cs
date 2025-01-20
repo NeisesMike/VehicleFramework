@@ -69,14 +69,14 @@ namespace VehicleFramework
 
             void SetWorldNotLoaded()
             {
-                VehicleManager.isWorldLoaded = false;
+                Admin.GameStateWatcher.isWorldLoaded = false;
                 ModuleBuilder.haveWeCalledBuildAllSlots = false;
                 ModuleBuilder.slotExtenderIsPatched = false;
                 ModuleBuilder.slotExtenderHasGreenLight = false;
             }
             void SetWorldLoaded()
             {
-                VehicleManager.isWorldLoaded = true;
+                Admin.GameStateWatcher.isWorldLoaded = true;
             }
             void OnLoadOnce()
             {

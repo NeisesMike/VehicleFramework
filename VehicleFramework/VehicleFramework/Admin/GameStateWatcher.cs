@@ -12,6 +12,7 @@ namespace VehicleFramework.Admin
     {
         public static bool IsPlayerAwaked;
         public static bool IsPlayerStarted;
+        public static bool isWorldLoaded = false;
         public static bool IsWorldSettled => LargeWorldStreamer.main != null && Player.main != null && LargeWorldStreamer.main.IsRangeActiveAndBuilt(new Bounds(Player.main.transform.position, new Vector3(5f, 5f, 5f)));
 
         public static List<IGameObjectManager> GOManagers = new List<IGameObjectManager>();

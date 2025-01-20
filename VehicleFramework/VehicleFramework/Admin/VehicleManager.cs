@@ -14,16 +14,9 @@ namespace VehicleFramework
 {
     public static class VehicleManager
     {
-        public static List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
-        public static List<PingInstance> mvPings = new List<PingInstance>();
-        public static List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
-        public static int VehiclesRegistered = 0;
-        public static int VehiclesPrefabricated = 0;
-        public static Atlas.Sprite defaultPingSprite = null;
-        public static Sprite defaultSaveFileSprite = null;
-        public static Dictionary<TechType, int> defaultRecipe = new Dictionary<TechType, int>();
-        public static VFEngine defaultEngine = null;
-        public static bool isWorldLoaded = false;
+        public static readonly List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
+        public static readonly List<PingInstance> mvPings = new List<PingInstance>();
+        public static readonly List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
         public static PingType RegisterPingType(PingType pt)
         {
             return RegisterPingType(pt, false);
@@ -60,7 +53,7 @@ namespace VehicleFramework
         {
             VehiclesInPlay.Remove(mv);
         }
-        public static void SaveVehicles(object sender, JsonFileEventArgs e)
+        internal static void SaveVehicles(object sender, JsonFileEventArgs e)
         {
             SaveData data = e.Instance as SaveData;
             /* TODO
@@ -84,7 +77,7 @@ namespace VehicleFramework
             data.SubNames = SaveManager.SerializeSubName();
             data.HasVehicleTechTypes = SaveManager.SerializeHasVehicleTechTypes();
         }
-        public static IEnumerator LoadVehicle(ModVehicle mv)
+        private static IEnumerator LoadVehicle(ModVehicle mv)
         {
             while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {

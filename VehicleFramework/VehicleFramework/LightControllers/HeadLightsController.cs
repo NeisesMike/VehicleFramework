@@ -4,11 +4,16 @@ namespace VehicleFramework
 {
     public class HeadLightsController : BaseLightController
     {
+        private bool hasWarned = false;
         public bool isHeadlightsOn // this is just here because the Beluga was using it
         {
             get
             {
-                Logger.Warn("Getting HeadLightsController.isHeadlightsOn (deprecated). Please instead Get HeadLightsController.IsLightsOn!");
+                if (!hasWarned)
+                {
+                    Logger.Warn("Getting HeadLightsController.isHeadlightsOn (deprecated). Please instead Get HeadLightsController.IsLightsOn!");
+                    hasWarned = true;
+                }
                 return IsLightsOn;
             }
         }

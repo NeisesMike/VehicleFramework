@@ -14,7 +14,7 @@ namespace VehicleFramework.Patches
         {
             foreach (var ve in VehicleManager.vehicleTypes)
             {
-                if (ve.mv != null && ve.mv.SaveFileSprite != VehicleManager.defaultSaveFileSprite)
+                if (ve.mv != null && ve.mv.SaveFileSprite != Assets.StaticAssets.DefaultSaveFileSprite)
                 {
                     string techType = ve.techType.AsString();
                     GameObject imageObject = new GameObject(techType);

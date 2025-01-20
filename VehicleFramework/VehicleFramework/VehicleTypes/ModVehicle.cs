@@ -72,8 +72,8 @@ namespace VehicleFramework
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
-        public virtual Atlas.Sprite PingSprite => VehicleManager.defaultPingSprite;
-        public virtual Sprite SaveFileSprite => VehicleManager.defaultSaveFileSprite;
+        public virtual Atlas.Sprite PingSprite => Assets.StaticAssets.DefaultPingSprite;
+        public virtual Sprite SaveFileSprite => Assets.StaticAssets.DefaultSaveFileSprite; // I think I can use SpriteHelper.CreateSpriteFromAtlasSprite for this now. But do I want to?
         public virtual List<GameObject> WaterClipProxies => new List<GameObject>();
         public virtual List<VehicleParts.VehicleStorage> InnateStorages => new List<VehicleParts.VehicleStorage>();
         public virtual List<VehicleParts.VehicleStorage> ModularStorages => new List<VehicleParts.VehicleStorage>();
