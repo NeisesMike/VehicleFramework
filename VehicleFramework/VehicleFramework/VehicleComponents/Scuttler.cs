@@ -45,7 +45,7 @@ namespace VehicleFramework
             {
                 if (transform.position.y < (initialLandRayCast.y - 40)) // why 40?
                 {
-                    transform.position = initialLandRayCast + Vector3.up * 5f;
+                    transform.position = initialLandRayCast + Vector3.up * 25f;
                 }
                 Vector3 oldScuttle = RaycastDownToLand(transform);
                 Vector3 oldPosition = transform.position;
