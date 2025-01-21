@@ -98,16 +98,40 @@ namespace VehicleFramework
             {
                 if (Vector3.Distance(Player.main.transform.position, transform.position) > 10)
                 {
-                    mv.PlayerExit();
+                    MVExit();
                 }
             }
             else
             {
                 if (!bounds.Contains(Player.main.transform.position))
                 {
-                    mv.PlayerExit();
+                    MVExit();
                 }
             }
+        }
+        private void MVExit()
+        {
+            mv.StopPiloting();
+            mv.PlayerExit();
+
+            // the following block is just for the gargantuan leviathan
+            // that mod disables all vehicle colliders in GargantuanGrab.GrabVehicle
+            // but doesn't later re-enable them.
+            // I don't know why it rips the player out of its position anyways.
+            IEnumerator PleaseEnableColliders()
+            {
+                List<Collider> effectedColliders = mv.GetComponentsInChildren<Collider>(true)
+                    .Where(x => !x.enabled) // collisionModel is set active again
+                    .Where(x => x != mv.BoundingBoxCollider) // want this to remain disabled
+                    .ToList();
+                while (effectedColliders.Where(x => x.enabled).Count() == 0)
+                {
+                    yield return new WaitForSeconds(5);
+                    effectedColliders.ForEach(x => x.enabled = true);
+                    yield return new WaitForSeconds(5);
+                }
+            }
+            UWE.CoroutineHost.StartCoroutine(PleaseEnableColliders());
         }
 
         public void TryToEstablishLeash()

@@ -193,7 +193,6 @@ namespace VehicleFramework
                 PlayerExit();
             }
             DestroyMV();
-            PlayerEntry();
         }
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {

@@ -235,6 +235,16 @@ namespace VehicleFramework.VehicleTypes
             }
         }
 
+        public override void OnKill()
+        {
+            bool isplayerinthissub = isPlayerInside;
+            base.OnKill();
+            if (isplayerinthissub)
+            {
+                PlayerEntry();
+            }
+        }
+
         IEnumerator TrySpawnFabricator()
         {
             if(Fabricator == null)
