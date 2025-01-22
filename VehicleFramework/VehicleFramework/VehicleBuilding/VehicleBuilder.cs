@@ -844,6 +844,7 @@ namespace VehicleFramework
             SetupDealDamageOnImpact(mv);
             SetupDamageComponents(mv);
             SetupLavaLarvaAttachPoints(mv);
+            SetupDenyBuildingTags(mv);
             mv.collisionModel = mv.CollisionModel;
 
             if (mv as Submarine != null)
