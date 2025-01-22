@@ -65,7 +65,10 @@ namespace VehicleFramework.VehicleComponents
                 return;
             }
             UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
-            TryMagnets(true, CheckPlacement(), false);
+            if (!mv.docked)
+            {
+                TryMagnets(true, CheckPlacement(), false);
+            }
         }
         public IEnumerator FindStoreInfoIdentifier()
         {

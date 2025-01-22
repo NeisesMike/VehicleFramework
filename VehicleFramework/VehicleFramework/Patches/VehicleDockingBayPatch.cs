@@ -219,6 +219,19 @@ namespace VehicleFramework.Patches
             return IsThisDockable(__instance, nearby);
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(VehicleDockingBay.Start))]
+        public static void VehicleDockingBayStartPostfix(VehicleDockingBay __instance)
+        {
+            dockingBays.Add(__instance);
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(VehicleDockingBay.OnDestroy))]
+        public static void VehicleDockingBayOnDestroyPostfix(VehicleDockingBay __instance)
+        {
+            dockingBays.Remove(__instance);
+        }
+        public static List<VehicleDockingBay> dockingBays = new List<VehicleDockingBay>();
     }
 
 

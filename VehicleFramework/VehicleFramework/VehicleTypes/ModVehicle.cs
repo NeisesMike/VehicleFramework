@@ -504,7 +504,7 @@ namespace VehicleFramework
         public virtual void OnVehicleUndocked()
         {
             // The Moonpool invokes this once upon vehicle exit from the dock
-            if (!isScuttled)
+            if (!isScuttled && !Admin.ConsoleCommands.isUndockConsoleCommand)
             {
                 OnPlayerUndocked();
             }

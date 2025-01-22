@@ -5,8 +5,9 @@ using UnityEngine;
 
 namespace VehicleFramework.Admin
 {
-    internal class ConsoleCommands : MonoBehaviour
+	internal class ConsoleCommands : MonoBehaviour
 	{
+		internal static bool isUndockConsoleCommand = false; // hacky
 		public void Awake()
 		{
 			DevConsole.RegisterConsoleCommand(this, "givevfupgrades", false, false);
@@ -17,12 +18,13 @@ namespace VehicleFramework.Admin
 			DevConsole.RegisterConsoleCommand(this, "logvfvehicles", false, false);
 			DevConsole.RegisterConsoleCommand(this, "logvfvoices", false, false);
 			DevConsole.RegisterConsoleCommand(this, "vfspawncodes", false, false);
+			DevConsole.RegisterConsoleCommand(this, "undockclosest", false, false);
 		}
 		public void OnConsoleCommand_givevfupgrades(NotificationCenter.Notification _)
 		{
 			UpgradeRegistrar.UpgradeIcons
 				.Select(x => x.Key)
-				.Where(x=> UWE.Utils.TryParseEnum<TechType>(x, out TechType techType))
+				.Where(x => UWE.Utils.TryParseEnum<TechType>(x, out TechType techType))
 				.ForEach(x => DevConsole.instance.Submit("item " + x));
 		}
 		public void OnConsoleCommand_givevfseamothupgrades(NotificationCenter.Notification _)
@@ -63,16 +65,53 @@ namespace VehicleFramework.Admin
 			UWE.CoroutineHost.StartCoroutine(ListSpawnCodes());
 		}
 		private static IEnumerator ListSpawnCodes()
-        {
+		{
 			List<string> allCodes = new List<string>();
 			allCodes.AddRange(VehicleManager.vehicleTypes.Select(x => x.techType.AsString()));
 			allCodes.AddRange(UpgradeRegistrar.UpgradeIcons.Select(x => x.Key));
-			foreach(string code in allCodes)
-            {
+			foreach (string code in allCodes)
+			{
 				Logger.PDANote(code, 4f);
 				yield return new WaitForSeconds(0.3f);
-            }
+			}
 
+		}
+		public void OnConsoleCommand_undockclosest(NotificationCenter.Notification _)
+		{
+			void MaybeUndock(VehicleDockingBay dock)
+			{
+				if (dock.dockedVehicle != null)
+				{
+					Logger.PDANote("Undocking " + dock.dockedVehicle.subName.name + " from bay.");
+					isUndockConsoleCommand = true;
+					dock.dockedVehicle.Undock();
+					isUndockConsoleCommand = false;
+				}
+				else
+				{
+					Logger.PDANote("There was no vehicle docked in that bay.");
+				}
+			}
+
+			float distanceToPlayer = float.PositiveInfinity;
+			VehicleDockingBay closestBay = null;
+			foreach (var marty in Patches.VehicleDockingBayPatch.dockingBays.Where(x => x != null))
+			{
+				float thisDistance = Vector3.Distance(Player.main.transform.position, marty.transform.position);
+				if (thisDistance < distanceToPlayer)
+				{
+					closestBay = marty;
+					distanceToPlayer = thisDistance;
+				}
+			}
+			if (closestBay != null)
+			{
+				MaybeUndock(closestBay);
+			}
+			else
+			{
+				Logger.PDANote("There are no docking bays.");
+			}
 		}
 	}
 }
