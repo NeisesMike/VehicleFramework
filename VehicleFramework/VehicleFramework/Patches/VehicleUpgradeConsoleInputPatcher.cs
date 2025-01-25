@@ -25,7 +25,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.UpdateVisuals))]
         public static void UpdateVisualsPostfix(VehicleUpgradeConsoleInput __instance)
         {
-            if (__instance.GetComponentInParent<ModVehicle>() != null)
+            if (__instance.GetComponentInParent<ModVehicle>() != null && __instance.GetComponentInChildren<UpgradeProxy>() != null && __instance.GetComponentInChildren<UpgradeProxy>().slots != null)
             {
                 __instance.slots = __instance.GetComponentInChildren<UpgradeProxy>().slots.ToArray();
                 for (int i = 0; i < __instance.slots.Length; i++)
