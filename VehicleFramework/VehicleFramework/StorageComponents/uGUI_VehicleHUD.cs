@@ -10,19 +10,20 @@ namespace VehicleFramework
 	{
 		public GameObject droneHUD = null;
 		private bool IsStorageHUD()
-        {
+		{
 			return textStorage != null;
-        }
+		}
 		private bool HasMvStorage(ModVehicle mv)
-        {
+		{
 			return mv.InnateStorages != null || mv.ModularStorages != null;
 		}
 		private bool IsDrone()
 		{
 			return VehicleTypes.Drone.mountedDrone != null;
 		}
+
 		private void DeactivateAll()
-        {
+		{
 			root.SetActive(false);
 			droneHUD.SetActive(false);
 		}
@@ -75,18 +76,20 @@ namespace VehicleFramework
 		}
 		public void Update()
 		{
-			if(Player.main == null)
-            {
+			if (Player.main == null)
+			{
 				DeactivateAll();
 				return;
-            }
+			}
 			ModVehicle mv = Player.main.GetModVehicle();
 			PDA pda = Player.main.GetPDA();
-			if(ShouldIDie(mv, pda))
-            {
+			if (ShouldIDie(mv, pda))
+			{
 				DeactivateAll();
 				return;
-            }
+			}
+
+			root.transform.localPosition = Vector3.zero;
 
 			bool mvflag = !pda.isInUse;
 			bool droneflag = mvflag && (VehicleTypes.Drone.mountedDrone != null);
@@ -158,10 +161,10 @@ namespace VehicleFramework
 		}
 		public void UpdateStorage()
 		{
-			if(textStorage == null)
-            {
+			if (textStorage == null)
+			{
 				return;
-            }
+			}
 			Player.main.GetModVehicle().GetStorageValues(out int stored, out int capacity);
 			if (capacity > 0)
 			{

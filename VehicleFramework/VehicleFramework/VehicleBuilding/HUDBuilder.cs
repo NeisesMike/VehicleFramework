@@ -83,6 +83,13 @@ namespace VehicleFramework
             GameObject seamothHUDElementsRoot = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Seamoth").gameObject;
             GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
             mvHUDElementsRoot.name = "ModVehicle";
+            Vector3 offset = mvHUDElementsRoot.transform.localPosition;
+            mvHUDElementsRoot.transform.localPosition = Vector3.zero;
+
+            mvHUDElementsRoot.transform.Find("Background").localPosition = offset;
+            mvHUDElementsRoot.transform.Find("Health").localPosition = offset;
+            mvHUDElementsRoot.transform.Find("Power").localPosition = offset;
+            mvHUDElementsRoot.transform.Find("Temperature").localPosition = offset;
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
@@ -99,29 +106,33 @@ namespace VehicleFramework
             GameObject seamothHUDElementsRoot = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Seamoth").gameObject;
             GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
             mvHUDElementsRoot.name = "ModVehicleStorage";
+            Vector3 offset = mvHUDElementsRoot.transform.localPosition;
+            mvHUDElementsRoot.transform.localPosition = Vector3.zero;
+
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
             var healthObject = mvHUDElementsRoot.transform.Find("Health");
-            healthObject.localPosition = new Vector3(-56, -15, 0);
+            healthObject.localPosition = offset + new Vector3(-56, -15, 0);
             ret.textHealth = healthObject.GetComponent<TMPro.TextMeshProUGUI>();
 
             var powerObject = mvHUDElementsRoot.transform.Find("Power");
-            powerObject.localPosition = new Vector3(100, 8, 0);
+            powerObject.localPosition = offset + new Vector3(100, 8, 0);
             ret.textPower = powerObject.GetComponent<TMPro.TextMeshProUGUI>();
 
-            mvHUDElementsRoot.transform.Find("Temperature").localPosition = new Vector3(93, -58, 0);
+            mvHUDElementsRoot.transform.Find("Temperature").localPosition = offset + new Vector3(93, -58, 0);
             ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
 
             var modVehicleBackground = mvHUDElementsRoot.transform.Find("Background").GetComponent<UnityEngine.UI.Image>();
             modVehicleBackground.sprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFDroneHUDBackground.png");
             modVehicleBackground.transform.localScale = new Vector3(1, 1.238f, 1);
+            modVehicleBackground.transform.localPosition = offset;
 
             GameObject exoTemp = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Exosuit/Temperature").gameObject;
             GameObject storageCanvasObject = GameObject.Instantiate(exoTemp, mvHUDElementsRoot.transform);
             storageCanvasObject.name = "Storage";
-            storageCanvasObject.transform.localPosition = new Vector3(125, 65, 0);
+            storageCanvasObject.transform.localPosition = offset + new Vector3(125, 65, 0);
             storageCanvasObject.transform.Find("TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>().text = "<color=#FFDC00FF>%</color>";
             Transform storageTextObject = storageCanvasObject.transform.Find("TemperatureValue");
             storageTextObject.name = "StorageValue";
@@ -134,12 +145,13 @@ namespace VehicleFramework
             // copy the CameraScannerRoom hud for now
             GameObject cameraScannerRoomObj = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/CameraScannerRoom").gameObject;
             GameObject droneHUDElementsRoot = GameObject.Instantiate(cameraScannerRoomObj, hudRoot.transform);
+            droneHUDElementsRoot.transform.localPosition = Vector3.zero;
             droneHUDElementsRoot.name = "VFDrone";
 
             GameObject.Destroy(droneHUDElementsRoot.transform.Find("HealthBackground").gameObject);
             GameObject.Destroy(droneHUDElementsRoot.transform.Find("PingCanvas").gameObject);
             GameObject.Destroy(droneHUDElementsRoot.transform.Find("PowerBackground").gameObject);
-            droneHUDElementsRoot.transform.localPosition = new Vector3(-730.410f, 334.763f, 0f);
+            droneHUDElementsRoot.transform.localPosition = Vector3.zero;
             ret.droneHUD = droneHUDElementsRoot;
         }
         public static void BuildVRHUD(GameObject VRVehicleCanvas)
