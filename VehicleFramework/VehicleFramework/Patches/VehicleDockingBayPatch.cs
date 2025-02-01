@@ -89,11 +89,11 @@ namespace VehicleFramework.Patches
         public static bool IsThisVehicleSmallEnough(VehicleDockingBay bay, GameObject nearby)
         {
             ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(nearby.gameObject);
-            if (mv == null || Player.main.GetVehicle() != mv)
+            if (mv == null)
             {
                 return true;
             }
-            if (!mv.CanMoonpoolDock)
+            if (!mv.CanMoonpoolDock || mv.docked)
             {
                 return false;
             }

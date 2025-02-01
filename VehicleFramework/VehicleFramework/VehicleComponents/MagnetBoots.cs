@@ -17,7 +17,18 @@ namespace VehicleFramework.VehicleComponents
         }
         private ModVehicle mv => GetComponent<ModVehicle>();
         private Vector3 attachmentOffset = Vector3.zero;
-        private bool IsAttached = false;
+        private bool _isAttached = false;
+        public bool IsAttached
+        {
+            get
+            {
+                return _isAttached;
+            }
+            private set
+            {
+                _isAttached = value;
+            }
+        }
         private Transform attachedPlatform = null;
         public Action Attach = null;
         public Action Detach = null;
