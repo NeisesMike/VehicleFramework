@@ -26,14 +26,27 @@ namespace VehicleFramework.Assets
         }
         private static Atlas.Sprite GetSpriteGeneric(string fullPath)
         {
-            return new Atlas.Sprite(GetSpriteGenericRaw(fullPath));
+            Sprite innerSprite = GetSpriteGenericRaw(fullPath);
+            if (innerSprite != null)
+            {
+                return new Atlas.Sprite(innerSprite);
+            }
+            else return null;
         }
         private static Sprite GetSpriteGenericRaw(string fullPath)
         {
-            byte[] spriteBytes = System.IO.File.ReadAllBytes(fullPath);
-            Texture2D SpriteTexture = new Texture2D(128, 128);
-            SpriteTexture.LoadImage(spriteBytes);
-            return Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            try
+            {
+                byte[] spriteBytes = System.IO.File.ReadAllBytes(fullPath);
+                Texture2D SpriteTexture = new Texture2D(128, 128);
+                SpriteTexture.LoadImage(spriteBytes);
+                return Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            }
+            catch
+            {
+                Logger.Warn($"Could not find file {fullPath}. Returning null Sprite.");
+                return null;
+            }
         }
         public static Sprite CreateSpriteFromAtlasSprite(Atlas.Sprite sprite)
         {
