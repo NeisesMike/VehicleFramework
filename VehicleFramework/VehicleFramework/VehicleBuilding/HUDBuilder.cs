@@ -86,10 +86,10 @@ namespace VehicleFramework
             Vector3 offset = mvHUDElementsRoot.transform.localPosition;
             mvHUDElementsRoot.transform.localPosition = Vector3.zero;
 
-            mvHUDElementsRoot.transform.Find("Background").localPosition = offset;
-            mvHUDElementsRoot.transform.Find("Health").localPosition = offset;
-            mvHUDElementsRoot.transform.Find("Power").localPosition = offset;
-            mvHUDElementsRoot.transform.Find("Temperature").localPosition = offset;
+            mvHUDElementsRoot.transform.Find("Background").localPosition += offset;
+            mvHUDElementsRoot.transform.Find("Health").localPosition += offset;
+            mvHUDElementsRoot.transform.Find("Power").localPosition += offset;
+            mvHUDElementsRoot.transform.Find("Temperature").localPosition += offset;
 
             uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
