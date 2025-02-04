@@ -62,7 +62,7 @@ namespace VehicleFramework.Admin
         internal static void AddFabricatorMenus()
         {
             var vfIcon = SpriteHelper.GetSpriteInternal("VFUpgradesIcon.png") ?? StaticAssets.ModVehicleIcon;
-            var mvIcon = SpriteHelper.GetSpriteInternal("ModVehicleUpgradeIcon.png") ?? StaticAssets.ModVehicleIcon;
+            var mvIcon = StaticAssets.UpgradeIcon;
             var seamothIcon = SpriteManager.Get(TechType.Seamoth) ?? StaticAssets.ModVehicleIcon;
             var prawnIcon = SpriteManager.Get(TechType.Exosuit) ?? StaticAssets.ModVehicleIcon;
             var cyclopsIcon = SpriteManager.Get(TechType.Cyclops) ?? StaticAssets.ModVehicleIcon;
