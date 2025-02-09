@@ -190,6 +190,10 @@ namespace VehicleFramework
                     speaker.volume = balance * MainPatcher.VFConfig.aiVoiceVolume / 100f;
                     speaker.clip = clip;
                     speaker.Play();
+                    if (MainPatcher.VFConfig.isSubtitlesEnabled)
+                    {
+                        CreateSubtitle(clip);
+                    }
                 }
             }
         }
@@ -215,10 +219,88 @@ namespace VehicleFramework
         {
             enabled = false;
         }
-
         void IScuttleListener.OnUnscuttle()
         {
             enabled = true;
+        }
+        private void CreateSubtitle(AudioClip clip)
+        {
+            if(clip == null)
+            {
+                return;
+            }
+            if(clip == voice.BatteriesDepleted)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Batteries are depleted!");
+            }
+            else if (clip == voice.BatteriesNearlyEmpty)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Batteries are nearly depleted!");
+            }
+            else if (clip == voice.PowerLow)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Energy low!");
+            }
+            else if (clip == voice.EnginePoweringDown)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Engine powering down!");
+            }
+            else if (clip == voice.EnginePoweringUp)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Engine powering up!");
+            }
+            else if (clip == voice.Goodbye)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Goodbye.");
+            }
+            else if (clip == voice.HullFailureImminent)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Emergency! Hull is close to failure!");
+            }
+            else if (clip == voice.HullIntegrityCritical)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Hull integrity is critical!");
+            }
+            else if (clip == voice.HullIntegrityLow)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Hull integrity is low!");
+            }
+            else if (clip == voice.Leveling)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Leveling...");
+            }
+            else if (clip == voice.WelcomeAboard)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Welcome aboard, captain.");
+            }
+            else if (clip == voice.OxygenProductionOffline)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Emergency power only! Oyxgen production offline!");
+            }
+            else if (clip == voice.WelcomeAboardAllSystemsOnline)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Welcome aboard, captain. All systems online.");
+            }
+            else if (clip == voice.MaximumDepthReached)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Maximum depth reached! Hull damage imminent!");
+            }
+            else if (clip == voice.PassingSafeDepth)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Maximum depth is close!");
+            }
+            else if (clip == voice.LeviathanDetected)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Leviathan detected!");
+            }
+            else if (clip == voice.UhOh)
+            {
+                Logger.PDANote($"{mv.subName.hullName.text}: Uh oh!");
+            }
+            else
+            {
+                Logger.Warn($"Vehicle {mv.subName.hullName.text} with voice {name} did not recognize clip {clip.name}");
+            }
         }
     }
 }
