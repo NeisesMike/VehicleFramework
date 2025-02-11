@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx;
 using Nautilus.Crafting;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Utility;
 using UnityEngine;
-using Nautilus.Assets.PrefabTemplates;
 using Ingredient = CraftData.Ingredient;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
-using System.IO;
-using System.Reflection;
 
 namespace VehicleFramework
 {
@@ -43,15 +36,8 @@ namespace VehicleFramework
             prefab.SetGameObject(droneStation);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
             prefab.SetRecipe(new RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
-            if(MainPatcher.VFConfig.isFragmentExperience)
-            {
-                prefab.SetUnlock(TechType.Fragment)
-                    .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
-            }
-            else
-            {
-                prefab.SetUnlock(TechType.Constructor);
-            }
+            prefab.SetUnlock(TechType.Fragment)
+                .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
             prefab.Register();
             return Info.TechType;
         }

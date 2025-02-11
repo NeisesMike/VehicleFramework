@@ -45,8 +45,6 @@ namespace VehicleFramework
             }
         }
 
-
-
         public void PauseSpeakers(bool pause)
         {
             foreach (var sp in speakers)
@@ -141,13 +139,6 @@ namespace VehicleFramework
                 voice = inputVoice;
             }
         }
-        public void SetVoiceEnum(KnownVoices voiceName)
-        {
-            if (!blockVoiceChange)
-            {
-                voice = VoiceManager.GetVoice(VoiceManager.GetKnownVoice(voiceName));
-            }
-        }
         public void Update()
         {
             foreach (var speaker in speakers)
@@ -187,10 +178,10 @@ namespace VehicleFramework
             {
                 foreach(var speaker in speakers)
                 {
-                    speaker.volume = balance * MainPatcher.VFConfig.aiVoiceVolume / 100f;
+                    speaker.volume = balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value;
                     speaker.clip = clip;
                     speaker.Play();
-                    if (MainPatcher.VFConfig.isSubtitlesEnabled)
+                    if (MainPatcher.VFConfig.IsSubtitles.Value)
                     {
                         CreateSubtitle(clip);
                     }

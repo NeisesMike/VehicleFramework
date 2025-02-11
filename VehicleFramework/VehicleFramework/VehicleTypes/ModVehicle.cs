@@ -356,12 +356,12 @@ namespace VehicleFramework
             if (gameObject.GetComponentInChildren<VehicleComponents.MVCameraController>() != null)
             {
                 Logger.PDANote("Press " +
-                              MainPatcher.VFConfig.nextCamera +
+                              MainPatcher.VFConfig.NextCamera.Value.MainKey +
                               " and " +
-                              MainPatcher.VFConfig.previousCamera +
+                              MainPatcher.VFConfig.PreviousCamera.Value.MainKey +
                               " to switch cameras.\n" +
                               "Press " +
-                              MainPatcher.VFConfig.exitCamera +
+                              MainPatcher.VFConfig.ExitCamera.Value.MainKey +
                               " to exit cameras.");
             }
         }
@@ -1213,13 +1213,13 @@ namespace VehicleFramework
         private static string[] GenerateSlotIDs(int modules, bool arms)
         {
             string[] retIDs;
-            int numUpgradesTotal = (arms || MainPatcher.VFConfig.forceArmsCompat) ? (modules + 2) : modules;
+            int numUpgradesTotal = (arms || MainPatcher.VFConfig.ForceArmsCompat.Value) ? (modules + 2) : modules;
             retIDs = new string[numUpgradesTotal];
             for (int i = 0; i < modules; i++)
             {
                 retIDs[i] = ModuleBuilder.ModVehicleModulePrefix + i.ToString();
             }
-            if (arms || MainPatcher.VFConfig.forceArmsCompat)
+            if (arms || MainPatcher.VFConfig.ForceArmsCompat.Value)
             {
                 retIDs[modules] = ModuleBuilder.LeftArmSlotName;
                 retIDs[modules + 1] = ModuleBuilder.RightArmSlotName;

@@ -14,11 +14,17 @@ namespace VehicleFramework
     [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, "1.0.0.32")]
     public class MainPatcher : BaseUnityPlugin
     {
-        internal static VehicleFrameworkConfig VFConfig { get; private set; }
+        public static MainPatcher Instance { get; private set; }
         internal static SaveData VehicleSaveData { get; private set; }
         public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
+
+        internal static VFConfig VFConfig { get; private set; }
+
         public void Awake()
         {
+            SetupInstance();
+            VFConfig = new VFConfig();
+            VFConfig.SetupGeneral(Config);
             VehicleFramework.Logger.MyLog = base.Logger;
             PrePatch();
         }
@@ -30,7 +36,6 @@ namespace VehicleFramework
         public void PrePatch()
         {
             Assets.StaticAssets.SetupDefaultAssets();
-            VFConfig = OptionsPanelHandler.RegisterModOptions<VehicleFrameworkConfig>();
             IEnumerator CollectPrefabsForBuilderReference()
             {
                 CoroutineTask<GameObject> request = CraftData.GetPrefabForTechTypeAsync(TechType.BaseUpgradeConsole, true);
@@ -142,6 +147,19 @@ namespace VehicleFramework
         public void PostPatch()
         {
             //VehicleBuilder.ScatterDataBoxes(craftables);
+        }
+        private void SetupInstance()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                return;
+            }
+            if (Instance != this)
+            {
+                UnityEngine.Object.Destroy(this);
+                return;
+            }
         }
     }
 }

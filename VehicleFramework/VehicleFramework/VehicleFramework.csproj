@@ -144,7 +144,6 @@
     <Compile Include="Assets\SpriteHelper.cs" />
     <Compile Include="Assets\StaticAssets.cs" />
     <Compile Include="Assets\VanillaVehicleHelpers.cs" />
-    <Compile Include="Config.cs" />
     <Compile Include="DepthModules\DepthModule3.cs" />
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />
@@ -156,6 +155,7 @@
     <Compile Include="LightControllers\VolumetricLightController.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="VFConfig.cs" />
     <Compile Include="Patches\UpgradeConsolePatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SilencePatcher.cs" />
     <Compile Include="Patches\Core\DroneTranspilerHelper.cs" />

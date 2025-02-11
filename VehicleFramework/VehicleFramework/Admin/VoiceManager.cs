@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Reflection;
@@ -11,17 +9,6 @@ using System.IO;
 
 namespace VehicleFramework
 {
-    public enum KnownVoices
-    {
-        // Only add new items to the end of this list
-        // That way, dependent mods won't get bamboozled
-        ShirubaFoxy,
-        Airon,
-        Chelse,
-        Mikjaw,
-        Turtle,
-        Salli
-    }
     public class VehicleVoice
     {
         public AudioClip BatteriesDepleted;
@@ -75,7 +62,7 @@ namespace VehicleFramework
         {
             try
             {
-                defaultVoices.Add(mv.vehicleDefaultName, voice);
+                defaultVoices.Add(mv.TechType, voice);
             }
             catch (ArgumentException e)
             {
@@ -85,10 +72,6 @@ namespace VehicleFramework
             {
                 Logger.Error("Failed to register a default voice: " + e.Message);
             }
-        }
-        public static void RegisterDefaultVoice(this ModVehicle mv, KnownVoices voice)
-        {
-            RegisterDefaultVoice(mv, GetKnownVoice(voice));
         }
         public static IEnumerator RegisterVoice(string name, string conventionalPath = "")
         {
@@ -149,12 +132,6 @@ namespace VehicleFramework
         {
             Logger.Log("Voices available:");
             vehicleVoices.Select(x => x.Key).ForEach(x => Logger.Log(x));
-            /*
-            foreach (var but in voices)
-            {
-                Logger.Log(but.name);
-            }
-            */
         }
         #endregion
 
@@ -179,9 +156,9 @@ namespace VehicleFramework
             "UhOh"
         };
         // voice names : voices
-        private static Dictionary<string, VehicleVoice> vehicleVoices = new Dictionary<string, VehicleVoice>();
+        internal static Dictionary<string, VehicleVoice> vehicleVoices = new Dictionary<string, VehicleVoice>();
         // vehicle names : voice names
-        private static Dictionary<string, string> defaultVoices = new Dictionary<string, string>();
+        private static Dictionary<TechType, string> defaultVoices = new Dictionary<TechType, string>();
         private static void RegisterVoice(string name, VehicleVoice voice)
         {
             RegisterVoice(name, voice, false);
@@ -209,7 +186,7 @@ namespace VehicleFramework
             string defaultOption = "";
             try
             {
-                defaultOption = defaultVoices[mv.vehicleDefaultName];
+                defaultOption = defaultVoices[mv.TechType];
             }
             catch (KeyNotFoundException e)
             {
@@ -245,17 +222,28 @@ namespace VehicleFramework
             }
 
         exit:
-            return GetVoice(MainPatcher.VFConfig.voiceChoice);
+            return GetVoice(VehicleConfig.GetConfig(mv).AutopilotVoice.Value);
+        }
+        internal static void UpdateDefaultVoice(ModVehicle mv, string voice)
+        {
+            if (defaultVoices.ContainsKey(mv.TechType))
+            {
+                defaultVoices[mv.TechType] = voice;
+            }
+            else
+            {
+                defaultVoices.Add(mv.TechType, voice);
+            }
         }
         internal static IEnumerator LoadAllVoices()
         {
             GetSilence();
-            yield return RegisterVoice(GetKnownVoice(KnownVoices.ShirubaFoxy));
-            yield return RegisterVoice(GetKnownVoice(KnownVoices.Chelse));
-            yield return RegisterVoice(GetKnownVoice(KnownVoices.Airon));
-            yield return RegisterVoice(GetKnownVoice(KnownVoices.Mikjaw));
-            yield return RegisterVoice(GetKnownVoice(KnownVoices.Salli));
-            yield return RegisterVoice(GetKnownVoice(KnownVoices.Turtle));
+            yield return RegisterVoice("ShirubaFoxy");
+            yield return RegisterVoice("Airon");
+            yield return RegisterVoice("Chels-E");
+            yield return RegisterVoice("Mikjaw");
+            yield return RegisterVoice("Turtle");
+            yield return RegisterVoice("Salli");
         }
         internal static IEnumerator GetSilence()
         {
@@ -361,27 +349,6 @@ namespace VehicleFramework
                     }
                 }
             }
-        }
-        internal static string GetKnownVoice(KnownVoices name)
-        {
-            switch (name)
-            {
-                case KnownVoices.ShirubaFoxy:
-                    return "ShirubaFoxy";
-                case KnownVoices.Airon:
-                    return "Airon";
-                case KnownVoices.Chelse:
-                    return "Chels-E";
-                case KnownVoices.Mikjaw:
-                    return "Mikjaw";
-                case KnownVoices.Turtle:
-                    return "Turtle";
-                case KnownVoices.Salli:
-                    return "Salli";
-                default:
-                    break;
-            }
-            return "The KnownVoices enum is likely outdated";
         }
         #endregion
     }

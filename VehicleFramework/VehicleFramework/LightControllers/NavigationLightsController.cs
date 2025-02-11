@@ -187,13 +187,13 @@ namespace VehicleFramework
             switch (lc)
             {
                 case LightClass.WhiteStrobes:
-                    if (MainPatcher.VFConfig.isFlashingLightsEnabled && white == null)
+                    if (MainPatcher.VFConfig.IsFlashingLights.Value && white == null)
                     {
                         white = UWE.CoroutineHost.StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
-                    if (MainPatcher.VFConfig.isFlashingLightsEnabled && red == null)
+                    if (MainPatcher.VFConfig.IsFlashingLights.Value && red == null)
                     {
                         red = UWE.CoroutineHost.StartCoroutine(Strobe(LightClass.RedStrobes));
                     }

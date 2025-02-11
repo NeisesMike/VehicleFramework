@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using TMPro;
 
 
@@ -8,6 +6,11 @@ namespace VehicleFramework
 {
 	public class uGUI_VehicleHUD : MonoBehaviour
 	{
+		public enum HUDChoice
+        {
+			Normal,
+			Storage
+        }
 		public GameObject droneHUD = null;
 		private bool IsStorageHUD()
 		{
@@ -16,10 +19,6 @@ namespace VehicleFramework
 		private bool HasMvStorage(ModVehicle mv)
 		{
 			return mv.InnateStorages != null || mv.ModularStorages != null;
-		}
-		private bool IsDrone()
-		{
-			return VehicleTypes.Drone.mountedDrone != null;
 		}
 
 		private void DeactivateAll()
@@ -35,46 +34,43 @@ namespace VehicleFramework
 				// or if PDA isn't available
 				return true;
 			}
-			if (IsStorageHUD())
-			{
-				if (!HasMvStorage(mv))
+
+            if (IsStorageHUD())
+            {
+                if (HasMvStorage(mv))
 				{
-					return true;
-				}
-				switch (MainPatcher.VFConfig.storageHudChoice)
-				{
-					case VehicleFrameworkConfig.StorageAll:
-						return false;
-					case VehicleFrameworkConfig.StorageDrone:
-						return !IsDrone();
-					case VehicleFrameworkConfig.StorageNone:
-						return true;
-					default:
-						Logger.Warn("Unknown Storage HUD Choice!");
-						return true;
-				}
-			}
-			else
-			{
-				if (HasMvStorage(mv))
-				{
-					switch (MainPatcher.VFConfig.storageHudChoice)
+					switch (VehicleConfig.GetConfig(mv).HUDChoice.Value)
 					{
-						case VehicleFrameworkConfig.StorageAll:
+						case HUDChoice.Normal:
+							// I'm the storage HUD, and I can be displayed, but the user wants the normal HUD. I should die.
 							return true;
-						case VehicleFrameworkConfig.StorageDrone:
-							return IsDrone();
-						case VehicleFrameworkConfig.StorageNone:
+						case HUDChoice.Storage:
+							// I'm the storage HUD, and I can be displayed, and the user wants me. I should live.
 							return false;
-						default:
-							Logger.Warn("Unknown Storage HUD Choice!");
-							return true;
 					}
 				}
-				return false;
+                else
+				{
+					// I'm the storage HUD, but I can't be displayed. I should die.
+					return true;
+				}
+            }
+            else
+			{
+				switch (VehicleConfig.GetConfig(mv).HUDChoice.Value)
+				{
+					case HUDChoice.Normal:
+						// I'm the normal HUD, and the user wants me. I should live
+						return false;
+					case HUDChoice.Storage:
+						// I'm the normal HUD, but the user wants storage. I should die if it is available.
+						return HasMvStorage(mv);
+				}
 			}
+
+			return true;
 		}
-		public void Update()
+        public void Update()
 		{
 			if (Player.main == null)
 			{
@@ -196,5 +192,5 @@ namespace VehicleFramework
 		public float temperatureVelocity;
 		[AssertLocalization]
 		public const string thermometerFormatKey = "ThermometerFormat";
-	}
+    }
 }

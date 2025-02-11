@@ -23,7 +23,7 @@ namespace VehicleFramework
         }
         public static void DebugLog(string message)
         {
-            if (MainPatcher.VFConfig.isDebugLogging)
+            if (MainPatcher.VFConfig.IsDebugLogging.Value)
             {
                 MyLog.LogInfo("[VehicleFramework] " + message);
             }

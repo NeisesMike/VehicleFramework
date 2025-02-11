@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Reflection;
@@ -12,12 +10,6 @@ using VehicleFramework.Engines;
 
 namespace VehicleFramework
 {
-    public enum KnownEngineSounds
-    {
-        // Only add new items to the end of this list
-        // That way, dependent mods won't get bamboozled
-        ShirubaFoxy
-    }
     public class EngineSounds
     {
         public AudioClip hum;
@@ -25,13 +17,13 @@ namespace VehicleFramework
     }
     public static class EngineSoundsManager
     {
-        public static List<ModVehicleEngine> engines = new List<ModVehicleEngine>();
+        internal static List<ModVehicleEngine> engines = new List<ModVehicleEngine>();
         // EngineSounds names : EngineSounds
-        private static Dictionary<string, EngineSounds> EngineSoundss = new Dictionary<string, EngineSounds>();
+        internal static Dictionary<string, EngineSounds> EngineSoundss = new Dictionary<string, EngineSounds>();
         // vehicle names : EngineSounds names
-        private static Dictionary<string, string> defaultEngineSounds = new Dictionary<string, string>();
+        internal static Dictionary<TechType, string> defaultEngineSounds = new Dictionary<TechType, string>();
         public static EngineSounds silentVoice = new EngineSounds();
-        public static void RegisterVoice(string name, EngineSounds voice)
+        public static void RegisterEngineSounds(string name, EngineSounds voice)
         {
             try
             {
@@ -49,12 +41,12 @@ namespace VehicleFramework
             }
             Logger.Log("Successfully registered engine-sounds: " + name);
         }
-        public static IEnumerator RegisterVoice(string name, string voicepath="")
+        public static IEnumerator RegisterEngineSounds(string name, string voicepath="")
         {
             yield return LoadEngineSoundClips(name, EngineSounds =>
             {
                 // Once the voice is loaded, store it in the dictionary
-                RegisterVoice(name, EngineSounds);
+                RegisterEngineSounds(name, EngineSounds);
             }, voicepath);
         }
         public static EngineSounds GetVoice(string name)
@@ -81,7 +73,7 @@ namespace VehicleFramework
         {
             try
             {
-                defaultEngineSounds.Add(mv.name, voice);
+                defaultEngineSounds.Add(mv.TechType, voice);
             }
             catch (ArgumentException e)
             {
@@ -92,28 +84,35 @@ namespace VehicleFramework
                 Logger.Error("Failed to register a default engine-sounds: " + e.Message);
             }
         }
-        public static void RegisterDefault(ModVehicle mv, KnownEngineSounds voice)
+        internal static void UpdateDefaultVoice(ModVehicle mv, string voice)
         {
-            RegisterDefault(mv, GetKnownVoice(voice));
+            if (defaultEngineSounds.ContainsKey(mv.TechType))
+            {
+                defaultEngineSounds[mv.TechType] = voice;
+            }
+            else
+            {
+                defaultEngineSounds.Add(mv.TechType, voice);
+            }
         }
         public static EngineSounds GetDefaultVoice(ModVehicle mv)
         {
             try
             {
-                return EngineSoundss[defaultEngineSounds[mv.name]];
+                return EngineSoundss[defaultEngineSounds[mv.TechType]];
             }
             catch(Exception e)
             {
                 Logger.Warn("No default engine sounds for vehicle type: " + mv.name + ". Using Shiruba. " + e.Message);
-                return GetVoice(GetKnownVoice(KnownEngineSounds.ShirubaFoxy));
+                return EngineSoundss.First().Value;
             }
         }
-        public static IEnumerator LoadAllVoices()
+        internal static IEnumerator LoadAllVoices()
         {
             GetSilence();
-            yield return RegisterVoice(GetKnownVoice(KnownEngineSounds.ShirubaFoxy));
+            yield return RegisterEngineSounds("ShirubaFoxy");
         }
-        public static IEnumerator GetSilence()
+        private static IEnumerator GetSilence()
         {
             while(VoiceManager.silence == null)
             {
@@ -124,11 +123,10 @@ namespace VehicleFramework
                 hum = VoiceManager.silence,
                 whistle = VoiceManager.silence,
             };
-
             yield break;
         }
         // Method signature with a callback to return the EngineSounds instance
-        public static IEnumerator LoadEngineSoundClips(string voice, Action<EngineSounds> onComplete, string voicepath)
+        private static IEnumerator LoadEngineSoundClips(string voice, Action<EngineSounds> onComplete, string voicepath)
         {
             EngineSounds returnVoice = new EngineSounds();
             
@@ -193,17 +191,6 @@ namespace VehicleFramework
                     }
                 }
             }
-        }
-        public static string GetKnownVoice(KnownEngineSounds name)
-        {
-            switch (name)
-            {
-                case KnownEngineSounds.ShirubaFoxy:
-                    return "ShirubaFoxy";
-                default:
-                    break;
-            }
-            return "The KnownEngineSounds enum is likely outdated";
         }
     }
 }

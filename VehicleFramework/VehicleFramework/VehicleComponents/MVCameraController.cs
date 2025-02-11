@@ -91,20 +91,20 @@ namespace VehicleFramework.VehicleComponents
         }
         private void ScanInput()
         {
-            if(DevConsole.instance.state)
+            if (DevConsole.instance.state)
             {
                 return;
             }
             int currentIndex = cameras.Keys.ToList().IndexOf(state);
-            if (Input.GetKeyDown(MainPatcher.VFConfig.nextCamera))
+            if (GameInput.GetKeyDown(MainPatcher.VFConfig.NextCamera.Value.MainKey))
             {
                 currentIndex++;
             }
-            else if (Input.GetKeyDown(MainPatcher.VFConfig.previousCamera))
+            else if (GameInput.GetKeyDown(MainPatcher.VFConfig.PreviousCamera.Value.MainKey))
             {
                 currentIndex--;
             }
-            else if (Input.GetKeyDown(MainPatcher.VFConfig.exitCamera))
+            else if (GameInput.GetKeyDown(MainPatcher.VFConfig.ExitCamera.Value.MainKey))
             {
                 SetState(playerCameraState);
                 return;

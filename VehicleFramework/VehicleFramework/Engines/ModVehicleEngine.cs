@@ -379,7 +379,8 @@ namespace VehicleFramework.Engines
         }
         protected virtual void PlayEngineHum()
         {
-            EngineSource1.volume = EngineHum / 10f * (MainPatcher.VFConfig.engineVolume / 100) * HumFactor;
+            float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value;
+            EngineSource1.volume = EngineHum / 10f * configVolume * HumFactor;
             if (MV.IsPowered())
             {
                 if (!EngineSource1.isPlaying && RB.velocity.magnitude > 0.2f) // why 0.2f ?
@@ -413,7 +414,8 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    EngineSource2.volume = (MainPatcher.VFConfig.engineVolume / 100f) * 0.4f * WhistleFactor;
+                    float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value;
+                    EngineSource2.volume = configVolume * 0.4f * WhistleFactor;
                     EngineSource2.Play();
                 }
             }
@@ -461,18 +463,11 @@ namespace VehicleFramework.Engines
             float timeToZStop = Mathf.Log(0.05f * FORWARD_TOP_SPEED / ForwardMomentum) / (Mathf.Log(.25f));
             return Mathf.Max(timeToXStop,timeToYStop,timeToZStop);
         }
-        public void SetVoice(EngineSounds inputVoice)
+        public void SetEngineSounds(EngineSounds inputVoice)
         {
             if (!blockVoiceChange)
             {
                 sounds = inputVoice;
-            }
-        }
-        public void SetVoice(KnownEngineSounds voiceName)
-        {
-            if (!blockVoiceChange)
-            {
-                sounds = EngineSoundsManager.GetVoice(EngineSoundsManager.GetKnownVoice(voiceName));
             }
         }
         #endregion

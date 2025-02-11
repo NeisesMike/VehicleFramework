@@ -120,6 +120,8 @@ namespace VehicleFramework
                 mv.gameObject.SetActive(true);
 
                 Logger.Log("Finished " + mv.gameObject.name + " registration.");
+
+                VFConfig.Setup(mv);
             }
             BuildableDroneStation.TryRegister(mv);
             yield break;

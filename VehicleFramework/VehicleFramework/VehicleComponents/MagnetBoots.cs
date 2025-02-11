@@ -102,7 +102,7 @@ namespace VehicleFramework.VehicleComponents
         public bool CheckControls()
         {
             return mv.IsPlayerControlling()
-                && GameInput.GetKeyDown(MainPatcher.VFConfig.magnetBoots);
+                && GameInput.GetKeyDown(MainPatcher.VFConfig.MagnetBootsButton.Value.MainKey);
         }
         public MagnetStruct CheckPlacement()
         {
