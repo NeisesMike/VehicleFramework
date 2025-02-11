@@ -1,0 +1,72 @@
+﻿using HarmonyLib;
+using UnityEngine;
+using System.Collections;
+
+namespace VehicleFramework.Patches
+{
+	public class VFUpgradesListener : MonoBehaviour
+	{
+		private UpgradeConsole UpgradeConsole => GetComponent<UpgradeConsole>();
+		private SubRoot Subroot => GetComponentInParent<SubRoot>();
+		private int GetSlotNumber(string slot)
+		{
+			for (int i = 0; i < UpgradeConsole.modules.equipment.Count; i++)
+			{
+				try
+				{
+					if (slot == SubRoot.slotNames[i])
+					{
+						return i;
+					}
+				}
+				catch
+				{
+					Logger.Warn("Cyclops Upgrades Error: Didn't know about Cyclops Upgrade Slot Name for Slot #" + i.ToString());
+				}
+			}
+			return -1;
+		}
+		public void OnSlotEquipped(string slot, InventoryItem item)
+		{
+			if (item.techType != TechType.None)
+			{
+				UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+				{
+					cyclops = Subroot,
+					slotID = GetSlotNumber(slot),
+					techType = item.techType,
+					isAdded = true
+				};
+				VehicleFramework.Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
+				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
+			}
+		}
+		public void OnSlotUnequipped(string slot, InventoryItem item)
+		{
+			if (item.techType != TechType.None)
+			{
+				UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+				{
+					cyclops = Subroot,
+					slotID = GetSlotNumber(slot),
+					techType = item.techType,
+					isAdded = false
+				};
+				VehicleFramework.Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
+				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
+			}
+		}
+	}
+    [HarmonyPatch(typeof(UpgradeConsole))]
+    public class UpgradeConsolePatcher
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(UpgradeConsole.Awake))]
+        public static void UpgradeConsoleAwakeHarmonyPostfix(UpgradeConsole __instance)
+        {
+			var listener = __instance.gameObject.AddComponent<VFUpgradesListener>();
+            __instance.modules.onEquip += listener.OnSlotEquipped;
+            __instance.modules.onUnequip += listener.OnSlotUnequipped;
+        }
+    }
+}

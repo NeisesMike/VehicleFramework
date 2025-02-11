@@ -156,10 +156,10 @@
     <Compile Include="LightControllers\VolumetricLightController.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\UpgradeConsolePatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SilencePatcher.cs" />
     <Compile Include="Patches\Core\DroneTranspilerHelper.cs" />
     <Compile Include="Patches\SubNamePatcher.cs" />
-    <Compile Include="Patches\CyclopsUpgradesPatcher.cs" />
     <Compile Include="Patches\FreecamControllerPatcher.cs" />
     <Compile Include="Patches\PingInstancePatcher.cs" />
     <Compile Include="Patches\SaveLoadManagerPatcher.cs" />

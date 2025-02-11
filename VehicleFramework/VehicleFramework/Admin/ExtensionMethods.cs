@@ -24,7 +24,13 @@ namespace VehicleFramework
         }
         public static List<string> GetCurrentUpgrades(this SubRoot subroot)
         {
-            return subroot.upgradeConsole.modules.equipment.Select(x => x.Value).Where(x => x != null && x.item != null).Select(x => x.item.name).ToList();
+            IEnumerable<string> upgrades = new List<string>();
+            foreach(UpgradeConsole upgradeConsole in subroot.GetComponentsInChildren<UpgradeConsole>(true))
+            {
+                IEnumerable<string> theseUpgrades = upgradeConsole.modules.equipment.Select(x => x.Value).Where(x => x != null && x.item != null).Select(x => x.item.name).Where(x => x != string.Empty);
+                upgrades = upgrades.Concat(theseUpgrades);
+            }
+            return upgrades.ToList();
         }
         public static AudioSource Register(this AudioSource source)
         {
