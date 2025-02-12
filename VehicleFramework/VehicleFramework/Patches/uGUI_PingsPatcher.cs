@@ -15,31 +15,20 @@ namespace VehicleFramework
          * This transpiler ensure our ping sprites are used properly by the base-game systems,
          * so that we may display our custom ping sprites on the HUD
          */
+        [HarmonyTranspiler]
         [HarmonyPatch(nameof(uGUI_Pings.OnAdd))]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> uGUI_PingsOnAddTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
-            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count);
-            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                newCodes.Add(myNOP);
-            }
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Callvirt)
-                {
-                    if (codes[i].operand.ToString() == "System.String Get(PingType)")
-                    {
-                        newCodes[i] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeString));
-                        newCodes[i + 1] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeSprite));
-                        i++;
-                        continue;
-                    }
-                }
-                newCodes[i] = codes[i];
-            }
-            return newCodes.AsEnumerable();
+            CodeMatch GetPingTypeMatch = new CodeMatch(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("System.String Get(PingType)"));
+            var newInstructions = new CodeMatcher(instructions)
+                .MatchStartForward(GetPingTypeMatch)
+                .Repeat(x =>
+                    x.RemoveInstruction()
+                    .InsertAndAdvance(Transpilers.EmitDelegate<Func<CachedEnumString<PingType>, PingType, string>>(VehicleBuilder.GetPingTypeString))
+                    .RemoveInstruction()
+                    .Insert(Transpilers.EmitDelegate<Func<SpriteManager.Group, string, Atlas.Sprite>>(VehicleBuilder.GetPingTypeSprite))
+                );
+            return newInstructions.InstructionEnumeration();
         }
     }
 }
