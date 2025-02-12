@@ -146,6 +146,11 @@ namespace VehicleFramework
             VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
             Upgrades.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
+            var warpChipThing = GetComponent("TelePingVehicleInstance");
+            if(warpChipThing != null)
+            {
+                Component.DestroyImmediate(warpChipThing);
+            }
         }
         public override void Start()
         {
