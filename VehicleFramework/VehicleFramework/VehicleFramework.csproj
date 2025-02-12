@@ -144,6 +144,7 @@
     <Compile Include="Assets\SpriteHelper.cs" />
     <Compile Include="Assets\StaticAssets.cs" />
     <Compile Include="Assets\VanillaVehicleHelpers.cs" />
+    <Compile Include="CompatChecker.cs" />
     <Compile Include="DepthModules\DepthModule3.cs" />
     <Compile Include="DepthModules\DepthModule2.cs" />
     <Compile Include="DepthModules\DepthModule1.cs" />

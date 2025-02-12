@@ -32,6 +32,7 @@ namespace VehicleFramework
         {
             Patch();
             PostPatch();
+            CompatChecker.CheckAll();
         }
         public void PrePatch()
         {
