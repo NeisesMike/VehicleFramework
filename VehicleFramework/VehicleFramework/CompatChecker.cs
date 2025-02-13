@@ -4,6 +4,7 @@ using BepInEx.Bootstrap;
 using System.Linq;
 using System.Collections;
 using UnityEngine;
+using System;
 
 namespace VehicleFramework
 {
@@ -36,8 +37,29 @@ namespace VehicleFramework
             {
                 yield return null;
             }
+            CheckForNautilusUpdate();
+            CheckForBepInExPackUpdate();
             CheckForFlareDurationIndicator();
         }
+
+        private static void CheckForBepInExPackUpdate()
+        {
+            Version target = new Version("1.0.2.0");
+            if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler.Plugin"].Metadata.Version.CompareTo(target) < 0)
+            {
+                ShowWarning("There is a BepInEx Pack update available!");
+            }
+        }
+
+        private static void CheckForNautilusUpdate()
+        {
+            Version target = new Version(Nautilus.PluginInfo.PLUGIN_VERSION);
+            if (Chainloader.PluginInfos[Nautilus.PluginInfo.PLUGIN_GUID].Metadata.Version.CompareTo(target) < 0)
+            {
+                ShowWarning("There is a Nautilus update available!");
+            }
+        }
+
         internal static void CheckForFlareDurationIndicator()
         {
             if (Chainloader.PluginInfos.ContainsKey("com.ramune.FlareDurationIndicator"))
