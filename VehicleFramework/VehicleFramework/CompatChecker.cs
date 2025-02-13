@@ -44,8 +44,8 @@ namespace VehicleFramework
 
         private static void CheckForBepInExPackUpdate()
         {
-            Version target = new Version("1.0.2.0");
-            if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler.Plugin"].Metadata.Version.CompareTo(target) < 0)
+            Version target = new Version("1.0.2");
+            if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler"].Metadata.Version.CompareTo(target) < 0)
             {
                 ShowWarning("There is a BepInEx Pack update available!");
             }
