@@ -11,9 +11,13 @@ namespace VehicleFramework
         internal static Dictionary<string, VehicleConfig> main = new Dictionary<string, VehicleConfig>();
         internal static VehicleConfig GetConfig(ModVehicle mv)
         {
+            if (!main.ContainsKey(mv.GetType().ToString()))
+            {
+                AddNew(mv);
+            }
             return main[mv.GetType().ToString()];
         }
-        internal static VehicleConfig AddNew(ModVehicle mv)
+        private static VehicleConfig AddNew(ModVehicle mv)
         {
             var thisConf = new VehicleConfig();
             main.Add(mv.GetType().ToString(), thisConf);
@@ -25,6 +29,9 @@ namespace VehicleFramework
         internal ConfigEntry<string> AutopilotVoice { get; set; }
         internal ConfigEntry<string> EngineSounds { get; set; }
         internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; }
+        internal List<ConfigEntry<bool>> ExternalToggles = new List<ConfigEntry<bool>>();
+        internal List<ConfigEntry<float>> ExternalSliders = new List<ConfigEntry<float>>();
+        internal List<ConfigEntry<KeyboardShortcut>> ExternalKeybinds = new List<ConfigEntry<KeyboardShortcut>>();
     }
     internal class VFConfig
     {
@@ -56,7 +63,7 @@ namespace VehicleFramework
         internal static void Setup(ModVehicle mv)
         {
             config = MainPatcher.Instance.Config;
-            var vConf = VehicleConfig.AddNew(mv);
+            var vConf = VehicleConfig.GetConfig(mv);
             string vehicleName = mv.GetType().ToString();
             vConf.AutopilotVolume = config.Bind<float>(vehicleName, "Autopilot Volume", 0.5f, new ConfigDescription("How loud is the autopilot voice", new AcceptableValueRange<float>(0, 1)));
             vConf.EngineVolume = config.Bind<float>(vehicleName, "Engine Volume", 0.5f, new ConfigDescription("How loud are the engine sounds", new AcceptableValueRange<float>(0, 1)));
@@ -68,6 +75,10 @@ namespace VehicleFramework
             vConf.EngineSounds.SettingChanged += GrabNewEngineSounds;
 
             vConf.HUDChoice = config.Bind<uGUI_VehicleHUD.HUDChoice>(vehicleName, "HUD Choice", uGUI_VehicleHUD.HUDChoice.Storage, "Choose a HUD option for this vehicle");
+
+            Admin.ExternalVehicleConfig<bool>.GetModVehicleConfig(mv.name);
+            Admin.ExternalVehicleConfig<float>.GetModVehicleConfig(mv.name);
+            Admin.ExternalVehicleConfig<KeyboardShortcut>.GetModVehicleConfig(mv.name);
         }
 
         internal static void SetupGeneral(ConfigFile config)
