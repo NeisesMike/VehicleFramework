@@ -955,6 +955,13 @@ namespace VehicleFramework
                     return ve.name;
                 }
             }
+            foreach (var pair in Assets.SpriteHelper.PingSprites)
+            {
+                if (pair.Item2 == inputType)
+                {
+                    return pair.Item1;
+                }
+            }
             return PingManager.sCachedPingTypeStrings.Get(inputType);
         }
         public static Atlas.Sprite GetPingTypeSprite(SpriteManager.Group group, string name)
@@ -964,6 +971,13 @@ namespace VehicleFramework
                 if (ve.name == name)
                 {
                     return ve.ping_sprite;
+                }
+            }
+            foreach(var pair in Assets.SpriteHelper.PingSprites)
+            {
+                if(pair.Item1 == name)
+                {
+                    return pair.Item3;
                 }
             }
             return SpriteManager.Get(SpriteManager.Group.Pings, name);

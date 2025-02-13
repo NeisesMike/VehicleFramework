@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace VehicleFramework.Assets
 {
@@ -52,6 +53,12 @@ namespace VehicleFramework.Assets
         {
             Texture2D texture = sprite.texture;
             return Sprite.Create(texture, new Rect(0f, 0f, (float)texture.width, (float)texture.height), Vector2.one * 0.5f);
+        }
+
+        internal static readonly List<(string, PingType, Atlas.Sprite)> PingSprites = new List<(string, PingType, Atlas.Sprite)>();
+        public static void RegisterPingSprite(string name, PingType pt, Atlas.Sprite pingSprite)
+        {
+            PingSprites.Add((name, pt, pingSprite));
         }
     }
 }
