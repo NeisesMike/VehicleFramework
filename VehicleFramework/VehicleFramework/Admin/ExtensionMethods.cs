@@ -90,5 +90,13 @@ namespace VehicleFramework
             }
             return current.parent.IsGameObjectAncestor(ancestor);
         }
+        public static TechType GetTechType(this Vehicle vehicle)
+        {
+            if (vehicle == null || vehicle.GetComponent<TechTag>() == null)
+            {
+                return TechType.None;
+            }
+            return vehicle.GetComponent<TechTag>().type;
+        }
     }
 }

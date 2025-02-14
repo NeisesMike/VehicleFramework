@@ -190,6 +190,13 @@ namespace VehicleFramework
             UWE.CoroutineHost.StartCoroutine(NotifyDockingBay(__instance.transform.parent.Find("BaseCell(Clone)")));
             return true;
         }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Vehicle.Awake))]
+        public static void VehicleAwakeHarmonyPostfix(Vehicle __instance)
+        {
+            Admin.GameObjectManager<Vehicle>.Register(__instance);
+        }
     }
 
     [HarmonyPatch(typeof(Vehicle))]
