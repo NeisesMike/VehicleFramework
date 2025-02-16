@@ -110,7 +110,6 @@ namespace VehicleFramework
 
         private static void SetupGeneralOptions(ConfigFile config)
         {
-            MainPatcher.VFConfig.IsCraftingMenuFix = config.Bind<bool>("!General", "Crafting Menu Fix", false, "Nautilus-33 allows some crafting tabs to be completely obscured by others. If you're having trouble, enable this.");
             MainPatcher.VFConfig.IsDebugLogging = config.Bind<bool>("!General", "Debug Logs", false, "Enable extra logging statements for debugging purposes");
             MainPatcher.VFConfig.ForceArmsCompat = config.Bind<bool>("!General", "Force Arms Slots", false, "Create Arm Upgrade Slots for vehicles that aren't setup for it.");
         }
@@ -135,7 +134,6 @@ namespace VehicleFramework
         internal ConfigEntry<bool> RightClickHeadlights { get; set; }
         internal ConfigEntry<bool> IsFlashingLights { get; set; }
         internal ConfigEntry<bool> IsSubtitles { get; set; }
-        internal ConfigEntry<bool> IsCraftingMenuFix { get; set; }
         internal ConfigEntry<bool> IsDebugLogging { get; set; }
         internal ConfigEntry<bool> ForceArmsCompat { get; set; }
         internal ConfigEntry<bool> UnlockDroneStation { get; set; }

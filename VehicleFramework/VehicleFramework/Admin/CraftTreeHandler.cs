@@ -1,63 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VehicleFramework.Localization;
 using VehicleFramework.Assets;
+using VehicleFramework.UpgradeTypes;
 
 namespace VehicleFramework.Admin
 {
     internal static class CraftTreeHandler
     {
-        internal static readonly string[] rootVehicleFrameworkTab = { "VFUM" };
-        internal static List<string> AddedTabs = new List<string>();
+        internal const string GeneralTabName = "VFGeneral";
+        private readonly static List<string[]> KnownPaths = new List<string[]>();
+        internal readonly static List<string> TabNodeTabNodes = new List<string>();
+        internal readonly static List<string> CraftNodeTabNodes = new List<string>();
         internal static string[] UpgradeTypeToPath(VehicleType path)
         {
             switch (path)
             {
                 case VehicleType.ModVehicle:
-                    return rootVehicleFrameworkTab.Append("MVCM").ToArray();
+                    return new string[] { "VFUniversal" };
                 case VehicleType.Seamoth:
-                    return rootVehicleFrameworkTab.Append("VVSM").ToArray();
+                    return new string[] { "VFSeamoth" };
                 case VehicleType.Prawn:
-                    return rootVehicleFrameworkTab.Append("VVEM").ToArray();
+                    return new string[] { "VFPrawn" };
                 case VehicleType.Cyclops:
-                    return rootVehicleFrameworkTab.Append("VVCM").ToArray();
+                    return new string[] { "VFCyclops" };
+                case VehicleType.Custom:
+                    return new string[] { "VFCustom" };
                 default:
                     return new string[] { "error" };
             }
-        }
-        internal static void AddCraftTreeNodesVF(string tabName, string displayName, Atlas.Sprite icon)
-        {
-            if (AddedTabs.Contains(tabName))
-            {
-                return;
-            }
-            List<VehicleType> upgradeTypes = new List<VehicleType> 
-            { 
-                VehicleType.ModVehicle,
-                VehicleType.Seamoth,
-                VehicleType.Prawn,
-                VehicleType.Cyclops
-            };
-            Dictionary<VehicleType, string[]> result = new Dictionary<VehicleType, string[]>();
-            try
-            {
-                foreach (VehicleType path in upgradeTypes)
-                {
-                    string[] thisPath = UpgradeTypeToPath(path).Append(tabName).ToArray();
-                    Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, tabName, displayName, icon, UpgradeTypeToPath(path));
-                    result.Add(path, thisPath);
-                }
-            }
-            catch(Exception e)
-            {
-                Logger.Warn("Could not add new crafting tree tab: " + tabName + " : " + displayName + ". Error follows:");
-                Logger.Warn(e.Message);
-            }
-            AddedTabs.Add(tabName);
-            return;
         }
         internal static void AddFabricatorMenus()
         {
@@ -67,16 +38,117 @@ namespace VehicleFramework.Admin
             var prawnIcon = SpriteManager.Get(TechType.Exosuit) ?? StaticAssets.ModVehicleIcon;
             var cyclopsIcon = SpriteManager.Get(TechType.Cyclops) ?? StaticAssets.ModVehicleIcon;
 
-            //Add root VF tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, rootVehicleFrameworkTab[0], "VF Upgrades", vfIcon);
-            // add MV tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), LocalizationManager.GetString(EnglishString.MVModules), mvIcon, rootVehicleFrameworkTab);
+            // add MV-universal tab
+            AddCraftingTab(new string[]{ }, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), "Universal VF Upgrades", vfIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.ModVehicle), $"{GeneralTabName}{VehicleType.ModVehicle}", "General", mvIcon);
+            // add MV-specific tab
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Custom).Last(), "Vehicle-specific Upgrades", vfIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Custom), $"{GeneralTabName}{VehicleType.Custom}", "General", mvIcon);
             // add seamoth tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Seamoth).Last(), "Seamoth Upgrades", seamothIcon, rootVehicleFrameworkTab);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Seamoth).Last(), "Seamoth Upgrades", seamothIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Seamoth), $"{GeneralTabName}{VehicleType.Seamoth}", "General", mvIcon);
             // add prawn tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Prawn).Last(), "Prawn Upgrades", prawnIcon, rootVehicleFrameworkTab);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Prawn).Last(), "Prawn Upgrades", prawnIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Prawn), $"{GeneralTabName}{VehicleType.Prawn}", "General", mvIcon);
             // add cyclops tab
-            Nautilus.Handlers.CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, UpgradeTypeToPath(VehicleType.Cyclops).Last(), "Cyclops Upgrades", cyclopsIcon, rootVehicleFrameworkTab);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Cyclops).Last(), "Cyclops Upgrades", cyclopsIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Cyclops), $"{GeneralTabName}{VehicleType.Cyclops}", "General", mvIcon);
+        }
+        internal static void EnsureCraftingTabsAvailable(ModVehicleUpgrade upgrade, UpgradeCompat compat)
+        {
+            if (upgrade.IsVehicleSpecific)
+            {
+                EnsureCraftingTabAvailable(upgrade, VehicleType.Custom);
+                return;
+            }
+            if (!compat.skipCyclops)
+            {
+                EnsureCraftingTabAvailable(upgrade, VehicleType.Cyclops);
+            }
+            if (!compat.skipExosuit)
+            {
+                EnsureCraftingTabAvailable(upgrade, VehicleType.Prawn);
+            }
+            if (!compat.skipModVehicle)
+            {
+                EnsureCraftingTabAvailable(upgrade, VehicleType.ModVehicle);
+            }
+            if (!compat.skipSeamoth)
+            {
+                EnsureCraftingTabAvailable(upgrade, VehicleType.Seamoth);
+            }
+        }
+        private static void EnsureCraftingTabAvailable(ModVehicleUpgrade upgrade, VehicleType vType)
+        {
+            if(upgrade.CraftingPath == null)
+            {
+                if (upgrade.TabName.Equals(string.Empty))
+                {
+                    // it goes in general, so we're good
+                    return;
+                }
+                else
+                {
+                    AddCraftingTab(vType, upgrade.TabName, upgrade.TabDisplayName, upgrade.TabIcon);
+                }
+            }
+            else
+            {
+                TraceCraftingPath(vType, upgrade.CraftingPath, (x,y) => AddCraftingTab(x, y.name, y.displayName, y.icon));
+            }
+        }
+        internal static string[] TraceCraftingPath(VehicleType vType, List<CraftingNode> path, Action<string[], CraftingNode> perNodeAction)
+        {
+            string[] pathCurrently = UpgradeTypeToPath(vType);
+            foreach (var node in path)
+            {
+                perNodeAction?.Invoke(pathCurrently, node);
+                pathCurrently = pathCurrently.Append(node.name).ToArray();
+            }
+            return pathCurrently;
+        }
+        private static string[] AddCraftingTab(VehicleType vType, string tabName, string displayName, Atlas.Sprite icon)
+        {
+            return AddCraftingTab(UpgradeTypeToPath(vType), tabName, displayName, icon);
+        }
+        private static string[] AddCraftingTab(string[] thisPath, string tabName, string displayName, Atlas.Sprite icon)
+        {
+            string[] resultPath = thisPath.Append(tabName).ToArray();
+            if (!IsKnownPath(resultPath))
+            {
+                if (thisPath.Any() && !IsValidTabPath(thisPath))
+                {
+                    throw new Exception($"CraftTreeHandler: Invalid Tab Path: there were crafting nodes in that tab: {thisPath.Last()}. Cannot mix tab nodes and crafting nodes.");
+                }
+                Nautilus.Handlers.CraftTreeHandler.AddTabNode(VFFabricator.TreeType, tabName, displayName, icon, thisPath);
+                if (thisPath.Any())
+                {
+                    TabNodeTabNodes.Add(thisPath.Last());
+                }
+                KnownPaths.Add(resultPath);
+            }
+            return resultPath;
+        }
+        private static bool IsKnownPath(string[] path)
+        {
+            List<string[]> innerKnownPaths = new List<string[]>();
+            KnownPaths.ForEach(x => innerKnownPaths.Add(x));
+            innerKnownPaths.RemoveAll(x => x.Length != path.Length);
+            for(int i=0; i<path.Length; i++)
+            {
+                innerKnownPaths.RemoveAll(x => x[i] != path[i]);
+            }
+            return innerKnownPaths.Any();
+        }
+        internal static bool IsValidTabPath(string[] steps)
+        {
+            // return false only if this tab has crafting nodes
+            return !CraftNodeTabNodes.Contains(steps.Last());
+        }
+        internal static bool IsValidCraftPath(string[] steps)
+        {
+            // return false only if this tab has tab nodes
+            return !TabNodeTabNodes.Contains(steps.Last());
         }
     }
 }

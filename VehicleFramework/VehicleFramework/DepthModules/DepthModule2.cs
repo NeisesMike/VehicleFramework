@@ -17,6 +17,7 @@ namespace VehicleFramework.DepthModules
                     new Assets.Ingredient(TechType.AluminumOxide, 5)
                 };
         public override Atlas.Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
+        public override Atlas.Sprite TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override string TabName => "MVDM";
         public override string TabDisplayName => "Depth Modules";
         public override void OnAdded(AddActionParams param)

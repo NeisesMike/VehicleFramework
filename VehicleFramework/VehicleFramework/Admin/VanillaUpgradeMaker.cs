@@ -34,14 +34,11 @@ namespace VehicleFramework.Admin
         {
             Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
             moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(vType));
-            string[] steps = CraftTreeHandler.UpgradeTypeToPath(vType);
-            if (upgrade.TabName.Length > 0)
-            {
-                steps = steps.Append(upgrade.TabName).ToArray();
-            }
+
+            string[] steps = upgrade.ResolvePath(vType);
             customPrefab
                 .SetRecipe(moduleRecipe)
-                .WithFabricatorType(CraftTree.Type.Workbench)
+                .WithFabricatorType(Assets.VFFabricator.TreeType)
                 .WithStepsToFabricatorTab(steps)
                 .WithCraftingTime(upgrade.CraftingTime);
             return customPrefab;
@@ -50,6 +47,10 @@ namespace VehicleFramework.Admin
         #region CreationMethods
         internal static void CreatePassiveModule(ModVehicleUpgrade upgrade, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
+            if (upgrade.IsVehicleSpecific)
+            {
+                return;
+            }
             bool isPdaRegistered = isPdaSetup;
             if (!compat.skipSeamoth)
             {
@@ -68,6 +69,10 @@ namespace VehicleFramework.Admin
         }
         internal static void CreateSelectModule(SelectableUpgrade select, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
+            if (select.IsVehicleSpecific)
+            {
+                return;
+            }
             bool isPdaRegistered = isPdaSetup;
             if (!compat.skipSeamoth)
             {
@@ -86,6 +91,10 @@ namespace VehicleFramework.Admin
         }
         internal static void CreateChargeModule(SelectableChargeableUpgrade selectcharge, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
+            if (selectcharge.IsVehicleSpecific)
+            {
+                return;
+            }
             bool isPdaRegistered = isPdaSetup;
             if (!compat.skipSeamoth)
             {
@@ -104,6 +113,10 @@ namespace VehicleFramework.Admin
         }
         internal static void CreateToggleModule(ToggleableUpgrade toggle, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
+            if (toggle.IsVehicleSpecific)
+            {
+                return;
+            }
             bool isPdaRegistered = isPdaSetup;
             if (!compat.skipSeamoth)
             {
@@ -122,6 +135,10 @@ namespace VehicleFramework.Admin
         }
         internal static void CreateExosuitArm(ModVehicleArm arm, UpgradeCompat compat, ref UpgradeTechTypes utt, bool isPdaSetup)
         {
+            if (arm.IsVehicleSpecific)
+            {
+                return;
+            }
             if (!compat.skipExosuit)
             {
                 CreateArmModuleExosuit(arm, ref utt, isPdaSetup);

@@ -46,6 +46,7 @@ namespace VehicleFramework
             }
             UWE.CoroutineHost.StartCoroutine(CollectPrefabsForBuilderReference());
             Assets.StaticAssets.GetSprites();
+            Assets.VFFabricator.CreateAndRegister();
             Admin.CraftTreeHandler.AddFabricatorMenus();
             Admin.Utils.RegisterDepthModules();
             UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());

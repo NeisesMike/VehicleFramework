@@ -6,15 +6,15 @@ namespace VehicleFramework.Assets
 {
     public static class StaticAssets
     {
-        internal static Atlas.Sprite ModVehicleIcon { get; private set; }
-        internal static Atlas.Sprite UpgradeIcon { get; private set; }
-        internal static Atlas.Sprite DepthIcon { get; private set; }
-        internal static Atlas.Sprite ArmIcon { get; private set; }
-        internal static Atlas.Sprite DefaultPingSprite { get; private set; }
-        internal static Sprite DefaultSaveFileSprite { get; private set; }
-        internal static Dictionary<TechType, int> DefaultRecipe { get; private set; }
-        internal static VFEngine DefaultEngine { get; private set; }
-        public static void GetSprites()
+        public static Atlas.Sprite ModVehicleIcon { get; private set; }
+        public static Atlas.Sprite UpgradeIcon { get; private set; }
+        public static Atlas.Sprite DepthIcon { get; private set; }
+        public static Atlas.Sprite ArmIcon { get; private set; }
+        public static Atlas.Sprite DefaultPingSprite { get; private set; }
+        public static Sprite DefaultSaveFileSprite { get; private set; }
+        public static Dictionary<TechType, int> DefaultRecipe { get; private set; }
+        public static VFEngine DefaultEngine { get; private set; }
+        internal static void GetSprites()
         {
             ModVehicleIcon = Assets.SpriteHelper.GetSpriteInternal("ModVehicleIcon.png");
             ArmIcon = Assets.SpriteHelper.GetSpriteInternal("ArmUpgradeIcon.png");
@@ -26,7 +26,7 @@ namespace VehicleFramework.Assets
             DefaultSaveFileSprite = Assets.AssetBundleInterface.LoadAdditionalRawSprite(DSAssets.abi, "ModVehicleSpriteAtlas", "ModVehiclePingSprite");
             DSAssets.Close();
         }
-        public static void SetupDefaultAssets()
+        internal static void SetupDefaultAssets()
         {
             DefaultRecipe = new Dictionary<TechType, int>();
             DefaultRecipe.Add(TechType.PlasteelIngot, 1);

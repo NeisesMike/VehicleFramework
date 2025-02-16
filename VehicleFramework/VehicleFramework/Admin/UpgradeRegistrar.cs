@@ -32,7 +32,8 @@ namespace VehicleFramework.Admin
         ModVehicle,
         Seamoth,
         Prawn,
-        Cyclops
+        Cyclops,
+        Custom
     }
     public static class UpgradeRegistrar
     {
@@ -49,17 +50,14 @@ namespace VehicleFramework.Admin
         public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default(UpgradeCompat), bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
-            if (upgrade.TabName != "")
-            {
-                AddCraftingTabs(upgrade.TabName, upgrade.TabDisplayName, upgrade.TabIcon);
-            }
             bool result = ValidateModVehicleUpgrade(upgrade, compat);
             if(result)
             {
+                CraftTreeHandler.EnsureCraftingTabsAvailable(upgrade, compat);
                 UpgradeIcons.Add(upgrade.ClassId, SpriteHelper.CreateSpriteFromAtlasSprite(upgrade.Icon));
                 UpgradeTechTypes utt = new UpgradeTechTypes();
                 bool isPdaRegistered = false;
-                if (!compat.skipModVehicle)
+                if (!compat.skipModVehicle || upgrade.IsVehicleSpecific)
                 {
                     utt.forModVehicle = RegisterModVehicleUpgrade(upgrade);
                     isPdaRegistered = true;
@@ -73,19 +71,6 @@ namespace VehicleFramework.Admin
                 Logger.Error("Failed to register upgrade: " + upgrade.ClassId);
                 return default;
             }
-        }
-        private static void AddCraftingTabs(string tabName, string tabDisplayName, Atlas.Sprite displayIcon)
-        {
-            Atlas.Sprite usedIcon = displayIcon;
-            if(usedIcon == null)
-            {
-                usedIcon = StaticAssets.ModVehicleIcon;
-            }
-            CraftTreeHandler.AddCraftTreeNodesVF(
-                tabName,
-                tabDisplayName,
-                usedIcon
-            );
         }
         private static bool ValidateModVehicleUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat)
         {
@@ -127,15 +112,25 @@ namespace VehicleFramework.Admin
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = upgrade.Color))
             };
             module_CustomPrefab.SetGameObject(moduleTemplate);
-            string[] steps = CraftTreeHandler.UpgradeTypeToPath(VehicleType.ModVehicle);
-            if (upgrade.TabName.Length > 0)
+
+            string[] steps;
+            if (upgrade.IsVehicleSpecific)
             {
-                steps = steps.Append(upgrade.TabName).ToArray();
+                steps = upgrade.ResolvePath(VehicleType.Custom);
             }
+            else
+            {
+                steps = upgrade.ResolvePath(VehicleType.ModVehicle);
+            }
+            if (!CraftTreeHandler.IsValidCraftPath(steps))
+            {
+                throw new Exception($"UpgradeRegistrar: Invalid Crafting Path: there were tab nodes in that tab: {steps.Last()}. Cannot mix tab nodes and crafting nodes.");
+            }
+            CraftTreeHandler.CraftNodeTabNodes.Add(steps.Last());
             module_CustomPrefab
                 .SetRecipe(moduleRecipe)
                 .WithCraftingTime(upgrade.CraftingTime)
-                .WithFabricatorType(upgrade.FabricatorType)
+                .WithFabricatorType(Assets.VFFabricator.TreeType)
                 .WithStepsToFabricatorTab(steps);
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
             if (upgrade as ModVehicleArm != null)
