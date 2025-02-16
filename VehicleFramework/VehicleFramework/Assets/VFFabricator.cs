@@ -35,7 +35,7 @@ namespace VehicleFramework.Assets
                 ModifyPrefab = ModifyFabricatorPrefab,
                 FabricatorModel = FabricatorTemplate.Model.MoonPool,
                 ConstructableFlags = ConstructableFlags.Wall | ConstructableFlags.Base | ConstructableFlags.Submarine
-                | ConstructableFlags.Inside | ConstructableFlags.AllowedOnConstructable,
+                | ConstructableFlags.Inside
             };
 
             prefab.SetGameObject(vfFabTemplate);
@@ -59,12 +59,19 @@ namespace VehicleFramework.Assets
         private static void ModifyFabricatorPrefab(GameObject obj)
         {
             obj.transform.localScale *= 0.67f;
-            obj.transform.Find("submarine_fabricator_03").localPosition += new Vector3(0, 0, 0.1f);
-            Transform geo = obj.transform.Find("submarine_fabricator_03/submarine_fabricator_03_geo");
-            var but = geo.GetComponent<Renderer>();
+            Component.DestroyImmediate(obj.GetComponent<Collider>());
+            Transform fabRoot = obj.transform.Find("submarine_fabricator_03");
+            Transform geo = fabRoot.Find("submarine_fabricator_03_geo");
             Color fabColor = new Color32(0x80, 0x59, 0xA0, 0xFF);
-            but.materials[0].color = fabColor;
-            but.materials[3].color = fabColor;
+            fabRoot.localPosition += new Vector3(0, 0, 0.1f);
+            fabRoot.GetComponent<BoxCollider>().center = new Vector3(-0.01f, 0.9f, 0.18f);
+            var renderer = geo.GetComponent<Renderer>();
+            renderer.materials[0].color = fabColor;
+            renderer.materials[3].color = fabColor;
+            obj.AddComponent<ConstructableBounds>().bounds = new OrientedBounds(
+                fabRoot.GetComponent<BoxCollider>().center - new Vector3(0f, 0.30f, 0f),
+                Quaternion.identity,
+                fabRoot.GetComponent<BoxCollider>().extents - new Vector3(0.15f, 0f, 0f));
             //8059A0FF
         }
     }
