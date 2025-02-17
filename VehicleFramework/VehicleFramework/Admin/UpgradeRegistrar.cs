@@ -281,9 +281,8 @@ namespace VehicleFramework.Admin
                             yield break;
                         }
                         toggle.OnRepeat(param);
-                        int whatWeGot = 0;
-                        param.vehicle.energyInterface.TotalCanProvide(out whatWeGot);
-                        if (whatWeGot < energyCostPerActivation)
+                        float availablePower = param.vehicle.energyInterface.TotalCanProvide(out _);
+                        if (availablePower < energyCostPerActivation)
                         {
                             param.vehicle.ToggleSlot(param.slotID, false);
                             yield break;
