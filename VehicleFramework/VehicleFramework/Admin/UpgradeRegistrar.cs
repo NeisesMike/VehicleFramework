@@ -300,15 +300,28 @@ namespace VehicleFramework.Admin
                 TechType cTT = utt.forCyclops;
                 void WrappedOnToggle(ToggleActionParams param)
                 {
+                    toggledActions.RemoveAll(x => x.Item3 == null);
                     if (param.techType != TechType.None && (param.techType == mvTT || param.techType == sTT || param.techType == eTT || param.techType == cTT))
                     {
+                        var relevantActions = toggledActions.Where(x => x.Item1 == param.vehicle).Where(x => x.Item2 == param.slotID);
                         if (param.active)
                         {
-                            toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(param.vehicle, param.slotID, param.vehicle.StartCoroutine(DoToggleAction(param, toggle.TimeToFirstActivation, toggle.RepeatRate, toggle.EnergyCostPerActivation))));
+                            if (relevantActions.Any())
+                            {
+                                // Something triggers my Nautilus WithOnModuleToggled action doubly for the Seamoth.
+                                // So if the toggle action already exists, don't add another one.
+                                return;
+                            }
+                            var thisToggleCoroutine = param.vehicle.StartCoroutine(DoToggleAction(param, toggle.TimeToFirstActivation, toggle.RepeatRate, toggle.EnergyCostPerActivation));
+                            toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(param.vehicle, param.slotID, thisToggleCoroutine));
                         }
                         else
                         {
-                            toggledActions.Where(x => x.Item1 == param.vehicle).Where(x => x.Item2 == param.slotID).Where(x => x.Item3 != null).ToList().ForEach(x => param.vehicle.StopCoroutine(x.Item3));
+                            foreach(var innerAction in relevantActions)
+                            {
+                                toggledActions.RemoveAll(x => x == innerAction);
+                                param.vehicle.StopCoroutine(innerAction.Item3);
+                            }
                         }
                     }
                 }

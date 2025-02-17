@@ -192,18 +192,16 @@ namespace VehicleFramework.Admin
         internal static void AddToggleActions(UpgradeModuleGadget gadget, ToggleableUpgrade upgrade, PrefabInfo info)
         {
             gadget
-                .WithEnergyCost(upgrade.EnergyCostPerActivation)
-                .WithCooldown(upgrade.RepeatRate)
                 .WithOnModuleToggled((Vehicle vehicleInstance, int slotId, float energyCost, bool isActive) =>
                 {
-                    UpgradeTypes.ToggleActionParams toggleParams = new UpgradeTypes.ToggleActionParams
+                    UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
                     {
+                        active = isActive,
                         vehicle = vehicleInstance,
                         slotID = slotId,
-                        techType = info.TechType,
-                        active = isActive
+                        techType = info.TechType
                     };
-                    upgrade.OnRepeat(toggleParams);
+                    Admin.UpgradeRegistrar.OnToggleActions.ForEach(x => x(param));
                 });
         }
         internal static void AddChargeActions(UpgradeModuleGadget gadget, SelectableChargeableUpgrade upgrade, PrefabInfo info)
