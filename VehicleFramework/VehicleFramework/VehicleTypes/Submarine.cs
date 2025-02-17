@@ -223,7 +223,6 @@ namespace VehicleFramework.VehicleTypes
             if (!pingInstance.enabled)
             {
                 base.SubConstructionComplete();
-                PaintNameDefaultStyle(GetName());
                 // Setup the color picker with the submarine's name
                 var active = transform.Find("ColorPicker/EditScreen/Active");
                 if (active)
@@ -233,6 +232,7 @@ namespace VehicleFramework.VehicleTypes
                 }
                 UWE.CoroutineHost.StartCoroutine(TrySpawnFabricator());
             }
+            PaintNameDefaultStyle(GetName());
         }
 
         public override void OnKill()
