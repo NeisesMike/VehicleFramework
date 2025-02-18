@@ -20,6 +20,9 @@ namespace VehicleFramework
 
         internal static VFConfig VFConfig { get; private set; }
 
+        internal Coroutine GetVoices = null;
+        internal Coroutine GetEngineSounds = null;
+
         public void Awake()
         {
             SetupInstance();
@@ -49,8 +52,8 @@ namespace VehicleFramework
             Assets.VFFabricator.CreateAndRegister();
             Admin.CraftTreeHandler.AddFabricatorMenus();
             Admin.Utils.RegisterDepthModules();
-            UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
-            UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());
+            GetVoices = UWE.CoroutineHost.StartCoroutine(VoiceManager.LoadAllVoices());
+            GetEngineSounds = UWE.CoroutineHost.StartCoroutine(EngineSoundsManager.LoadAllVoices());
         }
         public void Patch()
         {

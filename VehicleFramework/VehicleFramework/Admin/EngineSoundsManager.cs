@@ -111,6 +111,7 @@ namespace VehicleFramework
         {
             GetSilence();
             yield return RegisterEngineSounds("ShirubaFoxy");
+            MainPatcher.Instance.GetEngineSounds = null;
         }
         private static IEnumerator GetSilence()
         {

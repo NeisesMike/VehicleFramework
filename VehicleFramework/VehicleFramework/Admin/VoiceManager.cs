@@ -244,6 +244,7 @@ namespace VehicleFramework
             yield return RegisterVoice("Mikjaw");
             yield return RegisterVoice("Turtle");
             yield return RegisterVoice("Salli");
+            MainPatcher.Instance.GetVoices = null;
         }
         internal static IEnumerator GetSilence()
         {

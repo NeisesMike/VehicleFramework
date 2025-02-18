@@ -46,6 +46,8 @@ namespace VehicleFramework
         }
         public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose=false)
         {
+            yield return new WaitUntil(() => MainPatcher.Instance.GetVoices == null);
+            yield return new WaitUntil(() => MainPatcher.Instance.GetEngineSounds == null);
             bool isNewEntry = true;
             foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
             {
