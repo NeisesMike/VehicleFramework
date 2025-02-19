@@ -89,6 +89,7 @@ namespace VehicleFramework
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => "This is a vehicle you can build at the Mobile Vehicle Bay. It can be controlled either directly or with a Drone Station.";
         public virtual Sprite EncyclopediaImage => null;
+        public virtual Sprite ModuleBackgroundImage => SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
         public virtual int BaseCrushDepth => 250;
         public virtual int MaxHealth => 100;
         public virtual int Mass => 1000;

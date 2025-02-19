@@ -2,6 +2,7 @@
 using HarmonyLib;
 using UnityEngine;
 using System.Reflection.Emit;
+using System.Linq;
 
 namespace VehicleFramework.Patches
 {
@@ -41,8 +42,18 @@ namespace VehicleFramework.Patches
             }
         }
 
-
-
-
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandClick))]
+        public static void VehicleUpgradeConsoleInputOnHandClickHarmonyPostfix(VehicleUpgradeConsoleInput __instance)
+        {
+            foreach (var mv in VehicleManager.VehiclesInPlay.Where(x => x != null))
+            {
+                if (mv.upgradesInput == __instance)
+                {
+                    ModuleBuilder.main.BackgroundSprite = mv.ModuleBackgroundImage;
+                    break;
+                }
+            }
+        }
     }
 }

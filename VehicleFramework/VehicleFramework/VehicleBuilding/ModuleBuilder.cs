@@ -36,7 +36,22 @@ namespace VehicleFramework
         public GameObject genericModuleHint;
 
         public GameObject modulesBackground; // background image parent object
-        public Sprite backgroundSprite; // background image "the vehicle"
+        public Sprite BackgroundSprite
+        {
+            set
+            {
+                Sprite setSprite;
+                if(value == null)
+                {
+                    setSprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
+                }
+                else
+                {
+                    setSprite = value;
+                }
+                equipment.transform.Find("VehicleModule0/VehicleModuleBackground(Clone)").GetComponent<UnityEngine.UI.Image>().sprite = setSprite;
+            }
+        }
 
         public Sprite genericModuleSlotSprite;
         public Sprite leftArmModuleSlotSprite;
@@ -183,7 +198,8 @@ namespace VehicleFramework
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<RectTransform>(), modulesBackground);
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<CanvasRenderer>(), modulesBackground);
                             VehicleBuilder.CopyComponent(topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>(), modulesBackground);
-                            backgroundSprite = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().sprite;
+                            //backgroundSprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
+                            //backgroundSprite = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().sprite;
                             modulesBackground.EnsureComponent<UnityEngine.UI.Image>().material = topLeftSlot.Find("Exosuit").GetComponent<UnityEngine.UI.Image>().material;
                             // this can remain active, because its parent's Activity is controlled
                             modulesBackground.SetActive(true);
@@ -328,7 +344,8 @@ namespace VehicleFramework
             thisBackground.transform.localRotation = Quaternion.identity;
             thisBackground.transform.localPosition = new Vector3(250,250,0);
             thisBackground.transform.localScale = 5 * Vector3.one;
-            thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = backgroundSprite;
+            thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
+            //thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = backgroundSprite;
         }
         public void LinkArm(ref GameObject thisModule)
         {
@@ -343,12 +360,6 @@ namespace VehicleFramework
         public GameObject GetGenericModuleSlot()
         {
             return GameObject.Instantiate(genericModuleObject);
-        }
-        public GameObject GetBackgroundModuleSlot(int image)
-        {
-            GameObject bgmSlot = GameObject.Instantiate(modulesBackground);
-            bgmSlot.GetComponent<UnityEngine.UI.Image>().sprite = backgroundSprite;
-            return bgmSlot;
         }
         public GameObject GetLeftArmSlot()
         {
