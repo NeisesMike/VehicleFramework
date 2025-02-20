@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using System.Reflection;
 using Newtonsoft.Json;
 
 namespace VehicleFramework.SaveLoad
@@ -44,8 +41,8 @@ namespace VehicleFramework.SaveLoad
         }
         private static string GetFilePath(string innerName)
         {
-            string directoryPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-            string configFolderPath = Path.Combine(directoryPath, "savedata");
+            string directoryPath = SaveLoadManager.GetTemporarySavePath();
+            string configFolderPath = Path.Combine(directoryPath, "VFSaveData");
             if (!Directory.Exists(configFolderPath))
             {
                 Directory.CreateDirectory(configFolderPath);
