@@ -160,6 +160,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />
     <Compile Include="UpgradeTypes\CraftingNode.cs" />
+    <Compile Include="VehicleComponents\MaterialReactor.cs" />
     <Compile Include="VehicleComponents\ModVehicleDockingBay.cs" />
     <Compile Include="VehicleComponents\DockingBay.cs" />
     <Compile Include="VFConfig.cs" />
