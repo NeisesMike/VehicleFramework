@@ -11,9 +11,9 @@ using batteries = System.Collections.Generic.List<System.Tuple<System.String, fl
 using color = System.Tuple<float, float, float, float>;
 using techtype = System.String;
 
-namespace VehicleFramework
+namespace VehicleFramework.SaveLoad
 {
-    public static class SaveManager
+    internal static class SaveManager
     {
         /* Things what we can serialize
          * List<Tuple<Vector,Vector>>
@@ -359,22 +359,22 @@ namespace VehicleFramework
                     continue;
                 }
                 List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
-                try
+                foreach (EnergyMixin batt in mv.energyInterface.sources)
                 {
-                    foreach (EnergyMixin batt in mv.energyInterface.sources)
+                    if (batt.battery != null)
                     {
-                        if (batt.battery != null)
+                        try
                         {
                             thisVehiclesBatteries.Add(new Tuple<techtype, float>(batt.batterySlot.storedItem.item.GetTechType().AsString(), batt.battery.charge));
                         }
+                        catch (Exception e)
+                        {
+                            Logger.Error($"Failed to serialize battery {batt.name} for: {mv.name} : {mv.subName.hullName.text}");
+                            Logger.Log(e.Message);
+                        }
                     }
-                    allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
                 }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize batteries for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
+                allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
         }

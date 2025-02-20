@@ -11,7 +11,7 @@ using innateStorages = System.Collections.Generic.List<System.Tuple<UnityEngine.
 using modularStorages = System.Collections.Generic.List<System.Tuple<int, System.Collections.Generic.List<System.Tuple<System.String, float>>>>;
 using color = System.Tuple<float, float, float, float>;
 
-namespace VehicleFramework
+namespace VehicleFramework.SaveLoad
 {
     [FileName("vehicle_storage")]
     internal class SaveData : SaveDataCache
