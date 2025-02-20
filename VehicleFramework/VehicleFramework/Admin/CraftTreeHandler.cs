@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VehicleFramework.Assets;
 using VehicleFramework.UpgradeTypes;
+using VehicleFramework.Localization;
 
 namespace VehicleFramework.Admin
 {
@@ -39,20 +40,20 @@ namespace VehicleFramework.Admin
             var cyclopsIcon = SpriteManager.Get(TechType.Cyclops) ?? StaticAssets.ModVehicleIcon;
 
             // add MV-universal tab
-            AddCraftingTab(new string[]{ }, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), "Universal VF Upgrades", vfIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.ModVehicle), $"{GeneralTabName}{VehicleType.ModVehicle}", "General", mvIcon);
+            AddCraftingTab(new string[]{ }, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), LocalizationManager.GetString(EnglishString.MVModules), vfIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.ModVehicle), $"{GeneralTabName}{VehicleType.ModVehicle}", LocalizationManager.GetString(EnglishString.GeneralTab), mvIcon);
             // add MV-specific tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Custom).Last(), "Vehicle-specific Upgrades", vfIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Custom), $"{GeneralTabName}{VehicleType.Custom}", "General", mvIcon);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Custom).Last(), LocalizationManager.GetString(EnglishString.SpecificModules), vfIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Custom), $"{GeneralTabName}{VehicleType.Custom}", LocalizationManager.GetString(EnglishString.GeneralTab), mvIcon);
             // add seamoth tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Seamoth).Last(), "Seamoth Upgrades", seamothIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Seamoth), $"{GeneralTabName}{VehicleType.Seamoth}", "General", mvIcon);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Seamoth).Last(), LocalizationManager.GetString(EnglishString.SeamothTab), seamothIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Seamoth), $"{GeneralTabName}{VehicleType.Seamoth}", LocalizationManager.GetString(EnglishString.GeneralTab), mvIcon);
             // add prawn tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Prawn).Last(), "Prawn Upgrades", prawnIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Prawn), $"{GeneralTabName}{VehicleType.Prawn}", "General", mvIcon);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Prawn).Last(), LocalizationManager.GetString(EnglishString.PrawnTab), prawnIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Prawn), $"{GeneralTabName}{VehicleType.Prawn}", LocalizationManager.GetString(EnglishString.GeneralTab), mvIcon);
             // add cyclops tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Cyclops).Last(), "Cyclops Upgrades", cyclopsIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Cyclops), $"{GeneralTabName}{VehicleType.Cyclops}", "General", mvIcon);
+            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Cyclops).Last(), LocalizationManager.GetString(EnglishString.CyclopsTab), cyclopsIcon);
+            AddCraftingTab(UpgradeTypeToPath(VehicleType.Cyclops), $"{GeneralTabName}{VehicleType.Cyclops}", LocalizationManager.GetString(EnglishString.GeneralTab), mvIcon);
         }
         internal static void EnsureCraftingTabsAvailable(ModVehicleUpgrade upgrade, UpgradeCompat compat)
         {

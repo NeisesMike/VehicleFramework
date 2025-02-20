@@ -37,7 +37,12 @@ namespace VehicleFramework.Localization
         SecondaryAccent,
         NameLabel,
         MVModules,
-        MVDepthModules
+        MVDepthModules,
+        SpecificModules,
+        GeneralTab,
+        SeamothTab,
+        PrawnTab,
+        CyclopsTab
     }
     public static class Localizer<TEnum> where TEnum: struct, Enum
     {
