@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using Nautilus.Json;
-using VehicleFramework.Engines;
-using UnityEngine.SceneManagement;
 using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
@@ -16,6 +11,7 @@ namespace VehicleFramework
     {
         public static int VehiclesRegistered = 0;
         public static int VehiclesPrefabricated = 0;
+        private static Queue<Action> RegistrationQueue = new Queue<Action>();
         private static bool RegistrySemaphore = false;
         public enum LogType
         {
@@ -36,7 +32,6 @@ namespace VehicleFramework
                         break;
                     default:
                         break;
-
                 }
             }
         }
@@ -44,93 +39,94 @@ namespace VehicleFramework
         {
             UWE.CoroutineHost.StartCoroutine(RegisterVehicle(mv, verbose));
         }
-        public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose=false)
+        public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose = false)
         {
+            if (VehicleManager.vehicleTypes.Where(x => x.name == mv.gameObject.name).Any())
+            {
+                VerboseLog(LogType.Warn, verbose, $"{mv.gameObject.name} was already registered.");
+                yield break;
+            }
+            VerboseLog(LogType.Log, verbose, $"The {mv.gameObject.name} is beginning validation.");
+            if (!ValidateAll(mv, verbose))
+            {
+                yield break;
+            }
             yield return new WaitUntil(() => MainPatcher.Instance.GetVoices == null);
             yield return new WaitUntil(() => MainPatcher.Instance.GetEngineSounds == null);
-            bool isNewEntry = true;
-            foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
+            if (RegistrySemaphore)
             {
-                if (ve.name == mv.gameObject.name)
-                {
-                    VerboseLog(LogType.Warn, verbose, mv.gameObject.name + " was already registered.");
-                    isNewEntry = false;
-                    break;
-                }
+                VerboseLog(LogType.Log, verbose, $"Enqueueing the {mv.gameObject.name} for Registration.");
+                RegistrationQueue.Enqueue(() => UWE.CoroutineHost.StartCoroutine(InternalRegisterVehicle(mv, verbose)));
+                yield return new WaitUntil(() => VehicleManager.vehicleTypes.Select(x=>x.mv).Contains(mv));
             }
-            if (isNewEntry)
+            else
             {
-                VehiclesRegistered++;
-                if (RegistrySemaphore)
-                {
-                    VerboseLog(LogType.Log, verbose, "The " + mv.gameObject.name + " is waiting for Registration.");
-                }
-                while (RegistrySemaphore)
-                {
-                    yield return new WaitForSecondsRealtime(0.1f);
-                }
-                RegistrySemaphore = true;
-                VerboseLog(LogType.Log, verbose, "The " + mv.gameObject.name + " is beginning Registration.");
-                PingType registeredPingType = VehicleManager.RegisterPingType((PingType)121, verbose);
-                if (mv as Submarine != null)
-                {
-                    if (!ValidateRegistration(mv as Submarine, verbose))
-                    {
-                        Logger.Error("Invalid Submarine Registration for the " + mv.gameObject.name + ". Next.");
-                        RegistrySemaphore = false;
-                        yield break;
-                    }
-                }
-                if (mv as Submersible != null)
-                {
-                    if (!ValidateRegistration(mv as Submersible, verbose))
-                    {
-                        Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
-                        RegistrySemaphore = false;
-                        yield break;
-                    }
-                }
-                if (mv as Drone != null)
-                {
-                    if (!ValidateRegistration(mv as Drone, verbose))
-                    {
-                        Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
-                        RegistrySemaphore = false;
-                        yield break;
-                    }
-                }
-                if (mv as Walker != null)
-                {
-                    if (!ValidateRegistration(mv as Walker, verbose))
-                    {
-                        Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
-                        RegistrySemaphore = false;
-                        yield break;
-                    }
-                }
-                if (mv as Skimmer != null)
-                {
-                    if (!ValidateRegistration(mv as Skimmer, verbose))
-                    {
-                        Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
-                        RegistrySemaphore = false;
-                        yield break;
-                    }
-                }
-                yield return UWE.CoroutineHost.StartCoroutine(VehicleBuilder.Prefabricate(mv, registeredPingType, verbose));
-                RegistrySemaphore = false;
-                mv.gameObject.SetActive(true);
-
-                Logger.Log("Finished " + mv.gameObject.name + " registration.");
-
-                VFConfig.Setup(mv);
+                yield return UWE.CoroutineHost.StartCoroutine(InternalRegisterVehicle(mv, verbose));
             }
-            BuildableDroneStation.TryRegister(mv);
-            yield break;
         }
         public static IEnumerator RegisterVehicle(ModVehicle mv)
         {
             yield return RegisterVehicle(mv, false);
+        }
+        private static IEnumerator InternalRegisterVehicle(ModVehicle mv, bool verbose)
+        {
+            RegistrySemaphore = true;
+            VerboseLog(LogType.Log, verbose, $"The {mv.gameObject.name} is beginning Registration.");
+            PingType registeredPingType = VehicleManager.RegisterPingType((PingType)121, verbose);
+            yield return UWE.CoroutineHost.StartCoroutine(VehicleBuilder.Prefabricate(mv, registeredPingType, verbose));
+            RegistrySemaphore = false;
+            Logger.Log($"Finished {mv.gameObject.name} registration.");
+            VehiclesRegistered++;
+            BuildableDroneStation.TryRegister(mv);
+            VFConfig.Setup(mv);
+            if(RegistrationQueue.Count > 0)
+            {
+                RegistrationQueue.Dequeue().Invoke();
+            }
+        }
+        public static bool ValidateAll(ModVehicle mv, bool verbose)
+        {
+            if (mv as Submarine != null)
+            {
+                if (!ValidateRegistration(mv as Submarine, verbose))
+                {
+                    Logger.Error("Invalid Submarine Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+            }
+            if (mv as Submersible != null)
+            {
+                if (!ValidateRegistration(mv as Submersible, verbose))
+                {
+                    Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+            }
+            if (mv as Drone != null)
+            {
+                if (!ValidateRegistration(mv as Drone, verbose))
+                {
+                    Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+            }
+            if (mv as Walker != null)
+            {
+                if (!ValidateRegistration(mv as Walker, verbose))
+                {
+                    Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+            }
+            if (mv as Skimmer != null)
+            {
+                if (!ValidateRegistration(mv as Skimmer, verbose))
+                {
+                    Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+            }
+            return true;
         }
         public static bool ValidateRegistration(ModVehicle mv, bool verbose)
         {
@@ -623,6 +619,5 @@ namespace VehicleFramework
             */
 
         }
-
     }
 }

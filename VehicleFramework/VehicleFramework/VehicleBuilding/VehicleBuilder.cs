@@ -66,6 +66,7 @@ namespace VehicleFramework
             VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite ?? Assets.StaticAssets.DefaultPingSprite);
             numVehicleTypes++;
             VehicleNautilusInterface.PatchCraftable(ref ve, verbose);
+            mv.gameObject.SetActive(true);
         }
 
         #region setup_funcs
