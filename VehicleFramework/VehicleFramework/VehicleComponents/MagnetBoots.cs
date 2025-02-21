@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VehicleFramework.VehicleComponents
@@ -65,13 +63,13 @@ namespace VehicleFramework.VehicleComponents
         {
             if(mv is VehicleTypes.Submarine)
             {
-                Logger.Output("Submarines cannot use MagnetBoots!");
+                ErrorMessage.AddWarning("Submarines cannot use MagnetBoots!");
                 DestroyImmediate(this);
                 return;
             }
             if(mv?.BoundingBoxCollider == null)
             {
-                Logger.Output("This vehicle requires a BoundingBoxCollider to use MagnetBoots!");
+                ErrorMessage.AddWarning("This vehicle requires a BoundingBoxCollider to use MagnetBoots!");
                 DestroyImmediate(this);
                 return;
             }

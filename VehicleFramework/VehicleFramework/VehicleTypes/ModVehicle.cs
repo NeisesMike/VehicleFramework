@@ -802,7 +802,7 @@ namespace VehicleFramework
             }
             if (ModularStorages.Count <= slotID)
             {
-                Logger.Output("There is no storage expansion for slot ID: " + slotID.ToString());
+                ErrorMessage.AddWarning("There is no storage expansion for slot ID: " + slotID.ToString());
                 return;
             }
             var modSto = ModularStorages[slotID];

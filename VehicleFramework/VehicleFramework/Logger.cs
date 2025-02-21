@@ -27,16 +27,6 @@ namespace VehicleFramework
                 MyLog.LogInfo("[VehicleFramework] " + message);
             }
         }
-        public static Nautilus.Utility.BasicText Output(string msg, float time = 4, int x = 500, int y = 0)
-        {
-            if(GUIController.main.GetHidePhase() < GUIController.HidePhase.HUD)
-            {
-                Nautilus.Utility.BasicText message = new Nautilus.Utility.BasicText(x, y);
-                message.ShowMessage(msg, time);
-                return message;
-            }
-            return null;
-        }
         private static int IDCounter = 65536; 
         public static int GetFreshID()
         {

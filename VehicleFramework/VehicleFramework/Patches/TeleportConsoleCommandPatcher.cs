@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 
 namespace VehicleFramework.Patches
 {
@@ -9,7 +8,7 @@ namespace VehicleFramework.Patches
         {
             if (VehicleTypes.Drone.mountedDrone != null)
             {
-                Logger.Output("Can't teleport with a Drone");
+                ErrorMessage.AddWarning("Can't teleport with a Drone");
                 return false;
             }
             return true;
