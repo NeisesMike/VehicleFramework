@@ -1,5 +1,4 @@
 ﻿using BepInEx.Logging;
-using Nautilus.Utility;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,11 +27,11 @@ namespace VehicleFramework
                 MyLog.LogInfo("[VehicleFramework] " + message);
             }
         }
-        public static BasicText Output(string msg, float time = 4, int x = 500, int y = 0)
+        public static Nautilus.Utility.BasicText Output(string msg, float time = 4, int x = 500, int y = 0)
         {
             if(GUIController.main.GetHidePhase() < GUIController.HidePhase.HUD)
             {
-                BasicText message = new BasicText(x, y);
+                Nautilus.Utility.BasicText message = new Nautilus.Utility.BasicText(x, y);
                 message.ShowMessage(msg, time);
                 return message;
             }

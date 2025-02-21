@@ -3,10 +3,7 @@ using System.Linq;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.VehicleComponents;
 using VehicleFramework.Assets;
-using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
-using Nautilus.Assets.PrefabTemplates;
-using BiomeData = LootDistributionData.BiomeData;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
@@ -103,11 +100,11 @@ namespace VehicleFramework.Admin
         {
             Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
             moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(VehicleType.ModVehicle));
-            PrefabInfo module_info = PrefabInfo
+            Nautilus.Assets.PrefabInfo module_info = Nautilus.Assets.PrefabInfo
                 .WithTechType(upgrade.ClassId, upgrade.DisplayName, upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
-            CustomPrefab module_CustomPrefab = new CustomPrefab(module_info);
-            PrefabTemplate moduleTemplate = new CloneTemplate(module_info, TechType.SeamothElectricalDefense)
+            Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(module_info);
+            Nautilus.Assets.PrefabTemplates.PrefabTemplate moduleTemplate = new Nautilus.Assets.PrefabTemplates.CloneTemplate(module_info, TechType.SeamothElectricalDefense)
             {
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = upgrade.Color))
             };

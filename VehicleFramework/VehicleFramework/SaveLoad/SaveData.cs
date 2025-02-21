@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nautilus.Json;
-using Nautilus.Json.Attributes;
 using UnityEngine;
 
 using techtype = System.String;
@@ -13,8 +11,8 @@ using color = System.Tuple<float, float, float, float>;
 
 namespace VehicleFramework.SaveLoad
 {
-    [FileName("vehicle_storage")]
-    internal class SaveData : SaveDataCache
+    [Nautilus.Json.Attributes.FileName("vehicle_storage")]
+    internal class SaveData : Nautilus.Json.SaveDataCache
     {
         public List<Tuple<Vector3, bool>> IsPlayerInside { get; set; }
         public List<Tuple<Vector3, bool>> IsPlayerControlling { get; set; }

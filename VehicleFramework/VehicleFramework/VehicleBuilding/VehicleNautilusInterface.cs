@@ -1,12 +1,7 @@
 using System.Linq;
-using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
-using BiomeData = LootDistributionData.BiomeData;
-using Nautilus.Handlers;
 using System.Reflection;
 using System.IO;
-using Nautilus.Utility;
-using Nautilus.Crafting;
 using VehicleFramework.Assets;
 
 namespace VehicleFramework
@@ -15,7 +10,7 @@ namespace VehicleFramework
     {
         internal static TechType RegisterVehicle(VehicleEntry vehicle)
         {
-            PrefabInfo vehicle_info = PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
+            Nautilus.Assets.PrefabInfo vehicle_info = Nautilus.Assets.PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
             if (vehicle.mv.EncyclopediaEntry != null && vehicle.mv.EncyclopediaEntry.Length > 0)
             {
@@ -28,12 +23,12 @@ namespace VehicleFramework
                     popup = null,
                     image = vehicle.mv.EncyclopediaImage?.texture,
                 };
-                LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
-                LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
-                PDAHandler.AddEncyclopediaEntry(entry);
+                Nautilus.Handlers.LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
+                Nautilus.Handlers.LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
+                Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
             }
 
-            CustomPrefab module_CustomPrefab = new CustomPrefab(vehicle_info);
+            Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);
             vehicle.mv.VehicleModel.EnsureComponent<TechTag>().type = vehicle_info.TechType;
             vehicle.mv.VehicleModel.EnsureComponent<PrefabIdentifier>().ClassId = vehicle.mv.name;
             module_CustomPrefab.SetGameObject(vehicle.mv.VehicleModel);
@@ -41,12 +36,12 @@ namespace VehicleFramework
                                             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                             "recipes",
                                             vehicle.mv.name + "_recipe.json");
-            RecipeData modulerRecipe = JsonUtils.Load<RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
+            Nautilus.Crafting.RecipeData modulerRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
             if(modulerRecipe.Ingredients.Count() == 0)
             {
                 modulerRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new CraftData.Ingredient(x.Key, x.Value)).ToList());
-                JsonUtils.Save<RecipeData>(modulerRecipe, jsonRecipeFileName, new Nautilus.Json.Converters.CustomEnumConverter());
-                modulerRecipe = JsonUtils.Load<RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
+                Nautilus.Utility.JsonUtils.Save<Nautilus.Crafting.RecipeData>(modulerRecipe, jsonRecipeFileName, new Nautilus.Json.Converters.CustomEnumConverter());
+                modulerRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
             }
 
             module_CustomPrefab.SetRecipe(modulerRecipe).WithCraftingTime(3).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });

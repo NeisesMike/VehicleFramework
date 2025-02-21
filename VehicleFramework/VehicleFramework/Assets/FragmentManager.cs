@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using BepInEx;
-using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
-using Nautilus.Assets.PrefabTemplates;
-using BiomeData = LootDistributionData.BiomeData;
-
 
 namespace VehicleFramework.Assets
 {
@@ -75,7 +67,7 @@ namespace VehicleFramework.Assets
             TechType fragmentTT;
             if(frag.fragment != null && (frag.fragments == null || frag.fragments.Count() < 1))
             {
-                CustomPrefab customPrefab = RegisterFragmentGenericSingle(frag, frag.fragment, true, out fragmentTT);
+                Nautilus.Assets.CustomPrefab customPrefab = RegisterFragmentGenericSingle(frag, frag.fragment, true, out fragmentTT);
                 customPrefab.Register();
                 Logger.Log("Registered fragment: " + frag.classID);
             }
@@ -93,16 +85,16 @@ namespace VehicleFramework.Assets
             List<GameObject> tail = frag.fragments;
             tail.Remove(head);
             TechType fragmentType;
-            List<CustomPrefab> customPrefabs = new List<CustomPrefab>();
+            List<Nautilus.Assets.CustomPrefab> customPrefabs = new List<Nautilus.Assets.CustomPrefab>();
             customPrefabs.Add(RegisterFragmentGenericSingle(frag, head, false, out fragmentType));
             int numberFragments = 1;
             foreach (GameObject fragmentObject in tail)
             {
                 Admin.Utils.ApplyMarmoset(fragmentObject);
-                PrefabInfo fragmentInfo = PrefabInfo.WithTechType(frag.classID + numberFragments.ToString(), frag.displayName, frag.description);
+                Nautilus.Assets.PrefabInfo fragmentInfo = Nautilus.Assets.PrefabInfo.WithTechType(frag.classID + numberFragments.ToString(), frag.displayName, frag.description);
                 numberFragments++;
                 fragmentInfo.TechType = fragmentType;
-                CustomPrefab customFragmentPrefab = new CustomPrefab(fragmentInfo);
+                Nautilus.Assets.CustomPrefab customFragmentPrefab = new Nautilus.Assets.CustomPrefab(fragmentInfo);
                 fragmentObject.EnsureComponent<BoxCollider>();
                 fragmentObject.EnsureComponent<PrefabIdentifier>().ClassId = frag.classID;
                 fragmentObject.EnsureComponent<FragmentManager>();
@@ -113,7 +105,7 @@ namespace VehicleFramework.Assets
                 customPrefabs.Add(customFragmentPrefab);
             }
             int numberPrefabsRegistered = 0;
-            foreach (CustomPrefab customPrefab in customPrefabs)
+            foreach (Nautilus.Assets.CustomPrefab customPrefab in customPrefabs)
             {
                 List<Vector3> spawnLocationsToUse = new List<Vector3>();
                 List<int> indexes = new List<int>();
@@ -126,14 +118,14 @@ namespace VehicleFramework.Assets
                 }
                 if (frag.spawnRotations == null)
                 {
-                    customPrefab.SetSpawns(spawnLocationsToUse.Select(x => new SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
+                    customPrefab.SetSpawns(spawnLocationsToUse.Select(x => new Nautilus.Assets.SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
                 }
                 else
                 {
-                    List<SpawnLocation> spawns = new List<SpawnLocation>();
+                    List<Nautilus.Assets.SpawnLocation> spawns = new List<Nautilus.Assets.SpawnLocation>();
                     for (int i = 0; i < spawnLocationsToUse.Count(); i++)
                     {
-                        spawns.Add(new SpawnLocation(spawnLocationsToUse[i], frag.spawnRotations[indexes[i]]));
+                        spawns.Add(new Nautilus.Assets.SpawnLocation(spawnLocationsToUse[i], frag.spawnRotations[indexes[i]]));
                     }
                     customPrefab.SetSpawns(spawns.ToArray()); // this creates a harmless Nautilus error
                 }
@@ -142,11 +134,11 @@ namespace VehicleFramework.Assets
             }
             return fragmentType;
         }
-        internal static CustomPrefab RegisterFragmentGenericSingle(FragmentData frag, GameObject fragmentObject, bool doSpawnLocations, out TechType result)
+        internal static Nautilus.Assets.CustomPrefab RegisterFragmentGenericSingle(FragmentData frag, GameObject fragmentObject, bool doSpawnLocations, out TechType result)
         {
             Admin.Utils.ApplyMarmoset(fragmentObject);
-            PrefabInfo fragmentInfo = PrefabInfo.WithTechType(frag.classID, frag.displayName, frag.description);
-            CustomPrefab customFragmentPrefab = new CustomPrefab(fragmentInfo);
+            Nautilus.Assets.PrefabInfo fragmentInfo = Nautilus.Assets.PrefabInfo.WithTechType(frag.classID, frag.displayName, frag.description);
+            Nautilus.Assets.CustomPrefab customFragmentPrefab = new Nautilus.Assets.CustomPrefab(fragmentInfo);
             fragmentObject.EnsureComponent<BoxCollider>();
             fragmentObject.EnsureComponent<PrefabIdentifier>().ClassId = frag.classID;
             fragmentObject.EnsureComponent<FragmentManager>();
@@ -158,14 +150,14 @@ namespace VehicleFramework.Assets
             {
                 if (frag.spawnRotations == null)
                 {
-                    customFragmentPrefab.SetSpawns(frag.spawnLocations.Select(x => new SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
+                    customFragmentPrefab.SetSpawns(frag.spawnLocations.Select(x => new Nautilus.Assets.SpawnLocation(x)).ToArray()); // this creates a harmless Nautilus error
                 }
                 else
                 {
-                    List<SpawnLocation> spawns = new List<SpawnLocation>();
+                    List<Nautilus.Assets.SpawnLocation> spawns = new List<Nautilus.Assets.SpawnLocation>();
                     for (int i = 0; i < frag.spawnLocations.Count(); i++)
                     {
-                        spawns.Add(new SpawnLocation(frag.spawnLocations[i], frag.spawnRotations[i]));
+                        spawns.Add(new Nautilus.Assets.SpawnLocation(frag.spawnLocations[i], frag.spawnRotations[i]));
                     }
                     customFragmentPrefab.SetSpawns(spawns.ToArray()); // this creates a harmless Nautilus error
                 }

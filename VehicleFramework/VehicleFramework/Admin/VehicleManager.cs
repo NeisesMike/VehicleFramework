@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using Nautilus.Json;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.SaveLoad;
 
@@ -49,7 +48,7 @@ namespace VehicleFramework
         {
             VehiclesInPlay.Remove(mv);
         }
-        internal static void SaveVehicles(object sender, JsonFileEventArgs e)
+        internal static void SaveVehicles(object sender, Nautilus.Json.JsonFileEventArgs e)
         {
             SaveData data = e.Instance as SaveData;
             /* TODO

@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using Nautilus.Crafting;
-using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
-using Nautilus.Utility;
 using UnityEngine;
-using Ingredient = CraftData.Ingredient;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
 
@@ -25,17 +21,17 @@ namespace VehicleFramework
 
         public static TechType RegisterConsole(GameObject droneStation, Atlas.Sprite crafter, Sprite unlock)
         {
-            PrefabInfo Info = PrefabInfo.WithTechType(classID, displayName, description)
+            Nautilus.Assets.PrefabInfo Info = Nautilus.Assets.PrefabInfo.WithTechType(classID, displayName, description)
                 .WithIcon(crafter);
-            CustomPrefab prefab = new CustomPrefab(Info);
-            ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Wall | ConstructableFlags.Submarine;
+            Nautilus.Assets.CustomPrefab prefab = new Nautilus.Assets.CustomPrefab(Info);
+            Nautilus.Utility.ConstructableFlags constructableFlags = Nautilus.Utility.ConstructableFlags.Inside | Nautilus.Utility.ConstructableFlags.Wall | Nautilus.Utility.ConstructableFlags.Submarine;
             droneStation.AddComponent<DroneStation>();
             Admin.Utils.ApplyMarmoset(droneStation);
-            PrefabUtils.AddBasicComponents(droneStation, classID, Info.TechType, LargeWorldEntity.CellLevel.Medium);
-            PrefabUtils.AddConstructable(droneStation, Info.TechType, constructableFlags, droneStation.transform.Find("model").gameObject);
+            Nautilus.Utility.PrefabUtils.AddBasicComponents(droneStation, classID, Info.TechType, LargeWorldEntity.CellLevel.Medium);
+            Nautilus.Utility.PrefabUtils.AddConstructable(droneStation, Info.TechType, constructableFlags, droneStation.transform.Find("model").gameObject);
             prefab.SetGameObject(droneStation);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
-            prefab.SetRecipe(new RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
+            prefab.SetRecipe(new Nautilus.Crafting.RecipeData(new CraftData.Ingredient(TechType.ComputerChip, 1), new CraftData.Ingredient(TechType.Glass, 1), new CraftData.Ingredient(TechType.Titanium, 1), new CraftData.Ingredient(TechType.Silver, 1)));
             prefab.SetUnlock(TechType.Fragment)
                 .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
             prefab.Register();

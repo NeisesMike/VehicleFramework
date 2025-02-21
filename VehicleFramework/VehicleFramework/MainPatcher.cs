@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using HarmonyLib;
 using System.Collections;
-using Nautilus.Json;
-using Nautilus.Handlers;
 using BepInEx;
 using UnityEngine.SceneManagement;
 
@@ -57,22 +55,22 @@ namespace VehicleFramework
         }
         public void Patch()
         {
-            SaveLoad.SaveData saveData = SaveDataHandler.RegisterSaveDataCache<SaveLoad.SaveData>();
+            SaveLoad.SaveData saveData = Nautilus.Handlers.SaveDataHandler.RegisterSaveDataCache<SaveLoad.SaveData>();
 
             // Update the player position before saving it
-            saveData.OnStartedSaving += (object sender, JsonFileEventArgs e) =>
+            saveData.OnStartedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
                 VehicleManager.SaveVehicles(sender, e);
             };
 
-            saveData.OnFinishedSaving += (object sender, JsonFileEventArgs e) =>
+            saveData.OnFinishedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
                 //SaveData data = e.Instance as SaveData;
                 //Logger.Output(VehicleManager.VehiclesInPlay.Count.ToString());
                 //Logger.Output(data.UpgradeList.Keys.ToString());
             };
 
-            saveData.OnFinishedLoading += (object sender, JsonFileEventArgs e) =>
+            saveData.OnFinishedLoading += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
                 VehicleSaveData = e.Instance as SaveLoad.SaveData;
             };
