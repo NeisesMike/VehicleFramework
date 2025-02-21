@@ -164,5 +164,21 @@ namespace VehicleFramework.Admin
             mat.SetFloat("_EmissionLM", dayAmount);
             mat.SetFloat("_EmissionLMNight", nightAmount);
         }
+        public static void AddEncyclopediaEntry(PDAEncyclopedia.EntryData data)
+        {
+            IEnumerator AddEncyclopediaEntryInternal()
+            {
+                yield return new WaitUntil(() => PDAEncyclopedia.mapping != null);
+                if (PDAEncyclopedia.mapping.ContainsKey(data.key))
+                {
+                    PDAEncyclopedia.mapping[data.key] = data;
+                }
+                else
+                {
+                    PDAEncyclopedia.mapping.Add(data.key, data);
+                }
+            }
+            UWE.CoroutineHost.StartCoroutine(AddEncyclopediaEntryInternal());
+        }
     }
 }

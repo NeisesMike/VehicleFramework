@@ -23,9 +23,9 @@ namespace VehicleFramework
                     popup = null,
                     image = vehicle.mv.EncyclopediaImage?.texture,
                 };
-                Nautilus.Handlers.LanguageHandler.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
-                Nautilus.Handlers.LanguageHandler.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
-                Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
+                Patches.LanguagePatcher.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
+                Patches.LanguagePatcher.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
+                Admin.Utils.AddEncyclopediaEntry(entry);
             }
 
             Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);

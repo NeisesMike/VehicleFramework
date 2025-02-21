@@ -59,7 +59,18 @@ namespace VehicleFramework
                 new Vector3 (375.1f, -69.4f, -22.4f),
                 new Vector3 (-148.1f, -31.7f, 252.8f)
             };
-            Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(classID, "Tech/Habitats", displayName, encyclopediaDesc, DSAssets.unlock.texture, DSAssets.unlock, null, null);
+            PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
+            {
+                key = classID,
+                path = "Tech/Habitats",
+                nodes = new[] { "Tech", "Habitats" },
+                unlocked = true,
+                popup = DSAssets.unlock,
+                image = DSAssets.unlock.texture,
+            };
+            Admin.Utils.AddEncyclopediaEntry(entry);
+            Patches.LanguagePatcher.SetLanguageLine($"Ency_{classID}", displayName);
+            Patches.LanguagePatcher.SetLanguageLine($"EncyDesc_{classID}", encyclopediaDesc);
             FragmentData fragmentData = new FragmentData
             {
                 fragment = DSAssets.fragment,

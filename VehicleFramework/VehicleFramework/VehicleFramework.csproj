@@ -160,6 +160,7 @@
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Patches\FontReferencesPatcher.cs" />
+    <Compile Include="Patches\LanguagePatcher.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />
     <Compile Include="UpgradeTypes\CraftingNode.cs" />
     <Compile Include="VehicleComponents\MaterialReactor.cs" />
