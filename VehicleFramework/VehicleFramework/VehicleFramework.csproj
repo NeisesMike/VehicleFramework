@@ -133,6 +133,7 @@
     <Compile Include="Admin\UpgradeRegistrar.cs" />
     <Compile Include="Assets\AssetBundleManager.cs" />
     <Compile Include="Assets\BiomeType.cs" />
+    <Compile Include="Assets\FontUtils.cs" />
     <Compile Include="Assets\FragmentManager.cs" />
     <Compile Include="Admin\GameObjectManager.cs" />
     <Compile Include="Admin\GameStateWatcher.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="LightControllers\VolumetricLightController.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\FontReferencesPatcher.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />
     <Compile Include="UpgradeTypes\CraftingNode.cs" />
     <Compile Include="VehicleComponents\MaterialReactor.cs" />
