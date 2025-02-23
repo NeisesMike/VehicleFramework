@@ -59,5 +59,9 @@ namespace VehicleFramework
                 Subtitles.main.queue.Add(id, new StringBuilder(msg), delay, duration);
             }
         }
+        public static void Output(string msg, float time = 4f, int x = 500, int y = 0)
+        {
+            ErrorMessage.AddWarning(msg);
+        }
     }
 }
