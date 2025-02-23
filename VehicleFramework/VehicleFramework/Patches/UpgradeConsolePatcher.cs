@@ -28,6 +28,11 @@ namespace VehicleFramework.Patches
 		}
 		public void OnSlotEquipped(string slot, InventoryItem item)
 		{
+			IEnumerator BroadcastMessageSoon()
+            {
+				yield return new WaitUntil(() => Subroot != null);
+				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
+			}
 			if (item.techType != TechType.None)
 			{
 				UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
@@ -38,11 +43,16 @@ namespace VehicleFramework.Patches
 					isAdded = true
 				};
 				VehicleFramework.Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
-				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
+				UWE.CoroutineHost.StartCoroutine(BroadcastMessageSoon());
 			}
 		}
 		public void OnSlotUnequipped(string slot, InventoryItem item)
 		{
+			IEnumerator BroadcastMessageSoon()
+			{
+				yield return new WaitUntil(() => Subroot != null);
+				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
+			}
 			if (item.techType != TechType.None)
 			{
 				UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
@@ -53,7 +63,7 @@ namespace VehicleFramework.Patches
 					isAdded = false
 				};
 				VehicleFramework.Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
-				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
+				UWE.CoroutineHost.StartCoroutine(BroadcastMessageSoon());
 			}
 		}
 	}
