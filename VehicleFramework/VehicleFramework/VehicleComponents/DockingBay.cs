@@ -19,6 +19,7 @@ namespace VehicleFramework.VehicleComponents
         private Coroutine dockAnimation = null;
         private float dockingDistanceThreshold = 6f;
         private Vector3 internalExitForce;
+        private bool isInitialized = false;
 
         public bool Initialize(Transform docked, Transform exit, Transform dockTrigger, List<TechType> inputWhitelist, Vector3 exitForce)
         {
@@ -49,6 +50,7 @@ namespace VehicleFramework.VehicleComponents
             vehicleDockingTrigger = dockTrigger;
             inputWhitelist.ForEach(x => whitelist.Add(x));
             internalExitForce = exitForce;
+            isInitialized = true;
             return true;
         }
         public void Detach(bool withPlayer)
@@ -72,6 +74,10 @@ namespace VehicleFramework.VehicleComponents
                 foreach (TechType tt in whitelist)
                 {
                     Vehicle innerTarget = Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, x => x.GetTechType() == tt);
+                    if(innerTarget == null)
+                    {
+                        continue;
+                    }
                     float innerDistance = Vector3.Distance(vehicleDockingTrigger.transform.position, innerTarget.transform.position);
                     if (innerDistance < closestTargetDistance)
                     {
@@ -186,6 +192,10 @@ namespace VehicleFramework.VehicleComponents
 
         private void Update()
         {
+            if (!isInitialized)
+            {
+                return;
+            }
             OnDockUpdate();
             if (dockAnimation != null)
             {
