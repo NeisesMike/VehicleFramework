@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using System.Reflection;
-using HarmonyLib;
 
 namespace VehicleFramework
 {
@@ -14,6 +9,7 @@ namespace VehicleFramework
     {
         public static ModuleBuilder main;
         public static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new Dictionary<string, uGUI_EquipmentSlot>();
+        public const int MaxNumModules = 18;
         public bool isEquipmentInit = false;
         public bool areModulesReady = false;
         public static bool haveWeCalledBuildAllSlots = false;
@@ -81,19 +77,7 @@ namespace VehicleFramework
             if (!vehicleAllSlots.ContainsKey("VehicleModule0"))
             {
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                int max_num_modules = 0;
-                foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
-                {
-                    if(ve.mv is null)
-                    {
-                        continue;
-                    }
-                    if (max_num_modules < ve.mv.NumModules)
-                    {
-                        max_num_modules = ve.mv.NumModules;
-                    }
-                }
-                for (int i = 0; i < max_num_modules; i++)
+                for (int i = 0; i < MaxNumModules; i++)
                 {
                     vehicleAllSlots.Add("VehicleModule" + i.ToString(), equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>());
                 }
@@ -103,19 +87,7 @@ namespace VehicleFramework
             else
             {
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                int max_num_modules = 0;
-                foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
-                {
-                    if (ve.mv is null)
-                    {
-                        continue;
-                    }
-                    if (max_num_modules < ve.mv.NumModules)
-                    {
-                        max_num_modules = ve.mv.NumModules;
-                    }
-                }
-                for (int i = 0; i < max_num_modules; i++)
+                for (int i = 0; i < MaxNumModules; i++)
                 {
                     vehicleAllSlots["VehicleModule" + i.ToString()] = equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>();
                 }
@@ -250,15 +222,12 @@ namespace VehicleFramework
                         break;
                 }
             }
-            // TODO: fix this constant value somehow
-            BuildVehicleModuleSlots(12, true);
+            BuildVehicleModuleSlots(MaxNumModules, true);
             main.areModulesReady = true;
             haveSlotsBeenInited = true;
         }
         public void BuildVehicleModuleSlots(int modules, bool arms)
         {
-            int numModules = arms ? modules + 2 : modules;
-
             // build, link, and position modules
             for (int i=0; i<modules; i++)
             {
@@ -272,7 +241,7 @@ namespace VehicleFramework
 
                 LinkModule(ref thisModule);
 
-                DistributeModule(ref thisModule, i, numModules);
+                DistributeModule(ref thisModule, i);
 
                 if (i == 0)
                 {
@@ -291,7 +260,7 @@ namespace VehicleFramework
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().slot = ModuleBuilder.LeftArmSlotName;
                 leftArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
                 LinkArm(ref leftArm);
-                DistributeModule(ref leftArm, modules, numModules);
+                DistributeModule(ref leftArm, modules);
             }
 
             // build, link, and position right arm
@@ -305,7 +274,7 @@ namespace VehicleFramework
                 rightArm.EnsureComponent<uGUI_EquipmentSlot>().slot = ModuleBuilder.RightArmSlotName;
                 rightArm.EnsureComponent<uGUI_EquipmentSlot>().manager = equipment;
                 LinkArm(ref rightArm);
-                DistributeModule(ref rightArm, modules + 1, numModules);
+                DistributeModule(ref rightArm, modules + 1);
             }
         }
         public void LinkModule(ref GameObject thisModule)
@@ -318,7 +287,7 @@ namespace VehicleFramework
             thisModule.GetComponent<uGUI_EquipmentSlot>().background.sprite = genericModuleSlotSprite;
             thisModule.GetComponent<uGUI_EquipmentSlot>().background.material = genericModuleSlotMaterial;
         }
-        public void DistributeModule(ref GameObject thisModule, int position, int numModules)
+        public void DistributeModule(ref GameObject thisModule, int position)
         {
             int row_size = 4;
             int arrayX = position % row_size;
@@ -330,7 +299,7 @@ namespace VehicleFramework
             float stepX = Mathf.Abs(topLeftSlot.localPosition.x - centerX);
             float stepY = Mathf.Abs(topLeftSlot.localPosition.y - centerY);
 
-            Vector3 arrayOrigin = new Vector3(centerX - 2 * stepX, centerY - 2 * stepY, 0);
+            Vector3 arrayOrigin = new Vector3(centerX - 2 * stepX, centerY - 2.5f * stepY, 0);
 
             float thisX = arrayOrigin.x + arrayX * stepX;
             float thisY = arrayOrigin.y + arrayY * stepY;
@@ -345,7 +314,6 @@ namespace VehicleFramework
             thisBackground.transform.localPosition = new Vector3(250,250,0);
             thisBackground.transform.localScale = 5 * Vector3.one;
             thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
-            //thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = backgroundSprite;
         }
         public void LinkArm(ref GameObject thisModule)
         {

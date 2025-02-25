@@ -28,6 +28,8 @@ namespace VehicleFramework
         internal ConfigEntry<float> EngineVolume { get; set; }
         internal ConfigEntry<string> AutopilotVoice { get; set; }
         internal ConfigEntry<string> EngineSounds { get; set; }
+        internal ConfigEntry<int> NumUpgrades { get; set; }
+        internal ConfigEntry<bool> IsArms { get; set; }
         internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; }
         internal List<ConfigEntry<bool>> ExternalToggles = new List<ConfigEntry<bool>>();
         internal List<ConfigEntry<float>> ExternalSliders = new List<ConfigEntry<float>>();
@@ -75,6 +77,9 @@ namespace VehicleFramework
             vConf.EngineSounds.SettingChanged += GrabNewEngineSounds;
 
             vConf.HUDChoice = config.Bind<uGUI_VehicleHUD.HUDChoice>(vehicleName, "HUD Choice", uGUI_VehicleHUD.HUDChoice.Storage, "Choose a HUD option for this vehicle");
+
+            vConf.NumUpgrades= config.Bind<int>(vehicleName, "Number of Upgrade Slots", mv.NumModules, new ConfigDescription("How many upgrades can this vehicle use? (restart required)", new AcceptableValueRange<int>(0, ModuleBuilder.MaxNumModules)));
+            vConf.IsArms = config.Bind<bool>(vehicleName, "Enable Arm Slots", mv.HasArms, new ConfigDescription("Can this vehicle use arm upgrades? (restart required)"));
 
             Admin.ExternalVehicleConfig<bool>.GetModVehicleConfig(mv.name);
             Admin.ExternalVehicleConfig<float>.GetModVehicleConfig(mv.name);

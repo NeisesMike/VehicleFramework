@@ -333,7 +333,7 @@ namespace VehicleFramework
             {
                 if (_slotIDs == null)
                 {
-                    _slotIDs = GenerateSlotIDs(NumModules, HasArms);
+                    _slotIDs = GenerateSlotIDs(VehicleConfig.GetConfig(this).NumUpgrades.Value, VehicleConfig.GetConfig(this).IsArms.Value);
                 }
                 return _slotIDs;
             }
@@ -719,7 +719,7 @@ namespace VehicleFramework
         #endregion
 
         #region internal_methods
-        internal List<string> VehicleModuleSlots => GenerateModuleSlots(NumModules).ToList();
+        internal List<string> VehicleModuleSlots => GenerateModuleSlots(VehicleConfig.GetConfig(this).NumUpgrades.Value).ToList(); // use config value instead
         internal List<string> VehicleArmSlots => new List<string> { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
         internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new Dictionary<EquipmentType, List<string>>
                 {
