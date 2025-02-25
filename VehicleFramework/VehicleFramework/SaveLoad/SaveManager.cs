@@ -369,6 +369,12 @@ namespace VehicleFramework.SaveLoad
                         }
                         catch (Exception e)
                         {
+                            if(batt.name.Equals("MaterialReactor", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Right now, MaterialReactors are serialized in a custom way
+                                // Eventually, I'd like to move everything in this file to use that scheme.
+                                continue;
+                            }
                             Logger.Error($"Failed to serialize battery {batt.name} for: {mv.name} : {mv.subName.hullName.text}");
                             Logger.Log(e.Message);
                         }
