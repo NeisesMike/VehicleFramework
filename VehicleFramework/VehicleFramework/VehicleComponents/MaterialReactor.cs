@@ -194,6 +194,12 @@ namespace VehicleFramework.VehicleComponents
                 currentEnergies.Add(item, maxEnergies[item.techType]);
             }
             UpdateVisuals?.Invoke(container.count);
+            // check if it can rot, and disable all that
+            Eatable eatable = item.item.gameObject.GetComponent<Eatable>();
+            if(eatable != null)
+            {
+                eatable.decomposes = false;
+            }
         }
         private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
         {
