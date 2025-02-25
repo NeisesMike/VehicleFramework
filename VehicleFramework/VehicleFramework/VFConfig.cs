@@ -116,7 +116,6 @@ namespace VehicleFramework
         private static void SetupGeneralOptions(ConfigFile config)
         {
             MainPatcher.VFConfig.IsDebugLogging = config.Bind<bool>("!General", "Debug Logs", false, "Enable extra logging statements for debugging purposes");
-            MainPatcher.VFConfig.ForceArmsCompat = config.Bind<bool>("!General", "Force Arms Slots", false, "Create Arm Upgrade Slots for vehicles that aren't setup for it.");
         }
 
         private static void SetupAccessibilityOptions(ConfigFile config)
@@ -140,7 +139,6 @@ namespace VehicleFramework
         internal ConfigEntry<bool> IsFlashingLights { get; set; }
         internal ConfigEntry<bool> IsSubtitles { get; set; }
         internal ConfigEntry<bool> IsDebugLogging { get; set; }
-        internal ConfigEntry<bool> ForceArmsCompat { get; set; }
         internal ConfigEntry<bool> UnlockDroneStation { get; set; }
     }
 }
