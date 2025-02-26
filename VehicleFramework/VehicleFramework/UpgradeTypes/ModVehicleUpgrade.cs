@@ -37,7 +37,8 @@ namespace VehicleFramework.UpgradeTypes
         public virtual float CraftingTime => 3f;
         public virtual Atlas.Sprite Icon => StaticAssets.UpgradeIcon;
         public virtual TechType UnlockWith => TechType.Workbench;
-        public virtual string UnlockedMessage => "New vehicle upgrade acquired";
+        public const string DefaultUnlockMessage = "New vehicle upgrade acquired";
+        public virtual string UnlockedMessage => DefaultUnlockMessage;
         public virtual Sprite UnlockedSprite => null;
         public virtual string TabName { get; set; } = string.Empty;
         public virtual string TabDisplayName => string.Empty;

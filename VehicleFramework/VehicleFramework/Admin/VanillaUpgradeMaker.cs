@@ -16,10 +16,13 @@ namespace VehicleFramework.Admin
             {
                 prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
             }
-            if (upgrade.UnlockedSprite != null && !upgrade.UnlockAtStart)
+            if (!upgrade.UnlockAtStart)
             {
-                var scanningGadget = prefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
-                scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+                ScanningGadget scanGadge = prefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
+                if (upgrade.UnlockedSprite != null)
+                {
+                    scanGadge.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+                }
             }
             return prefab;
         }
@@ -255,10 +258,13 @@ namespace VehicleFramework.Admin
             {
                 prefab.SetPdaGroupCategory(TechGroup.Cyclops, TechCategory.CyclopsUpgrades);
             }
-            if (upgrade.UnlockedSprite != null && !upgrade.UnlockAtStart)
+            if (!upgrade.UnlockAtStart)
             {
-                var scanningGadget = prefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
-                scanningGadget.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+                ScanningGadget scanGadge = prefab.SetUnlock(upgrade.UnlockTechType == TechType.Fragment ? upgrade.UnlockWith : upgrade.UnlockTechType);
+                if (upgrade.UnlockedSprite != null)
+                {
+                    scanGadge.WithAnalysisTech(upgrade.UnlockedSprite, unlockMessage: upgrade.UnlockedMessage);
+                }
             }
             prefab.AddRecipe(upgrade, VehicleType.Cyclops);
             prefab.SetEquipment(EquipmentType.CyclopsModule);

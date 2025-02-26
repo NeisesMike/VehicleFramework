@@ -73,25 +73,32 @@ namespace VehicleFramework.Admin
         {
             if(compat.skipModVehicle && compat.skipSeamoth && compat.skipExosuit && compat.skipCyclops)
             {
-                Logger.Error("ModVehicleUpgrade compat cannot skip all vehicle types!");
+                Logger.Error($"UpgradeRegistrar Error: ModVehicleUpgrade {upgrade.ClassId}: compat cannot skip all vehicle types!");
                 return false;
             }
-            if(upgrade.ClassId == "")
+            if(upgrade.ClassId.Equals(string.Empty))
             {
-                Logger.Error("ModVehicleUpgrade cannot have empty class ID!");
+                Logger.Error($"UpgradeRegistrar Error: ModVehicleUpgrade {upgrade.ClassId} cannot have empty class ID!");
                 return false;
             }
             if(upgrade.GetRecipe(VehicleType.ModVehicle).Count == 0)
             {
-                Logger.Error("ModVehicleUpgrade cannot have empty recipe!");
+                Logger.Error($"UpgradeRegistrar Error: ModVehicleUpgrade {upgrade.ClassId} cannot have empty recipe!");
                 return false;
             }
             if (upgrade as ModVehicleArm != null)
             {
                 if ((upgrade as ModVehicleArm).QuickSlotType != QuickSlotType.Selectable && (upgrade as ModVehicleArm).QuickSlotType != QuickSlotType.SelectableChargeable)
                 {
-                    Logger.Error("ModVehicleArm must have QuickSlotType Selectable or SelectableChargeable!");
+                    Logger.Error($"UpgradeRegistrar Error: ModVehicleArm {upgrade.ClassId} must have QuickSlotType Selectable or SelectableChargeable!");
                     return false;
+                }
+            }
+            if (!upgrade.UnlockAtStart)
+            {
+                if (!upgrade.UnlockedSprite && !upgrade.UnlockedMessage.Equals(ModVehicleUpgrade.DefaultUnlockMessage))
+                {
+                    Logger.Warn($"UpgradeRegistrar Warning: the upgrade {upgrade.ClassId} has UnlockAtStart false and UnlockedSprite null. When unlocked, its custom UnlockedMessage will not be displayed. Add an UnlockedSprite to resolve this.");
                 }
             }
             return true;
