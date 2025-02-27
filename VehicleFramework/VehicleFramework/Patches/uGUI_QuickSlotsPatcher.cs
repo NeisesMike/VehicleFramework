@@ -19,11 +19,7 @@ namespace VehicleFramework
             if (!Builder.isPlacing) // SnapBuilder compat
             {
                 Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
-                if (target == null)
-                {
-                    return true;
-                }
-                if (target.name.Contains("DroneStation") || (target.transform.parent != null && target.transform.parent.name.Contains("DroneStation")))
+                if (target?.GetComponentInParent<DroneStation>() != null)
                 {
                     return false;
                 }
