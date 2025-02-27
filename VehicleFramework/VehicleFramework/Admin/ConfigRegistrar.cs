@@ -34,14 +34,16 @@ namespace VehicleFramework.Admin
         }
         public static ExternalVehicleConfig<T> GetModVehicleConfig(string vehicleName)
         {
-            var MVs = VehicleManager.vehicleTypes.Where(x => x.name.ToLower().Contains(vehicleName.ToLower()));
+            var MVs = VehicleManager.vehicleTypes.Where(x => x.name.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
             if (!MVs.Any())
             {
-                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not identify a ModVehicle: {vehicleName}");
+                string mvNames = VehicleManager.vehicleTypes.Select(x => x.name).Aggregate((x, y) => $"{x}, {y}");
+                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {mvNames}");
             }
             if (MVs.Count() > 1)
             {
-                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches.");
+                string mvNames = MVs.Select(x => x.name).Aggregate((x, y) => $"{x}, {y}");
+                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {mvNames}");
             }
             ModVehicle mv = MVs.First().mv;
             if (!main.ContainsKey(mv.GetType().ToString()))
