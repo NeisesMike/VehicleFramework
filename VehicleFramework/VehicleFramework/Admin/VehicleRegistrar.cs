@@ -259,11 +259,6 @@ namespace VehicleFramework
                         Logger.Error(thisName + " A null VehicleFloodLight.Light was provided. There would be nothing from which to emit light.");
                         return false;
                     }
-                    if (vfl.Light.transform.Find("VolumetricLight") == null)
-                    {
-                        Logger.Error(thisName + " A headlight was missing its VolumetricLight.");
-                        return false;
-                    }
                     if (vfl.Intensity < 0)
                     {
                         Logger.Error(thisName + " A negative VehicleFloodLight.Intensity was provided. The light would be totally dark.");
@@ -452,11 +447,6 @@ namespace VehicleFramework
                     if (vfl.Light == null)
                     {
                         Logger.Error(thisName + " A null VehicleFloodLight.Light was provided. There would be nothing from which to emit light.");
-                        return false;
-                    }
-                    if (vfl.Light.transform.Find("VolumetricLight") == null)
-                    {
-                        Logger.Error(thisName + " A floodlight was missing its VolumetricLight.");
                         return false;
                     }
                     if (vfl.Intensity < 0)
