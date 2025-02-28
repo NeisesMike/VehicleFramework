@@ -24,7 +24,7 @@ namespace VehicleFramework
         {
             if (MainPatcher.VFConfig.IsDebugLogging.Value)
             {
-                MyLog.LogInfo("[VehicleFramework] " + message);
+                MyLog.LogInfo($"[DebugLog]: {message}");
             }
         }
         private static int IDCounter = 65536; 
