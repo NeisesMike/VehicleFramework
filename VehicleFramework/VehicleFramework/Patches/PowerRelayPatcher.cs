@@ -44,10 +44,17 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(PowerRelay.GetPower))]
         public static bool GetPowerPrefix(PowerRelay __instance, ref float __result)
         {
-            ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
+            ModVehicle mv = __instance?.gameObject?.GetComponent<ModVehicle>();
             if (mv != null)
             {
-                __result = mv.energyInterface.TotalCanProvide(out _);
+                if (mv.energyInterface != null)
+                {
+                    __result = mv.energyInterface.TotalCanProvide(out _);
+                }
+                else
+                {
+                    __result = 0;
+                }
                 return false;
             }
             return true;
@@ -56,19 +63,17 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(PowerRelay.GetMaxPower))]
         public static bool GetMaxPowerPrefix(PowerRelay __instance, ref float __result)
         {
-            ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
-            if (mv != null && mv.energyInterface != null && mv.energyInterface.sources != null)
+            ModVehicle mv = __instance?.gameObject?.GetComponent<ModVehicle>();
+            if (mv != null)
             {
-                float totalCapacity = 0f;
-                for (int i = 0; i < mv.energyInterface.sources.Length; i++)
+                if (mv.energyInterface != null && mv.energyInterface.sources != null)
                 {
-                    EnergyMixin energyMixin = mv.energyInterface.sources[i];
-                    if (energyMixin != null)
-                    {
-                        totalCapacity += energyMixin.capacity;
-                    }
+                    __result = mv.energyInterface.sources.Where(x => x != null).Select(x => x.capacity).Sum();
                 }
-                __result = totalCapacity;
+                else
+                {
+                    __result = 0;
+                }
                 return false;
             }
             return true;
