@@ -13,11 +13,11 @@ namespace VehicleFramework
 {
     public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener, IScuttleListener
     {
-		public ModVehicle mv;
         public EnergyInterface aiEI;
         public AutoPilotVoice apVoice;
-        public LiveMixin liveMixin;
-        public EnergyInterface eInterf;
+        public ModVehicle mv => GetComponent<ModVehicle>();
+        public LiveMixin liveMixin => mv.liveMixin;
+        public EnergyInterface eInterf => mv.energyInterface;
 
         public enum HealthState
         {
@@ -85,12 +85,9 @@ namespace VehicleFramework
         private bool isDead = false;
         public void Awake()
         {
-            mv = GetComponent<ModVehicle>();
             mv.voice = apVoice = mv.gameObject.EnsureComponent<AutoPilotVoice>();
             mv.voice.voice = VoiceManager.GetDefaultVoice(mv);
             mv.gameObject.EnsureComponent<AutoPilotNavigator>();
-            liveMixin = mv.liveMixin;
-            eInterf = mv.energyInterface;
             healthStatus = HealthState.Safe;
             powerStatus = PowerState.Safe;
             depthStatus = DepthState.Safe;
