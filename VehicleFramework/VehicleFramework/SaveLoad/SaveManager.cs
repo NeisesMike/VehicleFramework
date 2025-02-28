@@ -747,22 +747,6 @@ namespace VehicleFramework.SaveLoad
                 }
             }
         }
-        internal static List<string> SerializeHasVehicleTechTypes()
-        {
-            return VehicleManager.vehicleTypes.Select(x => x.techType).Where(x => GameInfoIcon.Has(x)).Select(x => x.AsString()).ToList();
-        }
-        internal static void DeserializeHasVehicleTechTypes(SaveData data)
-        {
-            try
-            {
-                VehicleFramework.Patches.MainMenuLoadPanelPatcher.HasTechTypes = data.HasVehicleTechTypes;
-            }
-            catch
-            {
-                Logger.Error("Failed to deserialize HasVehicleTechTypes!");
-            }
-        }
-
 
         internal static IEnumerator LoadThisStorage(ModVehicle mv, batteries thisStorage, InnateStorageContainer matchedContainer)
         {

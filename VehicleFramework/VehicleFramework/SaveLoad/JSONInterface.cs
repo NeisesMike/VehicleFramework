@@ -6,6 +6,7 @@ namespace VehicleFramework.SaveLoad
 {
     public static class JsonInterface
     {
+        public const string SaveFolderName = "VFSaveData";
         public static void Write<T>(ModVehicle mv, string fileTitle, T data)
         {
             Write<T>($"{fileTitle}-{mv.GetComponent<PrefabIdentifier>().Id}", data);
@@ -74,7 +75,7 @@ namespace VehicleFramework.SaveLoad
         private static string GetFilePath(string innerName)
         {
             string directoryPath = SaveLoadManager.GetTemporarySavePath();
-            string configFolderPath = Path.Combine(directoryPath, "VFSaveData");
+            string configFolderPath = Path.Combine(directoryPath, SaveFolderName);
             if (!Directory.Exists(configFolderPath))
             {
                 Directory.CreateDirectory(configFolderPath);

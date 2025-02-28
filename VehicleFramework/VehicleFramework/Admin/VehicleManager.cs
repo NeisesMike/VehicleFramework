@@ -70,7 +70,7 @@ namespace VehicleFramework
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
             data.IsPlayerControlling = SaveManager.SerializePlayerControlling();
             data.SubNames = SaveManager.SerializeSubName();
-            data.HasVehicleTechTypes = SaveManager.SerializeHasVehicleTechTypes();
+            JsonInterface.Write<List<string>>(Patches.SaveLoadManagerPatcher.SaveFileSpritesFileName, VehicleManager.vehicleTypes.Select(x => x.techType).Where(x => GameInfoIcon.Has(x)).Select(x => x.AsString()).ToList());
         }
         private static IEnumerator LoadVehicle(ModVehicle mv)
         {
