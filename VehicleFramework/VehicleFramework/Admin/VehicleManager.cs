@@ -48,18 +48,12 @@ namespace VehicleFramework
         {
             VehiclesInPlay.Remove(mv);
         }
-        internal static void SaveVehicles(object sender, Nautilus.Json.JsonFileEventArgs e)
+        internal static void CreateSaveFileData(object sender, Nautilus.Json.JsonFileEventArgs e)
         {
             SaveData data = e.Instance as SaveData;
             /* TODO
-             * All these serializers are bad. For some reason,
-             * the system chokes and the game fails to save,
-             * but if you left-click, the game will unfreeze,
-             * and you can continue playing, having not saved.
-             * 
-             * It appears to be TechType that is the problem.
-             * Fortunately, it appears we can use TechType.AsString
-             * and TechTypeExtensions.FromString to get around this.
+             * This method should only be used for save-file-wide issues
+             * Per-vehicle issues should be moved into the vehicle classes
              */
             data.UpgradeLists = SaveManager.SerializeUpgrades();
             data.InnateStorages = SaveManager.SerializeInnateStorage();
@@ -74,6 +68,8 @@ namespace VehicleFramework
         }
         private static IEnumerator LoadVehicle(ModVehicle mv)
         {
+            // TODO
+            // this method should be moved into the vehicle classes and made non-static
             while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {
                 yield return null;
@@ -83,20 +79,20 @@ namespace VehicleFramework
                 yield return null;
             }
             Logger.Log("Loading: " + mv.GetName());
-            Coroutine ModuleGetter = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.VehicleSaveData, mv));
-            Coroutine dis = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.VehicleSaveData, mv));
-            Coroutine db = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.VehicleSaveData, mv));
+            Coroutine ModuleGetter = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.SaveFileData, mv));
+            Coroutine dis = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.SaveFileData, mv));
+            Coroutine db = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.SaveFileData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
-            Coroutine dms = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.VehicleSaveData, mv));
-            Coroutine da = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.VehicleSaveData, mv as Submarine));
+            Coroutine dms = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.SaveFileData, mv));
+            Coroutine da = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.SaveFileData, mv as Submarine));
             Coroutine dbb = null;
             if (mv as Submarine != null)
             {
-                dbb = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.VehicleSaveData, mv as Submarine));
+                dbb = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.SaveFileData, mv as Submarine));
             }
-            Coroutine dpi = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.VehicleSaveData, mv));
-            Coroutine dpc = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.VehicleSaveData, mv));
-            Coroutine dsn = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeSubName(MainPatcher.VehicleSaveData, mv));
+            Coroutine dpi = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.SaveFileData, mv));
+            Coroutine dpc = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.SaveFileData, mv));
+            Coroutine dsn = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeSubName(MainPatcher.SaveFileData, mv));
             if (mv.liveMixin.health == 0)
             {
                 mv.OnKill();

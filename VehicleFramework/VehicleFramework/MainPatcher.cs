@@ -13,7 +13,7 @@ namespace VehicleFramework
     public class MainPatcher : BaseUnityPlugin
     {
         public static MainPatcher Instance { get; private set; }
-        internal static SaveLoad.SaveData VehicleSaveData { get; private set; }
+        internal static SaveLoad.SaveData SaveFileData { get; private set; }
         public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
 
         internal static VFConfig VFConfig { get; private set; }
@@ -60,7 +60,7 @@ namespace VehicleFramework
             // Update the player position before saving it
             saveData.OnStartedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
-                VehicleManager.SaveVehicles(sender, e);
+                VehicleManager.CreateSaveFileData(sender, e);
             };
 
             saveData.OnFinishedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
@@ -72,7 +72,7 @@ namespace VehicleFramework
 
             saveData.OnFinishedLoading += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
-                VehicleSaveData = e.Instance as SaveLoad.SaveData;
+                SaveFileData = e.Instance as SaveLoad.SaveData;
             };
 
             void SetWorldNotLoaded()
