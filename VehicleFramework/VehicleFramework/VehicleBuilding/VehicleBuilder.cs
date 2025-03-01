@@ -448,8 +448,8 @@ namespace VehicleFramework
             Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
-            List<VehicleParts.VehicleFloodLight> theseLights = mv.HeadLights;
-            if(mv is VehicleTypes.Submarine subma)
+            List<VehicleParts.VehicleFloodLight> theseLights = mv.HeadLights ?? new List<VehicleParts.VehicleFloodLight>();
+            if(mv is VehicleTypes.Submarine subma && subma.FloodLights != null)
             {
                 theseLights.AddRange(subma.FloodLights);
             }
