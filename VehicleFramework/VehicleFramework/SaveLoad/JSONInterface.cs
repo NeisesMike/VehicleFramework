@@ -17,14 +17,25 @@ namespace VehicleFramework.SaveLoad
         public static void Write<T>(string uniqueFileName, T data)
         {
             string fileName = GetFilePath(uniqueFileName);
+            string json;
             try
             {
-                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-                File.WriteAllText(fileName, json);
+                json = JsonConvert.SerializeObject(data, Formatting.Indented);
             }
             catch(Exception e)
             {
-                Logger.Error($"Failed to serialize into file {uniqueFileName}!");
+                Logger.Error($"Failed to serialize json data for file {uniqueFileName}!");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+                return;
+            }
+            try
+            {
+                File.WriteAllText(fileName, json);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Failed to write file {uniqueFileName}!");
                 Logger.Error(e.Message);
                 Logger.Error(e.StackTrace);
             }
@@ -32,10 +43,31 @@ namespace VehicleFramework.SaveLoad
         public static T Read<T>(string uniqueFileName)
         {
             string fileName = GetFilePath(uniqueFileName);
-            if (File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
-                string json = File.ReadAllText(fileName);
+                return default;
+            }
+            string json;
+            try
+            {
+                json = File.ReadAllText(fileName);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Failed to read file {uniqueFileName}!");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+                return default;
+            }
+            try
+            {
                 return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Failed to deserialize json from file {uniqueFileName}!");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
             }
             return default;
         }
