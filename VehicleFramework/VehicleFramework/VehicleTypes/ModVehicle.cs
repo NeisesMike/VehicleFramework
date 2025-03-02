@@ -15,7 +15,7 @@ namespace VehicleFramework
      * ModVehicle is the primary abstract class provided by Vehicle Framework.
      * All VF vehicles inherit from ModVehicle.
      */
-    public abstract class ModVehicle : Vehicle, ICraftTarget
+    public abstract class ModVehicle : Vehicle, ICraftTarget, IProtoTreeEventListener
     {
         #region enumerations
         public enum DeathStyle
@@ -1275,6 +1275,27 @@ namespace VehicleFramework
                 UWE.Utils.ExitPhysicsSyncSection();
             }
             UWE.CoroutineHost.StartCoroutine(waitForTeleport());
+        }
+        #endregion
+
+        #region saveload
+        void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
+        {
+            SaveLoad.ModVehicleSaveLoad.Save(this);
+            OnGameSaved();
+        }
+        void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
+        {
+            SaveLoad.ModVehicleSaveLoad.Load(this);
+            OnGameLoaded();
+        }
+        protected virtual void OnGameSaved()
+        {
+            Logger.PDANote($"save me {name} {GetComponent<PrefabIdentifier>().Id}");
+        }
+        protected virtual void OnGameLoaded()
+        {
+            Logger.PDANote($"load me {name} {GetComponent<PrefabIdentifier>().Id}");
         }
         #endregion
     }

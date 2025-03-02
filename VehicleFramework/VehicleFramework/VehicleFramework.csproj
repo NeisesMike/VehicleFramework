@@ -162,6 +162,7 @@
     <Compile Include="Patches\FontReferencesPatcher.cs" />
     <Compile Include="Patches\LanguagePatcher.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />
+    <Compile Include="SaveLoad\ModVehicleSaveLoad.cs" />
     <Compile Include="UpgradeTypes\CraftingNode.cs" />
     <Compile Include="VehicleComponents\MaterialReactor.cs" />
     <Compile Include="VehicleComponents\ModVehicleDockingBay.cs" />
