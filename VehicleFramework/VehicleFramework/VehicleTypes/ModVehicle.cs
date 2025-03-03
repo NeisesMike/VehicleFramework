@@ -1279,24 +1279,75 @@ namespace VehicleFramework
         #endregion
 
         #region saveload
+        private const string isControlling = "isControlling";
+        private const string isInside = "isInside";
+        private const string mySubName = "SubName";
+        private const string SaveFileName = "SimpleData";
+        private void SaveSimpleData()
+        {
+            Dictionary<string, string> simpleData = new Dictionary<string, string>
+            {
+                { isControlling, IsPlayerControlling() ? bool.TrueString : bool.FalseString },
+                { isInside, IsUnderCommand ? bool.TrueString : bool.FalseString },
+                { mySubName, subName.hullName.text }
+            };
+            SaveLoad.JsonInterface.Write(this, SaveFileName, simpleData);
+        }
+        private IEnumerator LoadSimpleData()
+        {
+            yield return new WaitUntil(() => Admin.GameStateWatcher.isWorldLoaded);
+            var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SaveFileName);
+            if (simpleData == null || simpleData.Count == 0)
+            {
+                yield break;
+            }
+            if (Boolean.Parse(simpleData[isControlling]))
+            {
+                if (this as Drone != null)
+                {
+                    (this as Drone).BeginControlling();
+                }
+                else
+                {
+                    BeginPiloting();
+                }
+            }
+            if (Boolean.Parse(simpleData[isInside]))
+            {
+                PlayerEntry();
+            }
+            subName.SetName(simpleData[mySubName]);
+        }
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
-            SaveLoad.ModVehicleSaveLoad.Save(this);
+            try
+            {
+                SaveSimpleData();
+            }
+            catch(Exception e)
+            {
+                Logger.Error($"Failed to save simple data for ModVehicle {name}");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
             OnGameSaved();
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            SaveLoad.ModVehicleSaveLoad.Load(this);
+            try
+            {
+                UWE.CoroutineHost.StartCoroutine(LoadSimpleData());
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Failed to load simple data for ModVehicle {name}");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
             OnGameLoaded();
         }
-        protected virtual void OnGameSaved()
-        {
-            Logger.PDANote($"save me {name} {GetComponent<PrefabIdentifier>().Id}");
-        }
-        protected virtual void OnGameLoaded()
-        {
-            Logger.PDANote($"load me {name} {GetComponent<PrefabIdentifier>().Id}");
-        }
+        protected virtual void OnGameSaved() { }
+        protected virtual void OnGameLoaded() { }
         #endregion
     }
 }

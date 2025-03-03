@@ -414,24 +414,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, bool>> SerializePlayerInside()
         {
-            List<Tuple<Vector3, bool>> allVehiclesIsPlayerInside = new List<Tuple<Vector3, bool>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                try
-                {
-                    allVehiclesIsPlayerInside.Add(new Tuple<Vector3, bool>(mv.transform.position, mv.IsUnderCommand));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize IsPlayerInside for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
-        }
-            return allVehiclesIsPlayerInside;
+            return new List<Tuple<Vector3, bool>>();
         }
         internal static IEnumerator DeserializePlayerInside(SaveData data, ModVehicle mv)
         {
@@ -566,24 +549,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, bool>> SerializePlayerControlling()
         {
-            List<Tuple<Vector3, bool>> allVehiclesIsPlayerControlling = new List<Tuple<Vector3, bool>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                try
-                {
-                    allVehiclesIsPlayerControlling.Add(new Tuple<Vector3, bool>(mv.transform.position, mv.IsPlayerControlling()));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize IsPlayerControlling for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
-            }
-            return allVehiclesIsPlayerControlling;
+            return new List<Tuple<Vector3, bool>>();
         }
         internal static IEnumerator DeserializePlayerControlling(SaveData data, ModVehicle mv)
         {
@@ -617,24 +583,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, string>> SerializeSubName()
         {
-            List<Tuple<Vector3, string>> allVehiclesSubNames = new List<Tuple<Vector3, string>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                try
-                {
-                    allVehiclesSubNames.Add(new Tuple<Vector3, string>(mv.transform.position, mv.subName.hullName.text));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize SubName for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
-            }
-            return allVehiclesSubNames;
+            return new List<Tuple<Vector3, string>>();
         }
         internal static IEnumerator DeserializeSubName(SaveData data, ModVehicle mv)
         {

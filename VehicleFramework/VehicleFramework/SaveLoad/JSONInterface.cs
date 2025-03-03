@@ -56,6 +56,7 @@ namespace VehicleFramework.SaveLoad
             string fileName = GetFilePath(uniqueFileName);
             if (!File.Exists(fileName))
             {
+                Logger.DebugLog($"File did not exist! {fileName}!");
                 return default;
             }
             string json;
