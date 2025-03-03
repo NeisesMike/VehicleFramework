@@ -24,8 +24,6 @@ namespace VehicleFramework.SaveLoad
             SerializeUpgrades(mv);
             SerializeInnateStorage(mv);
             SerializeModularStorage(mv);
-            SerializeBatteries(mv);
-            SerializeBackupBatteries(mv);
             SerializePlayerInside(mv);
             SerializeAesthetics(mv);
             SerializePlayerControlling(mv);
@@ -47,16 +45,6 @@ namespace VehicleFramework.SaveLoad
         }
 
         private static void SerializeModularStorage(ModVehicle mv)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void SerializeBatteries(ModVehicle mv)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void SerializeBackupBatteries(ModVehicle mv)
         {
             throw new NotImplementedException();
         }
@@ -83,8 +71,6 @@ namespace VehicleFramework.SaveLoad
             DeserializeUpgrades(mv);
             DeserializeInnateStorage(mv);
             DeserializeModularStorage(mv);
-            DeserializeBatteries(mv);
-            DeserializeBackupBatteries(mv);
             DeserializePlayerInside(mv);
             DeserializeAesthetics(mv);
             DeserializePlayerControlling(mv);
@@ -102,16 +88,6 @@ namespace VehicleFramework.SaveLoad
         }
 
         private static void DeserializeModularStorage(ModVehicle mv)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void DeserializeBatteries(ModVehicle mv)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void DeserializeBackupBatteries(ModVehicle mv)
         {
             throw new NotImplementedException();
         }

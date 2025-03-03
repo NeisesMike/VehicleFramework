@@ -329,6 +329,9 @@ namespace VehicleFramework
                 var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
                 model.proxy = vb.BatteryProxy;
                 model.mixin = energyMixin;
+
+                SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vb.BatterySlot.transform);
+                vb.BatterySlot.EnsureComponent<SaveLoad.VFBatteryIdentifier>();
             }
             // Configure energy interface
             var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
@@ -369,6 +372,9 @@ namespace VehicleFramework
                 var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
                 model.proxy = vb.BatteryProxy;
                 model.mixin = em;
+
+                SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vb.BatterySlot.transform);
+                vb.BatterySlot.EnsureComponent<SaveLoad.VFBatteryIdentifier>();
             }
             // Configure energy interface
             mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();

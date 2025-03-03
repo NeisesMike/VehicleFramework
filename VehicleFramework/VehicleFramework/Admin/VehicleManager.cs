@@ -58,8 +58,8 @@ namespace VehicleFramework
             data.UpgradeLists = SaveManager.SerializeUpgrades();
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
-            data.Batteries = SaveManager.SerializeBatteries();
-            data.BackupBatteries = SaveManager.SerializeBackupBatteries();
+            //data.Batteries = SaveManager.SerializeBatteries();
+            //data.BackupBatteries = SaveManager.SerializeBackupBatteries();
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
             data.IsPlayerControlling = SaveManager.SerializePlayerControlling();
@@ -70,6 +70,8 @@ namespace VehicleFramework
         {
             // TODO
             // this method should be moved into the vehicle classes and made non-static
+            // The following methods no longer have serialization complements, and can probably be removed after a long time:
+            // DeserializeBatteries and DeserializeBackupBatteries
             while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {
                 yield return null;
