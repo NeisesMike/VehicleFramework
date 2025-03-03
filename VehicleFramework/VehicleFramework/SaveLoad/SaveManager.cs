@@ -61,31 +61,9 @@ namespace VehicleFramework.SaveLoad
                 {
                     continue;
                 }
-                try
-                {
-                    Dictionary<string, techtype> equipmentStrings = new Dictionary<string, techtype>();
-                    foreach (KeyValuePair<string, InventoryItem> pair in mv.modules.equipment)
-                    {
-                        if (pair.Value != null && pair.Value.item != null && pair.Value.item.name != null)
-                        {
-                            string thisName = pair.Value.item.name;
-                            int cloneIndex = thisName.IndexOf("(Clone)");
-                            if (cloneIndex != -1)
-                            {
-                                pair.Value.item.name = thisName.Remove(cloneIndex, 7);
-                            }
-                            equipmentStrings.Add(pair.Key, pair.Value.item.GetTechType().AsString());
-                        }
-                    }
-                    Tuple<Vector3, Dictionary<string, techtype>> thisTuple = new Tuple<Vector3, Dictionary<string, techtype>>(mv.transform.position, equipmentStrings);
-                    // this is the problematic line
-                    modVehiclesUpgrades.Add(thisTuple);
-                }
-                catch(Exception e)
-                {
-                    Logger.Error("Failed to serialize upgrades for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
+                Dictionary<string, techtype> equipmentStrings = new Dictionary<string, techtype>();
+                Tuple<Vector3, Dictionary<string, techtype>> thisTuple = new Tuple<Vector3, Dictionary<string, techtype>>(mv.transform.position, equipmentStrings);
+                modVehiclesUpgrades.Add(thisTuple);
             }
             return modVehiclesUpgrades;
         }

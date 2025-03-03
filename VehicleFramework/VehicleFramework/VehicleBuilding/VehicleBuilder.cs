@@ -151,6 +151,9 @@ namespace VehicleFramework
                         mv.upgradesInput = vuci;
                         var up = vu.Interface.EnsureComponent<UpgradeProxy>();
                         up.proxies = vu.ModuleProxies;
+
+                        SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vu.Interface.transform);
+                        vu.Interface.EnsureComponent<SaveLoad.VFUpgradesIdentifier>();
                     }
                     if(mv.Upgrades.Count() == 0)
                     {
