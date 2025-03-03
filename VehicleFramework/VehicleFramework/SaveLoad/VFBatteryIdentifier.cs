@@ -34,6 +34,10 @@ namespace VehicleFramework.SaveLoad
         {
             yield return new WaitUntil(() => mv != null);
             var thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(mv, SaveFileName);
+            if(thisBattery == default)
+            {
+                yield break;
+            }
             TaskResult<GameObject> result = new TaskResult<GameObject>();
             yield return CraftData.InstantiateFromPrefabAsync(thisBattery.Item1, result, false);
             GameObject thisItem = result.Get();
@@ -48,7 +52,7 @@ namespace VehicleFramework.SaveLoad
             catch (Exception e)
             {
                 Logger.Error($"Failed to load battery : {thisBattery.Item1} for {mv.name} on GameObject {gameObject.name} : {mv.subName.hullName.text}");
-                Logger.Log(e.Message);
+                Logger.Log(e.StackTrace);
             }
         }
     }
