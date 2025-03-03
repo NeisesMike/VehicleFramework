@@ -9,10 +9,20 @@ namespace VehicleFramework.SaveLoad
         public const string SaveFolderName = "VFSaveData";
         public static void Write<T>(ModVehicle mv, string fileTitle, T data)
         {
+            if (mv == null)
+            {
+                Logger.Error($"Could not perform JsonInterface.Write because mv was null: {fileTitle}");
+                return;
+            }
             Write<T>($"{fileTitle}-{mv.GetComponent<PrefabIdentifier>().Id}", data);
         }
         public static T Read<T>(ModVehicle mv, string fileTitle)
         {
+            if(mv == null)
+            {
+                Logger.Error($"Could not perform JsonInterface.Read because mv was null: {fileTitle}");
+                return default;
+            }
             return Read<T>($"{fileTitle}-{mv.GetComponent<PrefabIdentifier>().Id}");
         }
         public static void Write<T>(string uniqueFileName, T data)
