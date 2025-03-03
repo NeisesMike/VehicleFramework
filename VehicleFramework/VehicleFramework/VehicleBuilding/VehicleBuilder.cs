@@ -94,6 +94,9 @@ namespace VehicleFramework
                         inp.openSound = storageOpenSound;
                         inp.closeSound = storageCloseSound;
                         vs.Container.SetActive(true);
+
+                        SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vs.Container.transform);
+                        vs.Container.EnsureComponent<SaveLoad.VFInnateStorageIdentifier>();
                     }
                 }
             }

@@ -164,6 +164,7 @@
     <Compile Include="SaveLoad\JSONInterface.cs" />
     <Compile Include="SaveLoad\ModVehicleSaveLoad.cs" />
     <Compile Include="SaveLoad\SaveLoadUtils.cs" />
+    <Compile Include="SaveLoad\VFInnateStorageIdentifier.cs" />
     <Compile Include="SaveLoad\VFBatteryIdentifier.cs" />
     <Compile Include="UpgradeTypes\CraftingNode.cs" />
     <Compile Include="VehicleComponents\MaterialReactor.cs" />

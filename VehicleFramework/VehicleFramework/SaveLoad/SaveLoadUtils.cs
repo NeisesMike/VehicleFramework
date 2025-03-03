@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,6 +55,41 @@ namespace VehicleFramework.SaveLoad
         internal static string GetSaveFileName(Transform root, Transform target, string fileSuffix)
         {
             return $"{GetTransformPath(root, target)}-{fileSuffix}";
+        }
+
+        internal static IEnumerator ReloadBatteryPower(GameObject thisItem, float thisCharge, TechType innerBatteryTT)
+        {
+            // check whether we *are* a battery xor we *have* a battery
+            if (thisItem.GetComponent<Battery>() != null)
+            {
+                // we are a battery
+                thisItem.GetComponentInChildren<Battery>().charge = thisCharge;
+            }
+            else
+            {
+                // we have a battery (we are a tool)
+                // Thankfully we have this naming convention
+                Transform batSlot = thisItem.transform.Find("BatterySlot");
+                if (batSlot == null)
+                {
+                    Logger.Error($"Failed to find battery slot for tool in innate storage: {thisItem.name}");
+                    yield break;
+                }
+                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                yield return CraftData.InstantiateFromPrefabAsync(innerBatteryTT, result, false);
+                GameObject newBat = result.Get();
+                if (newBat.GetComponent<Battery>() != null)
+                {
+                    newBat.GetComponent<Battery>().charge = thisCharge;
+                }
+                else
+                {
+                    Logger.Error($"Failed to find battery component for tool in innate storage: {thisItem.name}");
+                    yield break;
+                }
+                newBat.transform.SetParent(batSlot);
+                newBat.SetActive(false);
+            }
         }
     }
 }
