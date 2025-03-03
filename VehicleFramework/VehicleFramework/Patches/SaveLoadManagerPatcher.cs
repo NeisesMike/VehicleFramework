@@ -40,12 +40,20 @@ namespace VehicleFramework.Patches
                 List<string> hasTechTypes = JsonConvert.DeserializeObject<List<string>>(jsonContent);
                 if (hasTechTypes != null)
                 {
-                    hasTechTypeGameInfo.Add(slotName, hasTechTypes);
+                    if (hasTechTypeGameInfo.ContainsKey(slotName))
+                    {
+                        hasTechTypeGameInfo[slotName] = hasTechTypes;
+                    }
+                    else
+                    {
+                        hasTechTypeGameInfo.Add(slotName, hasTechTypes);
+                    }
                 }
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 Logger.Error("SaveLoadManager.RegisterSaveGamePostfix: Could not read json file!");
+                Logger.Error(e.Message);
                 Logger.Error(e.StackTrace);
             }
         }
