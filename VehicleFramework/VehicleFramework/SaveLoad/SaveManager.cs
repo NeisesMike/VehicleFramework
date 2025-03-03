@@ -263,32 +263,7 @@ namespace VehicleFramework.SaveLoad
                     continue;
                 }
                 List<Tuple<Vector3, batteries>> thisVehiclesStoragesContents = new List<Tuple<Vector3, batteries>>();
-                try
-                {
-                    foreach (InnateStorageContainer vsc in mv.GetComponentsInChildren<InnateStorageContainer>())
-                    {
-                        Vector3 thisLocalPos = mv.transform.InverseTransformPoint(vsc.transform.position);
-                        batteries thisContents = new batteries();
-                        foreach (var item in vsc.container.ToList())
-                        {
-                            TechType thisItemType = item.item.GetTechType();
-                            float batteryChargeIfApplicable = -1;
-                            var bat = item.item.GetComponentInChildren<Battery>(true);
-                            if (bat != null)
-                            {
-                                batteryChargeIfApplicable = bat.charge;
-                            }
-                            thisContents.Add(new Tuple<techtype, float>(thisItemType.AsString(), batteryChargeIfApplicable));
-                        }
-                        thisVehiclesStoragesContents.Add(new Tuple<Vector3, batteries>(thisLocalPos, thisContents));
-                    }
-                    allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<Vector3, batteries>>>(mv.transform.position, thisVehiclesStoragesContents));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize innate storage for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
+                allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<Vector3, batteries>>>(mv.transform.position, thisVehiclesStoragesContents));
             }
             return allVehiclesStoragesContents;
         }
@@ -359,27 +334,6 @@ namespace VehicleFramework.SaveLoad
                     continue;
                 }
                 List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
-                foreach (EnergyMixin batt in mv.energyInterface.sources)
-                {
-                    if (batt.battery != null)
-                    {
-                        try
-                        {
-                            thisVehiclesBatteries.Add(new Tuple<techtype, float>(batt.batterySlot.storedItem.item.GetTechType().AsString(), batt.battery.charge));
-                        }
-                        catch (Exception e)
-                        {
-                            if(batt.name.Equals("MaterialReactor", StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Right now, MaterialReactors are serialized in a custom way
-                                // Eventually, I'd like to move everything in this file to use that scheme.
-                                continue;
-                            }
-                            Logger.Error($"Failed to serialize battery {batt.name} for: {mv.name} : {mv.subName.hullName.text}");
-                            Logger.Log(e.Message);
-                        }
-                    }
-                }
                 allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
@@ -432,28 +386,8 @@ namespace VehicleFramework.SaveLoad
                 {
                     continue;
                 }
-                if (mv.energyInterface == mv.AIEnergyInterface)
-                {
-                    // don't back up the same batteries twice
-                    continue;
-                }
                 List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
-                try
-                {
-                    foreach (EnergyMixin batt in mv.GetComponent<AutoPilot>().aiEI.sources)
-                    {
-                        if (batt.battery != null)
-                        {
-                            thisVehiclesBatteries.Add(new Tuple<techtype, float>(batt.batterySlot.storedItem.item.GetTechType().AsString(), batt.battery.charge));
-                        }
-                    }
-                    allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize backup batteries for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
+                allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
             }
             return allVehiclesBatteries;
         }

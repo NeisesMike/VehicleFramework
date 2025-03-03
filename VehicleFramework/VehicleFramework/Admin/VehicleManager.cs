@@ -56,10 +56,10 @@ namespace VehicleFramework
              * Per-vehicle issues should be moved into the vehicle classes
              */
             data.UpgradeLists = SaveManager.SerializeUpgrades();
-            //data.InnateStorages = SaveManager.SerializeInnateStorage();
+            data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
-            //data.Batteries = SaveManager.SerializeBatteries();
-            //data.BackupBatteries = SaveManager.SerializeBackupBatteries();
+            data.Batteries = SaveManager.SerializeBatteries();
+            data.BackupBatteries = SaveManager.SerializeBackupBatteries();
             data.IsPlayerInside = SaveManager.SerializePlayerInside();
             data.AllVehiclesAesthetics = SaveManager.SerializeAesthetics();
             data.IsPlayerControlling = SaveManager.SerializePlayerControlling();
