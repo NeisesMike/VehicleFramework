@@ -447,7 +447,8 @@ namespace VehicleFramework
         }
         public virtual bool GetIsUnderwater()
         {
-            return !worldForces.IsAboveWater();
+            bool isBeneathSurface = !worldForces.IsAboveWater();
+            return isBeneathSurface && !precursorOutOfWater;
         }
         public virtual void OnCraftEnd(TechType techType)
         {

@@ -159,6 +159,7 @@
     <Compile Include="LightControllers\VolumetricLightController.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Patches\PrecursorDoorMotorModeSetterPatcher.cs" />
     <Compile Include="Patches\FontReferencesPatcher.cs" />
     <Compile Include="Patches\LanguagePatcher.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />

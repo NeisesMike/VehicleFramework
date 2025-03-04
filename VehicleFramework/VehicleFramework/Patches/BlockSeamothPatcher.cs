@@ -1,53 +1,63 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace VehicleFramework.Patches
 {
-    /* This set of patches over BlockSeamoth
-     * prevents ModVehicles from entering "moon gates"
-     * which are vertical force fields that prevent seamoth entry.
-     * The only one I know of is at the entrance to the prison.
-     */
-    [HarmonyPatch(typeof(BlockSeamoth))]
-    public class BlockSeamothPatcher
+    internal class BlockModVehicle : MonoBehaviour
     {
-        private static Rigidbody mvRigidbody;
-
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(BlockSeamoth.FixedUpdate))]
-        public static void BlockSeamothFixedUpdatePostfix(BlockSeamoth __instance)
+        private readonly Dictionary<ModVehicle, int> MVs = new Dictionary<ModVehicle, int>();
+        internal void FixedUpdate()
         {
-            if (!BlockSeamothPatcher.mvRigidbody)
-            {
-                return;
-            }
-            BlockSeamothPatcher.mvRigidbody.AddForce(__instance.transform.forward * 3f, ForceMode.VelocityChange);
+            MVs.ForEach(x => x.Key.useRigidbody.AddForce(transform.forward * 3f, ForceMode.VelocityChange));
         }
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(BlockSeamoth.OnTriggerEnter))]
-        public static void BlockSeamothOnTriggerEnterPostfix(BlockSeamoth __instance, Collider other)
-        {
-            ModVehicle mv = other.GetComponentInParent<ModVehicle>();
-            if(mv == null)
-            {
-                return;
-            }
-            __instance.enteredCollidersCount++;
-            BlockSeamothPatcher.mvRigidbody = mv.useRigidbody;
-        }
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(BlockSeamoth.OnTriggerExit))]
-        public static void BlockSeamothOnTriggerExitPostfix(BlockSeamoth __instance, Collider other)
+        internal void OnTriggerEnter(Collider other)
         {
             ModVehicle mv = other.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
                 return;
             }
-            __instance.enteredCollidersCount--;
-            if (__instance.enteredCollidersCount <= 0)
+            if (MVs.ContainsKey(mv))
             {
-                BlockSeamothPatcher.mvRigidbody = null;
+                MVs[mv]++;
+            }
+            else
+            {
+                MVs.Add(mv, 1);
+            }
+        }
+        internal void OnTriggerExit(Collider other)
+        {
+            ModVehicle mv = other.GetComponentInParent<ModVehicle>();
+            if (mv == null)
+            {
+                return;
+            }
+            MVs[mv]--;
+            if (MVs[mv] <= 0)
+            {
+                MVs.Remove(mv);
+            }
+        }
+    }
+
+
+    /* 
+     * Prevent ModVehicles from entering "moon gates"
+     * which are vertical force fields that prevent seamoth entry.
+     * There's one at "prison" and one at "lavacastlebase"
+     */
+    [HarmonyPatch(typeof(BlockSeamoth))]
+    public class BlockSeamothPatcher
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(BlockSeamoth.FixedUpdate))]
+        public static void BlockSeamothFixedUpdatePostfix(BlockSeamoth __instance)
+        {
+            if(__instance.GetComponent<BlockModVehicle>() == null)
+            {
+                __instance.gameObject.AddComponent<BlockModVehicle>();
             }
         }
     }
