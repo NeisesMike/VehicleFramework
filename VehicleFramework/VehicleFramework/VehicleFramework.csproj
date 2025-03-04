@@ -162,7 +162,6 @@
     <Compile Include="Patches\FontReferencesPatcher.cs" />
     <Compile Include="Patches\LanguagePatcher.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />
-    <Compile Include="SaveLoad\ModVehicleSaveLoad.cs" />
     <Compile Include="SaveLoad\SaveLoadUtils.cs" />
     <Compile Include="SaveLoad\VFInnateStorageIdentifier.cs" />
     <Compile Include="SaveLoad\VFBatteryIdentifier.cs" />
