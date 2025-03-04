@@ -239,7 +239,6 @@ namespace VehicleFramework
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
-
             UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
             {
                 vehicle = this,
@@ -1080,7 +1079,7 @@ namespace VehicleFramework
                     return true;
                 }
             }
-            foreach (var container in ModularStorages?.Select(x => x.Container.GetComponent<ModularStorageInput>().GetContainer()))
+            foreach(var container in ModularStorageInput.GetAllModularStorageContainers(this))
             {
                 if (container.HasRoomFor(pickup))
                 {
@@ -1101,7 +1100,7 @@ namespace VehicleFramework
                     }
                 }
             }
-            foreach (var container in ModularStorages?.Select(x => x.Container.GetComponent<ModularStorageInput>().GetContainer()))
+            foreach (var container in ModularStorageInput.GetAllModularStorageContainers(this))
             {
                 if (container.Contains(techType))
                 {
@@ -1137,7 +1136,7 @@ namespace VehicleFramework
                     return true;
                 }
             }
-            foreach (var container in ModularStorages?.Select(x => x.Container.GetComponent<ModularStorageInput>().GetContainer()))
+            foreach (var container in ModularStorageInput.GetAllModularStorageContainers(this))
             {
                 if (container.HasRoomFor(pickup))
                 {
@@ -1158,24 +1157,24 @@ namespace VehicleFramework
             int retStored = 0;
             int retCapacity = 0;
 
-            int GetModularCapacity(VehicleParts.VehicleStorage sto)
+            int GetModularCapacity()
             {
-                if (sto.Container == null || !sto.Container.activeInHierarchy || !sto.Container.activeSelf)
-                {
-                    return 0;
-                }
-                return sto.Height * sto.Width;
-            }
-            int GetModularStored(VehicleParts.VehicleStorage sto)
-            {
-                if (sto.Container == null || !sto.Container.activeInHierarchy || !sto.Container.activeSelf || sto.Container.GetComponent<SeamothStorageContainer>() == null || sto.Container.GetComponent<SeamothStorageContainer>().container == null)
-                {
-                    return 0;
-                }
                 int ret = 0;
-                var marty = (IEnumerable<InventoryItem>)sto.Container.GetComponent<ModularStorageInput>().GetContainer();
-                marty.ForEach(x => ret += x.width * x.height);
+                var marty = ModularStorageInput.GetAllModularStorageContainers(this);
+                marty.ForEach(x => ret += x.sizeX * x.sizeY);
                 return ret;
+            }
+            int GetModularStored()
+            {
+                int ret = 0;
+                var marty = ModularStorageInput.GetAllModularStorageContainers(this);
+                marty.ForEach(x => x.ForEach(y => ret += y.width * y.height));
+                return ret;
+            }
+            int GetInnateCapacity(VehicleParts.VehicleStorage sto)
+            {
+                var container = sto.Container.GetComponent<InnateStorageContainer>();
+                return container.container.sizeX * container.container.sizeY;
             }
             int GetInnateStored(VehicleParts.VehicleStorage sto)
             {
@@ -1187,14 +1186,11 @@ namespace VehicleFramework
 
             if (InnateStorages != null)
             {
-                InnateStorages.ForEach(x => retCapacity += (x.Height * x.Width));
+                InnateStorages.ForEach(x => retCapacity += GetInnateCapacity(x));
                 InnateStorages.ForEach(x => retStored += GetInnateStored(x));
             }
-            if(ModularStorages != null)
-            {
-                ModularStorages.ForEach(x => retCapacity += GetModularCapacity(x));
-                InnateStorages.ForEach(x => retStored += GetModularStored(x));
-            }
+            retCapacity += GetModularCapacity();
+            retStored += GetModularStored();
 
             stored = retStored;
             capacity = retCapacity;

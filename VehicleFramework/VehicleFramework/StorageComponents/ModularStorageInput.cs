@@ -46,5 +46,19 @@ namespace VehicleFramework
 		{
 			return mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
 		}
+		internal static List<ItemsContainer> GetAllModularStorageContainers(ModVehicle mv)
+		{
+			List<ItemsContainer> result = new List<ItemsContainer>();
+			if (mv == null)
+			{
+				return result;
+			}
+			var containerList = mv.ModulesRootObject.GetComponentsInChildren<SeamothStorageContainer>(true);
+			if (!containerList.Any())
+			{
+				return result;
+			}
+			return containerList.Select(x => x.container).ToList();
+		}
 	}
 }
