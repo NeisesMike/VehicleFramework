@@ -1300,11 +1300,7 @@ namespace VehicleFramework
             }
             if (Boolean.Parse(simpleData[isControlling]))
             {
-                if (this as Drone != null)
-                {
-                    (this as Drone).BeginControlling();
-                }
-                else
+                if (this as Drone == null)
                 {
                     BeginPiloting();
                 }
