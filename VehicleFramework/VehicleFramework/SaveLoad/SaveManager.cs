@@ -97,50 +97,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, List<Tuple<int, batteries>>>> SerializeModularStorage()
         {
-            List<Tuple<Vector3, List<Tuple<int, batteries>>>> allVehiclesStoragesContents = new List<Tuple<Vector3, List<Tuple<int, batteries>>>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                if (mv.ModularStorages == null)
-                {
-                    return allVehiclesStoragesContents;
-                }
-                List<Tuple<int, batteries>> thisVehiclesStoragesContents = new List<Tuple<int, batteries>>();
-
-                try
-                {
-                    for (int i = 0; i < mv.ModularStorages.Count; i++)
-                    {
-                        var thisContainer = mv.GetStorageInSlot(i, TechType.VehicleStorageModule);
-                        if (thisContainer != null)
-                        {
-                            batteries thisContents = new batteries();
-                            foreach (var item in thisContainer.ToList())
-                            {
-                                TechType thisItemType = item.item.GetTechType();
-                                float batteryChargeIfApplicable = -1;
-                                var bat = item.item.GetComponentInChildren<Battery>(true);
-                                if (bat != null)
-                                {
-                                    batteryChargeIfApplicable = bat.charge;
-                                }
-                                thisContents.Add(new Tuple<techtype, float>(thisItemType.AsString(), batteryChargeIfApplicable));
-                            }
-                            thisVehiclesStoragesContents.Add(new Tuple<int, batteries>(i, thisContents));
-                        }
-                    }
-                    allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<int, batteries>>>(mv.transform.position, thisVehiclesStoragesContents));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize modular storage for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
-            }
-            return allVehiclesStoragesContents;
+            return new List<Tuple<Vector3, List<Tuple<int, batteries>>>>();
         }
         internal static IEnumerator DeserializeModularStorage(SaveData data, ModVehicle mv)
         {

@@ -1362,6 +1362,7 @@ namespace VehicleFramework
             try
             {
                 SaveSimpleData();
+                SaveLoad.VFModularStorageSaveLoad.SerializeAllModularStorage(this);
             }
             catch(Exception e)
             {
@@ -1374,6 +1375,7 @@ namespace VehicleFramework
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
             UWE.CoroutineHost.StartCoroutine(LoadSimpleData());
+            UWE.CoroutineHost.StartCoroutine(SaveLoad.VFModularStorageSaveLoad.DeserializeAllModularStorage(this));
             OnGameLoaded();
         }
         protected virtual void OnGameSaved() { }

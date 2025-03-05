@@ -8,6 +8,7 @@ namespace VehicleFramework.SaveLoad
 {
     internal class VFUpgradesIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
+        internal bool isFinished = false;
         internal ModVehicle mv => GetComponentInParent<ModVehicle>();
         const string saveFileNameSuffix = "upgrades";
         private string SaveFileName => SaveLoadUtils.GetSaveFileName(mv.transform, transform, saveFileNameSuffix);
@@ -34,6 +35,7 @@ namespace VehicleFramework.SaveLoad
             var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, TechType>>(mv, SaveFileName);
             if(theseUpgrades == default)
             {
+                isFinished = true;
                 yield break;
             }
             foreach(var upgrade in theseUpgrades.Where(x=>x.Value != TechType.None))
@@ -57,6 +59,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 mv.UpdateModuleSlots();
             }
+            isFinished = true;
         }
     }
 }
