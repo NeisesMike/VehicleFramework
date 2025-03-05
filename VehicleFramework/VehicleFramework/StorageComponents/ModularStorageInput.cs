@@ -42,7 +42,7 @@ namespace VehicleFramework
 				this.OnClosePDA(null);
 			}
 		}
-		internal static List<ItemsContainer> GetAllModularStorageContainers(ModVehicle mv)
+		public static List<ItemsContainer> GetAllModularStorageContainers(ModVehicle mv)
 		{
 			List<ItemsContainer> result = new List<ItemsContainer>();
 			if (mv == null)

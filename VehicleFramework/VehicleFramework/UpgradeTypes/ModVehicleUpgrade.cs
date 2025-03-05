@@ -36,7 +36,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual Color Color => Color.red;
         public virtual float CraftingTime => 3f;
         public virtual Atlas.Sprite Icon => StaticAssets.UpgradeIcon;
-        public virtual TechType UnlockWith => TechType.Workbench;
+        public virtual TechType UnlockWith => TechType.Constructor;
         public const string DefaultUnlockMessage = "New vehicle upgrade acquired";
         public virtual string UnlockedMessage => DefaultUnlockMessage;
         public virtual Sprite UnlockedSprite => null;
@@ -110,7 +110,7 @@ namespace VehicleFramework.UpgradeTypes
             }
             return vehicle.GetCurrentUpgrades().Where(x => x.Contains(ClassId)).Count();
         }
-        public string[] ResolvePath(VehicleType vType)
+        internal string[] ResolvePath(VehicleType vType)
         {
             // If TabName is string.Empty, use $"{CraftTreeHandler.GeneralTabName}{vType}"
             if (CraftingPath == null)
