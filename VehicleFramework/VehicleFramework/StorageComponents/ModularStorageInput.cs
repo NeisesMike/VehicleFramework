@@ -42,10 +42,6 @@ namespace VehicleFramework
 				this.OnClosePDA(null);
 			}
 		}
-		public ItemsContainer GetContainer()
-		{
-			return mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
-		}
 		internal static List<ItemsContainer> GetAllModularStorageContainers(ModVehicle mv)
 		{
 			List<ItemsContainer> result = new List<ItemsContainer>();

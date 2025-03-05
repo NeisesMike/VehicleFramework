@@ -809,7 +809,7 @@ namespace VehicleFramework
             modSto.Container.SetActive(activated);
             if (activated)
             {
-                modSto.Container.GetComponent<ModularStorageInput>().GetContainer().Resize(modSto.Width, modSto.Height);
+                ModGetStorageInSlot(slotID, TechType.VehicleStorageModule).Resize(modSto.Width, modSto.Height);
             }
         }
         internal ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
