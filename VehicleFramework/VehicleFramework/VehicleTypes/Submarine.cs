@@ -284,12 +284,6 @@ namespace VehicleFramework.VehicleTypes
         }
         public virtual void PaintVehicleDefaultStyle(string name)
         {
-            ExteriorMainColor = Color.white;
-            OldExteriorMainColor = Color.white;
-            ExteriorPrimaryAccent = Color.blue;
-            OldExteriorPrimaryAccent = Color.blue;
-            ExteriorSecondaryAccent = Color.grey;
-            OldExteriorSecondaryAccent = Color.grey;
             PaintNameDefaultStyle(name);
         }
         public enum TextureDefinition : int
@@ -306,19 +300,28 @@ namespace VehicleFramework.VehicleTypes
             OnNameChange(name);
         }
 
-
-
-
-
-        public Color ExteriorMainColor;
-        public Color ExteriorPrimaryAccent;
-        public Color ExteriorSecondaryAccent;
-        public Color ExteriorNameLabel;
         protected Color OldExteriorMainColor;
         protected Color OldExteriorPrimaryAccent;
         protected Color OldExteriorSecondaryAccent;
         protected Color OldExteriorNameLabel;
         public bool IsDefaultTexture = true;
+
+        public override void SetBaseColor(Vector3 hsb, Color color)
+        {
+            base.SetBaseColor(hsb, color);
+            PaintVehicleSection("ExteriorMainColor", baseColor);
+        }
+        public override void SetInteriorColor(Vector3 hsb, Color color)
+        {
+            base.SetInteriorColor(hsb, color);
+            PaintVehicleSection("ExteriorPrimaryAccent", interiorColor);
+        }
+        public override void SetStripeColor(Vector3 hsb, Color color)
+        {
+            base.SetStripeColor(hsb, color);
+            PaintVehicleSection("ExteriorSecondaryAccent", stripeColor);
+        }
+
         public virtual void SetColorPickerUIColor(string name, Color col)
         {
             ActualEditScreen.transform.Find("Active/" + name + "/SelectedColor").GetComponent<Image>().color = col;
@@ -343,28 +346,27 @@ namespace VehicleFramework.VehicleTypes
             {
                 case "MainExterior":
                     IsDefaultTexture = false;
-                    OldExteriorMainColor = ExteriorMainColor;
-                    ExteriorMainColor = eventData.color;
+                    OldExteriorMainColor = baseColor;
+                    baseColor = eventData.color;
                     break;
                 case "PrimaryAccent":
                     IsDefaultTexture = false;
-                    OldExteriorPrimaryAccent = ExteriorPrimaryAccent;
-                    ExteriorPrimaryAccent = eventData.color;
+                    OldExteriorPrimaryAccent = interiorColor;
+                    interiorColor = eventData.color;
                     break;
                 case "SecondaryAccent":
                     IsDefaultTexture = false;
-                    OldExteriorSecondaryAccent = ExteriorSecondaryAccent;
-                    ExteriorSecondaryAccent = eventData.color;
+                    OldExteriorSecondaryAccent = stripeColor;
+                    stripeColor = eventData.color;
                     break;
                 case "NameLabel":
-                    //IsDefaultTexture = false;
-                    OldExteriorNameLabel = ExteriorNameLabel;
-                    ExteriorNameLabel = eventData.color;
+                    OldExteriorNameLabel = nameColor;
+                    nameColor = eventData.color;
                     break;
                 default:
                     break;
             }
-            ActualEditScreen.transform.Find("Active/MainExterior/SelectedColor").GetComponent<Image>().color = ExteriorMainColor;
+            ActualEditScreen.transform.Find("Active/MainExterior/SelectedColor").GetComponent<Image>().color = baseColor;
         }
         public virtual void OnNameChange(string e) // why is this independent from OnNameChange?
         {
@@ -375,17 +377,17 @@ namespace VehicleFramework.VehicleTypes
         }
         public virtual void OnColorSubmit() // called by color picker submit button
         {
-            if (ExteriorMainColor != OldExteriorMainColor)
+            if (baseColor != OldExteriorMainColor)
             {
-                PaintVehicleSection("ExteriorMainColor", ExteriorMainColor);
+                PaintVehicleSection("ExteriorMainColor", baseColor);
             }
-            if (ExteriorPrimaryAccent != OldExteriorPrimaryAccent)
+            if (interiorColor != OldExteriorPrimaryAccent)
             {
-                PaintVehicleSection("ExteriorPrimaryAccent", ExteriorPrimaryAccent);
+                PaintVehicleSection("ExteriorPrimaryAccent", interiorColor);
             }
-            if (ExteriorSecondaryAccent != OldExteriorSecondaryAccent)
+            if (stripeColor != OldExteriorSecondaryAccent)
             {
-                PaintVehicleSection("ExteriorSecondaryAccent", ExteriorSecondaryAccent);
+                PaintVehicleSection("ExteriorSecondaryAccent", stripeColor);
             }
             if (IsDefaultTexture)
             {
@@ -393,7 +395,7 @@ namespace VehicleFramework.VehicleTypes
             }
             else
             {
-                PaintVehicleName(GetName(), ExteriorNameLabel, ExteriorMainColor);
+                PaintVehicleName(GetName(), nameColor, baseColor);
             }
             return;
         }

@@ -54,18 +54,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, Dictionary<string, techtype>>> SerializeUpgrades()
         {
-            List<Tuple<Vector3, Dictionary<string, techtype>>> modVehiclesUpgrades = new List<Tuple<Vector3, Dictionary<string, techtype>>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                Dictionary<string, techtype> equipmentStrings = new Dictionary<string, techtype>();
-                Tuple<Vector3, Dictionary<string, techtype>> thisTuple = new Tuple<Vector3, Dictionary<string, techtype>>(mv.transform.position, equipmentStrings);
-                modVehiclesUpgrades.Add(thisTuple);
-            }
-            return modVehiclesUpgrades;
+            return new List<Tuple<Vector3, Dictionary<string, techtype>>>();
         }
         internal static IEnumerator DeserializeUpgrades(SaveData data, ModVehicle mv)
         {
@@ -233,17 +222,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> SerializeInnateStorage()
         {
-            List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> allVehiclesStoragesContents = new List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                List<Tuple<Vector3, batteries>> thisVehiclesStoragesContents = new List<Tuple<Vector3, batteries>>();
-                allVehiclesStoragesContents.Add(new Tuple<Vector3, List<Tuple<Vector3, batteries>>>(mv.transform.position, thisVehiclesStoragesContents));
-            }
-            return allVehiclesStoragesContents;
+            return new List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>>();
         }
         internal static IEnumerator DeserializeInnateStorage(SaveData data, ModVehicle mv)
         {
@@ -304,17 +283,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, batteries>> SerializeBatteries()
         {
-            List<Tuple<Vector3, batteries>> allVehiclesBatteries = new List<Tuple<Vector3, batteries>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
-                allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
-            }
-            return allVehiclesBatteries;
+            return new List<Tuple<Vector3, batteries>>();
         }
         internal static IEnumerator DeserializeBatteries(SaveData data, ModVehicle mv)
         {
@@ -357,17 +326,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, batteries>> SerializeBackupBatteries()
         {
-            List<Tuple<Vector3, batteries>> allVehiclesBatteries = new List<Tuple<Vector3, batteries>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                List<Tuple<techtype, float>> thisVehiclesBatteries = new List<Tuple<techtype, float>>();
-                allVehiclesBatteries.Add(new Tuple<Vector3, batteries>(mv.transform.position, thisVehiclesBatteries));
-            }
-            return allVehiclesBatteries;
+            return new List<Tuple<Vector3, batteries>>();
         }
         internal static IEnumerator DeserializeBackupBatteries(SaveData data, Submarine mv)
         {
@@ -441,35 +400,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, string, color, color, color, color, bool>> SerializeAesthetics()
         {
-            color ExtractFloats(Color col)
-            {
-                return new Tuple<float, float, float, float>(col.r, col.g, col.b, col.a);
-            }
-            List<Tuple<Vector3, string, color, color, color, color, bool>> allVehiclesAesthetics = new List<Tuple<Vector3, string, color, color, color, color, bool>>();
-            foreach (ModVehicle mv in VehicleManager.VehiclesInPlay)
-            {
-                if (ValidateMvObject(mv))
-                {
-                    continue;
-                }
-                try
-                {
-                    if (mv is Submarine && (mv as Submarine).ColorPicker != null)
-                    {
-                        allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, mv.GetName(), ExtractFloats((mv as Submarine).ExteriorMainColor), ExtractFloats((mv as Submarine).ExteriorPrimaryAccent), ExtractFloats((mv as Submarine).ExteriorSecondaryAccent), ExtractFloats((mv as Submarine).ExteriorNameLabel), (mv as Submarine).IsDefaultTexture));
-                    }
-                    else
-                    {
-                        allVehiclesAesthetics.Add(new Tuple<Vector3, string, color, color, color, color, bool>(mv.transform.position, mv.GetName(), ExtractFloats(mv.baseColor), ExtractFloats(mv.interiorColor), ExtractFloats(mv.stripeColor), ExtractFloats(mv.nameColor), false));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Failed to serialize aesthetics for: " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
-                }
-            }
-            return allVehiclesAesthetics;
+            return new List<Tuple<Vector3, string, color, color, color, color, bool>>();
         }
         internal static IEnumerator DeserializeAesthetics(SaveData data, ModVehicle mv)
         {
@@ -505,24 +436,21 @@ namespace VehicleFramework.SaveLoad
                             }
                             else
                             {
-                                mvSub.ExteriorMainColor = SynthesizeColor(vehicle.Item3);
-                                mvSub.ExteriorPrimaryAccent = SynthesizeColor(vehicle.Item4);
-                                mvSub.ExteriorSecondaryAccent = SynthesizeColor(vehicle.Item5);
-                                mvSub.ExteriorNameLabel = SynthesizeColor(vehicle.Item6);
-                                mvSub.PaintVehicleSection("ExteriorMainColor", mvSub.ExteriorMainColor);
-                                mvSub.PaintVehicleSection("ExteriorPrimaryAccent", mvSub.ExteriorPrimaryAccent);
-                                mvSub.PaintVehicleSection("ExteriorSecondaryAccent", mvSub.ExteriorSecondaryAccent);
-                                mvSub.PaintVehicleName(vehicle.Item2, mvSub.ExteriorNameLabel, mvSub.ExteriorMainColor);
+                                mvSub.baseColor = SynthesizeColor(vehicle.Item3);
+                                mvSub.interiorColor = SynthesizeColor(vehicle.Item4);
+                                mvSub.stripeColor = SynthesizeColor(vehicle.Item5);
+                                mvSub.nameColor = SynthesizeColor(vehicle.Item6);
+                                mvSub.PaintVehicleSection("ExteriorMainColor", mvSub.baseColor);
+                                mvSub.PaintVehicleSection("ExteriorPrimaryAccent", mvSub.interiorColor);
+                                mvSub.PaintVehicleSection("ExteriorSecondaryAccent", mvSub.stripeColor);
+                                mvSub.PaintVehicleName(vehicle.Item2, mvSub.nameColor, mvSub.baseColor);
 
                                 mvSub.IsDefaultTexture = false;
 
-                                //var colorPicker = mvSub.transform.Find("ColorPicker/EditScreen/Active/ColorPicker").GetComponentInChildren<uGUI_ColorPicker>();
-                                //Color.RGBToHSV(mvSub.ExteriorMainColor, out colorPicker._hue, out colorPicker._saturation, out colorPicker._brightness);
-
-                                active.transform.Find("MainExterior/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorMainColor;
-                                active.transform.Find("PrimaryAccent/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorPrimaryAccent;
-                                active.transform.Find("SecondaryAccent/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorSecondaryAccent;
-                                active.transform.Find("NameLabel/SelectedColor").GetComponent<Image>().color = mvSub.ExteriorNameLabel;
+                                active.transform.Find("MainExterior/SelectedColor").GetComponent<Image>().color = mvSub.baseColor;
+                                active.transform.Find("PrimaryAccent/SelectedColor").GetComponent<Image>().color = mvSub.interiorColor;
+                                active.transform.Find("SecondaryAccent/SelectedColor").GetComponent<Image>().color = mvSub.stripeColor;
+                                active.transform.Find("NameLabel/SelectedColor").GetComponent<Image>().color = mvSub.nameColor;
                             }
                         }
                         else

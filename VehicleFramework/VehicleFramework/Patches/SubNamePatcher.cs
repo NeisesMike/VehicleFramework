@@ -11,9 +11,17 @@ namespace VehicleFramework.Patches
         public static void SubNameSetNamePostfix(SubName __instance)
         {
             ModVehicle mv = __instance.GetComponent<ModVehicle>();
-            if (mv != null && mv.SubNameDecals != null)
+            if(mv == null)
+            {
+                return;
+            }
+            if (mv.SubNameDecals != null)
             {
                 SetSubNameDecals(mv);
+            }
+            if (mv is VehicleTypes.Submarine sub)
+            {
+                sub.PaintVehicleName(mv.subName.GetName(), mv.nameColor, mv.baseColor);
             }
         }
         private static void SetSubNameDecals(ModVehicle mv)
@@ -27,11 +35,19 @@ namespace VehicleFramework.Patches
 
         private static void SetSubNameDecalsWithColor(ModVehicle mv, Vector3 hsb, Color color)
         {
+            if (mv == null)
+            {
+                return;
+            }
             mv.nameColor = color;
             SetSubNameDecals(mv);
             foreach (var tmprougui in mv.SubNameDecals)
             {
                 tmprougui.color = color;
+            }
+            if(mv is VehicleTypes.Submarine sub)
+            {
+                sub.PaintVehicleName(mv.subName.GetName(), mv.nameColor, mv.baseColor);
             }
         }
 

@@ -1279,37 +1279,83 @@ namespace VehicleFramework
         private const string isControlling = "isControlling";
         private const string isInside = "isInside";
         private const string mySubName = "SubName";
-        private const string SaveFileName = "SimpleData";
+        private const string baseColorName = "BaseColor";
+        private const string interiorColorName = "InteriorColor";
+        private const string stripeColorName = "StripeColor";
+        private const string nameColorName = "NameColor";
+        private const string defaultColorName = "DefaultColor";
+        private const string SimpleDataSaveFileName = "SimpleData";
         private void SaveSimpleData()
         {
             Dictionary<string, string> simpleData = new Dictionary<string, string>
             {
-                { isControlling, IsPlayerControlling() ? bool.TrueString : bool.FalseString },
-                { isInside, IsUnderCommand ? bool.TrueString : bool.FalseString },
-                { mySubName, subName.hullName.text }
+                { isControlling, (this as Drone == null) && IsPlayerControlling() ? bool.TrueString : bool.FalseString },
+                { isInside, (this as Drone == null) && IsUnderCommand ? bool.TrueString : bool.FalseString },
+                { mySubName, subName.hullName.text },
+                { baseColorName, $"#{ColorUtility.ToHtmlStringRGB(baseColor)}" },
+                { interiorColorName, $"#{ColorUtility.ToHtmlStringRGB(interiorColor)}" },
+                { stripeColorName, $"#{ColorUtility.ToHtmlStringRGB(stripeColor)}" },
+                { nameColorName, $"#{ColorUtility.ToHtmlStringRGB(nameColor)}" },
+                { defaultColorName, (this is Submarine sub) && sub.IsDefaultTexture ? bool.TrueString : bool.FalseString }
             };
-            SaveLoad.JsonInterface.Write(this, SaveFileName, simpleData);
+            SaveLoad.JsonInterface.Write(this, SimpleDataSaveFileName, simpleData);
         }
         private IEnumerator LoadSimpleData()
         {
+            // Need to handle some things specially here for Submarines
+            // Because Submarines had color changing before I knew how to integrate with the Moonpool
+            // The new color changing methods are much simpler, but Odyssey and Beluga use the old methods,
+            // So I'll still support them.
             yield return new WaitUntil(() => Admin.GameStateWatcher.isWorldLoaded);
-            var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SaveFileName);
+            var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SimpleDataSaveFileName);
             if (simpleData == null || simpleData.Count == 0)
             {
                 yield break;
             }
             if (Boolean.Parse(simpleData[isControlling]))
             {
-                if (this as Drone == null)
-                {
-                    BeginPiloting();
-                }
+                BeginPiloting();
             }
             if (Boolean.Parse(simpleData[isInside]))
             {
                 PlayerEntry();
             }
             subName.SetName(simpleData[mySubName]);
+            if (Boolean.Parse(simpleData[defaultColorName]))
+            {
+                Submarine sub = this as Submarine;
+                if(sub != null)
+                {
+                    sub.PaintVehicleDefaultStyle(simpleData[mySubName]);
+                    yield break;
+                }
+            }
+            if (ColorUtility.TryParseHtmlString(simpleData[baseColorName], out baseColor))
+            {
+                subName.SetColor(0, Vector3.zero, baseColor);
+                Submarine sub = this as Submarine;
+                if (sub != null)
+                {
+                    sub.PaintVehicleName(simpleData[mySubName], Color.black, baseColor);
+                }
+            }
+            if (ColorUtility.TryParseHtmlString(simpleData[nameColorName], out nameColor))
+            {
+                subName.SetColor(1, Vector3.zero, nameColor);
+                Submarine sub = this as Submarine;
+                if (sub != null)
+                {
+                    sub.PaintVehicleName(simpleData[mySubName], nameColor, baseColor);
+                }
+            }
+            if (ColorUtility.TryParseHtmlString(simpleData[interiorColorName], out interiorColor))
+            {
+                subName.SetColor(2, Vector3.zero, interiorColor);
+            }
+            if (ColorUtility.TryParseHtmlString(simpleData[stripeColorName], out stripeColor))
+            {
+                subName.SetColor(3, Vector3.zero, stripeColor);
+            }
         }
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
@@ -1327,16 +1373,7 @@ namespace VehicleFramework
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            try
-            {
-                UWE.CoroutineHost.StartCoroutine(LoadSimpleData());
-            }
-            catch (Exception e)
-            {
-                Logger.Error($"Failed to load simple data for ModVehicle {name}");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
-            }
+            UWE.CoroutineHost.StartCoroutine(LoadSimpleData());
             OnGameLoaded();
         }
         protected virtual void OnGameSaved() { }
