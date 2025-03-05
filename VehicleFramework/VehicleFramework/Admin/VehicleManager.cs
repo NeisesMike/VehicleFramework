@@ -50,11 +50,8 @@ namespace VehicleFramework
         }
         internal static void CreateSaveFileData(object sender, Nautilus.Json.JsonFileEventArgs e)
         {
+            // See SaveData.cs
             SaveData data = e.Instance as SaveData;
-            /* TODO
-             * This method should only be used for save-file-wide issues
-             * Per-vehicle issues should be moved into the vehicle classes
-             */
             data.UpgradeLists = SaveManager.SerializeUpgrades();
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
@@ -68,13 +65,7 @@ namespace VehicleFramework
         }
         private static IEnumerator LoadVehicle(ModVehicle mv)
         {
-            // TODO
-            // this method should be moved into the vehicle classes and made non-static
-            // The following methods no longer have serialization complements, and can probably be removed after a long time:
-            // DeserializeBatteries
-            // DeserializeBackupBatteries
-            // DeserializeInnateStorage
-            // DeserializeUpgrades
+            // See SaveData.cs
             while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {
                 yield return null;

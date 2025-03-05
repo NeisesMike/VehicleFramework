@@ -67,9 +67,6 @@ namespace VehicleFramework
             saveData.OnFinishedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
                 //VehicleComponents.MagnetBoots.AttachAll();
-                //SaveData data = e.Instance as SaveData;
-                //Logger.Output(VehicleManager.VehiclesInPlay.Count.ToString());
-                //Logger.Output(data.UpgradeList.Keys.ToString());
             };
 
             saveData.OnFinishedLoading += (object sender, Nautilus.Json.JsonFileEventArgs e) =>

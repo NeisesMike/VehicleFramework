@@ -13,6 +13,7 @@ using techtype = System.String;
 
 namespace VehicleFramework.SaveLoad
 {
+    // see SaveData.cs
     internal static class SaveManager
     {
         /* Things what we can serialize
@@ -24,28 +25,6 @@ namespace VehicleFramework.SaveLoad
          * List<Tuple<Dictionary<Vector3, Vector3>, TechType>>
          * List<TechType>
          */
-        internal static List<techtype> SerializeTesto()
-        {
-            List<techtype> ret = new List<techtype>();
-            //var dic = new Dictionary<Vector3, Vector3>();
-            //var tup = new Tuple<Dictionary<Vector3, Vector3>, TechType>(dic, TechType.Seamoth);
-            ret.Add(TechType.Seamoth.AsString());
-            Logger.Warn(TechType.Seamoth.AsString());
-            return ret;
-        }
-        internal static bool ValidateMvObject(ModVehicle mv)
-        {
-            if (mv == null)
-            {
-                return true;
-            }
-            if (!mv.name.Contains("Clone"))
-            {
-                // skip the prefabs
-                return true;
-            }
-            return false;
-        }
         internal static bool MatchMv(ModVehicle mv, Vector3 location)
         {
             // the following floats we compare should in reality be the same
@@ -493,7 +472,6 @@ namespace VehicleFramework.SaveLoad
                 }
             }
         }
-
         internal static IEnumerator LoadThisStorage(ModVehicle mv, batteries thisStorage, InnateStorageContainer matchedContainer)
         {
             foreach (var techtype in thisStorage)
