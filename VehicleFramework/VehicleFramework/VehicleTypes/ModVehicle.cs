@@ -1289,8 +1289,8 @@ namespace VehicleFramework
         {
             Dictionary<string, string> simpleData = new Dictionary<string, string>
             {
-                { isControlling, (this as Drone == null) && IsPlayerControlling() ? bool.TrueString : bool.FalseString },
-                { isInside, (this as Drone == null) && IsUnderCommand ? bool.TrueString : bool.FalseString },
+                { isControlling, IsPlayerControlling() ? bool.TrueString : bool.FalseString },
+                { isInside, IsUnderCommand ? bool.TrueString : bool.FalseString },
                 { mySubName, subName.hullName.text },
                 { baseColorName, $"#{ColorUtility.ToHtmlStringRGB(baseColor)}" },
                 { interiorColorName, $"#{ColorUtility.ToHtmlStringRGB(interiorColor)}" },
@@ -1312,13 +1312,23 @@ namespace VehicleFramework
             {
                 yield break;
             }
-            if (Boolean.Parse(simpleData[isControlling]))
-            {
-                BeginPiloting();
-            }
             if (Boolean.Parse(simpleData[isInside]))
             {
-                PlayerEntry();
+                if(this as Drone == null)
+                {
+                    PlayerEntry();
+                }
+            }
+            if (Boolean.Parse(simpleData[isControlling]))
+            {
+                if (this as Drone == null)
+                {
+                    BeginPiloting();
+                }
+                else
+                {
+                    (this as Drone).BeginControlling();
+                }
             }
             subName.SetName(simpleData[mySubName]);
             if (Boolean.Parse(simpleData[defaultColorName]))
