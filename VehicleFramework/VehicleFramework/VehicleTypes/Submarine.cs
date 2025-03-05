@@ -284,6 +284,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public virtual void PaintVehicleDefaultStyle(string name)
         {
+            IsDefaultTexture = true;
             PaintNameDefaultStyle(name);
         }
         public enum TextureDefinition : int
@@ -300,10 +301,6 @@ namespace VehicleFramework.VehicleTypes
             OnNameChange(name);
         }
 
-        protected Color OldExteriorMainColor;
-        protected Color OldExteriorPrimaryAccent;
-        protected Color OldExteriorSecondaryAccent;
-        protected Color OldExteriorNameLabel;
         public bool IsDefaultTexture = true;
 
         public override void SetBaseColor(Vector3 hsb, Color color)
@@ -346,21 +343,17 @@ namespace VehicleFramework.VehicleTypes
             {
                 case "MainExterior":
                     IsDefaultTexture = false;
-                    OldExteriorMainColor = baseColor;
                     baseColor = eventData.color;
                     break;
                 case "PrimaryAccent":
                     IsDefaultTexture = false;
-                    OldExteriorPrimaryAccent = interiorColor;
                     interiorColor = eventData.color;
                     break;
                 case "SecondaryAccent":
                     IsDefaultTexture = false;
-                    OldExteriorSecondaryAccent = stripeColor;
                     stripeColor = eventData.color;
                     break;
                 case "NameLabel":
-                    OldExteriorNameLabel = nameColor;
                     nameColor = eventData.color;
                     break;
                 default:
@@ -377,18 +370,9 @@ namespace VehicleFramework.VehicleTypes
         }
         public virtual void OnColorSubmit() // called by color picker submit button
         {
-            if (baseColor != OldExteriorMainColor)
-            {
-                PaintVehicleSection("ExteriorMainColor", baseColor);
-            }
-            if (interiorColor != OldExteriorPrimaryAccent)
-            {
-                PaintVehicleSection("ExteriorPrimaryAccent", interiorColor);
-            }
-            if (stripeColor != OldExteriorSecondaryAccent)
-            {
-                PaintVehicleSection("ExteriorSecondaryAccent", stripeColor);
-            }
+            SetBaseColor(Vector3.zero, baseColor);
+            SetInteriorColor(Vector3.zero, interiorColor);
+            SetStripeColor(Vector3.zero, stripeColor);
             if (IsDefaultTexture)
             {
                 PaintVehicleDefaultStyle(GetName());

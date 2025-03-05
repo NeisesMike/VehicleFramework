@@ -143,7 +143,6 @@ namespace VehicleFramework
         public void DefaultColorClick()
         {
             mv.PaintVehicleDefaultStyle(mv.GetName());
-            mv.IsDefaultTexture = true;
         }
         public void DefaultColorHover()
         {

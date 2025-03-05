@@ -1331,32 +1331,21 @@ namespace VehicleFramework
                 }
             }
             subName.SetName(simpleData[mySubName]);
+            Submarine sub = this as Submarine;
+            sub?.PaintVehicleDefaultStyle(simpleData[mySubName]);
             if (Boolean.Parse(simpleData[defaultColorName]))
             {
-                Submarine sub = this as Submarine;
-                if(sub != null)
-                {
-                    sub.PaintVehicleDefaultStyle(simpleData[mySubName]);
-                    yield break;
-                }
+                yield break;
             }
             if (ColorUtility.TryParseHtmlString(simpleData[baseColorName], out baseColor))
             {
                 subName.SetColor(0, Vector3.zero, baseColor);
-                Submarine sub = this as Submarine;
-                if (sub != null)
-                {
-                    sub.PaintVehicleName(simpleData[mySubName], Color.black, baseColor);
-                }
+                sub?.PaintVehicleName(simpleData[mySubName], Color.black, baseColor);
             }
             if (ColorUtility.TryParseHtmlString(simpleData[nameColorName], out nameColor))
             {
                 subName.SetColor(1, Vector3.zero, nameColor);
-                Submarine sub = this as Submarine;
-                if (sub != null)
-                {
-                    sub.PaintVehicleName(simpleData[mySubName], nameColor, baseColor);
-                }
+                sub?.PaintVehicleName(simpleData[mySubName], nameColor, baseColor);
             }
             if (ColorUtility.TryParseHtmlString(simpleData[interiorColorName], out interiorColor))
             {
