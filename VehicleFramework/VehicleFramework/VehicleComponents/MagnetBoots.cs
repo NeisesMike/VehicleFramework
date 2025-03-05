@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -74,10 +75,6 @@ namespace VehicleFramework.VehicleComponents
                 return;
             }
             UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
-            if (!mv.docked)
-            {
-                TryMagnets(true, CheckPlacement(), false);
-            }
         }
         public IEnumerator FindStoreInfoIdentifier()
         {
@@ -196,6 +193,30 @@ namespace VehicleFramework.VehicleComponents
                     }
                 }
             }
+        }
+
+        private static List<MagnetBoots> previouslyAttached = new List<MagnetBoots>();
+        internal static void DetachAll()
+        {
+            previouslyAttached = new List<MagnetBoots>();
+            void DetachAndNotify(MagnetBoots boots)
+            {
+                if (boots.IsAttached)
+                {
+                    boots.HandleAttachment(false);
+                    Logger.PDANote($"{boots.mv.GetName()} magnet boots have detached!", 3f);
+                    previouslyAttached.Add(boots);
+                }
+            }
+            VehicleManager.VehiclesInPlay
+                .Where(x => x != null & x.GetComponent<MagnetBoots>() != null)
+                .Select(x => x.GetComponent<MagnetBoots>())
+                .ForEach(DetachAndNotify);
+        }
+        internal static void AttachAll()
+        {
+            previouslyAttached.ForEach(x => x.TryMagnets(true, x.CheckPlacement(), false));
+            previouslyAttached.Clear();
         }
     }
 }

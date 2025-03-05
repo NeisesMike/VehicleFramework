@@ -60,11 +60,13 @@ namespace VehicleFramework
             // Update the player position before saving it
             saveData.OnStartedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
+                VehicleComponents.MagnetBoots.DetachAll();
                 VehicleManager.CreateSaveFileData(sender, e);
             };
 
             saveData.OnFinishedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
+                //VehicleComponents.MagnetBoots.AttachAll();
                 //SaveData data = e.Instance as SaveData;
                 //Logger.Output(VehicleManager.VehiclesInPlay.Count.ToString());
                 //Logger.Output(data.UpgradeList.Keys.ToString());
