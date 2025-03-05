@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework.SaveLoad
 {
-    internal static class SaveLoadUtils
+    public static class SaveLoadUtils
     {
         internal static bool IsNameUniqueAmongSiblings(Transform tran)
         {
@@ -56,8 +56,7 @@ namespace VehicleFramework.SaveLoad
         {
             return $"{GetTransformPath(root, target)}-{fileSuffix}";
         }
-
-        internal static IEnumerator ReloadBatteryPower(GameObject thisItem, float thisCharge, TechType innerBatteryTT)
+        public static IEnumerator ReloadBatteryPower(GameObject thisItem, float thisCharge, TechType innerBatteryTT)
         {
             // check whether we *are* a battery xor we *have* a battery
             if (thisItem.GetComponent<Battery>() != null)
