@@ -57,7 +57,6 @@ namespace VehicleFramework.SaveLoad
                     Logger.Log(e.StackTrace);
                     continue;
                 }
-                mv.UpdateModuleSlots();
             }
             isFinished = true;
         }
