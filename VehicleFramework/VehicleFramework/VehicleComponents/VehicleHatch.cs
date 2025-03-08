@@ -70,7 +70,7 @@ namespace VehicleFramework
 					(mv as Submarine).PlayerEntry();
 				}
 			}
-			else if (mv as Submersible != null)
+			else if (mv as Submersible != null && !mv.isScuttled)
 			{
 				Player.main.transform.position = (mv as Submersible).PilotSeat.SitLocation.transform.position;
 				Player.main.transform.rotation = (mv as Submersible).PilotSeat.SitLocation.transform.rotation;
