@@ -27,6 +27,16 @@ namespace VehicleFramework
                 MyLog.LogInfo($"[DebugLog]: {message}");
             }
         }
+        public static void LogException(string message, System.Exception e, bool outputToScreen = false)
+        {
+            Error(message);
+            Error(e.Message);
+            Error(e.StackTrace);
+            if (outputToScreen)
+            {
+                ErrorMessage.AddError(message);
+            }
+        }
         private static int IDCounter = 65536; 
         public static int GetFreshID()
         {
