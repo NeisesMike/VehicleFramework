@@ -60,8 +60,22 @@ namespace VehicleFramework
             // Update the player position before saving it
             saveData.OnStartedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
             {
-                VehicleComponents.MagnetBoots.DetachAll();
-                VehicleManager.CreateSaveFileData(sender, e);
+                try
+                {
+                    VehicleComponents.MagnetBoots.DetachAll();
+                }
+                catch (Exception ex)
+                {
+                    VehicleFramework.Logger.LogException("Failed to detach all magnet boots!", ex);
+                }
+                try
+                {
+                    VehicleManager.CreateSaveFileData(sender, e);
+                }
+                catch(Exception ex)
+                {
+                    VehicleFramework.Logger.LogException("Failed to Create Save File Data!", ex);
+                }
             };
 
             saveData.OnFinishedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
