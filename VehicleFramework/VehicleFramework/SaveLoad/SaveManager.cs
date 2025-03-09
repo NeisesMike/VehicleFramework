@@ -67,8 +67,7 @@ namespace VehicleFramework.SaveLoad
                         }
                         catch (Exception e)
                         {
-                            Logger.Error("Failed to load upgrades for " + mv.name + " : " + mv.subName.hullName.text);
-                            Logger.Log(e.Message);
+                            Logger.LogException($"Failed to load upgrades for {mv.GetName()}", e);
                         }
                     }
                 }
@@ -120,7 +119,7 @@ namespace VehicleFramework.SaveLoad
                                         Transform batSlot = thisItem.transform.Find("BatterySlot");
                                         if(batSlot == null)
                                         {
-                                            Logger.Warn("Failed to load modular storage item : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                                            Logger.Warn($"Failed to load modular storage item {thisItem.name} to modular storage in vehicle {mv.GetName()}.");
                                             continue;
                                         }
                                         result = new TaskResult<GameObject>();
@@ -129,7 +128,7 @@ namespace VehicleFramework.SaveLoad
                                         if (newBat.GetComponent<Battery>() != null)
                                         {
                                             newBat.GetComponent<Battery>().charge = techtype.Item2;
-                                            Logger.Warn("Failed to load modular storage battery : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                                            Logger.Warn($"Failed to load modular storage battery {thisItem.name} to modular storage in vehicle {mv.GetName()}.");
                                         }
                                         newBat.transform.SetParent(batSlot);
                                         newBat.SetActive(false);
@@ -142,15 +141,14 @@ namespace VehicleFramework.SaveLoad
                                 }
                                 catch(Exception e)
                                 {
-                                    Logger.Error("Failed to add storage item to modular storage : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                                    Logger.Log(e.Message);
+                                    Logger.LogException($"Failed to add storage item {thisItem.name} to modular storage in vehicle {mv.GetName()}.", e);
                                 }
                                 thisItem.SetActive(false);
                             }
                         }
                         else
                         {
-                            Logger.Warn("Tried to deserialize items into a non-existent modular container: " + container.Item1.ToString());
+                            Logger.Warn($"Tried to deserialize items into a non-existent modular container: {container.Item1.ToString()}");
                         }
                     }
                 }
@@ -192,7 +190,7 @@ namespace VehicleFramework.SaveLoad
                         }
                         if (!isStorageMatched)
                         {
-                            Logger.Warn("Failed to normally restore the contents of the " + mv.name + ". Trying the old method.");
+                            Logger.Warn($"Failed to normally restore the contents of the {mv.GetName()}. Trying the old method.");
                             foreach (var isc in mv.GetComponentsInChildren<InnateStorageContainer>())
                             {
                                 isStorageMatched = false;
@@ -210,7 +208,7 @@ namespace VehicleFramework.SaveLoad
                         }
                         if (!isStorageMatched)
                         {
-                            Logger.Error("Failed to restore the contents of the " + mv.name);
+                            Logger.Error($"Failed to restore the contents of the {mv.GetName()}.");
                         }
                     }
                 }
@@ -252,8 +250,7 @@ namespace VehicleFramework.SaveLoad
                         }
                         catch (Exception e)
                         {
-                            Logger.Error("Failed to load battery : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                            Logger.Log(e.Message);
+                            Logger.LogException($"Failed to load battery {thisItem.name} into vehicle : {mv.GetName()}.", e);
                         }
                     }
                 }
@@ -299,8 +296,7 @@ namespace VehicleFramework.SaveLoad
                         }
                         catch (Exception e)
                         {
-                            Logger.Error("Failed to load backup battery : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                            Logger.Log(e.Message);
+                            Logger.LogException($"Failed to load battery {thisItem.name} into vehicle : {mv.GetName()}.", e);
                         }
                     }
                 }
@@ -327,8 +323,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch(Exception e)
                     {
-                        Logger.Error("Failed to load player into vehicle :" + mv.name + " : " + mv.subName.hullName.text);
-                        Logger.Log(e.Message);
+                        Logger.LogException($"Failed to load player into vehicle : {mv.GetName()}.", e);
                     }
                     yield break;
                 }
@@ -405,8 +400,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch (Exception e)
                     {
-                        Logger.Error("Failed to load color details for " + mv.name + " : " + mv.subName.hullName.text);
-                        Logger.Log(e.Message);
+                        Logger.LogException($"Failed to load color details for vehicle : {mv.GetName()}.", e);
                     }
                 }
             }
@@ -438,8 +432,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch (Exception e)
                     {
-                        Logger.Error("Failed to load player into vehicle :" + mv.name + " : " + mv.subName.hullName.text);
-                        Logger.Log(e.Message);
+                        Logger.LogException($"Failed to load player into vehicle : {mv.GetName()}.", e);
                     }
                     yield break;
                 }
@@ -465,8 +458,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch (Exception e)
                     {
-                        Logger.Error("Failed to load SubName for vehicle :" + mv.name + " : " + mv.subName.hullName.text);
-                        Logger.Log(e.Message);
+                        Logger.LogException($"Failed to load SubName for vehicle : {mv.GetName()}.", e);
                     }
                     yield break;
                 }
@@ -500,7 +492,7 @@ namespace VehicleFramework.SaveLoad
                         Transform batSlot = thisItem.transform.Find("BatterySlot");
                         if (batSlot == null)
                         {
-                            Logger.Warn("Failed to load innate storage item : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                            Logger.Warn($"Failed to load innate storage item {thisItem.name} to modular storage for {mv.name} : {mv.GetName()}.");
                             continue;
                         }
                         result = new TaskResult<GameObject>();
@@ -509,7 +501,7 @@ namespace VehicleFramework.SaveLoad
                         if (newBat.GetComponent<Battery>() != null)
                         {
                             newBat.GetComponent<Battery>().charge = techtype.Item2;
-                            Logger.Warn("Failed to load innate storage battery : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
+                            Logger.Warn($"Failed to load innate storage battery {thisItem.name} to modular storage for {mv.name} : {mv.GetName()}.");
                         }
                         newBat.transform.SetParent(batSlot);
                         newBat.SetActive(false);
@@ -522,8 +514,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("Failed to add storage item to modular storage : " + thisItem.name + " for " + mv.name + " : " + mv.subName.hullName.text);
-                    Logger.Log(e.Message);
+                    Logger.LogException($"Failed to add storage item {thisItem.name} to modular storage for {mv.name} : {mv.GetName()}.", e);
                 }
                 thisItem.SetActive(false);
             }

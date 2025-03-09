@@ -46,15 +46,15 @@ namespace VehicleFramework
             }
             catch(KeyNotFoundException e)
             {
-                Logger.Warn("That voice not found: " + name + ". " + e.Message);
+                Logger.WarnException($"That voice '{name}' not found.", e);
             }
             catch(ArgumentNullException e)
             {
-                Logger.Warn("That voice was null: " + e.Message);
+                Logger.WarnException($"That voice '{name}' was null: ", e);
             }
             catch(Exception e)
             {
-                Logger.Error("GetVoice failed: " + e.Message);
+                Logger.LogException($"GetVoice failed on {name}.", e);
             }
             return silentVoice;
         }
@@ -66,11 +66,11 @@ namespace VehicleFramework
             }
             catch (ArgumentException e)
             {
-                Logger.Warn("Tried to register a default voice for a vehicle that already had a default voice." + e.Message);
+                Logger.WarnException($"Tried to register a default voice {voice} for a vehicle {mv.GetName()} that already had a default voice.", e);
             }
             catch (Exception e)
             {
-                Logger.Error("Failed to register a default voice: " + e.Message);
+                Logger.LogException($"Failed to register a default voice {voice} for the vehicle {mv.GetName()}.", e);
             }
         }
         public static IEnumerator RegisterVoice(string name, string conventionalPath = "")
@@ -171,36 +171,41 @@ namespace VehicleFramework
             }
             catch (ArgumentException e)
             {
-                Logger.Warn("Tried to register a voice using a name that already exists: " + name + ". " + e.Message);
+                Logger.WarnException($"Tried to register a voice using a name that already exists: {name}.", e);
                 return;
             }
             catch (Exception e)
             {
-                Logger.Error("Failed to register a voice: " + e.Message);
+                Logger.LogException($"Failed to register a voice: {name} " , e);
                 return;
             }
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Successfully registered voice: " + name);
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, $"Successfully registered voice: {name}.");
         }
         internal static VehicleVoice GetDefaultVoice(ModVehicle mv)
         {
-            string defaultOption = "";
+            if(mv == null)
+            {
+                Logger.Error("Cannot get default voice for null ModVehicle!");
+                return default;
+            }
+            string defaultOption;
             try
             {
                 defaultOption = defaultVoices[mv.TechType];
             }
             catch (KeyNotFoundException e)
             {
-                Logger.Warn("Default voice option not found for vehicle: " + mv.name + ". " + e.Message);
+                Logger.WarnException($"Default voice option not found for vehicle: {mv.GetName()}.", e);
                 goto exit;
             }
             catch (ArgumentNullException e)
             {
-                Logger.Error("That mv.name was null: " + e.Message);
+                Logger.LogException($"That mv.name was null: {mv.GetName()}.", e);
                 goto exit;
             }
             catch (Exception e)
             {
-                Logger.Error("GetDefaultVoice option failed: " + e.Message);
+                Logger.LogException($"GetDefaultVoice option failed: {mv.GetName()}.", e);
                 goto exit;
             }
 
@@ -210,15 +215,15 @@ namespace VehicleFramework
             }
             catch (KeyNotFoundException e)
             {
-                Logger.Warn("Default voice not found for vehicle: " + mv.name + ". " + e.Message);
+                Logger.WarnException($"Default voice not found for vehicle: {mv.GetName()}.", e);
             }
             catch (ArgumentNullException e)
             {
-                Logger.Error("That default voice index was null: " + e.Message);
+                Logger.LogException($"That default voice index was null: {mv.GetName()}.", e);
             }
             catch (Exception e)
             {
-                Logger.Error("GetDefaultVoice failed: " + e.Message);
+                Logger.LogException($"GetDefaultVoice failed: {mv.GetName()}.", e);
             }
 
         exit:

@@ -46,9 +46,7 @@ namespace VehicleFramework.Assets
             }
             catch (Exception e)
             {
-                Logger.Error("AssetBundleInterface failed to load AssetBundle with the path: " + bundlePath);
-                Logger.Error("Make sure the name is correct.");
-                Logger.Error(e.Message);
+                Logger.LogException($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. Make sure the name is correct.", e);
                 return;
             }
             objectArray = bundle.LoadAllAssets();
@@ -65,13 +63,12 @@ namespace VehicleFramework.Assets
                     }
                     catch (Exception e)
                     {
-                        Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite Atlas " + spriteAtlasName);
-                        Logger.Error(e.Message);
+                        Logger.LogException($"AssetBundle {bundleName} failed to get Sprite Atlas: {spriteAtlasName}.", e);
                         return null;
                     }
                 }
             }
-            Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite Atlas " + spriteAtlasName);
+            Logger.Error($"AssetBundle {bundleName} failed to get Sprite Atlas: {spriteAtlasName}.");
             return null;
         }
         internal Atlas.Sprite GetSprite(string spriteAtlasName, string spriteName)
@@ -84,8 +81,7 @@ namespace VehicleFramework.Assets
             }
             catch (Exception e)
             {
-                Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
-                Logger.Error(e.Message);
+                Logger.LogException($"In AssetBundle {bundleName}, failed to get Sprite {spriteName} from Sprite Atlas {spriteAtlasName}.", e);
                 return null;
             }
         }
@@ -98,8 +94,7 @@ namespace VehicleFramework.Assets
             }
             catch (Exception e)
             {
-                Logger.Error("In AssetBundle " + bundleName + ", failed to get Sprite " + spriteName + " from Sprite Atlas " + spriteAtlasName);
-                Logger.Error(e.Message);
+                Logger.LogException($"In AssetBundle {bundleName}, failed to get Sprite {spriteName} from Sprite Atlas {spriteAtlasName}.", e);
                 return null;
             }
         }

@@ -185,8 +185,7 @@ namespace VehicleFramework
             }
             catch (Exception e)
             {
-                Logger.Warn("There was a problem setting up the BoundingBoxCollider. If your vehicle uses 'BoundingBox', use 'BoundingBoxCollider' instead.");
-                Logger.Warn(e.Message);
+                Logger.WarnException("There was a problem setting up the BoundingBoxCollider. If your vehicle uses 'BoundingBox', use 'BoundingBoxCollider' instead.", e);
                 try
                 {
                     mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();

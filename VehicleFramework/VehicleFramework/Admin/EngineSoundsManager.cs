@@ -31,15 +31,15 @@ namespace VehicleFramework
             }
             catch (ArgumentException e)
             {
-                Logger.Warn("Tried to register an engine-sounds using a name that already exists: " + name + ". " + e.Message);
+                Logger.WarnException($"Tried to register an engine-sounds using a name that already exists: {name}.", e);
                 return;
             }
             catch (Exception e)
             {
-                Logger.Error("Failed to register a engine-sounds: " + e.Message);
+                Logger.LogException($"Failed to register a engine-sounds: {name}.", e);
                 return;
             }
-            Logger.Log("Successfully registered engine-sounds: " + name);
+            Logger.Log($"Successfully registered engine-sounds: {name}.");
         }
         public static IEnumerator RegisterEngineSounds(string name, string voicepath="")
         {
@@ -57,31 +57,36 @@ namespace VehicleFramework
             }
             catch(KeyNotFoundException e)
             {
-                Logger.Warn("That engine-sounds not found: " + name + ". " + e.Message);
+                Logger.WarnException($"That engine-sounds not found: {name}.", e);
             }
             catch(ArgumentNullException e)
             {
-                Logger.Warn("That engine-sounds was null: " + e.Message);
+                Logger.WarnException($"That engine-sounds was null: {name}. ", e);
             }
             catch(Exception e)
             {
-                Logger.Error("GetVoice engine-sounds failed: " + e.Message);
+                Logger.LogException($"GetVoice engine-sounds failed: {name}.", e);
             }
             return silentVoice;
         }
         public static void RegisterDefault(ModVehicle mv, string voice)
         {
+            if(mv == null)
+            {
+                Logger.Error($"Cannot register default engine sounds for null ModVehicle: {voice}.");
+                return;
+            }
             try
             {
                 defaultEngineSounds.Add(mv.TechType, voice);
             }
             catch (ArgumentException e)
             {
-                Logger.Warn("Tried to register a default engine-sounds for a vehicle that already had a default engine-sounds." + e.Message);
+                Logger.WarnException($"Tried to register a default engine-sounds for a vehicle {mv.GetName()} that already had a default engine-sounds {voice}.", e);
             }
             catch (Exception e)
             {
-                Logger.Error("Failed to register a default engine-sounds: " + e.Message);
+                Logger.LogException($"Failed to register a default engine-sounds: {voice} for vehicle {mv.GetName()}.", e);
             }
         }
         internal static void UpdateDefaultVoice(ModVehicle mv, string voice)
@@ -103,7 +108,7 @@ namespace VehicleFramework
             }
             catch(Exception e)
             {
-                Logger.Warn("No default engine sounds for vehicle type: " + mv.name + ". Using Shiruba. " + e.Message);
+                Logger.WarnException($"No default engine sounds for vehicle type: {mv.GetName()}. Using Shiruba.", e);
                 return EngineSoundss.First().Value;
             }
         }

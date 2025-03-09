@@ -160,7 +160,7 @@ namespace VehicleFramework.Admin
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name. Error follows:\n" + e.Message);
+                    Logger.LogException("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name.", e);
                     yield break;
                 }
                 if (OnChange != null)
@@ -216,7 +216,7 @@ namespace VehicleFramework.Admin
             }
             catch (Exception e)
             {
-                Logger.Error("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name. Error follows:\n" + e.Message);
+                Logger.LogException("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name.", e);
                 yield break;
             }
             if (OnChange != null)
@@ -254,7 +254,7 @@ namespace VehicleFramework.Admin
             }
             catch (Exception e)
             {
-                Logger.Error("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name. Error follows:\n" + e.Message);
+                Logger.LogException("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name.", e);
                 yield break;
             }
             if (onChange != null)
@@ -292,7 +292,7 @@ namespace VehicleFramework.Admin
             }
             catch (Exception e)
             {
-                Logger.Error("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name. Error follows:\n" + e.Message);
+                Logger.LogException("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name.", e);
                 yield break;
             }
             if (onChange != null)
@@ -330,7 +330,7 @@ namespace VehicleFramework.Admin
             }
             catch (Exception e)
             {
-                Logger.Error("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name. Error follows:\n" + e.Message);
+                Logger.LogException("ConfigRegistrar: Could not bind that config option. Probably you chose a non-unique name.", e);
                 yield break;
             }
             if (onChange != null)

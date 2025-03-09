@@ -27,6 +27,16 @@ namespace VehicleFramework
                 MyLog.LogInfo($"[DebugLog]: {message}");
             }
         }
+        public static void WarnException(string message, System.Exception e, bool outputToScreen = false)
+        {
+            Warn(message);
+            Warn(e.Message);
+            Warn(e.StackTrace);
+            if (outputToScreen)
+            {
+                ErrorMessage.AddWarning(message);
+            }
+        }
         public static void LogException(string message, System.Exception e, bool outputToScreen = false)
         {
             Error(message);
