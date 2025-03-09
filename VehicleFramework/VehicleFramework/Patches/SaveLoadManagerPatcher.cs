@@ -52,9 +52,7 @@ namespace VehicleFramework.Patches
             }
             catch (System.Exception e)
             {
-                Logger.Error("SaveLoadManager.RegisterSaveGamePostfix: Could not read json file!");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Logger.LogException("SaveLoadManager.RegisterSaveGamePostfix: Could not read json file!", e);
             }
         }
     }

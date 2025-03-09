@@ -86,9 +86,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 catch (Exception e)
                 {
-                    Logger.Error($"Failed to add storage item {thisItem.name} to modular storage in slot {slotID} for {mv.name} : {mv.subName.hullName.text}");
-                    Logger.Log(e.Message);
-                    Logger.Log(e.StackTrace);
+                    Logger.LogException($"Failed to add storage item {thisItem.name} to modular storage in slot {slotID} for {mv.name} : {mv.subName.hullName.text}", e);
                 }
                 thisItem.SetActive(false);
                 if (item.Item2 >= 0)
@@ -100,10 +98,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch (Exception e)
                     {
-
-                        Logger.Error($"Failed to load reload battery power for modular storage item {thisItem.name} to modular storage in slot {slotID} for {mv.name} : {mv.subName.hullName.text}");
-                        Logger.Log(e.Message);
-                        Logger.Log(e.StackTrace);
+                        Logger.LogException($"Failed to load reload battery power for modular storage item {thisItem.name} to modular storage in slot {slotID} for {mv.name} : {mv.subName.hullName.text}", e);
                     }
                 }
             }

@@ -1365,9 +1365,7 @@ namespace VehicleFramework
             }
             catch(Exception e)
             {
-                Logger.Error($"Failed to save simple data for ModVehicle {name}");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Logger.LogException($"Failed to save simple data for ModVehicle {name}", e);
             }
             OnGameSaved();
         }

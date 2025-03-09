@@ -56,9 +56,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 catch (Exception e)
                 {
-                    Logger.Error($"Failed to add storage item {thisItem.name} to innate storage on GameObject {gameObject.name} for {mv.name} : {mv.subName.hullName.text}");
-                    Logger.Log(e.Message);
-                    Logger.Log(e.StackTrace);
+                    Logger.LogException($"Failed to add storage item {thisItem.name} to innate storage on GameObject {gameObject.name} for {mv.name} : {mv.subName.hullName.text}", e);
                 }
                 thisItem.SetActive(false);
                 if (item.Item2 >= 0)
@@ -70,9 +68,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch(Exception e)
                     {
-                        Logger.Error($"Failed to reload battery power for innate storage item {thisItem.name} in innate storage on GameObject {gameObject.name} for {mv.name} : {mv.subName.hullName.text}");
-                        Logger.Log(e.Message);
-                        Logger.Log(e.StackTrace);
+                        Logger.LogException($"Failed to reload battery power for innate storage item {thisItem.name} in innate storage on GameObject {gameObject.name} for {mv.name} : {mv.subName.hullName.text}", e);
                     }
                 }
             }

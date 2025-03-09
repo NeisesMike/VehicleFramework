@@ -51,8 +51,7 @@ namespace VehicleFramework.SaveLoad
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to load battery : {thisBattery.Item1} for {mv.name} on GameObject {gameObject.name} : {mv.subName.hullName.text}");
-                Logger.Log(e.StackTrace);
+                Logger.LogException($"Failed to load battery : {thisBattery.Item1} for {mv.name} on GameObject {gameObject.name} : {mv.subName.hullName.text}", e);
             }
         }
     }

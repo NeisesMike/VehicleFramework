@@ -35,9 +35,7 @@ namespace VehicleFramework.SaveLoad
             }
             catch(Exception e)
             {
-                Logger.Error($"Failed to serialize json data for file {uniqueFileName}!");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Logger.LogException($"Failed to serialize json data for file {uniqueFileName}!", e);
                 return;
             }
             try
@@ -46,9 +44,7 @@ namespace VehicleFramework.SaveLoad
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to write file {uniqueFileName}!");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Logger.LogException($"Failed to write file {uniqueFileName}!", e);
             }
         }
         public static T Read<T>(string uniqueFileName)
@@ -66,9 +62,7 @@ namespace VehicleFramework.SaveLoad
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to read file {uniqueFileName}!");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Logger.LogException($"Failed to read file {uniqueFileName}!", e);
                 return default;
             }
             try
@@ -77,9 +71,7 @@ namespace VehicleFramework.SaveLoad
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to deserialize json from file {uniqueFileName}!");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Logger.LogException($"Failed to deserialize json from file {uniqueFileName}!", e);
             }
             return default;
         }

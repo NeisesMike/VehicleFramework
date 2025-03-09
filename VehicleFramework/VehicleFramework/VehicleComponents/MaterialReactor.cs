@@ -182,9 +182,7 @@ namespace VehicleFramework.VehicleComponents
             catch(Exception e)
             {
                 string errorMessage = $"Could not add material {toAdd.AsString()} to the material reactor!";
-                ErrorMessage.AddWarning(errorMessage);
-                Logger.Error(errorMessage);
-                Logger.Error(e.StackTrace);
+                Logger.LogException(errorMessage, e, true);
             }
         }
         private void OnAddItem(InventoryItem item)
