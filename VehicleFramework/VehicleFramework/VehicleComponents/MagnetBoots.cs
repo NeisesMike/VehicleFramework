@@ -209,7 +209,7 @@ namespace VehicleFramework.VehicleComponents
                 }
             }
             VehicleManager.VehiclesInPlay
-                .Where(x => x != null & x.GetComponent<MagnetBoots>() != null)
+                .Where(x => x != null && x.GetComponent<MagnetBoots>() != null)
                 .Select(x => x.GetComponent<MagnetBoots>())
                 .ForEach(DetachAndNotify);
         }
