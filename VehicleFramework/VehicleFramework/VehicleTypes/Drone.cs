@@ -38,10 +38,7 @@ namespace VehicleFramework.VehicleTypes
         private IEnumerator EstablishConnection()
         {
             yield return new WaitForSeconds(0.1f);
-            while (!LargeWorldStreamer.main.isIdle)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => LargeWorldStreamer.main.isIdle);
             IsConnecting = false;
             GetComponent<VFEngine>().enabled = true;
         }

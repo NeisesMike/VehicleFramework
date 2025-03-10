@@ -169,14 +169,11 @@ namespace VehicleFramework
         {
             IEnumerator NotifyDockingBay(Transform baseCell)
             {
-                while (baseCell?.Find("BaseMoonpool(Clone)") == null)
+                if(baseCell == null)
                 {
-                    if(baseCell == null)
-                    {
-                        yield break;
-                    }
-                    yield return null;
+                    yield break;
                 }
+                yield return new WaitUntil(() => baseCell.Find("BaseMoonpool(Clone)") != null);
                 var thisBasesBays = baseCell?.GetAllComponentsInChildren<VehicleDockingBay>();
                 const float expectedMaxDistance = 5f;
                 foreach (VehicleDockingBay bay in thisBasesBays)

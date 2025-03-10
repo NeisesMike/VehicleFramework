@@ -120,10 +120,7 @@ namespace VehicleFramework
         }
         private static IEnumerator GetSilence()
         {
-            while(VoiceManager.silence == null)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => VoiceManager.silence != null);
             silentVoice = new EngineSounds
             {
                 hum = VoiceManager.silence,

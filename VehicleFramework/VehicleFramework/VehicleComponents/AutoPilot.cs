@@ -464,10 +464,7 @@ namespace VehicleFramework
             Logger.DebugLog("OnNearbyLeviathan");
             IEnumerator ResetDangerStatusEventually()
             {
-                while (Mathf.Abs(Time.time - timeWeStartedWaiting) < MAX_TIME_TO_WAIT)
-                {
-                    yield return null;
-                }
+                yield return new WaitUntil(() => Mathf.Abs(Time.time - timeWeStartedWaiting) >= MAX_TIME_TO_WAIT);
                 dangerStatus = DangerState.Safe;
             }
             StopAllCoroutines();

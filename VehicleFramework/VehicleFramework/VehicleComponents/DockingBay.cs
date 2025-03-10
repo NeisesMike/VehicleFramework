@@ -166,12 +166,9 @@ namespace VehicleFramework.VehicleComponents
         protected virtual IEnumerator DoUndockingAnimations()
         {
             currentDockedVehicle.useRigidbody.AddRelativeForce(internalExitForce, ForceMode.VelocityChange);
-            while (Vector3.Distance(currentDockedVehicle.transform.position, vehicleDockingTrigger.position) <= dockingDistanceThreshold)
-            {
-                // wait until the vehicle is "just" far enough away.
-                // Should probably disallow undocking if a collider is too close, lest we clip into it.
-                yield return null;
-            }
+            // wait until the vehicle is "just" far enough away.
+            // Should probably disallow undocking if a collider is too close, lest we clip into it.
+            yield return new WaitUntil(() => Vector3.Distance(currentDockedVehicle.transform.position, vehicleDockingTrigger.position) > dockingDistanceThreshold);
         }
         protected virtual void OnFinishedUndocking(bool hasPlayer)
         {

@@ -123,10 +123,7 @@ namespace VehicleFramework
         {
             IEnumerator WaitThenAct()
             {
-                while(!Admin.GameStateWatcher.IsPlayerStarted)
-                {
-                    yield return null;
-                }
+                yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted);
                 Drone nearest = Admin.GameObjectManager<Drone>.FindNearestSuch(transform.position);
                 DroneStation.FastenConnection(this, nearest);
                 if (GetComponent<Rigidbody>())

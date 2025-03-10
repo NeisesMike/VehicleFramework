@@ -69,11 +69,7 @@ namespace VehicleFramework
         }
         public IEnumerator BuildAllSlotsInternal()
         {
-            while (!haveSlotsBeenInited)
-            {
-                yield return null;
-            }
-
+            yield return new WaitUntil(() => haveSlotsBeenInited);
             if (!vehicleAllSlots.ContainsKey("VehicleModule0"))
             {
                 uGUI_Equipment equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
@@ -116,12 +112,7 @@ namespace VehicleFramework
             // Unfortunately this means we must wait for the player to open the PDA.
             // Maybe we can grab equipment from prefab?
             equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab").GetComponentInChildren<uGUI_Equipment>(true);
-
-            while (!main.isEquipmentInit)
-            {
-                yield return null;
-            }
-
+            yield return new WaitUntil(() => main.isEquipmentInit);
             foreach (KeyValuePair<string, uGUI_EquipmentSlot> pair in vehicleAllSlots)
             {
                 switch (pair.Key)

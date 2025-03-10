@@ -97,11 +97,8 @@ namespace VehicleFramework.Admin
         }
         private static IEnumerator LogAllVehicleNamesInternal()
         {
-            while (Player.main == null)
-            {
-                // wait until the player exists, so that we're sure every vehicle is done with registration
-                yield return null;
-            }
+            // wait until the player exists, so that we're sure every vehicle is done with registration
+            yield return new UnityEngine.WaitUntil(() => Player.main != null);
             var boolNames = ExternalVehicleConfig<bool>.main.Keys;
             var floatNames = ExternalVehicleConfig<float>.main.Keys;
             var keyNames = ExternalVehicleConfig<KeyboardShortcut>.main.Keys;
@@ -139,11 +136,8 @@ namespace VehicleFramework.Admin
                 Logger.Error($"ConfigRegistrar only accepts type parameters: bool, float, KeyboardShortcut, but you supplied the type parameter {typeof(T)}.");
                 yield break;
             }
-            while (Player.main == null)
-            {
-                // wait until the player exists, so that we're sure every vehicle is done with registration
-                yield return null;
-            }
+            // wait until the player exists, so that we're sure every vehicle is done with registration
+            yield return new UnityEngine.WaitUntil(() => Player.main != null);
             foreach (var pair in ExternalVehicleConfig<T>.main)
             {
                 ConfigFile config = configFile;
@@ -188,11 +182,8 @@ namespace VehicleFramework.Admin
                 Logger.Error($"ConfigRegistrar only accepts type parameters: bool, float, KeyboardShortcut, but you supplied the type parameter {typeof(T)}.");
                 yield break;
             }
-            while (Player.main == null)
-            {
-                // wait until the player exists, so that we're sure every vehicle is done with registration
-                yield return null;
-            }
+            // wait until the player exists, so that we're sure every vehicle is done with registration
+            yield return new UnityEngine.WaitUntil(() => Player.main != null);
             var MVs = VehicleManager.vehicleTypes.Where(x => x.name.ToLower().Contains(vehicleName.ToLower()));
             if (!MVs.Any())
             {
@@ -236,11 +227,8 @@ namespace VehicleFramework.Admin
                 Logger.Error($"ConfigRegistrar only accepts type parameters: bool, float, KeyboardShortcut, but you supplied the type parameter {typeof(T)}.");
                 yield break;
             }
-            while (Player.main == null)
-            {
-                // wait until the player exists, so that we're sure every vehicle is done with registration
-                yield return null;
-            }
+            // wait until the player exists, so that we're sure every vehicle is done with registration
+            yield return new UnityEngine.WaitUntil(() => Player.main != null);
             ConfigFile config = configFile;
             if (config == null)
             {
@@ -274,11 +262,8 @@ namespace VehicleFramework.Admin
                 Logger.Error($"ConfigRegistrar only accepts type parameters: bool, float, KeyboardShortcut, but you supplied the type parameter {typeof(T)}.");
                 yield break;
             }
-            while (Player.main == null)
-            {
-                // wait until the player exists, so that we're sure every vehicle is done with registration
-                yield return null;
-            }
+            // wait until the player exists, so that we're sure every vehicle is done with registration
+            yield return new UnityEngine.WaitUntil(() => Player.main != null);
             ConfigFile config = configFile;
             if (config == null)
             {
@@ -312,11 +297,8 @@ namespace VehicleFramework.Admin
                 Logger.Error($"ConfigRegistrar only accepts type parameters: bool, float, KeyboardShortcut, but you supplied the type parameter {typeof(T)}.");
                 yield break;
             }
-            while (Player.main == null)
-            {
-                // wait until the player exists, so that we're sure every vehicle is done with registration
-                yield return null;
-            }
+            // wait until the player exists, so that we're sure every vehicle is done with registration
+            yield return new UnityEngine.WaitUntil(() => Player.main != null);
             ConfigFile config = configFile;
             if (config == null)
             {

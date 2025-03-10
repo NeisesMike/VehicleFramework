@@ -66,15 +66,11 @@ namespace VehicleFramework
         private static IEnumerator LoadVehicle(ModVehicle mv)
         {
             // See SaveData.cs
-            while (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
-            {
-                yield return null;
-            }
-            while (WaitScreen.IsWaiting)
-            {
-                yield return null;
-            }
-            Logger.Log("Loading: " + mv.GetName());
+            yield return new WaitUntil(() => LargeWorldStreamer.main != null);
+            yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady());
+            yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
+            yield return new WaitUntil(() => !WaitScreen.IsWaiting);
+            Logger.Log($"Loading: {mv.GetName()}");
             Coroutine ModuleGetter = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.SaveFileData, mv));
             Coroutine dis = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.SaveFileData, mv));
             Coroutine db = UWE.CoroutineHost.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.SaveFileData, mv));

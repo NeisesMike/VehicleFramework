@@ -117,10 +117,7 @@ namespace VehicleFramework.VehicleTypes
         }
         protected IEnumerator TryStandUpFromChair()
         {
-            while (IsPlayerControlling())
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
+            yield return new WaitUntil(() => !IsPlayerControlling());
             yield return new WaitForSeconds(2);
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;

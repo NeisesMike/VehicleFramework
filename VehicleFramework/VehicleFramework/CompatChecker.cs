@@ -28,15 +28,9 @@ namespace VehicleFramework
         }
         private static IEnumerator CheckAllSoon()
         {
-            while (ErrorMessage.main == null)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => ErrorMessage.main != null);
             yield return new WaitForSeconds(1);
-            while (ErrorMessage.main == null)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => ErrorMessage.main != null);
             CheckForNautilusUpdate();
             CheckForBepInExPackUpdate();
             CheckForFlareDurationIndicator();

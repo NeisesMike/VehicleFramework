@@ -79,10 +79,7 @@ namespace VehicleFramework
             VoiceManager.voices.Add(this);
             IEnumerator WaitUntilReadyToSpeak()
             {
-                while (!Admin.GameStateWatcher.IsWorldSettled)
-                {
-                    yield return null;
-                }
+                yield return new WaitUntil(() => Admin.GameStateWatcher.IsWorldSettled);
                 NotifyReadyToSpeak();
                 yield break;
             }
