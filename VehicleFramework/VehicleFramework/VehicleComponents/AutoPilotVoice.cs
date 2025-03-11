@@ -175,7 +175,7 @@ namespace VehicleFramework
             {
                 foreach(var speaker in speakers)
                 {
-                    speaker.volume = balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value;
+                    speaker.volume = balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
                     speaker.clip = clip;
                     speaker.Play();
                     if (MainPatcher.VFConfig.IsSubtitles.Value)
