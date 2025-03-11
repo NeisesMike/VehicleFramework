@@ -786,8 +786,11 @@ namespace VehicleFramework
         }
         public static void SetupCameraController(ModVehicle mv)
         {
-            var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
-            mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
+            if (mv.Cameras.Any())
+            {
+                var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
+                mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
+            }
         }
         public static void SetupDenyBuildingTags(ModVehicle mv)
         {
