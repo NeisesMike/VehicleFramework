@@ -184,13 +184,13 @@ namespace VehicleFramework
                 {
                     foreach (Material mat in renderer.materials)
                     {
-                        mat.EnableKeyword("MARMO_EMISSION");
-                        mat.SetFloat("_GlowStrength", 0.1f);
-                        mat.SetFloat("_GlowStrengthNight", 0.1f);
-                        mat.SetFloat("_EmissionLM", 0.01f);
-                        mat.SetFloat("_EmissionLMNight", 0.01f);
-                        mat.SetColor("_GlowColor", Color.red);
-                        mat.SetColor("_Color", Color.red);
+                        mat.EnableKeyword(Admin.Utils.emissionKeyword);
+                        mat.SetFloat(Admin.Utils.glowField, 0.1f);
+                        mat.SetFloat(Admin.Utils.glowNightField, 0.1f);
+                        mat.SetFloat(Admin.Utils.emissionField, 0.01f);
+                        mat.SetFloat(Admin.Utils.emissionNightField, 0.01f);
+                        mat.SetColor(Admin.Utils.glowColorField, Color.red);
+                        mat.SetColor(Admin.Utils.colorField, Color.red);
                     }
                 }
             }
@@ -200,8 +200,8 @@ namespace VehicleFramework
                 {
                     foreach (Material mat in renderer.materials)
                     {
-                        mat.DisableKeyword("MARMO_EMISSION");
-                        mat.SetColor("_Color", Color.white);
+                        mat.DisableKeyword(Admin.Utils.emissionKeyword);
+                        mat.SetColor(Admin.Utils.colorField, Color.white);
                     }
                 }
             }

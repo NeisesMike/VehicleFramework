@@ -221,25 +221,25 @@ namespace VehicleFramework
         }
         private void BlinkThisLightOn(Material mat, Color col)
         {
-            mat.EnableKeyword("MARMO_EMISSION");
-            mat.EnableKeyword("MARMO_SPECMAP");
-            mat.SetFloat("_GlowStrength", lightBrightness);
-            mat.SetFloat("_GlowStrengthNight", lightBrightness);
-            mat.SetColor("_Color", col);
-            mat.SetColor("_GlowColor", col);
+            mat.EnableKeyword(Admin.Utils.emissionKeyword);
+            mat.EnableKeyword(Admin.Utils.specmapKeyword);
+            mat.SetFloat(Admin.Utils.glowField, lightBrightness);
+            mat.SetFloat(Admin.Utils.glowNightField, lightBrightness);
+            mat.SetColor(Admin.Utils.colorField, col);
+            mat.SetColor(Admin.Utils.glowColorField, col);
         }
         private void BlinkThisStrobeOn(Material mat, Color col)
         {
-            mat.EnableKeyword("MARMO_EMISSION");
-            mat.EnableKeyword("MARMO_SPECMAP");
-            mat.SetFloat("_GlowStrength", strobeBrightness);
-            mat.SetFloat("_GlowStrengthNight", strobeBrightness);
-            mat.SetColor("_Color", col);
-            mat.SetColor("_GlowColor", col);
+            mat.EnableKeyword(Admin.Utils.emissionKeyword);
+            mat.EnableKeyword(Admin.Utils.specmapKeyword);
+            mat.SetFloat(Admin.Utils.glowField, strobeBrightness);
+            mat.SetFloat(Admin.Utils.glowNightField, strobeBrightness);
+            mat.SetColor(Admin.Utils.colorField, col);
+            mat.SetColor(Admin.Utils.glowColorField, col);
         }
         private void BlinkThisLightOff(Material mat)
         {
-            mat.DisableKeyword("MARMO_EMISSION");
+            mat.DisableKeyword(Admin.Utils.emissionKeyword);
         }
         private void BlinkOn(List<Material> mats, Color col)
         {

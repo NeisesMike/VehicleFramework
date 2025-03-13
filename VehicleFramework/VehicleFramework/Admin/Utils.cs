@@ -11,6 +11,16 @@ namespace VehicleFramework.Admin
 {
     public static class Utils
     {
+        public const string marmosetUberName = "MarmosetUBER";
+        public const string emissionKeyword = "MARMO_EMISSION";
+        public const string specmapKeyword = "MARMO_SPECMAP";
+        public const string glowField= "_GlowStrength";
+        public const string glowNightField = "_GlowStrengthNight";
+        public const string emissionField = "_EmissionLM";
+        public const string emissionNightField = "_EmissionLMNight";
+        public const string specIntField = "_SpecInt";
+        public const string colorField = "_Color";
+        public const string glowColorField = "_GlowColor";
         public static Shader StoreShader(List<MeshRenderer> rends)
         {
             Shader m_ShaderMemory = null;
@@ -52,7 +62,7 @@ namespace VehicleFramework.Admin
         }
         public static void ListShaderProperties()
         {
-            Shader shader = Shader.Find("MarmosetUBER");
+            Shader shader = Shader.Find(marmosetUberName);
             for (int i = 0; i < shader.GetPropertyCount(); i++)
             {
                 string propertyName = shader.GetPropertyName(i);
@@ -61,7 +71,7 @@ namespace VehicleFramework.Admin
         }
         public static void ApplyMarmoset(GameObject go)
         {
-            go.GetComponentsInChildren<MeshRenderer>(true).ForEach(x => x.materials.ForEach(y => y.shader = Shader.Find("MarmosetUBER")));
+            go.GetComponentsInChildren<MeshRenderer>(true).ForEach(x => x.materials.ForEach(y => y.shader = Shader.Find(marmosetUberName)));
         }
         public static void ApplyInteriorLighting()
         {
@@ -157,12 +167,12 @@ namespace VehicleFramework.Admin
             // No guarantees this will work well, but it's a good starting place.
             // For example, not all materials will want to use a specular map. In that case,
             // it can make a material look brighter, shinier, or more luminescent than it should be.
-            mat.EnableKeyword("MARMO_EMISSION");
-            mat.EnableKeyword("MARMO_SPECMAP");
-            mat.SetFloat("_GlowStrength", 0);
-            mat.SetFloat("_GlowStrengthNight", 0);
-            mat.SetFloat("_EmissionLM", dayAmount);
-            mat.SetFloat("_EmissionLMNight", nightAmount);
+            mat.EnableKeyword(emissionKeyword);
+            mat.EnableKeyword(specmapKeyword);
+            mat.SetFloat(glowField, 0);
+            mat.SetFloat(glowNightField, 0);
+            mat.SetFloat(emissionField, dayAmount);
+            mat.SetFloat(emissionNightField, nightAmount);
         }
         public static void AddEncyclopediaEntry(PDAEncyclopedia.EntryData data)
         {

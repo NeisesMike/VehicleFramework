@@ -862,7 +862,7 @@ namespace VehicleFramework
             ApplySkyAppliers(mv);
 
             // ApplyShaders should happen last
-            Shader shader = Shader.Find("MarmosetUBER");
+            Shader shader = Shader.Find(Admin.Utils.marmosetUberName);
             ApplyShaders(mv, shader);
 
             return true;
