@@ -4,19 +4,6 @@ namespace VehicleFramework
 {
     public class HeadLightsController : BaseLightController
     {
-        private bool hasWarned = false;
-        public bool isHeadlightsOn // this is just here because the Beluga was using it
-        {
-            get
-            {
-                if (!hasWarned)
-                {
-                    Logger.Warn("Getting HeadLightsController.isHeadlightsOn (deprecated). Please instead Get HeadLightsController.IsLightsOn!");
-                    hasWarned = true;
-                }
-                return IsLightsOn;
-            }
-        }
         private ModVehicle MV => GetComponent<ModVehicle>();
         protected override void HandleLighting(bool active)
         {
