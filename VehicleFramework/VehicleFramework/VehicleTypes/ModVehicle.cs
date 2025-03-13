@@ -492,7 +492,7 @@ namespace VehicleFramework
                 OnPlayerDocked(vehicle, exitLocation);
             }
             useRigidbody.detectCollisions = false;
-            SetDockedLighting(true);
+            SetDockedLighting();
             foreach (var component in GetComponentsInChildren<IDockListener>())
             {
                 (component as IDockListener).OnDock();
@@ -516,7 +516,7 @@ namespace VehicleFramework
             }
             IsVehicleDocked = false;
             useRigidbody.detectCollisions = true;
-            SetDockedLighting(false);
+            ResetDockedLighting();
             foreach (var component in GetComponentsInChildren<IDockListener>())
             {
                 (component as IDockListener).OnUndock();
@@ -859,8 +859,20 @@ namespace VehicleFramework
                     }
             }
         }
-        private void SetDockedLighting(bool docked)
+        private struct materialData
         {
+            internal bool wasEmission;
+            internal bool wasSpecMap;
+            internal float emissionNight;
+            internal float emissionDay;
+            internal float glowNight;
+            internal float glowDay;
+            internal float specInt;
+        }
+        private Dictionary<int, materialData> allMatsData;
+        private void SetDockedLighting()
+        {
+            allMatsData = new Dictionary<int, materialData>();
             foreach (var renderer in GetComponentsInChildren<Renderer>())
             {
                 foreach (Material mat in renderer.materials)
@@ -873,20 +885,72 @@ namespace VehicleFramework
                     {
                         continue;
                     }
-                    mat.EnableKeyword("MARMO_EMISSION");
-                    mat.SetFloat("_EmissionLMNight", docked ? 0.4f : 0f);
-                    mat.SetFloat("_EmissionLM", 0);
-                    mat.SetFloat("_GlowStrength", 0);
-                    mat.SetFloat("_GlowStrengthNight", 0);
-                    mat.SetFloat("_SpecInt", 0f);
-                    if (docked)
+                    if(mat.shader != Shader.Find(Admin.Utils.marmosetUberName))
                     {
-                        mat.EnableKeyword("MARMO_SPECMAP");
+                        continue;
+                    }
+                    allMatsData.Add(mat.GetInstanceID(), new materialData
+                    {
+                        wasEmission = mat.IsKeywordEnabled(Admin.Utils.emissionKeyword),
+                        wasSpecMap = mat.IsKeywordEnabled(Admin.Utils.specmapKeyword),
+                        emissionDay = mat.GetFloat(Admin.Utils.emissionField),
+                        emissionNight = mat.GetFloat(Admin.Utils.emissionNightField),
+                        glowDay = mat.GetFloat(Admin.Utils.glowField),
+                        glowNight = mat.GetFloat(Admin.Utils.glowNightField),
+                        specInt = mat.GetFloat(Admin.Utils.specIntField)
+                    });
+                    mat.EnableKeyword(Admin.Utils.emissionKeyword);
+                    mat.EnableKeyword(Admin.Utils.specmapKeyword);
+                    mat.SetFloat(Admin.Utils.emissionNightField, docked ? 0.4f : 0f);
+                    mat.SetFloat(Admin.Utils.emissionField, 0);
+                    mat.SetFloat(Admin.Utils.glowField, 0);
+                    mat.SetFloat(Admin.Utils.glowNightField, 0);
+                    mat.SetFloat(Admin.Utils.specIntField, 0f);
+                }
+            }
+        }
+        private void ResetDockedLighting()
+        {
+            // this method is predicated on the fact that docking always precedes undocking
+            // for that reason, allMatsData will be populated prior to the invocation of this method
+            foreach (var renderer in GetComponentsInChildren<Renderer>())
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    if (renderer.gameObject.name.ToLower().Contains("light"))
+                    {
+                        continue;
+                    }
+                    if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
+                    {
+                        continue;
+                    }
+                    if (mat.shader != Shader.Find(Admin.Utils.marmosetUberName))
+                    {
+                        continue;
+                    }
+                    materialData thisData = allMatsData[mat.GetInstanceID()];
+                    if (thisData.wasEmission)
+                    {
+                        mat.EnableKeyword(Admin.Utils.emissionKeyword);
                     }
                     else
                     {
-                        mat.DisableKeyword("MARMO_SPECMAP");
+                        mat.DisableKeyword(Admin.Utils.emissionKeyword);
                     }
+                    if (thisData.wasSpecMap)
+                    {
+                        mat.EnableKeyword(Admin.Utils.specmapKeyword);
+                    }
+                    else
+                    {
+                        mat.DisableKeyword(Admin.Utils.specmapKeyword);
+                    }
+                    mat.SetFloat(Admin.Utils.emissionNightField, thisData.emissionNight);
+                    mat.SetFloat(Admin.Utils.emissionField, thisData.emissionDay);
+                    mat.SetFloat(Admin.Utils.glowField, thisData.glowDay);
+                    mat.SetFloat(Admin.Utils.glowNightField, thisData.glowNight);
+                    mat.SetFloat(Admin.Utils.specIntField, thisData.specInt);
                 }
             }
         }
