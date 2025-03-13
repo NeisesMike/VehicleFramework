@@ -657,6 +657,30 @@ namespace VehicleFramework
                 }
             }
         }
+        public static void SetupSDFCutOuts(ModVehicle mv)
+        {
+            //SDFCutouts help creepvine and blood kelp not clip into vehicles
+            IEnumerator Setup()
+            {
+                yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
+                /*
+                if (mv.WaterClipProxies != null)
+                {
+                    SDFCutout vanillaSDF = SeamothHelper.Seamoth.GetComponentInChildren<SDFCutout>();
+                    foreach (GameObject proxy in mv.WaterClipProxies)
+                    {
+                        // Apply the SDFCutout settings from the seamoth.
+                        var sdf = proxy.AddComponent<SDFCutout>();
+                        sdf.distanceFieldRef = vanillaSDF.distanceFieldRef;
+                    }
+                }
+                */
+                SDFCutout vanillaSDF = SeamothHelper.Seamoth.GetComponentInChildren<SDFCutout>();
+                var mySDF = mv.gameObject.AddComponent<SDFCutout>();
+                mySDF.distanceFieldRef = vanillaSDF.distanceFieldRef;
+            }
+            UWE.CoroutineHost.StartCoroutine(Setup());
+        }
         public static void SetupSubName(ModVehicle mv)
         {
             var subname = mv.gameObject.EnsureComponent<SubName>();

@@ -18,6 +18,7 @@ namespace VehicleFramework.Admin
 			DevConsole.RegisterConsoleCommand(this, "logvfvehicles", false, false);
 			DevConsole.RegisterConsoleCommand(this, "logvfvoices", false, false);
 			DevConsole.RegisterConsoleCommand(this, "vfspawncodes", false, false);
+			//DevConsole.RegisterConsoleCommand(this, "incrementme", false, false);
 			DevConsole.RegisterConsoleCommand(this, "undockclosest", false, false);
 		}
 		public void OnConsoleCommand_givevfupgrades(NotificationCenter.Notification _)
@@ -75,6 +76,12 @@ namespace VehicleFramework.Admin
 				yield return new WaitForSeconds(0.3f);
 			}
 
+		}
+		public void OnConsoleCommand_incrementme(NotificationCenter.Notification _)
+		{
+			Patches.SDFCutoutPatcher.cutouts.ForEach(x =>
+				UWE.CoroutineHost.StartCoroutine(Patches.SDFCutoutPatcher.UpdateIt(x))
+			); ;
 		}
 		public void OnConsoleCommand_undockclosest(NotificationCenter.Notification _)
 		{
