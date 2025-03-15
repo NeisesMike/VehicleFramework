@@ -1330,7 +1330,7 @@ namespace VehicleFramework
                     (this as Drone).BeginControlling();
                 }
             }
-            subName.SetName(simpleData[mySubName]);
+            SetName(simpleData[mySubName]);
             Submarine sub = this as Submarine;
             sub?.PaintVehicleDefaultStyle(simpleData[mySubName]);
             if (Boolean.Parse(simpleData[defaultColorName]))
