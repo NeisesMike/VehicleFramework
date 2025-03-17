@@ -108,7 +108,7 @@ namespace VehicleFramework
             }
             catch(Exception e)
             {
-                Logger.WarnException($"No default engine sounds for vehicle type: {mv.GetName()}. Using Shiruba.", e);
+                Logger.Warn($"No default engine sounds for vehicle type: {mv.GetName()}. Using Shiruba.");
                 return EngineSoundss.First().Value;
             }
         }

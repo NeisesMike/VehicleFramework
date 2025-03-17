@@ -195,7 +195,7 @@ namespace VehicleFramework
             }
             catch (KeyNotFoundException e)
             {
-                Logger.WarnException($"Default voice option not found for vehicle: {mv.GetName()}.", e);
+                Logger.Warn($"Default voice option not found for vehicle: {mv.GetName()}.");
                 goto exit;
             }
             catch (ArgumentNullException e)
@@ -215,7 +215,7 @@ namespace VehicleFramework
             }
             catch (KeyNotFoundException e)
             {
-                Logger.WarnException($"Default voice not found for vehicle: {mv.GetName()}.", e);
+                Logger.Warn($"Default voice not found for vehicle: {mv.GetName()}.");
             }
             catch (ArgumentNullException e)
             {
