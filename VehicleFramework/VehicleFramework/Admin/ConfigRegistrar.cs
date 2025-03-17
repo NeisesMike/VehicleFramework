@@ -38,12 +38,12 @@ namespace VehicleFramework.Admin
             if (!MVs.Any())
             {
                 string mvNames = VehicleManager.vehicleTypes.Select(x => x.name).Aggregate((x, y) => $"{x}, {y}");
-                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {mvNames}");
+                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {mvNames}");
             }
             if (MVs.Count() > 1)
             {
                 string mvNames = MVs.Select(x => x.name).Aggregate((x, y) => $"{x}, {y}");
-                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {mvNames}");
+                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {mvNames}");
             }
             ModVehicle mv = MVs.First().mv;
             if (!main.ContainsKey(mv.GetType().ToString()))
