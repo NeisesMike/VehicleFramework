@@ -156,6 +156,7 @@ namespace VehicleFramework.VehicleComponents
                         if (items.Count == 0)
                         {
                             container._items.Remove(reactantPair.Key.techType);
+                            container.NotifyRemoveItem(reactantPair.Key);
                             TechType toAdd = spentMaterialIndex[reactantPair.Key.techType];
                             if(toAdd != TechType.None)
                             {
@@ -308,10 +309,6 @@ namespace VehicleFramework.VehicleComponents
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
-            if(currentEnergies.Count == 0)
-            {
-                return;
-            }
             SaveLoad.JsonInterface.Write<List<Tuple<TechType, float>>>(mv, saveFileName, GetSaveDict());
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
