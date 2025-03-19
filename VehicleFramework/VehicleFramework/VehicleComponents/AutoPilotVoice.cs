@@ -123,6 +123,7 @@ namespace VehicleFramework
                 sp.rolloffMode = AudioRolloffMode.Linear;
                 sp.minDistance = 0f;
                 sp.maxDistance = 100f;
+                sp.spread = 180;
             }
         }
         public void Start()

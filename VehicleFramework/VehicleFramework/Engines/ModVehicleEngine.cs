@@ -212,11 +212,13 @@ namespace VehicleFramework.Engines
             EngineSource1.loop = true;
             EngineSource1.playOnAwake = false;
             EngineSource1.priority = 0;
+            EngineSource1.spread = 180;
 
             EngineSource2 = MV.gameObject.AddComponent<AudioSource>().Register();
             EngineSource2.loop = false;
             EngineSource2.playOnAwake = false;
             EngineSource2.priority = 0;
+            EngineSource1.spread = 180;
 
             sounds = EngineSoundsManager.GetDefaultVoice(MV);
         }
