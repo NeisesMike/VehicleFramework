@@ -19,7 +19,7 @@ namespace VehicleFramework.Patches
                 // ensure we unlock our encyclopedia pages
                 foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
                 {
-                    PDAEncyclopedia.Add(ve.name, true);
+                    PDAEncyclopedia.Add(ve.name, false);
                 }
             }
         }
