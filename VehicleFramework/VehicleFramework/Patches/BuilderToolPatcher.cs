@@ -12,20 +12,14 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(BuilderTool.Construct))]
         public static void ConstructPostfix(BuilderTool __instance, Constructable c, bool state, bool start)
         {
-            SubRoot subroot = Player.main.currentSub;
-            if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>())
+            SubRoot subroot = Player.main?.currentSub;
+            if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>() != null && c != null)
             {
-                if (c != null && __instance.HasEnergyOrInBase())
+                if (c.gameObject.GetComponent<LargeWorldEntity>() != null)
                 {
-                    if (!c.constructed)
-                    {
-                        if (c.gameObject.GetComponent<LargeWorldEntity>() != null)
-                        {
-                            c.gameObject.GetComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
-                        }
-                        c.gameObject.transform.SetParent(subroot.gameObject.transform);
-                    }
+                    c.gameObject.GetComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
                 }
+                c.gameObject.transform.SetParent(subroot.gameObject.transform);
             }
         }
     }
