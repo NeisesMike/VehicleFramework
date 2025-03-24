@@ -28,6 +28,7 @@ namespace VehicleFramework
                 Patches.LanguagePatcher.SetLanguageLine($"EncyDesc_{entry.key}", vehicle.mv.EncyclopediaEntry);
                 //Admin.Utils.AddEncyclopediaEntry(entry);
                 Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
+                Nautilus.Handlers.StoryGoalHandler.RegisterItemGoal(entry.key, Story.GoalType.Encyclopedia, vehicle.mv.UnlockedWith, 0f);
             }
 
             Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);
