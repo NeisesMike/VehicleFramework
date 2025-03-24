@@ -12,7 +12,7 @@ namespace VehicleFramework
         {
             Nautilus.Assets.PrefabInfo vehicle_info = Nautilus.Assets.PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
-            if (vehicle.mv.EncyclopediaEntry != null && vehicle.mv.EncyclopediaEntry.Length > 0)
+            if (!vehicle.mv.EncyclopediaEntry.Equals(string.Empty))
             {
                 PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
                 {

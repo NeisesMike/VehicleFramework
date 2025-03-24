@@ -87,7 +87,7 @@ namespace VehicleFramework
         public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
         public virtual List<VehicleParts.VehicleCamera> Cameras => new List<VehicleParts.VehicleCamera>();
         public virtual string Description => "A vehicle";
-        public virtual string EncyclopediaEntry => "This is a vehicle you can build at the Mobile Vehicle Bay. It can be controlled either directly or with a Drone Station.";
+        public virtual string EncyclopediaEntry => string.Empty;
         public virtual Sprite EncyclopediaImage => null;
         public virtual Sprite ModuleBackgroundImage => SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
         public virtual int BaseCrushDepth => 250;
