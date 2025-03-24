@@ -24,9 +24,10 @@ namespace VehicleFramework
                     popup = null,
                     image = vehicle.mv.EncyclopediaImage?.texture,
                 };
-                Admin.Utils.AddEncyclopediaEntry(entry);
                 Patches.LanguagePatcher.SetLanguageLine($"Ency_{entry.key}", entry.key);
                 Patches.LanguagePatcher.SetLanguageLine($"EncyDesc_{entry.key}", vehicle.mv.EncyclopediaEntry);
+                //Admin.Utils.AddEncyclopediaEntry(entry);
+                Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
             }
 
             Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);
