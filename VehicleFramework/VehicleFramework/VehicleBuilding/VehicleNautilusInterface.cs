@@ -10,32 +10,33 @@ namespace VehicleFramework
     {
         internal static TechType RegisterVehicle(VehicleEntry vehicle)
         {
-            Nautilus.Assets.PrefabInfo vehicle_info = Nautilus.Assets.PrefabInfo.WithTechType(vehicle.mv.name, vehicle.mv.name, vehicle.mv.Description);
+            string vehicleKey = vehicle.mv.name;
+            Nautilus.Assets.PrefabInfo vehicle_info = Nautilus.Assets.PrefabInfo.WithTechType(vehicleKey, vehicleKey, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
             if (!vehicle.mv.EncyclopediaEntry.Equals(string.Empty))
             {
                 PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
                 {
-                    key = vehicle.mv.name,
+                    key = vehicleKey,
                     path = "Tech/Vehicles",
                     nodes = new[] { "Tech", "Vehicles" },
                     unlocked = true,
                     popup = null,
                     image = vehicle.mv.EncyclopediaImage?.texture,
                 };
-                Patches.LanguagePatcher.SetLanguageLine("Ency_" + vehicle.mv.name, vehicle.mv.name);
-                Patches.LanguagePatcher.SetLanguageLine("EncyDesc_" + vehicle.mv.name, vehicle.mv.EncyclopediaEntry);
                 Admin.Utils.AddEncyclopediaEntry(entry);
+                Patches.LanguagePatcher.SetLanguageLine($"Ency_{entry.key}", entry.key);
+                Patches.LanguagePatcher.SetLanguageLine($"EncyDesc_{entry.key}", vehicle.mv.EncyclopediaEntry);
             }
 
             Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);
             vehicle.mv.VehicleModel.EnsureComponent<TechTag>().type = vehicle_info.TechType;
-            vehicle.mv.VehicleModel.EnsureComponent<PrefabIdentifier>().ClassId = vehicle.mv.name;
+            vehicle.mv.VehicleModel.EnsureComponent<PrefabIdentifier>().ClassId = vehicleKey;
             module_CustomPrefab.SetGameObject(vehicle.mv.VehicleModel);
             string jsonRecipeFileName = Path.Combine(
                                             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                             "recipes",
-                                            vehicle.mv.name + "_recipe.json");
+                                            $"{vehicleKey}_recipe.json");
             Nautilus.Crafting.RecipeData modulerRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
             if(modulerRecipe.Ingredients.Count() == 0)
             {
@@ -44,7 +45,7 @@ namespace VehicleFramework
                 modulerRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
             }
 
-            module_CustomPrefab.SetRecipe(modulerRecipe).WithCraftingTime(3).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
+            module_CustomPrefab.SetRecipe(modulerRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.Constructor, TechCategory.Constructor);
             var scanningGadget = module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith);
             if (vehicle.mv.UnlockedSprite != null)
@@ -58,10 +59,9 @@ namespace VehicleFramework
         internal static void PatchCraftable(ref VehicleEntry ve, bool verbose)
         {
             TechType techType = VehicleNautilusInterface.RegisterVehicle(ve);
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Patched the " + ve.name + " Craftable");
+            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, $"Patched the {ve.name} Craftable");
             VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
             VehicleManager.vehicleTypes.Add(newVE);
         }
-
     }
 }
