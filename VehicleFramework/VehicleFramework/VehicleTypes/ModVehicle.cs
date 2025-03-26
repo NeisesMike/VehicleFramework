@@ -1189,9 +1189,11 @@ namespace VehicleFramework
                 InnateStorages.ForEach(x => retCapacity += GetInnateCapacity(x));
                 InnateStorages.ForEach(x => retStored += GetInnateStored(x));
             }
-            retCapacity += GetModularCapacity();
-            retStored += GetModularStored();
-
+            if(ModularStorages != null)
+            {
+                retCapacity += GetModularCapacity();
+                retStored += GetModularStored();
+            }
             stored = retStored;
             capacity = retCapacity;
         }
