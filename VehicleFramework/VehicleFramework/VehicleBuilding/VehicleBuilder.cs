@@ -51,7 +51,11 @@ namespace VehicleFramework
             prefabs.Add(mv);
             VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite ?? Assets.StaticAssets.DefaultPingSprite);
             numVehicleTypes++;
+            VehicleEntry naiveVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, TechType.None);
+            VehicleManager.vehicleTypes.Add(naiveVE); // must add/remove this vehicle entry so that we can call VFConfig.Setup.
+            VFConfig.Setup(mv); // must call VFConfig.Setup so that VNI.PatchCraftable can access the per-vehicle config
             VehicleNautilusInterface.PatchCraftable(ref ve, verbose);
+            VehicleManager.vehicleTypes.Remove(naiveVE); // must remove this vehicle entry bc PatchCraftable adds a more complete one (with tech type)
             mv.gameObject.SetActive(true);
         }
 

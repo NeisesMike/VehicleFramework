@@ -30,6 +30,7 @@ namespace VehicleFramework
         internal ConfigEntry<string> EngineSounds { get; set; }
         internal ConfigEntry<int> NumUpgrades { get; set; }
         internal ConfigEntry<bool> IsArms { get; set; }
+        internal ConfigEntry<bool> UseCustomRecipe { get; set; }
         internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; }
         internal List<ConfigEntry<bool>> ExternalToggles = new List<ConfigEntry<bool>>();
         internal List<ConfigEntry<float>> ExternalSliders = new List<ConfigEntry<float>>();
@@ -81,6 +82,7 @@ namespace VehicleFramework
             vConf.NumUpgrades= config.Bind<int>(vehicleName, "Number of Upgrade Slots", mv.NumModules, new ConfigDescription("How many upgrades can this vehicle use? (restart required)", new AcceptableValueRange<int>(0, ModuleBuilder.MaxNumModules)));
             vConf.IsArms = config.Bind<bool>(vehicleName, "Enable Arm Slots", mv.HasArms, new ConfigDescription("Can this vehicle use arm upgrades? (restart required)"));
 
+            vConf.UseCustomRecipe = config.Bind<bool>(vehicleName, "Use Custom Recipe", false, new ConfigDescription("Should this vehicle use the custom recipe file in the VehicleFramework/recipes folder? (restart required)"));
             Admin.ExternalVehicleConfig<bool>.GetModVehicleConfig(mv.name);
             Admin.ExternalVehicleConfig<float>.GetModVehicleConfig(mv.name);
             Admin.ExternalVehicleConfig<KeyboardShortcut>.GetModVehicleConfig(mv.name);

@@ -78,7 +78,6 @@ namespace VehicleFramework
             Logger.Log($"Finished {mv.gameObject.name} registration.");
             VehiclesRegistered++;
             BuildableDroneStation.TryRegister(mv);
-            VFConfig.Setup(mv);
             if(RegistrationQueue.Count > 0)
             {
                 RegistrationQueue.Dequeue().Invoke();

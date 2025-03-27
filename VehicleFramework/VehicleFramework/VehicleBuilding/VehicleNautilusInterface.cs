@@ -39,15 +39,24 @@ namespace VehicleFramework
                                             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                             "recipes",
                                             $"{vehicleKey}_recipe.json");
-            Nautilus.Crafting.RecipeData modulerRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
-            if(modulerRecipe.Ingredients.Count() == 0)
+            Nautilus.Crafting.RecipeData vehicleRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
+            if (vehicleRecipe.Ingredients.Count() == 0)
             {
-                modulerRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new CraftData.Ingredient(x.Key, x.Value)).ToList());
-                Nautilus.Utility.JsonUtils.Save<Nautilus.Crafting.RecipeData>(modulerRecipe, jsonRecipeFileName, new Nautilus.Json.Converters.CustomEnumConverter());
-                modulerRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
+                // If the custom recipe file doesn't exist, go ahead and make it using the default recipe.
+                vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new CraftData.Ingredient(x.Key, x.Value)).ToList());
+                Nautilus.Utility.JsonUtils.Save<Nautilus.Crafting.RecipeData>(vehicleRecipe, jsonRecipeFileName, new Nautilus.Json.Converters.CustomEnumConverter());
+            }
+            if (VehicleConfig.GetConfig(vehicle.mv).UseCustomRecipe.Value)
+            {
+                vehicleRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
+            }
+            else
+            {
+                vehicleRecipe = new Nautilus.Crafting.RecipeData();
+                vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new CraftData.Ingredient(x.Key, x.Value)).ToList());
             }
 
-            module_CustomPrefab.SetRecipe(modulerRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
+            module_CustomPrefab.SetRecipe(vehicleRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
             module_CustomPrefab.SetPdaGroupCategory(TechGroup.Constructor, TechCategory.Constructor);
             var scanningGadget = module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith);
             if (vehicle.mv.UnlockedSprite != null)
