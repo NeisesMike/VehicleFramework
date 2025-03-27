@@ -381,7 +381,7 @@ namespace VehicleFramework.Engines
         }
         protected virtual void PlayEngineHum()
         {
-            float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
+            float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value * SoundSystem.GetMasterVolume();
             EngineSource1.volume = EngineHum / 10f * configVolume * HumFactor;
             if (MV.IsPowered())
             {
@@ -416,7 +416,7 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
+                    float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value * SoundSystem.GetMasterVolume();
                     EngineSource2.volume = configVolume * 0.4f * WhistleFactor;
                     EngineSource2.Play();
                 }
