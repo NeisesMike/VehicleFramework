@@ -769,25 +769,28 @@ namespace VehicleFramework
         }
         private void HandleExtraQuickSlotInputs()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha6))
+            if (IsPlayerControlling())
             {
-                SlotKeyDown(5);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha7))
-            {
-                SlotKeyDown(6);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha8))
-            {
-                SlotKeyDown(7);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                SlotKeyDown(8);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                SlotKeyDown(9);
+                if (Input.GetKeyDown(KeyCode.Alpha6))
+                {
+                    SlotKeyDown(5);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha7))
+                {
+                    SlotKeyDown(6);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha8))
+                {
+                    SlotKeyDown(7);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha9))
+                {
+                    SlotKeyDown(8);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha0))
+                {
+                    SlotKeyDown(9);
+                }
             }
         }
         private void SetStorageModule(int slotID, bool activated)
