@@ -212,6 +212,24 @@ namespace VehicleFramework
         {
             enabled = true;
         }
+        #region subtitles
+        public string BatteriesDepleted = "Batteries are depleted!";
+        public string BatteriesNearlyEmpty = "Batteries are nearly depleted!";
+        public string PowerLow = "Energy low!";
+        public string EnginePoweringDown = "Engine powering down!";
+        public string EnginePoweringUp = "Engine powering up!";
+        public string Goodbye = " Goodbye.";
+        public string HullFailureImminent = "Emergency! Hull is close to failure!";
+        public string HullIntegrityCritical = "Warning! Hull integrity is critical!";
+        public string HullIntegrityLow = "Warning! Hull integrity is low!";
+        public string Leveling = "Leveling...";
+        public string WelcomeAboard = "Welcome aboard, captain.";
+        public string OxygenProductionOffline = "Emergency power only! Oyxgen production offline!";
+        public string WelcomeAboardAllSystemsOnline = "Welcome aboard, captain. All systems online.";
+        public string MaximumDepthReached = "Warning! Maximum depth reached! Hull damage imminent!";
+        public string PassingSafeDepth = "Warning! Maximum depth is close!";
+        public string LeviathanDetected = "Leviathan detected!";
+        public string UhOh = " Uh oh!";
         private void CreateSubtitle(AudioClip clip)
         {
             if(clip == null)
@@ -220,76 +238,77 @@ namespace VehicleFramework
             }
             if(clip == voice.BatteriesDepleted)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Batteries are depleted!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {BatteriesDepleted}");
             }
             else if (clip == voice.BatteriesNearlyEmpty)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Batteries are nearly depleted!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {BatteriesNearlyEmpty}");
             }
             else if (clip == voice.PowerLow)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Energy low!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {PowerLow}");
             }
             else if (clip == voice.EnginePoweringDown)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Engine powering down!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {EnginePoweringDown}");
             }
             else if (clip == voice.EnginePoweringUp)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Engine powering up!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {EnginePoweringUp}");
             }
             else if (clip == voice.Goodbye)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Goodbye.");
+                Logger.PDANote($"{mv.subName.hullName.text}: {Goodbye}");
             }
             else if (clip == voice.HullFailureImminent)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Emergency! Hull is close to failure!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {HullFailureImminent}");
             }
             else if (clip == voice.HullIntegrityCritical)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Hull integrity is critical!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {HullIntegrityCritical}");
             }
             else if (clip == voice.HullIntegrityLow)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Hull integrity is low!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {HullIntegrityLow}");
             }
             else if (clip == voice.Leveling)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Leveling...");
+                Logger.PDANote($"{mv.subName.hullName.text}: {Leveling}");
             }
             else if (clip == voice.WelcomeAboard)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Welcome aboard, captain.");
+                Logger.PDANote($"{mv.subName.hullName.text}: {WelcomeAboard}");
             }
             else if (clip == voice.OxygenProductionOffline)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Emergency power only! Oyxgen production offline!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {OxygenProductionOffline}");
             }
             else if (clip == voice.WelcomeAboardAllSystemsOnline)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Welcome aboard, captain. All systems online.");
+                Logger.PDANote($"{mv.subName.hullName.text}: {WelcomeAboardAllSystemsOnline}");
             }
             else if (clip == voice.MaximumDepthReached)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Maximum depth reached! Hull damage imminent!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {MaximumDepthReached}");
             }
             else if (clip == voice.PassingSafeDepth)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Warning! Maximum depth is close!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {PassingSafeDepth}");
             }
             else if (clip == voice.LeviathanDetected)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Leviathan detected!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {LeviathanDetected}");
             }
             else if (clip == voice.UhOh)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: Uh oh!");
+                Logger.PDANote($"{mv.subName.hullName.text}: {UhOh}");
             }
             else
             {
                 Logger.Warn($"Vehicle {mv.subName.hullName.text} with voice {name} did not recognize clip {clip.name}");
             }
         }
+        #endregion
     }
 }
