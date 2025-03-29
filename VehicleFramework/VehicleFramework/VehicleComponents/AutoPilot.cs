@@ -57,13 +57,13 @@ namespace VehicleFramework
         private float smoothTime = 0.3f;
         public float autoLevelRate = 11f;
         private bool _autoLeveling = false;
-        private bool autoLeveling
+        public bool autoLeveling
         {
             get
             {
                 return _autoLeveling;
             }
-            set
+            private set
             {
                 if(value)
                 {
