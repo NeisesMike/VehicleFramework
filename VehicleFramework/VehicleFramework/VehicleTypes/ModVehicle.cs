@@ -397,6 +397,7 @@ namespace VehicleFramework
                 Player.main.lastValidSub = GetComponent<SubRoot>();
                 Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
                 NotifyStatus(PlayerStatus.OnPlayerEntry);
+                pingInstance.enabled = false;
             }
         }
         public virtual void PlayerExit()
@@ -428,6 +429,7 @@ namespace VehicleFramework
             NotifyStatus(PlayerStatus.OnPlayerExit);
             Player.main.transform.SetParent(null);
             Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
+            pingInstance.enabled = true;
         }
         public virtual void SubConstructionBeginning()
         {
