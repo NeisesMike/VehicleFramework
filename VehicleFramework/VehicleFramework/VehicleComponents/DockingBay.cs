@@ -9,51 +9,36 @@ using System.Collections;
 namespace VehicleFramework.VehicleComponents
 {
     // TODO: disallow undocking when not enough space
-    public class DockingBay : MonoBehaviour
+    public abstract class DockingBay : MonoBehaviour
     {
-        public List<TechType> whitelist = new List<TechType>();
         public Vehicle currentDockedVehicle { get; protected set; }
-        private Func<Vehicle, Transform> vehicleDockedPosition = null;
-        private Transform dockedVehicleExitPosition = null;
-        private Transform vehicleDockingTrigger = null;
         private Coroutine dockAnimation = null;
-        private float dockingDistanceThreshold = 6f;
-        private Action<Vehicle> internalUndockAction;
-        private bool isInitialized = false;
 
-        public bool Initialize(Func<Vehicle, Transform> getDockedPosition, Transform exit, Transform dockTrigger, List<TechType> inputWhitelist, Action<Vehicle> UndockAction)
+        public abstract Transform GetDockedPosition(Vehicle dockedVehicle);
+        public abstract Transform PlayerExitLocation { get; }
+        public abstract Transform DockTrigger { get; }
+        public virtual void UndockAction(Vehicle dockedVehicle)
         {
-            const string failMessagePrefix = "Dockingbay Initialization Error: Input transform was null:";
+            dockedVehicle.useRigidbody.AddRelativeForce(Vector3.down);
+        }
+        public virtual float DockingDistanceThreshold { get; set; } = 6f;
+
+        public virtual void Awake()
+        {
+            const string failMessagePrefix = "Dockingbay Initialization Error:";
             string failTransformPrefix = $"{failMessagePrefix} Input transform was null:";
-            if (getDockedPosition == null)
+            if (PlayerExitLocation == null)
             {
-                Logger.Log($"{failTransformPrefix} dockedPosition");
-                return false;
+                Logger.Log($"{failTransformPrefix} PlayerExitLocation. Destroying this component.");
+                Component.DestroyImmediate(this);
+                return;
             }
-            if (exit == null)
+            if (DockTrigger == null)
             {
-                Logger.Log($"{failTransformPrefix} exit");
-                return false;
+                Logger.Log($"{failTransformPrefix} DockTrigger. Destroying this component.");
+                Component.DestroyImmediate(this);
+                return;
             }
-            if (dockTrigger == null)
-            {
-                Logger.Log($"{failTransformPrefix} dockTrigger");
-                return false;
-            }
-            if(inputWhitelist != null)
-            {
-                inputWhitelist.ForEach(x => whitelist.Add(x));
-            }
-            vehicleDockedPosition = getDockedPosition;
-            dockedVehicleExitPosition = exit;
-            vehicleDockingTrigger = dockTrigger;
-            void defaultUndockAction(Vehicle dockingVehicle)
-            {
-                dockingVehicle.useRigidbody.AddRelativeForce(Vector3.down);
-            }
-            internalUndockAction = UndockAction ?? defaultUndockAction;
-            isInitialized = true;
-            return true;
         }
         public void Detach(bool withPlayer)
         {
@@ -73,39 +58,16 @@ namespace VehicleFramework.VehicleComponents
         protected virtual void TryRechargeDockedVehicle() { }
         protected virtual Vehicle GetDockingTarget()
         {
-            Vehicle target = null;
-            if(whitelist.Count > 0)
+            bool IsValidDockingTarget(Vehicle thisPossibleTarget)
             {
-                float closestTargetDistance = 99999;
-                foreach (TechType tt in whitelist)
-                {
-                    Vehicle innerTarget = Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, x => x.GetTechType() == tt);
-                    if(innerTarget == null)
-                    {
-                        continue;
-                    }
-                    float innerDistance = Vector3.Distance(vehicleDockingTrigger.transform.position, innerTarget.transform.position);
-                    if (innerDistance < closestTargetDistance)
-                    {
-                        target = innerTarget;
-                        closestTargetDistance = innerDistance;
-                    }
-                }
-                return target;
+                return thisPossibleTarget != GetComponent<Vehicle>() && IsTargetValid(thisPossibleTarget);
             }
-            else
-            {
-                bool IsValidDockingTarget(Vehicle thisPossibleTarget)
-                {
-                    return thisPossibleTarget != GetComponent<Vehicle>() && IsTargetValid(thisPossibleTarget);
-                }
-                return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, IsValidDockingTarget);
-            }
+            return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, IsValidDockingTarget);
         }
         protected virtual void UpdateDockedVehicle()
         {
-            currentDockedVehicle.transform.position = vehicleDockedPosition(currentDockedVehicle).position;
-            currentDockedVehicle.transform.rotation = vehicleDockedPosition(currentDockedVehicle).rotation;
+            currentDockedVehicle.transform.position = GetDockedPosition(currentDockedVehicle).position;
+            currentDockedVehicle.transform.rotation = GetDockedPosition(currentDockedVehicle).rotation;
             currentDockedVehicle.liveMixin.shielded = true;
             currentDockedVehicle.useRigidbody.detectCollisions = false;
             currentDockedVehicle.crushDamage.enabled = false;
@@ -128,7 +90,7 @@ namespace VehicleFramework.VehicleComponents
         }
         protected virtual bool ValidateAttachment(Vehicle dockTarget)
         {
-            if (Vector3.Distance(vehicleDockingTrigger.position, dockTarget.transform.position) >= dockingDistanceThreshold)
+            if (Vector3.Distance(DockTrigger.position, dockTarget.transform.position) >= DockingDistanceThreshold)
             {
                 // dockTarget is too far away
                 return false;
@@ -149,16 +111,16 @@ namespace VehicleFramework.VehicleComponents
                 Player.main.ToNormalMode(false);
                 Player.main.rigidBody.angularVelocity = Vector3.zero;
                 Player.main.ExitLockedMode(false, false);
-                Player.main.SetPosition(dockedVehicleExitPosition.position);
+                Player.main.SetPosition(PlayerExitLocation.position);
                 Player.main.ExitSittingMode();
-                Player.main.SetPosition(dockedVehicleExitPosition.position);
-                ModVehicle.TeleportPlayer(dockedVehicleExitPosition.position);
+                Player.main.SetPosition(PlayerExitLocation.position);
+                ModVehicle.TeleportPlayer(PlayerExitLocation.position);
             }
             if(dockingVehicle is ModVehicle mv)
             {
                 mv.DeselectSlots();
-                Player.main.SetPosition(dockedVehicleExitPosition.position);
-                ModVehicle.TeleportPlayer(dockedVehicleExitPosition.position);
+                Player.main.SetPosition(PlayerExitLocation.position);
+                ModVehicle.TeleportPlayer(PlayerExitLocation.position);
                 mv.OnVehicleDocked(Vector3.zero);
             }
             dockingVehicle.transform.SetParent(transform);
@@ -193,10 +155,10 @@ namespace VehicleFramework.VehicleComponents
         }
         protected virtual IEnumerator DoUndockingAnimations()
         {
-            internalUndockAction?.Invoke(currentDockedVehicle);
+            UndockAction(currentDockedVehicle);
             // wait until the vehicle is "just" far enough away.
             // Should probably disallow undocking if a collider is too close, lest we clip into it.
-            yield return new WaitUntil(() => Vector3.Distance(currentDockedVehicle.transform.position, vehicleDockingTrigger.position) > dockingDistanceThreshold);
+            yield return new WaitUntil(() => Vector3.Distance(currentDockedVehicle.transform.position, DockTrigger.position) > DockingDistanceThreshold);
         }
         protected virtual void OnFinishedUndocking(bool hasPlayer)
         {
@@ -211,16 +173,12 @@ namespace VehicleFramework.VehicleComponents
         }
         protected virtual IEnumerator DoDockingAnimations(Vehicle dockingVehicle, float duration, float duration2)
         {
-            yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, vehicleDockingTrigger, duration));
-            yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, vehicleDockedPosition(dockingVehicle), duration2));
+            yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, DockTrigger, duration));
+            yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, GetDockedPosition(dockingVehicle), duration2));
         }
 
         private void Update()
         {
-            if (!isInitialized)
-            {
-                return;
-            }
             OnDockUpdate();
             if (dockAnimation != null)
             {
@@ -245,7 +203,7 @@ namespace VehicleFramework.VehicleComponents
                 HandleDockDoors(TechType.None, false);
                 return;
             }
-            if (Vector3.Distance(vehicleDockedPosition(dockTarget).position, dockTarget.transform.position) < 20)
+            if (Vector3.Distance(GetDockedPosition(dockTarget).position, dockTarget.transform.position) < 20)
             {
                 HandleDockDoors(dockTarget.GetTechType(), true);
             }

@@ -2,7 +2,7 @@
 
 namespace VehicleFramework.VehicleComponents
 {
-    public class ModVehicleDockingBay : DockingBay
+    public abstract class ModVehicleDockingBay : DockingBay
     {
         private ModVehicle mv => GetComponent<ModVehicle>();
         protected float rechargePerFrame = 1f;
