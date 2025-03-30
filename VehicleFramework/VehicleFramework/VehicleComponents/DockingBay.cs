@@ -154,7 +154,18 @@ namespace VehicleFramework.VehicleComponents
                 Player.main.SetPosition(dockedVehicleExitPosition.position);
                 ModVehicle.TeleportPlayer(dockedVehicleExitPosition.position);
             }
+            if(dockingVehicle is ModVehicle mv)
+            {
+                mv.DeselectSlots();
+                Player.main.SetPosition(dockedVehicleExitPosition.position);
+                ModVehicle.TeleportPlayer(dockedVehicleExitPosition.position);
+                mv.OnVehicleDocked(Vector3.zero);
+            }
             dockingVehicle.transform.SetParent(transform);
+            if(GetComponent<VehicleTypes.Submarine>() != null)
+            {
+                GetComponent<VehicleTypes.Submarine>().PlayerEntry();
+            }
         }
         protected virtual void OnStartedUndocking(bool withPlayer)
         {
@@ -163,13 +174,21 @@ namespace VehicleFramework.VehicleComponents
             currentDockedVehicle.transform.SetParent(this.transform.parent);
             if (withPlayer)
             {
-                currentDockedVehicle.EnterVehicle(Player.main, true, true);
                 // disabling the avatarinputhandler is a brutish way to do this
                 // but I want the vehicle to continue drifting down,
                 // until it leaves the docking trigger area
                 // otherwise, the player could take advantage of their lack of collision,
                 // since vehicle collisions aren't re-enabled until undocking is complete
                 AvatarInputHandler.main.gameObject.SetActive(false);
+            }
+            if(currentDockedVehicle is SeaMoth || currentDockedVehicle is Exosuit)
+            {
+                currentDockedVehicle.EnterVehicle(Player.main, true, true);
+            }
+            if(currentDockedVehicle is ModVehicle mv)
+            {
+                mv.OnVehicleUndocked();
+                mv.useRigidbody.detectCollisions = false;
             }
         }
         protected virtual IEnumerator DoUndockingAnimations()
