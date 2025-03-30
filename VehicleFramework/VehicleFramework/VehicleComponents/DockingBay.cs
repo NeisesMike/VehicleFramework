@@ -40,15 +40,13 @@ namespace VehicleFramework.VehicleComponents
                 Logger.Log($"{failTransformPrefix} dockTrigger");
                 return false;
             }
-            if (inputWhitelist == null || inputWhitelist.Count < 1)
+            if(inputWhitelist != null)
             {
-                Logger.Log($"{failMessagePrefix} Input whitelist was null or empty. No vehicles would be able to dock in this bay!");
-                return false;
+                inputWhitelist.ForEach(x => whitelist.Add(x));
             }
             vehicleDockedPosition = docked;
             dockedVehicleExitPosition = exit;
             vehicleDockingTrigger = dockTrigger;
-            inputWhitelist.ForEach(x => whitelist.Add(x));
             internalExitForce = exitForce;
             isInitialized = true;
             return true;
@@ -89,7 +87,7 @@ namespace VehicleFramework.VehicleComponents
             }
             else
             {
-                return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position);
+                return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, x => x != gameObject.GetComponent<Vehicle>());
             }
         }
         protected virtual void UpdateDockedVehicle()
