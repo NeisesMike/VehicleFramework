@@ -74,14 +74,14 @@ namespace VehicleFramework.VehicleComponents
                 ErrorMessage.AddWarning($"Material Reactor {label} must be given a non-null ModVehicle.");
                 return;
             }
-            if (height <= 0 || width <= 0)
+            if (height < 0 || width < 0 || height * width == 0)
             {
                 ErrorMessage.AddWarning($"Material Reactor {label} cannot have non-positive size.");
                 return;
             }
-            if (totalCapacity <= 0)
+            if (totalCapacity < 0)
             {
-                ErrorMessage.AddWarning($"Material Reactor {label} cannot have non-positive capacity.");
+                ErrorMessage.AddWarning($"Material Reactor {label} cannot have negative capacity.");
                 return;
             }
             if (iMaterialData.Count() == 0)
@@ -229,7 +229,8 @@ namespace VehicleFramework.VehicleComponents
             if (container != null)
             {
                 HandReticle main = HandReticle.main;
-                string finalText = $"{interactText} (charge: {(int)reactorBattery.GetCharge()}/{capacity})";
+                string chargeValue = capacity == 0 ? string.Empty : $"(charge: {(int)reactorBattery.GetCharge()}/{capacity})";
+                string finalText = $"{interactText} {chargeValue}";
                 main.SetText(HandReticle.TextType.Hand, finalText, true, GameInput.Button.LeftHand);
                 if (canViewWhitelist)
                 {
