@@ -127,12 +127,12 @@ namespace VehicleFramework.Patches
                 if (moonpool != null || cmm != null)
                 {
                     Transform playerSpawn = dock.transform.Find("playerSpawn");
-                    mv.OnVehicleDocked(vehicle, playerSpawn.position);
+                    mv.OnVehicleDocked(playerSpawn.position);
                 }
                 else
                 {
                     Logger.Warn("Vehicle Framework is not aware of this dock. The player is probably in a weird position now.");
-                    mv.OnVehicleDocked(vehicle, Vector3.zero);
+                    mv.OnVehicleDocked(Vector3.zero);
                 }
             }
         }

@@ -164,7 +164,7 @@ namespace VehicleFramework.VehicleTypes
             camControl.MovePlayerCameraToTransform(camControl.PlayerCamPivot);
             Player.main.SetHeadVisible(false);
         }
-        public override void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
+        public override void OnPlayerDocked(Vector3 exitLocation)
         {
             DeselectSlots();
         }

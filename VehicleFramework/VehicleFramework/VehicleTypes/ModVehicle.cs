@@ -485,13 +485,13 @@ namespace VehicleFramework
                 UWE.CoroutineHost.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
             }
         }
-        public virtual void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
+        public virtual void OnVehicleDocked(Vector3 exitLocation)
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
             IsVehicleDocked = true;
             if (IsUnderCommand)
             {
-                OnPlayerDocked(vehicle, exitLocation);
+                OnPlayerDocked(exitLocation);
             }
             useRigidbody.detectCollisions = false;
             SetDockedLighting(true);
@@ -500,13 +500,13 @@ namespace VehicleFramework
                 (component as IDockListener).OnDock();
             }
         }
-        public virtual void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
+        public virtual void OnPlayerDocked(Vector3 exitLocation)
         {
             PlayerExit();
             if (exitLocation != Vector3.zero)
             {
                 Player.main.transform.position = exitLocation;
-                Player.main.transform.LookAt(vehicle.transform);
+                Player.main.transform.LookAt(this.transform);
             }
         }
         public virtual void OnVehicleUndocked()

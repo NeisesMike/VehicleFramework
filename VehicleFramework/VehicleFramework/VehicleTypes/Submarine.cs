@@ -478,9 +478,9 @@ namespace VehicleFramework.VehicleTypes
                 }
             }
         }
-        public override void OnVehicleDocked(Vehicle vehicle, Vector3 exitLocation)
+        public override void OnVehicleDocked(Vector3 exitLocation)
         {
-            base.OnVehicleDocked(vehicle, exitLocation);
+            base.OnVehicleDocked(exitLocation);
             EnableFabricator(false);
         }
         public override void OnVehicleUndocked()
@@ -488,10 +488,10 @@ namespace VehicleFramework.VehicleTypes
             base.OnVehicleUndocked();
             EnableFabricator(true);
         }
-        public override void OnPlayerDocked(Vehicle vehicle, Vector3 exitLocation)
+        public override void OnPlayerDocked(Vector3 exitLocation)
         {
             StopPiloting();
-            base.OnPlayerDocked(vehicle, exitLocation);
+            base.OnPlayerDocked(exitLocation);
             //UWE.CoroutineHost.StartCoroutine(TryStandUpFromChair());
         }
         public override void OnPlayerUndocked()
