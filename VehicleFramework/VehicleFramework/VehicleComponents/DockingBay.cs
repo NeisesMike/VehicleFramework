@@ -13,21 +13,21 @@ namespace VehicleFramework.VehicleComponents
     {
         public List<TechType> whitelist = new List<TechType>();
         public Vehicle currentDockedVehicle { get; protected set; }
-        private Transform vehicleDockedPosition = null;
+        private Func<Vehicle, Transform> vehicleDockedPosition = null;
         private Transform dockedVehicleExitPosition = null;
         private Transform vehicleDockingTrigger = null;
         private Coroutine dockAnimation = null;
         private float dockingDistanceThreshold = 6f;
-        private Vector3 internalExitForce;
+        private Action<Vehicle> internalUndockAction;
         private bool isInitialized = false;
 
-        public bool Initialize(Transform docked, Transform exit, Transform dockTrigger, List<TechType> inputWhitelist, Vector3 exitForce)
+        public bool Initialize(Func<Vehicle, Transform> getDockedPosition, Transform exit, Transform dockTrigger, List<TechType> inputWhitelist, Action<Vehicle> UndockAction)
         {
             const string failMessagePrefix = "Dockingbay Initialization Error: Input transform was null:";
             string failTransformPrefix = $"{failMessagePrefix} Input transform was null:";
-            if (docked == null)
+            if (getDockedPosition == null)
             {
-                Logger.Log($"{failTransformPrefix} docked");
+                Logger.Log($"{failTransformPrefix} dockedPosition");
                 return false;
             }
             if (exit == null)
@@ -44,10 +44,14 @@ namespace VehicleFramework.VehicleComponents
             {
                 inputWhitelist.ForEach(x => whitelist.Add(x));
             }
-            vehicleDockedPosition = docked;
+            vehicleDockedPosition = getDockedPosition;
             dockedVehicleExitPosition = exit;
             vehicleDockingTrigger = dockTrigger;
-            internalExitForce = exitForce;
+            void defaultUndockAction(Vehicle dockingVehicle)
+            {
+                dockingVehicle.useRigidbody.AddRelativeForce(Vector3.down);
+            }
+            internalUndockAction = UndockAction ?? defaultUndockAction;
             isInitialized = true;
             return true;
         }
@@ -59,6 +63,10 @@ namespace VehicleFramework.VehicleComponents
             }
         }
         protected virtual bool IsSufficientSpace()
+        {
+            return true;
+        }
+        public virtual bool IsTargetValid(Vehicle thisPossibleTarget)
         {
             return true;
         }
@@ -87,13 +95,17 @@ namespace VehicleFramework.VehicleComponents
             }
             else
             {
-                return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, x => x != gameObject.GetComponent<Vehicle>());
+                bool IsValidDockingTarget(Vehicle thisPossibleTarget)
+                {
+                    return thisPossibleTarget != GetComponent<Vehicle>() && IsTargetValid(thisPossibleTarget);
+                }
+                return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, IsValidDockingTarget);
             }
         }
         protected virtual void UpdateDockedVehicle()
         {
-            currentDockedVehicle.transform.position = vehicleDockedPosition.position;
-            currentDockedVehicle.transform.rotation = vehicleDockedPosition.rotation;
+            currentDockedVehicle.transform.position = vehicleDockedPosition(currentDockedVehicle).position;
+            currentDockedVehicle.transform.rotation = vehicleDockedPosition(currentDockedVehicle).rotation;
             currentDockedVehicle.liveMixin.shielded = true;
             currentDockedVehicle.useRigidbody.detectCollisions = false;
             currentDockedVehicle.crushDamage.enabled = false;
@@ -103,12 +115,11 @@ namespace VehicleFramework.VehicleComponents
                 (currentDockedVehicle as SeaMoth).toggleLights.SetLightsActive(false);
                 currentDockedVehicle.GetComponent<SeaMoth>().enabled = true; // why is this necessary?
             }
-            else if(currentDockedVehicle is ModVehicle)
+            else if(currentDockedVehicle is ModVehicle mv)
             {
-                var but = (currentDockedVehicle as ModVehicle).headlights;
-                if (but.IsLightsOn)
+                if (mv.headlights.IsLightsOn)
                 {
-                    (currentDockedVehicle as ModVehicle).headlights.Toggle();
+                    mv.headlights.Toggle();
                 }
             }
         }
@@ -163,7 +174,7 @@ namespace VehicleFramework.VehicleComponents
         }
         protected virtual IEnumerator DoUndockingAnimations()
         {
-            currentDockedVehicle.useRigidbody.AddRelativeForce(internalExitForce, ForceMode.VelocityChange);
+            internalUndockAction?.Invoke(currentDockedVehicle);
             // wait until the vehicle is "just" far enough away.
             // Should probably disallow undocking if a collider is too close, lest we clip into it.
             yield return new WaitUntil(() => Vector3.Distance(currentDockedVehicle.transform.position, vehicleDockingTrigger.position) > dockingDistanceThreshold);
@@ -182,7 +193,7 @@ namespace VehicleFramework.VehicleComponents
         protected virtual IEnumerator DoDockingAnimations(Vehicle dockingVehicle, float duration, float duration2)
         {
             yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, vehicleDockingTrigger, duration));
-            yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, vehicleDockedPosition, duration2));
+            yield return UWE.CoroutineHost.StartCoroutine(MoveAndRotate(dockingVehicle, vehicleDockedPosition(dockingVehicle), duration2));
         }
 
         private void Update()
@@ -215,7 +226,7 @@ namespace VehicleFramework.VehicleComponents
                 HandleDockDoors(TechType.None, false);
                 return;
             }
-            if (Vector3.Distance(vehicleDockedPosition.position, dockTarget.transform.position) < 20)
+            if (Vector3.Distance(vehicleDockedPosition(dockTarget).position, dockTarget.transform.position) < 20)
             {
                 HandleDockDoors(dockTarget.GetTechType(), true);
             }
