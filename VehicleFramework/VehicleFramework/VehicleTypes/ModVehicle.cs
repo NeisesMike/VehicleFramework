@@ -152,6 +152,7 @@ namespace VehicleFramework
             {
                 Component.DestroyImmediate(warpChipThing);
             }
+            vfxConstructing = GetComponent<VFXConstructing>();
         }
         public override void Start()
         {
@@ -911,7 +912,8 @@ namespace VehicleFramework
                 StabilizeRoll();
             }
             prevVelocity = useRigidbody.velocity;
-            UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, teleporting, true);
+            bool shouldSetKinematic = teleporting || (!constructionFallOverride && !GetPilotingMode() && (!Admin.GameStateWatcher.IsWorldSettled || docked || !vfxConstructing.IsConstructed()));
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, shouldSetKinematic, true);
         }
         internal void HandlePilotingAnimations()
         {
