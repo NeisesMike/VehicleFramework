@@ -215,9 +215,16 @@ namespace VehicleFramework
             {
                 return;
             }
-            var list = Admin.GameObjectManager<Drone>.Where(x => x.gameObject.activeSelf); // Pickupable Vehicles, for example, sets drones inactive.
+            var list = Admin.GameObjectManager<Drone>.Where(x => x.gameObject.activeSelf && !x.isAsleep); // Pickupable Vehicles, for example, sets drones inactive.
+            if (pairedDrone != null && !list.Contains(pairedDrone))
+            {
+                // if our paired drone recently became unavailable, unpair it from this DroneStation
+                pairedDrone.pairedStation = null;
+                pairedDrone = null;
+            }
             if (pairedDrone == null && list.Count() > 0)
             {
+                // if we ain't never peeped it before, grab one if possible
                 FastenConnection(this, list.First());
             }
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());

@@ -11,6 +11,7 @@ namespace VehicleFramework.VehicleTypes
 {
     public abstract class Drone : ModVehicle
     {
+        public bool isAsleep = false;
         public static Drone mountedDrone = null;
         public DroneStation pairedStation = null;
         public const float baseConnectionDistance = 350;
