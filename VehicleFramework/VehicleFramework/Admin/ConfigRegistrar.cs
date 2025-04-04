@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System.Text;
 using BepInEx.Configuration;
 
 namespace VehicleFramework.Admin
@@ -37,13 +38,15 @@ namespace VehicleFramework.Admin
             var MVs = VehicleManager.vehicleTypes.Where(x => x.name.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
             if (!MVs.Any())
             {
-                string mvNames = VehicleManager.vehicleTypes.Select(x => x.name).Aggregate((x, y) => $"{x}, {y}");
-                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {mvNames}");
+                StringBuilder sb = new StringBuilder();
+                VehicleManager.vehicleTypes.ForEach(x => sb.AppendLine(x.name));
+                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {sb}");
             }
             if (MVs.Count() > 1)
             {
-                string mvNames = MVs.Select(x => x.name).Aggregate((x, y) => $"{x}, {y}");
-                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {mvNames}");
+                StringBuilder sb = new StringBuilder();
+                VehicleManager.vehicleTypes.ForEach(x => sb.AppendLine(x.name));
+                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {sb}");
             }
             ModVehicle mv = MVs.First().mv;
             if (!main.ContainsKey(mv.GetType().ToString()))
