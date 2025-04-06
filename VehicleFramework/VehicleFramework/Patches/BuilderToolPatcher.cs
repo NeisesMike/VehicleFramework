@@ -20,6 +20,11 @@ namespace VehicleFramework.Patches
                     c.gameObject.GetComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
                 }
                 c.gameObject.transform.SetParent(subroot.gameObject.transform);
+                if(c.gameObject.GetComponent<Rigidbody>())
+                {
+                    // The architect fabricator from RotA, for example, has a rigidbody for some reason.
+                    Component.DestroyImmediate(c.gameObject.GetComponent<Rigidbody>());
+                }
             }
         }
     }
