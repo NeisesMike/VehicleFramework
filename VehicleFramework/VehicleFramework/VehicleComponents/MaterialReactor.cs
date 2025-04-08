@@ -315,10 +315,6 @@ namespace VehicleFramework.VehicleComponents
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
             var saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, saveFileName);
-            if(saveDict == default)
-            {
-                return;
-            }
             UWE.CoroutineHost.StartCoroutine(LoadSaveDict(saveDict));
         }
         private List<Tuple<TechType, float>> GetSaveDict()
@@ -330,6 +326,14 @@ namespace VehicleFramework.VehicleComponents
             foreach (var reactant in currentEnergies)
             {
                 result.Add(new Tuple<TechType, float>(reactant.Key.techType, reactant.Value));
+            }
+            foreach(var item in container)
+            {
+                if (currentEnergies.ContainsKey(item))
+                {
+                    continue;
+                }
+                result.Add(new Tuple<TechType, float>(item.techType, 0));
             }
             return result;
         }
@@ -345,23 +349,23 @@ namespace VehicleFramework.VehicleComponents
                 yield return UWE.CoroutineHost.StartCoroutine(AddMaterial(reactant.Item1));
             }
             Dictionary<InventoryItem, float> changesPending = new Dictionary<InventoryItem, float>();
-            foreach (var but in currentEnergies)
+            foreach (var reactant in currentEnergies)
             {
-                Tuple<TechType, float> chosen = default;
-                foreach (var tits in saveDict)
+                Tuple<TechType, float> selectedReactant = default;
+                foreach (var savedReactant in saveDict)
                 {
-                    if (but.Key.techType == tits.Item1)
+                    if (reactant.Key.techType == savedReactant.Item1)
                     {
-                        chosen = tits;
-                        changesPending.Add(but.Key, tits.Item2);
+                        selectedReactant = savedReactant;
+                        changesPending.Add(reactant.Key, savedReactant.Item2);
                         break;
                     }
                 }
-                saveDict.Remove(chosen);
+                saveDict.Remove(selectedReactant);
             }
-            foreach (var ass in changesPending)
+            foreach (var reactantToLoad in changesPending)
             {
-                currentEnergies[ass.Key] = ass.Value;
+                currentEnergies[reactantToLoad.Key] = reactantToLoad.Value;
             }
         }
     }
