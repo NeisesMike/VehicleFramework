@@ -14,7 +14,7 @@ namespace VehicleFramework.VehicleComponents
             public Transform target;
             public Vector3 location;
         }
-        private ModVehicle mv => GetComponent<ModVehicle>();
+        private Vehicle MyVehicle => GetComponent<Vehicle>();
         private Vector3 attachmentOffset = Vector3.zero;
         private bool _isAttached = false;
         public bool IsAttached
@@ -34,45 +34,103 @@ namespace VehicleFramework.VehicleComponents
         public float MagnetDistance = 1f;
         public bool recharges = true;
         public float rechargeRate = 0.5f; // transfer 0.5 energy per second
+        public static int colliderPairsPerFrame = 20;
+
+        private Coroutine CollisionHandling = null;
+        private IEnumerator IgnoreCollisionWithHost(bool shouldIgnore)
+        {
+            if (MyVehicle == null || MyVehicle.useRigidbody == null || attachedPlatform == null) yield break;
+
+            int ignoreCounter = 0;
+            MyVehicle.useRigidbody.detectCollisions = !shouldIgnore;
+
+            var attachedVehicleColliders = MyVehicle.GetComponentsInChildren<Collider>()
+                .Where(x => x.GetComponentInParent<Player>() == null)
+                .Where(x => x.enabled && x.gameObject.activeInHierarchy);
+            var hostColliders = attachedPlatform.GetComponentsInChildren<Collider>()
+                .Where(x => !attachedVehicleColliders.Contains(x))
+                .Where(x => x.GetComponentInParent<Player>() == null)
+                .Where(x => x.enabled && x.gameObject.activeInHierarchy);
+
+            foreach (Collider left in attachedVehicleColliders)
+            {
+                foreach (Collider right in hostColliders)
+                {
+                    // Disallow the attached vehicle from colliding with the host vehicle.
+                    // Hate this nested foreach loop, especially because some vehicles have a huge number of colliders.
+                    Physics.IgnoreCollision(left, right, shouldIgnore);
+                    Logger.Log($"{left.gameObject.name} and {right.gameObject.name}");
+                    ignoreCounter++;
+                    if (ignoreCounter >= colliderPairsPerFrame)
+                    {
+                        // only only a few collider pairs per frame, so it never chugs.
+                        ignoreCounter = 0;
+                        yield return null;
+                    }
+                }
+            }
+            // Once all collisions with the host are ignored, this vehicle begins to detect collisions again.
+            MyVehicle.useRigidbody.detectCollisions = true;
+            if(MyVehicle is ModVehicle mv)
+            {
+                // Why the hell does bounding box collider become enabled sometime after we detectCollisions:=true ???
+                yield return new WaitUntil(() => mv.BoundingBoxCollider.enabled);
+                mv.BoundingBoxCollider.enabled = false;
+            }
+            CollisionHandling = null;
+        }
         public void HandleAttachment(bool isAttached, Transform platform = null)
         {
+            MyVehicle.teleporting = isAttached; // a little hack to ensure the vehicle gets IsKinematic:=true every frame
             IsAttached = isAttached;
-            mv.useRigidbody.isKinematic = isAttached;
-            mv.collisionModel.SetActive(!isAttached);
-            mv.useRigidbody.detectCollisions = !isAttached;
             if (isAttached)
             {
+                if (platform == null) return;
                 Attach?.Invoke();
                 attachedPlatform = platform;
-                if(attachedPlatform.GetComponent<ModVehicle>())
+                if(CollisionHandling != null)
                 {
-                    attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += mv.useRigidbody.mass;
+                    UWE.CoroutineHost.StopCoroutine(CollisionHandling);
+                }
+                CollisionHandling = UWE.CoroutineHost.StartCoroutine(IgnoreCollisionWithHost(true));
+                if (attachedPlatform.GetComponent<ModVehicle>())
+                {
+                    attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += MyVehicle.useRigidbody.mass;
                 }
             }
             else
             {
                 Detach?.Invoke();
-                mv.transform.SetParent(serializerObject);
+                if (CollisionHandling != null)
+                {
+                    UWE.CoroutineHost.StopCoroutine(CollisionHandling);
+                }
+                CollisionHandling = UWE.CoroutineHost.StartCoroutine(IgnoreCollisionWithHost(false));
+                MyVehicle.transform.SetParent(serializerObject);
                 if (attachedPlatform?.GetComponent<ModVehicle>())
                 {
-                    attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass -= mv.useRigidbody.mass;
+                    attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass -= MyVehicle.useRigidbody.mass;
                 }
                 attachedPlatform = null;
             }
+            //MyVehicle.collisionModel.SetActive(!isAttached);
         }
         public void Start()
         {
-            if(mv is VehicleTypes.Submarine)
+            if(MyVehicle is ModVehicle mv)
             {
-                ErrorMessage.AddWarning("Submarines cannot use MagnetBoots!");
-                DestroyImmediate(this);
-                return;
-            }
-            if(mv?.BoundingBoxCollider == null)
-            {
-                ErrorMessage.AddWarning("This vehicle requires a BoundingBoxCollider to use MagnetBoots!");
-                DestroyImmediate(this);
-                return;
+                if (mv is VehicleTypes.Submarine)
+                {
+                    ErrorMessage.AddWarning("Submarines cannot use MagnetBoots!");
+                    DestroyImmediate(this);
+                    return;
+                }
+                if (mv?.BoundingBoxCollider == null)
+                {
+                    ErrorMessage.AddWarning("This vehicle requires a BoundingBoxCollider to use MagnetBoots!");
+                    DestroyImmediate(this);
+                    return;
+                }
             }
             UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
         }
@@ -87,21 +145,40 @@ namespace VehicleFramework.VehicleComponents
         public void Update()
         {
             TryMagnets(CheckControls(), CheckPlacement());
-            if(mv.IsPlayerControlling() && IsAttached)
+            if(IsPlayerControlling() && IsAttached)
             {
                 HandleAttachment(false);
             }
             UpdatePosition();
             UpdateRecharge();
         }
+        private bool IsPlayerControlling()
+        {
+            if(MyVehicle is ModVehicle mv)
+            {
+                return mv.IsPlayerControlling();
+            }
+            else
+            {
+                return MyVehicle == Player.main.currentMountedVehicle;
+            }
+        }
         public bool CheckControls()
         {
-            return mv.IsPlayerControlling()
+            return IsPlayerControlling()
                 && GameInput.GetKeyDown(MainPatcher.VFConfig.MagnetBootsButton.Value.MainKey);
         }
         public MagnetStruct CheckPlacement()
         {
-            RaycastHit[] allHits = Physics.BoxCastAll(mv.BoundingBoxCollider.bounds.center, mv.GetBoundingDimensions() / 2f, -transform.up, transform.rotation, MagnetDistance);
+            RaycastHit[] allHits;
+            if(MyVehicle is ModVehicle mv)
+            {
+                allHits = Physics.BoxCastAll(mv.BoundingBoxCollider.bounds.center, mv.GetBoundingDimensions() / 2f, -transform.up, transform.rotation, MagnetDistance);
+            }
+            else
+            {
+                allHits = Physics.BoxCastAll(MyVehicle.transform.position, Vector3.one, -transform.up, transform.rotation, MagnetDistance);
+            }
             var orderedHits = allHits
                 .Where(x=>!x.collider.transform.IsGameObjectAncestor(gameObject))
                 .OrderBy(x => (x.point - transform.position).sqrMagnitude);
@@ -144,7 +221,7 @@ namespace VehicleFramework.VehicleComponents
                 if (magnetData.target)
                 {
                     ParentSelfToTarget(magnetData);
-                    mv.DeselectSlots();
+                    MyVehicle.DeselectSlots();
                 }
                 else if(verbose)
                 {
@@ -170,7 +247,7 @@ namespace VehicleFramework.VehicleComponents
             if (IsAttached && attachedPlatform)
             {
                 float consumePerFrame = rechargeRate * Time.deltaTime;
-                float canConsume = mv.energyInterface.TotalCanConsume(out _);
+                float canConsume = MyVehicle.energyInterface.TotalCanConsume(out _);
                 if (canConsume > consumePerFrame)
                 {
                     Base baseTarget = UWE.Utils.GetComponentInHierarchy<Base>(attachedPlatform.gameObject);
@@ -179,17 +256,17 @@ namespace VehicleFramework.VehicleComponents
                     if (baseTarget)
                     {
                         baseTarget.GetComponent<BasePowerRelay>().ConsumeEnergy(consumePerFrame, out float trulyConsumed);
-                        mv.energyInterface.AddEnergy(trulyConsumed);
+                        MyVehicle.energyInterface.AddEnergy(trulyConsumed);
                     }
                     else if (mvTarget)
                     {
                         float trulyConsumed = mvTarget.energyInterface.ConsumeEnergy(consumePerFrame);
-                        mv.energyInterface.AddEnergy(trulyConsumed);
+                        MyVehicle.energyInterface.AddEnergy(trulyConsumed);
                     }
                     else if (subRootTarget)
                     {
                         subRootTarget.powerRelay.ConsumeEnergy(consumePerFrame, out float trulyConsumed);
-                        mv.energyInterface.AddEnergy(trulyConsumed);
+                        MyVehicle.energyInterface.AddEnergy(trulyConsumed);
                     }
                 }
             }
@@ -204,7 +281,7 @@ namespace VehicleFramework.VehicleComponents
                 if (boots.IsAttached)
                 {
                     boots.HandleAttachment(false);
-                    Logger.PDANote($"{boots.mv.GetName()} magnet boots have detached!", 3f);
+                    Logger.PDANote($"{boots.MyVehicle.GetName()} magnet boots have detached!", 3f);
                     previouslyAttached.Add(boots);
                 }
             }
