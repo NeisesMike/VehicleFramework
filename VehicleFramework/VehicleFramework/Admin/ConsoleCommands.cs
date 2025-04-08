@@ -10,6 +10,7 @@ namespace VehicleFramework.Admin
 		internal static bool isUndockConsoleCommand = false; // hacky
 		public void Awake()
 		{
+			DevConsole.RegisterConsoleCommand(this, "vfhelp", false, false);
 			DevConsole.RegisterConsoleCommand(this, "givevfupgrades", false, false);
 			DevConsole.RegisterConsoleCommand(this, "givevfseamothupgrades", false, false);
 			DevConsole.RegisterConsoleCommand(this, "givevfprawnupgrades", false, false);
@@ -19,6 +20,18 @@ namespace VehicleFramework.Admin
 			DevConsole.RegisterConsoleCommand(this, "logvfvoices", false, false);
 			DevConsole.RegisterConsoleCommand(this, "vfspawncodes", false, false);
 			DevConsole.RegisterConsoleCommand(this, "undockclosest", false, false);
+		}
+		public void OnConsoleCommand_vfhelp(NotificationCenter.Notification _)
+		{
+			Logger.PDANote("givevfupgrades");
+			Logger.PDANote("givevfseamothupgrades");
+			Logger.PDANote("givevfprawnupgrades");
+			Logger.PDANote("givevfcyclopsupgrades");
+			Logger.PDANote("logvfupgrades");
+			Logger.PDANote("logvfvehicles");
+			Logger.PDANote("logvfvoices");
+			Logger.PDANote("vfspawncodes");
+			Logger.PDANote("undockclosest");
 		}
 		public void OnConsoleCommand_givevfupgrades(NotificationCenter.Notification _)
 		{
