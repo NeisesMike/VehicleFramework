@@ -27,7 +27,16 @@ namespace VehicleFramework.SaveLoad
         }
         public static void Write<T>(string uniqueFileName, T data)
         {
-            string fileName = GetFilePath(uniqueFileName);
+            string fileName;
+            try
+            {
+                fileName = GetFilePath(uniqueFileName);
+            }
+            catch(Exception e)
+            {
+                Logger.LogException("Failed to GetFilePath!", e);
+                return;
+            }
             string json;
             try
             {
@@ -49,7 +58,16 @@ namespace VehicleFramework.SaveLoad
         }
         public static T Read<T>(string uniqueFileName)
         {
-            string fileName = GetFilePath(uniqueFileName);
+            string fileName;
+            try
+            {
+                fileName = GetFilePath(uniqueFileName);
+            }
+            catch (Exception e)
+            {
+                Logger.LogException("Failed to GetFilePath!", e);
+                return default;
+            }
             if (!File.Exists(fileName))
             {
                 Logger.DebugLog($"File did not exist! {fileName}!");
