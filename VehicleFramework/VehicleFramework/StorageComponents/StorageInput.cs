@@ -22,6 +22,8 @@ namespace VehicleFramework
 		protected Vehicle.DockType dockType;
 		protected bool state;
 
+		public string DisplayName { get; set; } = string.Empty;
+
 		public abstract void OpenFromExternal();
 		protected abstract void OpenPDA();
 
@@ -35,10 +37,10 @@ namespace VehicleFramework
 
 			// go up in the transform heirarchy until we find the ModVehicle
 			Transform modVe = transform;
-			while(modVe.gameObject.GetComponent<ModVehicle>() == null)
-            {
+			while (modVe.gameObject.GetComponent<ModVehicle>() == null)
+			{
 				modVe = modVe.parent;
-            }
+			}
 			mv = modVe.gameObject.GetComponent<ModVehicle>();
 			SetEnabled(true);
 		}
@@ -89,15 +91,24 @@ namespace VehicleFramework
 			{
 				return;
 			}
-			HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.OpenStorage));
+			string nameDisplayed;
+			if (DisplayName.Equals(string.Empty))
+			{
+				nameDisplayed = LocalizationManager.GetString(EnglishString.OpenStorage);
+			}
+			else
+			{
+				nameDisplayed = DisplayName;
+			}
+			HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, nameDisplayed);
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 
 		public Sequence seq = new Sequence();
 		public void Update()
-        {
+		{
 			seq.Update();
-        }
+		}
 		public void OnHandClick(GUIHand hand)
 		{
 			if (VehicleTypes.Drone.mountedDrone != null)
