@@ -708,6 +708,7 @@ namespace VehicleFramework
         public bool IsUndockingAnimating = false;
         public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
         public TechType TechType => GetComponent<TechTag>().type;
+        public bool IsConstructed => vfxConstructing == null || vfxConstructing.IsConstructed();
         #endregion
 
         #region internal_fields

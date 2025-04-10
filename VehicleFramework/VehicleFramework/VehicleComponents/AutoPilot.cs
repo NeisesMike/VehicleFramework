@@ -200,9 +200,8 @@ namespace VehicleFramework
         }
         private void UpdatePowerState()
         {
-            float totalPower = eInterf.TotalCanProvide(out _);
-            float totalAIPower = eInterf.TotalCanProvide(out _);
-            if (totalPower < 0.1 && totalAIPower < 0.1)
+            mv.GetEnergyValues(out float totalPower, out float totalCapacity);
+            if (totalPower < 0.1)
             {
                 if (powerStatus < PowerState.OxygenOffline)
                 {
@@ -218,7 +217,7 @@ namespace VehicleFramework
                 }
                 powerStatus = PowerState.Depleted;
             }
-            else if (totalPower < 100)
+            else if (totalPower < 0.1f * totalCapacity)
             {
                 if (powerStatus < PowerState.NearMT)
                 {
@@ -226,7 +225,7 @@ namespace VehicleFramework
                 }
                 powerStatus = PowerState.NearMT;
             }
-            else if (totalPower < 320)
+            else if (totalPower < 0.3f * totalCapacity)
             {
                 if (powerStatus < PowerState.Low)
                 {
@@ -244,25 +243,34 @@ namespace VehicleFramework
             float crushDepth = GetComponent<CrushDamage>().crushDepth * -1;
             float perilousDepth = crushDepth * 0.9f;
             float depth = transform.position.y;
-            if (depth < crushDepth)
+
+            DepthState newDepthState = DepthState.Safe;
+            if (depth < perilousDepth)
             {
-                if (depthStatus < DepthState.Lethal)
+                if(depth < crushDepth)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.MaximumDepthReached);
+                    newDepthState = DepthState.Lethal;
                 }
-                depthStatus = DepthState.Lethal;
-            }
-            else if (depth < perilousDepth)
-            {
-                if (depthStatus < DepthState.Perilous)
+                else
                 {
-                    apVoice.EnqueueClip(apVoice.voice.PassingSafeDepth);
+                    newDepthState = DepthState.Perilous;
                 }
-                depthStatus = DepthState.Perilous;
             }
-            else
+
+            if(depthStatus != newDepthState)
             {
-                depthStatus = DepthState.Safe;
+                depthStatus = newDepthState;
+                switch (depthStatus)
+                {
+                    case DepthState.Perilous:
+                        apVoice.EnqueueClip(apVoice.voice.PassingSafeDepth);
+                        break;
+                    case DepthState.Lethal:
+                        apVoice.EnqueueClip(apVoice.voice.MaximumDepthReached);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         private void MaybeRefillOxygen()
