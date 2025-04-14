@@ -29,16 +29,19 @@ namespace VehicleFramework
 			{
 				if ((mv as Submarine).IsPlayerInside())
 				{
-					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.ExitVehicle));
+					string result = $"{LocalizationManager.GetString(EnglishString.ExitVehicle)} {mv.subName.GetName()}";
+					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, result);
 				}
 				else
 				{
-					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EnterVehicle));
+					string result = $"{LocalizationManager.GetString(EnglishString.EnterVehicle)} {mv.subName.GetName()}";
+					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, result);
 				}
 			}
 			else if ((mv as Submersible != null) || (mv as Walker != null) || (mv as Skimmer != null))
 			{
-				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EnterVehicle));
+				string result = $"{LocalizationManager.GetString(EnglishString.EnterVehicle)} {mv.subName.GetName()}";
+				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, result);
 			}
 		}
 
