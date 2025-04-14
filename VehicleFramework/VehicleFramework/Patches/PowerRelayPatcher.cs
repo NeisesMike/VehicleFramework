@@ -63,20 +63,16 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(PowerRelay.GetMaxPower))]
         public static bool GetMaxPowerPrefix(PowerRelay __instance, ref float __result)
         {
-            ModVehicle mv = __instance?.gameObject?.GetComponent<ModVehicle>();
-            if (mv != null)
+            if (__instance == null || __instance.gameObject == null) return true;
+            ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
+            if (mv == null) return true;
+            if (mv.energyInterface == null || mv.energyInterface.sources == null)
             {
-                if (mv.energyInterface != null && mv.energyInterface.sources != null)
-                {
-                    __result = mv.energyInterface.sources.Where(x => x != null).Select(x => x.capacity).Sum();
-                }
-                else
-                {
-                    __result = 0;
-                }
+                __result = 0;
                 return false;
             }
-            return true;
+            __result = mv.energyInterface.sources.Where(x => x != null).Select(x => x.capacity).Sum();
+            return false;
         }
     }
 
