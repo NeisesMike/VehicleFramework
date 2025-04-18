@@ -14,9 +14,20 @@ namespace VehicleFramework
         {
             BuildBotBeamPoints bbbp = mv.EnsureComponent<BuildBotBeamPoints>();
             List<Transform> bbbpList = new List<Transform>();
-            foreach (Transform child in mv.GetComponentsInChildren<Transform>())
+            ModVehicle modVehicle = mv.GetComponent<ModVehicle>();
+            if (modVehicle != null)
             {
-                bbbpList.Add(child);
+                foreach (Transform child in modVehicle.collisionModel.transform.GetComponentsInChildren<Transform>())
+                {
+                    bbbpList.Add(child);
+                }
+            }
+            else
+            {
+                foreach (Transform child in mv.GetComponentsInChildren<Transform>())
+                {
+                    bbbpList.Add(child);
+                }
             }
             bbbp.beamPoints = bbbpList.ToArray();
         }
@@ -170,11 +181,12 @@ namespace VehicleFramework
         {
             Vector3 worldScale = box.transform.lossyScale;
             Vector3 boxSizeScaled = Vector3.Scale(box.size, worldScale);
-            boxSizeScaled *= 2.5f;
+            boxSizeScaled *= 1.1f;
             float x = boxSizeScaled.x / 2f;
             float y = boxSizeScaled.y / 2f;
             float z = boxSizeScaled.z / 2f;
-            return GetCorner(root, corner, box.center, x, y, z);
+            Vector3 boxCenterScaled = Vector3.Scale(box.center, worldScale);
+            return GetCorner(root, corner, boxCenterScaled, x, y, z);
         }
         public static void BuildPathsForGameObject(GameObject go, GameObject pointsRoot)
         {
@@ -215,12 +227,14 @@ namespace VehicleFramework
             ModVehicle mv = go.GetComponent<ModVehicle>();
             GameObject bbPointsRoot = new GameObject("BuildBotPoints");
             bbPointsRoot.transform.SetParent(go.transform);
-            if (mv != null)
+            if (mv != null && mv.BoundingBoxCollider != null)
             {
+                bbPointsRoot.transform.localPosition = go.transform.InverseTransformPoint(mv.BoundingBoxCollider.transform.position);
                 BuildPathsForModVehicle(mv, bbPointsRoot);
             }
             else
             {
+                bbPointsRoot.transform.localPosition = Vector3.zero;
                 BuildPathsForGameObject(go, bbPointsRoot);
             }
 
