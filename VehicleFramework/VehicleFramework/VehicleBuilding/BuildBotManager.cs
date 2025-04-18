@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VehicleFramework
@@ -11,22 +8,8 @@ namespace VehicleFramework
     //SetupBuildBotPaths is invoked by Player.Start
     public static class BuildBotManager
     {
-        private static Color m_ghostColor = Color.black;
-        public static Color ghostMaterialColor
-        {
-            get
-            {
-                return m_ghostColor;
-            }
-            set
-            {
-                if(m_ghostColor == Color.black)
-                {
-                    m_ghostColor = value;
-                }
-            }
-        }
-        public static Color ghostWireColor;
+        private static Color OriginalConstructingGhostColor = ((Material)Resources.Load("Materials/constructingGhost")).color;
+
         public static void SetupBuildBotBeamPoints(GameObject mv)
         {
             BuildBotBeamPoints bbbp = mv.EnsureComponent<BuildBotBeamPoints>();
@@ -44,26 +27,10 @@ namespace VehicleFramework
             VFXConstructing seamothVFXC = seamoth.GetComponent<VFXConstructing>();
             VFXConstructing rocketPlatformVfx = seamoth.GetComponentInChildren<VFXConstructing>();
             VFXConstructing vfxc = go.EnsureComponent<VFXConstructing>();
-            // grab colors to remember for later
-            Material ghostMat = (Material)Resources.Load("Materials/constructingGhost");
-            ghostMaterialColor = ghostMat.color;
-            ghostWireColor = seamothVFXC.wireColor;
-            // setup new vfxconstructing
-            vfxc.timeToConstruct = 10f;
-            vfxc.ghostMaterial = ghostMat;
+            
             ModVehicle mv = go.GetComponent<ModVehicle>();
-            if (mv != null)
-            {
-                vfxc.timeToConstruct = go.GetComponent<ModVehicle>().TimeToConstruct;
-                if (mv.ConstructionGhostColor != Color.black)
-                {
-                    vfxc.ghostMaterial.color = mv.ConstructionGhostColor;
-                }
-                if (mv.ConstructionWireframeColor != Color.black)
-                {
-                    vfxc.wireColor = mv.ConstructionWireframeColor;
-                }
-            }
+            vfxc.timeToConstruct = mv == null ? 10f : mv.TimeToConstruct;
+
             vfxc.alphaTexture = seamothVFXC.alphaTexture;
             vfxc.alphaDetailTexture = seamothVFXC.alphaDetailTexture;
             vfxc.wireColor = seamothVFXC.wireColor;
@@ -277,7 +244,7 @@ namespace VehicleFramework
         public static void ResetGhostMaterial()
         {
             Material ghostMat = (Material)Resources.Load("Materials/constructingGhost");
-            ghostMat.color = ghostMaterialColor;
+            ghostMat.color = OriginalConstructingGhostColor;
         }
     }
 

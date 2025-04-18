@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,17 +9,21 @@ namespace VehicleFramework.Patches
     {
         public static IEnumerator ManageColor(VFXConstructing vfx, ModVehicle mv)
         {
-            for (int i = 0; i < 20; i++)
+            if (vfx != null)
             {
-                if (vfx.ghostMaterial != null && mv.ConstructionGhostColor != Color.black)
+                yield return new WaitUntil(() => vfx.ghostMaterial != null);
+                if (mv.ConstructionGhostColor != Color.black)
                 {
+                    Material customGhostMat = new Material(Shader.Find(Admin.Utils.marmosetUberName));
+                    customGhostMat.CopyPropertiesFromMaterial(vfx.ghostMaterial);
+                    vfx.ghostMaterial = customGhostMat;
                     vfx.ghostMaterial.color = mv.ConstructionGhostColor;
+                    vfx.ghostOverlay.material.color = mv.ConstructionGhostColor;
                 }
                 if (mv.ConstructionWireframeColor != Color.black)
                 {
                     vfx.wireColor = mv.ConstructionWireframeColor;
                 }
-                yield return null;
             }
         }
         /*
