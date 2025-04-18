@@ -816,8 +816,28 @@ namespace VehicleFramework
             modSto.Container.SetActive(activated);
             if (activated)
             {
+                var modularContainer = GetSeamothStorageContainer(slotID);
+                modularContainer.height = modSto.Height;
+                modularContainer.width = modSto.Width;
                 ModGetStorageInSlot(slotID, TechType.VehicleStorageModule).Resize(modSto.Width, modSto.Height);
             }
+        }
+        internal SeamothStorageContainer GetSeamothStorageContainer(int slotID)
+        {
+            InventoryItem slotItem = this.GetSlotItem(slotID);
+            if (slotItem == null)
+            {
+                Logger.Warn("Warning: failed to get item for that slotID: " + slotID.ToString());
+                return null;
+            }
+            Pickupable item = slotItem.item;
+            if (item.GetTechType() != TechType.VehicleStorageModule)
+            {
+                Logger.Warn("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
+                return null;
+            }
+            SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
+            return component;
         }
         internal ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
         {
@@ -839,19 +859,7 @@ namespace VehicleFramework
                     }
                 case TechType.VehicleStorageModule:
                     {
-                        InventoryItem slotItem = this.GetSlotItem(slotID);
-                        if (slotItem == null)
-                        {
-                            Logger.Warn("Warning: failed to get item for that slotID: " + slotID.ToString());
-                            return null;
-                        }
-                        Pickupable item = slotItem.item;
-                        if (item.GetTechType() != techType)
-                        {
-                            Logger.Warn("Warning: failed to get pickupable for that slotID: " + slotID.ToString());
-                            return null;
-                        }
-                        SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
+                        SeamothStorageContainer component = GetSeamothStorageContainer(slotID);
                         if (component == null)
                         {
                             Logger.Warn("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
