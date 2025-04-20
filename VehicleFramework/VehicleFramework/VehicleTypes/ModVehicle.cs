@@ -256,8 +256,7 @@ namespace VehicleFramework
                 return null;
             }
             string slot = this.slotIDs[slotID];
-            InventoryItem result;
-            if (upgradesInput.equipment.equipment.TryGetValue(slot, out result))
+            if (upgradesInput.equipment.equipment.TryGetValue(slot, out InventoryItem result))
             {
                 return result;
             }
@@ -1081,9 +1080,7 @@ namespace VehicleFramework
         public void GetHUDValues(out float health, out float power)
         {
             health = this.liveMixin.GetHealthFraction();
-            float num;
-            float num2;
-            base.GetEnergyValues(out num, out num2);
+            base.GetEnergyValues(out float num, out float num2);
             power = ((num > 0f && num2 > 0f) ? (num / num2) : 0f);
         }
         public bool HasRoomFor(Pickupable pickup)

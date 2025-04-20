@@ -434,9 +434,6 @@ namespace VehicleFramework
         public static void SetupFloodLights(Submarine mv)
         {
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
-            Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
-            MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
-            MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
             if (mv.FloodLights != null)
             {
                 foreach (VehicleParts.VehicleFloodLight pc in mv.FloodLights)

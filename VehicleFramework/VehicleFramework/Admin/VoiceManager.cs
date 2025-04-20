@@ -158,7 +158,7 @@ namespace VehicleFramework
         // voice names : voices
         internal static Dictionary<string, VehicleVoice> vehicleVoices = new Dictionary<string, VehicleVoice>();
         // vehicle names : voice names
-        private static Dictionary<TechType, string> defaultVoices = new Dictionary<TechType, string>();
+        private static readonly Dictionary<TechType, string> defaultVoices = new Dictionary<TechType, string>();
         private static void RegisterVoice(string name, VehicleVoice voice)
         {
             RegisterVoice(name, voice, false);
@@ -193,7 +193,7 @@ namespace VehicleFramework
             {
                 defaultOption = defaultVoices[mv.TechType];
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException _)
             {
                 Logger.Warn($"Default voice option not found for vehicle: {mv.GetName()}.");
                 goto exit;
@@ -213,7 +213,7 @@ namespace VehicleFramework
             {
                 return vehicleVoices[defaultOption];
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException _)
             {
                 Logger.Warn($"Default voice not found for vehicle: {mv.GetName()}.");
             }

@@ -281,9 +281,7 @@ namespace VehicleFramework
             {
                 // The main batteries are out, so the AI will take over life support.
                 OxygenManager oxygenMgr = Player.main.oxygenMgr;
-                float num;
-                float num2;
-                oxygenMgr.GetTotal(out num, out num2);
+                oxygenMgr.GetTotal(out float num, out float num2);
                 float amount = Mathf.Min(num2 - num, mv.oxygenPerSecond * Time.deltaTime) * mv.oxygenEnergyCost;
                 float secondsToAdd = mv.AIEnergyInterface.ConsumeEnergy(amount) / mv.oxygenEnergyCost;
                 oxygenMgr.AddOxygen(secondsToAdd);

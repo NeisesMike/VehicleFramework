@@ -14,7 +14,7 @@ namespace VehicleFramework.Patches
             if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>())
             {
                 Transform aimTransform = Builder.GetAimTransform();
-                RaycastHit raycastHit = default(RaycastHit);
+                RaycastHit raycastHit = default;
                 bool flag = false;
                 int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, aimTransform.forward, 5f, -5, QueryTriggerInteraction.UseGlobal);
                 float num2 = float.PositiveInfinity;
@@ -49,7 +49,7 @@ namespace VehicleFramework.Patches
                     {
                         return;
                     }
-                    RaycastHit raycastHit = default(RaycastHit);
+                    RaycastHit raycastHit = default;
                     bool flag = false;
                     int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, aimTransform.forward, 5f, -5, QueryTriggerInteraction.UseGlobal);
                     float num2 = float.PositiveInfinity;
