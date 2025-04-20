@@ -60,6 +60,13 @@ namespace VehicleFramework.VehicleComponents
         {
             bool IsValidDockingTarget(Vehicle thisPossibleTarget)
             {
+                if(thisPossibleTarget is Exosuit exo)
+                {
+                    if (exo.GetIsGrappling())
+                    {
+                        return false;
+                    }
+                }
                 return thisPossibleTarget != GetComponent<Vehicle>() && IsTargetValid(thisPossibleTarget);
             }
             return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, IsValidDockingTarget);
