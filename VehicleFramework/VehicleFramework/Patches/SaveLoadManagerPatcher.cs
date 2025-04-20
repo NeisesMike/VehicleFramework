@@ -19,16 +19,26 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(SaveLoadManager.RegisterSaveGame))]
         public static void SaveLoadManagerRegisterSaveGamePostfix(string slotName)
         {
-            string directoryPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-            string prefixToKeep = "Subnautica";
-            int index = directoryPath.LastIndexOf(prefixToKeep);
-            if(index == -1)
+            string subnauticaPath;
+            try
             {
-                Logger.DebugLog("SaveLoadManager.RegisterSaveGamePostfix failed to find the save game json file path!");
+                subnauticaPath = Directory.GetParent(BepInEx.Paths.BepInExRootPath).FullName;
+            }
+            catch (System.Exception e)
+            {
+                Logger.LogException("Failed to get parent directory.", e);
                 return;
             }
-            string result = directoryPath.Substring(0, index);
-            string savePath = Path.Combine(result, "SNAppData", "SavedGames", slotName, SaveLoad.JsonInterface.SaveFolderName, $"{SaveFileSpritesFileName}.json");
+            string savePath;
+            try
+            {
+                savePath = Path.Combine(subnauticaPath, "SNAppData", "SavedGames", slotName, SaveLoad.JsonInterface.SaveFolderName, $"{SaveFileSpritesFileName}.json");
+            }
+            catch (System.Exception e)
+            {
+                Logger.LogException("Failed to get parent directory.", e);
+                return;
+            }
             if (!File.Exists(savePath))
             {
                 Logger.DebugLog("SaveLoadManager.RegisterSaveGamePostfix failed to find the save game json file!");
