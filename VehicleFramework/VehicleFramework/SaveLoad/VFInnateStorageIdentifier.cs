@@ -29,7 +29,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 result.Add(new Tuple<TechType, float, TechType>(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
             }
-            JsonInterface.Write(mv, SaveFileName, result);
+            mv.SaveInnateStorage(SaveFileName, result);
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
@@ -38,11 +38,17 @@ namespace VehicleFramework.SaveLoad
         private IEnumerator LoadInnateStorage()
         {
             yield return new WaitUntil(() => mv != null);
-            var thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float, TechType>>>(mv, SaveFileName);
+
+            var thisStorage = mv.ReadInnateStorage(SaveFileName);
             if (thisStorage == default)
             {
-                yield break;
+                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float, TechType>>>(mv, SaveFileName);
+                if (thisStorage == default)
+                {
+                    yield break;
+                }
             }
+
             TaskResult<GameObject> result = new TaskResult<GameObject>();
             foreach (var item in thisStorage)
             {

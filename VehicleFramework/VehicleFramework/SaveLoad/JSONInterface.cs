@@ -49,6 +49,11 @@ namespace VehicleFramework.SaveLoad
             }
             try
             {
+                Logger.Log($"File path length: {fileName.Length}");
+                if(fileName.Length > 260)
+                {
+                    throw new ArgumentException("That file path was too long!");
+                }
                 File.WriteAllText(fileName, json);
             }
             catch (Exception e)

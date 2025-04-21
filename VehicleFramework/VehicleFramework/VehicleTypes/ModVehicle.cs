@@ -1392,6 +1392,50 @@ namespace VehicleFramework
         }
         protected virtual void OnGameSaved() { }
         protected virtual void OnGameLoaded() { }
+
+        private const string StorageSaveName = "Storage";
+        private readonly Dictionary<string, List<Tuple<TechType, float, TechType>>> innateStorageSaveData = new Dictionary<string, List<Tuple<TechType, float, TechType>>>();
+        internal void SaveInnateStorage(string path, List<Tuple<TechType, float, TechType>> storageData)
+        {
+            innateStorageSaveData.Add(path, storageData);
+            if(innateStorageSaveData.Count() == InnateStorages.Count())
+            {
+                // write it out
+                SaveLoad.JsonInterface.Write(this, StorageSaveName, innateStorageSaveData);
+                innateStorageSaveData.Clear();
+            }
+        }
+        internal List<Tuple<TechType, float, TechType>> ReadInnateStorage(string path)
+        {
+            var allInnateStorageData = SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
+            if (allInnateStorageData == null || !allInnateStorageData.ContainsKey(path))
+            {
+                return default;
+            }
+            return allInnateStorageData[path];
+        }
+
+        private const string BatterySaveName = "Batteries";
+        private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new Dictionary<string, Tuple<TechType, float>>();
+        internal void SaveBatteryData(string path, Tuple<TechType, float> batteryData)
+        {
+            batterySaveData.Add(path, batteryData);
+            if (batterySaveData.Count() == Batteries.Count())
+            {
+                // write it out
+                SaveLoad.JsonInterface.Write(this, BatterySaveName, batterySaveData);
+                batterySaveData.Clear();
+            }
+        }
+        internal Tuple<TechType, float> ReadBatteryData(string path)
+        {
+            var allBatteryData = SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
+            if (allBatteryData == null || !allBatteryData.ContainsKey(path))
+            {
+                return default;
+            }
+            return allBatteryData[path];
+        }
         #endregion
     }
 }

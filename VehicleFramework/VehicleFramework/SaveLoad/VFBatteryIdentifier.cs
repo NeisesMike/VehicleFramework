@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VehicleFramework.SaveLoad
@@ -16,14 +17,14 @@ namespace VehicleFramework.SaveLoad
             if (thisEM.batterySlot.storedItem == null)
             {
                 var emptyBattery = new Tuple<TechType, float>(0, 0);
-                SaveLoad.JsonInterface.Write<Tuple<TechType, float>>(mv, SaveFileName, emptyBattery);
+                mv.SaveBatteryData(SaveFileName, emptyBattery);
             }
             else
             {
                 TechType thisTT = thisEM.batterySlot.storedItem.item.GetTechType();
                 float thisEnergy = thisEM.battery.charge;
                 var thisBattery = new Tuple<TechType, float>(thisTT, thisEnergy);
-                SaveLoad.JsonInterface.Write<Tuple<TechType, float>>(mv, SaveFileName, thisBattery);
+                mv.SaveBatteryData(SaveFileName, thisBattery);
             }
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
@@ -33,10 +34,14 @@ namespace VehicleFramework.SaveLoad
         private IEnumerator LoadBattery()
         {
             yield return new WaitUntil(() => mv != null);
-            var thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(mv, SaveFileName);
-            if(thisBattery == default)
+            var thisBattery = mv.ReadBatteryData(SaveFileName);
+            if (thisBattery == default)
             {
-                yield break;
+                thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(mv, SaveFileName);
+                if (thisBattery == default)
+                {
+                    yield break;
+                }
             }
             TaskResult<GameObject> result = new TaskResult<GameObject>();
             yield return CraftData.InstantiateFromPrefabAsync(thisBattery.Item1, result, false);

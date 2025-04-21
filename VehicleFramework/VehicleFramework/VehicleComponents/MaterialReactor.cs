@@ -66,9 +66,15 @@ namespace VehicleFramework.VehicleComponents
         private Coroutine OutputReactorDataCoroutine = null;
         private bool isInitialized = false;
         private const string saveFileName = "MaterialReactor";
+        private const string newSaveFileName = "Reactor";
 
         public void Initialize(ModVehicle modVehicle, int height, int width, string label, float totalCapacity, List<MaterialReactorData> iMaterialData)
         {
+            if (modVehicle.GetComponentsInChildren<MaterialReactor>().Where(x => x.mv == modVehicle).Any())
+            {
+                ErrorMessage.AddWarning($"A ModVehicle may (for now) only have one material reactor!");
+                return;
+            }
             if (modVehicle == null)
             {
                 ErrorMessage.AddWarning($"Material Reactor {label} must be given a non-null ModVehicle.");
@@ -310,11 +316,15 @@ namespace VehicleFramework.VehicleComponents
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
-            SaveLoad.JsonInterface.Write<List<Tuple<TechType, float>>>(mv, saveFileName, GetSaveDict());
+            SaveLoad.JsonInterface.Write<List<Tuple<TechType, float>>>(mv, newSaveFileName, GetSaveDict());
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            var saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, saveFileName);
+            var saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, newSaveFileName);
+            if(saveDict == default)
+            {
+                saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, saveFileName);
+            }
             UWE.CoroutineHost.StartCoroutine(LoadSaveDict(saveDict));
         }
         private List<Tuple<TechType, float>> GetSaveDict()

@@ -12,6 +12,7 @@ namespace VehicleFramework.SaveLoad
         internal ModVehicle mv => GetComponentInParent<ModVehicle>();
         const string saveFileNameSuffix = "upgrades";
         private string SaveFileName => SaveLoadUtils.GetSaveFileName(mv.transform, transform, saveFileNameSuffix);
+        private const string NewSaveFileName = "Upgrades";
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
             Dictionary<string, InventoryItem> upgradeList = mv.modules?.equipment;
@@ -21,7 +22,7 @@ namespace VehicleFramework.SaveLoad
             }
             Dictionary<string, TechType> result = new Dictionary<string, TechType>();
             upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType ?? TechType.None));
-            SaveLoad.JsonInterface.Write<Dictionary<string, TechType>>(mv, SaveFileName, result);
+            SaveLoad.JsonInterface.Write<Dictionary<string, TechType>>(mv, NewSaveFileName, result);
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
@@ -32,11 +33,15 @@ namespace VehicleFramework.SaveLoad
             yield return new WaitUntil(() => mv != null);
             yield return new WaitUntil(() => mv.upgradesInput.equipment != null);
             mv.UnlockDefaultModuleSlots();
-            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, TechType>>(mv, SaveFileName);
+            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, TechType>>(mv, NewSaveFileName);
             if(theseUpgrades == default)
             {
-                isFinished = true;
-                yield break;
+                theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, TechType>>(mv, SaveFileName);
+                if (theseUpgrades == default)
+                {
+                    isFinished = true;
+                    yield break;
+                }
             }
             foreach(var upgrade in theseUpgrades.Where(x=>x.Value != TechType.None))
             {
