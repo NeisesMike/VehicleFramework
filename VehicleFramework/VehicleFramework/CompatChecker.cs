@@ -34,6 +34,7 @@ namespace VehicleFramework
             CheckForNautilusUpdate();
             CheckForBepInExPackUpdate();
             CheckForFlareDurationIndicator();
+            CheckForBuildingTweaks();
         }
 
         private static void CheckForBepInExPackUpdate()
@@ -62,6 +63,14 @@ namespace VehicleFramework
                 {
                     ShowError("not compatible with the Flare Duration Indicator mod version 1.0.1\nPlease remove or downgrade the plugin.");
                 }
+            }
+        }
+        private static void CheckForBuildingTweaks()
+        {
+            const string buildingTweaksGUID = "BuildingTweaks";
+            if (Chainloader.PluginInfos.ContainsKey(buildingTweaksGUID))
+            {
+                ShowWarning("Do not use BuildingTweaks to build things inside/on Vehicle Framework submarines!");
             }
         }
     }
