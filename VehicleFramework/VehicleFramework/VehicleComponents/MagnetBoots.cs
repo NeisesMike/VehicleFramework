@@ -6,9 +6,11 @@ using UnityEngine;
 
 namespace VehicleFramework.VehicleComponents
 {
-    public class MagnetBoots : MonoBehaviour
+    public class MagnetBoots : MonoBehaviour, IProtoTreeEventListener
     {
+        private static readonly List<MagnetBoots> KnownMagnetBoots = new List<MagnetBoots>();
         private Transform serializerObject;
+        private bool saveLoadWasAttached = false;
         public struct MagnetStruct
         {
             public Transform target;
@@ -52,6 +54,7 @@ namespace VehicleFramework.VehicleComponents
                 .Where(x => x.GetComponentInParent<Player>() == null)
                 .Where(x => x.enabled && x.gameObject.activeInHierarchy);
 
+            Logger.PDANote($"{MyVehicle.GetName()} magnet boots engaging...", duration: 3f);
             foreach (Collider left in attachedVehicleColliders)
             {
                 foreach (Collider right in hostColliders)
@@ -59,7 +62,7 @@ namespace VehicleFramework.VehicleComponents
                     // Disallow the attached vehicle from colliding with the host vehicle.
                     // Hate this nested foreach loop, especially because some vehicles have a huge number of colliders.
                     Physics.IgnoreCollision(left, right, shouldIgnore);
-                    Logger.Log($"{left.gameObject.name} and {right.gameObject.name}");
+                    //Logger.Log($"{left.gameObject.name} and {right.gameObject.name}");
                     ignoreCounter++;
                     if (ignoreCounter >= colliderPairsPerFrame)
                     {
@@ -69,9 +72,10 @@ namespace VehicleFramework.VehicleComponents
                     }
                 }
             }
+            Logger.PDANote($"{MyVehicle.GetName()} magnet boots ready!", duration: 3f);
             // Once all collisions with the host are ignored, this vehicle begins to detect collisions again.
             MyVehicle.useRigidbody.detectCollisions = true;
-            if(MyVehicle is ModVehicle mv)
+            if (MyVehicle is ModVehicle mv)
             {
                 // Why the hell does bounding box collider become enabled sometime after we detectCollisions:=true ???
                 yield return new WaitUntil(() => mv.BoundingBoxCollider.enabled);
@@ -88,7 +92,7 @@ namespace VehicleFramework.VehicleComponents
                 if (platform == null) return;
                 Attach?.Invoke();
                 attachedPlatform = platform;
-                if(CollisionHandling != null)
+                if (CollisionHandling != null)
                 {
                     UWE.CoroutineHost.StopCoroutine(CollisionHandling);
                 }
@@ -97,6 +101,7 @@ namespace VehicleFramework.VehicleComponents
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += MyVehicle.useRigidbody.mass;
                 }
+                saveLoadWasAttached = true;
             }
             else
             {
@@ -117,7 +122,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public void Start()
         {
-            if(MyVehicle is ModVehicle mv)
+            if (MyVehicle is ModVehicle mv)
             {
                 if (mv is VehicleTypes.Submarine)
                 {
@@ -134,6 +139,21 @@ namespace VehicleFramework.VehicleComponents
             }
             UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
         }
+        private void OnEnable()
+        {
+            if (!KnownMagnetBoots.Contains(this))
+            {
+                KnownMagnetBoots.Add(this);
+            }
+        }
+        private void OnDisable()
+        {
+            if (KnownMagnetBoots.Contains(this))
+            {
+                KnownMagnetBoots.Remove(this);
+            }
+        }
+
         public IEnumerator FindStoreInfoIdentifier()
         {
             while (serializerObject == null)
@@ -141,6 +161,7 @@ namespace VehicleFramework.VehicleComponents
                 serializerObject = transform.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
                 yield return null;
             }
+            UWE.CoroutineHost.StartCoroutine(InternalLoad());
         }
         public void Update()
         {
@@ -148,6 +169,7 @@ namespace VehicleFramework.VehicleComponents
             if(IsPlayerControlling() && IsAttached)
             {
                 HandleAttachment(false);
+                saveLoadWasAttached = false;
             }
             UpdatePosition();
             UpdateRecharge();
@@ -221,7 +243,10 @@ namespace VehicleFramework.VehicleComponents
                 if (magnetData.target)
                 {
                     ParentSelfToTarget(magnetData);
-                    MyVehicle.DeselectSlots();
+                    if(MyVehicle.GetComponentInChildren<Player>() != null)
+                    {
+                        MyVehicle.DeselectSlots();
+                    }
                 }
                 else if(verbose)
                 {
@@ -244,7 +269,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public void UpdateRecharge()
         {
-            if (IsAttached && attachedPlatform)
+            if (recharges && IsAttached && attachedPlatform)
             {
                 float consumePerFrame = rechargeRate * Time.deltaTime;
                 float canConsume = MyVehicle.energyInterface.TotalCanConsume(out _);
@@ -281,19 +306,40 @@ namespace VehicleFramework.VehicleComponents
                 if (boots.IsAttached)
                 {
                     boots.HandleAttachment(false);
-                    Logger.PDANote($"{boots.MyVehicle.GetName()} magnet boots have detached!", 3f);
                     previouslyAttached.Add(boots);
                 }
             }
-            VehicleManager.VehiclesInPlay
-                .Where(x => x != null && x.GetComponent<MagnetBoots>() != null)
-                .Select(x => x.GetComponent<MagnetBoots>())
-                .ForEach(DetachAndNotify);
+            KnownMagnetBoots.ForEach(DetachAndNotify);
+            SaveLoadManager.notificationSaveInProgress -= AttachAll; // unsubscribe is safe, even it not already added
+            SaveLoadManager.notificationSaveInProgress += AttachAll;
         }
-        internal static void AttachAll()
+        internal static void AttachAll(bool isSavingInProgress)
         {
+            if (isSavingInProgress) return;
             previouslyAttached.ForEach(x => x.TryMagnets(true, x.CheckPlacement(), false));
             previouslyAttached.Clear();
         }
+
+        private const string SaveFileSaveName = "MagnetBoots";
+        void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
+        {
+            SaveLoad.JsonInterface.Write<bool>(MyVehicle, SaveFileSaveName, saveLoadWasAttached);
+        }
+        void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
+        {
+            // Do nothing. This component is only added once upgrades have been deserialized.
+            // By that point, MagnetBoots has missed the opportunity to receive this signal.
+        }
+        private IEnumerator InternalLoad()
+        {
+            // why isn't this invoked?
+            yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted && Admin.GameStateWatcher.IsWorldSettled && Admin.GameStateWatcher.isWorldLoaded);
+            bool loadedWasAttached = SaveLoad.JsonInterface.Read<bool>(MyVehicle, SaveFileSaveName);
+            if (loadedWasAttached)
+            {
+                TryMagnets(true, CheckPlacement(), false);
+            }
+        }
+
     }
 }

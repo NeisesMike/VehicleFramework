@@ -1,29 +1,42 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace VehicleFramework.SaveLoad
 {
     public static class JsonInterface
     {
         public const string SaveFolderName = "VFSaveData";
-        public static void Write<T>(ModVehicle mv, string fileTitle, T data)
+        public static void Write<T>(Component comp, string fileTitle, T data)
         {
-            if (mv == null)
+            if (comp == null)
             {
-                Logger.Error($"Could not perform JsonInterface.Write because mv was null: {fileTitle}");
+                Logger.Error($"Could not perform JsonInterface.Write because comp was null: {fileTitle}");
                 return;
             }
-            Write<T>($"{fileTitle}-{mv.GetComponent<PrefabIdentifier>().Id}", data);
-        }
-        public static T Read<T>(ModVehicle mv, string fileTitle)
-        {
-            if(mv == null)
+            PrefabIdentifier prefabID = comp.GetComponent<PrefabIdentifier>();
+            if (prefabID == null)
             {
-                Logger.Error($"Could not perform JsonInterface.Read because mv was null: {fileTitle}");
+                Logger.Error($"Could not perform JsonInterface.Write because comp had no PrefabIdentifier: {fileTitle}");
+                return;
+            }
+            Write<T>($"{fileTitle}-{prefabID.Id}", data);
+        }
+        public static T Read<T>(Component comp, string fileTitle)
+        {
+            if (comp == null)
+            {
+                Logger.Error($"Could not perform JsonInterface.Read because comp was null: {fileTitle}");
                 return default;
             }
-            return Read<T>($"{fileTitle}-{mv.GetComponent<PrefabIdentifier>().Id}");
+            PrefabIdentifier prefabID = comp.GetComponent<PrefabIdentifier>();
+            if (prefabID == null)
+            {
+                Logger.Error($"Could not perform JsonInterface.Read because comp had no PrefabIdentifier: {fileTitle}");
+                return default;
+            }
+            return Read<T>($"{fileTitle}-{prefabID.Id}");
         }
         public static void Write<T>(string uniqueFileName, T data)
         {
@@ -49,7 +62,6 @@ namespace VehicleFramework.SaveLoad
             }
             try
             {
-                Logger.Log($"File path length: {fileName.Length}");
                 if(fileName.Length > 260)
                 {
                     throw new ArgumentException("That file path was too long!");
