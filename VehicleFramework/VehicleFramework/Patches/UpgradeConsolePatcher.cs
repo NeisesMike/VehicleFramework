@@ -29,7 +29,7 @@ namespace VehicleFramework.Patches
 		public void OnSlotEquipped(string slot, InventoryItem item)
 		{
 			IEnumerator BroadcastMessageSoon()
-            {
+			{
 				yield return new WaitUntil(() => Subroot != null);
 				Subroot.BroadcastMessage("UpdateAbilities", null, SendMessageOptions.DontRequireReceiver);
 			}
@@ -67,16 +67,19 @@ namespace VehicleFramework.Patches
 			}
 		}
 	}
-    [HarmonyPatch(typeof(UpgradeConsole))]
-    public class UpgradeConsolePatcher
-    {
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(UpgradeConsole.Awake))]
-        public static void UpgradeConsoleAwakeHarmonyPostfix(UpgradeConsole __instance)
-        {
-			var listener = __instance.gameObject.AddComponent<VFUpgradesListener>();
-            __instance.modules.onEquip += listener.OnSlotEquipped;
-            __instance.modules.onUnequip += listener.OnSlotUnequipped;
-        }
-    }
+	[HarmonyPatch(typeof(UpgradeConsole))]
+	public class UpgradeConsolePatcher
+	{
+		[HarmonyPostfix]
+		[HarmonyPatch(nameof(UpgradeConsole.Awake))]
+		public static void UpgradeConsoleAwakeHarmonyPostfix(UpgradeConsole __instance)
+		{
+			if (__instance.GetComponentInParent<SubRoot>().isCyclops)
+			{
+				var listener = __instance.gameObject.EnsureComponent<VFUpgradesListener>();
+				__instance.modules.onEquip += listener.OnSlotEquipped;
+				__instance.modules.onUnequip += listener.OnSlotUnequipped;
+			}
+		}
+	}
 }
