@@ -1,0 +1,141 @@
+﻿{
+    // GENERAL UI LABELS
+    "VFVehicle": "Vehicle",
+    "VFEnterVehicle": "Enter Vehicle",
+    "VFExitVehicle": "Exit Vehicle",
+    "VFOpenStorage": "Open Storage",
+    "VFStartPiloting": "Start Piloting",
+    "VFNameLabel": "Name Label",
+
+    // LIGHTS
+    "VFHeadlightsButtonLabel": "Headlights Toggle",
+    "VFHeadlightsButtonTooltip": "Press this button to toggle vehicle headlights while piloting.",
+    "VFLeftClickHeadlightsLabel": "Toggle Headlights (Left Click)",
+    "VFLeftClickHeadlightsTooltip": "Allow left-click (or left trigger) to activate headlights.",
+    "VFRightClickHeadlightsLabel": "Toggle Headlights (Right Click)",
+    "VFRightClickHeadlightsTooltip": "Allow right-click (or right trigger) to activate headlights.",
+    "VFHeadLightsHover": "Toggle Headlights",
+    "VFFloodLightsHover": "Toggle Flood Lights",
+    "VFNavLightsHover": "Toggle Nav Lights",
+    "VFFlashingLightsLabel": "Flashing Lights",
+    "VFFlashingLightsTooltip": "Enable blinking lights on vehicle exteriors (navigation lights).",
+    "VFInteriorLightsHover": "Toggle Interior Lighting",
+
+    // CAMERA CONTROLS
+    "VFCameraHint": "Camera Controls:",
+    "VFPrevCameraLabel": "Camera Previous",
+    "VFPrevCameraTooltip": "Press this button to switch to the previous vehicle camera.",
+    "VFNextCameraLabel": "Camera Next",
+    "VFNextCameraTooltip": "Press this button to switch to the next vehicle camera.",
+    "VFExitCameraLabel": "Camera Exit",
+    "VFExitCameraTooltip": "Press this button to exit vehicle camera view.",
+
+    // CONFIG / DEBUGGING
+    "VFConfigManagerLabel": "See Config Manager for More Options",
+    "VFConfigManagerTooltip": "Download the config manager mod for per-vehicle options!",
+    "VFConfigManagerPrintInfo": "Download the Config Manager mod on Nexus!",
+    "VFDebugLogLabel": "Debug Logs",
+    "VFDebugLogTooltip": "Enable extra logging statements for debugging purposes.",
+
+    // MODULES / UPGRADES
+    "VFMVModules": "VF Vehicle Upgrades",
+    "VFMVDepthModules": "Depth Modules",
+    "VFSpecificModules": "Specific Vehicle Upgrades",
+    "VFDepth1FriendlyString": "Vehicle Depth Module MK1",
+    "VFDepth1Description": "Increases Crush Depth Marginally. Does Not Stack.",
+    "VFDepth2FriendlyString": "Vehicle Depth Module MK2",
+    "VFDepth2Description": "Increases Crush Depth Moderately. Does Not Stack.",
+    "VFDepth3FriendlyString": "Vehicle Depth Module MK3",
+    "VFDepth3Description": "Increases Crush Depth Greatly. Does Not Stack.",
+
+    // UPGRADE TABS
+    "VFSeamothTab": "Seamoth Upgrades",
+    "VFPrawnTab": "Prawn Upgrades",
+    "VFCyclopsTab": "Cyclops Upgrades",
+    "VFGeneralTab": "General",
+
+    // BATTERY
+    "VFVehicleBattery": "Vehicle Battery",
+    "VFAutoPilotBattery": "Auto-Pilot Battery",
+
+    // AUTOPILOT
+    "VFAutoPilotHover": "Open Auto-Pilot (Coming Soon)",
+
+    // MAGNET BOOTS
+    "VFMagBootsButtonLabel": "Magnet Boots Toggle",
+    "VFMagBootsButtonTooltip": "Toggle magnet boots.",
+
+    // DRONE STATION
+    "VFDroneStationCheatLabel": "Unlock Drone Station",
+    "VFDroneStationCheatTooltip": "Press this to unlock the drone station for the current game.",
+    "VFDroneStationError": "This cheat can only be used during gameplay.",
+
+    // SUBTITLES SETTINGS
+    "VFSubtitlesLabel": "Autopilot Subtitles",
+    "VFSubtitlesTooltip": "Enable subtitles for the autopilot voice lines.",
+
+    // VARIOUS HOVERS
+    "VFEmptyHover": "No function",
+    "VFPowerHover": "Toggle Power",
+    "VFDefaultColorHover": "Revert to Default Colors",
+    "VFPrimaryAccent": "Accent Color 1",
+    "VFSecondaryAccent": "Accent Color 2",
+
+    // HINTS (Grouped)
+    "VFMagnetBootsHint1": "There is no viable surface nearby.",
+    "VFMagnetBootsHint2": "magnet boots engaging...",
+    "VFMagnetBootsHint3": "magnet boots ready!",
+    
+    "VFDroneHint1": "Current Drone",
+    "VFDroneHint2": "Distance",
+    "VFDroneHint3": "Status: Damaged",
+    "VFDroneHint4": "Suggested Action: Dismantle with laser cutter.",
+    "VFDroneHint5": "Status: Low Power",
+    "VFDroneHint6": "Suggested Action: Replace power source.",
+    "VFDroneHint7": "The drone will be visible on the HUD for one minute.",
+    "VFDroneHint8": "Drone Disconnected (Low Power)",
+    "VFDroneHint9": "Disconnect Drone",
+    "VFDroneHint10": "Return to drone station",
+
+    "VFDroneStationHint1": "None Detected",
+    "VFDroneStationHint2": "Status",
+    "VFDroneStationHint3": "Request Details",
+    "VFDroneStationHint4": "Connect",
+    "VFDroneStationHint5": "Cycle Next Drone",
+    "VFDroneStationHint6": "Cycle Previous Drone",
+
+    "VFAutopilotHint1": "Autopilot navigation stopped. The path is not clear.",
+
+    "VFMaterialReactorHint1": "This material reactor accepts these materials:",
+    "VFMaterialReactorHint2": "This material reactor accepts these materials, which have these energy potentials:",
+    "VFMaterialReactorHint3": "Read Reactor Data",
+    "VFMaterialReactorHint4": "power level",
+
+    "VFUndockHint1": "Undocking this vehicle from the bay",
+    "VFUndockHint2": "There was no vehicle docked in that bay.",
+    "VFUndockHint3": "There are no docking bays.",
+
+    "VFDeconstructionHint": "Percent Deconstructed",
+
+    "VFTooFast": "Moving too fast. Double-tap to auto-brake.",
+    "VFTooSteep": "Angle too steep. Double-tap to auto-level.",
+
+    // SUBTITLES (Grouped)
+    "VFSubtitleBatteriesDepleted": "Batteries are depleted!",
+    "VFSubtitleBatteriesNearlyEmpty": "Batteries are nearly depleted!",
+    "VFSubtitlePowerLow": "Energy low!",
+    "VFSubtitleEnginePoweringDown": "Engine powering down!",
+    "VFSubtitleEnginePoweringUp": "Engine powering up!",
+    "VFSubtitleGoodbye": "Goodbye.",
+    "VFSubtitleHullFailureImminent": "Emergency! Hull is close to failure!",
+    "VFSubtitleHullIntegrityCritical": "Warning! Hull integrity is critical!",
+    "VFSubtitleHullIntegrityLow": "Warning! Hull integrity is low!",
+    "VFSubtitleLeveling": "Leveling...",
+    "VFSubtitleWelcomeAboard": "Welcome aboard, captain.",
+    "VFSubtitleOxygenProductionOffline": "Emergency power only! Oxygen production offline!",
+    "VFSubtitleWelcomeAboardAllSystemsOnline": "Welcome aboard, captain. All systems online.",
+    "VFSubtitleMaximumDepthReached": "Warning! Maximum depth reached! Hull damage imminent!",
+    "VFSubtitlePassingSafeDepth": "Warning! Maximum depth is close!",
+    "VFSubtitleLeviathanDetected": "Leviathan detected!",
+    "VFSubtitleUhOh": "Uh oh!"
+}
