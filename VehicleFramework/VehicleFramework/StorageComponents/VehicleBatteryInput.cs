@@ -1,4 +1,4 @@
-﻿using VehicleFramework.Localization;
+﻿//using VehicleFramework.Localization;
 using UnityEngine;
 
 namespace VehicleFramework
@@ -10,7 +10,7 @@ namespace VehicleFramework
 		// need this SerializeField attribute or else assignment in
 		// VehicleBuilder is not propogated to instances
 		[SerializeField]
-		internal EnglishString tooltip;
+		internal string tooltip;
 
 		public void OnHandHover(GUIHand hand)
 		{
@@ -18,7 +18,7 @@ namespace VehicleFramework
 			{
 				return;
 			}
-			HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(tooltip));
+			HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get(tooltip));
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 

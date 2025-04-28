@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
@@ -17,6 +17,8 @@ namespace VehicleFramework
 		public Transform EntryLocation;
 		public Transform ExitLocation;
 		public Transform SurfaceExitLocation;
+		public string EnterHint = Language.main.Get("VFEnterVehicle");
+		public string ExitHint = Language.main.Get("VFExitVehicle");
 
 		public void OnHandHover(GUIHand hand)
 		{
@@ -29,19 +31,16 @@ namespace VehicleFramework
 			{
 				if ((mv as Submarine).IsPlayerInside())
 				{
-					string result = $"{LocalizationManager.GetString(EnglishString.ExitVehicle)} {mv.subName.GetName()}";
-					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, result);
+					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, ExitHint);
 				}
 				else
 				{
-					string result = $"{LocalizationManager.GetString(EnglishString.EnterVehicle)} {mv.subName.GetName()}";
-					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, result);
+					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, EnterHint);
 				}
 			}
 			else if ((mv as Submersible != null) || (mv as Walker != null) || (mv as Skimmer != null))
 			{
-				string result = $"{LocalizationManager.GetString(EnglishString.EnterVehicle)} {mv.subName.GetName()}";
-				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, result);
+				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, EnterHint);
 			}
 		}
 

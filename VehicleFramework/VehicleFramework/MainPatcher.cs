@@ -17,15 +17,17 @@ namespace VehicleFramework
         public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
 
         internal static VFConfig VFConfig { get; private set; }
+        internal static VehicleFrameworkNautilusConfig NautilusConfig { get; private set; }
 
         internal Coroutine GetVoices = null;
         internal Coroutine GetEngineSounds = null;
 
         public void Awake()
         {
+            Nautilus.Handlers.LanguageHandler.RegisterLocalizationFolder();
             SetupInstance();
             VFConfig = new VFConfig();
-            VFConfig.SetupGeneral(Config);
+            NautilusConfig = Nautilus.Handlers.OptionsPanelHandler.RegisterModOptions<VehicleFrameworkNautilusConfig>();
             VehicleFramework.Logger.MyLog = base.Logger;
             PrePatch();
         }

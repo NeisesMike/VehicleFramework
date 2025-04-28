@@ -172,6 +172,7 @@
     <Compile Include="VehicleComponents\MaterialReactor.cs" />
     <Compile Include="VehicleComponents\ModVehicleDockingBay.cs" />
     <Compile Include="VehicleComponents\DockingBay.cs" />
+    <Compile Include="NautilusConfig.cs" />
     <Compile Include="VFConfig.cs" />
     <Compile Include="Patches\UpgradeConsolePatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SilencePatcher.cs" />

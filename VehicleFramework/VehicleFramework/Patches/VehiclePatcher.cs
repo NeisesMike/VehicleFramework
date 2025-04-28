@@ -48,7 +48,7 @@ namespace VehicleFramework
                     float now = mv.GetComponent<Sealed>().openedAmount;
                     float max = mv.GetComponent<Sealed>().maxOpenedAmount;
                     string percent = Mathf.CeilToInt(now * 100f / max).ToString();
-                    HandReticle.main.SetText(HandReticle.TextType.Hand, percent + "% deconstructed", true, GameInput.Button.None);
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, $"{Language.main.Get("VFDeconstructionHint")}: {percent}", true, GameInput.Button.None);
                 }
                 else if (mv.IsUnderCommand)
                 {
@@ -56,8 +56,7 @@ namespace VehicleFramework
                 }
                 else
                 {
-                    string text = mv.name.Substring(0, mv.name.Length - 7);
-                    HandReticle.main.SetText(HandReticle.TextType.Hand, text, true, GameInput.Button.None);
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, mv.GetName(), true, GameInput.Button.None);
                 }
                 return false;
             }

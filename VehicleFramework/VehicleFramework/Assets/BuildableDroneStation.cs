@@ -278,22 +278,22 @@ namespace VehicleFramework
         }
         public string BuildScreenText()
         {
-            string ret = "Current Drone: " + ((pairedDrone != null) ? pairedDrone.subName.hullName.text : "[None Detected]") + "\n";
+            string ret = $"{Language.main.Get("VFDroneHint1")}: {((pairedDrone != null) ? pairedDrone.GetName() : $"[{Language.main.Get("VFDroneStationHint1")}]")}\n";
             if (pairedDrone == null)
             {
                 return ret;
             }
-            ret += "Status: " + GetStatus(pairedDrone) + "\n";
+            ret += $"{Language.main.Get("VFDroneStationHint2")}: {GetStatus(pairedDrone)}\n";
             if(pairedDrone.isScuttled || !pairedDrone.energyInterface.hasCharge)
             {
-                ret += HandReticle.main.GetText("Request Details ", false, GameInput.Button.LeftHand) + "\n";
+                ret += HandReticle.main.GetText($"{Language.main.Get("VFDroneStationHint3")} ", false, GameInput.Button.LeftHand) + "\n";
             }
             else
             {
-                ret += HandReticle.main.GetText("Connect ", false, GameInput.Button.LeftHand) + "\n";
+                ret += HandReticle.main.GetText($"{Language.main.Get("VFDroneStationHint4")} ", false, GameInput.Button.LeftHand) + "\n";
             }
-            ret += HandReticle.main.GetText("Next Drone: ", false, GameInput.Button.CycleNext) + "\n";
-            ret += HandReticle.main.GetText("Previous Drone: ", false, GameInput.Button.CyclePrev) + "\n";
+            ret += HandReticle.main.GetText($"{Language.main.Get("VFDroneStationHint5")}: ", false, GameInput.Button.CycleNext) + "\n";
+            ret += HandReticle.main.GetText($"{Language.main.Get("VFDroneStationHint6")}: ", false, GameInput.Button.CyclePrev) + "\n";
             return ret;
         }
         public void ShowDetails(Drone drone)
@@ -309,19 +309,19 @@ namespace VehicleFramework
                 drone.pingInstance.enabled = false;
             }
             UWE.CoroutineHost.StartCoroutine(PingPingForAWhile());
-            string ret = "Current Drone: " + drone.subName.hullName.text + "\n";
-            ret += "Distance: " + Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position)).ToString() + "\n";
+            string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.subName.hullName.text}\n";
+            ret += $"{Language.main.Get("VFDroneHint2")}: {Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position))}\n";
             if(drone.isScuttled)
             {
-                ret += "Status: Damaged\n";
-                ret += "Recommendation: Dismantle with laser cutter.\n";
+                ret += $"{Language.main.Get("VFDroneHint3")}\n";
+                ret += $"{Language.main.Get("VFDroneHint4")}\n";
             }
             else
             {
-                ret += "Status: Low Power\n";
-                ret += "Recommendation: Replace power source.\n";
+                ret += $"{Language.main.Get("VFDroneHint5")}\n";
+                ret += $"{Language.main.Get("VFDroneHint6")}\n";
             }
-            ret += "Making drone visible on HUD for one minute.\n";
+            ret += $"{Language.main.Get("VFDroneHint7")}\n";
 
             Logger.PDANote(ret, 8);
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
@@ -89,7 +89,7 @@ namespace VehicleFramework
         }
         public void EmptyHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.EmptyHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFEmptyHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void HeadlightsClick()
@@ -101,7 +101,7 @@ namespace VehicleFramework
         }
         public void HeadLightsHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.HeadLightsHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFHeadLightsHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void FloodLightsClick()
@@ -113,7 +113,7 @@ namespace VehicleFramework
         }
         public void FloodLightsHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.FloodLightsHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFFloodLightsHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void NavLightsClick()
@@ -125,7 +125,7 @@ namespace VehicleFramework
         }
         public void NavLightsHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.NavLightsHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFNavLightsHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void InteriorLightsClick()
@@ -137,7 +137,7 @@ namespace VehicleFramework
         }
         public void InteriorLightsHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.InteriorLightsHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFInteriorLightsHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void DefaultColorClick()
@@ -146,7 +146,7 @@ namespace VehicleFramework
         }
         public void DefaultColorHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.DefaultColorHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFDefaultColorHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void PowerClick()
@@ -159,7 +159,7 @@ namespace VehicleFramework
         }
         public void PowerHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.PowerHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFPowerHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void AutoPilotClick()
@@ -168,7 +168,7 @@ namespace VehicleFramework
         }
         public void AutoPilotHover()
         {
-            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.AutoPilotHover));
+            HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFAutoPilotHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
         public void SetButtonLightingActive(GameObject button, bool active)

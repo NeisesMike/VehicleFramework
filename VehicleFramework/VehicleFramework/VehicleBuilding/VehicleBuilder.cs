@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
@@ -333,7 +333,7 @@ namespace VehicleFramework
                 energyMixins.Add(energyMixin);
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = energyMixin;
-                tmp.tooltip = EnglishString.VehicleBattery;
+                tmp.tooltip = "VFVehicleBattery";
 
                 var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
                 model.proxy = vb.BatteryProxy;
@@ -376,7 +376,7 @@ namespace VehicleFramework
 
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = em;
-                tmp.tooltip = EnglishString.AutoPilotBattery;
+                tmp.tooltip = "VFAutoPilotBattery";
 
                 var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
                 model.proxy = vb.BatteryProxy;

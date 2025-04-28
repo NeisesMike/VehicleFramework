@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using VehicleFramework.UpgradeTypes;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework.DepthModules
 {
     public class DepthModule3 : ModVehicleUpgrade
     {
         public override string ClassId => "ModVehicleDepthModule3";
-        public override string DisplayName => LocalizationManager.GetString(EnglishString.Depth3FriendlyString);
-        public override string Description => LocalizationManager.GetString(EnglishString.Depth3Description);
+        public override string DisplayName => Language.main.Get("VFDepth3FriendlyString");
+        public override string Description => Language.main.Get("VFDepth3Description");
         public override List<Assets.Ingredient> Recipe => new List<Assets.Ingredient>()
                 {
                     new Assets.Ingredient(TechType.PlasteelIngot, 3),
@@ -19,7 +19,7 @@ namespace VehicleFramework.DepthModules
         public override Atlas.Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override Atlas.Sprite TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override string TabName => "MVDM";
-        public override string TabDisplayName => LocalizationManager.GetString(EnglishString.MVDepthModules);
+        public override string TabDisplayName => Language.main.Get("VFMVDepthModules");
         public override void OnAdded(AddActionParams param)
         {
             Admin.Utils.EvaluateDepthModules(param);

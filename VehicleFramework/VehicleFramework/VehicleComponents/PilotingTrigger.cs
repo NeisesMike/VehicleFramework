@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
@@ -31,7 +31,7 @@ namespace VehicleFramework
             if (!mv.GetPilotingMode() && mv.IsPowered() && isLive)
             {
                 HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, LocalizationManager.GetString(EnglishString.StartPiloting));
+                HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFStartPiloting"));
             }
         }
 

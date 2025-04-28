@@ -81,7 +81,7 @@ namespace VehicleFramework.VehicleComponents
                 FaceDestinationFrame(dest);
                 if (CheckClose(dest, 5f))
                 {
-                    Logger.PDANote("Autopilot navigation stopped.\nPath not clear.");
+                    Logger.PDANote(Language.main.Get("VFAutopilotHint1"));
                     break;
                 }
                 if (CheckClose(dest, 25f))
@@ -89,6 +89,7 @@ namespace VehicleFramework.VehicleComponents
                     yield return UWE.CoroutineHost.StartCoroutine(BreakLoop());
                     if(gameObject.GetComponent<Rigidbody>().velocity.magnitude < 0.1f)
                     {
+                        Logger.PDANote(Language.main.Get("VFAutopilotHint1"));
                         yield break;
                     }
                 }

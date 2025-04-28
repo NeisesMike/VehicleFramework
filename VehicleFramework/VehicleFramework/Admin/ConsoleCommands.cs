@@ -95,14 +95,14 @@ namespace VehicleFramework.Admin
 			{
 				if (dock.dockedVehicle != null)
 				{
-					Logger.PDANote("Undocking " + dock.dockedVehicle.subName.name + " from bay.");
+					Logger.PDANote($"{Language.main.Get("VFUndockHint1")} {dock.dockedVehicle.GetName()}");
 					isUndockConsoleCommand = true;
 					dock.dockedVehicle.Undock();
 					isUndockConsoleCommand = false;
 				}
 				else
 				{
-					Logger.PDANote("There was no vehicle docked in that bay.");
+					Logger.PDANote(Language.main.Get("VFUndockHint2"));
 				}
 			}
 
@@ -123,7 +123,7 @@ namespace VehicleFramework.Admin
 			}
 			else
 			{
-				Logger.PDANote("There are no docking bays.");
+				Logger.PDANote(Language.main.Get("VFUndockHint3"));
 			}
 		}
 	}

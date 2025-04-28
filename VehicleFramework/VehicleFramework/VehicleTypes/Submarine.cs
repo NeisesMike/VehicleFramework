@@ -8,7 +8,7 @@ using UnityEngine;
 using VehicleFramework.Engines;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -424,22 +424,22 @@ namespace VehicleFramework.VehicleTypes
 
             var but = ActualEditScreen.transform.Find("Active/BaseTab");
             but.name = "MainExterior";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = LocalizationManager.GetString(EnglishString.MainExterior);
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFMainExterior");
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("MainExterior"));
 
             but = ActualEditScreen.transform.Find("Active/NameTab");
             but.name = "PrimaryAccent";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = LocalizationManager.GetString(EnglishString.PrimaryAccent);
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFPrimaryAccent");
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("PrimaryAccent"));
 
             but = ActualEditScreen.transform.Find("Active/InteriorTab");
             but.name = "SecondaryAccent";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = LocalizationManager.GetString(EnglishString.SecondaryAccent);
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFSecondaryAccent");
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("SecondaryAccent"));
 
             but = ActualEditScreen.transform.Find("Active/Stripe1Tab");
             but.name = "NameLabel";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = LocalizationManager.GetString(EnglishString.NameLabel);
+            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFNameLabel");
             but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("NameLabel"));
 
             GameObject colorPicker = ActualEditScreen.transform.Find("Active/ColorPicker").gameObject;

@@ -235,12 +235,12 @@ namespace VehicleFramework.VehicleComponents
             if (container != null)
             {
                 HandReticle main = HandReticle.main;
-                string chargeValue = capacity == 0 ? string.Empty : $"(charge: {(int)reactorBattery.GetCharge()}/{capacity})";
+                string chargeValue = capacity == 0 ? string.Empty : $"({Language.main.Get("VFMaterialReactorHint4")}: {(int)reactorBattery.GetCharge()}/{capacity})";
                 string finalText = $"{interactText} {chargeValue}";
                 main.SetText(HandReticle.TextType.Hand, finalText, true, GameInput.Button.LeftHand);
                 if (canViewWhitelist)
                 {
-                    main.SetText(HandReticle.TextType.HandSubscript, "Read Reactor Data", false, GameInput.Button.RightHand);
+                    main.SetText(HandReticle.TextType.HandSubscript, Language.main.Get("VFMaterialReactorHint3"), false, GameInput.Button.RightHand);
                     if (GameInput.GetButtonDown(GameInput.Button.RightHand) && OutputReactorDataCoroutine == null)
                     {
                         OutputReactorDataCoroutine = UWE.CoroutineHost.StartCoroutine(OutputReactorData());
@@ -257,11 +257,11 @@ namespace VehicleFramework.VehicleComponents
         {
             if (listPotentials)
             {
-                Logger.PDANote("This material reactor accepts these materials, which have these energy potentials:", 4f);
+                Logger.PDANote(Language.main.Get("VFMaterialReactorHint2"), 4f);
             }
             else
             {
-                Logger.PDANote("This material reactor accepts these materials:", 4f);
+                Logger.PDANote(Language.main.Get("VFMaterialReactorHint1"), 4f);
             }
             foreach (var pair in maxEnergies)
             {

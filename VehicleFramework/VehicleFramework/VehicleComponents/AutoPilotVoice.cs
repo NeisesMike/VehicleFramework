@@ -179,7 +179,7 @@ namespace VehicleFramework
                     speaker.volume = balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
                     speaker.clip = clip;
                     speaker.Play();
-                    if (MainPatcher.VFConfig.IsSubtitles.Value)
+                    if (MainPatcher.NautilusConfig.IsSubtitles)
                     {
                         CreateSubtitle(clip);
                     }
@@ -213,23 +213,23 @@ namespace VehicleFramework
             enabled = true;
         }
         #region subtitles
-        public string BatteriesDepleted = "Batteries are depleted!";
-        public string BatteriesNearlyEmpty = "Batteries are nearly depleted!";
-        public string PowerLow = "Energy low!";
-        public string EnginePoweringDown = "Engine powering down!";
-        public string EnginePoweringUp = "Engine powering up!";
-        public string Goodbye = " Goodbye.";
-        public string HullFailureImminent = "Emergency! Hull is close to failure!";
-        public string HullIntegrityCritical = "Warning! Hull integrity is critical!";
-        public string HullIntegrityLow = "Warning! Hull integrity is low!";
-        public string Leveling = "Leveling...";
-        public string WelcomeAboard = "Welcome aboard, captain.";
-        public string OxygenProductionOffline = "Emergency power only! Oyxgen production offline!";
-        public string WelcomeAboardAllSystemsOnline = "Welcome aboard, captain. All systems online.";
-        public string MaximumDepthReached = "Warning! Maximum depth reached! Hull damage imminent!";
-        public string PassingSafeDepth = "Warning! Maximum depth is close!";
-        public string LeviathanDetected = "Leviathan detected!";
-        public string UhOh = " Uh oh!";
+        public string BatteriesDepleted = Language.main.Get("VFSubtitleBatteriesDepleted");
+        public string BatteriesNearlyEmpty = Language.main.Get("VFSubtitleBatteriesNearlyEmpty");
+        public string PowerLow = Language.main.Get("VFSubtitlePowerLow");
+        public string EnginePoweringDown = Language.main.Get("VFSubtitleEnginePoweringDown");
+        public string EnginePoweringUp = Language.main.Get("VFSubtitleEnginePoweringUp");
+        public string Goodbye = Language.main.Get("VFSubtitleGoodbye");
+        public string HullFailureImminent = Language.main.Get("VFSubtitleHullFailureImminent");
+        public string HullIntegrityCritical = Language.main.Get("VFSubtitleHullIntegrityCritical");
+        public string HullIntegrityLow = Language.main.Get("VFSubtitleHullIntegrityLow");
+        public string Leveling = Language.main.Get("VFSubtitleLeveling");
+        public string WelcomeAboard = Language.main.Get("VFSubtitleWelcomeAboard");
+        public string OxygenProductionOffline = Language.main.Get("VFSubtitleOxygenProductionOffline");
+        public string WelcomeAboardAllSystemsOnline = Language.main.Get("VFSubtitleWelcomeAboardAllSystemsOnline");
+        public string MaximumDepthReached = Language.main.Get("VFSubtitleMaximumDepthReached");
+        public string PassingSafeDepth = Language.main.Get("VFSubtitlePassingSafeDepth");
+        public string LeviathanDetected = Language.main.Get("VFSubtitleLeviathanDetected");
+        public string UhOh = Language.main.Get("VFSubtitleUhOh");
         private void CreateSubtitle(AudioClip clip)
         {
             if(clip == null)

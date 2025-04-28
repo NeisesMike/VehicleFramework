@@ -89,7 +89,7 @@ namespace VehicleFramework.VehicleTypes
                 yield return new WaitForSeconds(1f);
             }
             DeselectSlots();
-            Logger.PDANote("Disconnected: Low Power", 3f);
+            Logger.PDANote(Language.main.Get("VFDroneHint8"), 3f);
             yield break;
         }
         private GameObject temporaryParent = null;
@@ -155,9 +155,8 @@ namespace VehicleFramework.VehicleTypes
         public void SwapToDroneCamera()
         {
             camControl.MovePlayerCameraToTransform(CameraLocation);
-            Logger.PDANote("Press " + LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit) + " to disconnect.");
-            string text3 = uGUI.FormatButton(AutoHomeButton, false, " / ", false);
-            Logger.PDANote("Press " + text3 + " to return home.");
+            Logger.PDANote($"{Language.main.Get("VFDroneHint9")} {LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit)}");
+            Logger.PDANote($"{Language.main.Get("VFDroneHint10")} {uGUI.FormatButton(AutoHomeButton, false, " / ", false)}");
             Player.main.SetHeadVisible(true);
         }
         public void SwapToPlayerCamera()

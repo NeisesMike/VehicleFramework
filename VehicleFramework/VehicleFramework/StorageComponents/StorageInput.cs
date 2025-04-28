@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 
 namespace VehicleFramework
 {
@@ -94,7 +94,7 @@ namespace VehicleFramework
 			string nameDisplayed;
 			if (DisplayName.Equals(string.Empty))
 			{
-				nameDisplayed = LocalizationManager.GetString(EnglishString.OpenStorage);
+				nameDisplayed = Language.main.Get("VFOpenStorage");
 			}
 			else
 			{

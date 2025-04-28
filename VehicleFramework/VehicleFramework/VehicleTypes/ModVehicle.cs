@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
-using VehicleFramework.Localization;
+//using VehicleFramework.Localization;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
 
@@ -344,7 +344,7 @@ namespace VehicleFramework
                 Language main = Language.main;
                 if (main == null)
                 {
-                    return LocalizationManager.GetString(EnglishString.Vehicle);
+                    return Language.main.Get("VFVehicle");
                 }
                 return main.Get("ModVehicle");
             }
@@ -360,14 +360,7 @@ namespace VehicleFramework
             NotifyStatus(PlayerStatus.OnPilotBegin);
             if (gameObject.GetComponentInChildren<VehicleComponents.MVCameraController>() != null)
             {
-                Logger.PDANote("Press " +
-                              MainPatcher.VFConfig.NextCamera.Value.MainKey +
-                              " and " +
-                              MainPatcher.VFConfig.PreviousCamera.Value.MainKey +
-                              " to switch cameras.\n" +
-                              "Press " +
-                              MainPatcher.VFConfig.ExitCamera.Value.MainKey +
-                              " to exit cameras.");
+                Logger.PDANote($"{Language.main.Get("VFCameraHint")} {MainPatcher.NautilusConfig.NextCamera}, {MainPatcher.NautilusConfig.PreviousCamera}, and {MainPatcher.NautilusConfig.ExitCamera}");
             }
         }
         public virtual void StopPiloting()
@@ -1017,11 +1010,11 @@ namespace VehicleFramework
                 {
                     if (HUDBuilder.IsVR)
                     {
-                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString());
+                        Logger.PDANote($"{Language.main.Get("VFTooSteep")} ({GameInput.Button.Exit})");
                     }
                     else
                     {
-                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooSteep) + GameInput.Button.Exit.ToString());
+                        Logger.PDANote($"{Language.main.Get("VFTooSteep")} ({GameInput.Button.Exit})");
                     }
                     return;
                 }
@@ -1029,11 +1022,11 @@ namespace VehicleFramework
                 {
                     if (HUDBuilder.IsVR)
                     {
-                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString());
+                        Logger.PDANote($"{Language.main.Get("VFTooFast")} ({GameInput.Button.Exit})");
                     }
                     else
                     {
-                        Logger.PDANote(LocalizationManager.GetString(EnglishString.TooFast) + GameInput.Button.Exit.ToString());
+                        Logger.PDANote($"{Language.main.Get("VFTooFast")} ({GameInput.Button.Exit})");
                     }
                     return;
                 }

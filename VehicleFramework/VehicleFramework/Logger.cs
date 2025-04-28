@@ -22,7 +22,7 @@ namespace VehicleFramework
         }
         public static void DebugLog(string message)
         {
-            if (MainPatcher.VFConfig.IsDebugLogging.Value)
+            if (MainPatcher.NautilusConfig.IsDebugLogging)
             {
                 MyLog.LogInfo($"[DebugLog]: {message}");
             }

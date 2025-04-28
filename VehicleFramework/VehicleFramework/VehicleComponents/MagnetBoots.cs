@@ -54,7 +54,7 @@ namespace VehicleFramework.VehicleComponents
                 .Where(x => x.GetComponentInParent<Player>() == null)
                 .Where(x => x.enabled && x.gameObject.activeInHierarchy);
 
-            Logger.PDANote($"{MyVehicle.GetName()} magnet boots engaging...", duration: 3f);
+            Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint2")}", duration: 3f);
             foreach (Collider left in attachedVehicleColliders)
             {
                 foreach (Collider right in hostColliders)
@@ -72,7 +72,7 @@ namespace VehicleFramework.VehicleComponents
                     }
                 }
             }
-            Logger.PDANote($"{MyVehicle.GetName()} magnet boots ready!", duration: 3f);
+            Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint3")}", duration: 3f);
             // Once all collisions with the host are ignored, this vehicle begins to detect collisions again.
             MyVehicle.useRigidbody.detectCollisions = true;
             if (MyVehicle is ModVehicle mv)
@@ -188,7 +188,7 @@ namespace VehicleFramework.VehicleComponents
         public bool CheckControls()
         {
             return IsPlayerControlling()
-                && GameInput.GetKeyDown(MainPatcher.VFConfig.MagnetBootsButton.Value.MainKey);
+                && GameInput.GetKeyDown(MainPatcher.NautilusConfig.MagnetBootsButton);
         }
         public MagnetStruct CheckPlacement()
         {
@@ -250,7 +250,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else if(verbose)
                 {
-                    Logger.PDANote("No attachable surface nearby.");
+                    Logger.PDANote(Language.main.Get("VFMagnetBootsHint1"));
                 }
             }
         }
