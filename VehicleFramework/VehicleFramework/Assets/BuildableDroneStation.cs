@@ -11,13 +11,9 @@ namespace VehicleFramework
     public static class BuildableDroneStation
     {
         public const string classID = "DroneStation";
-        public const string displayName = "Drone Station";
-        public const string description = "A terminal from which to control drones remotely";
-        public const string encyclopediaDesc = "The drone station can be used to remotely connect to and pilot any nearby drone vehicles. The drone station enhances radio technology to keep users safe from distant threats."
-                                            + "\n "
-                                            + " - Connection Range: ~600 meters\n"
-                                            + " - Designed for: Compartments and Submarines\n"
-                                            + " - Can automatically return drones to itself\n";
+        public static string displayName = Language.main.Get("VFDroneStationDisplayName");
+        public static string description = Language.main.Get("VFDroneStationDesc");
+        public static string encyclopediaDesc = Language.main.Get("VFDroneStationEncy");
 
         public static TechType RegisterConsole(GameObject droneStation, Atlas.Sprite crafter, Sprite unlock)
         {
@@ -33,7 +29,7 @@ namespace VehicleFramework
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
             prefab.SetRecipe(new Nautilus.Crafting.RecipeData(new CraftData.Ingredient(TechType.ComputerChip, 1), new CraftData.Ingredient(TechType.Glass, 1), new CraftData.Ingredient(TechType.Titanium, 1), new CraftData.Ingredient(TechType.Silver, 1)));
             prefab.SetUnlock(TechType.Fragment)
-                .WithAnalysisTech(unlock, unlockMessage: "Drone Required");
+                .WithAnalysisTech(unlock, unlockMessage: Language.main.Get("VFDroneStationUnlockText"));
             prefab.Register();
             return Info.TechType;
         }
