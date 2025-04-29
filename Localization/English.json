@@ -80,6 +80,16 @@
     "VFDefaultColorHover": "Revert to Default Colors",
     "VFPrimaryAccent": "Accent Color 1",
     "VFSecondaryAccent": "Accent Color 2",
+	
+    // VF Fabricator
+    "VFFabricatorDisplayName" : "VF Fabricator",
+    "VFFabricatorDesc" : "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+
+    // Drone Station
+    "VFDroneStationDisplayName" : "Drone Station",
+    "VFDroneStationDesc" : "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy" : "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText" : "Drone Required",
 
     // HINTS (Grouped)
     "VFMagnetBootsHint1": "There is no viable surface nearby.",
