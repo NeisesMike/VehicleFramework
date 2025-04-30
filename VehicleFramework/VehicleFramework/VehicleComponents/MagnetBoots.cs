@@ -247,6 +247,10 @@ namespace VehicleFramework.VehicleComponents
                     {
                         MyVehicle.DeselectSlots();
                     }
+                    else if(MyVehicle is VehicleTypes.Drone && (MyVehicle as VehicleTypes.Drone).IsPlayerControlling())
+                    {
+                        MyVehicle.DeselectSlots();
+                    }
                 }
                 else if(verbose)
                 {
