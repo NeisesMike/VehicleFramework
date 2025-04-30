@@ -112,7 +112,7 @@ namespace VehicleFramework.SaveLoad
         }
         private static string GetFilePath(string innerName)
         {
-            string directoryPath = SaveLoadManager.GetTemporarySavePath();
+            string directoryPath = Path.Combine(PlatformServicesNull.DefaultSavePath, SaveLoadManager.main.GetCurrentSlot());
             string configFolderPath = Path.Combine(directoryPath, SaveFolderName);
             if (!Directory.Exists(configFolderPath))
             {
