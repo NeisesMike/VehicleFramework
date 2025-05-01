@@ -137,12 +137,28 @@ namespace VehicleFramework
 		{
 			float temperature = Player.main.GetModVehicle().GetTemperature();
 			temperatureSmoothValue = ((temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(temperatureSmoothValue, temperature, ref temperatureVelocity, 1f));
-			int num5 = Mathf.CeilToInt(temperatureSmoothValue);
-			if (lastTemperature != num5)
+			int tempNum;
+			if (MainPatcher.NautilusConfig.IsFahrenheit)
 			{
-				lastTemperature = num5;
+				tempNum = Mathf.CeilToInt(temperatureSmoothValue * 1.8f + 32);
+			}
+			else
+			{
+				tempNum = Mathf.CeilToInt(temperatureSmoothValue);
+			}
+			if (lastTemperature != tempNum)
+			{
+				lastTemperature = tempNum;
 				textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
-				textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
+				textTemperatureSuffix.color = new Color32(byte.MaxValue, 220, 0, byte.MaxValue);
+				if (MainPatcher.NautilusConfig.IsFahrenheit)
+				{
+					textTemperatureSuffix.text = "°F";
+				}
+				else
+				{
+					textTemperatureSuffix.text = Language.main.GetFormat("ThermometerFormat");
+				}
 			}
 		}
 		public void UpdatePower()

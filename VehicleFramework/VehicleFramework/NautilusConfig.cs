@@ -45,6 +45,9 @@ namespace VehicleFramework
         [Toggle(LabelLanguageId = "VFSubtitlesLabel", TooltipLanguageId = "VFSubtitlesTooltip")]
         public bool IsSubtitles = true;
 
+        [Toggle(LabelLanguageId = "VFFahrenheit", TooltipLanguageId = "VFFahrenheitTooltip")]
+        public bool IsFahrenheit = false;
+
         [Toggle(LabelLanguageId = "VFDebugLogLabel", TooltipLanguageId = "VFDebugLogTooltip")]
         public bool IsDebugLogging = false;
         #endregion
