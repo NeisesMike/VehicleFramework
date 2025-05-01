@@ -34,6 +34,8 @@
     "VFConfigManagerLabel": "See Config Manager for More Options",
     "VFConfigManagerTooltip": "Download the config manager mod for per-vehicle options!",
     "VFConfigManagerPrintInfo": "Download the Config Manager mod on Nexus!",
+    "VFFahrenheit" : "Use Fahrenheit",
+    "VFFahrenheitTooltip" : "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
     "VFDebugLogLabel": "Debug Logs",
     "VFDebugLogTooltip": "Enable extra logging statements for debugging purposes.",
 
