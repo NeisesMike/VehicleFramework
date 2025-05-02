@@ -36,6 +36,8 @@
     "VFConfigManagerPrintInfo": "Nexus'tan Config Manager modunu indirin!",
     "VFDebugLogLabel": "Hata Ayıklama Günlükleri",
     "VFDebugLogTooltip": "Hata ayıklama amacıyla ekstra günlük ifadelerini etkinleştirin.",
+    "VFFahrenheit" : "Fahrenheit kullan",
+    "VFFahrenheitTooltip" : "VF araçlarındaki Celsius ölçümlerini Fahrenheit eşdeğerleriyle değiştirin.",
 
     // MODULES / UPGRADES
     "VFMVModules": "VF Araç Yükseltmeleri",
