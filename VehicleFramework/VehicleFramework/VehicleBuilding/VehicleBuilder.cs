@@ -796,7 +796,7 @@ namespace VehicleFramework
         public static void SetupDenyBuildingTags(ModVehicle mv)
         {
             mv.DenyBuildingColliders
-                .ForEach(x => x.tag = "DenyBuilding");
+                .ForEach(x => x.tag = Builder.denyBuildingTag);
         }
 
         #endregion
