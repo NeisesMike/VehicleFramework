@@ -71,14 +71,29 @@ namespace VehicleFramework.Patches
 	public class UpgradeConsolePatcher
 	{
 		[HarmonyPostfix]
-		[HarmonyPatch(nameof(UpgradeConsole.Awake))]
-		public static void UpgradeConsoleAwakeHarmonyPostfix(UpgradeConsole __instance)
+		[HarmonyPatch(nameof(UpgradeConsole.InitializeModules))]
+		public static void UpgradeConsoleInitializeModulesHarmonyPostfix(UpgradeConsole __instance)
 		{
-			if (__instance.GetComponentInParent<SubRoot>().isCyclops)
+			UpdateSignals(__instance);
+		}
+		[HarmonyPrefix]
+		[HarmonyPatch(nameof(UpgradeConsole.OnProtoDeserializeObjectTree))]
+		public static void UpgradeConsoleOnProtoDeserializeObjectTreePrefix(UpgradeConsole __instance)
+		{
+			UpdateSignals(__instance);
+		}
+		private static void UpdateSignals(UpgradeConsole console)
+		{
+			SubRoot thisSubRoot = console.GetComponentInParent<SubRoot>();
+			if (thisSubRoot == null) return;
+
+			if (thisSubRoot.isCyclops)
 			{
-				var listener = __instance.gameObject.EnsureComponent<VFUpgradesListener>();
-				__instance.modules.onEquip += listener.OnSlotEquipped;
-				__instance.modules.onUnequip += listener.OnSlotUnequipped;
+				var listener = console.gameObject.EnsureComponent<VFUpgradesListener>();
+				console.modules.onEquip -= listener.OnSlotEquipped;
+				console.modules.onUnequip -= listener.OnSlotUnequipped;
+				console.modules.onEquip += listener.OnSlotEquipped;
+				console.modules.onUnequip += listener.OnSlotUnequipped;
 			}
 		}
 	}
