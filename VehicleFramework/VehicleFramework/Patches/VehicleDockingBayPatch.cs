@@ -21,7 +21,7 @@ namespace VehicleFramework.Patches
     {
         private static bool HandleMoonpool(ModVehicle mv)
         {
-            Vector3 boundingDimensions = mv.GetBoundingDimensions();
+            Vector3 boundingDimensions = mv.CyclopsDockRotation * mv.GetBoundingDimensions();
             if (boundingDimensions == Vector3.zero)
             {
                 return false;
@@ -45,7 +45,7 @@ namespace VehicleFramework.Patches
         }
         private static bool HandleCyclops(ModVehicle mv)
         {
-            Vector3 boundingDimensions = mv.GetBoundingDimensions();
+            Vector3 boundingDimensions = mv.CyclopsDockRotation * mv.GetBoundingDimensions();
             if (boundingDimensions == Vector3.zero)
             {
                 return false;
@@ -200,7 +200,7 @@ namespace VehicleFramework.Patches
             if (!mv.IsUndockingAnimating)
             {
                 vehicle.transform.position = Vector3.Lerp(__instance.startPosition, endingTransform.position, interpfraction) - mv.GetDifferenceFromCenter();
-                vehicle.transform.rotation = Quaternion.Lerp(__instance.startRotation, endingTransform.rotation, interpfraction);
+                vehicle.transform.rotation = Quaternion.Lerp(__instance.startRotation, mv.CyclopsDockRotation * endingTransform.rotation, interpfraction);
             }
             return false;
         }

@@ -115,6 +115,7 @@ namespace VehicleFramework
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
         public virtual bool AutoApplyShaders { get; set; } = true;
         public virtual List<TMPro.TextMeshProUGUI> SubNameDecals => null;
+        public virtual Quaternion CyclopsDockRotation => Quaternion.identity;
         #endregion
 
         #region vehicle_overrides
