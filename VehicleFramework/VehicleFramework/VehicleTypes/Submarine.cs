@@ -234,7 +234,7 @@ namespace VehicleFramework.VehicleTypes
 
         public override void OnKill()
         {
-            bool isplayerinthissub = isPlayerInside;
+            bool isplayerinthissub = IsPlayerInside();
             base.OnKill();
             if (isplayerinthissub)
             {
