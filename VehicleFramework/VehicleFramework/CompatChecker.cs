@@ -35,6 +35,7 @@ namespace VehicleFramework
             CheckForBepInExPackUpdate();
             CheckForFlareDurationIndicator();
             CheckForBuildingTweaks();
+            CheckForVanillaExpanded();
         }
 
         private static void CheckForBepInExPackUpdate()
@@ -61,7 +62,8 @@ namespace VehicleFramework
             {
                 if (Chainloader.PluginInfos["com.ramune.FlareDurationIndicator"].Metadata.Version.ToString() == "1.0.1")
                 {
-                    ShowError("not compatible with the Flare Duration Indicator mod version 1.0.1\nPlease remove or downgrade the plugin.");
+                    ShowError("Not compatible with the Flare Duration Indicator mod version 1.0.1\nPlease remove or downgrade the plugin.");
+                    Logger.Log("Flare Duration Indicator 1.0.1 has a bad patch that must be fixed.");
                 }
             }
         }
@@ -71,6 +73,16 @@ namespace VehicleFramework
             if (Chainloader.PluginInfos.ContainsKey(buildingTweaksGUID))
             {
                 ShowWarning("Do not use BuildingTweaks to build things inside/on Vehicle Framework submarines!");
+                Logger.Log("Using some BuildingTweaks options to build things inside submarines can prevent those buildables from correctly anchoring to the submarine. Be careful.");
+            }
+        }
+        private static void CheckForVanillaExpanded()
+        {
+            const string vanillaExpandedGUID = "VanillaExpanded";
+            if (Chainloader.PluginInfos.ContainsKey(vanillaExpandedGUID))
+            {
+                ShowError("Not compatible with Vanilla Expanded!");
+                Logger.Log("Vanilla Expanded has a patch on UniqueIdentifier.Awake that throws an error (dereferences null) during many Vehicle Framework setup methods. If you choose to continue, some vehicles, buildables, and fragments may simply not appear.");
             }
         }
     }
