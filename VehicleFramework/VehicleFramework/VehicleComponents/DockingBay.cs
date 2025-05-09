@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 namespace VehicleFramework.VehicleComponents
 {
     // TODO: disallow undocking when not enough space
+
+    // TODO: Is it an issue that we set vehicle.docked = true/false ?
+    //       Previous iterations of DockingBay did not touch vehicle.docked,
+    //       But if we do so, we get free compat with DockedVehicleStorageAccess...
+
+    // ISSUE: hand animations (seamoth/prawn) when undocking are weird
+    //        until AvatarInputHandler.main.gameObject.SetActive(true);
+    //        But the input handler must be inactive until
+    //        currentDockedVehicle.useRigidbody.detectCollisions = true;  
+    //        Otherwise, the player could drive inside of the dock and get stuck.
+    // SOLUTION: activate the input handler during OnStartedUndocking, and
+    //           control exit more cleverly, e.g. by animation rather than physics
+
     public abstract class DockingBay : MonoBehaviour
     {
         public Vehicle currentDockedVehicle { get; protected set; }
@@ -232,6 +240,7 @@ namespace VehicleFramework.VehicleComponents
             OnStartedDocking();
             dockAnimation = UWE.CoroutineHost.StartCoroutine(DoDockingAnimations(dockTarget, 1f, 1f));
             yield return dockAnimation;
+            dockTarget.docked = true;
             OnFinishedDocking(dockTarget);
             currentDockedVehicle = dockTarget;
             dockAnimation = null;
@@ -243,6 +252,7 @@ namespace VehicleFramework.VehicleComponents
                 yield break;
             }
             OnStartedUndocking(withPlayer);
+            currentDockedVehicle.docked = false;
             dockAnimation = UWE.CoroutineHost.StartCoroutine(DoUndockingAnimations());
             yield return dockAnimation;
             OnFinishedUndocking(withPlayer);
