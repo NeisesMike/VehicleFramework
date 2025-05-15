@@ -105,9 +105,17 @@ namespace VehicleFramework.Patches
 
             mv.IsUndockingAnimating = true;
             string subRootName = __instance.dockingBay.subRoot.name.ToLower();
+            Transform moonpoolMaybe = __instance.dockingBay.transform.parent?.parent;
             if (subRootName.Contains("cyclops"))
             {
                 __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(false);
+            }
+            else
+            {
+                if(moonpoolMaybe != null && moonpoolMaybe.name.Equals("BaseMoonpool(Clone)", StringComparison.OrdinalIgnoreCase))
+                {
+                    moonpoolMaybe.Find("Collisions").gameObject.SetActive(false);
+                }
             }
             Player.main.SetCurrentSub(null, false);
             if (__instance.dockingBay.dockedVehicle != null)
@@ -126,6 +134,30 @@ namespace VehicleFramework.Patches
                     __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
                 }
                 UWE.CoroutineHost.StartCoroutine(ReEnableCollisionsInAMoment());
+            }
+            else
+            {
+                float GetVehicleTop()
+                {
+                    Vector3 worldCenter = mv.BoundingBoxCollider.transform.TransformPoint(mv.BoundingBoxCollider.center);
+                    return worldCenter.y + (mv.BoundingBoxCollider.size.y * 0.5f * mv.BoundingBoxCollider.transform.lossyScale.y);
+                }
+                float GetMoonPoolPlane()
+                {
+                    return moonpoolMaybe.Find("Flood_BaseMoonPool/x_BaseWaterPlane").transform.position.y;
+                }
+                IEnumerator ReEnableCollisionsInAMoment()
+                {
+                    while (GetMoonPoolPlane() < GetVehicleTop())
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+                    moonpoolMaybe.Find("Collisions").gameObject.SetActive(true);
+                }
+                if (moonpoolMaybe != null && moonpoolMaybe.name.Equals("BaseMoonpool(Clone)", StringComparison.OrdinalIgnoreCase))
+                {
+                    UWE.CoroutineHost.StartCoroutine(ReEnableCollisionsInAMoment());
+                }
             }
             SkyEnvironmentChanged.Broadcast(mv.gameObject, (GameObject)null);
             mv.OnVehicleUndocked();
