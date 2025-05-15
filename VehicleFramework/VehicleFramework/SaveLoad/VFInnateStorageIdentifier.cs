@@ -58,7 +58,7 @@ namespace VehicleFramework.SaveLoad
                 thisItem.transform.SetParent(mv.StorageRootObject.transform);
                 try
                 {
-                    GetComponent<InnateStorageContainer>().container.AddItem(thisItem.GetComponent<Pickupable>());
+                    GetComponent<InnateStorageContainer>().container.AddItem(thisItem.EnsureComponent<Pickupable>());
                 }
                 catch (Exception e)
                 {

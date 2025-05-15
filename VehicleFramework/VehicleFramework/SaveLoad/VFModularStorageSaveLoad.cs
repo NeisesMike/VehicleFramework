@@ -90,7 +90,7 @@ namespace VehicleFramework.SaveLoad
                 thisItem.transform.SetParent(mv.StorageRootObject.transform);
                 try
                 {
-                    container.AddItem(thisItem.GetComponent<Pickupable>());
+                    container.AddItem(thisItem.EnsureComponent<Pickupable>());
                 }
                 catch (Exception e)
                 {
