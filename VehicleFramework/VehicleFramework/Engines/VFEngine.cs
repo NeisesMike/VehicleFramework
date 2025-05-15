@@ -72,8 +72,11 @@ namespace VehicleFramework.Engines
         protected virtual void DoMovementInputs()
         {
             Vector3 moveDirection = GameInput.GetMoveDirection();
-            ApplyPlayerControls(moveDirection);
-            DrainPower(moveDirection);
+            if (!Player.main.GetPDA().isOpen)
+            {
+                ApplyPlayerControls(moveDirection);
+                DrainPower(moveDirection);
+            }
         }
         protected virtual void DoMovement()
         {
@@ -100,10 +103,6 @@ namespace VehicleFramework.Engines
         #region methods
         public void ApplyPlayerControls(Vector3 moveDirection)
         {
-            if (Player.main.GetPDA().isOpen)
-            {
-                return;
-            }
             var modifiers = GetComponentsInChildren<VehicleAccelerationModifier>();
             foreach (var modifier in modifiers)
             {
