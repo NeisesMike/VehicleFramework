@@ -20,6 +20,7 @@ namespace VehicleFramework.Admin
 			DevConsole.RegisterConsoleCommand(this, "logvfvoices", false, false);
 			DevConsole.RegisterConsoleCommand(this, "vfspawncodes", false, false);
 			DevConsole.RegisterConsoleCommand(this, "undockclosest", false, false);
+			DevConsole.RegisterConsoleCommand(this, "vfdestroy", false, false);
 		}
 		public void OnConsoleCommand_vfhelp(NotificationCenter.Notification _)
 		{
@@ -32,6 +33,7 @@ namespace VehicleFramework.Admin
 			Logger.PDANote("logvfvoices");
 			Logger.PDANote("vfspawncodes");
 			Logger.PDANote("undockclosest");
+			Logger.PDANote("vfdestroy [vehicle type]");
 		}
 		public void OnConsoleCommand_givevfupgrades(NotificationCenter.Notification _)
 		{
@@ -125,6 +127,28 @@ namespace VehicleFramework.Admin
 			{
 				Logger.PDANote(Language.main.Get("VFUndockHint3"));
 			}
+		}
+		public void OnConsoleCommand_vfdestroy(NotificationCenter.Notification notif)
+		{
+			if (notif.data == null || notif.data.Count < 1)
+			{
+				ErrorMessage.AddError("vfdestroy error: no vehicle type specified. Ex: \"vfdestroy exosuit\"");
+			}
+			string vehicleType = (string)notif.data[0];
+			ErrorMessage.AddWarning($"vfdestroy doing destroy on {vehicleType}");
+			Vehicle found = GameObjectManager<Vehicle>.FindNearestSuch(Player.main.transform.position, x => x.name.Equals($"{vehicleType}(Clone)", System.StringComparison.OrdinalIgnoreCase));
+			if (found == null)
+			{
+				ErrorMessage.AddWarning($"vfdestroy found no vehicle matching \"{vehicleType}\"");
+				Vehicle nearest = GameObjectManager<Vehicle>.FindNearestSuch(Player.main.transform.position);
+				if (nearest != null)
+				{
+					ErrorMessage.AddWarning($"Did you mean \"vfdestroy {nearest.name.Substring(0, nearest.name.Length - "(Clone)".Length)}\"?".ToLower());
+				}
+				return;
+			}
+			ErrorMessage.AddWarning($"Destroying {found.name}");
+			GameObject.DestroyImmediate(found.gameObject);
 		}
 	}
 }
