@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace VehicleFramework.Patches
 {
@@ -66,13 +67,30 @@ namespace VehicleFramework.Patches
 				UWE.CoroutineHost.StartCoroutine(BroadcastMessageSoon());
 			}
 		}
+		internal void BumpUpgrade(KeyValuePair<string, InventoryItem> upgrade)
+		{
+			OnSlotUnequipped(upgrade.Key, upgrade.Value);
+			OnSlotEquipped(upgrade.Key, upgrade.Value);
+		}
 	}
 	[HarmonyPatch(typeof(UpgradeConsole))]
 	public class UpgradeConsolePatcher
 	{
 		[HarmonyPostfix]
+		[HarmonyPatch(nameof(UpgradeConsole.Awake))]
+		public static void UpgradeConsoleAwakeHarmonyPostfix(UpgradeConsole __instance)
+		{
+			UpdateSignals(__instance);
+		}
+		[HarmonyPostfix]
 		[HarmonyPatch(nameof(UpgradeConsole.InitializeModules))]
 		public static void UpgradeConsoleInitializeModulesHarmonyPostfix(UpgradeConsole __instance)
+		{
+			UpdateSignals(__instance);
+		}
+		[HarmonyPrefix]
+		[HarmonyPatch(nameof(UpgradeConsole.OnProtoDeserialize))]
+		public static void UpgradeConsoleOnProtoDeserializePrefix(UpgradeConsole __instance)
 		{
 			UpdateSignals(__instance);
 		}
@@ -87,13 +105,14 @@ namespace VehicleFramework.Patches
 			SubRoot thisSubRoot = console.GetComponentInParent<SubRoot>();
 			if (thisSubRoot == null) return;
 
-			if (thisSubRoot.isCyclops)
+			if (thisSubRoot.isCyclops && console.modules != null && console.modules.equipment != null)
 			{
 				var listener = console.gameObject.EnsureComponent<VFUpgradesListener>();
 				console.modules.onEquip -= listener.OnSlotEquipped;
 				console.modules.onUnequip -= listener.OnSlotUnequipped;
 				console.modules.onEquip += listener.OnSlotEquipped;
 				console.modules.onUnequip += listener.OnSlotUnequipped;
+				console.modules.equipment.ForEach(listener.BumpUpgrade);
 			}
 		}
 	}
