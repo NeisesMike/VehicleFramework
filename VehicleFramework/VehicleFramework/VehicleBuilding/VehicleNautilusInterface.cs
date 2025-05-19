@@ -69,10 +69,17 @@ namespace VehicleFramework
 
         internal static void PatchCraftable(ref VehicleEntry ve, bool verbose)
         {
-            TechType techType = VehicleNautilusInterface.RegisterVehicle(ve);
-            VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, $"Patched the {ve.name} Craftable");
-            VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
-            VehicleManager.vehicleTypes.Add(newVE);
+            try
+            {
+                TechType techType = VehicleNautilusInterface.RegisterVehicle(ve);
+                VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, $"Patched the {ve.name} Craftable");
+                VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
+                VehicleManager.vehicleTypes.Add(newVE);
+            }
+            catch(System.Exception e)
+            {
+                Logger.LogException($"VehicleNautilusInterface Error: Failed to Register Vehicle {ve.name}. Error follows:", e);
+            }
         }
     }
 }

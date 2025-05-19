@@ -297,6 +297,26 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. A default engine will be chosen.");
                 }
+                if(mv.Recipe != null)
+                {
+                    bool badRecipeFlag = false;
+                    foreach (var ingredient in mv.Recipe)
+                    {
+                        try
+                        {
+                            string result = ingredient.Key.EncodeKey();
+                        }
+                        catch (System.Exception e)
+                        {
+                            Logger.LogException($"Vehicle Recipe Error: {mv.name}'s recipe had an invalid tech type: {ingredient.Key}. Probably you are referencing an unregistered/non-existent techtype!", e);
+                            badRecipeFlag = true;
+                        }
+                    }
+                    if (badRecipeFlag)
+                    {
+                        return false;
+                    }
+                }
             }
             catch (Exception e)
             {
