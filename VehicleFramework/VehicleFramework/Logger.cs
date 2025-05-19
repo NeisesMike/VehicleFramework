@@ -1,12 +1,15 @@
 ﻿using BepInEx.Logging;
 using System.Text;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace VehicleFramework
 {
     public static class Logger
     {
+        #region BepInExLog
         internal static ManualLogSource MyLog { get; set; }
         public static void Log(string message)
         {
@@ -47,7 +50,11 @@ namespace VehicleFramework
                 ErrorMessage.AddError(message);
             }
         }
-        private static int IDCounter = 65536; 
+        #endregion
+
+        #region PdaNotifications
+        private static int IDCounter = 65536;
+        private static readonly Dictionary<string, int> NoteIDsMemory = new Dictionary<string, int>();
         public static int GetFreshID()
         {
             int returnID = IDCounter++;
@@ -57,7 +64,6 @@ namespace VehicleFramework
             }
             return returnID;
         }
-        private static readonly Dictionary<string, int> NoteIDsMemory = new Dictionary<string, int>();
         public static void PDANote(string msg, float duration = 1.4f, float delay = 0)
         {
             int id;
@@ -83,5 +89,39 @@ namespace VehicleFramework
         {
             ErrorMessage.AddWarning(msg);
         }
+        #endregion
+
+        #region MainMenuLoopingMessages
+        private static readonly List<string> Notifications = new List<string>();
+        public static void LoopMainMenuError(string message, string prefix = "")
+        {
+            string result = $"<color=#FF0000>{prefix} Error: </color><color=#FFFF00>{message}</color>";
+            Notifications.Add(result);
+            Logger.Error(message);
+        }
+        public static void LoopMainMenuWarning(string message, string prefix = "")
+        {
+            string result = $"<color=#FF0000>{prefix} Warning: </color><color=#FFFF00>{message}</color>";
+            Notifications.Add(result);
+            Logger.Error(message);
+        }
+        internal static IEnumerator MakeAlerts()
+        {
+            yield return new WaitUntil(() => ErrorMessage.main != null);
+            yield return new WaitForSeconds(1);
+            yield return new WaitUntil(() => ErrorMessage.main != null);
+            ErrorMessage eMain = ErrorMessage.main;
+            float messageDuration = eMain.timeFlyIn + eMain.timeDelay + eMain.timeFadeOut + eMain.timeInvisible + 0.1f;
+            while (Player.main == null)
+            {
+                foreach (string notif in Notifications)
+                {
+                    ErrorMessage.AddMessage(notif);
+                    yield return new WaitForSeconds(1);
+                }
+                yield return new WaitForSeconds(messageDuration);
+            }
+        }
+        #endregion
     }
 }

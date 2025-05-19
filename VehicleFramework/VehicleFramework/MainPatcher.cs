@@ -36,6 +36,7 @@ namespace VehicleFramework
             Patch();
             PostPatch();
             CompatChecker.CheckAll();
+            UWE.CoroutineHost.StartCoroutine(VehicleFramework.Logger.MakeAlerts());
         }
         public void PrePatch()
         {
