@@ -369,12 +369,8 @@ namespace VehicleFramework.Engines
         public virtual void ExecutePhysicsMove() // public just for AircraftLib
         {
             Vector3 tsm = Vector3.one;
-            // Thank you to MrPurple6411 for this snip regarding VehicleAccelerationModifier
-            var modifiers = base.gameObject.GetComponentsInChildren<VehicleAccelerationModifier>();
-            foreach (var modifier in modifiers)
-            {
-                modifier.ModifyAcceleration(ref tsm);
-            }
+            // Thank you to MrPurple6411 for the note about VehicleAccelerationModifier
+            gameObject.GetComponents<VehicleAccelerationModifier>().ForEach(x => x.ModifyAcceleration(ref tsm));
             RB.AddForce(tsm.z * DamageModifier * MV.transform.forward * (ForwardMomentum / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             RB.AddForce(tsm.x * DamageModifier * MV.transform.right   * (RightMomentum   / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             RB.AddForce(tsm.y * DamageModifier * MV.transform.up      * (UpMomentum      / 100f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
@@ -424,6 +420,8 @@ namespace VehicleFramework.Engines
         }
         protected virtual void DoEngineSounds(Vector3 moveDirection)
         {
+            // DoEngineSounds shouldn't depend on the movement input,
+            // it should depend on the rigidbody velocity!
             if(CanMove() && CanTakeInputs())
             {
                 UpdateEngineHum(moveDirection.magnitude);
