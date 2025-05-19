@@ -46,6 +46,7 @@ namespace VehicleFramework
             if(!Instrument(mv, pingType))
             {
                 Logger.Error("Failed to instrument the vehicle: " + mv.gameObject.name);
+                Logger.LoopMainMenuError($"Failed prefabrication. Not registered. See log.", mv.gameObject.name);
                 yield break;
             }
             prefabs.Add(mv);

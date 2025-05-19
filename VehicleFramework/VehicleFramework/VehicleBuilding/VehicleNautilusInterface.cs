@@ -79,6 +79,7 @@ namespace VehicleFramework
             catch(System.Exception e)
             {
                 Logger.LogException($"VehicleNautilusInterface Error: Failed to Register Vehicle {ve.name}. Error follows:", e);
+                Logger.LoopMainMenuError($"Failed registration. See log.", ve.name);
             }
         }
     }

@@ -49,6 +49,8 @@ namespace VehicleFramework
             VerboseLog(LogType.Log, verbose, $"The {mv.gameObject.name} is beginning validation.");
             if (!ValidateAll(mv, verbose))
             {
+                Logger.Error($"{mv.gameObject.name} failed validation. Not registered.");
+                Logger.LoopMainMenuError($"Failed validation. Not registered. See log.", mv.gameObject.name);
                 yield break;
             }
             yield return new WaitUntil(() => MainPatcher.Instance.GetVoices == null);
