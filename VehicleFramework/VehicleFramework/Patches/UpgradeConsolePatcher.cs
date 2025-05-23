@@ -69,8 +69,11 @@ namespace VehicleFramework.Patches
 		}
 		internal void BumpUpgrade(KeyValuePair<string, InventoryItem> upgrade)
 		{
-			OnSlotUnequipped(upgrade.Key, upgrade.Value);
-			OnSlotEquipped(upgrade.Key, upgrade.Value);
+			if (upgrade.Value != null)
+			{
+				OnSlotUnequipped(upgrade.Key, upgrade.Value);
+				OnSlotEquipped(upgrade.Key, upgrade.Value);
+			}
 		}
 	}
 	[HarmonyPatch(typeof(UpgradeConsole))]
