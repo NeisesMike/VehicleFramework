@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using System.IO;
 using System.Reflection;
@@ -36,7 +33,6 @@ namespace VehicleFramework.Assets
     {
         internal string bundleName;
         internal AssetBundle bundle;
-        internal System.Object[] objectArray;
         internal AssetBundleInterface(string bundlePath)
         {
             bundleName = bundlePath;
@@ -49,27 +45,25 @@ namespace VehicleFramework.Assets
                 Logger.LogException($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. Make sure the name is correct.", e);
                 return;
             }
-            objectArray = bundle.LoadAllAssets();
         }
         internal SpriteAtlas GetSpriteAtlas(string spriteAtlasName)
         {
-            foreach (System.Object obj in objectArray)
+            try
             {
-                if (obj.ToString().Contains(spriteAtlasName))
+                return bundle.LoadAsset<SpriteAtlas>(spriteAtlasName);
+            }
+            catch
+            {
+                try
                 {
-                    try
-                    {
-                        return (SpriteAtlas)obj;
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogException($"AssetBundle {bundleName} failed to get Sprite Atlas: {spriteAtlasName}.", e);
-                        return null;
-                    }
+                    return bundle.LoadAsset<SpriteAtlas>($"{spriteAtlasName}.spriteatlas");
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException($"AssetBundle {bundleName} failed to get Sprite Atlas: {spriteAtlasName}.", e);
+                    return null;
                 }
             }
-            Logger.Error($"AssetBundle {bundleName} failed to get Sprite Atlas: {spriteAtlasName}.");
-            return null;
         }
         internal Atlas.Sprite GetSprite(string spriteAtlasName, string spriteName)
         {
@@ -100,35 +94,30 @@ namespace VehicleFramework.Assets
         }
         internal GameObject GetGameObject(string gameObjectName)
         {
-            foreach (System.Object obj in objectArray)
+            try
             {
-                if (obj.ToString().Contains(gameObjectName))
+                return bundle.LoadAsset<GameObject>(gameObjectName);
+            }
+            catch
+            {
+                try
                 {
-                    return (GameObject)obj;
+                    return bundle.LoadAsset<GameObject>($"{gameObjectName}.prefab");
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException($"AssetBundle {bundleName} failed to get Sprite Atlas: {gameObjectName}.", e);
+                    return null;
                 }
             }
-            Logger.Error("In AssetBundle " + bundleName + ", failed to get GameObject " + gameObjectName);
-            return null;
         }
         internal AudioClip GetAudioClip(string prefabName, string clipName)
         {
-            foreach (System.Object obj in objectArray)
-            {
-                if (obj.ToString().Contains(prefabName))
-                {
-                    GameObject thisGO = (GameObject)obj;
-                    var sources = thisGO.GetComponents<AudioSource>();
-                    foreach(AudioSource source in sources)
-                    {
-                        if(source.clip.name == clipName)
-                        {
-                            return source.clip;
-                        }
-                    }
-                }
-            }
-            Logger.Error("In AssetBundle " + bundleName + ", failed to get AudioClip " + clipName + " from prefab " + prefabName);
-            return null;
+            return GetGameObject(prefabName)
+                .GetComponents<AudioSource>()
+                .Select(x => x.clip)
+                .Where(x => x.name == clipName)
+                .FirstOrDefault();
         }
         public static VehicleAssets GetVehicleAssetsFromBundle(string bundleName, string modelName = "", string spriteAtlasName = "", string pingSpriteName = "", string crafterSpriteName = "", string fragmentName = "", string unlockName = "")
         {
