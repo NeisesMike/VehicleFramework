@@ -10,11 +10,19 @@ namespace VehicleFramework
     {
         internal static void CheckAll()
         {
-            CheckForNautilusUpdate();
-            CheckForBepInExPackUpdate();
-            CheckForFlareDurationIndicator();
-            CheckForBuildingTweaks();
-            CheckForVanillaExpanded();
+            try
+            {
+                CheckForNautilusUpdate();
+                CheckForBepInExPackUpdate();
+                CheckForFlareDurationIndicator();
+                CheckForBuildingTweaks();
+                CheckForVanillaExpanded();
+            }
+            catch(Exception e)
+            {
+                Logger.LogException("Failed to check compatibility notes.", e);
+                ShowError("Failed to check for compatibility notes. Something went wrong!");
+            }
         }
 
         #region private_utilities
@@ -31,8 +39,15 @@ namespace VehicleFramework
         #region checks
         private static void CheckForBepInExPackUpdate()
         {
-            Version target = new Version("1.0.2");
-            if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler"].Metadata.Version.CompareTo(target) < 0)
+            if (Chainloader.PluginInfos.ContainsKey("Tobey.Subnautica.ConfigHandler"))
+            {
+                Version target = new Version("1.0.2");
+                if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler"].Metadata.Version.CompareTo(target) < 0)
+                {
+                    ShowWarning("There is a BepInEx Pack update available!");
+                }
+            }
+            else
             {
                 ShowWarning("There is a BepInEx Pack update available!");
             }
