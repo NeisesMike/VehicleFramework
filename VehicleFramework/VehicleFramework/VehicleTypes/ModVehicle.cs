@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
-//using VehicleFramework.Localization;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
 
@@ -102,7 +101,6 @@ namespace VehicleFramework
         public virtual int CrushDepthUpgrade3 => 300;
         public virtual int CrushDamage => MaxHealth / 15;
         public virtual int CrushPeriod => 1;
-        public virtual bool UseDefaultDamageTracker => false;
         public virtual PilotingStyle pilotingStyle => PilotingStyle.Other;
         public virtual List<Collider> DenyBuildingColliders => new List<Collider>();
         #endregion
@@ -133,10 +131,7 @@ namespace VehicleFramework
             gameObject.AddComponent<VolumetricLightController>();
 
             gameObject.EnsureComponent<AutoPilot>();
-            if (UseDefaultDamageTracker)
-            {
-                gameObject.EnsureComponent<VehicleComponents.VehicleDamageTracker>();
-            }
+
             if (BoundingBoxCollider == null && BoundingBox != null)
             {
                 BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 
 namespace VehicleFramework
@@ -18,16 +13,6 @@ namespace VehicleFramework
             if (__instance.gameObject?.GetComponent<ModVehicle>() != null)
             {
                 __instance.player = Player.main;
-            }
-        }
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(LiveMixin.TakeDamage))]
-        public static void TakeDamagePostfix(LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
-        {
-            VehicleComponents.VehicleDamageTracker vdt = __instance.gameObject?.GetComponent<ModVehicle>()?.GetComponent<VehicleComponents.VehicleDamageTracker>();
-            if (vdt != null)
-            {
-                vdt.TakeDamagePostfix(originalDamage, position, type, dealer);
             }
         }
     }
