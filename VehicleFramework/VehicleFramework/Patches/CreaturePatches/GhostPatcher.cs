@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: configure how much damage ghost leviathans can do
+// VALUE: Moderate. Convenient for developers.
 
 namespace VehicleFramework.Patches.LeviathanPatches
 {
@@ -16,28 +14,26 @@ namespace VehicleFramework.Patches.LeviathanPatches
          * Ghosts will do:
          * 85 to Seamoth/Prawn
          * 250 to Cyclops
-         * TODO: we should include this in the VehicleEntry struct, to make it configurable
          */
         [HarmonyPostfix]
         [HarmonyPatch(nameof(GhostLeviathanMeleeAttack.GetBiteDamage))]
         public static void GetBiteDamagePostfix(GhostLeviathanMeleeAttack __instance, ref float __result, GameObject target)
         {
-            if(target.GetComponentInParent<ModVehicle>() != null)
+            ModVehicle mv = target.GetComponent<ModVehicle>();
+            if (mv == null) return;
+
+            TechType techType = CraftData.GetTechType(__instance.gameObject);
+            if (techType == TechType.GhostLeviathan)
             {
-                TechType techType = CraftData.GetTechType(__instance.gameObject);
-                string myTechType = techType.AsString(true);
-                if (myTechType == "ghostleviathan")
-                {
-                    __result = 150f;
-                }
-                else if (myTechType == "ghostleviathanjuvenile")
-                {
-                    __result = 100f;
-                }
-                else
-                {
-                    Logger.Error("ERROR: Unrecognized ghost leviathan");
-                }
+                __result = mv.GhostAdultBiteDamage;
+            }
+            else if (techType == TechType.GhostLeviathanJuvenile)
+            {
+                __result = mv.GhostJuvenileBiteDamage;
+            }
+            else
+            {
+                Logger.Error("ERROR: Unrecognized ghost leviathan");
             }
         }
     }

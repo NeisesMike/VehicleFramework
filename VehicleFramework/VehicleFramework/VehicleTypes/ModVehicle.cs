@@ -103,6 +103,9 @@ namespace VehicleFramework
         public virtual int CrushPeriod => 1;
         public virtual PilotingStyle pilotingStyle => PilotingStyle.Other;
         public virtual List<Collider> DenyBuildingColliders => new List<Collider>();
+        public virtual float GhostAdultBiteDamage => 150f;
+        public virtual float GhostJuvenileBiteDamage => 100f;
+        public virtual float ReaperBiteDamage => 120f;
         #endregion
 
         #region virtual_properties_dynamic

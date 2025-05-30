@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: allows Reaper Leviathans to grab a ModVehicle. Configure how much damage their bite does.
+// VALUE: High.
 
 namespace VehicleFramework.Patches.LeviathanPatches
 {
@@ -52,7 +50,17 @@ namespace VehicleFramework.Patches.LeviathanPatches
 					}
 				}
 			}
-        }
+		}
+
+		[HarmonyPostfix]
+		[HarmonyPatch(nameof(ReaperMeleeAttack.GetBiteDamage))]
+		public static void GetBiteDamagePostfix(ReaperMeleeAttack __instance, ref float __result, GameObject target)
+		{
+			ModVehicle mv = target.GetComponent<ModVehicle>();
+			if (mv == null) return;
+
+			__result = mv.ReaperBiteDamage;
+		}
 	}
 
 	[HarmonyPatch(typeof(ReaperLeviathan))]
