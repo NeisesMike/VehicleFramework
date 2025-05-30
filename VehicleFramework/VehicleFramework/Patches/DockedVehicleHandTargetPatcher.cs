@@ -133,6 +133,7 @@ namespace VehicleFramework.Patches
                 {
                     yield return new WaitForSeconds(5);
                     __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
+                    mv.useRigidbody.detectCollisions = true;
                 }
                 UWE.CoroutineHost.StartCoroutine(ReEnableCollisionsInAMoment());
             }
@@ -154,6 +155,7 @@ namespace VehicleFramework.Patches
                         yield return new WaitForEndOfFrame();
                     }
                     moonpoolMaybe.Find("Collisions").gameObject.SetActive(true);
+                    mv.useRigidbody.detectCollisions = true;
                 }
                 if (moonpoolMaybe != null && moonpoolMaybe.name.Equals("BaseMoonpool(Clone)", StringComparison.OrdinalIgnoreCase))
                 {

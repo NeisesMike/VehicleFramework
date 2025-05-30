@@ -506,12 +506,17 @@ namespace VehicleFramework
                 OnPlayerUndocked();
             }
             IsVehicleDocked = false;
-            useRigidbody.detectCollisions = true;
             SetDockedLighting(false);
             foreach (var component in GetComponentsInChildren<IDockListener>())
             {
                 (component as IDockListener).OnUndock();
             }
+            IEnumerator EnsureCollisionsEnabledEventually()
+            {
+                yield return new WaitForSeconds(5f);
+                useRigidbody.detectCollisions = true;
+            }
+            UWE.CoroutineHost.StartCoroutine(EnsureCollisionsEnabledEventually());
         }
         public virtual void OnPlayerUndocked()
         {

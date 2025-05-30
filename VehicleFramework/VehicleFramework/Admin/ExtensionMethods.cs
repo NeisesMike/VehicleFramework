@@ -43,6 +43,7 @@ namespace VehicleFramework
                 if (vehicle is ModVehicle)
                 {
                     (vehicle as ModVehicle).OnVehicleUndocked();
+                    vehicle.useRigidbody.detectCollisions = true;
                 }
             }
             var theseBays = vehicle.transform.parent?.gameObject?.GetComponentsInChildren<VehicleDockingBay>()?.Where(x => x.dockedVehicle == vehicle);
