@@ -213,7 +213,7 @@
     <Compile Include="Patches\CyclopsPatcher.cs" />
     <Compile Include="Patches\DockedVehicleHandTargetPatcher.cs" />
     <Compile Include="Patches\FabricatorPatcher.cs" />
-    <Compile Include="Patches\EncyUnlocksPatcher.cs" />
+    <Compile Include="Patches\KnownTechPatcher.cs" />
     <Compile Include="Patches\MapRoomCameraScreenFXControllerPatcher.cs" />
     <Compile Include="Patches\PowerRelayPatcher.cs" />
     <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />

@@ -13,23 +13,6 @@ namespace VehicleFramework
             string vehicleKey = vehicle.mv.name;
             Nautilus.Assets.PrefabInfo vehicle_info = Nautilus.Assets.PrefabInfo.WithTechType(vehicleKey, vehicleKey, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
-            if (!vehicle.mv.EncyclopediaEntry.Equals(string.Empty))
-            {
-                PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
-                {
-                    key = vehicleKey,
-                    path = "Tech/Vehicles",
-                    nodes = new[] { "Tech", "Vehicles" },
-                    unlocked = true,
-                    popup = null,
-                    image = vehicle.mv.EncyclopediaImage?.texture,
-                };
-                Nautilus.Handlers.LanguageHandler.SetLanguageLine($"Ency_{entry.key}", entry.key);
-                Nautilus.Handlers.LanguageHandler.SetLanguageLine($"EncyDesc_{entry.key}", vehicle.mv.EncyclopediaEntry);
-                //Admin.Utils.AddEncyclopediaEntry(entry);
-                Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
-                Nautilus.Handlers.StoryGoalHandler.RegisterItemGoal(entry.key, Story.GoalType.Encyclopedia, vehicle.mv.UnlockedWith, 0f);
-            }
 
             Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);
             vehicle.mv.VehicleModel.EnsureComponent<TechTag>().type = vehicle_info.TechType;
@@ -57,8 +40,17 @@ namespace VehicleFramework
             }
 
             module_CustomPrefab.SetRecipe(vehicleRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
-            module_CustomPrefab.SetPdaGroupCategory(TechGroup.Constructor, TechCategory.Constructor);
-            var scanningGadget = module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith);
+            var scanningGadget = module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith)
+                .WithPdaGroupCategory(TechGroup.Constructor, TechCategory.Constructor);
+
+            if (!string.IsNullOrEmpty(vehicle.mv.EncyclopediaEntry))
+            {
+                Nautilus.Handlers.LanguageHandler.SetLanguageLine($"Ency_{vehicleKey}", vehicleKey);
+                Nautilus.Handlers.LanguageHandler.SetLanguageLine($"EncyDesc_{vehicleKey}", vehicle.mv.EncyclopediaEntry);
+                scanningGadget.WithEncyclopediaEntry("Tech/Vehicles", null, vehicle.mv.EncyclopediaImage?.texture);
+                Nautilus.Handlers.StoryGoalHandler.RegisterItemGoal(vehicleKey, Story.GoalType.Encyclopedia, vehicle.mv.UnlockedWith);
+            }
+
             if (vehicle.mv.UnlockedSprite != null)
             {
                 scanningGadget.WithAnalysisTech(vehicle.mv.UnlockedSprite, unlockMessage: vehicle.mv.UnlockedMessage);
