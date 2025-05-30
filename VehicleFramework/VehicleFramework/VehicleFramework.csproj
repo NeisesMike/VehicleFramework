@@ -279,10 +279,8 @@
     <Compile Include="VehicleTypes\ModVehicle.cs" />
     <Compile Include="VehicleComponents\PilotingTrigger.cs" />
     <Compile Include="Patches\EquipmentPatcher.cs" />
-    <Compile Include="Patches\LiveMixinPatcher.cs" />
     <Compile Include="Patches\PlayerPatcher.cs" />
     <Compile Include="Patches\uGUI_EquipmentPatcher.cs" />
-    <Compile Include="Patches\uGUI_EquipmentSlotPatcher.cs" />
     <Compile Include="Patches\PDAPatcher.cs" />
     <Compile Include="Patches\uGUI_PingsPatcher.cs" />
     <Compile Include="Patches\VehiclePatcher.cs" />
