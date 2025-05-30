@@ -203,7 +203,7 @@
     <Compile Include="Patches\PlaceToolPatcher.cs" />
     <Compile Include="Patches\BuilderToolPatcher.cs" />
     <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
-    <Compile Include="Patches\CompatibilityPatches\StealthModulePatcher.cs" />
+    <Compile Include="Patches\CreaturePatcher.cs" />
     <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\BleederPatcher.cs" />
     <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
