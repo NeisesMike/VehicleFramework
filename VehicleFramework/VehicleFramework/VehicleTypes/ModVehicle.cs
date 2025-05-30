@@ -876,19 +876,19 @@ namespace VehicleFramework
                     {
                         continue;
                     }
-                    mat.EnableKeyword("MARMO_EMISSION");
-                    mat.SetFloat("_EmissionLMNight", docked ? 0.4f : 0f);
-                    mat.SetFloat("_EmissionLM", 0);
-                    mat.SetFloat("_GlowStrength", 0);
-                    mat.SetFloat("_GlowStrengthNight", 0);
-                    mat.SetFloat("_SpecInt", 0f);
+                    mat.EnableKeyword(Admin.Utils.emissionKeyword);
+                    mat.SetFloat(Admin.Utils.emissionNightField, docked ? 0.4f : 0f);
+                    mat.SetFloat(Admin.Utils.emissionField, 0);
+                    mat.SetFloat(Admin.Utils.glowField, 0);
+                    mat.SetFloat(Admin.Utils.glowNightField, 0);
+                    mat.SetFloat(Admin.Utils.specIntField, 0f);
                     if (docked)
                     {
-                        mat.EnableKeyword("MARMO_SPECMAP");
+                        mat.EnableKeyword(Admin.Utils.specmapKeyword);
                     }
                     else
                     {
-                        mat.DisableKeyword("MARMO_SPECMAP");
+                        mat.DisableKeyword(Admin.Utils.specmapKeyword);
                     }
                 }
             }
