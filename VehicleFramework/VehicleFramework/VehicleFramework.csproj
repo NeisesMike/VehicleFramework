@@ -133,7 +133,6 @@
     <Compile Include="Admin\UpgradeRegistrar.cs" />
     <Compile Include="Assets\AssetBundleManager.cs" />
     <Compile Include="Assets\BiomeType.cs" />
-    <Compile Include="Assets\FontUtils.cs" />
     <Compile Include="Assets\FragmentManager.cs" />
     <Compile Include="Admin\GameObjectManager.cs" />
     <Compile Include="Admin\GameStateWatcher.cs" />
@@ -161,8 +160,6 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Patches\BuilderPatcher.cs" />
     <Compile Include="Patches\PrecursorDoorMotorModeSetterPatcher.cs" />
-    <Compile Include="Patches\FontReferencesPatcher.cs" />
-    <Compile Include="Patches\LanguagePatcher.cs" />
     <Compile Include="SaveLoad\JSONInterface.cs" />
     <Compile Include="SaveLoad\SaveLoadUtils.cs" />
     <Compile Include="SaveLoad\VFModularStorageSaveLoad.cs" />

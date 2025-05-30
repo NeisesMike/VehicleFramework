@@ -65,8 +65,8 @@ namespace VehicleFramework
                 image = DSAssets.unlock.texture,
             };
             Admin.Utils.AddEncyclopediaEntry(entry);
-            Patches.LanguagePatcher.SetLanguageLine($"Ency_{classID}", displayName);
-            Patches.LanguagePatcher.SetLanguageLine($"EncyDesc_{classID}", encyclopediaDesc);
+            Nautilus.Handlers.LanguageHandler.SetLanguageLine($"Ency_{classID}", displayName);
+            Nautilus.Handlers.LanguageHandler.SetLanguageLine($"EncyDesc_{classID}", encyclopediaDesc);
             FragmentData fragmentData = new FragmentData
             {
                 fragment = DSAssets.fragment,

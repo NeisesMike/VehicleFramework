@@ -28,7 +28,7 @@ namespace VehicleFramework.Patches
         {
             foreach (var tmprougui in mv.SubNameDecals)
             {
-                tmprougui.font = Assets.FontUtils.Aller_Rg;
+                tmprougui.font = Nautilus.Utility.FontUtils.Aller_Rg;
                 tmprougui.text = mv.subName.GetName();
             }
         }

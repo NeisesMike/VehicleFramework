@@ -24,8 +24,8 @@ namespace VehicleFramework
                     popup = null,
                     image = vehicle.mv.EncyclopediaImage?.texture,
                 };
-                Patches.LanguagePatcher.SetLanguageLine($"Ency_{entry.key}", entry.key);
-                Patches.LanguagePatcher.SetLanguageLine($"EncyDesc_{entry.key}", vehicle.mv.EncyclopediaEntry);
+                Nautilus.Handlers.LanguageHandler.SetLanguageLine($"Ency_{entry.key}", entry.key);
+                Nautilus.Handlers.LanguageHandler.SetLanguageLine($"EncyDesc_{entry.key}", vehicle.mv.EncyclopediaEntry);
                 //Admin.Utils.AddEncyclopediaEntry(entry);
                 Nautilus.Handlers.PDAHandler.AddEncyclopediaEntry(entry);
                 Nautilus.Handlers.StoryGoalHandler.RegisterItemGoal(entry.key, Story.GoalType.Encyclopedia, vehicle.mv.UnlockedWith, 0f);
