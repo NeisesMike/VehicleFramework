@@ -1408,8 +1408,12 @@ namespace VehicleFramework
         private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new Dictionary<string, Tuple<TechType, float>>();
         internal void SaveBatteryData(string path, Tuple<TechType, float> batteryData)
         {
+            int batteryCount = 0;
+            if (Batteries != null) batteryCount += Batteries.Count();
+            if (BackupBatteries != null) batteryCount += BackupBatteries.Count();
+
             batterySaveData.Add(path, batteryData);
-            if (batterySaveData.Count() == Batteries.Count())
+            if (batterySaveData.Count() == batteryCount)
             {
                 // write it out
                 SaveLoad.JsonInterface.Write(this, BatterySaveName, batterySaveData);

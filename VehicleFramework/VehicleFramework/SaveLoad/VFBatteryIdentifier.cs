@@ -38,10 +38,10 @@ namespace VehicleFramework.SaveLoad
             if (thisBattery == default)
             {
                 thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(mv, SaveFileName);
-                if (thisBattery == default)
-                {
-                    yield break;
-                }
+            }
+            if (thisBattery == default || thisBattery.Item1 == TechType.None)
+            {
+                yield break;
             }
             TaskResult<GameObject> result = new TaskResult<GameObject>();
             yield return CraftData.InstantiateFromPrefabAsync(thisBattery.Item1, result, false);
