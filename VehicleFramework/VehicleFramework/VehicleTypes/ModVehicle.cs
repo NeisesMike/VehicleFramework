@@ -1383,6 +1383,7 @@ namespace VehicleFramework
         protected virtual void OnGameLoaded() { }
 
         private const string StorageSaveName = "Storage";
+        private Dictionary<string, List<Tuple<TechType, float, TechType>>> loadedStorageData = null;
         private readonly Dictionary<string, List<Tuple<TechType, float, TechType>>> innateStorageSaveData = new Dictionary<string, List<Tuple<TechType, float, TechType>>>();
         internal void SaveInnateStorage(string path, List<Tuple<TechType, float, TechType>> storageData)
         {
@@ -1396,15 +1397,26 @@ namespace VehicleFramework
         }
         internal List<Tuple<TechType, float, TechType>> ReadInnateStorage(string path)
         {
-            var allInnateStorageData = SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
-            if (allInnateStorageData == null || !allInnateStorageData.ContainsKey(path))
+            if (loadedStorageData == null)
+            {
+                loadedStorageData = SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
+            }
+            if (loadedStorageData == null)
             {
                 return default;
             }
-            return allInnateStorageData[path];
+            if (loadedStorageData.ContainsKey(path))
+            {
+                return loadedStorageData[path];
+            }
+            else
+            {
+                return default;
+            }
         }
 
         private const string BatterySaveName = "Batteries";
+        private Dictionary<string, Tuple<TechType, float>> loadedBatteryData = null;
         private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new Dictionary<string, Tuple<TechType, float>>();
         internal void SaveBatteryData(string path, Tuple<TechType, float> batteryData)
         {
@@ -1422,12 +1434,22 @@ namespace VehicleFramework
         }
         internal Tuple<TechType, float> ReadBatteryData(string path)
         {
-            var allBatteryData = SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
-            if (allBatteryData == null || !allBatteryData.ContainsKey(path))
+            if (loadedBatteryData == null)
+            {
+                loadedBatteryData = SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
+            }
+            if (loadedBatteryData == null)
             {
                 return default;
             }
-            return allBatteryData[path];
+            if (loadedBatteryData.ContainsKey(path))
+            {
+                return loadedBatteryData[path];
+            }
+            else
+            {
+                return default;
+            }
         }
         #endregion
     }
