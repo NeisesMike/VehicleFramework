@@ -14,7 +14,6 @@ namespace VehicleFramework
     {
         public static MainPatcher Instance { get; private set; }
         internal static SaveLoad.SaveData SaveFileData { get; private set; }
-        public static List<Action<Player>> VFPlayerStartActions = new List<Action<Player>>();
 
         internal static VFConfig VFConfig { get; private set; }
         internal static VehicleFrameworkNautilusConfig NautilusConfig { get; private set; }

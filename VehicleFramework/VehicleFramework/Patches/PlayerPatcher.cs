@@ -32,24 +32,6 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Player.Start))]
         public static void StartPostfix(Player __instance)
         {
-            /*
-            IEnumerator raycastme()
-            {
-                while (true)
-                {
-                    yield return new WaitForSeconds(0.5f);
-                    RaycastHit[] allHits;
-                    allHits = Physics.RaycastAll(MainCamera.camera.transform.position, MainCamera.camera.transform.forward, 100f);
-                    allHits
-                        .Where(hit=>hit.transform.GetComponent<TerrainChunkPieceCollider>() != null)
-                        .ForEach(x => Logger.Error("Did Hit: " + x.ToString() + " : " + x.transform.name + " : " + x.collider.gameObject.name));
-                }
-            }
-            UWE.CoroutineHost.StartCoroutine(raycastme());
-            */
-
-
-            MainPatcher.VFPlayerStartActions.ForEach(x => x(__instance));
             VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted = true;
             return;
         }
