@@ -483,7 +483,6 @@ namespace VehicleFramework
                 OnPlayerDocked(exitLocation);
             }
             useRigidbody.detectCollisions = false;
-            SetDockedLighting(true);
             foreach (var component in GetComponentsInChildren<IDockListener>())
             {
                 (component as IDockListener).OnDock();
@@ -506,7 +505,6 @@ namespace VehicleFramework
                 OnPlayerUndocked();
             }
             IsVehicleDocked = false;
-            SetDockedLighting(false);
             foreach (var component in GetComponentsInChildren<IDockListener>())
             {
                 (component as IDockListener).OnUndock();
