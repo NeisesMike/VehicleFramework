@@ -140,10 +140,8 @@ namespace VehicleFramework.Assets
             Nautilus.Assets.PrefabInfo fragmentInfo = Nautilus.Assets.PrefabInfo.WithTechType(frag.classID, frag.displayName, frag.description);
             Nautilus.Assets.CustomPrefab customFragmentPrefab = new Nautilus.Assets.CustomPrefab(fragmentInfo);
             fragmentObject.EnsureComponent<BoxCollider>();
-            fragmentObject.EnsureComponent<PrefabIdentifier>().ClassId = frag.classID;
+            Nautilus.Utility.PrefabUtils.AddBasicComponents(fragmentObject, frag.classID, fragmentInfo.TechType, LargeWorldEntity.CellLevel.Global);
             fragmentObject.EnsureComponent<FragmentManager>();
-            fragmentObject.EnsureComponent<LargeWorldEntity>();
-            fragmentObject.EnsureComponent<SkyApplier>().enabled = true;
             SetupScannable(fragmentObject, fragmentInfo.TechType);
             customFragmentPrefab.SetGameObject(() => fragmentObject);
             if (doSpawnLocations)

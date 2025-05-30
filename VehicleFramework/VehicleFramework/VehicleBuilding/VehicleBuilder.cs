@@ -591,11 +591,6 @@ namespace VehicleFramework
             mv.worldForces.aboveWaterGravity = 9.8f;
             mv.worldForces.waterDepth = 0f;
         }
-        public static void SetupLargeWorldEntity(ModVehicle mv)
-        {
-            // Ensure vehicle remains in the world always
-            mv.gameObject.EnsureComponent<LargeWorldEntity>().cellLevel = LargeWorldEntity.CellLevel.Global;
-        }
         public static void SetupHudPing(ModVehicle mv, PingType pingType)
         {
             mv.pingInstance = mv.gameObject.EnsureComponent<PingInstance>();
@@ -830,7 +825,6 @@ namespace VehicleFramework
             SetupLiveMixin(mv);
             SetupRigidbody(mv);
             SetupWorldForces(mv);
-            SetupLargeWorldEntity(mv);
             SetupHudPing(mv, pingType);
             SetupVehicleConfig(mv);
             SetupCrushDamage(mv);
@@ -861,7 +855,6 @@ namespace VehicleFramework
             {
                 SetupEngine(mv as Drone);
             }
-            ApplySkyAppliers(mv);
 
             // ApplyShaders should happen last
             Shader shader = Shader.Find(Admin.Utils.marmosetUberName);
@@ -924,23 +917,6 @@ namespace VehicleFramework
                     mat.shader = shader;
                 }
             }
-        }
-        public static void ApplySkyAppliers(ModVehicle mv)
-        {
-            var ska = mv.gameObject.EnsureComponent<SkyApplier>();
-            ska.anchorSky = Skies.Auto;
-            ska.customSkyPrefab = null;
-            ska.dynamic = true;
-            ska.emissiveFromPower = false;
-            ska.environmentSky = null;
-
-            var rends = mv.gameObject.GetComponentsInChildren<Renderer>();
-            ska.renderers = new Renderer[rends.Count()];
-            foreach(var rend in rends)
-            {
-                ska.renderers.Append(rend);
-            }
-
         }
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
