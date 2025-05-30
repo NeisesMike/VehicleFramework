@@ -1,8 +1,10 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 using System.Reflection.Emit;
 using System.Collections.Generic;
 using System;
+
+// PURPOSE: allow intuitive use of drone stations while seated
+// VALUE: Moderate. Some value for immersion. See GUIHandPatcher too.
 
 namespace VehicleFramework.Patches
 {

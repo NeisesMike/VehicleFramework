@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+// PURPOSE: allows Submarines to specify volumes in which things cannot be built or placed
+// VALUE: moderate, as a developer utility
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(Builder))]

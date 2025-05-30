@@ -4,6 +4,9 @@ using UnityEngine;
 using System.Reflection.Emit;
 using System.Linq;
 
+// PURPOSE: Prevent Drones from accessing upgrades. Display upgrade module models when appropriate. Display custom upgrade-background images.
+// VALUE: High. Drones would have odd behavior otherwise, and the other functions are important developer utilities.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(VehicleUpgradeConsoleInput))]

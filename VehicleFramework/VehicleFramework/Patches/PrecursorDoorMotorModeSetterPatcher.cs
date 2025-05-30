@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
+// PURPOSE: ModVehicles that go through MoonGates should fall to the ground
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(PrecursorDoorMotorModeSetter))]

@@ -3,6 +3,9 @@ using UnityEngine;
 using UWE;
 using System.Collections.Generic;
 
+// PURPOSE: Allow easy registration of AudioSources and pause them during game pause.
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(FreezeTime))]

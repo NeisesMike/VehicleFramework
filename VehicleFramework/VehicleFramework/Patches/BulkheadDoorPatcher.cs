@@ -2,6 +2,9 @@
 using HarmonyLib;
 using System.Reflection.Emit;
 
+// PURPOSE: Drones cannot open bulkheads (would teleport the player there)
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(BulkheadDoor))]

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: protect player's in Submarines against Warper teleport balls.
+// VALUE: High.
 
 namespace VehicleFramework.Patches.CreaturePatches
 {

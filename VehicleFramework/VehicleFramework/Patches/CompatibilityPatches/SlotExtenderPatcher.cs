@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
-using System.Reflection;
-using UnityEngine;
+﻿using HarmonyLib;
+
+// PURPOSE: Ensure VF is compatible with Slot Extender (both can be used to full effect)
+// VALUE: Very high. Excellent mod!
 
 namespace VehicleFramework.Patches.CompatibilityPatches
 {

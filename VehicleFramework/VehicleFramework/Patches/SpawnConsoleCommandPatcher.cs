@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: allow the spawn console command to work for ModVehicles
+// VALUE: Moderate. Could register a new console command instead.
 
 namespace VehicleFramework.Patches
 {

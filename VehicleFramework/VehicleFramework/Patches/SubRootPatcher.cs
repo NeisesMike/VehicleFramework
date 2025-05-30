@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: neuter many SubRoot functions
+// VALUE: High. It's valuable to have a SubRoot, but I don't want to sort these out or make them work, to be perfectly honest.
 
 namespace VehicleFramework.Patches
 {
 	[HarmonyPatch(typeof(SubRoot))]
-
 	class SubRootPatcher
 	{
 		[HarmonyPrefix]

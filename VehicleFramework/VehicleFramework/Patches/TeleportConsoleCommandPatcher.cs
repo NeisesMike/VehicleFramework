@@ -1,5 +1,8 @@
 ﻿using HarmonyLib;
 
+// PURPOSE: prevent teleportation cheats while using a Drone
+// VALUE: High. Could disable the console instead, but it has some utility still.
+
 namespace VehicleFramework.Patches
 {
     public static class TeleportUtils

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
+
+// PURPOSE: Create visual noise when Drones are far away from their station
+// VALUE: High.
 
 namespace VehicleFramework.Patches
 {

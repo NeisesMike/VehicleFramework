@@ -1,6 +1,8 @@
-﻿using System.Collections;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: ensures building ghosts truly attach to Submarines, and in a non-problematic way
+// VALUE: High.
 
 namespace VehicleFramework.Patches
 {

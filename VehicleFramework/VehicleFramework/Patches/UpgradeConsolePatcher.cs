@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+// PURPOSE: allow VF upgrades to function as expected in a Cyclops
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
 	public class VFUpgradesListener : MonoBehaviour

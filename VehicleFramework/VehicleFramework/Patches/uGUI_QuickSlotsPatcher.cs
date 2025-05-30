@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
+
+// PURPOSE: Prevent switching hotbar items while looking at a drone station. Allows for saner usage of the drone station controls.
+// VALUE: Moderate. Could find another control scheme that doesn't use "select next, select previous."
 
 namespace VehicleFramework
 {

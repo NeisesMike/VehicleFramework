@@ -4,6 +4,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
+// PURPOSE: Allow ModVehicles to be built basically anywhere (don't "need deeper water" unnecessarily)
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(ConstructorInput))]

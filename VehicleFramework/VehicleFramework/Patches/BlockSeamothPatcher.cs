@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// PURPOSE: Prevent ModVehicles from entering "moon gates"
+// VALUE: high, for the sake of world consistency
+
 namespace VehicleFramework.Patches
 {
     internal class BlockModVehicle : MonoBehaviour

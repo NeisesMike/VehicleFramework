@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
+// PURPOSE: ensure placed objects are permitted on and correctly parented to Submarines.
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(PlaceTool))]

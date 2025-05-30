@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using System.Reflection.Emit;
 
+
+// PURPOSE: Allow battery charges (and Power Relay in general) to work in expected ways on ModVehicles
+// VALUE: High.
 
 namespace VehicleFramework.Patches
 {

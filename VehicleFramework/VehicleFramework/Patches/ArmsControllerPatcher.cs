@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
-using UnityEngine;
+
+// PURPOSE: Allow custom handling of the player's body during ModVehicle piloting
+// VALUE: Moderate-low. Convenient for developers. Maybe better to do it in a per-vehicle way
 
 namespace VehicleFramework.Patches
 {

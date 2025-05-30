@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using System.Reflection.Emit;
+
+// PURPOSE: Allow ModVehicles to use (and have displayed) custom ping sprites.
+// VALUE: Very high.
 
 namespace VehicleFramework
 {

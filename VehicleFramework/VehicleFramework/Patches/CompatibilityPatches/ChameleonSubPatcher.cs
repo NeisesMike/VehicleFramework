@@ -1,5 +1,8 @@
 ﻿using HarmonyLib;
 
+// PURPOSE: ensures ModVehicles are built normally despite the presence of the Chameleon sub
+// VALUE: High, unfortunately. As you can see, the prefix is empty. Odd!
+
 namespace VehicleFramework.Patches.CompatibilityPatches
 {
     [HarmonyPatch(typeof(ConstructorInput))]

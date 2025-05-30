@@ -3,6 +3,9 @@ using HarmonyLib;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
 
+// PURPOSE: ensure the Player behaves as expected when ModVehicles are involved
+// VALUE: Very high.
+
 namespace VehicleFramework
 { 
     [HarmonyPatch(typeof(Player))]

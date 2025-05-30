@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// PURPOSE: allow custom save file sprites to be displayed
+// VALUE: High.
+
 namespace VehicleFramework.Patches
 {
     // See also: SaveLoadManagerPatcher

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
+
+// PURPOSE: ensure ModVehicles are displayed correctly in the Map mod
+// VALUE: High. The Map is a great mod!
 
 namespace VehicleFramework.Patches.CompatibilityPatches
 {

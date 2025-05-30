@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
-using UnityEngine;
+
+// PURPOSE: Allow a seated player to use a Drone Station
+// VALUE: Moderate. Some value for immersion. See BenchPatcher too.
 
 namespace VehicleFramework.Patches
 {
@@ -10,6 +12,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(GUIHand.OnUpdate))]
         public static void GUIHandOnUpdatePostfix(GUIHand __instance)
         {
+            // OnUpdate does (almost) nothing when the player is sitting, so we add a special case.
             if (Player.main.mode == Player.Mode.Sitting)
             {
                 if (AvatarInputHandler.main.IsEnabled() && !__instance.IsPDAInUse() && __instance.grabMode == GUIHand.GrabMode.None)

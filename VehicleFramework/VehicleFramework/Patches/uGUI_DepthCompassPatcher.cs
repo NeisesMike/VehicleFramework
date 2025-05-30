@@ -1,5 +1,8 @@
 ﻿using HarmonyLib;
 
+// PURPOSE: Ensure drones always have a functional compass on the GUI
+// VALUE: Moderate. Could pass this off to individual drones.
+
 namespace VehicleFramework.Patches
 {
 	[HarmonyPatch(typeof(uGUI_DepthCompass))]

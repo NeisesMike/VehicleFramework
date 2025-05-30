@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
-using UnityEngine;
+﻿using HarmonyLib;
+
+// PURPOSE: ensures QuickSlots display as expected when inside a ModVehicle. Prevents Drones from accessing the Player's inventory.
+// VALUE: High.
 
 namespace VehicleFramework
 {

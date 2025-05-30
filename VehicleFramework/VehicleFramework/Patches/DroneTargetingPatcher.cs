@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 using System.Reflection;
+
+// PURPOSE: Allow drones to target, hover, and pick things up in an intuitive way.
+// VALUE: High.
 
 namespace VehicleFramework.Patches
 {

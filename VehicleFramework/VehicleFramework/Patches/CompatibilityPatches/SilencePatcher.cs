@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
+// PURPOSE: ensure the Silence doesn't kill us in a way that softlocks the game
+// VALUE: High, unfortunately
+
 namespace VehicleFramework.Patches.CompatibilityPatches
 {
     [HarmonyPatch(typeof(Player))]

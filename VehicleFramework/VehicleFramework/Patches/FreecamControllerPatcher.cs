@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
-using UnityEngine;
+
+// PURPOSE: Fix a bug in the base game, wherein FreeCamController fields are not correctly controlled.
+// VALUE: High, unfortunately.
 
 namespace VehicleFramework.Patches
 {

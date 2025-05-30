@@ -1,11 +1,10 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using System.Linq;
 using VehicleFramework.VehicleComponents;
 using VehicleFramework.UpgradeTypes;
+
+// PURPOSE: allow VF upgrades for the Prawn to be used as expected
+// VALUE: High.
 
 namespace VehicleFramework.Patches
 {

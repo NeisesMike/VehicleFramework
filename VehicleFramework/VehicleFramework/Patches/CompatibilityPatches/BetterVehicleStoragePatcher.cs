@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
-using System.Reflection;
-using UnityEngine;
+
+// PURPOSE: add compatibility for better vehicle storage upgrades
+// VALUE: High. It's a very cool mod.
 
 namespace VehicleFramework.Patches.CompatibilityPatches
 {

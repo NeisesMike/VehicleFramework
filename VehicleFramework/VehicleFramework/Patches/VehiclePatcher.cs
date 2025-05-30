@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using System.Reflection.Emit;
 using UnityEngine;
+
+// PURPOSE: generally ensures ModVehicles behave like normal Vehicles
+// VALUE: Very high.
 
 namespace VehicleFramework
 {

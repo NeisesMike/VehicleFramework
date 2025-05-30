@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 using System.Reflection.Emit;
 using VehicleFramework.VehicleTypes;
+
+// PURPOSE: allow docked vehicles to be hovered and clicked in the expected ways
+// VALUE: High.
 
 namespace VehicleFramework.Patches
 {

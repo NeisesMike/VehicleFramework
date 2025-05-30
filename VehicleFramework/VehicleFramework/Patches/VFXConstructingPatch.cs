@@ -2,6 +2,9 @@
 using HarmonyLib;
 using UnityEngine;
 
+// PURPOSE: configure timeToConstruct. Broadcasts the SubConstructionBeginning signal. Manages the building fx colors.
+// VALUE: Very high. Important ModVehicle and developer utilities.
+
 namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(VFXConstructing))]
