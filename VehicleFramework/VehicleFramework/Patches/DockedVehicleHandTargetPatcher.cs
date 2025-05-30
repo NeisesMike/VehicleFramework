@@ -50,10 +50,14 @@ namespace VehicleFramework.Patches
             ModVehicle mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
             if (mv != null)
             {
-                string text = "Enter " + mv.subName.hullName.text;
+                string text = mv.subName.hullName.text;
                 if((mv as Drone) != null)
                 {
                     text = mv.subName.hullName.text;
+                }
+                else if(mv is Submarine && (mv as Submarine).Hatches.Any())
+                {
+                    text = (mv as Submarine).Hatches.First().Hatch.GetComponent<VehicleHatch>().EnterHint;
                 }
                 float energyActual = 0;
                 float energyMax = 0;
