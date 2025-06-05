@@ -25,7 +25,7 @@ namespace VehicleFramework
         {
             get
             {
-                if (mv == null)
+                if (mv == null || mv.isScuttled)
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
                 }
@@ -94,6 +94,10 @@ namespace VehicleFramework
 
         public void TryToDropLeash()
         {
+            if (mv.IsPlayerControlling())
+            {
+                return;
+            }
             if (isSimple)
             {
                 if (Vector3.Distance(Player.main.transform.position, transform.position) > 10)
