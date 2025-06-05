@@ -1317,6 +1317,7 @@ namespace VehicleFramework
             // The new color changing methods are much simpler, but Odyssey and Beluga use the old methods,
             // So I'll still support them.
             yield return new WaitUntil(() => Admin.GameStateWatcher.isWorldLoaded);
+            yield return new WaitUntil(() => isInitialized);
             var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SimpleDataSaveFileName);
             if (simpleData == null || simpleData.Count == 0)
             {
