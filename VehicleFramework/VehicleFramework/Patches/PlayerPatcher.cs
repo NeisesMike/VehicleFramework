@@ -177,7 +177,7 @@ namespace VehicleFramework
                 return true;
             }
 
-            if (__instance.mode == Player.Mode.LockedPiloting && !Admin.Utils.IsAnAncestorTheCurrentMountedVehicle(Player.main.transform))
+            if (__instance.currentMountedVehicle is ModVehicle && __instance.mode == Player.Mode.LockedPiloting && !Admin.Utils.IsAnAncestorTheCurrentMountedVehicle(Player.main.transform))
             {
                 Logger.Error("Mismatch between the Player's mounted vehicle and the Player's parent!");
                 // Don't skip. This is a weird problem and it needs resolved, so let it die strangely.
