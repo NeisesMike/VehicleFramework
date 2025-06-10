@@ -275,7 +275,7 @@
     <Compile Include="StorageComponents\InnateStorageContainer.cs" />
     <Compile Include="StorageComponents\ModularStorageInput.cs" />
     <Compile Include="VehicleBuilding\ModuleBuilder.cs" />
-    <Compile Include="StorageComponents\uGUI_VehicleHUD.cs" />
+    <Compile Include="MiscComponents\uGUI_VehicleHUD.cs" />
     <Compile Include="MainPatcher.cs" />
     <Compile Include="VehicleTypes\ModVehicle.cs" />
     <Compile Include="VehicleComponents\PilotingTrigger.cs" />
