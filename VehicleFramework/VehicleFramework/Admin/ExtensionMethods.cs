@@ -99,5 +99,9 @@ namespace VehicleFramework
             }
             return vehicle.GetComponent<TechTag>().type;
         }
+        public static float GetEngineVolume(this ModVehicle vehicle)
+        {
+            return VehicleConfig.GetConfig(vehicle).EngineVolume.Value;
+        }
     }
 }
