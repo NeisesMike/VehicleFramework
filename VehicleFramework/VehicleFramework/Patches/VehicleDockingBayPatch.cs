@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 using System.Reflection.Emit;
+using VehicleFramework.MiscComponents;
 
 // PURPOSE: allow ModVehicles to use in-game docking bays
 // VALUE: High.
@@ -20,56 +21,6 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(VehicleDockingBay))]
     class VehicleDockingBayPatch
     {
-        private static bool HandleMoonpool(ModVehicle mv)
-        {
-            //Vector3 boundingDimensions = mv.CyclopsDockRotation * mv.GetBoundingDimensions();
-            Vector3 boundingDimensions = mv.GetBoundingDimensions();
-            if (boundingDimensions == Vector3.zero)
-            {
-                return false;
-            }
-            float mpx = 8.6f;
-            float mpy = 8.6f;
-            float mpz = 12.0f;
-            if (boundingDimensions.x > mpx)
-            {
-                return false;
-            }
-            else if (boundingDimensions.y > mpy)
-            {
-                return false;
-            }
-            else if (boundingDimensions.z > mpz)
-            {
-                return false;
-            }
-            return true;
-        }
-        private static bool HandleCyclops(ModVehicle mv)
-        {
-            //Vector3 boundingDimensions = mv.CyclopsDockRotation * mv.GetBoundingDimensions();
-            Vector3 boundingDimensions = mv.GetBoundingDimensions();
-            if (boundingDimensions == Vector3.zero)
-            {
-                return false;
-            }
-            float mpx = 4.5f;
-            float mpy = 6.0f;
-            float mpz = 4.5f;
-            if (boundingDimensions.x > mpx)
-            {
-                return false;
-            }
-            else if (boundingDimensions.y > mpy)
-            {
-                return false;
-            }
-            else if (boundingDimensions.z > mpz)
-            {
-                return false;
-            }
-            return true;
-        }
         public static bool IsThisDockable(VehicleDockingBay bay, GameObject nearby)
         {
             return
@@ -92,28 +43,11 @@ namespace VehicleFramework.Patches
         public static bool IsThisVehicleSmallEnough(VehicleDockingBay bay, GameObject nearby)
         {
             ModVehicle mv = UWE.Utils.GetComponentInHierarchy<ModVehicle>(nearby.gameObject);
-            if (mv == null)
-            {
-                return true;
-            }
-            if (!mv.CanMoonpoolDock || mv.docked)
-            {
-                return false;
-            }
-            string subRootName = bay.subRoot.name.ToLower();
-            if (subRootName.Contains("base"))
-            {
-                return HandleMoonpool(mv);
-            }
-            else if (subRootName.Contains("cyclops"))
-            {
-                return HandleCyclops(mv);
-            }
-            else
-            {
-                Logger.Warn("Trying to dock in something that is neither a moonpool nor a cyclops. What is this?");
-                return false;
-            }
+            if (mv == null) return true;
+            if (!mv.CanMoonpoolDock || mv.docked) return false;
+            DockingBayBounds bounds = bay.gameObject.GetComponent<DockingBayBounds>();
+            if (bounds == null) return false;
+            return bounds.IsVehicleSmallEnough(bay, mv);
         }
         private static void HandleMVDocked(Vehicle vehicle, VehicleDockingBay dock)
         {
@@ -228,6 +162,22 @@ namespace VehicleFramework.Patches
         public static void VehicleDockingBayStartPostfix(VehicleDockingBay __instance)
         {
             dockingBays.Add(__instance);
+
+            string subRootName = __instance.subRoot.name.ToLower();
+            if (string.Equals(subRootName, "base(clone)", StringComparison.OrdinalIgnoreCase))
+            {
+                __instance.gameObject.EnsureComponent<DockingBayBounds>()
+                   .WithX(8.6f)
+                   .WithY(8.6f)
+                   .WithZ(12.0f);
+            }
+            else if (string.Equals(subRootName, "cyclops-mainprefab(clone)", StringComparison.OrdinalIgnoreCase))
+            {
+                __instance.gameObject.EnsureComponent<DockingBayBounds>()
+                   .WithX(4.5f)
+                   .WithY(6.0f)
+                   .WithZ(4.5f);
+            }
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleDockingBay.OnDestroy))]
