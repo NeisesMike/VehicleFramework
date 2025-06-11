@@ -29,7 +29,7 @@ namespace VehicleFramework.Patches
         {
             if (Player.main.GetModVehicle() != null)
             {
-                Player.main.GetModVehicle().controlSheme = (Vehicle.ControlSheme)12;
+                Player.main.GetModVehicle().controlSheme = Admin.EnumHelper.GetScheme();
             }
         }
 

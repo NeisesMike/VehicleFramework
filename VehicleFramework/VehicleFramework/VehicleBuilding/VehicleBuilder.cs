@@ -35,10 +35,6 @@ namespace VehicleFramework
         private static int numVehicleTypes = 0;
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
 
-        public const EquipmentType ModuleType = (EquipmentType)625;
-        public const EquipmentType ArmType = (EquipmentType)626;
-        public const TechType InnateStorage = (TechType)0x4100;
-
         public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Prefabricating the " + mv.gameObject.name);
@@ -603,7 +599,7 @@ namespace VehicleFramework
         {
             // add various vehicle things
             mv.stabilizeRoll = true;
-            mv.controlSheme = (Vehicle.ControlSheme)12;
+            mv.controlSheme = Admin.EnumHelper.GetScheme();
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
             mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
             mv.splashSound = SeamothHelper.Seamoth.GetComponent<SeaMoth>().splashSound;

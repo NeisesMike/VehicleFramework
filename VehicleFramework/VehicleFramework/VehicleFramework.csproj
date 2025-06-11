@@ -128,6 +128,7 @@
     <Compile Include="Admin\ConfigRegistrar.cs" />
     <Compile Include="Admin\ConsoleCommands.cs" />
     <Compile Include="Admin\CraftTreeHandler.cs" />
+    <Compile Include="Admin\EnumHelper.cs" />
     <Compile Include="Admin\ExtensionMethods.cs" />
     <Compile Include="Admin\VanillaUpgradeMaker.cs" />
     <Compile Include="Admin\UpgradeRegistrar.cs" />

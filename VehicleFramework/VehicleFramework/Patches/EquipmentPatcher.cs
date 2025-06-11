@@ -60,7 +60,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Equipment.GetCompatibleSlotDefault))]
         public static void GetCompatibleSlotDefaultPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
+            if (itemType != Admin.EnumHelper.GetModuleType() && itemType != Admin.EnumHelper.GetArmType())
             {
                 return;
             }
@@ -77,7 +77,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Equipment.GetFreeSlot))]
         public static void GetFreeSlotPrefix(Equipment __instance, EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (type != VehicleBuilder.ModuleType && type != VehicleBuilder.ArmType)
+            if (type != Admin.EnumHelper.GetModuleType() && type != Admin.EnumHelper.GetArmType())
             {
                 return;
             }
@@ -94,7 +94,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Equipment.GetSlots))]
         public static void GetSlotsPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (itemType != VehicleBuilder.ModuleType && itemType != VehicleBuilder.ArmType)
+            if (itemType != Admin.EnumHelper.GetModuleType() && itemType != Admin.EnumHelper.GetArmType())
             {
                 return;
             }
@@ -130,12 +130,12 @@ namespace VehicleFramework
         {
             if(slot.Contains(ModuleBuilder.ModVehicleModulePrefix))
             {
-                __result = VehicleBuilder.ModuleType;
+                __result = Admin.EnumHelper.GetModuleType();
                 return false;
             }
             else if(slot == ModuleBuilder.RightArmSlotName || slot == ModuleBuilder.LeftArmSlotName)
             {
-                __result = VehicleBuilder.ArmType;
+                __result = Admin.EnumHelper.GetArmType();
                 return false;
             }
             else
@@ -148,7 +148,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Equipment.IsCompatible))]
         public static bool IsCompatiblePrefix(EquipmentType itemType, EquipmentType slotType, ref bool __result)
         {
-            __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == VehicleBuilder.ModuleType));
+            __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == Admin.EnumHelper.GetModuleType()));
             if (__result)
             {
                 return false;

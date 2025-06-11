@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using VehicleFramework.Admin;
 
 namespace VehicleFramework
 {
@@ -11,7 +6,7 @@ namespace VehicleFramework
     {
 		public override void OpenFromExternal()
 		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, VehicleBuilder.InnateStorage);
+			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
@@ -21,7 +16,7 @@ namespace VehicleFramework
 		}
 		protected override void OpenPDA()
 		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, VehicleBuilder.InnateStorage);
+			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();

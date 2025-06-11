@@ -140,13 +140,13 @@ namespace VehicleFramework.Admin
             if (upgrade as ModVehicleArm != null)
             {
                 module_CustomPrefab
-                    .SetEquipment(VehicleBuilder.ArmType)
+                    .SetEquipment(EnumHelper.GetArmType())
                     .WithQuickSlotType(upgrade.QuickSlotType);
             }
             else
             {
                 module_CustomPrefab
-                    .SetEquipment(VehicleBuilder.ModuleType)
+                    .SetEquipment(EnumHelper.GetModuleType())
                     .WithQuickSlotType(upgrade.QuickSlotType);
             }
             if (!upgrade.UnlockAtStart)

@@ -7,6 +7,7 @@ using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
+using VehicleFramework.Admin;
 
 namespace VehicleFramework
 {
@@ -721,8 +722,8 @@ namespace VehicleFramework
         internal List<string> VehicleArmSlots => new List<string> { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
         internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new Dictionary<EquipmentType, List<string>>
                 {
-                    { VehicleBuilder.ModuleType, VehicleModuleSlots },
-                    { VehicleBuilder.ArmType, VehicleArmSlots }
+                    { EnumHelper.GetModuleType(), VehicleModuleSlots },
+                    { EnumHelper.GetArmType(), VehicleArmSlots }
                 };
         private void StorageModuleAction(int slotID, TechType techType, bool added)
         {
@@ -835,37 +836,34 @@ namespace VehicleFramework
         }
         internal ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
         {
-            switch (techType)
+            if (techType == EnumHelper.GetInnateStorageType())
             {
-                case VehicleBuilder.InnateStorage:
-                    {
-                        InnateStorageContainer vsc;
-                        if (0 <= slotID && slotID < InnateStorages.Count)
-                        {
-                            vsc = InnateStorages[slotID].Container.GetComponent<InnateStorageContainer>();
-                        }
-                        else
-                        {
-                            Logger.Error("Error: ModGetStorageInSlot called on invalid innate storage slotID");
-                            return null;
-                        }
-                        return vsc.container;
-                    }
-                case TechType.VehicleStorageModule:
-                    {
-                        SeamothStorageContainer component = GetSeamothStorageContainer(slotID);
-                        if (component == null)
-                        {
-                            Logger.Warn("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
-                            return null;
-                        }
-                        return component.container;
-                    }
-                default:
-                    {
-                        Logger.Error("Error: tried to get storage for unsupported TechType");
-                        return null;
-                    }
+                InnateStorageContainer vsc;
+                if (0 <= slotID && slotID < InnateStorages.Count)
+                {
+                    vsc = InnateStorages[slotID].Container.GetComponent<InnateStorageContainer>();
+                }
+                else
+                {
+                    Logger.Error("Error: ModGetStorageInSlot called on invalid innate storage slotID");
+                    return null;
+                }
+                return vsc.container;
+            }
+            else if (techType == TechType.VehicleStorageModule)
+            {
+                SeamothStorageContainer component = GetSeamothStorageContainer(slotID);
+                if (component == null)
+                {
+                    Logger.Warn("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
+                    return null;
+                }
+                return component.container;
+            }
+            else
+            {
+                Logger.Error("Error: tried to get storage for unsupported TechType");
+                return null;
             }
         }
         private void SetDockedLighting(bool docked)

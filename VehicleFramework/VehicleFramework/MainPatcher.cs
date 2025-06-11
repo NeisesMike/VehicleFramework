@@ -39,6 +39,7 @@ namespace VehicleFramework
         }
         public void PrePatch()
         {
+            Admin.EnumHelper.Setup();
             Assets.StaticAssets.SetupDefaultAssets();
             IEnumerator CollectPrefabsForBuilderReference()
             {
