@@ -179,7 +179,7 @@ namespace VehicleFramework
                     speaker.volume = balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
                     speaker.clip = clip;
                     speaker.Play();
-                    if (MainPatcher.NautilusConfig.IsSubtitles)
+                    if (MainPatcher.NautilusConfig.IsSubtitles && clip != VoiceManager.silence)
                     {
                         CreateSubtitle(clip);
                     }
