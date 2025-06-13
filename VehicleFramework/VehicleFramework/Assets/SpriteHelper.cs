@@ -51,6 +51,7 @@ namespace VehicleFramework.Assets
         }
         public static Sprite CreateSpriteFromAtlasSprite(Atlas.Sprite sprite)
         {
+            if (sprite == null) return null;
             Texture2D texture = sprite.texture;
             return Sprite.Create(texture, new Rect(0f, 0f, (float)texture.width, (float)texture.height), Vector2.one * 0.5f);
         }
