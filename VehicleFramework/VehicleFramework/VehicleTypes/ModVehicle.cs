@@ -102,7 +102,7 @@ namespace VehicleFramework
         public virtual int CrushDepthUpgrade3 => 300;
         public virtual int CrushDamage => MaxHealth / 15;
         public virtual int CrushPeriod => 1;
-        public virtual PilotingStyle pilotingStyle => PilotingStyle.Other;
+        public virtual PilotingStyle pilotingStyle => PilotingStyle.Other; // used by Echelon, Odyssey, Blossom
         public virtual List<Collider> DenyBuildingColliders => new List<Collider>();
         public virtual float GhostAdultBiteDamage => 150f;
         public virtual float GhostJuvenileBiteDamage => 100f;
@@ -864,37 +864,6 @@ namespace VehicleFramework
             {
                 Logger.Error("Error: tried to get storage for unsupported TechType");
                 return null;
-            }
-        }
-        private void SetDockedLighting(bool docked)
-        {
-            foreach (var renderer in GetComponentsInChildren<Renderer>())
-            {
-                foreach (Material mat in renderer.materials)
-                {
-                    if (renderer.gameObject.name.ToLower().Contains("light"))
-                    {
-                        continue;
-                    }
-                    if (CanopyWindows != null && CanopyWindows.Contains(renderer.gameObject))
-                    {
-                        continue;
-                    }
-                    mat.EnableKeyword(Admin.Utils.emissionKeyword);
-                    mat.SetFloat(Admin.Utils.emissionNightField, docked ? 0.4f : 0f);
-                    mat.SetFloat(Admin.Utils.emissionField, 0);
-                    mat.SetFloat(Admin.Utils.glowField, 0);
-                    mat.SetFloat(Admin.Utils.glowNightField, 0);
-                    mat.SetFloat(Admin.Utils.specIntField, 0f);
-                    if (docked)
-                    {
-                        mat.EnableKeyword(Admin.Utils.specmapKeyword);
-                    }
-                    else
-                    {
-                        mat.DisableKeyword(Admin.Utils.specmapKeyword);
-                    }
-                }
             }
         }
         internal void TogglePower()

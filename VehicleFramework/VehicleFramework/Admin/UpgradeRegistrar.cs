@@ -44,7 +44,7 @@ namespace VehicleFramework.Admin
         internal static List<Action<ArmActionParams>> OnArmUpActions = new List<Action<ArmActionParams>>();
         internal static List<Action<ArmActionParams>> OnArmAltActions = new List<Action<ArmActionParams>>();
         internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new List<Tuple<Vehicle, int, Coroutine>>();
-        public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default(UpgradeCompat), bool verbose = false)
+        public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default, bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
             bool result = ValidateModVehicleUpgrade(upgrade, compat);

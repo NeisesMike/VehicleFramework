@@ -112,7 +112,7 @@ namespace VehicleFramework.Admin
 
             var depthmodule3 = new DepthModules.DepthModule3();
             depthmodule3.ExtendRecipe(depth2);
-            UpgradeTechTypes depth3 = UpgradeRegistrar.RegisterUpgrade(depthmodule3, compat);
+            UpgradeTechTypes _ = UpgradeRegistrar.RegisterUpgrade(depthmodule3, compat);
         }
         public static void EvaluateDepthModules(AddActionParams param)
         {

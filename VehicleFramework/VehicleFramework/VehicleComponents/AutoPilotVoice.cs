@@ -16,13 +16,13 @@ namespace VehicleFramework
     {
         public ModVehicle mv;
         public EnergyInterface aiEI;
-        private List<AudioSource> speakers = new List<AudioSource>();
-        private PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
+        private readonly List<AudioSource> speakers = new List<AudioSource>();
+        private readonly PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
         private bool isReadyToSpeak = false; 
         public bool blockVoiceChange = false;
         public VehicleVoice voice = null;
         private float m_balance = 1f;
-        public float balance
+        public float balance // used by WraithJet
         {
             get
             {

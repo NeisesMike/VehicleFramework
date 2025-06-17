@@ -7,8 +7,8 @@ namespace VehicleFramework.Assets
     internal static class VFFabricator
     {
         private const string ClassID = "VFFabricatorClassID";
-        private static string DisplayName = Language.main.Get("VFFabricatorDisplayName");
-        private static string Description = Language.main.Get("VFFabricatorDesc");
+        private static readonly string DisplayName = Language.main.Get("VFFabricatorDisplayName");
+        private static readonly string Description = Language.main.Get("VFFabricatorDesc");
         internal static CraftTree.Type TreeType = default;
         internal static void CreateAndRegister()
         {
@@ -67,7 +67,7 @@ namespace VehicleFramework.Assets
             obj.AddComponent<ConstructableBounds>().bounds = new OrientedBounds(
                 fabRoot.GetComponent<BoxCollider>().center - new Vector3(0f, 0.30f, 0f),
                 Quaternion.identity,
-                fabRoot.GetComponent<BoxCollider>().extents - new Vector3(0.15f, 0f, 0f));
+                fabRoot.GetComponent<BoxCollider>().size / 2 - new Vector3(0.15f, 0f, 0f));
             //8059A0FF
         }
     }

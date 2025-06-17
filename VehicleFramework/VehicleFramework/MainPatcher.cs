@@ -41,14 +41,6 @@ namespace VehicleFramework
         {
             Admin.EnumHelper.Setup();
             Assets.StaticAssets.SetupDefaultAssets();
-            IEnumerator CollectPrefabsForBuilderReference()
-            {
-                CoroutineTask<GameObject> request = CraftData.GetPrefabForTechTypeAsync(TechType.BaseUpgradeConsole, true);
-                yield return request;
-                VehicleBuilder.upgradeconsole = request.GetResult();
-                yield break;
-            }
-            UWE.CoroutineHost.StartCoroutine(CollectPrefabsForBuilderReference());
             Assets.StaticAssets.GetSprites();
             Assets.VFFabricator.CreateAndRegister();
             Admin.CraftTreeHandler.AddFabricatorMenus();

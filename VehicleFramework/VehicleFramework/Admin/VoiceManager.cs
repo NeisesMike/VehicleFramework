@@ -193,9 +193,10 @@ namespace VehicleFramework
             {
                 defaultOption = defaultVoices[mv.TechType];
             }
-            catch (KeyNotFoundException _)
+            catch (KeyNotFoundException e)
             {
                 Logger.Warn($"Default voice option not found for vehicle: {mv.GetName()}.");
+                Logger.LogException($"KeyNotFound: ", e);
                 goto exit;
             }
             catch (ArgumentNullException e)
@@ -213,9 +214,10 @@ namespace VehicleFramework
             {
                 return vehicleVoices[defaultOption];
             }
-            catch (KeyNotFoundException _)
+            catch (KeyNotFoundException e)
             {
                 Logger.Warn($"Default voice not found for vehicle: {mv.GetName()}.");
+                Logger.LogException($"KeyNotFound: ", e);
             }
             catch (ArgumentNullException e)
             {

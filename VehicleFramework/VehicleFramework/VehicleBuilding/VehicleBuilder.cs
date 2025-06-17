@@ -30,7 +30,6 @@ namespace VehicleFramework
 
     public static class VehicleBuilder
     {
-        public static GameObject upgradeconsole { get; internal set; }
 
         private static int numVehicleTypes = 0;
         public static List<ModVehicle> prefabs = new List<ModVehicle>();
@@ -926,7 +925,7 @@ namespace VehicleFramework
             return copy as T;
         }
 
-        public static string GetPingTypeString(CachedEnumString<PingType> cache, PingType inputType)
+        public static string GetPingTypeString(CachedEnumString<PingType> _, PingType inputType)
         {
             foreach(VehicleEntry ve in VehicleManager.vehicleTypes)
             {
@@ -944,7 +943,7 @@ namespace VehicleFramework
             }
             return PingManager.sCachedPingTypeStrings.Get(inputType);
         }
-        public static Atlas.Sprite GetPingTypeSprite(SpriteManager.Group group, string name)
+        public static Atlas.Sprite GetPingTypeSprite(SpriteManager.Group _, string name)
         {
             foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
             {
