@@ -75,6 +75,10 @@ namespace VehicleFramework
         }
         public static IEnumerator RegisterVoice(string name, string conventionalPath = "")
         {
+            yield return RegisterVoice(name, false, conventionalPath);
+        }
+        public static IEnumerator RegisterVoice(string name, bool verbose, string conventionalPath = "")
+        {
             string modPath;
             if (conventionalPath == "")
             {
@@ -85,7 +89,7 @@ namespace VehicleFramework
                 modPath = conventionalPath;
             }
             string folderWithVoiceFiles = Path.Combine(modPath, DefaultVoicePath, name);
-            if(!CheckForVoiceClips(folderWithVoiceFiles))
+            if(!CheckForVoiceClips(folderWithVoiceFiles, verbose))
             {
                 Logger.Error(
                     "Voice Registration Error: " +
@@ -105,14 +109,18 @@ namespace VehicleFramework
         }
         public static void RegisterVoiceWithRelativePath(string name, string relativePathToFolderWithVoiceFiles)
         {
+            RegisterVoiceWithRelativePath(name, relativePathToFolderWithVoiceFiles, false);
+        }
+        public static void RegisterVoiceWithRelativePath(string name, string relativePathToFolderWithVoiceFiles, bool verbose)
+        {
             string folderWithVoiceFiles = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetCallingAssembly().Location),
                 relativePathToFolderWithVoiceFiles);
-            UWE.CoroutineHost.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles));
+            UWE.CoroutineHost.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles, verbose));
         }
-        private static IEnumerator RegisterVoiceAbsolute(string name, string absolutePath)
+        private static IEnumerator RegisterVoiceAbsolute(string name, string absolutePath, bool verbose)
         {
-            if (!CheckForVoiceClips(absolutePath))
+            if (!CheckForVoiceClips(absolutePath, verbose))
             {
                 Logger.Error(
                     "Voice Registration Error: " +
@@ -317,19 +325,22 @@ namespace VehicleFramework
             }
             onComplete?.Invoke(returnVoice);
         }
-        private static bool CheckForVoiceClips(string voicePath)
+        private static bool CheckForVoiceClips(string voicePath, bool verbose)
         {
+            bool hasAtLeastOneClip = false;
             foreach (string clipName in clipNames)
             {
-                //string path = "file://" + Path.Combine(voicePath, clipName) + ".ogg";
                 string path = Path.Combine(voicePath, clipName) + ".ogg";
-                if (!File.Exists(path))
+                if (File.Exists(path))
                 {
-                    Logger.Error("Voice Registration Error: clip not found: " + path);
-                    return false;  // Return false if any clip is missing
+                    hasAtLeastOneClip = true;
+                }
+                else
+                {
+                    VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Warn, verbose, "Voice Registration Error: clip not found: " + path);
                 }
             }
-            return true;
+            return hasAtLeastOneClip;
         }
         private static IEnumerator LoadAudioClip(string filePath, Action<AudioClip> onSuccess, Action onError)
         {
