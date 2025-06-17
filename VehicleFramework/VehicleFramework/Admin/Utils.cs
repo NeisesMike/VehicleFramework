@@ -190,5 +190,19 @@ namespace VehicleFramework.Admin
             }
             UWE.CoroutineHost.StartCoroutine(AddEncyclopediaEntryInternal());
         }
+        public static bool IsSN1
+        {
+            get
+            {
+                return BepInEx.Paths.ProcessName == "Subnautica";
+            }
+        }
+        public static bool HasLargeRoom
+        {
+            get
+            {
+                return Enum.TryParse<TechType>("BaseLargeRoom", out _);
+            }
+        }
     }
 }
