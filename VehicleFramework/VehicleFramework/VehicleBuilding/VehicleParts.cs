@@ -37,6 +37,7 @@ namespace VehicleFramework.VehicleParts
             SurfaceExitLocation = iSurfaceExit;
         }
     }
+
     public struct VehicleStorage
     {
         public GameObject Container;
@@ -49,6 +50,20 @@ namespace VehicleFramework.VehicleParts
             Width = iWidth;
         }
     }
+
+    public struct VehicleAnchor
+    {
+        public GameObject Anchor;
+        public float AnchorLength;
+        public int AnchorSpeed;
+        public VehicleAnchor(GameObject iAnchor, float iAnchorLength, int IAnchorSpeed)
+        {
+            Anchor = iAnchor;
+            AnchorLength = iAnchorLength;
+            AnchorSpeed = IAnchorSpeed;
+        }
+    }
+}
     public struct VehicleUpgrades
     {
         public GameObject Interface;
