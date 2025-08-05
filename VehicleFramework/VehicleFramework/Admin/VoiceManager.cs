@@ -331,11 +331,9 @@ namespace VehicleFramework
             foreach (string clipName in clipNames)
             {
                 string path = Path.Combine(voicePath, clipName) + ".ogg";
-                if (File.Exists(path))
-                {
-                    hasAtLeastOneClip = true;
-                }
-                else
+                bool thisClipExists = File.Exists(path);
+                hasAtLeastOneClip |= thisClipExists;
+                if (!thisClipExists)
                 {
                     VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Warn, verbose, "Voice Registration Error: clip not found: " + path);
                 }
