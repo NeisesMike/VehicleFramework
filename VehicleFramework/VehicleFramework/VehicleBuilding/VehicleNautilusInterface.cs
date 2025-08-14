@@ -25,7 +25,7 @@ namespace VehicleFramework
             if (vehicleRecipe.Ingredients.Count() == 0)
             {
                 // If the custom recipe file doesn't exist, go ahead and make it using the default recipe.
-                vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new CraftData.Ingredient(x.Key, x.Value)).ToList());
+                vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new Ingredient(x.Key, x.Value)).ToList());
                 Nautilus.Utility.JsonUtils.Save<Nautilus.Crafting.RecipeData>(vehicleRecipe, jsonRecipeFileName, new Nautilus.Json.Converters.CustomEnumConverter());
             }
             if (VehicleConfig.GetConfig(vehicle.mv).UseCustomRecipe.Value)
@@ -35,7 +35,7 @@ namespace VehicleFramework
             else
             {
                 vehicleRecipe = new Nautilus.Crafting.RecipeData();
-                vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new CraftData.Ingredient(x.Key, x.Value)).ToList());
+                vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new Ingredient(x.Key, x.Value)).ToList());
             }
 
             module_CustomPrefab.SetRecipe(vehicleRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });

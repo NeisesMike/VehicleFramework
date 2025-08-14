@@ -28,13 +28,15 @@ namespace VehicleFramework.Assets
         }
         internal static void SetupDefaultAssets()
         {
-            DefaultRecipe = new Dictionary<TechType, int>();
-            DefaultRecipe.Add(TechType.PlasteelIngot, 1);
-            DefaultRecipe.Add(TechType.Lubricant, 1);
-            DefaultRecipe.Add(TechType.ComputerChip, 1);
-            DefaultRecipe.Add(TechType.AdvancedWiringKit, 1);
-            DefaultRecipe.Add(TechType.Lead, 2);
-            DefaultRecipe.Add(TechType.EnameledGlass, 2);
+            DefaultRecipe = new Dictionary<TechType, int>
+            {
+                { TechType.PlasteelIngot, 1 },
+                { TechType.Lubricant, 1 },
+                { TechType.ComputerChip, 1 },
+                { TechType.AdvancedWiringKit, 1 },
+                { TechType.Lead, 2 },
+                { TechType.EnameledGlass, 2 }
+            };
 
             DefaultEngine = new Engines.AtramaEngine();
         }

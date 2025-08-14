@@ -27,7 +27,7 @@ namespace VehicleFramework
             Nautilus.Utility.PrefabUtils.AddConstructable(droneStation, Info.TechType, constructableFlags, droneStation.transform.Find("model").gameObject);
             prefab.SetGameObject(droneStation);
             prefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
-            prefab.SetRecipe(new Nautilus.Crafting.RecipeData(new CraftData.Ingredient(TechType.ComputerChip, 1), new CraftData.Ingredient(TechType.Glass, 1), new CraftData.Ingredient(TechType.Titanium, 1), new CraftData.Ingredient(TechType.Silver, 1)));
+            prefab.SetRecipe(new Nautilus.Crafting.RecipeData(new Ingredient(TechType.ComputerChip, 1), new Ingredient(TechType.Glass, 1), new Ingredient(TechType.Titanium, 1), new Ingredient(TechType.Silver, 1)));
             prefab.SetUnlock(TechType.Fragment)
                 .WithAnalysisTech(unlock, unlockMessage: Language.main.Get("VFDroneStationUnlockText"));
             prefab.Register();

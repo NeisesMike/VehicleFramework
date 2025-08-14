@@ -43,8 +43,8 @@ namespace VehicleFramework.UpgradeTypes
         public virtual string TabName { get; set; } = string.Empty;
         public virtual string TabDisplayName => string.Empty;
         public virtual List<CraftingNode> CraftingPath { get; set; } = null;
-        public virtual List<Assets.Ingredient> Recipe => new List<Assets.Ingredient> { new Assets.Ingredient(TechType.Titanium, 1) };
         public virtual Sprite TabIcon => StaticAssets.UpgradeIcon;
+        public virtual List<Ingredient> Recipe => new List<Ingredient> { new Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {
             Logger.DebugLog("Adding " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
@@ -58,36 +58,36 @@ namespace VehicleFramework.UpgradeTypes
             Logger.DebugLog("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
         }
         private readonly List<UpgradeTechTypes> RecipeExtensions = new List<UpgradeTechTypes>();
-        private readonly List<Assets.Ingredient> SimpleRecipeExtensions = new List<Assets.Ingredient>();
-        public List<CraftData.Ingredient> GetRecipe(VehicleType type)
+        private readonly List<Ingredient> SimpleRecipeExtensions = new List<Ingredient>();
+        public List<Ingredient> GetRecipe(VehicleType type)
         {
-            List<Assets.Ingredient> ret = new List<Assets.Ingredient>();
+            List<Ingredient> ret = new List<Ingredient>();
             ret.AddRange(Recipe);
             ret.AddRange(SimpleRecipeExtensions);
             switch (type)
             {
                 case VehicleType.ModVehicle:
-                    RecipeExtensions.ForEach(x => ret.Add(new Assets.Ingredient(x.forModVehicle, 1)));
+                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forModVehicle, 1)));
                     break;
                 case VehicleType.Seamoth:
-                    RecipeExtensions.ForEach(x => ret.Add(new Assets.Ingredient(x.forSeamoth, 1)));
+                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forSeamoth, 1)));
                     break;
                 case VehicleType.Prawn:
-                    RecipeExtensions.ForEach(x => ret.Add(new Assets.Ingredient(x.forExosuit, 1)));
+                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forExosuit, 1)));
                     break;
                 case VehicleType.Cyclops:
-                    RecipeExtensions.ForEach(x => ret.Add(new Assets.Ingredient(x.forCyclops, 1)));
+                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forCyclops, 1)));
                     break;
                 default:
                     break;
             }
-            return ret.Select(x => x.Get()).ToList();
+            return ret;
         }
         public void ExtendRecipe(UpgradeTechTypes techTypes)
         {
             RecipeExtensions.Add(techTypes);
         }
-        public void ExtendRecipeSimple(Assets.Ingredient ingredient)
+        public void ExtendRecipeSimple(Ingredient ingredient)
         {
             SimpleRecipeExtensions.Add(ingredient);
         }

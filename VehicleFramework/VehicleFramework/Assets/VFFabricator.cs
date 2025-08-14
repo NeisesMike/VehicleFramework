@@ -46,9 +46,9 @@ namespace VehicleFramework.Assets
                 craftAmount = 1,
                 Ingredients =
                 {
-                    new CraftData.Ingredient(TechType.Titanium, 1),
-                    new CraftData.Ingredient(TechType.ComputerChip, 1),
-                    new CraftData.Ingredient(TechType.Diamond, 1),
+                    new Ingredient(TechType.Titanium, 1),
+                    new Ingredient(TechType.ComputerChip, 1),
+                    new Ingredient(TechType.Diamond, 1),
                 }
             };
         }
