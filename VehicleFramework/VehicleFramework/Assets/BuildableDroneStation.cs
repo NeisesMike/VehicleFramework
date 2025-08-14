@@ -148,7 +148,7 @@ namespace VehicleFramework
         void IHandTarget.OnHandHover(GUIHand hand)
         {
             HandReticle.main.SetIcon(HandReticle.IconType.Interact, 1f);
-            Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject target, out float _);
+            Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject _, out float _);
             OnScreenHover();
         }
         public Drone SelectDrone(List<Drone> list, bool next)

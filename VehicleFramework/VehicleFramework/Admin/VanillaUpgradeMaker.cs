@@ -384,7 +384,7 @@ namespace VehicleFramework.Admin
         {
             Nautilus.Assets.CustomPrefab prefab = CreateModuleVanilla(upgrade, isPdaSetup, info)
                 .AddRecipe(upgrade, vType);
-            EquipmentGadget gadget = prefab.SetEquipment(EquipmentType.ExosuitArm)
+            prefab.SetEquipment(EquipmentType.ExosuitArm)
                 .WithQuickSlotType(QuickSlotType.Selectable);
             prefab.Register();
             upgrade.UnlockTechType = info.TechType;
