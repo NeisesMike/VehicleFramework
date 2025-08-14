@@ -156,7 +156,7 @@ namespace VehicleFramework.VehicleTypes
         {
             camControl.MovePlayerCameraToTransform(CameraLocation);
             Logger.PDANote($"{Language.main.Get("VFDroneHint9")} {LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit)}");
-            Logger.PDANote($"{Language.main.Get("VFDroneHint10")} {uGUI.FormatButton(AutoHomeButton, false, " / ", false)}");
+            Logger.PDANote($"{LanguageCache.GetButtonFormat("VFDroneHint10", AutoHomeButton)}");
             Player.main.SetHeadVisible(true);
         }
         public void SwapToPlayerCamera()

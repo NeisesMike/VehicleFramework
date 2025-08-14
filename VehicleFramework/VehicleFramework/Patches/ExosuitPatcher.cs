@@ -88,7 +88,11 @@ namespace VehicleFramework.Patches
                 return;
             }
             int slotIDToTest = isJank ? slotID - 2 : slotID;
-            if (!Player.main.GetQuickSlotKeyDown(slotIDToTest) && !Player.main.GetLeftHandDown())
+            bool GetQuickSlotKeyDown(int inputSlotID)
+            {
+                return inputSlotID >= 0 && inputSlotID < uGUI_QuickSlots.quickSlotButtons.Length && GameInput.GetButtonDown(uGUI_QuickSlots.quickSlotButtons[slotID]);
+            }
+            if (!GetQuickSlotKeyDown(slotIDToTest) && !GameInput.GetButtonDown(GameInput.Button.LeftHand))
             {
                 // we didn't actually hit the slot button!
                 // (or hit the left mouse button!)
