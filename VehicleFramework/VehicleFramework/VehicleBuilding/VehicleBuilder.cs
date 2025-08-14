@@ -940,7 +940,7 @@ namespace VehicleFramework
             }
             return PingManager.sCachedPingTypeStrings.Get(inputType);
         }
-        public static Atlas.Sprite GetPingTypeSprite(SpriteManager.Group _, string name)
+        public static Sprite GetPingTypeSprite(SpriteManager.Group _, string name, Sprite defaultSprite = null)
         {
             foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
             {

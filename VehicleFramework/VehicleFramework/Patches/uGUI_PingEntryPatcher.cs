@@ -32,8 +32,9 @@ namespace VehicleFramework
                     if (codes[i].operand.ToString() == "System.String Get(PingType)")
                     {
                         newCodes[i] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeString));
-                        newCodes[i + 1] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeSprite));
-                        i++;
+                        newCodes[i + 1] = codes[i + 1];
+                        newCodes[i + 2] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeSprite));
+                        i+=2;
                         continue;
                     }
                 }

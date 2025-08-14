@@ -25,8 +25,9 @@ namespace VehicleFramework
                 .Repeat(x =>
                     x.RemoveInstruction()
                     .InsertAndAdvance(Transpilers.EmitDelegate<Func<CachedEnumString<PingType>, PingType, string>>(VehicleBuilder.GetPingTypeString))
+                    .Advance(1)
                     .RemoveInstruction()
-                    .Insert(Transpilers.EmitDelegate<Func<SpriteManager.Group, string, Atlas.Sprite>>(VehicleBuilder.GetPingTypeSprite))
+                    .Insert(Transpilers.EmitDelegate<Func<SpriteManager.Group, string, UnityEngine.Sprite, UnityEngine.Sprite>>(VehicleBuilder.GetPingTypeSprite))
                 );
             return newInstructions.InstructionEnumeration();
         }
