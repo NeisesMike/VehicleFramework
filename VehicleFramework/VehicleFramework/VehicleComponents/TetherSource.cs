@@ -157,7 +157,7 @@ namespace VehicleFramework
                     {
                         mv.PlayerEntry();
                     }
-                    else if (Vector3.Distance(Player.main.transform.position, mv.PilotSeats.First().Seat.transform.position) < 1f)
+                    else if (Vector3.Distance(Player.main.transform.position, mv.PilotSeat.Seat.transform.position) < 1f)
                     {
                         mv.PlayerEntry();
                     }

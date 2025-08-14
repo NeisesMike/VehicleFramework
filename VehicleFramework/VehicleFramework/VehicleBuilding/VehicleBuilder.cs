@@ -206,13 +206,10 @@ namespace VehicleFramework
         {
             try
             {
-                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
-                {
-                    mv.playerPosition = ps.SitLocation;
-                    PilotingTrigger pt = ps.Seat.EnsureComponent<PilotingTrigger>();
-                    pt.mv = mv;
-                    pt.exit = ps.ExitLocation;
-                }
+                mv.playerPosition = mv.PilotSeat.SitLocation;
+                PilotingTrigger pt = mv.PilotSeat.Seat.EnsureComponent<PilotingTrigger>();
+                pt.mv = mv;
+                pt.exit = mv.PilotSeat.ExitLocation;
             }
             catch (Exception e)
             {

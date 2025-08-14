@@ -339,11 +339,6 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.PilotSeats == null || mv.PilotSeats.Count == 0)
-                {
-                    Logger.Error(thisName + " No ModVehicle.PilotSeats were provided. These specify what the player will click on to begin piloting the vehicle.");
-                    return false;
-                }
                 if (mv.Hatches is null || mv.Hatches.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
@@ -398,30 +393,27 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
                 }
-                foreach (VehicleParts.VehiclePilotSeat ps in mv.PilotSeats)
+                if (mv.PilotSeat.Seat == null)
                 {
-                    if (ps.Seat == null)
-                    {
-                        Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
-                        return false;
-                    }
-                    if (ps.SitLocation == null)
-                    {
-                        Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
-                        return false;
-                    }
-                    if (ps.LeftHandLocation == null)
-                    {
-                        VerboseLog(LogType.Log, verbose, thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
-                    }
-                    if (ps.RightHandLocation == null)
-                    {
-                        VerboseLog(LogType.Log, verbose, thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
-                    }
-                    if (ps.ExitLocation == null)
-                    {
-                        VerboseLog(LogType.Warn, verbose, thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
-                    }
+                    Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
+                    return false;
+                }
+                if (mv.PilotSeat.SitLocation == null)
+                {
+                    Logger.Error(thisName + " A null PilotSeat.SitLocation was provided. There would be no way to pilot this vehicle.");
+                    return false;
+                }
+                if (mv.PilotSeat.LeftHandLocation == null)
+                {
+                    VerboseLog(LogType.Log, verbose, thisName + " A null PilotSeat.LeftHandLocation was provided. (It's unused anyway)");
+                }
+                if (mv.PilotSeat.RightHandLocation == null)
+                {
+                    VerboseLog(LogType.Log, verbose, thisName + " A null PilotSeat.RightHandLocation was provided. (It's unused anyway)");
+                }
+                if (mv.PilotSeat.ExitLocation == null)
+                {
+                    VerboseLog(LogType.Warn, verbose, thisName + " A null PilotSeat.ExitLocation was provided. You might need this if you exit from piloting into a weird place.");
                 }
                 foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
                 {

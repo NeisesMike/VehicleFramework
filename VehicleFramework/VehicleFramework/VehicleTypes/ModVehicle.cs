@@ -1001,9 +1001,15 @@ namespace VehicleFramework
                 }
 
                 mvSubmarine.VFEngine.KillMomentum();
-                // teleport the player to a walking position, just behind the chair
-                Player.main.transform.position = mvSubmarine.PilotSeats[0].Seat.transform.position - mvSubmarine.PilotSeats[0].Seat.transform.forward * 1 + mvSubmarine.PilotSeats[0].Seat.transform.up * 1f;
 
+                if(mvSubmarine.PilotSeat.ExitLocation == null)
+                {
+                    Player.main.transform.position = mvSubmarine.PilotSeat.Seat.transform.position - mvSubmarine.PilotSeat.Seat.transform.forward * 1 + mvSubmarine.PilotSeat.Seat.transform.up * 1f;
+                }
+                else
+                {
+                    Player.main.transform.position = mvSubmarine.PilotSeat.ExitLocation.position;
+                }
                 DoExitActions(ref myMode);
                 myPlayer.mode = myMode;
                 mvSubmarine.StopPiloting();

@@ -17,7 +17,7 @@ namespace VehicleFramework.VehicleTypes
      */
     public abstract class Submarine : ModVehicle
     {
-        public abstract List<VehicleParts.VehiclePilotSeat> PilotSeats { get; } // Need a way to start and stop piloting
+        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
         public virtual List<VehicleParts.VehicleFloodLight> FloodLights => null;
         public virtual List<GameObject> TetherSources => null;

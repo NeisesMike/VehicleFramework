@@ -91,10 +91,7 @@ namespace VehicleFramework
             //speakers.Add(mv.VehicleModel.EnsureComponent<AudioSource>());
             if (mv as Submarine != null)
             {
-                foreach (var ps in (mv as Submarine).PilotSeats)
-                {
-                    speakers.Add(ps.Seat.EnsureComponent<AudioSource>().Register());
-                }
+                speakers.Add((mv as Submarine).PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
                 foreach (var ps in (mv as Submarine).Hatches)
                 {
                     speakers.Add(ps.Hatch.EnsureComponent<AudioSource>().Register());
