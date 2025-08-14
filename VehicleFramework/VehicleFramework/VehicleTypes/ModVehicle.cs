@@ -35,7 +35,7 @@ namespace VehicleFramework
 
         #region abstract_members
         public abstract GameObject VehicleModel { get; } 
-        public abstract GameObject CollisionModel { get; }
+        public abstract GameObject[] CollisionModel { get; }
         #endregion
 
         #region virtual_properties_static

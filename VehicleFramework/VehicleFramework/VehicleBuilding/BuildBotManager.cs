@@ -17,7 +17,7 @@ namespace VehicleFramework
             ModVehicle modVehicle = mv.GetComponent<ModVehicle>();
             if (modVehicle != null)
             {
-                foreach (Transform child in modVehicle.collisionModel.transform.GetComponentsInChildren<Transform>())
+                foreach (Transform child in modVehicle.transform.GetComponentsInChildren<Transform>())
                 {
                     bbbpList.Add(child);
                 }
