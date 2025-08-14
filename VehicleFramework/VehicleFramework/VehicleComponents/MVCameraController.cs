@@ -96,15 +96,15 @@ namespace VehicleFramework.VehicleComponents
                 return;
             }
             int currentIndex = cameras.Keys.ToList().IndexOf(state);
-            if (GameInput.GetKeyDown(MainPatcher.NautilusConfig.NextCamera))
+            if (Input.GetKeyDown(MainPatcher.NautilusConfig.NextCamera))
             {
                 currentIndex++;
             }
-            else if (GameInput.GetKeyDown(MainPatcher.NautilusConfig.PreviousCamera))
+            else if (Input.GetKeyDown(MainPatcher.NautilusConfig.PreviousCamera))
             {
                 currentIndex--;
             }
-            else if (GameInput.GetKeyDown(MainPatcher.NautilusConfig.ExitCamera))
+            else if (Input.GetKeyDown(MainPatcher.NautilusConfig.ExitCamera))
             {
                 SetState(playerCameraState);
                 return;

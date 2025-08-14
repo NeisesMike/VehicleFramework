@@ -58,7 +58,7 @@ namespace VehicleFramework
 
         protected virtual void Update()
         {
-            bool isHeadlightsButtonPressed = GameInput.GetKeyDown(MainPatcher.NautilusConfig.HeadlightsButton);
+            bool isHeadlightsButtonPressed = Input.GetKeyDown(MainPatcher.NautilusConfig.HeadlightsButton);
             isHeadlightsButtonPressed |= GameInput.GetButtonDown(GameInput.Button.LeftHand) && MainPatcher.NautilusConfig.LeftClickHeadlights;
             isHeadlightsButtonPressed |= GameInput.GetButtonDown(GameInput.Button.RightHand) && MainPatcher.NautilusConfig.RightClickHeadlights;
             if (MV.IsPlayerControlling() && isHeadlightsButtonPressed && !Player.main.GetPDA().isInUse)

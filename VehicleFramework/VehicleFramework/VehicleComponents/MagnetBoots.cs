@@ -188,7 +188,7 @@ namespace VehicleFramework.VehicleComponents
         public bool CheckControls()
         {
             return IsPlayerControlling()
-                && GameInput.GetKeyDown(MainPatcher.NautilusConfig.MagnetBootsButton);
+                && Input.GetKeyDown(MainPatcher.NautilusConfig.MagnetBootsButton);
         }
         public MagnetStruct CheckPlacement()
         {
