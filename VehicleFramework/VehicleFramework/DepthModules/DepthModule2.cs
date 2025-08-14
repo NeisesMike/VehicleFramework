@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using VehicleFramework.UpgradeTypes;
 //using VehicleFramework.Localization;
+using UnityEngine;
 
 namespace VehicleFramework.DepthModules
 {
@@ -16,8 +17,8 @@ namespace VehicleFramework.DepthModules
                     new Assets.Ingredient(TechType.EnameledGlass, 3),
                     new Assets.Ingredient(TechType.AluminumOxide, 5)
                 };
-        public override Atlas.Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
-        public override Atlas.Sprite TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
+        public override Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
+        public override Sprite TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override string TabName => "MVDM";
         public override string TabDisplayName => Language.main.Get("VFMVDepthModules");
         public override void OnAdded(AddActionParams param)

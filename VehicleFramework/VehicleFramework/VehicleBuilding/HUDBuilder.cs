@@ -125,7 +125,7 @@ namespace VehicleFramework
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
 
             var modVehicleBackground = mvHUDElementsRoot.transform.Find("Background").GetComponent<UnityEngine.UI.Image>();
-            modVehicleBackground.sprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/StorageHUDBackground.png");
+            modVehicleBackground.sprite = Assets.SpriteHelper.GetSprite("Sprites/StorageHUDBackground.png");
             modVehicleBackground.transform.localScale = new Vector3(1, 1.238f, 1);
             modVehicleBackground.transform.localPosition = offset;
 

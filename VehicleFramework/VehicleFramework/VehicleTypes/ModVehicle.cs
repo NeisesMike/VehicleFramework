@@ -72,7 +72,7 @@ namespace VehicleFramework
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
         public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
         public virtual BoxCollider BoundingBoxCollider { get; set; }
-        public virtual Atlas.Sprite PingSprite => Assets.StaticAssets.DefaultPingSprite;
+        public virtual Sprite PingSprite => Assets.StaticAssets.DefaultPingSprite;
         public virtual Sprite SaveFileSprite => Assets.StaticAssets.DefaultSaveFileSprite; // I think I can use SpriteHelper.CreateSpriteFromAtlasSprite for this now. But do I want to?
         public virtual List<GameObject> WaterClipProxies => new List<GameObject>();
         public virtual List<VehicleParts.VehicleStorage> InnateStorages => new List<VehicleParts.VehicleStorage>();
@@ -83,13 +83,13 @@ namespace VehicleFramework
         public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new List<VehicleParts.VehicleBattery>();
         public virtual Sprite UnlockedSprite => null;
         public virtual GameObject LeviathanGrabPoint => gameObject;
-        public virtual Atlas.Sprite CraftingSprite => StaticAssets.ModVehicleIcon;
+        public virtual Sprite CraftingSprite => StaticAssets.ModVehicleIcon;
         public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
         public virtual List<VehicleParts.VehicleCamera> Cameras => new List<VehicleParts.VehicleCamera>();
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => string.Empty;
         public virtual Sprite EncyclopediaImage => null;
-        public virtual Sprite ModuleBackgroundImage => SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
+        public virtual Sprite ModuleBackgroundImage => SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
         public virtual int BaseCrushDepth => 250;
         public virtual int MaxHealth => 100;
         public virtual int Mass => 1000;

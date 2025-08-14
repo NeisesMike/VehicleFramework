@@ -7,34 +7,19 @@ namespace VehicleFramework.Assets
 {
     public static class SpriteHelper
     {
-        internal static Atlas.Sprite GetSpriteInternal(string name)
+        internal static Sprite GetSpriteInternal(string name)
         {
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string fullPath = Path.Combine(modPath, "Sprites", name);
             return GetSpriteGeneric(fullPath);
         }
-        public static Atlas.Sprite GetSprite(string relativePath)
+        public static Sprite GetSprite(string relativePath)
         {
             string modPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             string fullPath = Path.Combine(modPath, relativePath);
             return GetSpriteGeneric(fullPath);
         }
-        public static Sprite GetSpriteRaw(string relativePath)
-        {
-            string modPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-            string fullPath = Path.Combine(modPath, relativePath);
-            return GetSpriteGenericRaw(fullPath);
-        }
-        private static Atlas.Sprite GetSpriteGeneric(string fullPath)
-        {
-            Sprite innerSprite = GetSpriteGenericRaw(fullPath);
-            if (innerSprite != null)
-            {
-                return new Atlas.Sprite(innerSprite);
-            }
-            else return null;
-        }
-        private static Sprite GetSpriteGenericRaw(string fullPath)
+        private static Sprite GetSpriteGeneric(string fullPath)
         {
             try
             {
@@ -49,15 +34,8 @@ namespace VehicleFramework.Assets
                 return null;
             }
         }
-        public static Sprite CreateSpriteFromAtlasSprite(Atlas.Sprite sprite)
-        {
-            if (sprite == null) return null;
-            Texture2D texture = sprite.texture;
-            return Sprite.Create(texture, new Rect(0f, 0f, (float)texture.width, (float)texture.height), Vector2.one * 0.5f);
-        }
-
-        internal static readonly List<(string, PingType, Atlas.Sprite)> PingSprites = new List<(string, PingType, Atlas.Sprite)>();
-        public static void RegisterPingSprite(string name, PingType pt, Atlas.Sprite pingSprite)
+        internal static readonly List<(string, PingType, Sprite)> PingSprites = new List<(string, PingType, Sprite)>();
+        public static void RegisterPingSprite(string name, PingType pt, Sprite pingSprite)
         {
             PingSprites.Add((name, pt, pingSprite));
         }

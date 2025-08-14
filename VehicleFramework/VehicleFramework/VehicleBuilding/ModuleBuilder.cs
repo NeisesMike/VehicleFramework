@@ -39,7 +39,7 @@ namespace VehicleFramework
                 Sprite setSprite;
                 if(value == null)
                 {
-                    setSprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
+                    setSprite = Assets.SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
                 }
                 else
                 {
@@ -304,7 +304,7 @@ namespace VehicleFramework
             thisBackground.transform.localRotation = Quaternion.identity;
             thisBackground.transform.localPosition = new Vector3(250,250,0);
             thisBackground.transform.localScale = 5 * Vector3.one;
-            thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = Assets.SpriteHelper.GetSpriteRaw("Sprites/VFModuleBackground.png");
+            thisBackground.EnsureComponent<UnityEngine.UI.Image>().sprite = Assets.SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
         }
         public void LinkArm(ref GameObject thisModule)
         {

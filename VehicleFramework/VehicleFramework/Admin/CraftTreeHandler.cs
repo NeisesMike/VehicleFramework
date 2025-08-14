@@ -4,6 +4,7 @@ using System.Linq;
 using VehicleFramework.Assets;
 using VehicleFramework.UpgradeTypes;
 //using VehicleFramework.Localization;
+using UnityEngine;
 
 namespace VehicleFramework.Admin
 {
@@ -108,11 +109,11 @@ namespace VehicleFramework.Admin
             }
             return pathCurrently;
         }
-        private static string[] AddCraftingTab(VehicleType vType, string tabName, string displayName, Atlas.Sprite icon)
+        private static string[] AddCraftingTab(VehicleType vType, string tabName, string displayName, Sprite icon)
         {
             return AddCraftingTab(UpgradeTypeToPath(vType), tabName, displayName, icon);
         }
-        private static string[] AddCraftingTab(string[] thisPath, string tabName, string displayName, Atlas.Sprite icon)
+        private static string[] AddCraftingTab(string[] thisPath, string tabName, string displayName, Sprite icon)
         {
             string[] resultPath = thisPath.Append(tabName).ToArray();
             if (!IsKnownPath(resultPath))

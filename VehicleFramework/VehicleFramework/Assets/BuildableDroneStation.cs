@@ -15,7 +15,7 @@ namespace VehicleFramework
         public static string description = Language.main.Get("VFDroneStationDesc");
         public static string encyclopediaDesc = Language.main.Get("VFDroneStationEncy");
 
-        public static TechType RegisterConsole(GameObject droneStation, Atlas.Sprite crafter, Sprite unlock)
+        public static TechType RegisterConsole(GameObject droneStation, Sprite crafter, Sprite unlock)
         {
             Nautilus.Assets.PrefabInfo Info = Nautilus.Assets.PrefabInfo.WithTechType(classID, displayName, description)
                 .WithIcon(crafter);

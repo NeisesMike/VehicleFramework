@@ -11,7 +11,7 @@ namespace VehicleFramework
 {
     public struct VehicleEntry
     {
-        public VehicleEntry(ModVehicle inputMv, int id, PingType pt_in, Atlas.Sprite sprite, TechType tt=(TechType)0)
+        public VehicleEntry(ModVehicle inputMv, int id, PingType pt_in, Sprite sprite, TechType tt=(TechType)0)
         {
             mv = inputMv ?? throw new ArgumentException("Vehicle Entry cannot take a null mod vehicle");
             unique_id = id;
@@ -24,7 +24,7 @@ namespace VehicleFramework
         public string name;
         public int unique_id;
         public PingType pt;
-        public Atlas.Sprite ping_sprite;
+        public Sprite ping_sprite;
         public TechType techType;
     }
 

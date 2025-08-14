@@ -51,7 +51,7 @@ namespace VehicleFramework.Admin
             if(result)
             {
                 CraftTreeHandler.EnsureCraftingTabsAvailable(upgrade, compat);
-                UpgradeIcons.Add(upgrade.ClassId, SpriteHelper.CreateSpriteFromAtlasSprite(upgrade.Icon));
+                UpgradeIcons.Add(upgrade.ClassId, upgrade.Icon);
                 UpgradeTechTypes utt = new UpgradeTechTypes();
                 bool isPdaRegistered = false;
                 if (!compat.skipModVehicle || upgrade.IsVehicleSpecific)

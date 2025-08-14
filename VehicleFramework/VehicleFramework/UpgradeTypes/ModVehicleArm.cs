@@ -34,7 +34,7 @@ namespace VehicleFramework.UpgradeTypes
         public override QuickSlotType QuickSlotType => QuickSlotType.Selectable; // must be either selectable or selectablechargeable (only matters for exosuit?)
         public virtual ArmEnergyCosts EnergyCosts => default;
         public virtual ArmCooldowns ArmCooldowns => default;
-        public override Atlas.Sprite Icon => StaticAssets.ArmIcon;
+        public override Sprite Icon => StaticAssets.ArmIcon;
         public abstract IEnumerator GetArmPrefab(IOut<GameObject> arm);
         public virtual bool OnArmDown(ArmActionParams param, out float cooldown) // return true OnUseSuccess (false if you refuse to do the action)
         {
