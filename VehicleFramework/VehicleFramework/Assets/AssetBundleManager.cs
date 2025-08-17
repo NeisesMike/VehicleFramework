@@ -14,7 +14,7 @@ namespace VehicleFramework.Assets
         public Sprite crafter;
         public GameObject fragment;
         public Sprite unlock;
-        public AssetBundleInterface abi;
+        public AssetBundleInterface? abi;
         public VehicleAssets(GameObject imodel, Sprite iping, Sprite icrafter, GameObject ifragment, Sprite iunlock)
         {
             model = imodel;
@@ -26,7 +26,7 @@ namespace VehicleFramework.Assets
         }
         public readonly void Close()
         {
-            abi.CloseBundle();
+            abi?.CloseBundle();
         }
     }
     public class AssetBundleInterface

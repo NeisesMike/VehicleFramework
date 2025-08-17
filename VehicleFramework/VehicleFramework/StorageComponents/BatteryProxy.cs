@@ -9,8 +9,8 @@ namespace VehicleFramework.StorageComponents
 {
     public class BatteryProxy : MonoBehaviour
     {
-        public Transform proxy = null;
-        public EnergyMixin mixin = null;
+        public Transform proxy = null!;
+        public EnergyMixin mixin = null!;
 
         public void Awake()
         {

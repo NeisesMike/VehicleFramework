@@ -9,7 +9,7 @@ namespace VehicleFramework.VehicleComponents
     public class MagnetBoots : MonoBehaviour, IProtoTreeEventListener
     {
         private static readonly List<MagnetBoots> KnownMagnetBoots = new();
-        private Transform serializerObject;
+        private Transform? serializerObject;
         private bool saveLoadWasAttached = false;
         public struct MagnetStruct
         {

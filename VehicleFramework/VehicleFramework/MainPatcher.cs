@@ -13,21 +13,29 @@ namespace VehicleFramework
     [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, "1.0.0.32")]
     public class MainPatcher : BaseUnityPlugin
     {
-        public static MainPatcher Instance { get; private set; }
-        internal static SaveLoad.SaveData SaveFileData { get; private set; }
+        public static MainPatcher? Instance { get; private set; }
+        internal static SaveLoad.SaveData? SaveFileData { get; private set; }
 
-        internal static VFConfig VFConfig { get; private set; }
-        internal static VehicleFrameworkNautilusConfig NautilusConfig { get; private set; }
+        internal static VFConfig VFConfig { get; private set; } = null!;
+        internal static VehicleFrameworkNautilusConfig NautilusConfig { get; private set; } = null!;
 
-        internal Coroutine GetVoices = null;
-        internal Coroutine GetEngineSounds = null;
+        internal Coroutine? GetVoices = null;
+        internal Coroutine? GetEngineSounds = null;
 
         public void Awake()
         {
             Nautilus.Handlers.LanguageHandler.RegisterLocalizationFolder();
             SetupInstance();
             VFConfig = new();
+            if (VFConfig is null)
+            {
+                throw new Exception("VFConfig is null in Awake!");
+            }
             NautilusConfig = Nautilus.Handlers.OptionsPanelHandler.RegisterModOptions<VehicleFrameworkNautilusConfig>();
+            if(NautilusConfig is null)
+            {
+                throw new Exception("NautilusConfig is null in Awake!");
+            }
             VehicleFramework.Logger.MyLog = base.Logger;
             PrePatch();
         }

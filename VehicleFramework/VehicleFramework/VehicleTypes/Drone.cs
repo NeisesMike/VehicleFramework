@@ -12,12 +12,12 @@ namespace VehicleFramework.VehicleTypes
     public abstract class Drone : ModVehicle
     {
         public bool isAsleep = false;
-        public static Drone mountedDrone = null;
-        public DroneStation pairedStation = null;
+        public static Drone? mountedDrone = null;
+        public DroneStation? pairedStation = null;
         public const float baseConnectionDistance = 350;
         public float addedConnectionDistance = 0;
         public abstract Transform CameraLocation { get; }
-        private VehicleComponents.MVCameraController camControl;
+        private VehicleComponents.MVCameraController camControl = null!;
         private const GameInput.Button AutoHomeButton = GameInput.Button.PDA;
         private bool _IsConnecting = false;
         public bool IsConnecting
@@ -65,7 +65,7 @@ namespace VehicleFramework.VehicleTypes
         {
             //base.EnterVehicle(player, teleport, playEnterAnimation);
         }
-        private GUIHand _guihand = null;
+        private GUIHand _guihand = null!;
         private bool guihand
         {
             set
@@ -79,9 +79,9 @@ namespace VehicleFramework.VehicleTypes
                 _guihand.enabled = value;
             }
         }
-        public SubRoot lastSubRoot = null;
-        public Vehicle lastVehicle = null;
-        private Coroutine CheckingPower = null;
+        public SubRoot? lastSubRoot = null;
+        public Vehicle? lastVehicle = null;
+        private Coroutine? CheckingPower = null;
         private IEnumerator CheckPower()
         {
             while (energyInterface.hasCharge)
@@ -92,10 +92,14 @@ namespace VehicleFramework.VehicleTypes
             Logger.PDANote(Language.main.Get("VFDroneHint8"), 3f);
             yield break;
         }
-        private GameObject temporaryParent = null;
-        private Transform previousParent = null;
+        private GameObject temporaryParent = null!;
+        private Transform? previousParent = null;
         private void SetupTemporaryParent()
         {
+            if(pairedStation is null)
+            {
+                throw new Exception($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
+            }
             previousParent = Player.main.transform.parent;
             temporaryParent = new("DroneStationTempParent");
             temporaryParent.transform.SetParent(pairedStation.transform);
@@ -105,6 +109,10 @@ namespace VehicleFramework.VehicleTypes
         }
         private void DestroyTemporaryParent()
         {
+            if (pairedStation is null)
+            {
+                throw new Exception($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
+            }
             Vector3 worldPosition = Player.main.transform.position;
             Player.main.transform.SetParent(previousParent);
             Player.main.transform.position = worldPosition;

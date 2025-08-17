@@ -11,7 +11,7 @@ namespace VehicleFramework.MiscComponents
     public class UpgradeProxy : MonoBehaviour
     {
         public List<Transform> proxies = new();
-        public List<VehicleUpgradeConsoleInput.Slot> slots = null;
+        public List<VehicleUpgradeConsoleInput.Slot> slots = new();
 
         public void Awake()
         {

@@ -57,6 +57,10 @@ namespace VehicleFramework
         protected void Start()
         {
             rb = GetComponent<Rigidbody>();
+            if(rb is null)
+            {
+                throw new Exception(MV.GetName() + " has no Rigidbody! Please add a Rigidbody to the GameObject before starting the NavigationLightsController.");
+            }
             if (MV.NavigationPositionLights != null)
             {
                 foreach (GameObject lightObj in MV.NavigationPositionLights)
@@ -112,12 +116,12 @@ namespace VehicleFramework
             Admin.Utils.StartCoroutine(ControlLights());
         }
 
-        Rigidbody rb = null;
+        Rigidbody rb = null!;
         bool position = false;
-        Coroutine white = null;
-        Coroutine red = null;
-        Coroutine port = null;
-        Coroutine starboard = null;
+        Coroutine? white = null;
+        Coroutine? red = null;
+        Coroutine? port = null;
+        Coroutine? starboard = null;
         public const float lightBrightness = 1f;
         public const float strobeBrightness = 30f;
         private readonly List<Material> positionMats = new();

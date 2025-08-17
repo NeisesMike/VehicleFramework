@@ -11,9 +11,9 @@ namespace VehicleFramework
     {
         private Vector3 scuttlePosition = Vector3.zero;
         private Vector3 initialLandRayCast = Vector3.zero;
-        private Coroutine ScuttleCor;
-        private Coroutine Establish;
-        private Coroutine Check;
+        private Coroutine? ScuttleCor;
+        private Coroutine? Establish;
+        private Coroutine? Check;
         public void Scuttle()
         {
             ScuttleCor = Admin.Utils.StartCoroutine(DoScuttle());

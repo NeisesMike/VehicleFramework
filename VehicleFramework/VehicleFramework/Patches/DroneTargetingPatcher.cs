@@ -22,20 +22,19 @@ namespace VehicleFramework.Patches
         {
             if (ignoreObj != Player.main.gameObject)
             {
-                goto exit;
+                result = null;
+                distance = 0;
+                return true;
             }
-            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
-            if (drone == null)
+            if (VehicleTypes.Drone.mountedDrone is null)
             {
-                goto exit;
+                result = null;
+                distance = 0;
+                return true;
             }
-            Targeting.AddToIgnoreList(drone.transform);
+            Targeting.AddToIgnoreList(VehicleTypes.Drone.mountedDrone.transform);
             __result = Targeting.GetTarget(maxDistance, out result, out distance);
             return false;
-        exit:
-            result = null;
-            distance = 0;
-            return true;
         }
     }
 

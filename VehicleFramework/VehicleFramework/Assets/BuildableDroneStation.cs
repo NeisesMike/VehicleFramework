@@ -96,9 +96,8 @@ namespace VehicleFramework
 
     public class DroneStation : HandTarget, IHandTarget
     {
-        public static DroneStation BroadcastingStation = null;
-        private Drone _pairedDrone = null;
-        public Drone PairedDrone
+        private Drone? _pairedDrone = null;
+        public Drone? PairedDrone
         {
             get
             {
@@ -151,10 +150,10 @@ namespace VehicleFramework
             Targeting.GetTarget(Player.main.gameObject, 6f, out GameObject _, out float _);
             OnScreenHover();
         }
-        public Drone SelectDrone(List<Drone> list, bool next)
+        public Drone? SelectDrone(List<Drone> list, bool next)
         {
             int index = list.FindIndex(x => x == PairedDrone);
-            if (list.Count() == 0)
+            if (list.Count == 0)
             {
                 return null;
             }

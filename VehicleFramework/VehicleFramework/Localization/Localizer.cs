@@ -46,7 +46,7 @@ namespace VehicleFramework.Localization
     }
     public static class Localizer<TEnum> where TEnum: struct, Enum
     {
-        private static LocalDict<TEnum> main = null;
+        private static LocalDict<TEnum>? main = null;
         public static string GetString(TEnum value)
         {
             if(main == null)

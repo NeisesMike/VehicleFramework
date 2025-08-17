@@ -18,7 +18,7 @@ namespace VehicleFramework.Assets
         public string displayName;
         public string description;
         public List<Vector3> spawnLocations;
-        public List<Vector3> spawnRotations;
+        public List<Vector3>? spawnRotations;
         public string encyKey;
     }
     public class FragmentManager : MonoBehaviour
