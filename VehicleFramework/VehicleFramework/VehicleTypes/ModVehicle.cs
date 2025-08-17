@@ -18,12 +18,6 @@ namespace VehicleFramework
     public abstract class ModVehicle : Vehicle, ICraftTarget, IProtoTreeEventListener
     {
         #region enumerations
-        public enum DeathStyle
-        {
-            Explode = 0,
-            Sink = 1,
-            Float = 2
-        }
         public enum PilotingStyleEnum
         {
             Cyclops,
