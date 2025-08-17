@@ -127,7 +127,7 @@ namespace VehicleFramework
                     Component.Destroy(GetComponent<Rigidbody>());
                 }
             }
-            MainPatcher.Instance.StartCoroutine(WaitThenAct());
+            Admin.Utils.StartCoroutine(WaitThenAct());
         }
         public void Update()
         {
@@ -304,7 +304,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(60);
                 drone.pingInstance.enabled = false;
             }
-            MainPatcher.Instance.StartCoroutine(PingPingForAWhile());
+            Admin.Utils.StartCoroutine(PingPingForAWhile());
             string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.subName.hullName.text}\n";
             ret += $"{Language.main.Get("VFDroneHint2")}: {Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position))}\n";
             if(drone.isScuttled)

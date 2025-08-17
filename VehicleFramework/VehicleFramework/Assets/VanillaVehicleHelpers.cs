@@ -36,7 +36,7 @@ namespace VehicleFramework
                 }
                 else if (cor == null) // if we need to get prawn
                 {
-                    cor = MainPatcher.Instance.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
+                    cor = Admin.Utils.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Seamoth, request, false));
                     yield return cor;
                     cor = null;
                 }
@@ -76,7 +76,7 @@ namespace VehicleFramework
                 }
                 else if (cor == null) // if we need to get prawn
                 {
-                    cor = MainPatcher.Instance.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Exosuit, request, false));
+                    cor = Admin.Utils.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Exosuit, request, false));
                     yield return cor;
                     cor = null;
                 }

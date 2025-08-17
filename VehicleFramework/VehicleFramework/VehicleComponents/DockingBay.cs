@@ -52,7 +52,7 @@ namespace VehicleFramework.VehicleComponents
         {
             if (dockAnimation == null && IsSufficientSpace())
             {
-                MainPatcher.Instance.StartCoroutine(InternalDetach(withPlayer));
+                Admin.Utils.StartCoroutine(InternalDetach(withPlayer));
             }
         }
         protected virtual bool IsSufficientSpace()
@@ -188,8 +188,8 @@ namespace VehicleFramework.VehicleComponents
         }
         protected virtual IEnumerator DoDockingAnimations(Vehicle dockingVehicle, float duration, float duration2)
         {
-            yield return MainPatcher.Instance.StartCoroutine(MoveAndRotate(dockingVehicle, DockTrigger, duration));
-            yield return MainPatcher.Instance.StartCoroutine(MoveAndRotate(dockingVehicle, GetDockedPosition(dockingVehicle), duration2));
+            yield return Admin.Utils.StartCoroutine(MoveAndRotate(dockingVehicle, DockTrigger, duration));
+            yield return Admin.Utils.StartCoroutine(MoveAndRotate(dockingVehicle, GetDockedPosition(dockingVehicle), duration2));
         }
 
         private void Update()
@@ -228,7 +228,7 @@ namespace VehicleFramework.VehicleComponents
             }
             if (ValidateAttachment(dockTarget))
             {
-                MainPatcher.Instance.StartCoroutine(InternalAttach(dockTarget));
+                Admin.Utils.StartCoroutine(InternalAttach(dockTarget));
             }
         }
         private IEnumerator InternalAttach(Vehicle dockTarget)
@@ -238,7 +238,7 @@ namespace VehicleFramework.VehicleComponents
                 yield break;
             }
             OnStartedDocking();
-            dockAnimation = MainPatcher.Instance.StartCoroutine(DoDockingAnimations(dockTarget, 1f, 1f));
+            dockAnimation = Admin.Utils.StartCoroutine(DoDockingAnimations(dockTarget, 1f, 1f));
             yield return dockAnimation;
             dockTarget.docked = true;
             OnFinishedDocking(dockTarget);
@@ -253,7 +253,7 @@ namespace VehicleFramework.VehicleComponents
             }
             OnStartedUndocking(withPlayer);
             currentDockedVehicle.docked = false;
-            dockAnimation = MainPatcher.Instance.StartCoroutine(DoUndockingAnimations());
+            dockAnimation = Admin.Utils.StartCoroutine(DoUndockingAnimations());
             yield return dockAnimation;
             OnFinishedUndocking(withPlayer);
             currentDockedVehicle = null;

@@ -65,7 +65,7 @@ namespace VehicleFramework
 
         public void BuildAllSlots()
         {
-            MainPatcher.Instance.StartCoroutine(BuildAllSlotsInternal());
+            Admin.Utils.StartCoroutine(BuildAllSlotsInternal());
         }
         public IEnumerator BuildAllSlotsInternal()
         {
@@ -103,7 +103,7 @@ namespace VehicleFramework
         }
         public void GrabComponents()
         {
-            MainPatcher.Instance.StartCoroutine(BuildGenericModulesASAP());
+            Admin.Utils.StartCoroutine(BuildGenericModulesASAP());
         }
         private IEnumerator BuildGenericModulesASAP()
         {

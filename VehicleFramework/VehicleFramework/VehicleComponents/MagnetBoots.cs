@@ -94,9 +94,9 @@ namespace VehicleFramework.VehicleComponents
                 attachedPlatform = platform;
                 if (CollisionHandling != null)
                 {
-                    MainPatcher.Instance.StopCoroutine(CollisionHandling);
+                    Admin.Utils.StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = MainPatcher.Instance.StartCoroutine(IgnoreCollisionWithHost(true));
+                CollisionHandling = Admin.Utils.StartCoroutine(IgnoreCollisionWithHost(true));
                 if (attachedPlatform.GetComponent<ModVehicle>())
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += MyVehicle.useRigidbody.mass;
@@ -108,9 +108,9 @@ namespace VehicleFramework.VehicleComponents
                 Detach?.Invoke();
                 if (CollisionHandling != null)
                 {
-                    MainPatcher.Instance.StopCoroutine(CollisionHandling);
+                    Admin.Utils.StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = MainPatcher.Instance.StartCoroutine(IgnoreCollisionWithHost(false));
+                CollisionHandling = Admin.Utils.StartCoroutine(IgnoreCollisionWithHost(false));
                 MyVehicle.transform.SetParent(serializerObject);
                 if (attachedPlatform?.GetComponent<ModVehicle>())
                 {
@@ -137,7 +137,7 @@ namespace VehicleFramework.VehicleComponents
                     return;
                 }
             }
-            MainPatcher.Instance.StartCoroutine(FindStoreInfoIdentifier());
+            Admin.Utils.StartCoroutine(FindStoreInfoIdentifier());
         }
         private void OnEnable()
         {
@@ -161,7 +161,7 @@ namespace VehicleFramework.VehicleComponents
                 serializerObject = transform.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
                 yield return null;
             }
-            MainPatcher.Instance.StartCoroutine(InternalLoad());
+            Admin.Utils.StartCoroutine(InternalLoad());
         }
         public void Update()
         {

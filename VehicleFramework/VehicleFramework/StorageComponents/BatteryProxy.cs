@@ -14,7 +14,7 @@ namespace VehicleFramework.StorageComponents
 
         public void Awake()
         {
-            MainPatcher.Instance.StartCoroutine(GetSeamothBitsASAP());
+            Admin.Utils.StartCoroutine(GetSeamothBitsASAP());
         }
         public IEnumerator GetSeamothBitsASAP()
         {
@@ -24,7 +24,7 @@ namespace VehicleFramework.StorageComponents
                 // no...
                 yield break;
             }
-            yield return MainPatcher.Instance.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            yield return Admin.Utils.StartCoroutine(SeamothHelper.EnsureSeamoth());
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
 
             mixin.batteryModels = new EnergyMixin.BatteryModels[seamothEnergyMixin.batteryModels.Length];
@@ -57,43 +57,5 @@ namespace VehicleFramework.StorageComponents
                 mixin.batteryModels[i].model = model;
             }
         }
-        /*
-        public void Awake()
-        {
-            if (battery is null)
-            {
-                if (proxy.childCount == 0)
-                {
-                    battery = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                    battery.transform.SetParent(proxy);
-                    battery.transform.localScale = Vector3.one * 0.001f;
-                    battery.transform.localPosition = Vector3.zero;
-                    battery.transform.localRotation = Quaternion.identity;
-                }
-                else
-                {
-                    battery = proxy.GetChild(0).gameObject;
-                }
-            }
-        }
-        public void Register()
-        {
-            for (int i = 0; i < mixin.batteryModels.Length; i++)
-            {
-                var model = GameObject.Instantiate(mixin.batteryModels[i].model, proxy);
-                battery.transform.localPosition = Vector3.zero;
-                battery.transform.localRotation = Quaternion.identity;
-                mixin.batteryModels[i].model = model;
-            }
-        }
-        public void ShowBattery()
-        {
-            battery.SetActive(true);
-        }
-        public void HideBattery()
-        {
-            battery.SetActive(false);
-        }
-        */
     }
 }

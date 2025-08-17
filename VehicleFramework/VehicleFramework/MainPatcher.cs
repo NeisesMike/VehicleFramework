@@ -36,7 +36,7 @@ namespace VehicleFramework
             Patch();
             PostPatch();
             CompatChecker.CheckAll();
-            MainPatcher.Instance.StartCoroutine(VehicleFramework.Logger.MakeAlerts());
+            Admin.Utils.StartCoroutine(VehicleFramework.Logger.MakeAlerts());
         }
         public void PrePatch()
         {
@@ -46,8 +46,8 @@ namespace VehicleFramework
             Assets.VFFabricator.CreateAndRegister();
             Admin.CraftTreeHandler.AddFabricatorMenus();
             Admin.Utils.RegisterDepthModules();
-            GetVoices = MainPatcher.Instance.StartCoroutine(VoiceManager.LoadAllVoices());
-            GetEngineSounds = MainPatcher.Instance.StartCoroutine(EngineSoundsManager.LoadAllVoices());
+            GetVoices = Admin.Utils.StartCoroutine(VoiceManager.LoadAllVoices());
+            GetEngineSounds = Admin.Utils.StartCoroutine(EngineSoundsManager.LoadAllVoices());
         }
         public void Patch()
         {
@@ -162,7 +162,7 @@ namespace VehicleFramework
         }
         private void SetupInstance()
         {
-            if (Instance == null)
+            if (Instance is null)
             {
                 Instance = this;
                 return;

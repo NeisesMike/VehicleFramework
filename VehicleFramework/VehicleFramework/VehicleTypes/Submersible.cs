@@ -54,7 +54,7 @@ namespace VehicleFramework.VehicleTypes
         {
             base.BeginPiloting();
             Player.main.EnterSittingMode();
-            MainPatcher.Instance.StartCoroutine(SitDownInChair());
+            Admin.Utils.StartCoroutine(SitDownInChair());
             //StartCoroutine(TryStandUpFromChair());
             Player.main.armsController.ikToggleTime = 0;
             Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
@@ -70,7 +70,7 @@ namespace VehicleFramework.VehicleTypes
                 // So we'll return if the player is within a Cyclops.
                 return;
             }
-            MainPatcher.Instance.StartCoroutine(StandUpFromChair());
+            Admin.Utils.StartCoroutine(StandUpFromChair());
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
             uGUI.main.quickSlots.SetTarget(null);
@@ -107,7 +107,7 @@ namespace VehicleFramework.VehicleTypes
             }
             else
             {
-                MainPatcher.Instance.StartCoroutine(EventuallyStandUp());
+                Admin.Utils.StartCoroutine(EventuallyStandUp());
             }
         }
     }

@@ -26,7 +26,7 @@ namespace VehicleFramework.SaveLoad
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            MainPatcher.Instance.StartCoroutine(LoadUpgrades());
+            Admin.Utils.StartCoroutine(LoadUpgrades());
         }
         private IEnumerator LoadUpgrades()
         {

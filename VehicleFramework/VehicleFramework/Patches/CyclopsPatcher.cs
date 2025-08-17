@@ -62,7 +62,7 @@ namespace VehicleFramework.Patches
 				
                 if((vehicle as VehicleTypes.Drone) == null)
                 {
-                    MainPatcher.Instance.StartCoroutine(EnsureSubRootSet());
+                    Admin.Utils.StartCoroutine(EnsureSubRootSet());
                 }
             }
         }

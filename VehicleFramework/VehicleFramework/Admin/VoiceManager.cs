@@ -116,7 +116,7 @@ namespace VehicleFramework
             string folderWithVoiceFiles = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetCallingAssembly().Location),
                 relativePathToFolderWithVoiceFiles);
-            MainPatcher.Instance.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles, verbose));
+            Admin.Utils.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles, verbose));
         }
         private static IEnumerator RegisterVoiceAbsolute(string name, string absolutePath, bool verbose)
         {

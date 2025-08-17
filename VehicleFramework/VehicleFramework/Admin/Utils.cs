@@ -171,7 +171,7 @@ namespace VehicleFramework.Admin
                     PDAEncyclopedia.mapping.Add(data.key, data);
                 }
             }
-            MainPatcher.Instance.StartCoroutine(AddEncyclopediaEntryInternal());
+            Admin.Utils.StartCoroutine(AddEncyclopediaEntryInternal());
         }
         public static bool IsSN1
         {
@@ -186,6 +186,30 @@ namespace VehicleFramework.Admin
             {
                 return Enum.TryParse<TechType>("BaseLargeRoom", out _);
             }
+        }
+        public static Coroutine StartCoroutine(IEnumerator coroutine)
+        {
+            if (coroutine is null)
+            {
+                throw new Exception("Input coroutine is null in StartCoroutine!");
+            }
+            if (MainPatcher.Instance is null)
+            {
+                throw new Exception("MainPatcher Instance is null in StartCoroutine!");
+            }
+            return MainPatcher.Instance.StartCoroutine(coroutine);
+        }
+        public static void StopCoroutine(Coroutine? coroutine)
+        {
+            if (coroutine is null)
+            {
+                return;
+            }
+            if (MainPatcher.Instance is null)
+            {
+                throw new Exception("MainPatcher Instance is null in StopCoroutine!");
+            }
+            MainPatcher.Instance.StopCoroutine(coroutine);
         }
     }
 }

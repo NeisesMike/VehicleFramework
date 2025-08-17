@@ -341,7 +341,7 @@ namespace VehicleFramework.Admin
                 IEnumerator PrepareModVehicleArmPrefab()
                 {
                     TaskResult<GameObject> armRequest = new();
-                    yield return MainPatcher.Instance.StartCoroutine(arm.GetArmPrefab(armRequest));
+                    yield return Admin.Utils.StartCoroutine(arm.GetArmPrefab(armRequest));
                     GameObject armPrefab = armRequest.Get();
                     if (armPrefab == null)
                     {
@@ -353,7 +353,7 @@ namespace VehicleFramework.Admin
                     VFArm.armPrefabs.Add(staticUTT, armPrefab);
                     arm.armPrefab = armPrefab;
                 }
-                MainPatcher.Instance.StartCoroutine(PrepareModVehicleArmPrefab());
+                Admin.Utils.StartCoroutine(PrepareModVehicleArmPrefab());
 
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;

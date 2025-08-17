@@ -135,7 +135,7 @@ namespace VehicleFramework
                     yield return new WaitForSeconds(5);
                 }
             }
-            MainPatcher.Instance.StartCoroutine(PleaseEnableColliders());
+            Admin.Utils.StartCoroutine(PleaseEnableColliders());
         }
 
         public void TryToEstablishLeash()

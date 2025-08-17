@@ -15,14 +15,12 @@ namespace VehicleFramework.MiscComponents
 
         public void Awake()
         {
-            MainPatcher.Instance.StartCoroutine(GetSeamothBitsASAP());
+            Admin.Utils.StartCoroutine(GetSeamothBitsASAP());
         }
 
         public IEnumerator GetSeamothBitsASAP()
         {
-            yield return MainPatcher.Instance.StartCoroutine(SeamothHelper.EnsureSeamoth());
-
-            slots = new();
+            yield return Admin.Utils.StartCoroutine(SeamothHelper.EnsureSeamoth());
             GameObject module = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;
             for (int i = 0; i < proxies.Count; i++)
             {

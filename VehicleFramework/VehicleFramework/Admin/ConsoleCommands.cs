@@ -77,7 +77,7 @@ namespace VehicleFramework.Admin
 		}
 		public void OnConsoleCommand_vfspawncodes(NotificationCenter.Notification _)
 		{
-			MainPatcher.Instance.StartCoroutine(ListSpawnCodes());
+			Admin.Utils.StartCoroutine(ListSpawnCodes());
 		}
 		private static IEnumerator ListSpawnCodes()
 		{

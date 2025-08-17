@@ -109,7 +109,7 @@ namespace VehicleFramework
                     starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
                 }
             }
-            MainPatcher.Instance.StartCoroutine(ControlLights());
+            Admin.Utils.StartCoroutine(ControlLights());
         }
 
         Rigidbody rb = null;
@@ -189,13 +189,13 @@ namespace VehicleFramework
                 case LightClass.WhiteStrobes:
                     if (MainPatcher.NautilusConfig.IsFlashingLights && white == null)
                     {
-                        white = MainPatcher.Instance.StartCoroutine(Strobe(LightClass.WhiteStrobes));
+                        white = Admin.Utils.StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
                     if (MainPatcher.NautilusConfig.IsFlashingLights && red == null)
                     {
-                        red = MainPatcher.Instance.StartCoroutine(Strobe(LightClass.RedStrobes));
+                        red = Admin.Utils.StartCoroutine(Strobe(LightClass.RedStrobes));
                     }
                     break;
                 case LightClass.Positions:
@@ -206,10 +206,10 @@ namespace VehicleFramework
                     }
                     break;
                 case LightClass.Ports:
-                    port ??= MainPatcher.Instance.StartCoroutine(BlinkNarySequence(2, true));
+                    port ??= Admin.Utils.StartCoroutine(BlinkNarySequence(2, true));
                     break;
                 case LightClass.Starboards:
-                    starboard ??= MainPatcher.Instance.StartCoroutine(BlinkNarySequence(2, false));
+                    starboard ??= Admin.Utils.StartCoroutine(BlinkNarySequence(2, false));
                     break;
             }
         }

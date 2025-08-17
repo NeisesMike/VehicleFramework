@@ -87,7 +87,7 @@ namespace VehicleFramework.Admin
         internal const string CyclopsName = "VanillaCyclops";
         public static void LogAllVehicleNames()
         {
-            MainPatcher.Instance.StartCoroutine(LogAllVehicleNamesInternal());
+            Admin.Utils.StartCoroutine(LogAllVehicleNamesInternal());
         }
         private static IEnumerator LogAllVehicleNamesInternal()
         {
@@ -105,23 +105,23 @@ namespace VehicleFramework.Admin
         }
         public static void RegisterForAllModVehicles<T>(string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange = null, ConfigFile configFile = null)
         {
-            MainPatcher.Instance.StartCoroutine(RegisterForAllInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.Utils.StartCoroutine(RegisterForAllInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
         public static void RegisterForModVehicle<T>(string vehicleName, string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange = null, ConfigFile configFile = null)
         {
-            MainPatcher.Instance.StartCoroutine(RegisterForVehicleInternal<T>(vehicleName, name, description, defaultValue, OnChange, configFile));
+            Admin.Utils.StartCoroutine(RegisterForVehicleInternal<T>(vehicleName, name, description, defaultValue, OnChange, configFile));
         }
         public static void RegisterForSeamoth<T>(string name, ConfigDescription description, T defaultValue, Action<T> OnChange = null, ConfigFile configFile = null)
         {
-            MainPatcher.Instance.StartCoroutine(RegisterForSeamothInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.Utils.StartCoroutine(RegisterForSeamothInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
         public static void RegisterForPrawn<T>(string name, ConfigDescription description, T defaultValue, Action<T> OnChange = null, ConfigFile configFile = null)
         {
-            MainPatcher.Instance.StartCoroutine(RegisterForPrawnInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.Utils.StartCoroutine(RegisterForPrawnInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
         public static void RegisterForCyclops<T>(string name, ConfigDescription description, T defaultValue, Action<T> OnChange = null, ConfigFile configFile = null)
         {
-            MainPatcher.Instance.StartCoroutine(RegisterForCyclopsInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.Utils.StartCoroutine(RegisterForCyclopsInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
         private static IEnumerator RegisterForAllInternal<T>(string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange = null, ConfigFile configFile = null)
         {

@@ -466,7 +466,7 @@ namespace VehicleFramework
             }
             if (Batteries != null && Batteries.Count() > 0)
             {
-                MainPatcher.Instance.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
+                Admin.Utils.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
             }
         }
         public virtual void OnVehicleDocked(Vector3 exitLocation)
@@ -509,7 +509,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(5f);
                 useRigidbody.detectCollisions = true;
             }
-            MainPatcher.Instance.StartCoroutine(EnsureCollisionsEnabledEventually());
+            Admin.Utils.StartCoroutine(EnsureCollisionsEnabledEventually());
         }
         public virtual void OnPlayerUndocked()
         {
@@ -620,7 +620,7 @@ namespace VehicleFramework
                     yield return null;
                 }
             }
-            MainPatcher.Instance.StartCoroutine(DropLoot(transform.position, gameObject));
+            Admin.Utils.StartCoroutine(DropLoot(transform.position, gameObject));
         }
         public virtual void HandleOtherPilotingAnimations(bool isPiloting){}
         public virtual bool IsPlayerControlling()
@@ -1245,7 +1245,7 @@ namespace VehicleFramework
                 yield return null;
                 UWE.Utils.ExitPhysicsSyncSection();
             }
-            MainPatcher.Instance.StartCoroutine(waitForTeleport());
+            Admin.Utils.StartCoroutine(waitForTeleport());
         }
         #endregion
 
@@ -1346,8 +1346,8 @@ namespace VehicleFramework
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            MainPatcher.Instance.StartCoroutine(LoadSimpleData());
-            MainPatcher.Instance.StartCoroutine(SaveLoad.VFModularStorageSaveLoad.DeserializeAllModularStorage(this));
+            Admin.Utils.StartCoroutine(LoadSimpleData());
+            Admin.Utils.StartCoroutine(SaveLoad.VFModularStorageSaveLoad.DeserializeAllModularStorage(this));
             OnGameLoaded();
         }
         protected virtual void OnGameSaved() { }
