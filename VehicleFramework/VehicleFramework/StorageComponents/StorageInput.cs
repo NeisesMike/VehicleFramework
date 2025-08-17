@@ -75,10 +75,7 @@ namespace VehicleFramework
 			}
 			this.state = state;
 			this.UpdateColliderState();
-			if (this.model != null)
-			{
-				this.model.SetActive(state);
-			}
+			this.model?.SetActive(state);
 		}
 		public void SetDocked(Vehicle.DockType dockType)
 		{
@@ -104,7 +101,7 @@ namespace VehicleFramework
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
 		}
 
-		public Sequence seq = new Sequence();
+		public Sequence seq = new();
 		public void Update()
 		{
 			seq.Update();

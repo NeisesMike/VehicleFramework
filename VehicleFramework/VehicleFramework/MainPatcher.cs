@@ -5,6 +5,7 @@ using HarmonyLib;
 using System.Collections;
 using BepInEx;
 using UnityEngine.SceneManagement;
+using Nautilus.Handlers;
 
 namespace VehicleFramework
 {
@@ -25,7 +26,7 @@ namespace VehicleFramework
         {
             Nautilus.Handlers.LanguageHandler.RegisterLocalizationFolder();
             SetupInstance();
-            VFConfig = new VFConfig();
+            VFConfig = new();
             NautilusConfig = Nautilus.Handlers.OptionsPanelHandler.RegisterModOptions<VehicleFrameworkNautilusConfig>();
             VehicleFramework.Logger.MyLog = base.Logger;
             PrePatch();
@@ -99,7 +100,7 @@ namespace VehicleFramework
 
             }
             Nautilus.Utility.SaveUtils.RegisterOnQuitEvent(SetWorldNotLoaded);
-            Nautilus.Utility.SaveUtils.RegisterOnFinishLoadingEvent(SetWorldLoaded);
+            WaitScreenHandler.RegisterLateLoadTask(PluginInfo.PLUGIN_NAME, x=>SetWorldLoaded());
             Nautilus.Utility.SaveUtils.RegisterOneTimeUseOnLoadEvent(OnLoadOnce);
 
             var harmony = new Harmony(PluginInfo.PLUGIN_GUID);

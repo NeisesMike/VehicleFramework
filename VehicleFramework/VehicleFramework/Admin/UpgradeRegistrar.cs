@@ -34,16 +34,16 @@ namespace VehicleFramework.Admin
     }
     public static class UpgradeRegistrar
     {
-        public static Dictionary<string, Sprite> UpgradeIcons = new Dictionary<string, Sprite>(); // indexed by upgrade.ClassId
-        internal static List<Action<AddActionParams>> OnAddActions = new List<Action<AddActionParams>>();
-        internal static List<Action<ToggleActionParams>> OnToggleActions = new List<Action<ToggleActionParams>>();
-        internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new List<Action<SelectableChargeableActionParams>>();
-        internal static List<Action<SelectableActionParams>> OnSelectActions = new List<Action<SelectableActionParams>>();
-        internal static List<Action<ArmActionParams>> OnArmDownActions = new List<Action<ArmActionParams>>();
-        internal static List<Action<ArmActionParams>> OnArmHeldActions = new List<Action<ArmActionParams>>();
-        internal static List<Action<ArmActionParams>> OnArmUpActions = new List<Action<ArmActionParams>>();
-        internal static List<Action<ArmActionParams>> OnArmAltActions = new List<Action<ArmActionParams>>();
-        internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new List<Tuple<Vehicle, int, Coroutine>>();
+        public static Dictionary<string, Sprite> UpgradeIcons = new(); // indexed by upgrade.ClassId
+        internal static List<Action<AddActionParams>> OnAddActions = new();
+        internal static List<Action<ToggleActionParams>> OnToggleActions = new();
+        internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new();
+        internal static List<Action<SelectableActionParams>> OnSelectActions = new();
+        internal static List<Action<ArmActionParams>> OnArmDownActions = new();
+        internal static List<Action<ArmActionParams>> OnArmHeldActions = new();
+        internal static List<Action<ArmActionParams>> OnArmUpActions = new();
+        internal static List<Action<ArmActionParams>> OnArmAltActions = new();
+        internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new();
         public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default, bool verbose = false)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
@@ -52,7 +52,7 @@ namespace VehicleFramework.Admin
             {
                 CraftTreeHandler.EnsureCraftingTabsAvailable(upgrade, compat);
                 UpgradeIcons.Add(upgrade.ClassId, upgrade.Icon);
-                UpgradeTechTypes utt = new UpgradeTechTypes();
+                UpgradeTechTypes utt = new();
                 bool isPdaRegistered = false;
                 if (!compat.skipModVehicle || upgrade.IsVehicleSpecific)
                 {
@@ -105,12 +105,12 @@ namespace VehicleFramework.Admin
         }
         private static TechType RegisterModVehicleUpgrade(ModVehicleUpgrade upgrade)
         {
-            Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
+            Nautilus.Crafting.RecipeData moduleRecipe = new();
             moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(VehicleType.ModVehicle));
             Nautilus.Assets.PrefabInfo module_info = Nautilus.Assets.PrefabInfo
                 .WithTechType(upgrade.ClassId, upgrade.DisplayName, upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
-            Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(module_info);
+            Nautilus.Assets.CustomPrefab module_CustomPrefab = new(module_info);
             Nautilus.Assets.PrefabTemplates.PrefabTemplate moduleTemplate = new Nautilus.Assets.PrefabTemplates.CloneTemplate(module_info, TechType.SeamothElectricalDefense)
             {
                 ModifyPrefab = prefab => prefab.GetComponentsInChildren<Renderer>().ForEach(r => r.materials.ForEach(m => m.color = upgrade.Color))
@@ -340,7 +340,7 @@ namespace VehicleFramework.Admin
                 UpgradeTechTypes staticUTT = utt;
                 IEnumerator PrepareModVehicleArmPrefab()
                 {
-                    TaskResult<GameObject> armRequest = new TaskResult<GameObject>();
+                    TaskResult<GameObject> armRequest = new();
                     yield return MainPatcher.Instance.StartCoroutine(arm.GetArmPrefab(armRequest));
                     GameObject armPrefab = armRequest.Get();
                     if (armPrefab == null)

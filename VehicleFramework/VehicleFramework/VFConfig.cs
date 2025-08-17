@@ -8,7 +8,7 @@ namespace VehicleFramework
 {
     internal class VehicleConfig
     {
-        internal static Dictionary<string, VehicleConfig> main = new Dictionary<string, VehicleConfig>();
+        internal static Dictionary<string, VehicleConfig> main = new();
         internal static VehicleConfig GetConfig(ModVehicle mv)
         {
             if (!main.ContainsKey(mv.GetType().ToString()))
@@ -19,7 +19,7 @@ namespace VehicleFramework
         }
         private static VehicleConfig AddNew(ModVehicle mv)
         {
-            var thisConf = new VehicleConfig();
+            VehicleConfig thisConf = new();
             main.Add(mv.GetType().ToString(), thisConf);
             return thisConf;
         }
@@ -32,9 +32,9 @@ namespace VehicleFramework
         internal ConfigEntry<bool> IsArms { get; set; }
         internal ConfigEntry<bool> UseCustomRecipe { get; set; }
         internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; }
-        internal List<ConfigEntry<bool>> ExternalToggles = new List<ConfigEntry<bool>>();
-        internal List<ConfigEntry<float>> ExternalSliders = new List<ConfigEntry<float>>();
-        internal List<ConfigEntry<KeyboardShortcut>> ExternalKeybinds = new List<ConfigEntry<KeyboardShortcut>>();
+        internal List<ConfigEntry<bool>> ExternalToggles = new();
+        internal List<ConfigEntry<float>> ExternalSliders = new();
+        internal List<ConfigEntry<KeyboardShortcut>> ExternalKeybinds = new();
     }
     internal class VFConfig
     {

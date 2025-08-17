@@ -32,7 +32,7 @@ namespace VehicleFramework
     {
 
         private static int numVehicleTypes = 0;
-        public static List<ModVehicle> prefabs = new List<ModVehicle>();
+        public static List<ModVehicle> prefabs = new();
 
         public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
@@ -45,9 +45,9 @@ namespace VehicleFramework
                 yield break;
             }
             prefabs.Add(mv);
-            VehicleEntry ve = new VehicleEntry(mv, numVehicleTypes, pingType, mv.PingSprite ?? Assets.StaticAssets.DefaultPingSprite);
+            VehicleEntry ve = new(mv, numVehicleTypes, pingType, mv.PingSprite ?? Assets.StaticAssets.DefaultPingSprite);
             numVehicleTypes++;
-            VehicleEntry naiveVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, TechType.None);
+            VehicleEntry naiveVE = new(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, TechType.None);
             VehicleManager.vehicleTypes.Add(naiveVE); // must add/remove this vehicle entry so that we can call VFConfig.Setup.
             VFConfig.Setup(mv); // must call VFConfig.Setup so that VNI.PatchCraftable can access the per-vehicle config
             VehicleNautilusInterface.PatchCraftable(ref ve, verbose);
@@ -295,7 +295,7 @@ namespace VehicleFramework
         public static void SetupEnergyInterface(ModVehicle mv)
         {
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
-            List<EnergyMixin> energyMixins = new List<EnergyMixin>();
+            List<EnergyMixin> energyMixins = new();
             if(mv.Batteries.Count() == 0)
             {
                 // Configure energy mixin for this battery slot
@@ -351,7 +351,7 @@ namespace VehicleFramework
                 return;
             }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
-            List<EnergyMixin> energyMixins = new List<EnergyMixin>();
+            List<EnergyMixin> energyMixins = new();
             foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
             {
                 // Configure energy mixin for this battery slot
@@ -460,7 +460,7 @@ namespace VehicleFramework
             }
             foreach (VehicleParts.VehicleFloodLight pc in theseLights)
             {
-                GameObject volumetricLight = new GameObject("VolumetricLight");
+                GameObject volumetricLight = new("VolumetricLight");
                 volumetricLight.transform.SetParent(pc.Light.transform);
                 volumetricLight.transform.localPosition = Vector3.zero;
                 volumetricLight.transform.localEulerAngles = Vector3.zero;
@@ -733,7 +733,7 @@ namespace VehicleFramework
         {
             if (mv.LavaLarvaAttachPoints.Count() > 0)
             {
-                GameObject attachParent = new GameObject("AttachedLavaLarvae");
+                GameObject attachParent = new("AttachedLavaLarvae");
                 attachParent.transform.SetParent(mv.transform);
                 attachParent.AddComponent<EcoTarget>().SetTargetType(EcoTargetType.HeatSource);
                 var lavaLarvaTarget = attachParent.AddComponent<LavaLarvaTarget>();
@@ -743,10 +743,10 @@ namespace VehicleFramework
                 lavaLarvaTarget.primiryPointsCount = mv.LavaLarvaAttachPoints.Count();
                 lavaLarvaTarget.vehicle = mv;
                 lavaLarvaTarget.subControl = null;
-                List<LavaLarvaAttachPoint> llapList = new List<LavaLarvaAttachPoint>();
+                List<LavaLarvaAttachPoint> llapList = new();
                 foreach (var llap in mv.LavaLarvaAttachPoints)
                 {
-                    GameObject llapGO = new GameObject();
+                    GameObject llapGO = new();
                     llapGO.transform.SetParent(attachParent.transform);
                     var thisLlap = llapGO.AddComponent<LavaLarvaAttachPoint>();
                     thisLlap.Clear();

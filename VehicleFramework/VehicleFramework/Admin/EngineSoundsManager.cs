@@ -17,12 +17,12 @@ namespace VehicleFramework
     }
     public static class EngineSoundsManager
     {
-        internal static List<ModVehicleEngine> engines = new List<ModVehicleEngine>();
+        internal static List<ModVehicleEngine> engines = new();
         // EngineSounds names : EngineSounds
-        internal static Dictionary<string, EngineSounds> EngineSoundss = new Dictionary<string, EngineSounds>();
+        internal static Dictionary<string, EngineSounds> EngineSoundss = new();
         // vehicle names : EngineSounds names
-        internal static Dictionary<TechType, string> defaultEngineSounds = new Dictionary<TechType, string>();
-        public static EngineSounds silentVoice = new EngineSounds();
+        internal static Dictionary<TechType, string> defaultEngineSounds = new();
+        public static EngineSounds silentVoice = new();
         public static void RegisterEngineSounds(string name, EngineSounds voice)
         {
             try
@@ -132,7 +132,7 @@ namespace VehicleFramework
         // Method signature with a callback to return the EngineSounds instance
         private static IEnumerator LoadEngineSoundClips(string voice, Action<EngineSounds> onComplete, string voicepath)
         {
-            EngineSounds returnVoice = new EngineSounds();
+            EngineSounds returnVoice = new();
             
             string modPath = "";
             if(voicepath == "")
@@ -174,25 +174,23 @@ namespace VehicleFramework
         }
         private static IEnumerator LoadAudioClip(string filePath, Action<AudioClip> onSuccess, Action onError)
         {
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.OGGVORBIS))
-            {
-                yield return www.SendWebRequest();
+            using UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.OGGVORBIS);
+            yield return www.SendWebRequest();
 
-                if (www.isHttpError || www.isNetworkError)
+            if (www.isHttpError || www.isNetworkError)
+            {
+                onError?.Invoke();
+            }
+            else
+            {
+                AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                if (clip == null)
                 {
-                    onError?.Invoke();
+                    Logger.Error("Failed to retrieve AudioClip from file: " + filePath);
                 }
                 else
                 {
-                    AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-                    if (clip == null)
-                    {
-                        Logger.Error("Failed to retrieve AudioClip from file: " + filePath);
-                    }
-                    else
-                    {
-                        onSuccess?.Invoke(clip);
-                    }
+                    onSuccess?.Invoke(clip);
                 }
             }
         }

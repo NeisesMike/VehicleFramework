@@ -33,9 +33,9 @@ namespace VehicleFramework
     {
         #region public_api
         // voice that are in-play
-        public static List<AutoPilotVoice> voices = new List<AutoPilotVoice>();
+        public static List<AutoPilotVoice> voices = new();
         public static AudioClip silence;
-        public static VehicleVoice silentVoice = new VehicleVoice();
+        public static VehicleVoice silentVoice = new();
         public const string DefaultVoicePath = "AutoPilotVoices";
 
         public static VehicleVoice GetVoice(string name)
@@ -164,9 +164,9 @@ namespace VehicleFramework
             "UhOh"
         };
         // voice names : voices
-        internal static Dictionary<string, VehicleVoice> vehicleVoices = new Dictionary<string, VehicleVoice>();
+        internal static Dictionary<string, VehicleVoice> vehicleVoices = new();
         // vehicle names : voice names
-        private static readonly Dictionary<TechType, string> defaultVoices = new Dictionary<TechType, string>();
+        private static readonly Dictionary<TechType, string> defaultVoices = new();
         private static void RegisterVoice(string name, VehicleVoice voice)
         {
             RegisterVoice(name, voice, false);
@@ -305,7 +305,7 @@ namespace VehicleFramework
         // Method signature with a callback to return the VehicleVoice instance
         private static IEnumerator LoadVoiceClips(Action<VehicleVoice> onComplete, string inputPath, bool verbose)
         {
-            VehicleVoice returnVoice = new VehicleVoice();
+            VehicleVoice returnVoice = new();
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "AutoPilot Voice Path is : " + inputPath);
             foreach (string clipName in clipNames)
             {
@@ -342,28 +342,26 @@ namespace VehicleFramework
         }
         private static IEnumerator LoadAudioClip(string filePath, Action<AudioClip> onSuccess, Action onError)
         {
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.OGGVORBIS))
+            using UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.OGGVORBIS);
+            yield return www.SendWebRequest();
+            if (www.isHttpError)
             {
-                yield return www.SendWebRequest();
-                if(www.isHttpError)
+                onError?.Invoke();
+            }
+            else if (www.isNetworkError)
+            {
+                onError?.Invoke();
+            }
+            else
+            {
+                AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                if (clip == null)
                 {
-                    onError?.Invoke();
-                }
-                else if (www.isNetworkError)
-                {
-                    onError?.Invoke();
+                    Logger.Error("Failed to retrieve AudioClip from file: " + filePath);
                 }
                 else
                 {
-                    AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-                    if (clip == null)
-                    {
-                        Logger.Error("Failed to retrieve AudioClip from file: " + filePath);
-                    }
-                    else
-                    {
-                        onSuccess?.Invoke(clip);
-                    }
+                    onSuccess?.Invoke(clip);
                 }
             }
         }

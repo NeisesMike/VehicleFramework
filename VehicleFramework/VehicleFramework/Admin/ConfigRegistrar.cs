@@ -10,9 +10,9 @@ namespace VehicleFramework.Admin
     public class ExternalVehicleConfig<T>
     {
         internal string MyName = "";
-        internal Dictionary<string, ConfigEntry<T>> ExternalConfigs = new Dictionary<string, ConfigEntry<T>>();
+        internal Dictionary<string, ConfigEntry<T>> ExternalConfigs = new();
 
-        internal static Dictionary<string, ExternalVehicleConfig<T>> main = new Dictionary<string, ExternalVehicleConfig<T>>();
+        internal static Dictionary<string, ExternalVehicleConfig<T>> main = new();
         internal static ExternalVehicleConfig<T> SeamothConfig = null;
         internal static ExternalVehicleConfig<T> PrawnConfig = null;
         internal static ExternalVehicleConfig<T> CyclopsConfig = null;
@@ -38,13 +38,13 @@ namespace VehicleFramework.Admin
             var MVs = VehicleManager.vehicleTypes.Where(x => x.name.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
             if (!MVs.Any())
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 VehicleManager.vehicleTypes.ForEach(x => sb.AppendLine(x.name));
                 throw new ArgumentException($"GetModVehicleConfig: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {sb}");
             }
             if (MVs.Count() > 1)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 VehicleManager.vehicleTypes.ForEach(x => sb.AppendLine(x.name));
                 throw new ArgumentException($"GetModVehicleConfig: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {sb}");
             }
@@ -57,35 +57,26 @@ namespace VehicleFramework.Admin
         }
         public static ExternalVehicleConfig<T> GetSeamothConfig()
         {
-            if(SeamothConfig == null)
-            {
-                SeamothConfig = new ExternalVehicleConfig<T>
+            SeamothConfig ??= new ExternalVehicleConfig<T>
                 {
                     MyName = ConfigRegistrar.SeamothName
                 };
-            }
             return SeamothConfig;
         }
         public static ExternalVehicleConfig<T> GetPrawnConfig()
         {
-            if (PrawnConfig == null)
-            {
-                PrawnConfig = new ExternalVehicleConfig<T>
+            PrawnConfig ??= new ExternalVehicleConfig<T>
                 {
                     MyName = ConfigRegistrar.PrawnName
                 };
-            }
             return PrawnConfig;
         }
         public static ExternalVehicleConfig<T> GetCyclopsConfig()
         {
-            if (CyclopsConfig == null)
-            {
-                CyclopsConfig = new ExternalVehicleConfig<T>
+            CyclopsConfig ??= new ExternalVehicleConfig<T>
                 {
                     MyName = ConfigRegistrar.CyclopsName
                 };
-            }
             return CyclopsConfig;
         }
     }
@@ -144,10 +135,7 @@ namespace VehicleFramework.Admin
             foreach (var pair in ExternalVehicleConfig<T>.main)
             {
                 ConfigFile config = configFile;
-                if (config == null)
-                {
-                    config = MainPatcher.Instance.Config;
-                }
+                config ??= MainPatcher.Instance.Config;
                 var vConf = pair.Value;
                 string vehicleName = pair.Key;
                 ConfigEntry<T> thisConf;
@@ -198,10 +186,7 @@ namespace VehicleFramework.Admin
             }
             ModVehicle mv = MVs.First().mv;
             ConfigFile config = configFile;
-            if (config == null)
-            {
-                config = MainPatcher.Instance.Config;
-            }
+            config ??= MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetModVehicleConfig(vehicleName);
             ConfigEntry<T> thisConf;
             try
@@ -233,10 +218,7 @@ namespace VehicleFramework.Admin
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
             ConfigFile config = configFile;
-            if (config == null)
-            {
-                config = MainPatcher.Instance.Config;
-            }
+            config ??= MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetSeamothConfig();
             ConfigEntry<T> thisConf;
             try
@@ -268,10 +250,7 @@ namespace VehicleFramework.Admin
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
             ConfigFile config = configFile;
-            if (config == null)
-            {
-                config = MainPatcher.Instance.Config;
-            }
+            config ??= MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetPrawnConfig();
             ConfigEntry<T> thisConf;
             try
@@ -303,10 +282,7 @@ namespace VehicleFramework.Admin
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
             ConfigFile config = configFile;
-            if (config == null)
-            {
-                config = MainPatcher.Instance.Config;
-            }
+            config ??= MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetCyclopsConfig();
             ConfigEntry<T> thisConf;
             try
