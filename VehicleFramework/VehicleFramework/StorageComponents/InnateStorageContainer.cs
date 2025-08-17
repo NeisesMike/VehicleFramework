@@ -1,46 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using System.Collections;
-using UWE;
+using UnityEngine;
 
 namespace VehicleFramework
 {
 	public class InnateStorageContainer : MonoBehaviour, ICraftTarget//, IProtoEventListener, IProtoTreeEventListener
 	{
-		private bool hasInit = false;
-
-		private ItemsContainer _container = null;
+		private ItemsContainer _container = null!;
 		public ItemsContainer Container 
 		{ 
 			get
             {
-				return _container;
+                if (_container is null)
+                {
+                    _container = new(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
+                    _container.SetAllowedTechTypes(this.allowedTech);
+                    _container.isAllowedToRemove = null;
+                }
+                return _container;
             }
 			private set
 			{
 				_container = value;
             }
-		}
-
-		public void Awake()
-		{
-			this.Init();
-		}
-
-		private void Init()
-		{
-			if (this.Container != null || hasInit)
-			{
-				return;
-			}
-			this.Container = new(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
-			this.Container.SetAllowedTechTypes(this.allowedTech);
-			this.Container.isAllowedToRemove = null;
-			hasInit = true;
 		}
 
 		public void OnCraftEnd(TechType techType)
@@ -73,23 +55,48 @@ namespace VehicleFramework
 				}
 				yield break;
 			}
-			this.Init();
 			StartCoroutine(GetAndSetTorpedoSlots());
 		}
 
-		public string storageLabel = "StorageLabel";
+        internal static void Create(VehicleParts.VehicleStorage vs, ModVehicle mv, int storageID)
+        {
+            var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
+            cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
+            cont.storageLabel = "Vehicle Storage " + storageID.ToString();
+            cont.height = vs.Height;
+            cont.width = vs.Width;
+
+            FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
+            FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
+            var inp = vs.Container.EnsureComponent<InnateStorageInput>();
+            inp.mv = mv;
+            inp.slotID = storageID;
+            inp.model = vs.Container;
+            if (vs.Container.GetComponentInChildren<Collider>() is null)
+            {
+                inp.collider = vs.Container.EnsureComponent<BoxCollider>();
+            }
+            inp.openSound = storageOpenSound;
+            inp.closeSound = storageCloseSound;
+            vs.Container.SetActive(true);
+
+            SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vs.Container.transform);
+            vs.Container.EnsureComponent<SaveLoad.VFInnateStorageIdentifier>();
+        }
+
+        public string storageLabel = "StorageLabel";
 
 		public int width = 6;
 		public int height = 8;
 
-		public TechType[] allowedTech = new TechType[0];
+		public TechType[] allowedTech = Array.Empty<TechType>();
 
 		[AssertNotNull]
-		public ChildObjectIdentifier storageRoot;
+		public ChildObjectIdentifier storageRoot = null!;
 
 		public int version = 3;
 
 		[NonSerialized]
-		public byte[] serializedStorage;
+		public byte[] serializedStorage = null!;
 	}
 }
