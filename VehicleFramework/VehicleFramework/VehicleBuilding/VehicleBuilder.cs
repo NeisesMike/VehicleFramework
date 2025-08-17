@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.MiscComponents;
 //using VehicleFramework.Localization;
 
 namespace VehicleFramework
