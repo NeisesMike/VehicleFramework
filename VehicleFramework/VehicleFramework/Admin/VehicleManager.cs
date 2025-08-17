@@ -40,7 +40,7 @@ namespace VehicleFramework
                 Logger.Log("Enrolled the " + mv.name + " : " + mv.GetName() + " : " + mv.subName);
                 if (mv.GetComponent<VFXConstructing>() == null || mv.GetComponent<VFXConstructing>().constructed > 3f)
                 {
-                    Admin.Utils.StartCoroutine(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
+                    Admin.SessionManager.StartCoroutine(LoadVehicle(mv)); // I wish I knew a good way to optionally NOT do this if this sub is being constructed rn
                 }
             }
         }
@@ -71,20 +71,20 @@ namespace VehicleFramework
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !WaitScreen.IsWaiting);
             Logger.Log($"Loading: {mv.GetName()}");
-            Coroutine ModuleGetter = Admin.Utils.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.SaveFileData, mv));
-            Coroutine dis = Admin.Utils.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.SaveFileData, mv));
-            Coroutine db = Admin.Utils.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.SaveFileData, mv));
+            Coroutine ModuleGetter = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeUpgrades(MainPatcher.SaveFileData, mv));
+            Coroutine dis = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeInnateStorage(MainPatcher.SaveFileData, mv));
+            Coroutine db = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.SaveFileData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
-            Coroutine dms = Admin.Utils.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.SaveFileData, mv));
-            Coroutine da = Admin.Utils.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.SaveFileData, mv as Submarine));
+            Coroutine dms = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.SaveFileData, mv));
+            Coroutine da = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.SaveFileData, mv as Submarine));
             Coroutine dbb = null;
             if (mv as Submarine != null)
             {
-                dbb = Admin.Utils.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.SaveFileData, mv as Submarine));
+                dbb = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.SaveFileData, mv as Submarine));
             }
-            Coroutine dpi = Admin.Utils.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.SaveFileData, mv));
-            Coroutine dpc = Admin.Utils.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.SaveFileData, mv));
-            Coroutine dsn = Admin.Utils.StartCoroutine(SaveManager.DeserializeSubName(MainPatcher.SaveFileData, mv));
+            Coroutine dpi = Admin.SessionManager.StartCoroutine(SaveManager.DeserializePlayerInside(MainPatcher.SaveFileData, mv));
+            Coroutine dpc = Admin.SessionManager.StartCoroutine(SaveManager.DeserializePlayerControlling(MainPatcher.SaveFileData, mv));
+            Coroutine dsn = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeSubName(MainPatcher.SaveFileData, mv));
             if (mv.liveMixin.health == 0)
             {
                 mv.OnKill();

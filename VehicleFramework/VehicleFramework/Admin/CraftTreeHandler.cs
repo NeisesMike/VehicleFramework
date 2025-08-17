@@ -112,9 +112,9 @@ namespace VehicleFramework.Admin
             string[] resultPath = thisPath.Append(tabName).ToArray();
             if (!IsKnownPath(resultPath))
             {
-                if (thisPath.Any() && !IsValidTabPath(thisPath))
+                if (thisPath.Length != 0 && !IsValidTabPath(thisPath))
                 {
-                    throw new Exception($"CraftTreeHandler: Invalid Tab Path: there were crafting nodes in that tab: {thisPath.Last()}. Cannot mix tab nodes and crafting nodes.");
+                    throw Admin.SessionManager.Fatal($"CraftTreeHandler: Invalid Tab Path: there were crafting nodes in that tab: {thisPath.Last()}. Cannot mix tab nodes and crafting nodes.");
                 }
                 Nautilus.Handlers.CraftTreeHandler.AddTabNode(VFFabricator.TreeType, tabName, displayName, icon ?? StaticAssets.UpgradeIcon, thisPath);
                 if (thisPath.Any())

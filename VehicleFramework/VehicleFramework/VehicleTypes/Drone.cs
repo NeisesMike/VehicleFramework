@@ -31,7 +31,7 @@ namespace VehicleFramework.VehicleTypes
                 _IsConnecting = value;
                 if(value)
                 {
-                    Admin.Utils.StartCoroutine(EstablishConnection());
+                    Admin.SessionManager.StartCoroutine(EstablishConnection());
                     GetComponent<VFEngine>().enabled = false;
                 }
             }
@@ -98,7 +98,7 @@ namespace VehicleFramework.VehicleTypes
         {
             if(pairedStation is null)
             {
-                throw new Exception($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
+                throw Admin.SessionManager.Fatal($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
             }
             previousParent = Player.main.transform.parent;
             temporaryParent = new("DroneStationTempParent");
@@ -111,7 +111,7 @@ namespace VehicleFramework.VehicleTypes
         {
             if (pairedStation is null)
             {
-                throw new Exception($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
+                throw Admin.SessionManager.Fatal($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
             }
             Vector3 worldPosition = Player.main.transform.position;
             Player.main.transform.SetParent(previousParent);
@@ -140,7 +140,7 @@ namespace VehicleFramework.VehicleTypes
                 this.Undock();
             }
             mountedDrone = this;
-            CheckingPower = Admin.Utils.StartCoroutine(CheckPower());
+            CheckingPower = Admin.SessionManager.StartCoroutine(CheckPower());
             IsConnecting = true;
         }
         public virtual void StopControlling()
@@ -157,7 +157,7 @@ namespace VehicleFramework.VehicleTypes
             DestroyTemporaryParent();
             mountedDrone = null;
             pairedStation = null;
-            Admin.Utils.StopCoroutine(CheckingPower);
+            Admin.SessionManager.StopCoroutine(CheckingPower);
             GetComponent<VFEngine>().KillMomentum();
         }
         public void SwapToDroneCamera()

@@ -59,7 +59,7 @@ namespace VehicleFramework
             rb = GetComponent<Rigidbody>();
             if(rb is null)
             {
-                throw new Exception(MV.GetName() + " has no Rigidbody! Please add a Rigidbody to the GameObject before starting the NavigationLightsController.");
+                throw Admin.SessionManager.Fatal(MV.GetName() + " has no Rigidbody! Please add a Rigidbody to the GameObject before starting the NavigationLightsController.");
             }
             if (MV.NavigationPositionLights != null)
             {
@@ -113,7 +113,7 @@ namespace VehicleFramework
                     starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
                 }
             }
-            Admin.Utils.StartCoroutine(ControlLights());
+            Admin.SessionManager.StartCoroutine(ControlLights());
         }
 
         Rigidbody rb = null!;
@@ -193,13 +193,13 @@ namespace VehicleFramework
                 case LightClass.WhiteStrobes:
                     if (MainPatcher.NautilusConfig.IsFlashingLights && white == null)
                     {
-                        white = Admin.Utils.StartCoroutine(Strobe(LightClass.WhiteStrobes));
+                        white = Admin.SessionManager.StartCoroutine(Strobe(LightClass.WhiteStrobes));
                     }
                     break;
                 case LightClass.RedStrobes:
                     if (MainPatcher.NautilusConfig.IsFlashingLights && red == null)
                     {
-                        red = Admin.Utils.StartCoroutine(Strobe(LightClass.RedStrobes));
+                        red = Admin.SessionManager.StartCoroutine(Strobe(LightClass.RedStrobes));
                     }
                     break;
                 case LightClass.Positions:
@@ -210,10 +210,10 @@ namespace VehicleFramework
                     }
                     break;
                 case LightClass.Ports:
-                    port ??= Admin.Utils.StartCoroutine(BlinkNarySequence(2, true));
+                    port ??= Admin.SessionManager.StartCoroutine(BlinkNarySequence(2, true));
                     break;
                 case LightClass.Starboards:
-                    starboard ??= Admin.Utils.StartCoroutine(BlinkNarySequence(2, false));
+                    starboard ??= Admin.SessionManager.StartCoroutine(BlinkNarySequence(2, false));
                     break;
             }
         }

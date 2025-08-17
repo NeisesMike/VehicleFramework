@@ -13,7 +13,7 @@ namespace VehicleFramework
     [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, "1.0.0.32")]
     public class MainPatcher : BaseUnityPlugin
     {
-        public static MainPatcher? Instance { get; private set; }
+        public static MainPatcher Instance { get; private set; } = null!;
         internal static SaveLoad.SaveData? SaveFileData { get; private set; }
 
         internal static VFConfig VFConfig { get; private set; } = null!;
@@ -26,17 +26,25 @@ namespace VehicleFramework
         {
             Nautilus.Handlers.LanguageHandler.RegisterLocalizationFolder();
             SetupInstance();
+            VehicleFramework.Logger.MyLog = base.Logger;
+            if (VehicleFramework.Logger.MyLog is null)
+            {
+                throw Admin.SessionManager.Fatal("VehicleFramework.Logger.MyLog is null in Awake!");
+            }
+            if (Instance is null)
+            {
+                throw Admin.SessionManager.Fatal("Instance is null in Awake!");
+            }
             VFConfig = new();
             if (VFConfig is null)
             {
-                throw new Exception("VFConfig is null in Awake!");
+                throw Admin.SessionManager.Fatal("VFConfig is null in Awake!");
             }
             NautilusConfig = Nautilus.Handlers.OptionsPanelHandler.RegisterModOptions<VehicleFrameworkNautilusConfig>();
             if(NautilusConfig is null)
             {
-                throw new Exception("NautilusConfig is null in Awake!");
+                throw Admin.SessionManager.Fatal("NautilusConfig is null in Awake!");
             }
-            VehicleFramework.Logger.MyLog = base.Logger;
             PrePatch();
         }
         public void Start()
@@ -44,7 +52,7 @@ namespace VehicleFramework
             Patch();
             PostPatch();
             CompatChecker.CheckAll();
-            Admin.Utils.StartCoroutine(VehicleFramework.Logger.MakeAlerts());
+            Admin.SessionManager.StartCoroutine(VehicleFramework.Logger.MakeAlerts());
         }
         public void PrePatch()
         {
@@ -54,8 +62,8 @@ namespace VehicleFramework
             Assets.VFFabricator.CreateAndRegister();
             Admin.CraftTreeHandler.AddFabricatorMenus();
             Admin.Utils.RegisterDepthModules();
-            GetVoices = Admin.Utils.StartCoroutine(VoiceManager.LoadAllVoices());
-            GetEngineSounds = Admin.Utils.StartCoroutine(EngineSoundsManager.LoadAllVoices());
+            GetVoices = Admin.SessionManager.StartCoroutine(VoiceManager.LoadAllVoices());
+            GetEngineSounds = Admin.SessionManager.StartCoroutine(EngineSoundsManager.LoadAllVoices());
         }
         public void Patch()
         {

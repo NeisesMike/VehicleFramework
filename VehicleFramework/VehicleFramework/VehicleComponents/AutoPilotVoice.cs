@@ -14,13 +14,15 @@ namespace VehicleFramework
 {
     public class AutoPilotVoice : MonoBehaviour, IScuttleListener
     {
-        public ModVehicle mv;
-        public EnergyInterface aiEI;
+        public ModVehicle MV => GetComponent<ModVehicle>();
+        public Submarine? Sub => GetComponent<Submarine>();
+        public Submersible? Subbie => GetComponent<Submersible>();
+        public EnergyInterface aiEI = null!;
         private readonly List<AudioSource> speakers = new();
         private readonly PriorityQueue<AudioClip> speechQueue = new();
         private bool isReadyToSpeak = false; 
         public bool blockVoiceChange = false;
-        public VehicleVoice voice = null;
+        public VehicleVoice? voice = null;
         private float m_balance = 1f;
         public float Balance // used by WraithJet
         {
@@ -64,16 +66,25 @@ namespace VehicleFramework
         }
         public void Awake()
         {
-            isReadyToSpeak = false;
-            mv = GetComponent<ModVehicle>();
-            if (mv.BackupBatteries != null && mv.BackupBatteries.Count > 0)
+            if(MV is null)
             {
-                aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
+                throw Admin.SessionManager.Fatal("AutoPilotVoice is not attached to a ModVehicle!");
+            }
+            isReadyToSpeak = false;
+            if (MV.BackupBatteries != null && MV.BackupBatteries.Count > 0)
+            {
+                aiEI = MV.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
             }
             else
             {
-                aiEI = mv.energyInterface;
+                aiEI = MV.energyInterface;
             }
+            if (aiEI is null)
+            {
+                throw Admin.SessionManager.Fatal(MV.GetName() + " does not have an EnergyInterface!");
+            }
+
+            voice = VoiceManager.GetDefaultVoice(MV);
 
             // register self with mainpatcher, for on-the-fly voice selection updating
             VoiceManager.voices.Add(this);
@@ -83,28 +94,28 @@ namespace VehicleFramework
                 NotifyReadyToSpeak();
                 yield break;
             }
-            Admin.Utils.StartCoroutine(WaitUntilReadyToSpeak());
+            Admin.SessionManager.StartCoroutine(WaitUntilReadyToSpeak());
 
         }
         private void SetupSpeakers()
         {
             //speakers.Add(mv.VehicleModel.EnsureComponent<AudioSource>());
-            if (mv as Submarine != null)
+            if (Sub is not null)
             {
-                speakers.Add((mv as Submarine).PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
-                foreach (var ps in (mv as Submarine).Hatches)
+                speakers.Add(Sub.PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
+                foreach (var ps in Sub.Hatches)
                 {
                     speakers.Add(ps.Hatch.EnsureComponent<AudioSource>().Register());
                 }
-                foreach (var ps in (mv as Submarine).TetherSources)
+                foreach (var ps in Sub.TetherSources)
                 {
                     speakers.Add(ps.EnsureComponent<AudioSource>().Register());
                 }
             }
-            if (mv as Submersible != null)
+            if (Subbie is not null)
             {
-                speakers.Add((mv as Submersible).PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
-                foreach (var ps in (mv as Submersible).Hatches)
+                speakers.Add(Subbie.PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
+                foreach (var ps in Subbie.Hatches)
                 {
                     speakers.Add(ps.Hatch.EnsureComponent<AudioSource>().Register());
                 }
@@ -138,7 +149,7 @@ namespace VehicleFramework
         {
             foreach (var speaker in speakers)
             {
-                if (mv.IsUnderCommand)
+                if (MV.IsUnderCommand)
                 {
                     speaker.GetComponent<AudioLowPassFilter>().enabled = false;
                 }
@@ -173,7 +184,7 @@ namespace VehicleFramework
             {
                 foreach(var speaker in speakers)
                 {
-                    speaker.volume = Balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
+                    speaker.volume = Balance * VehicleConfig.GetConfig(MV).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
                     speaker.clip = clip;
                     speaker.Play();
                     if (MainPatcher.NautilusConfig.IsSubtitles && clip != VoiceManager.silence)
@@ -185,14 +196,14 @@ namespace VehicleFramework
         }
         public void EnqueueClipWithPriority(AudioClip clip, int priority)
         {
-            if (mv && aiEI.hasCharge)
+            if (MV && aiEI.hasCharge)
             {
                 speechQueue.Enqueue(clip, priority);
             }
         }
-        public void EnqueueClip(AudioClip clip)
+        public void EnqueueClip(AudioClip? clip)
         {
-            if (mv && aiEI.hasCharge && clip && isReadyToSpeak && mv.IsConstructed)
+            if (MV && aiEI.hasCharge && clip is not null && isReadyToSpeak && MV.IsConstructed)
             {
                 speechQueue.Enqueue(clip, 0);
             }
@@ -229,81 +240,81 @@ namespace VehicleFramework
         public string UhOh = Language.main.Get("VFSubtitleUhOh");
         private void CreateSubtitle(AudioClip clip)
         {
-            if(clip == null)
+            if(clip == null || voice is null)
             {
                 return;
             }
             if(clip == voice.BatteriesDepleted)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {BatteriesDepleted}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {BatteriesDepleted}");
             }
             else if (clip == voice.BatteriesNearlyEmpty)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {BatteriesNearlyEmpty}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {BatteriesNearlyEmpty}");
             }
             else if (clip == voice.PowerLow)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {PowerLow}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {PowerLow}");
             }
             else if (clip == voice.EnginePoweringDown)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {EnginePoweringDown}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {EnginePoweringDown}");
             }
             else if (clip == voice.EnginePoweringUp)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {EnginePoweringUp}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {EnginePoweringUp}");
             }
             else if (clip == voice.Goodbye)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {Goodbye}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {Goodbye}");
             }
             else if (clip == voice.HullFailureImminent)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {HullFailureImminent}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {HullFailureImminent}");
             }
             else if (clip == voice.HullIntegrityCritical)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {HullIntegrityCritical}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {HullIntegrityCritical}");
             }
             else if (clip == voice.HullIntegrityLow)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {HullIntegrityLow}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {HullIntegrityLow}");
             }
             else if (clip == voice.Leveling)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {Leveling}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {Leveling}");
             }
             else if (clip == voice.WelcomeAboard)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {WelcomeAboard}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {WelcomeAboard}");
             }
             else if (clip == voice.OxygenProductionOffline)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {OxygenProductionOffline}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {OxygenProductionOffline}");
             }
             else if (clip == voice.WelcomeAboardAllSystemsOnline)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {WelcomeAboardAllSystemsOnline}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {WelcomeAboardAllSystemsOnline}");
             }
             else if (clip == voice.MaximumDepthReached)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {MaximumDepthReached}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {MaximumDepthReached}");
             }
             else if (clip == voice.PassingSafeDepth)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {PassingSafeDepth}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {PassingSafeDepth}");
             }
             else if (clip == voice.LeviathanDetected)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {LeviathanDetected}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {LeviathanDetected}");
             }
             else if (clip == voice.UhOh)
             {
-                Logger.PDANote($"{mv.subName.hullName.text}: {UhOh}");
+                Logger.PDANote($"{MV.subName.hullName.text}: {UhOh}");
             }
             else
             {
-                Logger.Warn($"Vehicle {mv.subName.hullName.text} with voice {name} did not recognize clip {clip.name}");
+                Logger.Warn($"Vehicle {MV.subName.hullName.text} with voice {name} did not recognize clip {clip.name}");
             }
         }
         #endregion

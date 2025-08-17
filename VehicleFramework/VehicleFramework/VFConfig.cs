@@ -23,30 +23,29 @@ namespace VehicleFramework
             main.Add(mv.GetType().ToString(), thisConf);
             return thisConf;
         }
-        internal ConfigEntry<bool> IsEnabled { get; set; }
-        internal ConfigEntry<float> AutopilotVolume { get; set; }
-        internal ConfigEntry<float> EngineVolume { get; set; }
-        internal ConfigEntry<string> AutopilotVoice { get; set; }
-        internal ConfigEntry<string> EngineSounds { get; set; }
-        internal ConfigEntry<int> NumUpgrades { get; set; }
-        internal ConfigEntry<bool> IsArms { get; set; }
-        internal ConfigEntry<bool> UseCustomRecipe { get; set; }
-        internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; }
+        internal ConfigEntry<bool> IsEnabled { get; set; } = null!;
+        internal ConfigEntry<float> AutopilotVolume { get; set; } = null!;
+        internal ConfigEntry<float> EngineVolume { get; set; } = null!;
+        internal ConfigEntry<string> AutopilotVoice { get; set; } = null!;
+        internal ConfigEntry<string> EngineSounds { get; set; } = null!;
+        internal ConfigEntry<int> NumUpgrades { get; set; } = null!;
+        internal ConfigEntry<bool> IsArms { get; set; } = null!;
+        internal ConfigEntry<bool> UseCustomRecipe { get; set; } = null!;
+        internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; } = null!;
         internal List<ConfigEntry<bool>> ExternalToggles = new();
         internal List<ConfigEntry<float>> ExternalSliders = new();
         internal List<ConfigEntry<KeyboardShortcut>> ExternalKeybinds = new();
     }
     internal class VFConfig
     {
-        internal static ConfigFile config;
         internal static void GrabNewVoiceLines(object sender, EventArgs e)
         {
             if (Player.main != null)
             {
-                foreach (var tmp in VoiceManager.voices.Where(x => x != null && x.mv != null & x.mv.GetComponent<TechTag>() != null))
+                foreach (var tmp in VoiceManager.voices.Where(x => x != null && x.MV is not null && x.MV.GetComponent<TechTag>() != null))
                 {
-                    string voiceName = VehicleConfig.main[tmp.mv.GetType().ToString()].AutopilotVoice.Value;
-                    VoiceManager.UpdateDefaultVoice(tmp.mv, voiceName);
+                    string voiceName = VehicleConfig.main[tmp.MV.GetType().ToString()].AutopilotVoice.Value;
+                    VoiceManager.UpdateDefaultVoice(tmp.MV, voiceName);
                     tmp.SetVoice(VoiceManager.GetVoice(voiceName));
                 }
             }
@@ -55,7 +54,7 @@ namespace VehicleFramework
         {
             if (Player.main != null)
             {
-                foreach (var tmp in EngineSoundsManager.engines.Where(x => x != null && x.mv != null & x.mv.GetComponent<TechTag>() != null))
+                foreach (var tmp in EngineSoundsManager.engines.Where(x => x != null && x.mv is not null && x.mv.GetComponent<TechTag>() != null))
                 {
                     string soundsName = VehicleConfig.main[tmp.mv.GetType().ToString()].EngineSounds.Value;
                     EngineSoundsManager.UpdateDefaultVoice(tmp.mv, soundsName);
@@ -65,7 +64,7 @@ namespace VehicleFramework
         }
         internal static void Setup(ModVehicle mv)
         {
-            config = MainPatcher.Instance.Config;
+            ConfigFile config = MainPatcher.Instance.Config;
             var vConf = VehicleConfig.GetConfig(mv);
             string vehicleName = mv.GetType().ToString();
             vConf.AutopilotVolume = config.Bind<float>(vehicleName, "Autopilot Volume", 0.5f, new ConfigDescription("How loud is the autopilot voice", new AcceptableValueRange<float>(0, 1)));

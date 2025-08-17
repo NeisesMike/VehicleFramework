@@ -12,8 +12,8 @@ namespace VehicleFramework.VehicleTypes
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
         public abstract float DistanceAboveGround { get; }
         public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; }
-        public virtual GameObject SteeringWheelLeftHandTarget { get; }
-        public virtual GameObject SteeringWheelRightHandTarget { get; }
+        public virtual GameObject? SteeringWheelLeftHandTarget { get; }
+        public virtual GameObject? SteeringWheelRightHandTarget { get; }
         public virtual float GroundSpeed { get; }
         public virtual float BobSpeed { get; }
         public override void PlayerEntry()

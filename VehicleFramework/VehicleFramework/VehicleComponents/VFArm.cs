@@ -16,7 +16,7 @@ namespace VehicleFramework.VehicleComponents
     {
         internal static Dictionary<UpgradeTechTypes, GameObject> armPrefabs = new();
         internal static Dictionary<UpgradeTechTypes, ModVehicleArm> armLogics = new();
-        private ModVehicleArm armDeclaration;
+        private ModVehicleArm? armDeclaration;
         public bool IsLeft { get; private set; }
         private Vehicle Vehicle => GetComponentInParent<Exosuit>();
         private int SlotID => IsLeft ? Vehicle.GetSlotIndex("ExosuitArmLeft") : Vehicle.GetSlotIndex("ExosuitArmRight");
@@ -39,9 +39,9 @@ namespace VehicleFramework.VehicleComponents
             return gameObject;
         }
 
-        GameObject IExosuitArm.GetInteractableRoot(GameObject target) // target is whatever we're aiming at. What we return becomes Exosuit.activeTarget.
+        GameObject? IExosuitArm.GetInteractableRoot(GameObject target) // target is whatever we're aiming at. What we return becomes Exosuit.activeTarget.
         {
-            return armDeclaration.GetInteractableRoot(gameObject, Vehicle, target);
+            return armDeclaration?.GetInteractableRoot(gameObject, Vehicle, target);
         }
             
         void IExosuitArm.SetSide(Exosuit.Arm arm)
@@ -67,7 +67,15 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            return armDeclaration.OnArmDown(armActionParams, out cooldownDuration);
+            if(armDeclaration is null)
+            {
+                cooldownDuration = 0;
+                return false;
+            }
+            else
+            {
+                return armDeclaration.OnArmDown(armActionParams, out cooldownDuration);
+            }
         }
 
         bool IExosuitArm.OnUseHeld(out float cooldownDuration) // return true when the "hold" happened
@@ -79,7 +87,15 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            return armDeclaration.OnArmHeld(armActionParams, out cooldownDuration);
+            if (armDeclaration is null)
+            {
+                cooldownDuration = 0;
+                return false;
+            }
+            else
+            {
+                return armDeclaration.OnArmHeld(armActionParams, out cooldownDuration);
+            }
         }
 
         bool IExosuitArm.OnUseUp(out float cooldownDuration) // return true when the "stop using" happened
@@ -91,7 +107,15 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            return armDeclaration.OnArmUp(armActionParams, out cooldownDuration);
+            if (armDeclaration is null)
+            {
+                cooldownDuration = 0;
+                return false;
+            }
+            else
+            {
+                return armDeclaration.OnArmUp(armActionParams, out cooldownDuration);
+            }
         }
 
         bool IExosuitArm.OnAltDown() // return true when the "alt use" happened
@@ -103,20 +127,35 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            return armDeclaration.OnArmAltUse(armActionParams);
+            if (armDeclaration is null)
+            {
+                return false;
+            }
+            else
+            {
+                return armDeclaration.OnArmAltUse(armActionParams);
+            }
         }
 
         void IExosuitArm.Update(ref Quaternion aimDirection) // happens every frame the player is inside and has control over the exosuit
         {
+            if (armDeclaration is null)
+            {
+                return;
+            }
             armDeclaration.Update(gameObject, Vehicle, ref aimDirection);
         }
 
         void IExosuitArm.ResetArm() // called OnPilotExit
         {
+            if (armDeclaration is null)
+            {
+                return;
+            }
             armDeclaration.OnPilotExit(gameObject, Vehicle);
         }
 
-        public static GameObject GetArmPrefab(TechType techType)
+        public static GameObject? GetArmPrefab(TechType techType)
         {
             foreach (KeyValuePair<UpgradeTechTypes, GameObject> arms in armPrefabs)
             {
@@ -139,7 +178,7 @@ namespace VehicleFramework.VehicleComponents
             }
             return null;
         }
-        public static ModVehicleArm GetModVehicleArm(TechType techType)
+        public static ModVehicleArm? GetModVehicleArm(TechType techType)
         {
             foreach (KeyValuePair<UpgradeTechTypes, ModVehicleArm> arms in armLogics)
             {

@@ -187,7 +187,7 @@ namespace VehicleFramework.Assets
                 }
                 Component.Destroy(this);
             }
-            Admin.Utils.StartCoroutine(DestroyPickupable());
+            Admin.SessionManager.StartCoroutine(DestroyPickupable());
         }
 
         internal static void SetupScannable(GameObject obj, TechType tt)

@@ -128,7 +128,7 @@ namespace VehicleFramework.Admin
             }
             if (!CraftTreeHandler.IsValidCraftPath(steps))
             {
-                throw new Exception($"UpgradeRegistrar: Invalid Crafting Path: there were tab nodes in that tab: {steps.Last()}. Cannot mix tab nodes and crafting nodes.");
+                throw Admin.SessionManager.Fatal($"UpgradeRegistrar: Invalid Crafting Path: there were tab nodes in that tab: {steps.Last()}. Cannot mix tab nodes and crafting nodes.");
             }
             CraftTreeHandler.CraftNodeTabNodes.Add(steps.Last());
             module_CustomPrefab
@@ -341,7 +341,7 @@ namespace VehicleFramework.Admin
                 IEnumerator PrepareModVehicleArmPrefab()
                 {
                     TaskResult<GameObject> armRequest = new();
-                    yield return Admin.Utils.StartCoroutine(arm.GetArmPrefab(armRequest));
+                    yield return Admin.SessionManager.StartCoroutine(arm.GetArmPrefab(armRequest));
                     GameObject armPrefab = armRequest.Get();
                     if (armPrefab == null)
                     {
@@ -353,7 +353,7 @@ namespace VehicleFramework.Admin
                     VFArm.armPrefabs.Add(staticUTT, armPrefab);
                     arm.armPrefab = armPrefab;
                 }
-                Admin.Utils.StartCoroutine(PrepareModVehicleArmPrefab());
+                Admin.SessionManager.StartCoroutine(PrepareModVehicleArmPrefab());
 
                 TechType mvTT = utt.forModVehicle;
                 TechType sTT = utt.forSeamoth;

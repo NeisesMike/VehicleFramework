@@ -15,8 +15,8 @@ namespace VehicleFramework.SaveLoad
         private const string NewSaveFileName = "Upgrades";
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
-            Dictionary<string, InventoryItem> upgradeList = mv.modules?.equipment;
-            if (upgradeList == null)
+            Dictionary<string, InventoryItem> upgradeList = mv.modules.equipment;
+            if (upgradeList is null)
             {
                 return;
             }
@@ -26,7 +26,7 @@ namespace VehicleFramework.SaveLoad
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            Admin.Utils.StartCoroutine(LoadUpgrades());
+            Admin.SessionManager.StartCoroutine(LoadUpgrades());
         }
         private IEnumerator LoadUpgrades()
         {

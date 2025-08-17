@@ -9,11 +9,11 @@ namespace VehicleFramework.Assets
 {
     public struct VehicleAssets
     {
-        public GameObject model;
-        public Sprite ping;
-        public Sprite crafter;
-        public GameObject fragment;
-        public Sprite unlock;
+        public GameObject? model;
+        public Sprite? ping;
+        public Sprite? crafter;
+        public GameObject? fragment;
+        public Sprite? unlock;
         public AssetBundleInterface? abi;
         public VehicleAssets(GameObject imodel, Sprite iping, Sprite icrafter, GameObject ifragment, Sprite iunlock)
         {
@@ -32,7 +32,7 @@ namespace VehicleFramework.Assets
     public class AssetBundleInterface
     {
         internal string bundleName;
-        internal AssetBundle bundle;
+        internal AssetBundle bundle = null!;
         internal AssetBundleInterface(string bundlePath)
         {
             bundleName = bundlePath;
@@ -45,8 +45,12 @@ namespace VehicleFramework.Assets
                 Logger.LogException($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. Make sure the name is correct.", e);
                 return;
             }
+            if(bundle is null)
+            {
+                throw Admin.SessionManager.Fatal($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. The bundle is null.");
+            }
         }
-        internal SpriteAtlas GetSpriteAtlas(string spriteAtlasName)
+        internal SpriteAtlas? GetSpriteAtlas(string spriteAtlasName)
         {
             try
             {
@@ -65,12 +69,12 @@ namespace VehicleFramework.Assets
                 }
             }
         }
-        internal Sprite GetSprite(string spriteAtlasName, string spriteName)
+        internal Sprite? GetSprite(string spriteAtlasName, string spriteName)
         {
-            SpriteAtlas thisAtlas = GetSpriteAtlas(spriteAtlasName);
+            SpriteAtlas? thisAtlas = GetSpriteAtlas(spriteAtlasName);
             try
             {
-                return thisAtlas.GetSprite(spriteName);
+                return thisAtlas?.GetSprite(spriteName);
             }
             catch (Exception e)
             {
@@ -78,7 +82,7 @@ namespace VehicleFramework.Assets
                 return null;
             }
         }
-        internal GameObject GetGameObject(string gameObjectName)
+        internal GameObject? GetGameObject(string gameObjectName)
         {
             try
             {
@@ -97,9 +101,9 @@ namespace VehicleFramework.Assets
                 }
             }
         }
-        internal AudioClip GetAudioClip(string prefabName, string clipName)
+        internal AudioClip? GetAudioClip(string prefabName, string clipName)
         {
-            return GetGameObject(prefabName)
+            return GetGameObject(prefabName)?
                 .GetComponents<AudioSource>()
                 .Select(x => x.clip)
                 .Where(x => x.name == clipName)
@@ -139,15 +143,15 @@ namespace VehicleFramework.Assets
             }
             return result;
         }
-        public static GameObject LoadAdditionalGameObject(AssetBundleInterface abi, string modelName)
+        public static GameObject? LoadAdditionalGameObject(AssetBundleInterface abi, string modelName)
         {
             return abi.GetGameObject(modelName);
         }
-        public static Sprite LoadAdditionalSprite(AssetBundleInterface abi, string SpriteAtlasName, string SpriteName)
+        public static Sprite? LoadAdditionalSprite(AssetBundleInterface abi, string SpriteAtlasName, string SpriteName)
         {
             return abi.GetSprite(SpriteAtlasName, SpriteName);
         }
-        public static AudioClip LoadAudioClip(AssetBundleInterface abi, string prefabName, string clipName)
+        public static AudioClip? LoadAudioClip(AssetBundleInterface abi, string prefabName, string clipName)
         {
             return abi.GetAudioClip(prefabName, clipName);
         }

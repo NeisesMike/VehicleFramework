@@ -11,31 +11,28 @@ namespace VehicleFramework
 {
     public class VehicleVoice
     {
-        public AudioClip BatteriesDepleted;
-        public AudioClip BatteriesNearlyEmpty;
-        public AudioClip PowerLow;
-        public AudioClip EnginePoweringDown;
-        public AudioClip EnginePoweringUp;
-        public AudioClip Goodbye;
-        public AudioClip HullFailureImminent;
-        public AudioClip HullIntegrityCritical;
-        public AudioClip HullIntegrityLow;
-        public AudioClip Leveling;
-        public AudioClip WelcomeAboard;
-        public AudioClip OxygenProductionOffline;
-        public AudioClip WelcomeAboardAllSystemsOnline;
-        public AudioClip MaximumDepthReached;
-        public AudioClip PassingSafeDepth;
-        public AudioClip LeviathanDetected;
-        public AudioClip UhOh;
+        public AudioClip? BatteriesDepleted;
+        public AudioClip? BatteriesNearlyEmpty;
+        public AudioClip? PowerLow;
+        public AudioClip? EnginePoweringDown;
+        public AudioClip? EnginePoweringUp;
+        public AudioClip? Goodbye;
+        public AudioClip? HullFailureImminent;
+        public AudioClip? HullIntegrityCritical;
+        public AudioClip? HullIntegrityLow;
+        public AudioClip? Leveling;
+        public AudioClip? WelcomeAboard;
+        public AudioClip? OxygenProductionOffline;
+        public AudioClip? WelcomeAboardAllSystemsOnline;
+        public AudioClip? MaximumDepthReached;
+        public AudioClip? PassingSafeDepth;
+        public AudioClip? LeviathanDetected;
+        public AudioClip? UhOh;
     }
     public static class VoiceManager
     {
         #region public_api
         // voice that are in-play
-        public static List<AutoPilotVoice> voices = new();
-        public static AudioClip silence;
-        public static VehicleVoice silentVoice = new();
         public const string DefaultVoicePath = "AutoPilotVoices";
 
         public static VehicleVoice GetVoice(string name)
@@ -116,7 +113,7 @@ namespace VehicleFramework
             string folderWithVoiceFiles = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetCallingAssembly().Location),
                 relativePathToFolderWithVoiceFiles);
-            Admin.Utils.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles, verbose));
+            Admin.SessionManager.StartCoroutine(RegisterVoiceAbsolute(name, folderWithVoiceFiles, verbose));
         }
         private static IEnumerator RegisterVoiceAbsolute(string name, string absolutePath, bool verbose)
         {
@@ -144,6 +141,9 @@ namespace VehicleFramework
         #endregion
 
         #region internal
+        internal static List<AutoPilotVoice> voices = new();
+        internal static AudioClip silence = null!;
+        internal static VehicleVoice silentVoice = new();
         private static readonly string[] clipNames = {
             "BatteriesDepleted",
             "BatteriesNearlyEmpty",
@@ -191,10 +191,10 @@ namespace VehicleFramework
         }
         internal static VehicleVoice GetDefaultVoice(ModVehicle mv)
         {
-            if(mv == null)
+            if(mv is null)
             {
                 Logger.Error("Cannot get default voice for null ModVehicle!");
-                return default;
+                return silentVoice;
             }
             string defaultOption;
             try
@@ -269,10 +269,13 @@ namespace VehicleFramework
             yield return www.SendWebRequest();
             if (www.isHttpError || www.isNetworkError)
             {
-                Logger.Error("ERROR: Silence.ogg not found. Directory error.");
-                yield break;
+                throw Admin.SessionManager.Fatal("ERROR: Silence.ogg not found. Directory error.");
             }
             silence = DownloadHandlerAudioClip.GetContent(www);
+            if(silence is null)
+            {
+                throw Admin.SessionManager.Fatal("ERROR: Silence.ogg could not be loaded. Directory error.");
+            }
 
             silentVoice = new VehicleVoice
             {

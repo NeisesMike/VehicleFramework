@@ -13,11 +13,14 @@ namespace VehicleFramework
 {
     public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener, IScuttleListener
     {
-        public EnergyInterface aiEI;
-        public AutoPilotVoice apVoice;
-        public ModVehicle mv => GetComponent<ModVehicle>();
-        public LiveMixin liveMixin => mv.liveMixin;
-        public EnergyInterface eInterf => mv.energyInterface;
+        public EnergyInterface? AutoPilotEI;
+        public AutoPilotVoice? AutoPilotVoice;
+        public ModVehicle MV => GetComponent<ModVehicle>();
+        public Submarine? Sub => GetComponent<Submarine>();
+        public Submersible? Subbie => GetComponent<Submersible>();
+        public LiveMixin LiveMixin => MV.liveMixin;
+        public EnergyInterface MyEI => MV.energyInterface;
+        private bool HasSomePower => !isPoweredDown || (AutoPilotEI is not null && AutoPilotEI.hasCharge);
 
         public enum HealthState
         {
@@ -82,12 +85,15 @@ namespace VehicleFramework
                 _autoLeveling = value;
             }
         }
-        private bool isDead = false;
+        private bool isPoweredDown = false;
         public void Awake()
         {
-            mv.voice = apVoice = mv.gameObject.EnsureComponent<AutoPilotVoice>();
-            mv.voice.voice = VoiceManager.GetDefaultVoice(mv);
-            mv.gameObject.EnsureComponent<AutoPilotNavigator>();
+            if (MV is null)
+            {
+                throw Admin.SessionManager.Fatal("AutoPilotVoice is not attached to a ModVehicle!");
+            }
+            MV.voice = AutoPilotVoice = MV.gameObject.EnsureComponent<AutoPilotVoice>();
+            MV.gameObject.EnsureComponent<AutoPilotNavigator>();
             healthStatus = HealthState.Safe;
             powerStatus = PowerState.Safe;
             depthStatus = DepthState.Safe;
@@ -95,13 +101,13 @@ namespace VehicleFramework
         }
         public void Start()
         {
-            if (mv.BackupBatteries != null && mv.BackupBatteries.Count > 0)
+            if (MV.BackupBatteries != null && MV.BackupBatteries.Count > 0)
             {
-                aiEI = mv.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
+                AutoPilotEI = MV.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
             }
             else
             {
-                aiEI = mv.energyInterface;
+                AutoPilotEI = MV.energyInterface;
             }
         }
 
@@ -110,14 +116,14 @@ namespace VehicleFramework
             UpdateHealthState();
             UpdatePowerState();
             UpdateDepthState();
-            if(mv as Drone == null)
+            if(MV as Drone == null)
             {
                 MaybeRefillOxygen();
             }
-            if (mv as Submarine != null && (mv as Submarine).DoesAutolevel && mv.VFEngine is Engines.ModVehicleEngine)
+            if (Sub is not null && Sub.DoesAutolevel && MV.VFEngine is Engines.ModVehicleEngine)
             {
-                MaybeAutoLevel(mv as Submarine);
-                CheckForDoubleTap(mv as Submarine);
+                MaybeAutoLevel(Sub);
+                CheckForDoubleTap(Sub);
             }
         }
         public void MaybeAutoLevel(Submarine mv)
@@ -128,7 +134,7 @@ namespace VehicleFramework
                 autoLeveling = false;
                 return;
             }
-            if ((!isDead || aiEI.hasCharge) && (autoLeveling || !mv.IsPlayerControlling()) && mv.GetIsUnderwater())
+            if (HasSomePower && (autoLeveling || !mv.IsPlayerControlling()) && mv.GetIsUnderwater())
             {
                 if (RollDelta < 0.4f && PitchDelta < 0.4f && mv.useRigidbody.velocity.magnitude < mv.ExitVelocityLimit)
                 {
@@ -150,7 +156,7 @@ namespace VehicleFramework
         }
         private void CheckForDoubleTap(Submarine mv)
         {
-            if ((!isDead || aiEI.hasCharge) && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerControlling())
+            if (HasSomePower && GameInput.GetButtonDown(GameInput.Button.Exit) && mv.IsPlayerControlling())
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {
@@ -168,12 +174,12 @@ namespace VehicleFramework
         }
         private void UpdateHealthState()
         {
-            float percentHealth = (liveMixin.health / liveMixin.maxHealth);
+            float percentHealth = (LiveMixin.health / LiveMixin.maxHealth);
             if (percentHealth < .05f)
             {
                 if (healthStatus < HealthState.DoomImminent)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.HullFailureImminent);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.HullFailureImminent);
                 }
                 healthStatus = HealthState.DoomImminent;
             }
@@ -181,7 +187,7 @@ namespace VehicleFramework
             {
                 if (healthStatus < HealthState.Critical)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.HullIntegrityCritical);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.HullIntegrityCritical);
                 }
                 healthStatus = HealthState.Critical;
             }
@@ -189,7 +195,7 @@ namespace VehicleFramework
             {
                 if (healthStatus < HealthState.Low)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.HullIntegrityLow);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.HullIntegrityLow);
                 }
                 healthStatus = HealthState.Low;
             }
@@ -200,12 +206,12 @@ namespace VehicleFramework
         }
         private void UpdatePowerState()
         {
-            mv.GetEnergyValues(out float totalPower, out float totalCapacity);
+            MV.GetEnergyValues(out float totalPower, out float totalCapacity);
             if (totalPower < 0.1)
             {
                 if (powerStatus < PowerState.OxygenOffline)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.OxygenProductionOffline);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.OxygenProductionOffline);
                 }
                 powerStatus = PowerState.OxygenOffline;
             }
@@ -213,7 +219,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.Depleted)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.BatteriesDepleted);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.BatteriesDepleted);
                 }
                 powerStatus = PowerState.Depleted;
             }
@@ -221,7 +227,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.NearMT)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.BatteriesNearlyEmpty);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.BatteriesNearlyEmpty);
                 }
                 powerStatus = PowerState.NearMT;
             }
@@ -229,7 +235,7 @@ namespace VehicleFramework
             {
                 if (powerStatus < PowerState.Low)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.PowerLow);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.PowerLow);
                 }
                 powerStatus = PowerState.Low;
             }
@@ -263,10 +269,10 @@ namespace VehicleFramework
                 switch (depthStatus)
                 {
                     case DepthState.Perilous:
-                        apVoice.EnqueueClip(apVoice.voice.PassingSafeDepth);
+                        AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.PassingSafeDepth);
                         break;
                     case DepthState.Lethal:
-                        apVoice.EnqueueClip(apVoice.voice.MaximumDepthReached);
+                        AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.MaximumDepthReached);
                         break;
                     default:
                         break;
@@ -275,15 +281,15 @@ namespace VehicleFramework
         }
         private void MaybeRefillOxygen()
         {
-            float totalPower = mv.energyInterface.TotalCanProvide(out _);
-            float totalAIPower = eInterf.TotalCanProvide(out _);
-            if (totalPower < 0.1 && totalAIPower >= 0.1 && mv.IsUnderCommand)
+            float totalPower = MV.energyInterface.TotalCanProvide(out _);
+            float totalAIPower = MyEI.TotalCanProvide(out _);
+            if (totalPower < 0.1 && totalAIPower >= 0.1 && MV.IsUnderCommand)
             {
                 // The main batteries are out, so the AI will take over life support.
                 OxygenManager oxygenMgr = Player.main.oxygenMgr;
                 oxygenMgr.GetTotal(out float num, out float num2);
-                float amount = Mathf.Min(num2 - num, mv.oxygenPerSecond * Time.deltaTime) * mv.oxygenEnergyCost;
-                float secondsToAdd = mv.AIEnergyInterface.ConsumeEnergy(amount) / mv.oxygenEnergyCost;
+                float amount = Mathf.Min(num2 - num, MV.oxygenPerSecond * Time.deltaTime) * MV.oxygenEnergyCost;
+                float secondsToAdd = MV.AIEnergyInterface.ConsumeEnergy(amount) / MV.oxygenEnergyCost;
                 oxygenMgr.AddOxygen(secondsToAdd);
             }
         }
@@ -361,16 +367,16 @@ namespace VehicleFramework
         void IPowerListener.OnPowerUp()
         {
             Logger.DebugLog("OnPowerUp");
-            isDead = false;
-            apVoice.EnqueueClip(apVoice.voice.EnginePoweringUp);
-            if (mv.IsUnderCommand)
+            isPoweredDown = false;
+            AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.EnginePoweringUp);
+            if (MV.IsUnderCommand)
             {
                 IEnumerator ShakeCamera()
                 {
                     yield return new WaitForSeconds(4.6f);
                     MainCameraControl.main.ShakeCamera(1f, 0.5f, MainCameraControl.ShakeMode.Linear, 1f);
                 }
-                Admin.Utils.StartCoroutine(ShakeCamera());
+                Admin.SessionManager.StartCoroutine(ShakeCamera());
                 MainCameraControl.main.ShakeCamera(0.15f, 4.5f, MainCameraControl.ShakeMode.Linear, 1f);
             }
         }
@@ -378,9 +384,9 @@ namespace VehicleFramework
         void IPowerListener.OnPowerDown()
         {
             Logger.DebugLog("OnPowerDown");
-            isDead = true;
+            isPoweredDown = true;
             autoLeveling = false;
-            apVoice.EnqueueClip(apVoice.voice.EnginePoweringDown);
+            AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.EnginePoweringDown);
         }
 
         void IPowerListener.OnBatterySafe()
@@ -408,18 +414,18 @@ namespace VehicleFramework
             Logger.DebugLog("OnPlayerEntry");
             if (powerStatus < PowerState.NearMT && UnityEngine.Random.value < 0.5f)
             {
-                apVoice.EnqueueClip(apVoice.voice.WelcomeAboardAllSystemsOnline);
+                AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.WelcomeAboardAllSystemsOnline);
             }
             else
             {
-                apVoice.EnqueueClip(apVoice.voice.WelcomeAboard);
+                AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.WelcomeAboard);
             }
         }
 
         void IPlayerListener.OnPlayerExit()
         {
             Logger.DebugLog("OnPlayerExit");
-            apVoice.EnqueueClip(apVoice.voice.Goodbye);
+            AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.Goodbye);
         }
 
         void IPlayerListener.OnPilotBegin()
@@ -445,7 +451,7 @@ namespace VehicleFramework
         void IAutoPilotListener.OnAutoLevelBegin()
         {
             Logger.DebugLog("OnAutoLevelBegin");
-            apVoice.EnqueueClip(apVoice.voice.Leveling);
+            AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.Leveling);
         }
 
         void IAutoPilotListener.OnAutoLevelEnd()
@@ -475,17 +481,17 @@ namespace VehicleFramework
             }
             StopAllCoroutines();
             timeWeStartedWaiting = Time.time;
-            Admin.Utils.StartCoroutine(ResetDangerStatusEventually());
+            Admin.SessionManager.StartCoroutine(ResetDangerStatusEventually());
             if (dangerStatus == DangerState.Safe)
             {
                 dangerStatus = DangerState.LeviathanNearby;
                 if ((new System.Random()).NextDouble() < 0.5)
                 {
-                    apVoice.EnqueueClip(apVoice.voice.LeviathanDetected);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.LeviathanDetected);
                 }
                 else
                 {
-                    apVoice.EnqueueClip(apVoice.voice.UhOh);
+                    AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.UhOh);
                 }
             }
         }

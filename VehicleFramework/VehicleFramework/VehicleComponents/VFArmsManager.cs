@@ -10,10 +10,11 @@ namespace VehicleFramework.VehicleComponents
     // It manages ModVehicleArms and their actions.
     public class VFArmsManager : MonoBehaviour
     {
-        public GameObject leftArm;
-        public GameObject rightArm;
+        public GameObject? leftArm;
+        public GameObject? rightArm;
         internal int leftArmSlotID = 0;
         internal int rightArmSlotID = 0;
+        internal Drone? myDrone => GetComponent<Drone>();
 
         public void UpdateArms(ModVehicleArm arm, int slotId)
         {
@@ -67,21 +68,21 @@ namespace VehicleFramework.VehicleComponents
         public void SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {
             GameObject armPrefab = arm.armPrefab;
-            if (isLeft && leftArm == null)
+            if (isLeft && leftArm is null)
             {
                 leftArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
                 leftArm.transform.SetParent(mv.transform);
                 leftArm.transform.localRotation = Quaternion.identity;
-                if (mv.Arms.leftArmPlacement != null)
+                if (mv.Arms.leftArmPlacement is not null)
                 {
                     leftArm.transform.localPosition = mv.Arms.leftArmPlacement.localPosition;
                     leftArm.transform.localRotation = mv.Arms.leftArmPlacement.localRotation;
                 }
                 else
                 {
-                    if(mv is Drone)
+                    if(myDrone is not null)
                     {
-                        leftArm.transform.localPosition = (mv as Drone).CameraLocation.localPosition
+                        leftArm.transform.localPosition = myDrone.CameraLocation.localPosition
                             - Vector3.right;
                     }
                     else
@@ -94,7 +95,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 leftArm.name = "LeftArm";
             }
-            else if (!isLeft && rightArm == null)
+            else if (!isLeft && rightArm is null)
             {
                 rightArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
                 rightArm.transform.SetParent(mv.transform);
@@ -104,16 +105,16 @@ namespace VehicleFramework.VehicleComponents
                     rightArm.transform.localScale.y,
                     rightArm.transform.localScale.z
                 );
-                if (mv.Arms.rightArmPlacement != null)
+                if (mv.Arms.rightArmPlacement is not null)
                 {
                     rightArm.transform.localPosition = mv.Arms.rightArmPlacement.localPosition;
                     rightArm.transform.localRotation = mv.Arms.rightArmPlacement.localRotation;
                 }
                 else
                 {
-                    if (mv is Drone)
+                    if (myDrone is not null)
                     {
-                        leftArm.transform.localPosition = (mv as Drone).CameraLocation.localPosition
+                        rightArm.transform.localPosition = myDrone.CameraLocation.localPosition
                             + Vector3.right;
                     }
                     else
@@ -148,24 +149,36 @@ namespace VehicleFramework.VehicleComponents
             ModVehicle mv = GetComponent<ModVehicle>();
             int slotID = isLeft ? mv.GetSlotIndex(ModuleBuilder.LeftArmSlotName) : mv.GetSlotIndex(ModuleBuilder.RightArmSlotName);
             mv.GetQuickSlotType(slotID, out TechType techType);
-            return new ArmActionParams
+            if (isLeft)
             {
-                vehicle = mv,
-                slotID = slotID,
-                techType = techType,
-                arm = isLeft ? GetComponent<VFArmsManager>().leftArm : GetComponent<VFArmsManager>().rightArm
-            };
+                if (leftArm is not null)
+                {
+                    return new ArmActionParams
+                    {
+                        vehicle = mv,
+                        slotID = slotID,
+                        techType = techType,
+                        arm = leftArm
+                    };
+                }
+            }
+            else
+            {
+                if (rightArm is not null)
+                {
+                    return new ArmActionParams
+                    {
+                        vehicle = mv,
+                        slotID = slotID,
+                        techType = techType,
+                        arm = rightArm
+                    };
+                }
+            }
+            return default;
         }
         public void DoArmDown(bool isLeft)
         {
-            if(isLeft && leftArm == null)
-            {
-                return;
-            }
-            if(!isLeft && rightArm == null)
-            {
-                return;
-            }
             ArmActionParams param = GetArmActionParams(isLeft);
             if (GameInput.GetButtonHeld(GameInput.Button.AltTool))
             {
@@ -178,27 +191,11 @@ namespace VehicleFramework.VehicleComponents
         }
         public void DoArmUp(bool isLeft)
         {
-            if (isLeft && leftArm == null)
-            {
-                return;
-            }
-            if (!isLeft && rightArm == null)
-            {
-                return;
-            }
             ArmActionParams param = GetArmActionParams(isLeft);
             UpgradeRegistrar.OnArmUpActions.ForEach(x => x(param));
         }
         public void DoArmHeld(bool isLeft)
         {
-            if (isLeft && leftArm == null)
-            {
-                return;
-            }
-            if (!isLeft && rightArm == null)
-            {
-                return;
-            }
             ArmActionParams param = GetArmActionParams(isLeft);
             UpgradeRegistrar.OnArmHeldActions.ForEach(x => x(param));
         }

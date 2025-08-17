@@ -19,9 +19,9 @@ namespace VehicleFramework.Patches.CreaturePatches
             }
             if(__instance.name.Contains("Warper") && __result.GetType().ToString().Contains("RangedAttackLastTarget"))
             {
-                VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
-                VehicleTypes.Submarine sub = Player.main?.GetVehicle() as VehicleTypes.Submarine;
-                if (drone != null || sub != null)
+                VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+                VehicleTypes.Submarine? sub = Player.main?.GetVehicle() as VehicleTypes.Submarine;
+                if (drone is not null || sub is not null)
                 {
                     __result = new SwimRandom();
                 }
@@ -39,10 +39,10 @@ namespace VehicleFramework.Patches.CreaturePatches
             // Warp balls shouldn't effect players in Submarines
 
             Player myPlayer = target.GetComponent<Player>();
-            VehicleTypes.Submarine mySub = target.GetComponent<VehicleTypes.Submarine>()
+            VehicleTypes.Submarine? mySub = target.GetComponent<VehicleTypes.Submarine>()
                 ?? myPlayer?.GetVehicle() as VehicleTypes.Submarine;
 
-            if(mySub == null)
+            if(mySub is null)
             {
                 return true;
             }

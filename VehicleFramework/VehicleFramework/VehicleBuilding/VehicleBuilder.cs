@@ -38,7 +38,7 @@ namespace VehicleFramework
         public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Prefabricating the " + mv.gameObject.name);
-            yield return Admin.Utils.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            yield return Admin.SessionManager.StartCoroutine(SeamothHelper.EnsureSeamoth());
             if(!Instrument(mv, pingType))
             {
                 Logger.Error("Failed to instrument the vehicle: " + mv.gameObject.name);

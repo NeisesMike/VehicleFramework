@@ -94,9 +94,9 @@ namespace VehicleFramework.VehicleComponents
                 attachedPlatform = platform;
                 if (CollisionHandling != null)
                 {
-                    Admin.Utils.StopCoroutine(CollisionHandling);
+                    Admin.SessionManager.StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = Admin.Utils.StartCoroutine(IgnoreCollisionWithHost(true));
+                CollisionHandling = Admin.SessionManager.StartCoroutine(IgnoreCollisionWithHost(true));
                 if (attachedPlatform.GetComponent<ModVehicle>())
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += MyVehicle.useRigidbody.mass;
@@ -108,9 +108,9 @@ namespace VehicleFramework.VehicleComponents
                 Detach?.Invoke();
                 if (CollisionHandling != null)
                 {
-                    Admin.Utils.StopCoroutine(CollisionHandling);
+                    Admin.SessionManager.StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = Admin.Utils.StartCoroutine(IgnoreCollisionWithHost(false));
+                CollisionHandling = Admin.SessionManager.StartCoroutine(IgnoreCollisionWithHost(false));
                 MyVehicle.transform.SetParent(serializerObject);
                 if (attachedPlatform?.GetComponent<ModVehicle>())
                 {
@@ -137,7 +137,7 @@ namespace VehicleFramework.VehicleComponents
                     return;
                 }
             }
-            Admin.Utils.StartCoroutine(FindStoreInfoIdentifier());
+            Admin.SessionManager.StartCoroutine(FindStoreInfoIdentifier());
         }
         private void OnEnable()
         {
@@ -161,7 +161,7 @@ namespace VehicleFramework.VehicleComponents
                 serializerObject = transform.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
                 yield return null;
             }
-            Admin.Utils.StartCoroutine(InternalLoad());
+            Admin.SessionManager.StartCoroutine(InternalLoad());
         }
         public void Update()
         {

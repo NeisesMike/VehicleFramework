@@ -10,7 +10,7 @@ namespace VehicleFramework
     public static class Logger
     {
         #region BepInExLog
-        internal static ManualLogSource MyLog { get; set; }
+        internal static ManualLogSource MyLog { get; set; } = null!;
         public static void Log(string message)
         {
             MyLog.LogInfo(message);

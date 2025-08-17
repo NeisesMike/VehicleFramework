@@ -87,7 +87,7 @@ namespace VehicleFramework.Admin
         internal const string CyclopsName = "VanillaCyclops";
         public static void LogAllVehicleNames()
         {
-            Admin.Utils.StartCoroutine(LogAllVehicleNamesInternal());
+            Admin.SessionManager.StartCoroutine(LogAllVehicleNamesInternal());
         }
         private static IEnumerator LogAllVehicleNamesInternal()
         {
@@ -103,27 +103,27 @@ namespace VehicleFramework.Admin
             Logger.Log("Logging all vehicle type names:");
             result.ForEach(x => Logger.Log(x));
         }
-        public static void RegisterForAllModVehicles<T>(string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange = null, ConfigFile configFile = null)
+        public static void RegisterForAllModVehicles<T>(string name, ConfigDescription description, T defaultValue, Action<TechType, T>? OnChange, ConfigFile? configFile)
         {
-            Admin.Utils.StartCoroutine(RegisterForAllInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.SessionManager.StartCoroutine(RegisterForAllInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
-        public static void RegisterForModVehicle<T>(string vehicleName, string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange = null, ConfigFile configFile = null)
+        public static void RegisterForModVehicle<T>(string vehicleName, string name, ConfigDescription description, T defaultValue, Action<TechType, T>? OnChange, ConfigFile? configFile)
         {
-            Admin.Utils.StartCoroutine(RegisterForVehicleInternal<T>(vehicleName, name, description, defaultValue, OnChange, configFile));
+            Admin.SessionManager.StartCoroutine(RegisterForVehicleInternal<T>(vehicleName, name, description, defaultValue, OnChange, configFile));
         }
-        public static void RegisterForSeamoth<T>(string name, ConfigDescription description, T defaultValue, Action<T> OnChange = null, ConfigFile configFile = null)
+        public static void RegisterForSeamoth<T>(string name, ConfigDescription description, T defaultValue, Action<T>? OnChange, ConfigFile? configFile)
         {
-            Admin.Utils.StartCoroutine(RegisterForSeamothInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.SessionManager.StartCoroutine(RegisterForSeamothInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
-        public static void RegisterForPrawn<T>(string name, ConfigDescription description, T defaultValue, Action<T> OnChange = null, ConfigFile configFile = null)
+        public static void RegisterForPrawn<T>(string name, ConfigDescription description, T defaultValue, Action<T>? OnChange, ConfigFile? configFile)
         {
-            Admin.Utils.StartCoroutine(RegisterForPrawnInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.SessionManager.StartCoroutine(RegisterForPrawnInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
-        public static void RegisterForCyclops<T>(string name, ConfigDescription description, T defaultValue, Action<T> OnChange = null, ConfigFile configFile = null)
+        public static void RegisterForCyclops<T>(string name, ConfigDescription description, T defaultValue, Action<T>? OnChange, ConfigFile? configFile)
         {
-            Admin.Utils.StartCoroutine(RegisterForCyclopsInternal<T>(name, description, defaultValue, OnChange, configFile));
+            Admin.SessionManager.StartCoroutine(RegisterForCyclopsInternal<T>(name, description, defaultValue, OnChange, configFile));
         }
-        private static IEnumerator RegisterForAllInternal<T>(string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange = null, ConfigFile configFile = null)
+        private static IEnumerator RegisterForAllInternal<T>(string name, ConfigDescription description, T defaultValue, Action<TechType, T>? OnChange, ConfigFile? configFile)
         {
             if (typeof(T) != typeof(bool) && typeof(T) != typeof(float) && typeof(T) != typeof(KeyboardShortcut))
             {
@@ -134,8 +134,7 @@ namespace VehicleFramework.Admin
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
             foreach (var pair in ExternalVehicleConfig<T>.main)
             {
-                ConfigFile config = configFile;
-                config ??= MainPatcher.Instance.Config;
+                ConfigFile config = configFile ?? MainPatcher.Instance.Config;
                 var vConf = pair.Value;
                 string vehicleName = pair.Key;
                 ConfigEntry<T> thisConf;
@@ -166,7 +165,7 @@ namespace VehicleFramework.Admin
                 vConf.ExternalConfigs.Add(name, thisConf);
             }
         }
-        private static IEnumerator RegisterForVehicleInternal<T>(string vehicleName, string name, ConfigDescription description, T defaultValue, Action<TechType, T> OnChange, ConfigFile configFile)
+        private static IEnumerator RegisterForVehicleInternal<T>(string vehicleName, string name, ConfigDescription description, T defaultValue, Action<TechType, T>? OnChange, ConfigFile? configFile)
         {
             if (typeof(T) != typeof(bool) && typeof(T) != typeof(float) && typeof(T) != typeof(KeyboardShortcut))
             {
@@ -185,8 +184,7 @@ namespace VehicleFramework.Admin
                 throw new ArgumentException($"RegisterForModVehicle: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches.");
             }
             ModVehicle mv = MVs.First().mv;
-            ConfigFile config = configFile;
-            config ??= MainPatcher.Instance.Config;
+            ConfigFile config = configFile ?? MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetModVehicleConfig(vehicleName);
             ConfigEntry<T> thisConf;
             try
@@ -208,7 +206,7 @@ namespace VehicleFramework.Admin
             }
             vConf.ExternalConfigs.Add(name, thisConf);
         }
-        private static IEnumerator RegisterForSeamothInternal<T>(string name, ConfigDescription description, T defaultValue, Action<T> onChange, ConfigFile configFile)
+        private static IEnumerator RegisterForSeamothInternal<T>(string name, ConfigDescription description, T defaultValue, Action<T>? onChange, ConfigFile? configFile)
         {
             if (typeof(T) != typeof(bool) && typeof(T) != typeof(float) && typeof(T) != typeof(KeyboardShortcut))
             {
@@ -217,8 +215,7 @@ namespace VehicleFramework.Admin
             }
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
-            ConfigFile config = configFile;
-            config ??= MainPatcher.Instance.Config;
+            ConfigFile config = configFile ?? MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetSeamothConfig();
             ConfigEntry<T> thisConf;
             try
@@ -240,7 +237,7 @@ namespace VehicleFramework.Admin
             }
             vConf.ExternalConfigs.Add(name, thisConf);
         }
-        private static IEnumerator RegisterForPrawnInternal<T>(string name, ConfigDescription description, T defaultValue, Action<T> onChange, ConfigFile configFile)
+        private static IEnumerator RegisterForPrawnInternal<T>(string name, ConfigDescription description, T defaultValue, Action<T>? onChange, ConfigFile? configFile)
         {
             if (typeof(T) != typeof(bool) && typeof(T) != typeof(float) && typeof(T) != typeof(KeyboardShortcut))
             {
@@ -249,8 +246,7 @@ namespace VehicleFramework.Admin
             }
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
-            ConfigFile config = configFile;
-            config ??= MainPatcher.Instance.Config;
+            ConfigFile config = configFile ?? MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetPrawnConfig();
             ConfigEntry<T> thisConf;
             try
@@ -272,7 +268,7 @@ namespace VehicleFramework.Admin
             }
             vConf.ExternalConfigs.Add(name, thisConf);
         }
-        private static IEnumerator RegisterForCyclopsInternal<T>(string name, ConfigDescription description, T defaultValue, Action<T> onChange, ConfigFile configFile)
+        private static IEnumerator RegisterForCyclopsInternal<T>(string name, ConfigDescription description, T defaultValue, Action<T>? onChange, ConfigFile? configFile)
         {
             if (typeof(T) != typeof(bool) && typeof(T) != typeof(float) && typeof(T) != typeof(KeyboardShortcut))
             {
@@ -281,8 +277,7 @@ namespace VehicleFramework.Admin
             }
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
-            ConfigFile config = configFile;
-            config ??= MainPatcher.Instance.Config;
+            ConfigFile config = configFile ?? MainPatcher.Instance.Config;
             var vConf = ExternalVehicleConfig<T>.GetCyclopsConfig();
             ConfigEntry<T> thisConf;
             try

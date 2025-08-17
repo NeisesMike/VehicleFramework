@@ -125,7 +125,7 @@ namespace VehicleFramework.Patches
             Player.main.SetCurrentSub(null, false);
             if (__instance.dockingBay.dockedVehicle != null)
             {
-                Admin.Utils.StartCoroutine(__instance.dockingBay.dockedVehicle.Undock(Player.main, __instance.dockingBay.transform.position.y));
+                Admin.SessionManager.StartCoroutine(__instance.dockingBay.dockedVehicle.Undock(Player.main, __instance.dockingBay.transform.position.y));
                 SkyEnvironmentChanged.Broadcast(__instance.dockingBay.dockedVehicle.gameObject, (GameObject)null);
             }
             __instance.dockingBay.dockedVehicle = null;
@@ -139,7 +139,7 @@ namespace VehicleFramework.Patches
                     __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
                     mv.useRigidbody.detectCollisions = true;
                 }
-                Admin.Utils.StartCoroutine(ReEnableCollisionsInAMoment());
+                Admin.SessionManager.StartCoroutine(ReEnableCollisionsInAMoment());
             }
             else
             {
@@ -163,7 +163,7 @@ namespace VehicleFramework.Patches
                 }
                 if (moonpoolMaybe != null && moonpoolMaybe.name.Equals("BaseMoonpool(Clone)", StringComparison.OrdinalIgnoreCase))
                 {
-                    Admin.Utils.StartCoroutine(ReEnableCollisionsInAMoment());
+                    Admin.SessionManager.StartCoroutine(ReEnableCollisionsInAMoment());
                 }
             }
             SkyEnvironmentChanged.Broadcast(mv.gameObject, (GameObject)null);

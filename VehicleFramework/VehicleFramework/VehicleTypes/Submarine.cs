@@ -74,7 +74,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 if (ColorPicker.transform.Find("EditScreen") == null)
                 {
-                    Admin.Utils.StartCoroutine(SetupColorPicker());
+                    Admin.SessionManager.StartCoroutine(SetupColorPicker());
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace VehicleFramework.VehicleTypes
             }
             if(isScuttled)
             {
-                Admin.Utils.StartCoroutine(GrantPlayerInvincibility(3f));
+                Admin.SessionManager.StartCoroutine(GrantPlayerInvincibility(3f));
             }
             Player.main.SetCurrentSub(GetComponent<SubRoot>());
         }
@@ -226,7 +226,7 @@ namespace VehicleFramework.VehicleTypes
                     active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = GetName();
                     active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = GetName();
                 }
-                Admin.Utils.StartCoroutine(TrySpawnFabricator());
+                Admin.SessionManager.StartCoroutine(TrySpawnFabricator());
             }
             base.SubConstructionComplete();
             PaintNameDefaultStyle(GetName());
@@ -262,7 +262,7 @@ namespace VehicleFramework.VehicleTypes
         IEnumerator SpawnFabricator(Transform location)
         {
             TaskResult<GameObject> result = new();
-            yield return Admin.Utils.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
+            yield return Admin.SessionManager.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
             fabricator = result.Get();
             fabricator.GetComponent<SkyApplier>().enabled = true;
             fabricator.transform.SetParent(transform);
@@ -403,7 +403,7 @@ namespace VehicleFramework.VehicleTypes
 
             if (console is null)
             {
-                yield return Admin.Utils.StartCoroutine(Builder.BeginAsync(TechType.BaseUpgradeConsole));
+                yield return Admin.SessionManager.StartCoroutine(Builder.BeginAsync(TechType.BaseUpgradeConsole));
                 Builder.ghostModel.GetComponentInChildren<BaseGhost>().OnPlace();
                 console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
                 Builder.End();
@@ -492,7 +492,7 @@ namespace VehicleFramework.VehicleTypes
         {
             StopPiloting();
             base.OnPlayerDocked(exitLocation);
-            //Admin.Utils.StartCoroutine(TryStandUpFromChair());
+            //Admin.SessionManager.StartCoroutine(TryStandUpFromChair());
         }
         public override void OnPlayerUndocked()
         {

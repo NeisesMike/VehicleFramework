@@ -29,7 +29,7 @@ namespace VehicleFramework.SaveLoad
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            Admin.Utils.StartCoroutine(LoadBattery());
+            Admin.SessionManager.StartCoroutine(LoadBattery());
         }
         private IEnumerator LoadBattery()
         {

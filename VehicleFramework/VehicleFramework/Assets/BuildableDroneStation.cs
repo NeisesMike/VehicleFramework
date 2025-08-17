@@ -37,6 +37,22 @@ namespace VehicleFramework
         public static void Register()
         {
             VehicleAssets DSAssets = AssetBundleInterface.GetVehicleAssetsFromBundle("dronestation", "DroneStation", "DSSpriteAtlas", "", "DSCrafterSprite", "Fragment", "DSUnlockSprite");
+            if(DSAssets.model is null)
+            {
+                throw Admin.SessionManager.Fatal("Drone Station model is null, cannot register Drone Station!");
+            }
+            if (DSAssets.crafter is null)
+            {
+                throw Admin.SessionManager.Fatal("Drone Station crafter is null, cannot register Drone Station!");
+            }
+            if (DSAssets.unlock is null)
+            {
+                throw Admin.SessionManager.Fatal("Drone Station unlock is null, cannot register Drone Station!");
+            }
+            if (DSAssets.fragment is null)
+            {
+                throw Admin.SessionManager.Fatal("Drone Station fragment is null, cannot register Drone Station!");
+            }
             TechType consoleTT = RegisterConsole(DSAssets.model, DSAssets.crafter, DSAssets.unlock);
             List<Vector3> spawnLocations = new()
             {
@@ -126,7 +142,7 @@ namespace VehicleFramework
                     Component.Destroy(GetComponent<Rigidbody>());
                 }
             }
-            Admin.Utils.StartCoroutine(WaitThenAct());
+            Admin.SessionManager.StartCoroutine(WaitThenAct());
         }
         public void Update()
         {
@@ -236,9 +252,9 @@ namespace VehicleFramework
                 }
             }
             List<Drone> availableDrones = list.Where(x => GetComponentInParent<Player>() == null).ToList();
-            if (availableDrones.Count() > 0)
+            if (availableDrones.Count > 0)
             {
-                Drone selected = null;
+                Drone? selected = null;
                 if (GameInput.GetButtonDown(GameInput.Button.CycleNext))
                 {
                     selected = SelectDrone(availableDrones, true);
@@ -303,7 +319,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(60);
                 drone.pingInstance.enabled = false;
             }
-            Admin.Utils.StartCoroutine(PingPingForAWhile());
+            Admin.SessionManager.StartCoroutine(PingPingForAWhile());
             string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.subName.hullName.text}\n";
             ret += $"{Language.main.Get("VFDroneHint2")}: {Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position))}\n";
             if(drone.isScuttled)

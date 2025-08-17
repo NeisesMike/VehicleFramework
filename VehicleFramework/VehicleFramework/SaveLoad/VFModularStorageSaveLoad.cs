@@ -64,7 +64,7 @@ namespace VehicleFramework.SaveLoad
                     var container = result?.item?.GetComponent<SeamothStorageContainer>();
                     if (container != null && container.container != null)
                     {
-                        Admin.Utils.StartCoroutine(LoadThisModularStorage(mv, container.container, slotID));
+                        Admin.SessionManager.StartCoroutine(LoadThisModularStorage(mv, container.container, slotID));
                     }
                 }
             }
@@ -102,7 +102,7 @@ namespace VehicleFramework.SaveLoad
                     // then we have a battery xor we are a battery
                     try
                     {
-                        Admin.Utils.StartCoroutine(SaveLoadUtils.ReloadBatteryPower(thisItem, item.Item2, item.Item3));
+                        Admin.SessionManager.StartCoroutine(SaveLoadUtils.ReloadBatteryPower(thisItem, item.Item2, item.Item3));
                     }
                     catch (Exception e)
                     {
