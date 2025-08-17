@@ -10,7 +10,7 @@ namespace VehicleFramework
 {
     public class UpgradeProxy : MonoBehaviour
     {
-        public List<Transform> proxies = new List<Transform>();
+        public List<Transform> proxies = new();
         public List<VehicleUpgradeConsoleInput.Slot> slots = null;
 
         public void Awake()
@@ -22,7 +22,7 @@ namespace VehicleFramework
         {
             yield return MainPatcher.Instance.StartCoroutine(SeamothHelper.EnsureSeamoth());
 
-            slots = new List<VehicleUpgradeConsoleInput.Slot>();
+            slots = new();
             GameObject module = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;
             for (int i = 0; i < proxies.Count; i++)
             {

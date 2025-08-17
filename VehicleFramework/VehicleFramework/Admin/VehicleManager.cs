@@ -9,9 +9,9 @@ namespace VehicleFramework
 {
     public static class VehicleManager
     {
-        public static readonly List<ModVehicle> VehiclesInPlay = new List<ModVehicle>();
-        public static readonly List<PingInstance> mvPings = new List<PingInstance>();
-        public static readonly List<VehicleEntry> vehicleTypes = new List<VehicleEntry>();
+        public static readonly List<ModVehicle> VehiclesInPlay = new();
+        public static readonly List<PingInstance> mvPings = new();
+        public static readonly List<VehicleEntry> vehicleTypes = new();
         public static PingType RegisterPingType(PingType pt)
         {
             return RegisterPingType(pt, false);

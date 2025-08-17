@@ -16,9 +16,9 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(ConstructorInput.Craft))]
         public static IEnumerable<CodeInstruction> ConstructorInputCraftranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            CodeMatch ReturnValidCraftingPositionMatch = new CodeMatch(i => i.opcode == OpCodes.Call && i.operand.ToString().Contains("ReturnValidCraftingPosition"));
+            CodeMatch ReturnValidCraftingPositionMatch = new(i => i.opcode == OpCodes.Call && i.operand.ToString().Contains("ReturnValidCraftingPosition"));
 
-            var newInstructions = new CodeMatcher(instructions)
+            CodeMatcher newInstructions = new CodeMatcher(instructions)
                 .MatchStartForward(ReturnValidCraftingPositionMatch)
                 .RemoveInstruction()
                 .InsertAndAdvance(new CodeInstruction(OpCodes.Ldarg_1))

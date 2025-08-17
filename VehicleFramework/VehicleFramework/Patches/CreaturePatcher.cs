@@ -12,7 +12,7 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(nameof(Creature.ChooseBestAction))]
     class CreaturePatcher
     {
-        private static List<string> LeviathanNames = new List<string>
+        private static readonly List<string> LeviathanNames = new()
         {
             "GhostLeviathan",
             "ReaperLeviathan",
@@ -34,7 +34,7 @@ namespace VehicleFramework.Patches
         [HarmonyPostfix]
         public static void Postfix(Creature __instance)
         {
-            if (!(Player.main.GetVehicle() is ModVehicle mv)) return;
+            if (Player.main.GetVehicle() is not ModVehicle mv) return;
 
             if (Vector3.Distance(Player.main.transform.position, __instance.transform.position) > 150) return;
 

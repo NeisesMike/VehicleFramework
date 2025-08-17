@@ -13,7 +13,7 @@ namespace VehicleFramework.Patches
     public class SaveLoadManagerPatcher
     {
         public const string SaveFileSpritesFileName = "SaveFileSprites";
-        public static Dictionary<string, List<string>> hasTechTypeGameInfo = new Dictionary<string, List<string>>();
+        public static Dictionary<string, List<string>> hasTechTypeGameInfo = new();
 
         // This patch collects hasTechTypeGameInfo, in order to have save file sprites displayed on the save cards
         [HarmonyPostfix]

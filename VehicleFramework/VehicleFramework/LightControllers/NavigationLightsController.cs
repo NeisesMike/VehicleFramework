@@ -120,13 +120,13 @@ namespace VehicleFramework
         Coroutine starboard = null;
         public const float lightBrightness = 1f;
         public const float strobeBrightness = 30f;
-        private List<Material> positionMats = new List<Material>();
-        private List<Material> portMats = new List<Material>();
-        private List<Material> starboardMats = new List<Material>();
-        private List<Material> whiteStrobeMats = new List<Material>();
-        private List<Material> redStrobeMats = new List<Material>();
-        private List<Light> whiteStrobeLights = new List<Light>();
-        private List<Light> redStrobeLights = new List<Light>();
+        private readonly List<Material> positionMats = new();
+        private readonly List<Material> portMats = new();
+        private readonly List<Material> starboardMats = new();
+        private readonly List<Material> whiteStrobeMats = new();
+        private readonly List<Material> redStrobeMats = new();
+        private readonly List<Light> whiteStrobeLights = new();
+        private readonly List<Light> redStrobeLights = new();
 
         private enum LightClass
         {
@@ -206,16 +206,10 @@ namespace VehicleFramework
                     }
                     break;
                 case LightClass.Ports:
-                    if (port == null)
-                    {
-                        port = MainPatcher.Instance.StartCoroutine(BlinkNarySequence(2, true));
-                    }
+                    port ??= MainPatcher.Instance.StartCoroutine(BlinkNarySequence(2, true));
                     break;
                 case LightClass.Starboards:
-                    if (starboard == null)
-                    {
-                        starboard = MainPatcher.Instance.StartCoroutine(BlinkNarySequence(2, false));
-                    }
+                    starboard ??= MainPatcher.Instance.StartCoroutine(BlinkNarySequence(2, false));
                     break;
             }
         }

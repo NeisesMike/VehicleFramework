@@ -316,7 +316,7 @@ namespace VehicleFramework.Admin
                                 return;
                             }
                             var thisToggleCoroutine = param.vehicle.StartCoroutine(DoToggleAction(param, toggle.TimeToFirstActivation, toggle.RepeatRate, toggle.EnergyCostPerActivation));
-                            toggledActions.Add(new Tuple<Vehicle, int, Coroutine>(param.vehicle, param.slotID, thisToggleCoroutine));
+                            toggledActions.Add(new(param.vehicle, param.slotID, thisToggleCoroutine));
                         }
                         else
                         {

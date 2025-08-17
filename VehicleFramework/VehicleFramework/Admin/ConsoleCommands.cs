@@ -81,7 +81,7 @@ namespace VehicleFramework.Admin
 		}
 		private static IEnumerator ListSpawnCodes()
 		{
-			List<string> allCodes = new List<string>();
+			List<string> allCodes = new();
 			allCodes.AddRange(VehicleManager.vehicleTypes.Select(x => x.techType.AsString()));
 			allCodes.AddRange(UpgradeRegistrar.UpgradeIcons.Select(x => x.Key));
 			foreach (string code in allCodes)
@@ -93,7 +93,7 @@ namespace VehicleFramework.Admin
 		}
 		public void OnConsoleCommand_undockclosest(NotificationCenter.Notification _)
 		{
-			void MaybeUndock(VehicleDockingBay dock)
+            static void MaybeUndock(VehicleDockingBay dock)
 			{
 				if (dock.dockedVehicle != null)
 				{
@@ -143,7 +143,7 @@ namespace VehicleFramework.Admin
 				Vehicle nearest = GameObjectManager<Vehicle>.FindNearestSuch(Player.main.transform.position);
 				if (nearest != null)
 				{
-					ErrorMessage.AddWarning($"Did you mean \"vfdestroy {nearest.name.Substring(0, nearest.name.Length - "(Clone)".Length)}\"?".ToLower());
+					ErrorMessage.AddWarning($"Did you mean \"vfdestroy {nearest.name[..^"(Clone)".Length]}\"?".ToLower());
 				}
 				return;
 			}

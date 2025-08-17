@@ -22,10 +22,7 @@ namespace VehicleFramework
 		protected override void OpenPDA()
 		{
 			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
-			if (storageInSlot == null)
-			{
-				storageInSlot = gameObject.GetComponent<SeamothStorageContainer>().container;
-			}
+			storageInSlot ??= gameObject.GetComponent<SeamothStorageContainer>().container;
 
 			if (storageInSlot != null)
 			{
@@ -44,7 +41,7 @@ namespace VehicleFramework
 		}
 		public static List<ItemsContainer> GetAllModularStorageContainers(ModVehicle mv)
 		{
-			List<ItemsContainer> result = new List<ItemsContainer>();
+			List<ItemsContainer> result = new();
 			if (mv == null)
 			{
 				return result;

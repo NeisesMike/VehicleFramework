@@ -19,7 +19,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(uGUI_Pings.OnAdd))]
         static IEnumerable<CodeInstruction> uGUI_PingsOnAddTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            CodeMatch GetPingTypeMatch = new CodeMatch(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("System.String Get(PingType)"));
+            CodeMatch GetPingTypeMatch = new(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("System.String Get(PingType)"));
             var newInstructions = new CodeMatcher(instructions)
                 .MatchStartForward(GetPingTypeMatch)
                 .Repeat(x =>

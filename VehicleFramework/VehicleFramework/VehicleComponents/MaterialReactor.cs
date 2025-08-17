@@ -58,10 +58,10 @@ namespace VehicleFramework.VehicleComponents
         public bool listPotentials = true;
         public Action<PDA> OnClosePDAAction = null;
         public Action<int> UpdateVisuals = null;
-        private readonly Dictionary<TechType, float> maxEnergies = new Dictionary<TechType, float>();
-        private readonly Dictionary<TechType, float> rateEnergies = new Dictionary<TechType, float>();
-        private readonly Dictionary<InventoryItem, float> currentEnergies = new Dictionary<InventoryItem, float>();
-        private readonly Dictionary<TechType, TechType> spentMaterialIndex = new Dictionary<TechType, TechType>();
+        private readonly Dictionary<TechType, float> maxEnergies = new();
+        private readonly Dictionary<TechType, float> rateEnergies = new();
+        private readonly Dictionary<InventoryItem, float> currentEnergies = new();
+        private readonly Dictionary<TechType, TechType> spentMaterialIndex = new();
         private ItemsContainer container;
         private Coroutine OutputReactorDataCoroutine = null;
         private bool isInitialized = false;
@@ -110,10 +110,10 @@ namespace VehicleFramework.VehicleComponents
             }
             mv = modVehicle;
             capacity = totalCapacity;
-            container = new ItemsContainer(width, height, transform, label, null);
+            container = new(width, height, transform, label, null);
             container.onAddItem += OnAddItem;
             container.isAllowedToRemove = IsAllowedToRemove;
-            container.SetAllowedTechTypes(iMaterialData.SelectMany(x => new List<TechType> { x.inputTechType, x.outputTechType }).ToArray());
+            container.SetAllowedTechTypes(iMaterialData.SelectMany(x => new List<TechType>() { x.inputTechType, x.outputTechType }).ToArray());
             foreach (var reagent in iMaterialData)
             {
                 maxEnergies.Add(reagent.inputTechType, reagent.totalEnergy);
@@ -122,9 +122,9 @@ namespace VehicleFramework.VehicleComponents
             }
             gameObject.SetActive(false);
             EnergyMixin eMix = gameObject.AddComponent<EnergyMixin>();
-            eMix.batterySlot = new StorageSlot(transform);
+            eMix.batterySlot = new(transform);
             gameObject.SetActive(true);
-            GameObject batteryObj = new GameObject("ReactorBattery");
+            GameObject batteryObj = new("ReactorBattery");
             batteryObj.transform.SetParent(transform);
             reactorBattery = batteryObj.AddComponent<ReactorBattery>();
             reactorBattery.SetCapacity(capacity);
@@ -150,7 +150,7 @@ namespace VehicleFramework.VehicleComponents
                 float consumed = mv.energyInterface.AddEnergy(rate);
                 currentEnergies[reactant] -= consumed;
             }
-            List<InventoryItem> spentMaterials = new List<InventoryItem>();
+            List<InventoryItem> spentMaterials = new();
             foreach (var reactantPair in currentEnergies.ToList().Where(x => x.Value <= 0))
             {
                 spentMaterials.Add(reactantPair.Key);
@@ -178,7 +178,7 @@ namespace VehicleFramework.VehicleComponents
         }
         private IEnumerator AddMaterial(TechType toAdd)
         {
-            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            TaskResult<GameObject> result = new();
             yield return CraftData.InstantiateFromPrefabAsync(toAdd, result, false);
             GameObject spentMaterial = result.Get();
             spentMaterial.SetActive(false);
@@ -302,7 +302,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public static List<MaterialReactorData> GetNuclearReactorData()
         {
-            return new List<MaterialReactorData>
+            return new()
             {
                 new MaterialReactorData
                 {
@@ -329,13 +329,13 @@ namespace VehicleFramework.VehicleComponents
         }
         private List<Tuple<TechType, float>> GetSaveDict()
         {
-            List<Tuple<TechType, float>> result = new List<Tuple<TechType, float>>
+            List<Tuple<TechType, float>> result = new()
             {
-                new Tuple<TechType, float>(TechType.None, reactorBattery.GetCharge())
+                new(TechType.None, reactorBattery.GetCharge())
             };
             foreach (var reactant in currentEnergies)
             {
-                result.Add(new Tuple<TechType, float>(reactant.Key.techType, reactant.Value));
+                result.Add(new(reactant.Key.techType, reactant.Value));
             }
             foreach(var item in container)
             {
@@ -343,7 +343,7 @@ namespace VehicleFramework.VehicleComponents
                 {
                     continue;
                 }
-                result.Add(new Tuple<TechType, float>(item.techType, 0));
+                result.Add(new(item.techType, 0));
             }
             return result;
         }
@@ -358,7 +358,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 yield return MainPatcher.Instance.StartCoroutine(AddMaterial(reactant.Item1));
             }
-            Dictionary<InventoryItem, float> changesPending = new Dictionary<InventoryItem, float>();
+            Dictionary<InventoryItem, float> changesPending = new();
             foreach (var reactant in currentEnergies)
             {
                 Tuple<TechType, float> selectedReactant = default;

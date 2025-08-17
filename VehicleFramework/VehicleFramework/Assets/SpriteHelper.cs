@@ -24,7 +24,7 @@ namespace VehicleFramework.Assets
             try
             {
                 byte[] spriteBytes = System.IO.File.ReadAllBytes(fullPath);
-                Texture2D SpriteTexture = new Texture2D(128, 128);
+                Texture2D SpriteTexture = new(128, 128);
                 SpriteTexture.LoadImage(spriteBytes);
                 return Sprite.Create(SpriteTexture, new Rect(0.0f, 0.0f, SpriteTexture.width, SpriteTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             }
@@ -34,7 +34,7 @@ namespace VehicleFramework.Assets
                 return null;
             }
         }
-        internal static readonly List<(string, PingType, Sprite)> PingSprites = new List<(string, PingType, Sprite)>();
+        internal static readonly List<(string, PingType, Sprite)> PingSprites = new();
         public static void RegisterPingSprite(string name, PingType pt, Sprite pingSprite)
         {
             PingSprites.Add((name, pt, pingSprite));

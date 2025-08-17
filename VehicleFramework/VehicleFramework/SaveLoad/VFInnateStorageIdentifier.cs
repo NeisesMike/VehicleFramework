@@ -15,8 +15,8 @@ namespace VehicleFramework.SaveLoad
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
             InnateStorageContainer container = GetComponent<InnateStorageContainer>();
-            List<Tuple<TechType, float, TechType>> result = new List<Tuple<TechType, float, TechType>>();
-            foreach (var item in container.container.ToList())
+            List<Tuple<TechType, float, TechType>> result = new();
+            foreach (var item in container.Container.ToList())
             {
                 TechType thisItemType = item.item.GetTechType();
                 float batteryChargeIfApplicable = -1;
@@ -27,7 +27,7 @@ namespace VehicleFramework.SaveLoad
                     batteryChargeIfApplicable = bat.charge;
                     innerBatteryTT = bat.gameObject.GetComponent<TechTag>().type;
                 }
-                result.Add(new Tuple<TechType, float, TechType>(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
+                result.Add(new(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
             }
             mv.SaveInnateStorage(SaveFileName, result);
         }
@@ -49,7 +49,7 @@ namespace VehicleFramework.SaveLoad
                 }
             }
 
-            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            TaskResult<GameObject> result = new();
             foreach (var item in thisStorage)
             {
                 yield return CraftData.InstantiateFromPrefabAsync(item.Item1, result, false);
@@ -58,7 +58,7 @@ namespace VehicleFramework.SaveLoad
                 thisItem.transform.SetParent(mv.StorageRootObject.transform);
                 try
                 {
-                    GetComponent<InnateStorageContainer>().container.AddItem(thisItem.EnsureComponent<Pickupable>());
+                    GetComponent<InnateStorageContainer>().Container.AddItem(thisItem.EnsureComponent<Pickupable>());
                 }
                 catch (Exception e)
                 {

@@ -28,7 +28,7 @@ namespace VehicleFramework.Assets
         }
         internal static void SetupDefaultAssets()
         {
-            DefaultRecipe = new Dictionary<TechType, int>
+            DefaultRecipe = new()
             {
                 { TechType.PlasteelIngot, 1 },
                 { TechType.Lubricant, 1 },

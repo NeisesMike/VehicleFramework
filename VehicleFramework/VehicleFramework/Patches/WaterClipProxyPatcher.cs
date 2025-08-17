@@ -17,7 +17,7 @@ namespace VehicleFramework.Patches
             if (vehicle != null)
             {
                 Vector3 oldScale = __instance.transform.lossyScale;
-                Vector3 newScale = new Vector3(
+                Vector3 newScale = new(
                     Mathf.Abs(oldScale.x),
                     Mathf.Abs(oldScale.y),
                     Mathf.Abs(oldScale.z)

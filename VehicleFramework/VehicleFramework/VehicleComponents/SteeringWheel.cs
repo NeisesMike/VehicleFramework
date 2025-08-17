@@ -70,22 +70,22 @@ namespace VehicleFramework.VehicleComponents
             switch (yawAxis)
             {
                 case YawAxis.x:
-                    transform.localEulerAngles = new Vector3(initialYawRotation + currentYawRotation, transform.localEulerAngles.y, transform.localEulerAngles.z);
+                    transform.localEulerAngles = new(initialYawRotation + currentYawRotation, transform.localEulerAngles.y, transform.localEulerAngles.z);
                     break;
                 case YawAxis.y:
-                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, initialYawRotation + currentYawRotation, transform.localEulerAngles.z);
+                    transform.localEulerAngles = new(transform.localEulerAngles.x, initialYawRotation + currentYawRotation, transform.localEulerAngles.z);
                     break;
                 case YawAxis.z:
-                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, initialYawRotation + currentYawRotation);
+                    transform.localEulerAngles = new(transform.localEulerAngles.x, transform.localEulerAngles.y, initialYawRotation + currentYawRotation);
                     break;
                 case YawAxis.minusX:
-                    transform.localEulerAngles = new Vector3(initialYawRotation - currentYawRotation, transform.localEulerAngles.y, transform.localEulerAngles.z);
+                    transform.localEulerAngles = new(initialYawRotation - currentYawRotation, transform.localEulerAngles.y, transform.localEulerAngles.z);
                     break;
                 case YawAxis.minusY:
-                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, initialYawRotation - currentYawRotation, transform.localEulerAngles.z);
+                    transform.localEulerAngles = new(transform.localEulerAngles.x, initialYawRotation - currentYawRotation, transform.localEulerAngles.z);
                     break;
                 case YawAxis.minusZ:
-                    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, initialYawRotation - currentYawRotation);
+                    transform.localEulerAngles = new(transform.localEulerAngles.x, transform.localEulerAngles.y, initialYawRotation - currentYawRotation);
                     break;
             }
         }

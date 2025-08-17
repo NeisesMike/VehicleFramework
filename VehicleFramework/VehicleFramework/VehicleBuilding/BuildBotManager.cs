@@ -13,7 +13,7 @@ namespace VehicleFramework
         public static void SetupBuildBotBeamPoints(GameObject mv)
         {
             BuildBotBeamPoints bbbp = mv.EnsureComponent<BuildBotBeamPoints>();
-            List<Transform> bbbpList = new List<Transform>();
+            List<Transform> bbbpList = new();
             ModVehicle modVehicle = mv.GetComponent<ModVehicle>();
             if (modVehicle != null)
             {
@@ -65,7 +65,7 @@ namespace VehicleFramework
         }
         public static void BuildPathsUsingCorners(GameObject root, GameObject pointsRoot, Transform A, Transform B, Transform C, Transform D, Transform E, Transform F, Transform G, Transform H)
         {
-            GameObject bbPathsRoot = new GameObject("BuildBotPaths");
+            GameObject bbPathsRoot = new("BuildBotPaths");
             bbPathsRoot.transform.SetParent(root.transform);
             #region declarations
             Transform I = GetCentroid(pointsRoot, A, B, C, D);
@@ -86,14 +86,14 @@ namespace VehicleFramework
             Transform AE = GetMidpoint(pointsRoot, A, E);
             Transform CG = GetMidpoint(pointsRoot, C, G);
             Transform DH = GetMidpoint(pointsRoot, D, H);
-            List<Transform> path1List = new List<Transform> { K, GH, J, EF, L, AB, I, CD };
-            List<Transform> path2List = new List<Transform> { I, BD, N, FH, J, EG, M, AC };
-            List<Transform> path3List = new List<Transform> { N, BF, L, AE, M, CG, K, DH };
-            List<Transform> path4List = new List<Transform> { J, G, C, I, B, F };
+            List<Transform> path1List = new() { K, GH, J, EF, L, AB, I, CD };
+            List<Transform> path2List = new() { I, BD, N, FH, J, EG, M, AC };
+            List<Transform> path3List = new() { N, BF, L, AE, M, CG, K, DH };
+            List<Transform> path4List = new() { J, G, C, I, B, F };
             #endregion
-            void BuildBuildBotPath(GameObject rootGO, int number, List<Transform> pathList)
+            static void BuildBuildBotPath(GameObject rootGO, int number, List<Transform> pathList)
             {
-                GameObject bbPath = new GameObject("Path" + number.ToString());
+                GameObject bbPath = new("Path" + number.ToString());
                 bbPath.transform.SetParent(rootGO.transform);
                 BuildBotPath path = bbPath.AddComponent<BuildBotPath>();
                 path.points = pathList.ToArray();
@@ -105,7 +105,7 @@ namespace VehicleFramework
         }
         public static Transform GetMidpoint(GameObject root, Transform left, Transform right)
         {
-            GameObject pointGO = new GameObject(left.name + right.name);
+            GameObject pointGO = new(left.name + right.name);
             Transform pointTR = pointGO.transform;
             pointTR.SetParent(root.transform);
             pointTR.localPosition = (left.position + right.position) / 2;
@@ -113,7 +113,7 @@ namespace VehicleFramework
         }
         public static Transform GetCentroid(GameObject root, Transform topleft, Transform topright, Transform botleft, Transform botright)
         {
-            GameObject pointGO = new GameObject(topleft.name + topright.name + botleft.name + botright.name);
+            GameObject pointGO = new(topleft.name + topright.name + botleft.name + botright.name);
             Transform pointTR = pointGO.transform;
             pointTR.SetParent(root.transform);
             pointTR.localPosition = (topleft.position + topright.position + botleft.position + botright.position) / 4;
@@ -132,27 +132,18 @@ namespace VehicleFramework
         }
         public static (bool, bool, bool) CornerToBools(CornerValue corner)
         {
-            switch (corner)
+            return corner switch
             {
-                case CornerValue.lefttopfront:
-                    return (false, true, true);
-                case CornerValue.righttopfront:
-                    return (true, true, true);
-                case CornerValue.lefttopback:
-                    return (false, true, false);
-                case CornerValue.righttopback:
-                    return (true, true, false);
-                case CornerValue.leftbotfront:
-                    return (false, false, true);
-                case CornerValue.rightbotfront:
-                    return (true, false, true);
-                case CornerValue.leftbotback:
-                    return (false, false, false);
-                case CornerValue.rightbotback:
-                    return (true, false, false);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(corner), corner, null);
-            }
+                CornerValue.lefttopfront => (false, true, true),
+                CornerValue.righttopfront => (true, true, true),
+                CornerValue.lefttopback => (false, true, false),
+                CornerValue.righttopback => (true, true, false),
+                CornerValue.leftbotfront => (false, false, true),
+                CornerValue.rightbotfront => (true, false, true),
+                CornerValue.leftbotback => (false, false, false),
+                CornerValue.rightbotback => (true, false, false),
+                _ => throw new ArgumentOutOfRangeException(nameof(corner), corner, null),
+            };
         }
         public static Transform GetCorner(GameObject root, CornerValue corner, Vector3 center, float x, float y, float z)
         {
@@ -164,7 +155,7 @@ namespace VehicleFramework
                 ret += input.z ? z * Vector3.forward : -1 * z * Vector3.forward;
                 return ret;
             }
-            GameObject pointGO = new GameObject(corner.ToString());
+            GameObject pointGO = new(corner.ToString());
             Transform pointTR = pointGO.transform;
             pointTR.SetParent(root.transform);
             pointTR.localPosition = GetThisCorner(CornerToBools(corner));
@@ -191,7 +182,7 @@ namespace VehicleFramework
         public static void BuildPathsForGameObject(GameObject go, GameObject pointsRoot)
         {
             Vector3 localCenter = go.transform.localPosition;
-            Vector3 localSize = new Vector3(6f, 8f, 12f);
+            Vector3 localSize = new(6f, 8f, 12f);
             Transform A = GetCornerCube(pointsRoot, localSize, localCenter, CornerValue.lefttopfront);
             Transform B = GetCornerCube(pointsRoot, localSize, localCenter, CornerValue.righttopfront);
             Transform C = GetCornerCube(pointsRoot, localSize, localCenter, CornerValue.lefttopback);
@@ -225,7 +216,7 @@ namespace VehicleFramework
         public static void BuildBotPathsHelper(GameObject go)
         {
             ModVehicle mv = go.GetComponent<ModVehicle>();
-            GameObject bbPointsRoot = new GameObject("BuildBotPoints");
+            GameObject bbPointsRoot = new("BuildBotPoints");
             bbPointsRoot.transform.SetParent(go.transform);
             if (mv != null && mv.BoundingBoxCollider != null)
             {

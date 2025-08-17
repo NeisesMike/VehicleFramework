@@ -74,7 +74,7 @@ namespace VehicleFramework.SaveLoad
                     Logger.Error($"Failed to find battery slot for tool in innate storage: {thisItem.name}");
                     yield break;
                 }
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                TaskResult<GameObject> result = new();
                 yield return CraftData.InstantiateFromPrefabAsync(innerBatteryTT, result, false);
                 GameObject newBat = result.Get();
                 if (newBat.GetComponent<Battery>() != null)

@@ -11,26 +11,20 @@ namespace VehicleFramework.Admin
     internal static class CraftTreeHandler
     {
         internal const string GeneralTabName = "VFGeneral";
-        private readonly static List<string[]> KnownPaths = new List<string[]>();
-        internal readonly static List<string> TabNodeTabNodes = new List<string>();
-        internal readonly static List<string> CraftNodeTabNodes = new List<string>();
+        private readonly static List<string[]> KnownPaths = new();
+        internal readonly static List<string> TabNodeTabNodes = new();
+        internal readonly static List<string> CraftNodeTabNodes = new();
         internal static string[] UpgradeTypeToPath(VehicleType path)
         {
-            switch (path)
+            return path switch
             {
-                case VehicleType.ModVehicle:
-                    return new string[] { "VFUniversal" };
-                case VehicleType.Seamoth:
-                    return new string[] { "VFSeamoth" };
-                case VehicleType.Prawn:
-                    return new string[] { "VFPrawn" };
-                case VehicleType.Cyclops:
-                    return new string[] { "VFCyclops" };
-                case VehicleType.Custom:
-                    return new string[] { "VFCustom" };
-                default:
-                    return new string[] { "error" };
-            }
+                VehicleType.ModVehicle => new string[] { "VFUniversal" },
+                VehicleType.Seamoth => new string[] { "VFSeamoth" },
+                VehicleType.Prawn => new string[] { "VFPrawn" },
+                VehicleType.Cyclops => new string[] { "VFCyclops" },
+                VehicleType.Custom => new string[] { "VFCustom" },
+                _ => new string[] { "error" },
+            };
         }
         internal static void AddFabricatorMenus()
         {
@@ -133,7 +127,7 @@ namespace VehicleFramework.Admin
         }
         private static bool IsKnownPath(string[] path)
         {
-            List<string[]> innerKnownPaths = new List<string[]>();
+            List<string[]> innerKnownPaths = new();
             KnownPaths.ForEach(x => innerKnownPaths.Add(x));
             innerKnownPaths.RemoveAll(x => x.Length != path.Length);
             for(int i=0; i<path.Length; i++)

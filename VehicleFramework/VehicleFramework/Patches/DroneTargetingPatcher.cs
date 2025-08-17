@@ -53,7 +53,7 @@ namespace VehicleFramework.Patches
             }
             foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
             {
-                var cont = vs.Container.GetComponent<InnateStorageContainer>().container;
+                var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
                 if (cont.HasRoomFor(pickupable))
                 {
                     if (cont.AddItem(pickupable) != null)
@@ -84,7 +84,7 @@ namespace VehicleFramework.Patches
             bool hasRoomFor = false;
             foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
             {
-                var cont = vs.Container.GetComponent<InnateStorageContainer>().container;
+                var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
                 if (cont.HasRoomFor(__instance))
                 {
                     hasRoomFor = true;
@@ -124,7 +124,7 @@ namespace VehicleFramework.Patches
             bool hasRoomFor = false;
             foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
             {
-                var cont = vs.Container.GetComponent<InnateStorageContainer>().container;
+                var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
                 if (cont.HasRoomFor(__instance))
                 {
                     hasRoomFor = true;

@@ -16,7 +16,7 @@ namespace VehicleFramework
         public static bool IsVR = false;
         static List<GameObject> GetAllObjectsInScene()
         {
-            List<GameObject> objectsInScene = new List<GameObject>();
+            List<GameObject> objectsInScene = new();
 
             foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
             {
@@ -126,7 +126,7 @@ namespace VehicleFramework
 
             var modVehicleBackground = mvHUDElementsRoot.transform.Find("Background").GetComponent<UnityEngine.UI.Image>();
             modVehicleBackground.sprite = Assets.SpriteHelper.GetSprite("Sprites/StorageHUDBackground.png");
-            modVehicleBackground.transform.localScale = new Vector3(1, 1.238f, 1);
+            modVehicleBackground.transform.localScale = new(1, 1.238f, 1);
             modVehicleBackground.transform.localPosition = offset;
 
             GameObject exoTemp = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/Exosuit/Temperature").gameObject;
@@ -162,7 +162,7 @@ namespace VehicleFramework
             GameObject seamothHUDElementsRoot = VRVehicleCanvas.transform.Find("Seamoth").gameObject;
             GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, uGUI.main.transform.Find("ScreenCanvas/HUD/Content"));
             mvHUDElementsRoot.name = "ModVehicle";
-            mvHUDElementsRoot.transform.localPosition = new Vector3(245.2f, -163.5f, 0);
+            mvHUDElementsRoot.transform.localPosition = new(245.2f, -163.5f, 0);
             mvHUDElementsRoot.transform.localScale = 0.8f * Vector3.one;
 
             // Finally we need to add and configure a controller for our new HUD object
@@ -176,9 +176,9 @@ namespace VehicleFramework
         public static void BuildVRHUD_OLD()
         {
 
-            List<GameObject> GetAllObjectsInScene()
+            static List<GameObject> GetAllObjectsInScene()
             {
-                List<GameObject> objectsInScene = new List<GameObject>();
+                List<GameObject> objectsInScene = new();
 
                 foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
                 {

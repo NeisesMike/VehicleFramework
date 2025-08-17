@@ -16,13 +16,13 @@ namespace VehicleFramework
     {
         public ModVehicle mv;
         public EnergyInterface aiEI;
-        private readonly List<AudioSource> speakers = new List<AudioSource>();
-        private readonly PriorityQueue<AudioClip> speechQueue = new PriorityQueue<AudioClip>();
+        private readonly List<AudioSource> speakers = new();
+        private readonly PriorityQueue<AudioClip> speechQueue = new();
         private bool isReadyToSpeak = false; 
         public bool blockVoiceChange = false;
         public VehicleVoice voice = null;
         private float m_balance = 1f;
-        public float balance // used by WraithJet
+        public float Balance // used by WraithJet
         {
             get
             {
@@ -173,7 +173,7 @@ namespace VehicleFramework
             {
                 foreach(var speaker in speakers)
                 {
-                    speaker.volume = balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
+                    speaker.volume = Balance * VehicleConfig.GetConfig(mv).AutopilotVolume.Value * SoundSystem.GetVoiceVolume() * SoundSystem.GetMasterVolume();
                     speaker.clip = clip;
                     speaker.Play();
                     if (MainPatcher.NautilusConfig.IsSubtitles && clip != VoiceManager.silence)

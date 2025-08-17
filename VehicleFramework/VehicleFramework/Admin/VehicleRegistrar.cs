@@ -11,7 +11,7 @@ namespace VehicleFramework
     {
         public static int VehiclesRegistered = 0;
         public static int VehiclesPrefabricated = 0;
-        private readonly static Queue<Action> RegistrationQueue = new Queue<Action>();
+        private readonly static Queue<Action> RegistrationQueue = new();
         private static bool RegistrySemaphore = false;
         public enum LogType
         {

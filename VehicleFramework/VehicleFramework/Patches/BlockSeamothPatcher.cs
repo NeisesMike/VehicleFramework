@@ -9,7 +9,7 @@ namespace VehicleFramework.Patches
 {
     internal class BlockModVehicle : MonoBehaviour
     {
-        private readonly Dictionary<ModVehicle, int> MVs = new Dictionary<ModVehicle, int>();
+        private readonly Dictionary<ModVehicle, int> MVs = new();
         internal void FixedUpdate()
         {
             MVs.ForEach(x => x.Key.useRigidbody.AddForce(transform.forward * 3f, ForceMode.VelocityChange));

@@ -97,7 +97,7 @@ namespace VehicleFramework.VehicleTypes
         private void SetupTemporaryParent()
         {
             previousParent = Player.main.transform.parent;
-            temporaryParent = new GameObject("DroneStationTempParent");
+            temporaryParent = new("DroneStationTempParent");
             temporaryParent.transform.SetParent(pairedStation.transform);
             temporaryParent.transform.position = Player.main.transform.position;
             Player.main.transform.SetParent(temporaryParent.transform);
@@ -173,7 +173,7 @@ namespace VehicleFramework.VehicleTypes
             docked = false;
             UWE.Utils.SetIsKinematicAndUpdateInterpolation(useRigidbody, true, false);
             Vector3 initialPosition = transform.position;
-            Vector3 finalPosition = new Vector3(initialPosition.x, yUndockedPosition, initialPosition.z);
+            Vector3 finalPosition = new(initialPosition.x, yUndockedPosition, initialPosition.z);
             float duration = (initialPosition.y - finalPosition.y) / 5f;
             float timeInterpolated = 0f;
             if (duration > 0f)

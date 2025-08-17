@@ -54,13 +54,13 @@ namespace VehicleFramework.Localization
     {
         internal static LocalDict<TEnum> LoadLanguageFiles<TEnum>(string modPath) where TEnum : struct, Enum
         {
-            LocalDict<TEnum> result = new LocalDict<TEnum>();
+            LocalDict<TEnum> result = new();
             foreach (SupportedLanguage lang in Enum.GetValues(typeof(SupportedLanguage)))
             {
                 string filePath = Path.Combine(modPath, "Localization", $"{lang}.txt");
                 if (File.Exists(filePath))
                 {
-                    var strings = new Dictionary<TEnum, string>();
+                    Dictionary<TEnum, string> strings = new();
                     string[] lines = File.ReadAllLines(filePath);
                     foreach (string line in lines)
                     {

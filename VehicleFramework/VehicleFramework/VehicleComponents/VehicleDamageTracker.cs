@@ -19,7 +19,7 @@ namespace VehicleFramework.VehicleComponents
 	}
     public class VehicleDamageTracker : MonoBehaviour, IOnTakeDamage
     {
-		internal readonly List<Subsystem> subsystems = new List<Subsystem>();
+		internal readonly List<Subsystem> subsystems = new();
         void IOnTakeDamage.OnTakeDamage(DamageInfo damageInfo)
 		{
             if (subsystems.Any())

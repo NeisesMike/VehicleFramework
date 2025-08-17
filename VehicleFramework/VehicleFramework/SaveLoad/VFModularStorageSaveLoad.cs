@@ -33,7 +33,7 @@ namespace VehicleFramework.SaveLoad
         }
         private static void SaveThisModularStorage(ModVehicle mv, ItemsContainer container, string slotID)
         {
-            List<Tuple<TechType, float, TechType>> result = new List<Tuple<TechType, float, TechType>>();
+            List<Tuple<TechType, float, TechType>> result = new();
             foreach (var item in container.ToList())
             {
                 TechType thisItemType = item.item.GetTechType();
@@ -45,7 +45,7 @@ namespace VehicleFramework.SaveLoad
                     batteryChargeIfApplicable = bat.charge;
                     innerBatteryTT = bat.gameObject.GetComponent<TechTag>().type;
                 }
-                result.Add(new Tuple<TechType, float, TechType>(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
+                result.Add(new(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
             }
             JsonInterface.Write(mv, GetNewSaveFileName(slotID), result);
         }
@@ -81,7 +81,7 @@ namespace VehicleFramework.SaveLoad
                     yield break;
                 }
             }
-            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            TaskResult<GameObject> result = new();
             foreach (var item in thisStorage)
             {
                 yield return CraftData.InstantiateFromPrefabAsync(item.Item1, result, false);

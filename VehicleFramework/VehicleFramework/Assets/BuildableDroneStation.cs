@@ -19,7 +19,7 @@ namespace VehicleFramework
         {
             Nautilus.Assets.PrefabInfo Info = Nautilus.Assets.PrefabInfo.WithTechType(classID, displayName, description)
                 .WithIcon(crafter);
-            Nautilus.Assets.CustomPrefab prefab = new Nautilus.Assets.CustomPrefab(Info);
+            Nautilus.Assets.CustomPrefab prefab = new(Info);
             Nautilus.Utility.ConstructableFlags constructableFlags = Nautilus.Utility.ConstructableFlags.Inside | Nautilus.Utility.ConstructableFlags.Wall | Nautilus.Utility.ConstructableFlags.Submarine;
             droneStation.AddComponent<DroneStation>();
             Admin.Utils.ApplyMarmoset(droneStation);
@@ -38,24 +38,24 @@ namespace VehicleFramework
         {
             VehicleAssets DSAssets = AssetBundleInterface.GetVehicleAssetsFromBundle("dronestation", "DroneStation", "DSSpriteAtlas", "", "DSCrafterSprite", "Fragment", "DSUnlockSprite");
             TechType consoleTT = RegisterConsole(DSAssets.model, DSAssets.crafter, DSAssets.unlock);
-            List<Vector3> spawnLocations = new List<Vector3>
+            List<Vector3> spawnLocations = new()
             {
-                new Vector3 (375.1f, -69.4f, -22.4f),
-                new Vector3 (122.4f, -38.9f, -131.4f),
-                new Vector3 (89.9f, -30.5f, -162.6f),
-                new Vector3 (30.2f, -42.4f, -217.5f),
-                new Vector3 (46.9f, -20.1f, -86.7f),
-                new Vector3 (-148.1f, -31.7f, 252.8f),
-                new Vector3 (-150.2f, -47.7f, 234.4f),
-                new Vector3 (-228.7f, -66.2f, 159.8f),
-                new Vector3 (172.2f, -73.6f, -7.1f),
-                new Vector3 (394.4f, -98.7f, 83.3f),
-                new Vector3 (379.4f, -117.9f, 122.3f),
-                new Vector3 (424.8f, -112.5f, 104.3f),
-                new Vector3 (375.1f, -69.4f, -22.4f),
-                new Vector3 (-148.1f, -31.7f, 252.8f)
+                new(375.1f, -69.4f, -22.4f),
+                new(122.4f, -38.9f, -131.4f),
+                new(89.9f, -30.5f, -162.6f),
+                new(30.2f, -42.4f, -217.5f),
+                new(46.9f, -20.1f, -86.7f),
+                new(-148.1f, -31.7f, 252.8f),
+                new(-150.2f, -47.7f, 234.4f),
+                new(-228.7f, -66.2f, 159.8f),
+                new(172.2f, -73.6f, -7.1f),
+                new(394.4f, -98.7f, 83.3f),
+                new(379.4f, -117.9f, 122.3f),
+                new(424.8f, -112.5f, 104.3f),
+                new(375.1f, -69.4f, -22.4f),
+                new(-148.1f, -31.7f, 252.8f)
             };
-            PDAEncyclopedia.EntryData entry = new PDAEncyclopedia.EntryData
+            PDAEncyclopedia.EntryData entry = new()
             {
                 key = classID,
                 path = "Tech/Habitats",
@@ -67,7 +67,7 @@ namespace VehicleFramework
             Admin.Utils.AddEncyclopediaEntry(entry);
             Nautilus.Handlers.LanguageHandler.SetLanguageLine($"Ency_{classID}", displayName);
             Nautilus.Handlers.LanguageHandler.SetLanguageLine($"EncyDesc_{classID}", encyclopediaDesc);
-            FragmentData fragmentData = new FragmentData
+            FragmentData fragmentData = new()
             {
                 fragment = DSAssets.fragment,
                 toUnlock = consoleTT,
@@ -98,7 +98,7 @@ namespace VehicleFramework
     {
         public static DroneStation BroadcastingStation = null;
         private Drone _pairedDrone = null;
-        public Drone pairedDrone
+        public Drone PairedDrone
         {
             get
             {
@@ -139,7 +139,7 @@ namespace VehicleFramework
             {
                 return;
             }
-            station.pairedDrone = drone;
+            station.PairedDrone = drone;
             drone.pairedStation = station;
         }
         void IHandTarget.OnHandClick(GUIHand hand)
@@ -153,7 +153,7 @@ namespace VehicleFramework
         }
         public Drone SelectDrone(List<Drone> list, bool next)
         {
-            int index = list.FindIndex(x => x == pairedDrone);
+            int index = list.FindIndex(x => x == PairedDrone);
             if (list.Count() == 0)
             {
                 return null;
@@ -212,28 +212,28 @@ namespace VehicleFramework
                 return;
             }
             var list = Admin.GameObjectManager<Drone>.Where(x => x.gameObject.activeSelf && !x.isAsleep); // Pickupable Vehicles, for example, sets drones inactive.
-            if (pairedDrone != null && !list.Contains(pairedDrone))
+            if (PairedDrone != null && !list.Contains(PairedDrone))
             {
                 // if our paired drone recently became unavailable, unpair it from this DroneStation
-                pairedDrone.pairedStation = null;
-                pairedDrone = null;
+                PairedDrone.pairedStation = null;
+                PairedDrone = null;
             }
-            if (pairedDrone == null && list.Count() > 0)
+            if (PairedDrone == null && list.Count() > 0)
             {
                 // if we ain't never peeped it before, grab one if possible
                 FastenConnection(this, list.First());
             }
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
-            if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && pairedDrone != null)
+            if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && PairedDrone != null)
             {
-                if (pairedDrone.isScuttled || !pairedDrone.energyInterface.hasCharge)
+                if (PairedDrone.isScuttled || !PairedDrone.energyInterface.hasCharge)
                 {
-                    ShowDetails(pairedDrone);
+                    ShowDetails(PairedDrone);
                 }
                 else
                 {
-                    FastenConnection(this, pairedDrone);
-                    pairedDrone.BeginControlling();
+                    FastenConnection(this, PairedDrone);
+                    PairedDrone.BeginControlling();
                 }
             }
             List<Drone> availableDrones = list.Where(x => GetComponentInParent<Player>() == null).ToList();
@@ -274,13 +274,13 @@ namespace VehicleFramework
         }
         public string BuildScreenText()
         {
-            string ret = $"{Language.main.Get("VFDroneHint1")}: {((pairedDrone != null) ? pairedDrone.GetName() : $"[{Language.main.Get("VFDroneStationHint1")}]")}\n";
-            if (pairedDrone == null)
+            string ret = $"{Language.main.Get("VFDroneHint1")}: {((PairedDrone != null) ? PairedDrone.GetName() : $"[{Language.main.Get("VFDroneStationHint1")}]")}\n";
+            if (PairedDrone == null)
             {
                 return ret;
             }
-            ret += $"{Language.main.Get("VFDroneStationHint2")}: {GetStatus(pairedDrone)}\n";
-            if(pairedDrone.isScuttled || !pairedDrone.energyInterface.hasCharge)
+            ret += $"{Language.main.Get("VFDroneStationHint2")}: {GetStatus(PairedDrone)}\n";
+            if(PairedDrone.isScuttled || !PairedDrone.energyInterface.hasCharge)
             {
                 ret += HandReticle.main.GetText($"{Language.main.Get("VFDroneStationHint3")} ", false, GameInput.Button.LeftHand) + "\n";
             }

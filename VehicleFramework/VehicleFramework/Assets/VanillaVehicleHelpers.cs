@@ -9,7 +9,7 @@ namespace VehicleFramework
 {
     public static class SeamothHelper
     {
-        internal static TaskResult<GameObject> request = new TaskResult<GameObject>();
+        internal static TaskResult<GameObject> request = new();
         private static Coroutine cor = null;
         public static GameObject Seamoth
         {
@@ -49,7 +49,7 @@ namespace VehicleFramework
     }
     public static class PrawnHelper
     {
-        internal static TaskResult<GameObject> request = new TaskResult<GameObject>();
+        internal static TaskResult<GameObject> request = new();
         private static Coroutine cor = null;
         public static GameObject Prawn
         {

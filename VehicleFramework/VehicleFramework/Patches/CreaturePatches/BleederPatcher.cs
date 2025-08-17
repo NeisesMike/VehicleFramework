@@ -23,9 +23,9 @@ namespace VehicleFramework.Patches.CreaturePatches
         [HarmonyPatch(nameof(AttachAndSuck.OnCollisionEnter))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
-            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count + 2);
-            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
+            List<CodeInstruction> codes = new(instructions);
+            List<CodeInstruction> newCodes = new(codes.Count + 2);
+            CodeInstruction myNOP = new(OpCodes.Nop);
             for (int i = 0; i < codes.Count; i++)
             {
                 newCodes.Add(myNOP);
@@ -39,7 +39,7 @@ namespace VehicleFramework.Patches.CreaturePatches
                         newCodes[i] = codes[i];
                         newCodes[i + 1] = codes[i + 1];
                         newCodes[i + 2] = CodeInstruction.Call(typeof(BleederPatcher), nameof(IsPlayerInsideModVehicle));
-                        newCodes[i + 3] = new CodeInstruction(codes[i + 1]);
+                        newCodes[i + 3] = new(codes[i + 1]);
                         i += 4;
                         continue;
                     }

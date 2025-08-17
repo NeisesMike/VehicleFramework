@@ -54,7 +54,7 @@ namespace VehicleFramework
 
         #region PdaNotifications
         private static int IDCounter = 65536;
-        private static readonly Dictionary<string, int> NoteIDsMemory = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> NoteIDsMemory = new();
         public static int GetFreshID()
         {
             int returnID = IDCounter++;
@@ -92,7 +92,7 @@ namespace VehicleFramework
         #endregion
 
         #region MainMenuLoopingMessages
-        private static readonly List<string> Notifications = new List<string>();
+        private static readonly List<string> Notifications = new();
         public static void LoopMainMenuError(string message, string prefix = "")
         {
             string result = $"<color=#FF0000>{prefix} Error: </color><color=#FFFF00>{message}</color>";

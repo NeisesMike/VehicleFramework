@@ -99,7 +99,7 @@ namespace VehicleFramework.VehicleComponents
                 rightArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
                 rightArm.transform.SetParent(mv.transform);
                 rightArm.transform.localRotation = Quaternion.identity;
-                rightArm.transform.localScale = new Vector3(
+                rightArm.transform.localScale = new(
                     -rightArm.transform.localScale.x,
                     rightArm.transform.localScale.y,
                     rightArm.transform.localScale.z

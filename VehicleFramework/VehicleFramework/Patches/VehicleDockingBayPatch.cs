@@ -185,7 +185,7 @@ namespace VehicleFramework.Patches
         {
             dockingBays.Remove(__instance);
         }
-        public static List<VehicleDockingBay> dockingBays = new List<VehicleDockingBay>();
+        public static List<VehicleDockingBay> dockingBays = new();
     }
 
 
@@ -196,7 +196,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleDockingBay.LateUpdate))]
         public static IEnumerable<CodeInstruction> VehicleDockingBayLateUpdateTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            CodeMatch startCinematicMatch = new CodeMatch(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("StartCinematicMode"));
+            CodeMatch startCinematicMatch = new(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("StartCinematicMode"));
 
             var newInstructions = new CodeMatcher(instructions)
                 .MatchStartForward(startCinematicMatch)

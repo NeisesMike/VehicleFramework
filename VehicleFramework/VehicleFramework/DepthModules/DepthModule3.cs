@@ -10,12 +10,12 @@ namespace VehicleFramework.DepthModules
         public override string ClassId => "ModVehicleDepthModule3";
         public override string DisplayName => Language.main.Get("VFDepth3FriendlyString");
         public override string Description => Language.main.Get("VFDepth3Description");
-        public override List<Ingredient> Recipe => new List<Ingredient>()
+        public override List<Ingredient> Recipe => new()
                 {
-                    new Ingredient(TechType.PlasteelIngot, 3),
-                    new Ingredient(TechType.Nickel, 3),
-                    new Ingredient(TechType.EnameledGlass, 3),
-                    new Ingredient(TechType.Kyanite, 3)
+                    new(TechType.PlasteelIngot, 3),
+                    new(TechType.Nickel, 3),
+                    new(TechType.EnameledGlass, 3),
+                    new(TechType.Kyanite, 3)
                 };
         public override Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override Sprite TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");

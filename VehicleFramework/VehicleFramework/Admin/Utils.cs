@@ -21,26 +21,9 @@ namespace VehicleFramework.Admin
         public const string specIntField = "_SpecInt";
         public const string colorField = "_Color";
         public const string glowColorField = "_GlowColor";
-        public static Shader StoreShader(List<MeshRenderer> rends)
-        {
-            Shader m_ShaderMemory = null;
-            foreach (var rend in rends) //go.GetComponentsInChildren<MeshRenderer>(true)
-            {
-                // skip some materials
-                foreach (Material mat in rend.materials)
-                {
-                    if (mat.shader != null)
-                    {
-                        m_ShaderMemory = mat.shader;
-                        break;
-                    }
-                }
-            }
-            return m_ShaderMemory;
-        }
         public static void ListShadersInUse()
         {
-            HashSet<string> shaderNames = new HashSet<string>();
+            HashSet<string> shaderNames = new();
 
             // Find all materials currently loaded in the game.
             Material[] materials = Resources.FindObjectsOfTypeAll<Material>();

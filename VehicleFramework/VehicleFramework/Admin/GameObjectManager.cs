@@ -13,7 +13,7 @@ namespace VehicleFramework.Admin
     }
     public class GameObjectManager<T> : IGameObjectManager where T : Component
     {
-        private static List<T> AllSuchObjects = new List<T>();
+        private static readonly List<T> AllSuchObjects = new();
         public static T FindNearestSuch(Vector3 target, Func<T, bool> filter=null)
         {
             float ComputeDistance(T thisObject)

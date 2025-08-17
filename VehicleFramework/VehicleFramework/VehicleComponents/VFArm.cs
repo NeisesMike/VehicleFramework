@@ -14,8 +14,8 @@ namespace VehicleFramework.VehicleComponents
     // Its methods are mostly passed through to ModVehicleArm
     public class VFArm : MonoBehaviour, IExosuitArm
     {
-        internal static Dictionary<UpgradeTechTypes, GameObject> armPrefabs = new Dictionary<UpgradeTechTypes, GameObject>();
-        internal static Dictionary<UpgradeTechTypes, ModVehicleArm> armLogics = new Dictionary<UpgradeTechTypes, ModVehicleArm>();
+        internal static Dictionary<UpgradeTechTypes, GameObject> armPrefabs = new();
+        internal static Dictionary<UpgradeTechTypes, ModVehicleArm> armLogics = new();
         private ModVehicleArm armDeclaration;
         public bool IsLeft { get; private set; }
         private Vehicle Vehicle => GetComponentInParent<Exosuit>();
@@ -49,18 +49,18 @@ namespace VehicleFramework.VehicleComponents
             if (arm == Exosuit.Arm.Right)
             {
                 IsLeft = false;
-                gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                gameObject.transform.localScale = new(-1f, 1f, 1f);
             }
             else
             {
                 IsLeft = true;
-                gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                gameObject.transform.localScale = new(1f, 1f, 1f);
             }
         }
 
         bool IExosuitArm.OnUseDown(out float cooldownDuration) // return true when the "use" happened
         {
-            ArmActionParams armActionParams = new ArmActionParams
+            ArmActionParams armActionParams = new()
             {
                 vehicle = Vehicle,
                 slotID = SlotID,
@@ -72,7 +72,7 @@ namespace VehicleFramework.VehicleComponents
 
         bool IExosuitArm.OnUseHeld(out float cooldownDuration) // return true when the "hold" happened
         {
-            ArmActionParams armActionParams = new ArmActionParams
+            ArmActionParams armActionParams = new()
             {
                 vehicle = Vehicle,
                 slotID = SlotID,
@@ -84,7 +84,7 @@ namespace VehicleFramework.VehicleComponents
 
         bool IExosuitArm.OnUseUp(out float cooldownDuration) // return true when the "stop using" happened
         {
-            ArmActionParams armActionParams = new ArmActionParams
+            ArmActionParams armActionParams = new()
             {
                 vehicle = Vehicle,
                 slotID = SlotID,
@@ -96,7 +96,7 @@ namespace VehicleFramework.VehicleComponents
 
         bool IExosuitArm.OnAltDown() // return true when the "alt use" happened
         {
-            ArmActionParams armActionParams = new ArmActionParams
+            ArmActionParams armActionParams = new()
             {
                 vehicle = Vehicle,
                 slotID = SlotID,

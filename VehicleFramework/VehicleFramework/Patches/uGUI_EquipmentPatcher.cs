@@ -23,7 +23,7 @@ namespace VehicleFramework
             {
                 ModuleBuilder.haveWeCalledBuildAllSlots = true;
                 ModuleBuilder.main = Player.main.gameObject.AddComponent<ModuleBuilder>();
-                ModuleBuilder.main.grabComponents();
+                ModuleBuilder.main.GrabComponents();
                 ModuleBuilder.main.isEquipmentInit = true;
                 ModuleBuilder.vehicleAllSlots = ___allSlots;
                 ModuleBuilder.main.BuildAllSlots();

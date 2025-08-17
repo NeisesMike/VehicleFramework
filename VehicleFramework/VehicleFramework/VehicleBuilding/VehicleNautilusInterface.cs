@@ -14,7 +14,7 @@ namespace VehicleFramework
             Nautilus.Assets.PrefabInfo vehicle_info = Nautilus.Assets.PrefabInfo.WithTechType(vehicleKey, vehicleKey, vehicle.mv.Description);
             vehicle_info.WithIcon(vehicle.mv.CraftingSprite ?? StaticAssets.ModVehicleIcon);
 
-            Nautilus.Assets.CustomPrefab module_CustomPrefab = new Nautilus.Assets.CustomPrefab(vehicle_info);
+            Nautilus.Assets.CustomPrefab module_CustomPrefab = new(vehicle_info);
             Nautilus.Utility.PrefabUtils.AddBasicComponents(vehicle.mv.VehicleModel, vehicleKey, vehicle_info.TechType, LargeWorldEntity.CellLevel.Global);
             module_CustomPrefab.SetGameObject(vehicle.mv.VehicleModel);
             string jsonRecipeFileName = Path.Combine(
@@ -64,7 +64,7 @@ namespace VehicleFramework
             {
                 TechType techType = VehicleNautilusInterface.RegisterVehicle(ve);
                 VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, $"Patched the {ve.name} Craftable");
-                VehicleEntry newVE = new VehicleEntry(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
+                VehicleEntry newVE = new(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
                 VehicleManager.vehicleTypes.Add(newVE);
             }
             catch(System.Exception e)

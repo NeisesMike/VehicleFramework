@@ -19,9 +19,9 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(CyclopsVehicleStorageTerminalManager.VehicleDocked))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
-            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count);
-            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
+            List<CodeInstruction> codes = new(instructions);
+            List<CodeInstruction> newCodes = new(codes.Count);
+            CodeInstruction myNOP = new(OpCodes.Nop);
             for (int i = 0; i < codes.Count; i++)
             {
                 newCodes.Add(myNOP);

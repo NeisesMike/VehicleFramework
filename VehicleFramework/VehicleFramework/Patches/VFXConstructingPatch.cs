@@ -17,7 +17,7 @@ namespace VehicleFramework.Patches
                 yield return new WaitUntil(() => vfx.ghostMaterial != null);
                 if (mv.ConstructionGhostColor != Color.black)
                 {
-                    Material customGhostMat = new Material(Shader.Find(Admin.Utils.marmosetUberName));
+                    Material customGhostMat = new(Shader.Find(Admin.Utils.marmosetUberName));
                     customGhostMat.CopyPropertiesFromMaterial(vfx.ghostMaterial);
                     vfx.ghostMaterial = customGhostMat;
                     vfx.ghostMaterial.color = mv.ConstructionGhostColor;

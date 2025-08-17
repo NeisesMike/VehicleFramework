@@ -25,7 +25,7 @@ namespace VehicleFramework.VehicleComponents
                 return playerCamActual;
             }
         }
-        private Dictionary<string, Transform> cameras = new Dictionary<string, Transform>();
+        private readonly Dictionary<string, Transform> cameras = new();
         private ModVehicle mv = null;
         public void Start()
         {
@@ -69,8 +69,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public Transform GetCamera(string name)
         {
-            Transform ret = null;
-            cameras.TryGetValue(name, out ret);
+            cameras.TryGetValue(name, out Transform ret);
             return ret;
         }
         public bool SetState(string label)

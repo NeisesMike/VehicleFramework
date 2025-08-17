@@ -8,7 +8,7 @@ namespace VehicleFramework.VehicleComponents
 {
     public class MagnetBoots : MonoBehaviour, IProtoTreeEventListener
     {
-        private static readonly List<MagnetBoots> KnownMagnetBoots = new List<MagnetBoots>();
+        private static readonly List<MagnetBoots> KnownMagnetBoots = new();
         private Transform serializerObject;
         private bool saveLoadWasAttached = false;
         public struct MagnetStruct
@@ -301,11 +301,11 @@ namespace VehicleFramework.VehicleComponents
             }
         }
 
-        private static List<MagnetBoots> previouslyAttached = new List<MagnetBoots>();
+        private static List<MagnetBoots> previouslyAttached = new();
         internal static void DetachAll()
         {
-            previouslyAttached = new List<MagnetBoots>();
-            void DetachAndNotify(MagnetBoots boots)
+            previouslyAttached = new();
+            static void DetachAndNotify(MagnetBoots boots)
             {
                 if (boots.IsAttached)
                 {

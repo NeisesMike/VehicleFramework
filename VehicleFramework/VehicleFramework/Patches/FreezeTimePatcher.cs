@@ -11,7 +11,7 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(FreezeTime))]
     public class FreezeTimePatcher
     {
-        private static List<AudioSource> audioSources = new List<AudioSource>();
+        private readonly static List<AudioSource> audioSources = new();
         public static AudioSource Register(AudioSource source)
         {
             audioSources.RemoveAll(item => item == null);

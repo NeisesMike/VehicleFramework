@@ -17,7 +17,7 @@ namespace VehicleFramework.Patches
         public static void BuilderCheckAsSubModulePostfix(ref bool __result)
         {
             ModVehicle mv = Player.main.GetModVehicle();
-            if (mv == null || !(mv is VehicleTypes.Submarine))
+            if (mv == null || mv is not VehicleTypes.Submarine)
             {
                 return;
             }
@@ -32,7 +32,7 @@ namespace VehicleFramework.Patches
                 orientedBounds.rotation = Builder.placeRotation * orientedBounds.rotation;
                 if (orientedBounds.extents.x > 0f && orientedBounds.extents.y > 0f && orientedBounds.extents.z > 0f)
                 {
-                    List<Collider> outputColliders = new List<Collider>();
+                    List<Collider> outputColliders = new();
                     Builder.GetOverlappedColliders(orientedBounds.position, orientedBounds.rotation, orientedBounds.extents, Builder.placeLayerMask.value, QueryTriggerInteraction.Collide, outputColliders);
                     if (outputColliders.Where(x => x.CompareTag(Builder.denyBuildingTag)).Any())
                     {

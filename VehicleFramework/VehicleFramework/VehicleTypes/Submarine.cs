@@ -261,7 +261,7 @@ namespace VehicleFramework.VehicleTypes
 
         IEnumerator SpawnFabricator(Transform location)
         {
-            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            TaskResult<GameObject> result = new();
             yield return MainPatcher.Instance.StartCoroutine(CraftData.InstantiateFromPrefabAsync(TechType.Fabricator, result, false));
             fabricator = result.Get();
             fabricator.GetComponent<SkyApplier>().enabled = true;
@@ -324,7 +324,7 @@ namespace VehicleFramework.VehicleTypes
         {
             // determine which tab is selected
             // call the desired function
-            List<string> tabnames = new List<string>() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
+            List<string> tabnames = new() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
             string selectedTab = "";
             foreach (string tab in tabnames)
             {
@@ -389,7 +389,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 void Action()
                 {
-                    List<string> tabnames = new List<string>() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
+                    List<string> tabnames = new() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
                     foreach (string tab in tabnames.FindAll(x => x != name))
                     {
                         ActualEditScreen.transform.Find("Active/" + tab + "/Background").gameObject.SetActive(false);
@@ -418,8 +418,8 @@ namespace VehicleFramework.VehicleTypes
 
             GameObject frame = ColorPicker;
             ActualEditScreen.transform.SetParent(frame.transform);
-            ActualEditScreen.transform.localPosition = new Vector3(.15f, .28f, 0.01f);
-            ActualEditScreen.transform.localEulerAngles = new Vector3(0, 180, 0);
+            ActualEditScreen.transform.localPosition = new(.15f, .28f, 0.01f);
+            ActualEditScreen.transform.localEulerAngles = new(0, 180, 0);
             ActualEditScreen.transform.localScale = originalLocalScale;
 
             var but = ActualEditScreen.transform.Find("Active/BaseTab");
@@ -444,11 +444,11 @@ namespace VehicleFramework.VehicleTypes
 
             GameObject colorPicker = ActualEditScreen.transform.Find("Active/ColorPicker").gameObject;
             colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.RemoveAllListeners();
-            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.AddListener(new UnityAction<ColorChangeEventData>(OnColorChange));
+            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.AddListener(new(OnColorChange));
             ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.RemoveAllListeners();
             ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.AddListener(new UnityAction(OnColorSubmit));
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.RemoveAllListeners();
-            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new UnityAction<string>(OnNameChange));
+            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new(OnNameChange));
 
             EnsureColorPickerEnabled();
             yield break;

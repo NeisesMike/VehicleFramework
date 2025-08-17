@@ -109,8 +109,8 @@ namespace VehicleFramework.Assets
         {
             string directoryPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             string bundlePath = Path.Combine(directoryPath, bundleName);
-            AssetBundleInterface abi = new AssetBundleInterface(bundlePath);
-            VehicleAssets result = new VehicleAssets
+            AssetBundleInterface abi = new(bundlePath);
+            VehicleAssets result = new()
             {
                 abi = abi
             };

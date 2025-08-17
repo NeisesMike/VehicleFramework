@@ -35,9 +35,9 @@ namespace VehicleFramework.Patches
 
         public static IEnumerable<CodeInstruction> ReplaceExitSittingMode(IEnumerable<CodeInstruction> instructions)
         {
-            CodeMatch ExitSittingModeMatch = new CodeMatch(i => i.opcode == OpCodes.Call && i.operand.ToString().Contains("ExitSittingMode"));
+            CodeMatch ExitSittingModeMatch = new(i => i.opcode == OpCodes.Call && i.operand.ToString().Contains("ExitSittingMode"));
 
-            var newInstructions = new CodeMatcher(instructions)
+            CodeMatcher newInstructions = new CodeMatcher(instructions)
                 .MatchStartForward(ExitSittingModeMatch)
                 .RemoveInstruction()
                 .Insert(Transpilers.EmitDelegate<Action<Bench, Player, bool>>(MaybeExitSittingMode));

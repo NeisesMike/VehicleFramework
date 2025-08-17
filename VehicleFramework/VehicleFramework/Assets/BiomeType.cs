@@ -41,7 +41,7 @@ namespace VehicleFramework.Assets
     public static class BiomeTypes
     {
         // I included "CreatureOnly" biomes and some dead (unused) biome numbers
-        private static Dictionary<AbstractBiomeType, List<BiomeType>> mapping = new Dictionary<AbstractBiomeType, List<BiomeType>>
+        private static readonly Dictionary<AbstractBiomeType, List<BiomeType>> mapping = new()
         {
             {AbstractBiomeType.SafeShallows, Enumerable.Range(101, 27).Select(i => (BiomeType)i).ToList() },
             {AbstractBiomeType.KelpForest, Enumerable.Range(201, 22).Select(i => (BiomeType)i).ToList() },
@@ -103,7 +103,7 @@ namespace VehicleFramework.Assets
 
     public class AbstractBiomeData
     {
-        public List<BiomeStruct> biomes = new List<BiomeStruct>();
+        public List<BiomeStruct> biomes = new();
         public List<BiomeData> ConvertStruct(BiomeStruct biome)
         {
             return BiomeTypes.GetBiomeData(biome);

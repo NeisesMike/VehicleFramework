@@ -33,7 +33,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, Dictionary<string, techtype>>> SerializeUpgrades()
         {
-            return new List<Tuple<Vector3, Dictionary<string, techtype>>>();
+            return new();
         }
         internal static IEnumerator DeserializeUpgrades(SaveData data, ModVehicle mv)
         {
@@ -48,7 +48,7 @@ namespace VehicleFramework.SaveLoad
                 {
                     foreach (KeyValuePair<string, techtype> pair in tup.Item2)
                     {
-                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                        TaskResult<GameObject> result = new();
                         bool resulty = TechTypeExtensions.FromString(pair.Value, out TechType thisTT, true);
                         if(!resulty)
                         {
@@ -60,7 +60,7 @@ namespace VehicleFramework.SaveLoad
                             GameObject thisUpgrade = result.Get();
                             thisUpgrade.transform.SetParent(mv.modulesRoot.transform);
                             thisUpgrade.SetActive(false);
-                            InventoryItem thisItem = new InventoryItem(thisUpgrade.GetComponent<Pickupable>());
+                            InventoryItem thisItem = new(thisUpgrade.GetComponent<Pickupable>());
                             mv.modules.AddItem(pair.Key, thisItem, true);
                             // try calling OnUpgradeModulesChanged now
                             mv.UpdateModuleSlots();
@@ -75,7 +75,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, List<Tuple<int, batteries>>>> SerializeModularStorage()
         {
-            return new List<Tuple<Vector3, List<Tuple<int, batteries>>>>();
+            return new();
         }
         internal static IEnumerator DeserializeModularStorage(SaveData data, ModVehicle mv)
         {
@@ -96,7 +96,7 @@ namespace VehicleFramework.SaveLoad
                         {
                             foreach (var techtype in container.Item2)
                             {
-                                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                                TaskResult<GameObject> result = new();
                                 bool resulty = TechTypeExtensions.FromString(techtype.Item1, out TechType thisTT, true);
                                 if (!resulty)
                                 {
@@ -122,7 +122,7 @@ namespace VehicleFramework.SaveLoad
                                             Logger.Warn($"Failed to load modular storage item {thisItem.name} to modular storage in vehicle {mv.GetName()}.");
                                             continue;
                                         }
-                                        result = new TaskResult<GameObject>();
+                                        result = new();
                                         yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
                                         GameObject newBat = result.Get();
                                         if (newBat.GetComponent<Battery>() != null)
@@ -148,7 +148,7 @@ namespace VehicleFramework.SaveLoad
                         }
                         else
                         {
-                            Logger.Warn($"Tried to deserialize items into a non-existent modular container: {container.Item1.ToString()}");
+                            Logger.Warn($"Tried to deserialize items into a non-existent modular container: {container.Item1}");
                         }
                     }
                 }
@@ -156,7 +156,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>> SerializeInnateStorage()
         {
-            return new List<Tuple<Vector3, List<Tuple<Vector3, batteries>>>>();
+            return new();
         }
         internal static IEnumerator DeserializeInnateStorage(SaveData data, ModVehicle mv)
         {
@@ -217,7 +217,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, batteries>> SerializeBatteries()
         {
-            return new List<Tuple<Vector3, batteries>>();
+            return new();
         }
         internal static IEnumerator DeserializeBatteries(SaveData data, ModVehicle mv)
         {
@@ -232,7 +232,7 @@ namespace VehicleFramework.SaveLoad
                 {
                     foreach (var battery in vehicle.Item2.Select((value, i) => (value, i)))
                     {
-                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                        TaskResult<GameObject> result = new();
                         bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
                         if(!resulty)
                         {
@@ -259,7 +259,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, batteries>> SerializeBackupBatteries()
         {
-            return new List<Tuple<Vector3, batteries>>();
+            return new();
         }
         internal static IEnumerator DeserializeBackupBatteries(SaveData data, Submarine mv)
         {
@@ -278,7 +278,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     foreach (var battery in slot.Item2.Select((value, i) => (value, i)))
                     {
-                        TaskResult<GameObject> result = new TaskResult<GameObject>();
+                        TaskResult<GameObject> result = new();
                         bool resulty = TechTypeExtensions.FromString(battery.value.Item1, out TechType thisTT, true);
                         if (!resulty)
                         {
@@ -305,7 +305,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, bool>> SerializePlayerInside()
         {
-            return new List<Tuple<Vector3, bool>>();
+            return new();
         }
         internal static IEnumerator DeserializePlayerInside(SaveData data, ModVehicle mv)
         {
@@ -331,7 +331,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, string, color, color, color, color, bool>> SerializeAesthetics()
         {
-            return new List<Tuple<Vector3, string, color, color, color, color, bool>>();
+            return new();
         }
         internal static IEnumerator DeserializeAesthetics(SaveData data, ModVehicle mv)
         {
@@ -339,7 +339,7 @@ namespace VehicleFramework.SaveLoad
             {
                 yield break;
             }
-            Color SynthesizeColor(color col)
+            static Color SynthesizeColor(color col)
             {
                 return new Color(col.Item1, col.Item2, col.Item3, col.Item4);
             }
@@ -407,7 +407,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, bool>> SerializePlayerControlling()
         {
-            return new List<Tuple<Vector3, bool>>();
+            return new();
         }
         internal static IEnumerator DeserializePlayerControlling(SaveData data, ModVehicle mv)
         {
@@ -440,7 +440,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static List<Tuple<Vector3, string>> SerializeSubName()
         {
-            return new List<Tuple<Vector3, string>>();
+            return new();
         }
         internal static IEnumerator DeserializeSubName(SaveData data, ModVehicle mv)
         {
@@ -468,7 +468,7 @@ namespace VehicleFramework.SaveLoad
         {
             foreach (var techtype in thisStorage)
             {
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                TaskResult<GameObject> result = new();
                 System.String techTypeString = techtype.Item1.Replace("Undiscovered", ""); // fix for yet-"undiscovered" creature eggs
                 bool resulty = TechTypeExtensions.FromString(techTypeString, out TechType thisTT, true);
                 if (!resulty)
@@ -495,7 +495,7 @@ namespace VehicleFramework.SaveLoad
                             Logger.Warn($"Failed to load innate storage item {thisItem.name} to modular storage for {mv.name} : {mv.GetName()}.");
                             continue;
                         }
-                        result = new TaskResult<GameObject>();
+                        result = new();
                         yield return CraftData.InstantiateFromPrefabAsync(TechType.Battery, result, false);
                         GameObject newBat = result.Get();
                         if (newBat.GetComponent<Battery>() != null)
@@ -510,7 +510,7 @@ namespace VehicleFramework.SaveLoad
                 thisItem.transform.SetParent(mv.StorageRootObject.transform);
                 try
                 {
-                    matchedContainer.container.AddItem(thisItem.GetComponent<Pickupable>());
+                    matchedContainer.Container.AddItem(thisItem.GetComponent<Pickupable>());
                 }
                 catch (Exception e)
                 {

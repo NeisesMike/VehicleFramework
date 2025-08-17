@@ -18,7 +18,7 @@ namespace VehicleFramework.Admin
         internal static ExternalVehicleConfig<T> CyclopsConfig = null;
         private static ExternalVehicleConfig<T> AddNew(ModVehicle mv)
         {
-            var thisConf = new ExternalVehicleConfig<T>
+            ExternalVehicleConfig<T> thisConf = new()
             {
                 MyName = mv.GetType().ToString()
             };
@@ -57,7 +57,7 @@ namespace VehicleFramework.Admin
         }
         public static ExternalVehicleConfig<T> GetSeamothConfig()
         {
-            SeamothConfig ??= new ExternalVehicleConfig<T>
+            SeamothConfig ??= new()
                 {
                     MyName = ConfigRegistrar.SeamothName
                 };
@@ -65,7 +65,7 @@ namespace VehicleFramework.Admin
         }
         public static ExternalVehicleConfig<T> GetPrawnConfig()
         {
-            PrawnConfig ??= new ExternalVehicleConfig<T>
+            PrawnConfig ??= new()
                 {
                     MyName = ConfigRegistrar.PrawnName
                 };
@@ -73,8 +73,8 @@ namespace VehicleFramework.Admin
         }
         public static ExternalVehicleConfig<T> GetCyclopsConfig()
         {
-            CyclopsConfig ??= new ExternalVehicleConfig<T>
-                {
+            CyclopsConfig ??= new()
+            {
                     MyName = ConfigRegistrar.CyclopsName
                 };
             return CyclopsConfig;

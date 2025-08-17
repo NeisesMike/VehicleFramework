@@ -20,7 +20,7 @@ namespace VehicleFramework.SaveLoad
             {
                 return;
             }
-            Dictionary<string, TechType> result = new Dictionary<string, TechType>();
+            Dictionary<string, TechType> result = new();
             upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType ?? TechType.None));
             SaveLoad.JsonInterface.Write<Dictionary<string, TechType>>(mv, NewSaveFileName, result);
         }
@@ -45,14 +45,14 @@ namespace VehicleFramework.SaveLoad
             }
             foreach(var upgrade in theseUpgrades.Where(x=>x.Value != TechType.None))
             {
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                TaskResult<GameObject> result = new();
                 yield return CraftData.InstantiateFromPrefabAsync(upgrade.Value, result, false);
                 try
                 {
                     GameObject thisUpgrade = result.Get();
                     thisUpgrade.transform.SetParent(mv.modulesRoot.transform);
                     thisUpgrade.SetActive(false);
-                    InventoryItem thisItem = new InventoryItem(thisUpgrade.GetComponent<Pickupable>());
+                    InventoryItem thisItem = new(thisUpgrade.GetComponent<Pickupable>());
                     mv.modules.AddItem(upgrade.Key, thisItem, true);
                 }
                 catch (Exception e)

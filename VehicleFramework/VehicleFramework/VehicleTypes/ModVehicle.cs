@@ -24,7 +24,7 @@ namespace VehicleFramework
             Sink = 1,
             Float = 2
         }
-        public enum PilotingStyle
+        public enum PilotingStyleEnum
         {
             Cyclops,
             Seamoth,
@@ -43,10 +43,10 @@ namespace VehicleFramework
         {
             get
             {
-                var storageRO = transform.Find("StorageRootObject")?.gameObject;
+                GameObject storageRO = transform.Find("StorageRootObject")?.gameObject;
                 if (storageRO == null)
                 {
-                    storageRO = new GameObject("StorageRootObject");
+                    storageRO = new("StorageRootObject");
                     storageRO.transform.SetParent(transform);
                 }
                 return storageRO;
@@ -56,17 +56,17 @@ namespace VehicleFramework
         {
             get
             {
-                var storageRO = transform.Find("ModulesRootObject")?.gameObject;
+                GameObject storageRO = transform.Find("ModulesRootObject")?.gameObject;
                 if (storageRO == null)
                 {
-                    storageRO = new GameObject("ModulesRootObject");
+                    storageRO = new("ModulesRootObject");
                     storageRO.transform.SetParent(transform);
                 }
                 return storageRO;
             }
         }
-        public virtual List<VehicleParts.VehicleBattery> Batteries => new List<VehicleParts.VehicleBattery>();
-        public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new List<VehicleParts.VehicleUpgrades>();
+        public virtual List<VehicleParts.VehicleBattery> Batteries => new();
+        public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new();
         public virtual VFEngine VFEngine { get; set; }
         public virtual ModVehicleEngine Engine { get; set; } // prefer to use VFEngine.
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
@@ -74,18 +74,18 @@ namespace VehicleFramework
         public virtual BoxCollider BoundingBoxCollider { get; set; }
         public virtual Sprite PingSprite => Assets.StaticAssets.DefaultPingSprite;
         public virtual Sprite SaveFileSprite => Assets.StaticAssets.DefaultSaveFileSprite; // I think I can use SpriteHelper.CreateSpriteFromAtlasSprite for this now. But do I want to?
-        public virtual List<GameObject> WaterClipProxies => new List<GameObject>();
-        public virtual List<VehicleParts.VehicleStorage> InnateStorages => new List<VehicleParts.VehicleStorage>();
-        public virtual List<VehicleParts.VehicleStorage> ModularStorages => new List<VehicleParts.VehicleStorage>();
-        public virtual List<VehicleParts.VehicleFloodLight> HeadLights => new List<VehicleParts.VehicleFloodLight>();
-        public virtual List<GameObject> CanopyWindows => new List<GameObject>();
-        public virtual Dictionary<TechType, int> Recipe => new Dictionary<TechType, int>() { { TechType.Titanium, 1 } };
-        public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new List<VehicleParts.VehicleBattery>();
+        public virtual List<GameObject> WaterClipProxies => new();
+        public virtual List<VehicleParts.VehicleStorage> InnateStorages => new();
+        public virtual List<VehicleParts.VehicleStorage> ModularStorages => new();
+        public virtual List<VehicleParts.VehicleFloodLight> HeadLights => new();
+        public virtual List<GameObject> CanopyWindows => new();
+        public virtual Dictionary<TechType, int> Recipe => new() { { TechType.Titanium, 1 } };
+        public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new();
         public virtual Sprite UnlockedSprite => null;
         public virtual GameObject LeviathanGrabPoint => gameObject;
         public virtual Sprite CraftingSprite => StaticAssets.ModVehicleIcon;
-        public virtual List<Transform> LavaLarvaAttachPoints => new List<Transform>();
-        public virtual List<VehicleParts.VehicleCamera> Cameras => new List<VehicleParts.VehicleCamera>();
+        public virtual List<Transform> LavaLarvaAttachPoints => new();
+        public virtual List<VehicleParts.VehicleCamera> Cameras => new();
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => string.Empty;
         public virtual Sprite EncyclopediaImage => null;
@@ -102,8 +102,8 @@ namespace VehicleFramework
         public virtual int CrushDepthUpgrade3 => 300;
         public virtual int CrushDamage => MaxHealth / 15;
         public virtual int CrushPeriod => 1;
-        public virtual PilotingStyle pilotingStyle => PilotingStyle.Other; // used by Echelon, Odyssey, Blossom
-        public virtual List<Collider> DenyBuildingColliders => new List<Collider>();
+        public virtual PilotingStyleEnum PilotingStyle => PilotingStyleEnum.Other; // used by Echelon, Odyssey, Blossom
+        public virtual List<Collider> DenyBuildingColliders => new();
         public virtual float GhostAdultBiteDamage => 150f;
         public virtual float GhostJuvenileBiteDamage => 100f;
         public virtual float ReaperBiteDamage => 120f;
@@ -159,7 +159,7 @@ namespace VehicleFramework
             base.Start();
 
             upgradesInput.equipment = modules;
-            modules.isAllowedToRemove = new IsAllowedToRemove(IsAllowedToRemove);
+            modules.isAllowedToRemove = new(IsAllowedToRemove);
 
             // lost this in the update to Nautilus. We're no longer tracking our own tech type IDs or anything,
             // so I'm not able to provide the value easily here. Not even sure what a GameInfoIcon is :shrug:
@@ -204,7 +204,7 @@ namespace VehicleFramework
         public override void OnUpgradeModuleToggle(int slotID, bool active)
         {
             TechType techType = modules.GetTechTypeInSlot(slotIDs[slotID]);
-            UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
+            UpgradeTypes.ToggleActionParams param = new()
             {
                 active = active,
                 vehicle = this,
@@ -216,7 +216,7 @@ namespace VehicleFramework
         }
         public override void OnUpgradeModuleUse(TechType techType, int slotID)
         {
-            UpgradeTypes.SelectableActionParams param = new UpgradeTypes.SelectableActionParams
+            UpgradeTypes.SelectableActionParams param = new()
             {
                 vehicle = this,
                 slotID = slotID,
@@ -224,7 +224,7 @@ namespace VehicleFramework
             };
             Admin.UpgradeRegistrar.OnSelectActions.ForEach(x => x(param));
 
-            UpgradeTypes.SelectableChargeableActionParams param2 = new UpgradeTypes.SelectableChargeableActionParams
+            UpgradeTypes.SelectableChargeableActionParams param2 = new()
             {
                 vehicle = this,
                 slotID = slotID,
@@ -240,7 +240,7 @@ namespace VehicleFramework
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
-            UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+            UpgradeTypes.AddActionParams addedParams = new()
             {
                 vehicle = this,
                 slotID = slotID,
@@ -330,10 +330,7 @@ namespace VehicleFramework
         { // You probably do not want to override this
             get
             {
-                if (_slotIDs == null)
-                {
-                    _slotIDs = GenerateSlotIDs(VehicleConfig.GetConfig(this).NumUpgrades.Value, VehicleConfig.GetConfig(this).IsArms.Value);
-                }
+                _slotIDs ??= GenerateSlotIDs(VehicleConfig.GetConfig(this).NumUpgrades.Value, VehicleConfig.GetConfig(this).IsArms.Value);
                 return _slotIDs;
             }
         }
@@ -451,7 +448,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(2.5f);
 
                 // give us an AI battery please
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                TaskResult<GameObject> result = new();
                 yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
                 GameObject newAIBattery = result.Get();
                 newAIBattery.GetComponent<Battery>().charge = 200;
@@ -603,7 +600,7 @@ namespace VehicleFramework
         {
             IEnumerator DropLoot(Vector3 place, GameObject root)
             {
-                TaskResult<GameObject> result = new TaskResult<GameObject>();
+                TaskResult<GameObject> result = new();
                 foreach (KeyValuePair<TechType, int> item in Recipe)
                 {
                     for (int i = 0; i < item.Value; i++)
@@ -684,8 +681,8 @@ namespace VehicleFramework
         }
         public FMOD_CustomEmitter lightsOnSound = null;
         public FMOD_CustomEmitter lightsOffSound = null;
-        public List<GameObject> lights = new List<GameObject>();
-        public List<GameObject> volumetricLights = new List<GameObject>();
+        public List<GameObject> lights = new();
+        public List<GameObject> volumetricLights = new();
         public PingInstance pingInstance = null;
         public HeadLightsController headlights;
         public EnergyInterface AIEnergyInterface;
@@ -701,7 +698,7 @@ namespace VehicleFramework
         public bool IsPlayerDry = false;
         public bool isScuttled = false;
         public bool IsUndockingAnimating = false;
-        public List<Action<int, TechType, bool>> upgradeOnAddedActions = new List<Action<int, TechType, bool>>();
+        public List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
         public TechType TechType => GetComponent<TechTag>().type;
         public bool IsConstructed => vfxConstructing == null || vfxConstructing.IsConstructed();
         #endregion
@@ -719,8 +716,8 @@ namespace VehicleFramework
 
         #region internal_methods
         internal List<string> VehicleModuleSlots => GenerateModuleSlots(VehicleConfig.GetConfig(this).NumUpgrades.Value).ToList(); // use config value instead
-        internal List<string> VehicleArmSlots => new List<string> { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
-        internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new Dictionary<EquipmentType, List<string>>
+        internal List<string> VehicleArmSlots => new() { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
+        internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new()
                 {
                     { EnumHelper.GetModuleType(), VehicleModuleSlots },
                     { EnumHelper.GetArmType(), VehicleArmSlots }
@@ -848,7 +845,7 @@ namespace VehicleFramework
                     Logger.Error("Error: ModGetStorageInSlot called on invalid innate storage slotID");
                     return null;
                 }
-                return vsc.container;
+                return vsc.Container;
             }
             else if (techType == TechType.VehicleStorageModule)
             {
@@ -887,15 +884,15 @@ namespace VehicleFramework
         }
         internal void HandlePilotingAnimations()
         {
-            switch (pilotingStyle)
+            switch (PilotingStyle)
             {
-                case PilotingStyle.Cyclops:
+                case PilotingStyleEnum.Cyclops:
                     SafeAnimator.SetBool(Player.main.armsController.animator, "cyclops_steering", IsPlayerControlling());
                     break;
-                case PilotingStyle.Seamoth:
+                case PilotingStyleEnum.Seamoth:
                     SafeAnimator.SetBool(Player.main.armsController.animator, "in_seamoth", IsPlayerControlling());
                     break;
-                case PilotingStyle.Prawn:
+                case PilotingStyleEnum.Prawn:
                     SafeAnimator.SetBool(Player.main.armsController.animator, "in_exosuit", IsPlayerControlling());
                     break;
                 default:
@@ -1053,7 +1050,7 @@ namespace VehicleFramework
         }
         public bool HasRoomFor(Pickupable pickup)
         {
-            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
             {
                 if (container.HasRoomFor(pickup))
                 {
@@ -1071,7 +1068,7 @@ namespace VehicleFramework
         }
         public bool HasInStorage(TechType techType, int count=1)
         {
-            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
             {
                 if (container.Contains(techType))
                 {
@@ -1103,7 +1100,7 @@ namespace VehicleFramework
                 }
                 return false;
             }
-            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().container))
+            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
             {
                 if (container.HasRoomFor(pickup))
                 {
@@ -1111,7 +1108,7 @@ namespace VehicleFramework
                     ErrorMessage.AddMessage(Language.main.GetFormat<string>("VehicleAddedToStorage", arg));
                     uGUI_IconNotifier.main.Play(pickup.GetTechType(), uGUI_IconNotifier.AnimationType.From, null);
                     pickup.Initialize();
-                    InventoryItem item = new InventoryItem(pickup);
+                    InventoryItem item = new(pickup);
                     container.UnsafeAdd(item);
                     pickup.PlayPickupSound();
                     return true;
@@ -1125,7 +1122,7 @@ namespace VehicleFramework
                     ErrorMessage.AddMessage(Language.main.GetFormat<string>("VehicleAddedToStorage", arg));
                     uGUI_IconNotifier.main.Play(pickup.GetTechType(), uGUI_IconNotifier.AnimationType.From, null);
                     pickup.Initialize();
-                    InventoryItem item = new InventoryItem(pickup);
+                    InventoryItem item = new(pickup);
                     container.UnsafeAdd(item);
                     pickup.PlayPickupSound();
                     return true;
@@ -1155,12 +1152,12 @@ namespace VehicleFramework
             int GetInnateCapacity(VehicleParts.VehicleStorage sto)
             {
                 var container = sto.Container.GetComponent<InnateStorageContainer>();
-                return container.container.sizeX * container.container.sizeY;
+                return container.Container.sizeX * container.Container.sizeY;
             }
             int GetInnateStored(VehicleParts.VehicleStorage sto)
             {
                 int ret = 0;
-                var marty = (IEnumerable<InventoryItem>)sto.Container.GetComponent<InnateStorageContainer>().container;
+                var marty = (IEnumerable<InventoryItem>)sto.Container.GetComponent<InnateStorageContainer>().Container;
                 marty.ForEach(x => ret += x.width * x.height);
                 return ret;
             }
@@ -1270,7 +1267,7 @@ namespace VehicleFramework
         private const string SimpleDataSaveFileName = "SimpleData";
         private void SaveSimpleData()
         {
-            Dictionary<string, string> simpleData = new Dictionary<string, string>
+            Dictionary<string, string> simpleData = new()
             {
                 { isControlling, IsPlayerControlling() ? bool.TrueString : bool.FalseString },
                 { isInside, IsUnderCommand ? bool.TrueString : bool.FalseString },
@@ -1364,7 +1361,7 @@ namespace VehicleFramework
 
         private const string StorageSaveName = "Storage";
         private Dictionary<string, List<Tuple<TechType, float, TechType>>> loadedStorageData = null;
-        private readonly Dictionary<string, List<Tuple<TechType, float, TechType>>> innateStorageSaveData = new Dictionary<string, List<Tuple<TechType, float, TechType>>>();
+        private readonly Dictionary<string, List<Tuple<TechType, float, TechType>>> innateStorageSaveData = new();
         internal void SaveInnateStorage(string path, List<Tuple<TechType, float, TechType>> storageData)
         {
             innateStorageSaveData.Add(path, storageData);
@@ -1377,10 +1374,7 @@ namespace VehicleFramework
         }
         internal List<Tuple<TechType, float, TechType>> ReadInnateStorage(string path)
         {
-            if (loadedStorageData == null)
-            {
-                loadedStorageData = SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
-            }
+            loadedStorageData ??= SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
             if (loadedStorageData == null)
             {
                 return default;
@@ -1397,7 +1391,7 @@ namespace VehicleFramework
 
         private const string BatterySaveName = "Batteries";
         private Dictionary<string, Tuple<TechType, float>> loadedBatteryData = null;
-        private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new Dictionary<string, Tuple<TechType, float>>();
+        private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new();
         internal void SaveBatteryData(string path, Tuple<TechType, float> batteryData)
         {
             int batteryCount = 0;
@@ -1414,10 +1408,7 @@ namespace VehicleFramework
         }
         internal Tuple<TechType, float> ReadBatteryData(string path)
         {
-            if (loadedBatteryData == null)
-            {
-                loadedBatteryData = SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
-            }
+            loadedBatteryData ??= SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
             if (loadedBatteryData == null)
             {
                 return default;

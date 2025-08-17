@@ -39,7 +39,7 @@ namespace VehicleFramework.Engines
         {
             if (IsTrackingSurface())
             {
-                Vector3 targetPosition = new Vector3(transform.position.x, WaterLine, transform.position.z);
+                Vector3 targetPosition = new(transform.position.x, WaterLine, transform.position.z);
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * Buoyancy);
 
                 Quaternion targetForeAftRotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);

@@ -14,7 +14,7 @@ namespace VehicleFramework
 		private bool hasInit = false;
 
 		private ItemsContainer _container = null;
-		public ItemsContainer container 
+		public ItemsContainer Container 
 		{ 
 			get
             {
@@ -33,13 +33,13 @@ namespace VehicleFramework
 
 		private void Init()
 		{
-			if (this.container != null || hasInit)
+			if (this.Container != null || hasInit)
 			{
 				return;
 			}
-			this.container = new ItemsContainer(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
-			this.container.SetAllowedTechTypes(this.allowedTech);
-			this.container.isAllowedToRemove = null;
+			this.Container = new(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
+			this.Container.SetAllowedTechTypes(this.allowedTech);
+			this.Container.isAllowedToRemove = null;
 			hasInit = true;
 		}
 
@@ -52,7 +52,7 @@ namespace VehicleFramework
 				{
 					for (int i = 0; i < 2; i++)
 					{
-						TaskResult<GameObject> result = new TaskResult<GameObject>();
+						TaskResult<GameObject> result = new();
 						yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
 						GameObject gameObject = result.Get();
 						if (gameObject != null)
@@ -63,7 +63,7 @@ namespace VehicleFramework
 								// NEWNEW
 								// Why did we use to have this line?
 								//pickupable = pickupable.Pickup(false);
-								if (this.container.AddItem(pickupable) == null)
+								if (this.Container.AddItem(pickupable) == null)
 								{
 									UnityEngine.Object.Destroy(pickupable.gameObject);
 								}

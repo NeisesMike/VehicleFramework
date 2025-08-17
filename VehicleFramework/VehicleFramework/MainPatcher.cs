@@ -103,7 +103,7 @@ namespace VehicleFramework
             WaitScreenHandler.RegisterLateLoadTask(PluginInfo.PLUGIN_NAME, x=>SetWorldLoaded());
             Nautilus.Utility.SaveUtils.RegisterOneTimeUseOnLoadEvent(OnLoadOnce);
 
-            var harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+            Harmony harmony = new(PluginInfo.PLUGIN_GUID);
             harmony.PatchAll();
         
             // Patch SubnauticaMap with appropriate ping sprites, lest it crash.
@@ -111,7 +111,7 @@ namespace VehicleFramework
             if (type != null)
             {
                 var pingOriginal = AccessTools.Method(type, "Refresh");
-                var pingPrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.MapModPatcher), "Prefix"));
+                HarmonyMethod pingPrefix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.MapModPatcher), "Prefix"));
                 harmony.Patch(pingOriginal, pingPrefix);
             }
 
@@ -120,11 +120,11 @@ namespace VehicleFramework
             if (type2 != null)
             {
                 var awakePreOriginal = AccessTools.Method(type2, "Prefix");
-                var awakePrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePrefix"));
+                HarmonyMethod awakePrefix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePrefix"));
                 harmony.Patch(awakePreOriginal, awakePrefix);
 
                 var awakePostOriginal = AccessTools.Method(type2, "Postfix");
-                var awakePostfix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePostfix"));
+                HarmonyMethod awakePostfix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePostfix"));
                 harmony.Patch(awakePostOriginal, awakePostfix);
             }
 
@@ -133,7 +133,7 @@ namespace VehicleFramework
             if (type3 != null)
             {
                 var AllowedToAddOriginal = AccessTools.Method(type3, "AllowedToAdd");
-                var AllowedToAddPrefix = new HarmonyMethod(AccessTools.Method(typeof(Patches.CompatibilityPatches.BetterVehicleStoragePatcher), "Prefix"));
+                HarmonyMethod AllowedToAddPrefix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.BetterVehicleStoragePatcher), "Prefix"));
                 harmony.Patch(AllowedToAddOriginal, AllowedToAddPrefix);
             }
             /*

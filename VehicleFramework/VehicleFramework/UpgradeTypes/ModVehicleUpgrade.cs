@@ -44,7 +44,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual string TabDisplayName => string.Empty;
         public virtual List<CraftingNode> CraftingPath { get; set; } = null;
         public virtual Sprite TabIcon => StaticAssets.UpgradeIcon;
-        public virtual List<Ingredient> Recipe => new List<Ingredient> { new Ingredient(TechType.Titanium, 1) };
+        public virtual List<Ingredient> Recipe => new() { new Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {
             Logger.DebugLog("Adding " + ClassId + " to ModVehicle: " + param.vehicle.subName.name + " in slotID: " + param.slotID.ToString());
@@ -57,11 +57,11 @@ namespace VehicleFramework.UpgradeTypes
         {
             Logger.DebugLog("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
         }
-        private readonly List<UpgradeTechTypes> RecipeExtensions = new List<UpgradeTechTypes>();
-        private readonly List<Ingredient> SimpleRecipeExtensions = new List<Ingredient>();
+        private readonly List<UpgradeTechTypes> RecipeExtensions = new();
+        private readonly List<Ingredient> SimpleRecipeExtensions = new();
         public List<Ingredient> GetRecipe(VehicleType type)
         {
-            List<Ingredient> ret = new List<Ingredient>();
+            List<Ingredient> ret = new();
             ret.AddRange(Recipe);
             ret.AddRange(SimpleRecipeExtensions);
             switch (type)

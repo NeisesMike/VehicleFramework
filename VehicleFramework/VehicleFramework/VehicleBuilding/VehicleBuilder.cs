@@ -189,7 +189,7 @@ namespace VehicleFramework
                 try
                 {
                     mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();
-                    mv.BoundingBoxCollider.size = new Vector3(6, 8, 12);
+                    mv.BoundingBoxCollider.size = new(6, 8, 12);
                     mv.BoundingBoxCollider.enabled = false;
                     Logger.Warn("The " + mv.name + " has been given a default BoundingBox of size 6x8x12.");
                 }
@@ -358,7 +358,7 @@ namespace VehicleFramework
                 var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
                 em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
                 em.defaultBattery = seamothEnergyMixin.defaultBattery;
-                em.compatibleBatteries = new List<TechType>() { TechType.PowerCell, TechType.PrecursorIonPowerCell };
+                em.compatibleBatteries = new() { TechType.PowerCell, TechType.PrecursorIonPowerCell };
                 em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
                 em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
                 em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
@@ -453,7 +453,7 @@ namespace VehicleFramework
             Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
-            List<VehicleParts.VehicleFloodLight> theseLights = mv.HeadLights ?? new List<VehicleParts.VehicleFloodLight>();
+            List<VehicleParts.VehicleFloodLight> theseLights = mv.HeadLights ?? new();
             if(mv is VehicleTypes.Submarine subma && subma.FloodLights != null)
             {
                 theseLights.AddRange(subma.FloodLights);
@@ -956,7 +956,7 @@ namespace VehicleFramework
                     return pair.Item3;
                 }
             }
-            return SpriteManager.Get(SpriteManager.Group.Pings, name);
+            return SpriteManager.Get(SpriteManager.Group.Pings, name, defaultSprite);
         }
 
         /*
@@ -991,7 +991,7 @@ namespace VehicleFramework
         }
         public static void ScatterDataBoxes(List<VehicleCraftable> craftables)
         {
-            List<Spawnable.SpawnLocation> spawnLocations = new List<Spawnable.SpawnLocation>
+            List<Spawnable.SpawnLocation> spawnLocations = new
             {
                 new Spawnable.SpawnLocation(Vector3.zero, Vector3.zero),
                 new Spawnable.SpawnLocation(new Vector3(50,0,0), Vector3.zero),

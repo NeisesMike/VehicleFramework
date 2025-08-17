@@ -7,24 +7,24 @@ namespace VehicleFramework.SaveLoad
 {
     internal class VFBatteryIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
-        internal ModVehicle mv => GetComponentInParent<ModVehicle>();
+        internal ModVehicle MV => GetComponentInParent<ModVehicle>();
         const string saveFileNameSuffix = "battery";
-        private string SaveFileName => SaveLoadUtils.GetSaveFileName(mv.transform, transform, saveFileNameSuffix);
+        private string SaveFileName => SaveLoadUtils.GetSaveFileName(MV.transform, transform, saveFileNameSuffix);
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
             EnergyMixin thisEM = GetComponent<EnergyMixin>();
             if (thisEM.batterySlot.storedItem == null)
             {
-                var emptyBattery = new Tuple<TechType, float>(0, 0);
-                mv.SaveBatteryData(SaveFileName, emptyBattery);
+                Tuple<TechType, float> emptyBattery = new(0, 0);
+                MV.SaveBatteryData(SaveFileName, emptyBattery);
             }
             else
             {
                 TechType thisTT = thisEM.batterySlot.storedItem.item.GetTechType();
                 float thisEnergy = thisEM.battery.charge;
-                var thisBattery = new Tuple<TechType, float>(thisTT, thisEnergy);
-                mv.SaveBatteryData(SaveFileName, thisBattery);
+                Tuple<TechType, float> thisBattery = new(thisTT, thisEnergy);
+                MV.SaveBatteryData(SaveFileName, thisBattery);
             }
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
@@ -33,30 +33,30 @@ namespace VehicleFramework.SaveLoad
         }
         private IEnumerator LoadBattery()
         {
-            yield return new WaitUntil(() => mv != null);
-            var thisBattery = mv.ReadBatteryData(SaveFileName);
+            yield return new WaitUntil(() => MV != null);
+            var thisBattery = MV.ReadBatteryData(SaveFileName);
             if (thisBattery == default)
             {
-                thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(mv, SaveFileName);
+                thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(MV, SaveFileName);
             }
             if (thisBattery == default || thisBattery.Item1 == TechType.None)
             {
                 yield break;
             }
-            TaskResult<GameObject> result = new TaskResult<GameObject>();
+            TaskResult<GameObject> result = new();
             yield return CraftData.InstantiateFromPrefabAsync(thisBattery.Item1, result, false);
             GameObject thisItem = result.Get();
             try
             {
                 thisItem.GetComponent<Battery>().charge = thisBattery.Item2;
-                thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                thisItem.transform.SetParent(MV.StorageRootObject.transform);
                 GetComponent<EnergyMixin>().battery = thisItem.GetComponent<Battery>();
                 GetComponent<EnergyMixin>().batterySlot.AddItem(thisItem.GetComponent<Pickupable>());
                 thisItem.SetActive(false);
             }
             catch (Exception e)
             {
-                Logger.LogException($"Failed to load battery : {thisBattery.Item1} for {mv.name} on GameObject {gameObject.name} : {mv.subName.hullName.text}", e);
+                Logger.LogException($"Failed to load battery : {thisBattery.Item1} for {MV.name} on GameObject {gameObject.name} : {MV.subName.hullName.text}", e);
             }
         }
     }

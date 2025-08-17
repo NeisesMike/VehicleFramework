@@ -23,10 +23,10 @@ namespace VehicleFramework.Assets
     }
     public class FragmentManager : MonoBehaviour
     {
-        private static readonly List<PDAScanner.EntryData> PDAScannerData = new List<PDAScanner.EntryData>();
+        private static readonly List<PDAScanner.EntryData> PDAScannerData = new();
         internal static PDAScanner.EntryData MakeGenericEntryData(TechType fragmentTT, FragmentData frag)
         {
-            PDAScanner.EntryData entryData = new PDAScanner.EntryData()
+            PDAScanner.EntryData entryData = new()
             {
                 key = fragmentTT,
                 locked = true,
@@ -84,9 +84,10 @@ namespace VehicleFramework.Assets
             GameObject head = frag.fragments.First();
             List<GameObject> tail = frag.fragments;
             tail.Remove(head);
-            TechType fragmentType;
-            List<Nautilus.Assets.CustomPrefab> customPrefabs = new List<Nautilus.Assets.CustomPrefab>();
-            customPrefabs.Add(RegisterFragmentGenericSingle(frag, head, false, out fragmentType));
+            List<Nautilus.Assets.CustomPrefab> customPrefabs = new()
+            {
+                RegisterFragmentGenericSingle(frag, head, false, out TechType fragmentType)
+            };
             int numberFragments = 1;
             foreach (GameObject fragmentObject in tail)
             {
@@ -94,7 +95,7 @@ namespace VehicleFramework.Assets
                 Nautilus.Assets.PrefabInfo fragmentInfo = Nautilus.Assets.PrefabInfo.WithTechType(frag.classID + numberFragments.ToString(), frag.displayName, frag.description);
                 numberFragments++;
                 fragmentInfo.TechType = fragmentType;
-                Nautilus.Assets.CustomPrefab customFragmentPrefab = new Nautilus.Assets.CustomPrefab(fragmentInfo);
+                Nautilus.Assets.CustomPrefab customFragmentPrefab = new(fragmentInfo);
                 fragmentObject.EnsureComponent<BoxCollider>();
                 fragmentObject.EnsureComponent<PrefabIdentifier>().ClassId = frag.classID;
                 fragmentObject.EnsureComponent<FragmentManager>();
@@ -107,8 +108,8 @@ namespace VehicleFramework.Assets
             int numberPrefabsRegistered = 0;
             foreach (Nautilus.Assets.CustomPrefab customPrefab in customPrefabs)
             {
-                List<Vector3> spawnLocationsToUse = new List<Vector3>();
-                List<int> indexes = new List<int>();
+                List<Vector3> spawnLocationsToUse = new();
+                List<int> indexes = new();
                 int iterator = numberPrefabsRegistered;
                 while(iterator < frag.spawnLocations.Count())
                 {
@@ -122,7 +123,7 @@ namespace VehicleFramework.Assets
                 }
                 else
                 {
-                    List<Nautilus.Assets.SpawnLocation> spawns = new List<Nautilus.Assets.SpawnLocation>();
+                    List<Nautilus.Assets.SpawnLocation> spawns = new();
                     for (int i = 0; i < spawnLocationsToUse.Count(); i++)
                     {
                         spawns.Add(new Nautilus.Assets.SpawnLocation(spawnLocationsToUse[i], frag.spawnRotations[indexes[i]]));
@@ -138,7 +139,7 @@ namespace VehicleFramework.Assets
         {
             Admin.Utils.ApplyMarmoset(fragmentObject);
             Nautilus.Assets.PrefabInfo fragmentInfo = Nautilus.Assets.PrefabInfo.WithTechType(frag.classID, frag.displayName, frag.description);
-            Nautilus.Assets.CustomPrefab customFragmentPrefab = new Nautilus.Assets.CustomPrefab(fragmentInfo);
+            Nautilus.Assets.CustomPrefab customFragmentPrefab = new(fragmentInfo);
             fragmentObject.EnsureComponent<BoxCollider>();
             Nautilus.Utility.PrefabUtils.AddBasicComponents(fragmentObject, frag.classID, fragmentInfo.TechType, LargeWorldEntity.CellLevel.Global);
             fragmentObject.EnsureComponent<FragmentManager>();
@@ -152,7 +153,7 @@ namespace VehicleFramework.Assets
                 }
                 else
                 {
-                    List<Nautilus.Assets.SpawnLocation> spawns = new List<Nautilus.Assets.SpawnLocation>();
+                    List<Nautilus.Assets.SpawnLocation> spawns = new();
                     for (int i = 0; i < frag.spawnLocations.Count(); i++)
                     {
                         spawns.Add(new Nautilus.Assets.SpawnLocation(frag.spawnLocations[i], frag.spawnRotations[i]));
@@ -165,7 +166,7 @@ namespace VehicleFramework.Assets
         }
         internal static void AddScannerDataEntries()
         {
-            void TryAddScannerData(PDAScanner.EntryData data)
+            static void TryAddScannerData(PDAScanner.EntryData data)
             {
                 if (PDAScanner.mapping.ContainsKey(data.key))
                 {

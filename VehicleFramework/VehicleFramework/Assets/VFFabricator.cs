@@ -46,9 +46,9 @@ namespace VehicleFramework.Assets
                 craftAmount = 1,
                 Ingredients =
                 {
-                    new Ingredient(TechType.Titanium, 1),
-                    new Ingredient(TechType.ComputerChip, 1),
-                    new Ingredient(TechType.Diamond, 1),
+                    new(TechType.Titanium, 1),
+                    new(TechType.ComputerChip, 1),
+                    new(TechType.Diamond, 1),
                 }
             };
         }
@@ -60,7 +60,7 @@ namespace VehicleFramework.Assets
             Transform geo = fabRoot.Find("submarine_fabricator_03_geo");
             Color fabColor = new Color32(0x80, 0x59, 0xA0, 0xFF);
             fabRoot.localPosition += new Vector3(0, 0, 0.1f);
-            fabRoot.GetComponent<BoxCollider>().center = new Vector3(-0.01f, 0.9f, 0.18f);
+            fabRoot.GetComponent<BoxCollider>().center = new(-0.01f, 0.9f, 0.18f);
             var renderer = geo.GetComponent<Renderer>();
             renderer.materials[0].color = fabColor;
             renderer.materials[3].color = fabColor;

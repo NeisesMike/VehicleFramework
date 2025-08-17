@@ -101,7 +101,7 @@ namespace VehicleFramework
 
             foreach (var tmp in ((ModVehicle)__instance).InnateStorages)
             {
-                containers.Add(tmp.Container.GetComponent<InnateStorageContainer>().container);
+                containers.Add(tmp.Container.GetComponent<InnateStorageContainer>().Container);
             }
         }
 
@@ -131,16 +131,16 @@ namespace VehicleFramework
              * in particular, this ensures compatibility with FreeLook
              * We must control our ModVehicle rotation within the core Vehicle.Update code.
              */
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
-            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count + 2);
-            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
+            List<CodeInstruction> codes = new(instructions);
+            List<CodeInstruction> newCodes = new(codes.Count + 2);
+            CodeInstruction myNOP = new(OpCodes.Nop);
             for (int i = 0; i < codes.Count + 2; i++)
             {
                 newCodes.Add(myNOP);
             }
             // push reference to vehicle
             // Call a static function which takes a vehicle and ControlsRotation if it's a ModVehicle
-            newCodes[0] = new CodeInstruction(OpCodes.Ldarg_0);
+            newCodes[0] = new(OpCodes.Ldarg_0);
             newCodes[1] = CodeInstruction.Call(typeof(ModVehicle), nameof(ModVehicle.MaybeControlRotation));
             for (int i = 0; i < codes.Count; i++)
             {
@@ -206,9 +206,9 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.UpdateEnergyRecharge))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
-            List<CodeInstruction> newCodes = new List<CodeInstruction>(codes.Count);
-            CodeInstruction myNOP = new CodeInstruction(OpCodes.Nop);
+            List<CodeInstruction> codes = new(instructions);
+            List<CodeInstruction> newCodes = new(codes.Count);
+            CodeInstruction myNOP = new(OpCodes.Nop);
             for (int i = 0; i < codes.Count; i++)
             {
                 newCodes.Add(myNOP);

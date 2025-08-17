@@ -11,7 +11,7 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(MainMenuLoadPanel))]
     public class MainMenuLoadPanelPatcher
     {
-        public static List<string> HasTechTypes = new List<string>();
+        public static List<string> HasTechTypes = new();
 
         public static void AddLoadButtonSprites(MainMenuLoadButton lb)
         {
@@ -20,10 +20,10 @@ namespace VehicleFramework.Patches
                 if (ve.mv != null && ve.mv.SaveFileSprite != Assets.StaticAssets.DefaultSaveFileSprite)
                 {
                     string techType = ve.techType.AsString();
-                    GameObject imageObject = new GameObject(techType);
+                    GameObject imageObject = new(techType);
                     imageObject.transform.SetParent(lb.saveIcons.transform, false);
                     imageObject.AddComponent<UnityEngine.UI.Image>().sprite = ve.mv.SaveFileSprite;
-                    imageObject.EnsureComponent<RectTransform>().sizeDelta = new Vector2(24, 24);
+                    imageObject.EnsureComponent<RectTransform>().sizeDelta = new(24, 24);
                     imageObject.SetActive(false);
                 }
             }

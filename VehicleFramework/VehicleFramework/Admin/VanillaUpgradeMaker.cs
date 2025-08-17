@@ -6,7 +6,7 @@ namespace VehicleFramework.Admin
 {
     internal static class VanillaUpgradeMaker
     {
-        public static List<TechType> CyclopsUpgradeTechTypes = new List<TechType>();
+        public static List<TechType> CyclopsUpgradeTechTypes = new();
         internal static Nautilus.Assets.CustomPrefab CreateModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, Nautilus.Assets.PrefabInfo info)
         {
             Nautilus.Assets.CustomPrefab prefab = new Nautilus.Assets.CustomPrefab(info);

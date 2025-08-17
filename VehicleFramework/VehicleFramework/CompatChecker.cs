@@ -41,7 +41,7 @@ namespace VehicleFramework
         {
             if (Chainloader.PluginInfos.ContainsKey("Tobey.Subnautica.ConfigHandler"))
             {
-                Version target = new Version("1.0.2");
+                Version target = new("1.0.2");
                 if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler"].Metadata.Version.CompareTo(target) < 0)
                 {
                     ShowWarning("There is a BepInEx Pack update available!");
@@ -54,7 +54,7 @@ namespace VehicleFramework
         }
         private static void CheckForNautilusUpdate()
         {
-            Version target = new Version(Nautilus.PluginInfo.PLUGIN_VERSION);
+            Version target = new(Nautilus.PluginInfo.PLUGIN_VERSION);
             if (Chainloader.PluginInfos[Nautilus.PluginInfo.PLUGIN_GUID].Metadata.Version.CompareTo(target) < 0)
             {
                 ShowWarning("There is a Nautilus update available!");
