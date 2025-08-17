@@ -188,7 +188,7 @@ namespace VehicleFramework.Admin
                     PDAEncyclopedia.mapping.Add(data.key, data);
                 }
             }
-            UWE.CoroutineHost.StartCoroutine(AddEncyclopediaEntryInternal());
+            MainPatcher.Instance.StartCoroutine(AddEncyclopediaEntryInternal());
         }
         public static bool IsSN1
         {

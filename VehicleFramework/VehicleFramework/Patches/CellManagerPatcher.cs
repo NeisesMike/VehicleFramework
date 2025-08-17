@@ -21,7 +21,7 @@ namespace VehicleFramework.Patches
                 // Sometimes this function is called when streamer.globalRoot is null.
                 // Not sure why or by whom.
                 // All it does is set the parent, so we'll do that as soon as we possibly can.
-                UWE.CoroutineHost.StartCoroutine(SetParentEventually(__instance, ent));
+                MainPatcher.Instance.StartCoroutine(SetParentEventually(__instance, ent));
                 return false;
             }
             return true;

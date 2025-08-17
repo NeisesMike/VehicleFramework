@@ -28,7 +28,7 @@ namespace VehicleFramework
             // Setup build bot paths.
             // We have to do this at game-start time,
             // because the new objects we create are wiped on scene-change.
-            UWE.CoroutineHost.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
+            MainPatcher.Instance.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
             return;
         }
         [HarmonyPostfix]

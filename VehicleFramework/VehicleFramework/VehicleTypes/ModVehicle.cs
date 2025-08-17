@@ -475,7 +475,7 @@ namespace VehicleFramework
             }
             if (Batteries != null && Batteries.Count() > 0)
             {
-                UWE.CoroutineHost.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
+                MainPatcher.Instance.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
             }
         }
         public virtual void OnVehicleDocked(Vector3 exitLocation)
@@ -518,7 +518,7 @@ namespace VehicleFramework
                 yield return new WaitForSeconds(5f);
                 useRigidbody.detectCollisions = true;
             }
-            UWE.CoroutineHost.StartCoroutine(EnsureCollisionsEnabledEventually());
+            MainPatcher.Instance.StartCoroutine(EnsureCollisionsEnabledEventually());
         }
         public virtual void OnPlayerUndocked()
         {
@@ -629,7 +629,7 @@ namespace VehicleFramework
                     yield return null;
                 }
             }
-            UWE.CoroutineHost.StartCoroutine(DropLoot(transform.position, gameObject));
+            MainPatcher.Instance.StartCoroutine(DropLoot(transform.position, gameObject));
         }
         public virtual void HandleOtherPilotingAnimations(bool isPiloting){}
         public virtual bool IsPlayerControlling()
@@ -1254,7 +1254,7 @@ namespace VehicleFramework
                 yield return null;
                 UWE.Utils.ExitPhysicsSyncSection();
             }
-            UWE.CoroutineHost.StartCoroutine(waitForTeleport());
+            MainPatcher.Instance.StartCoroutine(waitForTeleport());
         }
         #endregion
 
@@ -1355,8 +1355,8 @@ namespace VehicleFramework
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            UWE.CoroutineHost.StartCoroutine(LoadSimpleData());
-            UWE.CoroutineHost.StartCoroutine(SaveLoad.VFModularStorageSaveLoad.DeserializeAllModularStorage(this));
+            MainPatcher.Instance.StartCoroutine(LoadSimpleData());
+            MainPatcher.Instance.StartCoroutine(SaveLoad.VFModularStorageSaveLoad.DeserializeAllModularStorage(this));
             OnGameLoaded();
         }
         protected virtual void OnGameSaved() { }

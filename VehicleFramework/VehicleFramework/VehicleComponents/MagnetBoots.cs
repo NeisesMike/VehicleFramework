@@ -94,9 +94,9 @@ namespace VehicleFramework.VehicleComponents
                 attachedPlatform = platform;
                 if (CollisionHandling != null)
                 {
-                    UWE.CoroutineHost.StopCoroutine(CollisionHandling);
+                    MainPatcher.Instance.StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = UWE.CoroutineHost.StartCoroutine(IgnoreCollisionWithHost(true));
+                CollisionHandling = MainPatcher.Instance.StartCoroutine(IgnoreCollisionWithHost(true));
                 if (attachedPlatform.GetComponent<ModVehicle>())
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += MyVehicle.useRigidbody.mass;
@@ -108,9 +108,9 @@ namespace VehicleFramework.VehicleComponents
                 Detach?.Invoke();
                 if (CollisionHandling != null)
                 {
-                    UWE.CoroutineHost.StopCoroutine(CollisionHandling);
+                    MainPatcher.Instance.StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = UWE.CoroutineHost.StartCoroutine(IgnoreCollisionWithHost(false));
+                CollisionHandling = MainPatcher.Instance.StartCoroutine(IgnoreCollisionWithHost(false));
                 MyVehicle.transform.SetParent(serializerObject);
                 if (attachedPlatform?.GetComponent<ModVehicle>())
                 {
@@ -137,7 +137,7 @@ namespace VehicleFramework.VehicleComponents
                     return;
                 }
             }
-            UWE.CoroutineHost.StartCoroutine(FindStoreInfoIdentifier());
+            MainPatcher.Instance.StartCoroutine(FindStoreInfoIdentifier());
         }
         private void OnEnable()
         {
@@ -161,7 +161,7 @@ namespace VehicleFramework.VehicleComponents
                 serializerObject = transform.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
                 yield return null;
             }
-            UWE.CoroutineHost.StartCoroutine(InternalLoad());
+            MainPatcher.Instance.StartCoroutine(InternalLoad());
         }
         public void Update()
         {

@@ -183,7 +183,7 @@ namespace VehicleFramework
                     }
                 }
             }
-            UWE.CoroutineHost.StartCoroutine(NotifyDockingBay(__instance.transform.parent.Find("BaseCell(Clone)")));
+            MainPatcher.Instance.StartCoroutine(NotifyDockingBay(__instance.transform.parent.Find("BaseCell(Clone)")));
             return true;
         }
 

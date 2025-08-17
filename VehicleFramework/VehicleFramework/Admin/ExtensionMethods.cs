@@ -53,10 +53,10 @@ namespace VehicleFramework
                 return;
             }
             VehicleDockingBay thisBay = theseBays.First();
-            UWE.CoroutineHost.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
+            MainPatcher.Instance.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
             thisBay.vehicle_docked_param = false;
             Player toUndock = vehicle.liveMixin.IsAlive() && !Admin.ConsoleCommands.isUndockConsoleCommand ? Player.main : null;
-            UWE.CoroutineHost.StartCoroutine(vehicle.Undock(toUndock, thisBay.transform.position.y));
+            MainPatcher.Instance.StartCoroutine(vehicle.Undock(toUndock, thisBay.transform.position.y));
             SkyEnvironmentChanged.Broadcast(vehicle.gameObject, (GameObject)null);
             thisBay.dockedVehicle = null;
             UndockModVehicle(vehicle);

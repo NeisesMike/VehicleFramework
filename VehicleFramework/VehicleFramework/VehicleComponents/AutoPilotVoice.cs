@@ -83,7 +83,7 @@ namespace VehicleFramework
                 NotifyReadyToSpeak();
                 yield break;
             }
-            UWE.CoroutineHost.StartCoroutine(WaitUntilReadyToSpeak());
+            MainPatcher.Instance.StartCoroutine(WaitUntilReadyToSpeak());
 
         }
         private void SetupSpeakers()

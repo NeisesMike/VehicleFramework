@@ -186,7 +186,7 @@ namespace VehicleFramework.Assets
                 }
                 Component.Destroy(this);
             }
-            UWE.CoroutineHost.StartCoroutine(DestroyPickupable());
+            MainPatcher.Instance.StartCoroutine(DestroyPickupable());
         }
 
         internal static void SetupScannable(GameObject obj, TechType tt)

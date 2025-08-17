@@ -33,7 +33,7 @@ namespace VehicleFramework.SaveLoad
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            UWE.CoroutineHost.StartCoroutine(LoadInnateStorage());
+            MainPatcher.Instance.StartCoroutine(LoadInnateStorage());
         }
         private IEnumerator LoadInnateStorage()
         {
@@ -70,7 +70,7 @@ namespace VehicleFramework.SaveLoad
                     // then we have a battery xor we are a battery
                     try
                     {
-                        UWE.CoroutineHost.StartCoroutine(SaveLoadUtils.ReloadBatteryPower(thisItem, item.Item2, item.Item3));
+                        MainPatcher.Instance.StartCoroutine(SaveLoadUtils.ReloadBatteryPower(thisItem, item.Item2, item.Item3));
                     }
                     catch(Exception e)
                     {

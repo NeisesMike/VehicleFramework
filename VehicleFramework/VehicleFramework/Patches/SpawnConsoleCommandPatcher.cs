@@ -20,7 +20,7 @@ namespace VehicleFramework.Patches
                 string text = (string)n.data[0];
                 if (UWE.Utils.TryParseEnum<TechType>(text, out TechType techType))
                 {
-                    UWE.CoroutineHost.StartCoroutine(CheckSpawnForMVs(techType));
+                    MainPatcher.Instance.StartCoroutine(CheckSpawnForMVs(techType));
                 }
             }
         }

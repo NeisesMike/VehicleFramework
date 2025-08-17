@@ -16,20 +16,20 @@ namespace VehicleFramework
         private Coroutine Check;
         public void Scuttle()
         {
-            ScuttleCor = UWE.CoroutineHost.StartCoroutine(DoScuttle());
+            ScuttleCor = MainPatcher.Instance.StartCoroutine(DoScuttle());
         }
         public void Unscuttle()
         {
-            UWE.CoroutineHost.StopCoroutine(ScuttleCor);
-            UWE.CoroutineHost.StopCoroutine(Establish);
-            UWE.CoroutineHost.StopCoroutine(Check);
+            MainPatcher.Instance.StopCoroutine(ScuttleCor);
+            MainPatcher.Instance.StopCoroutine(Establish);
+            MainPatcher.Instance.StopCoroutine(Check);
             gameObject.GetComponent<Rigidbody>().isKinematic = false;
         }
         public IEnumerator DoScuttle()
         {
-            Establish = UWE.CoroutineHost.StartCoroutine(EstablishScuttlePosition());
+            Establish = MainPatcher.Instance.StartCoroutine(EstablishScuttlePosition());
             yield return Establish;
-            Check = UWE.CoroutineHost.StartCoroutine(CheckScuttlePosition());
+            Check = MainPatcher.Instance.StartCoroutine(CheckScuttlePosition());
             yield return Check;
         }
         public IEnumerator EstablishScuttlePosition()

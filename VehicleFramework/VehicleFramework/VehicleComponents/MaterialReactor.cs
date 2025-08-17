@@ -166,7 +166,7 @@ namespace VehicleFramework.VehicleComponents
                             TechType toAdd = spentMaterialIndex[reactantPair.Key.techType];
                             if(toAdd != TechType.None)
                             {
-                                UWE.CoroutineHost.StartCoroutine(AddMaterial(toAdd));
+                                MainPatcher.Instance.StartCoroutine(AddMaterial(toAdd));
                             }
                         }
                         reactantPair.Key.container = null;
@@ -243,7 +243,7 @@ namespace VehicleFramework.VehicleComponents
                     main.SetText(HandReticle.TextType.HandSubscript, Language.main.Get("VFMaterialReactorHint3"), false, GameInput.Button.RightHand);
                     if (GameInput.GetButtonDown(GameInput.Button.RightHand) && OutputReactorDataCoroutine == null)
                     {
-                        OutputReactorDataCoroutine = UWE.CoroutineHost.StartCoroutine(OutputReactorData());
+                        OutputReactorDataCoroutine = MainPatcher.Instance.StartCoroutine(OutputReactorData());
                     }
                 }
                 else
@@ -325,7 +325,7 @@ namespace VehicleFramework.VehicleComponents
             {
                 saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, saveFileName);
             }
-            UWE.CoroutineHost.StartCoroutine(LoadSaveDict(saveDict));
+            MainPatcher.Instance.StartCoroutine(LoadSaveDict(saveDict));
         }
         private List<Tuple<TechType, float>> GetSaveDict()
         {
@@ -356,7 +356,7 @@ namespace VehicleFramework.VehicleComponents
                     reactorBattery.SetCharge(reactant.Item2);
                     continue;
                 }
-                yield return UWE.CoroutineHost.StartCoroutine(AddMaterial(reactant.Item1));
+                yield return MainPatcher.Instance.StartCoroutine(AddMaterial(reactant.Item1));
             }
             Dictionary<InventoryItem, float> changesPending = new Dictionary<InventoryItem, float>();
             foreach (var reactant in currentEnergies)

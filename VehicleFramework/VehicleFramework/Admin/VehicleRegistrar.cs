@@ -37,7 +37,7 @@ namespace VehicleFramework
         }
         public static void RegisterVehicleLater(ModVehicle mv, bool verbose=false)
         {
-            UWE.CoroutineHost.StartCoroutine(RegisterVehicle(mv, verbose));
+            MainPatcher.Instance.StartCoroutine(RegisterVehicle(mv, verbose));
         }
         public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose = false)
         {
@@ -58,12 +58,12 @@ namespace VehicleFramework
             if (RegistrySemaphore)
             {
                 VerboseLog(LogType.Log, verbose, $"Enqueueing the {mv.gameObject.name} for Registration.");
-                RegistrationQueue.Enqueue(() => UWE.CoroutineHost.StartCoroutine(InternalRegisterVehicle(mv, verbose)));
+                RegistrationQueue.Enqueue(() => MainPatcher.Instance.StartCoroutine(InternalRegisterVehicle(mv, verbose)));
                 yield return new WaitUntil(() => VehicleManager.vehicleTypes.Select(x=>x.mv).Contains(mv));
             }
             else
             {
-                yield return UWE.CoroutineHost.StartCoroutine(InternalRegisterVehicle(mv, verbose));
+                yield return MainPatcher.Instance.StartCoroutine(InternalRegisterVehicle(mv, verbose));
             }
         }
         public static IEnumerator RegisterVehicle(ModVehicle mv)
@@ -75,7 +75,7 @@ namespace VehicleFramework
             RegistrySemaphore = true;
             VerboseLog(LogType.Log, verbose, $"The {mv.gameObject.name} is beginning Registration.");
             PingType registeredPingType = VehicleManager.RegisterPingType((PingType)121, verbose);
-            yield return UWE.CoroutineHost.StartCoroutine(VehicleBuilder.Prefabricate(mv, registeredPingType, verbose));
+            yield return MainPatcher.Instance.StartCoroutine(VehicleBuilder.Prefabricate(mv, registeredPingType, verbose));
             RegistrySemaphore = false;
             Logger.Log($"Finished {mv.gameObject.name} registration.");
             VehiclesRegistered++;

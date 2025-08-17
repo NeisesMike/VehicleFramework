@@ -15,12 +15,12 @@ namespace VehicleFramework
 
         public void Awake()
         {
-            UWE.CoroutineHost.StartCoroutine(GetSeamothBitsASAP());
+            MainPatcher.Instance.StartCoroutine(GetSeamothBitsASAP());
         }
 
         public IEnumerator GetSeamothBitsASAP()
         {
-            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            yield return MainPatcher.Instance.StartCoroutine(SeamothHelper.EnsureSeamoth());
 
             slots = new List<VehicleUpgradeConsoleInput.Slot>();
             GameObject module = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;

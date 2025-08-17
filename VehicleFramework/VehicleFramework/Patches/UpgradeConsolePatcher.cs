@@ -47,7 +47,7 @@ namespace VehicleFramework.Patches
 					isAdded = true
 				};
 				VehicleFramework.Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
-				UWE.CoroutineHost.StartCoroutine(BroadcastMessageSoon());
+				MainPatcher.Instance.StartCoroutine(BroadcastMessageSoon());
 			}
 		}
 		public void OnSlotUnequipped(string slot, InventoryItem item)
@@ -67,7 +67,7 @@ namespace VehicleFramework.Patches
 					isAdded = false
 				};
 				VehicleFramework.Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
-				UWE.CoroutineHost.StartCoroutine(BroadcastMessageSoon());
+				MainPatcher.Instance.StartCoroutine(BroadcastMessageSoon());
 			}
 		}
 		internal void BumpUpgrade(KeyValuePair<string, InventoryItem> upgrade)

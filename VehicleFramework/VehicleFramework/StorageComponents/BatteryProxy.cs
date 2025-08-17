@@ -14,7 +14,7 @@ namespace VehicleFramework.StorageComponents
 
         public void Awake()
         {
-            UWE.CoroutineHost.StartCoroutine(GetSeamothBitsASAP());
+            MainPatcher.Instance.StartCoroutine(GetSeamothBitsASAP());
         }
         public IEnumerator GetSeamothBitsASAP()
         {
@@ -24,7 +24,7 @@ namespace VehicleFramework.StorageComponents
                 // no...
                 yield break;
             }
-            yield return UWE.CoroutineHost.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            yield return MainPatcher.Instance.StartCoroutine(SeamothHelper.EnsureSeamoth());
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
 
             mixin.batteryModels = new EnergyMixin.BatteryModels[seamothEnergyMixin.batteryModels.Length];

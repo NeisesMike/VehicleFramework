@@ -31,7 +31,7 @@ namespace VehicleFramework.VehicleTypes
                 _IsConnecting = value;
                 if(value)
                 {
-                    UWE.CoroutineHost.StartCoroutine(EstablishConnection());
+                    MainPatcher.Instance.StartCoroutine(EstablishConnection());
                     GetComponent<VFEngine>().enabled = false;
                 }
             }
@@ -132,7 +132,7 @@ namespace VehicleFramework.VehicleTypes
                 this.Undock();
             }
             mountedDrone = this;
-            CheckingPower = UWE.CoroutineHost.StartCoroutine(CheckPower());
+            CheckingPower = MainPatcher.Instance.StartCoroutine(CheckPower());
             IsConnecting = true;
         }
         public virtual void StopControlling()
@@ -149,7 +149,7 @@ namespace VehicleFramework.VehicleTypes
             DestroyTemporaryParent();
             mountedDrone = null;
             pairedStation = null;
-            UWE.CoroutineHost.StopCoroutine(CheckingPower);
+            MainPatcher.Instance.StopCoroutine(CheckingPower);
             GetComponent<VFEngine>().KillMomentum();
         }
         public void SwapToDroneCamera()
