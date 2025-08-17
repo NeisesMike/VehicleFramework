@@ -125,7 +125,7 @@ namespace VehicleFramework
 		}
 		public void UpdateHealth()
 		{
-			Player.main.GetModVehicle().GetHUDValues(out float num, out float num2);
+			Player.main.GetModVehicle().GetHUDValues(out float num, out float _);
 			int num3 = Mathf.CeilToInt(num * 100f);
 			if (lastHealth != num3)
 			{
@@ -163,7 +163,7 @@ namespace VehicleFramework
 		}
 		public void UpdatePower()
 		{
-			Player.main.GetModVehicle().GetHUDValues(out float num, out float num2);
+			Player.main.GetModVehicle().GetHUDValues(out float _, out float num2);
 			int num4 = Mathf.CeilToInt(num2 * 100f);
 			if (lastPower != num4)
 			{

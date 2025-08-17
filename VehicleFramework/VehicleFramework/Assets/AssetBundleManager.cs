@@ -24,7 +24,7 @@ namespace VehicleFramework.Assets
             unlock = iunlock;
             abi = null;
         }
-        public void Close()
+        public readonly void Close()
         {
             abi.CloseBundle();
         }

@@ -96,11 +96,11 @@ namespace VehicleFramework.Engines
         {
             if (0 < inputMagnitude)
             {
-                ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.fixedDeltaTime;
+                ForwardMomentum += inputMagnitude * FORWARD_ACCEL * Time.fixedDeltaTime;
             }
             else
             {
-                ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * Time.fixedDeltaTime;
+                ForwardMomentum += inputMagnitude * REVERSE_ACCEL * Time.fixedDeltaTime;
             }
         }
 

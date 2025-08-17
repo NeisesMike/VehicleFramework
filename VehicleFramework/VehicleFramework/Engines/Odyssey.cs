@@ -90,11 +90,11 @@ namespace VehicleFramework.Engines
             }
             if (0 < inputMagnitude)
             {
-                ForwardMomentum = ForwardMomentum + inputMagnitude * FORWARD_ACCEL * Time.deltaTime;
+                ForwardMomentum += inputMagnitude * FORWARD_ACCEL * Time.deltaTime;
             }
             else
             {
-                ForwardMomentum = ForwardMomentum + inputMagnitude * REVERSE_ACCEL * Time.deltaTime;
+                ForwardMomentum += inputMagnitude * REVERSE_ACCEL * Time.deltaTime;
             }
         }
         protected override float RightMomentum
