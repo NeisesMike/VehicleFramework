@@ -1,316 +1,59 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E7B01366-4FE5-472B-A299-52F37E95AD79}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VehicleFramework</RootNamespace>
-    <AssemblyName>VehicleFramework</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <!-- .NET Framework target (equivalent to v4.7.2) -->
+    <TargetFramework>net472</TargetFramework>
+
+    <!-- C# language + nullability -->
     <LangVersion>11</LangVersion>
-	<Nullable>enable</Nullable>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <Nullable>enable</Nullable>
+
+    <!-- Build output & options -->
+    <OutputType>Library</OutputType>
+    <Deterministic>true</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WarningsAsErrors>false</WarningsAsErrors>
+
+    <!-- Optional: turn off default namespaces if you prefer full control -->
+    <!-- <RootNamespace>VehicleFramework</RootNamespace>
+         <AssemblyName>VehicleFramework</AssemblyName> -->
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <Optimize>true</Optimize>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\core\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\core\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="FMODUnity">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\FMODUnity.dll</HintPath>
-    </Reference>
-    <Reference Include="Nautilus">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\Nautilus\Nautilus.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Unity.Addressables, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.Addressables.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.TextCoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestAudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VRModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.VRModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.XRModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Admin\ConfigRegistrar.cs" />
-    <Compile Include="Admin\ConsoleCommands.cs" />
-    <Compile Include="Admin\CraftTreeHandler.cs" />
-    <Compile Include="Admin\EnumHelper.cs" />
-    <Compile Include="Admin\ExtensionMethods.cs" />
-    <Compile Include="Admin\VanillaUpgradeMaker.cs" />
-    <Compile Include="Admin\UpgradeRegistrar.cs" />
-    <Compile Include="Assets\AssetBundleManager.cs" />
-    <Compile Include="Assets\BiomeType.cs" />
-    <Compile Include="Assets\FragmentManager.cs" />
-    <Compile Include="Admin\GameObjectManager.cs" />
-    <Compile Include="Admin\GameStateWatcher.cs" />
-    <Compile Include="Admin\Utils.cs" />
-    <Compile Include="Admin\VehicleRegistrar.cs" />
-    <Compile Include="Admin\EngineSoundsManager.cs" />
-    <Compile Include="Admin\VoiceManager.cs" />
-    <Compile Include="Assets\BuildableDroneStation.cs" />
-    <Compile Include="Assets\SpriteHelper.cs" />
-    <Compile Include="Assets\StaticAssets.cs" />
-    <Compile Include="Assets\VanillaVehicleHelpers.cs" />
-    <Compile Include="Assets\VFFabricator.cs" />
-    <Compile Include="CompatChecker.cs" />
-    <Compile Include="DepthModules\DepthModule3.cs" />
-    <Compile Include="DepthModules\DepthModule2.cs" />
-    <Compile Include="DepthModules\DepthModule1.cs" />
-    <Compile Include="Engines\VFEngine.cs" />
-    <Compile Include="Engines\SurfaceVessel.cs" />
-    <Compile Include="Interfaces\IDockListener.cs" />
-    <Compile Include="Interfaces\IScuttleListener.cs" />
-    <Compile Include="LightControllers\BaseLightController.cs" />
-    <Compile Include="LightControllers\VolumetricLightController.cs" />
-    <Compile Include="Localization\Localizer.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="MiscComponents\DockingBayBounds.cs" />
-    <Compile Include="Patches\EnergyMixinPatcher.cs" />
-    <Compile Include="Patches\BuilderPatcher.cs" />
-    <Compile Include="Patches\PrecursorDoorMotorModeSetterPatcher.cs" />
-    <Compile Include="SaveLoad\JSONInterface.cs" />
-    <Compile Include="SaveLoad\SaveLoadUtils.cs" />
-    <Compile Include="SaveLoad\VFModularStorageSaveLoad.cs" />
-    <Compile Include="SaveLoad\VFInnateStorageIdentifier.cs" />
-    <Compile Include="SaveLoad\VFBatteryIdentifier.cs" />
-    <Compile Include="SaveLoad\VFUpgradesIdentifier.cs" />
-    <Compile Include="UpgradeTypes\CraftingNode.cs" />
-    <Compile Include="VehicleComponents\MaterialReactor.cs" />
-    <Compile Include="VehicleComponents\ModVehicleDockingBay.cs" />
-    <Compile Include="VehicleComponents\DockingBay.cs" />
-    <Compile Include="NautilusConfig.cs" />
-    <Compile Include="VehicleComponents\Subsystem.cs" />
-    <Compile Include="VFConfig.cs" />
-    <Compile Include="Patches\UpgradeConsolePatcher.cs" />
-    <Compile Include="Patches\CompatibilityPatches\SilencePatcher.cs" />
-    <Compile Include="Patches\Core\DroneTranspilerHelper.cs" />
-    <Compile Include="Patches\SubNamePatcher.cs" />
-    <Compile Include="Patches\FreecamControllerPatcher.cs" />
-    <Compile Include="Patches\PingInstancePatcher.cs" />
-    <Compile Include="Patches\SaveLoadManagerPatcher.cs" />
-    <Compile Include="Patches\MainMenuLoadPanelPatcher.cs" />
-    <Compile Include="Patches\BlockSeamothPatcher.cs" />
-    <Compile Include="Patches\FreezeTimePatcher.cs" />
-    <Compile Include="Patches\BenchPatcher.cs" />
-    <Compile Include="Patches\GUIHandPatcher.cs" />
-    <Compile Include="Patches\TeleportConsoleCommandPatcher.cs" />
-    <Compile Include="Patches\ConstructorInputPatcher.cs" />
-    <Compile Include="Patches\ExosuitPatcher.cs" />
-    <Compile Include="Patches\ArmsControllerPatcher.cs" />
-    <Compile Include="Patches\BedPatcher.cs" />
-    <Compile Include="Patches\CompatibilityPatches\BetterVehicleStoragePatcher.cs" />
-    <Compile Include="Patches\uGUI_PingEntryPatcher.cs" />
-    <Compile Include="SaveLoad\SaveData.cs" />
-    <Compile Include="UpgradeTypes\ToggleableUpgrade.cs" />
-    <Compile Include="UpgradeTypes\SelectableChargeableUpgrade.cs" />
-    <Compile Include="UpgradeTypes\SelectableUpgrade.cs" />
-    <Compile Include="UpgradeTypes\ModVehicleUpgrade.cs" />
-    <Compile Include="UpgradeTypes\ModVehicleArm.cs" />
-    <Compile Include="Localization\LocalizationManager.cs" />
-    <Compile Include="Patches\CompatibilityPatches\ChameleonSubPatcher.cs" />
-    <Compile Include="Patches\PlaceToolPatcher.cs" />
-    <Compile Include="Patches\BuilderToolPatcher.cs" />
-    <Compile Include="Patches\CompatibilityPatches\SlotExtenderPatcher.cs" />
-    <Compile Include="Patches\CreaturePatcher.cs" />
-    <Compile Include="Patches\CreaturePatches\CrabSquidPatcher.cs" />
-    <Compile Include="Patches\CreaturePatches\BleederPatcher.cs" />
-    <Compile Include="Patches\CreaturePatches\GhostPatcher.cs" />
-    <Compile Include="Patches\CreaturePatches\ReaperPatcher.cs" />
-    <Compile Include="Patches\CreaturePatches\WarperPatcher.cs" />
-    <Compile Include="Patches\CellManagerPatcher.cs" />
-    <Compile Include="Patches\CyclopsPatcher.cs" />
-    <Compile Include="Patches\DockedVehicleHandTargetPatcher.cs" />
-    <Compile Include="Patches\FabricatorPatcher.cs" />
-    <Compile Include="Patches\KnownTechPatcher.cs" />
-    <Compile Include="Patches\MapRoomCameraScreenFXControllerPatcher.cs" />
-    <Compile Include="Patches\PowerRelayPatcher.cs" />
-    <Compile Include="Patches\SpawnConsoleCommandPatcher.cs" />
-    <Compile Include="Patches\SubRootPatcher.cs" />
-    <Compile Include="Patches\DroneTargetingPatcher.cs" />
-    <Compile Include="Patches\uGUI_DepthCompassPatcher.cs" />
-    <Compile Include="Patches\uGUI_QuickSlotsPatcher.cs" />
-    <Compile Include="Patches\VehicleDockingBayPatch.cs" />
-    <Compile Include="Patches\BulkheadDoorPatcher.cs" />
-    <Compile Include="Patches\VehicleUpgradeConsoleInputPatcher.cs" />
-    <Compile Include="Patches\WaterClipProxyPatcher.cs" />
-    <Compile Include="PluginInfo.cs" />
-    <Compile Include="StorageComponents\BatteryProxy.cs" />
-    <Compile Include="UpgradeTypes\UpgradeActionParams.cs" />
-    <Compile Include="VehicleComponents\AutoPilotNavigator.cs" />
-    <Compile Include="VehicleComponents\ForeverBattery.cs" />
-    <Compile Include="VehicleComponents\MagnetBoots.cs" />
-    <Compile Include="VehicleComponents\MVCameraController.cs" />
-    <Compile Include="VehicleComponents\Scuttler.cs" />
-    <Compile Include="VehicleComponents\SteeringWheel.cs" />
-    <Compile Include="VehicleComponents\VehicleDamageTracker.cs" />
-    <Compile Include="VehicleComponents\VFArm.cs" />
-    <Compile Include="VehicleComponents\VFArmsManager.cs" />
-    <Compile Include="VehicleTypes\Drone.cs" />
-    <Compile Include="VehicleTypes\Skimmer.cs" />
-    <Compile Include="VehicleTypes\Submarine.cs" />
-    <Compile Include="VehicleTypes\Submersible.cs" />
-    <Compile Include="UpgradeModules\UpgradeProxy.cs" />
-    <Compile Include="VehicleBuilding\VehicleNautilusInterface.cs" />
-    <Compile Include="VehicleComponents\AutoPilotVoice.cs" />
-    <Compile Include="Interfaces\IAutoPilotListener.cs" />
-    <Compile Include="Interfaces\IPlayerListener.cs" />
-    <Compile Include="Interfaces\IPowerListener.cs" />
-    <Compile Include="Interfaces\ILightsStatusListener.cs" />
-    <Compile Include="VehicleBuilding\BuildBotManager.cs" />
-    <Compile Include="Patches\CompatibilityPatches\MapModPatcher.cs" />
-    <Compile Include="Patches\VFXConstructingPatch.cs" />
-    <Compile Include="ControlPanel\ControlPanel.cs" />
-    <Compile Include="ControlPanel\ControlPanelButton.cs" />
-    <Compile Include="StorageComponents\StorageInput.cs" />
-    <Compile Include="StorageComponents\InnateStorageInput.cs" />
-    <Compile Include="Engines\Odyssey.cs" />
-    <Compile Include="Engines\ModVehicleEngine.cs" />
-    <Compile Include="VehicleComponents\PowerManager.cs" />
-    <Compile Include="VehicleComponents\TetherSource.cs" />
-    <Compile Include="VehicleBuilding\HUDBuilder.cs" />
-    <Compile Include="Patches\PlayerControllerPatcher.cs" />
-    <Compile Include="SaveLoad\SaveManager.cs" />
-    <Compile Include="VehicleComponents\AutoPilot.cs" />
-    <Compile Include="StorageComponents\VehicleBatteryInput.cs" />
-    <Compile Include="Engines\Cricket.cs" />
-    <Compile Include="Engines\Atrama.cs" />
-    <Compile Include="LightControllers\HeadLightsController.cs" />
-    <Compile Include="LightControllers\NavigationLightsController.cs" />
-    <Compile Include="LightControllers\FloodLightsController.cs" />
-    <Compile Include="LightControllers\InteriorLightsController.cs" />
-    <Compile Include="VehicleComponents\VehicleHatch.cs" />
-    <Compile Include="StorageComponents\InnateStorageContainer.cs" />
-    <Compile Include="StorageComponents\ModularStorageInput.cs" />
-    <Compile Include="VehicleBuilding\ModuleBuilder.cs" />
-    <Compile Include="MiscComponents\uGUI_VehicleHUD.cs" />
-    <Compile Include="MainPatcher.cs" />
-    <Compile Include="VehicleTypes\ModVehicle.cs" />
-    <Compile Include="VehicleComponents\PilotingTrigger.cs" />
-    <Compile Include="Patches\EquipmentPatcher.cs" />
-    <Compile Include="Patches\PlayerPatcher.cs" />
-    <Compile Include="Patches\uGUI_EquipmentPatcher.cs" />
-    <Compile Include="Patches\PDAPatcher.cs" />
-    <Compile Include="Patches\uGUI_PingsPatcher.cs" />
-    <Compile Include="Patches\VehiclePatcher.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VehicleBuilding\VehicleBuilder.cs" />
-    <Compile Include="Interfaces\IVehicleStatusListener.cs" />
-    <Compile Include="Admin\VehicleManager.cs" />
-    <Compile Include="VehicleBuilding\VehicleParts.cs" />
-    <Compile Include="VehicleTypes\Walker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BaseVehicle\" />
-    <Folder Include="Configuration\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="PolySharp">
-      <Version>1.15.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <!-- Polyfills for modern BCL APIs when targeting net472 -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.43" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!-- Prefer not to hardcode paths; make it configurable -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy  $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\plugins\$(ProjectName)\" /y
-</PostBuildEvent>
+    <!-- One line, no trailing spaces -->
+    <SubnauticaDir Condition="'$(SubnauticaDir)'==''">C:\Program Files (x86)\Steam\steamapps\common\Subnautica</SubnauticaDir>
+
+    <!-- Defensive: trim any whitespace if someone overrides this via env/props -->
+    <SubnauticaDirTrimmed>$([System.String]::Copy('$(SubnauticaDir)').Trim())</SubnauticaDirTrimmed>
+
+    <BepInExPlugins>$(SubnauticaDirTrimmed)\BepInEx\plugins\$(MSBuildProjectName)</BepInExPlugins>
+
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
   </PropertyGroup>
+
+  <Target Name="CopyToBepInEx" AfterTargets="Build" Condition="Exists('$(SubnauticaDirTrimmed)')">
+    <MakeDir Directories="$(BepInExPlugins)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExPlugins)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
+
