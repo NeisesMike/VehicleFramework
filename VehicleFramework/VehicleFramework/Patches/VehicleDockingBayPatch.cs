@@ -199,7 +199,7 @@ namespace VehicleFramework.Patches
             CodeMatch startCinematicMatch = new(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("StartCinematicMode"));
 
             var newInstructions = new CodeMatcher(instructions)
-                .MatchStartForward(startCinematicMatch)
+                .MatchForward(false, startCinematicMatch)
                 .Repeat(x =>
                     x.RemoveInstruction()
                     .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))

@@ -19,7 +19,7 @@ namespace VehicleFramework.Patches
             CodeMatch ReturnValidCraftingPositionMatch = new(i => i.opcode == OpCodes.Call && i.operand.ToString().Contains("ReturnValidCraftingPosition"));
 
             CodeMatcher newInstructions = new CodeMatcher(instructions)
-                .MatchStartForward(ReturnValidCraftingPositionMatch)
+                .MatchForward(false, ReturnValidCraftingPositionMatch)
                 .RemoveInstruction()
                 .InsertAndAdvance(new CodeInstruction(OpCodes.Ldarg_1))
                 .Insert(Transpilers.EmitDelegate<Func<ConstructorInput, Vector3, TechType, bool>>(ReturnValidCraftingPositionSpecial));

@@ -21,7 +21,7 @@ namespace VehicleFramework
         {
             CodeMatch GetPingTypeMatch = new(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("System.String Get(PingType)"));
             var newInstructions = new CodeMatcher(instructions)
-                .MatchStartForward(GetPingTypeMatch)
+                .MatchForward(false, GetPingTypeMatch)
                 .Repeat(x =>
                     x.RemoveInstruction()
                     .InsertAndAdvance(Transpilers.EmitDelegate<Func<CachedEnumString<PingType>, PingType, string>>(VehicleBuilder.GetPingTypeString))

@@ -38,7 +38,7 @@ namespace VehicleFramework.Patches
             CodeMatch ExitSittingModeMatch = new(i => i.opcode == OpCodes.Call && i.operand.ToString().Contains("ExitSittingMode"));
 
             CodeMatcher newInstructions = new CodeMatcher(instructions)
-                .MatchStartForward(ExitSittingModeMatch)
+                .MatchForward(false, ExitSittingModeMatch)
                 .RemoveInstruction()
                 .Insert(Transpilers.EmitDelegate<Action<Bench, Player, bool>>(MaybeExitSittingMode));
 
