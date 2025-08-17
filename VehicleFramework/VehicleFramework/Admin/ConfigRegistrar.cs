@@ -13,9 +13,9 @@ namespace VehicleFramework.Admin
         internal Dictionary<string, ConfigEntry<T>> ExternalConfigs = new();
 
         internal static Dictionary<string, ExternalVehicleConfig<T>> main = new();
-        internal static ExternalVehicleConfig<T> SeamothConfig = null;
-        internal static ExternalVehicleConfig<T> PrawnConfig = null;
-        internal static ExternalVehicleConfig<T> CyclopsConfig = null;
+        internal static ExternalVehicleConfig<T> SeamothConfig = null!;
+        internal static ExternalVehicleConfig<T> PrawnConfig = null!;
+        internal static ExternalVehicleConfig<T> CyclopsConfig = null!;
         private static ExternalVehicleConfig<T> AddNew(ModVehicle mv)
         {
             ExternalVehicleConfig<T> thisConf = new()

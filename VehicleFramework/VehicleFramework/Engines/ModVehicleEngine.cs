@@ -15,10 +15,10 @@ namespace VehicleFramework.Engines
 {
     public abstract class ModVehicleEngine : VFEngine
     {
-        public ModVehicle mv = null;
-        public Rigidbody rb = null;
-        private EngineSounds _sounds = null;
-        public EngineSounds sounds
+        public ModVehicle mv = null!;
+        public Rigidbody rb = null!;
+        private EngineSounds? _sounds = null;
+        public EngineSounds? Sounds
         {
             get
             {
@@ -220,7 +220,7 @@ namespace VehicleFramework.Engines
             EngineSource2.priority = 0;
             EngineSource1.spread = 180;
 
-            sounds = EngineSoundsManager.GetDefaultVoice(MV);
+            Sounds = EngineSoundsManager.GetDefaultVoice(MV);
         }
         public void OnDisable()
         {
@@ -447,7 +447,7 @@ namespace VehicleFramework.Engines
         {
             if (!blockVoiceChange)
             {
-                sounds = inputVoice;
+                Sounds = inputVoice;
             }
         }
         #endregion
