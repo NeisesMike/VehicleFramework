@@ -54,10 +54,10 @@ namespace VehicleFramework
         {
             if (Player.main != null)
             {
-                foreach (var tmp in EngineSoundsManager.engines.Where(x => x != null && x.mv != null && x.mv.GetComponent<TechTag>() != null))
+                foreach (var tmp in EngineSoundsManager.engines.Where(x => x != null && x.MV != null && x.MV.GetComponent<TechTag>() != null))
                 {
-                    string soundsName = VehicleConfig.main[tmp.mv.GetType().ToString()].EngineSounds.Value;
-                    EngineSoundsManager.UpdateDefaultVoice(tmp.mv, soundsName);
+                    string soundsName = VehicleConfig.main[tmp.MV.GetType().ToString()].EngineSounds.Value;
+                    EngineSoundsManager.UpdateDefaultVoice(tmp.MV, soundsName);
                     tmp.SetEngineSounds(EngineSoundsManager.GetVoice(soundsName));
                 }
             }

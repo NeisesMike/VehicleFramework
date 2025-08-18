@@ -8,6 +8,7 @@ using VehicleFramework.Engines;
 
 namespace VehicleFramework.VehicleTypes
 {
+    /*
     public abstract class Skimmer : ModVehicle
     {
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
@@ -22,4 +23,5 @@ namespace VehicleFramework.VehicleTypes
             return isPlayerInside;
         }
     }
+    */
 }

@@ -40,8 +40,8 @@ namespace VehicleFramework
 					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, EnterHint);
 				}
 			}
-			else if ((mv as Submersible != null) || (mv as Walker != null) || (mv as Skimmer != null))
-			{
+			else if ((mv as Submersible != null))// || (mv as Walker != null)) || (mv as Skimmer != null))
+            {
 				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, EnterHint);
 			}
 		}

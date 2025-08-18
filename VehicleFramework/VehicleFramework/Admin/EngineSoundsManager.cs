@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Reflection;
-using System.IO;
 using VehicleFramework.Engines;
+using static uGUI_ResourceTracker;
 
 namespace VehicleFramework
 {
     public class EngineSounds
     {
-        public AudioClip hum;
-        public AudioClip whistle;
+        public required AudioClip hum;
+        public required AudioClip whistle;
     }
     public static class EngineSoundsManager
     {
@@ -22,7 +23,6 @@ namespace VehicleFramework
         internal static Dictionary<string, EngineSounds> EngineSoundss = new();
         // vehicle names : EngineSounds names
         internal static Dictionary<TechType, string> defaultEngineSounds = new();
-        public static EngineSounds silentVoice = new();
         public static void RegisterEngineSounds(string name, EngineSounds voice)
         {
             try
@@ -67,7 +67,7 @@ namespace VehicleFramework
             {
                 Logger.LogException($"GetVoice engine-sounds failed: {name}.", e);
             }
-            return silentVoice;
+            return new EngineSounds { hum = VoiceManager.silence, whistle = VoiceManager.silence };
         }
         public static void RegisterDefault(ModVehicle mv, string voice)
         {
@@ -115,24 +115,17 @@ namespace VehicleFramework
         }
         internal static IEnumerator LoadAllVoices()
         {
-            GetSilence();
+            WaitForSilence();
             yield return RegisterEngineSounds("ShirubaFoxy");
             MainPatcher.Instance.GetEngineSounds = null;
         }
-        private static IEnumerator GetSilence()
+        private static IEnumerator WaitForSilence()
         {
             yield return new WaitUntil(() => VoiceManager.silence != null);
-            silentVoice = new EngineSounds
-            {
-                hum = VoiceManager.silence,
-                whistle = VoiceManager.silence,
-            };
-            yield break;
         }
         // Method signature with a callback to return the EngineSounds instance
         private static IEnumerator LoadEngineSoundClips(string voice, Action<EngineSounds> onComplete, string voicepath)
         {
-            EngineSounds returnVoice = new();
             
             string modPath = "";
             if(voicepath == "")
@@ -147,28 +140,32 @@ namespace VehicleFramework
             string engineSoundsFolder = Path.Combine(modPath, "EngineSounds");
             string engineSoundPath = Path.Combine(engineSoundsFolder, voice) + "/";
 
-            // List of clip names to load, corresponding to their fields in EngineSounds
-            string[] clipNames = {
-            "whistle",
-            "hum"
-        };
-
-            foreach (string clipName in clipNames)
+            AudioClip? myWhistle = null;
+            string path1 = "file://" + engineSoundPath + "whistle" + ".ogg";
+            yield return LoadAudioClip(path1, clip =>
             {
-                string path = "file://" + engineSoundPath + clipName + ".ogg";
-                yield return LoadAudioClip(path, clip =>
-                {
-                    // Use reflection to set the clip dynamically based on its name
-                    clip.name = clipName;
-                    typeof(EngineSounds).GetField(clipName).SetValue(returnVoice, clip);
-                },
-                () =>
-                {
-                    // Handle error, potentially logging and assigning Silence
-                    Logger.Warn($"WARNING: {clipName} could not be loaded. Assigning Silence.");
-                    typeof(EngineSounds).GetField(clipName).SetValue(returnVoice, VoiceManager.silence);
-                });
-            }
+                clip.name = "whistle";
+                myWhistle = clip;
+            },
+            () =>
+            {
+                Logger.Warn($"WARNING: {"whistle"} could not be loaded. Assigning Silence.");
+            });
+
+            AudioClip? myHum = null;
+            string path2 = "file://" + engineSoundPath + "hum" + ".ogg";
+            yield return LoadAudioClip(path2, clip =>
+            {
+                clip.name = "hum";
+                myHum = clip;
+            },
+            () =>
+            {
+                Logger.Warn($"WARNING: {"hum"} could not be loaded. Assigning Silence.");
+            });
+
+
+            EngineSounds returnVoice = new() { hum = myHum ?? VoiceManager.silence, whistle = myWhistle ?? VoiceManager.silence };
 
             onComplete?.Invoke(returnVoice);
         }

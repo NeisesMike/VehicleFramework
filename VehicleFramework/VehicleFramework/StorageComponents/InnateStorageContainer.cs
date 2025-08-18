@@ -66,6 +66,11 @@ namespace VehicleFramework
             cont.height = vs.Height;
             cont.width = vs.Width;
 
+			if(SeamothHelper.Seamoth == null)
+			{
+				throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null when trying to create innate storage! This should never happen!");
+            }
+
             FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
             FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
             var inp = vs.Container.EnsureComponent<InnateStorageInput>();

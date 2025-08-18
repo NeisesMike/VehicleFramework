@@ -12,13 +12,13 @@ namespace VehicleFramework.VehicleComponents
     {
         public static readonly string playerCameraState = "player";
         private string state = playerCameraState;
-        private Transform playerCamActual = null;
-        public Transform PlayerCamPivot => Player.main.transform.Find("camPivot");
-        public Transform PlayerCam
+        private Transform? playerCamActual = null;
+        public static Transform? PlayerCamPivot => Player.main.transform.Find("camPivot");
+        public Transform? PlayerCam
         {
             get
             {
-                if (playerCamActual == null)
+                if (playerCamActual == null && PlayerCamPivot != null)
                 {
                     playerCamActual = PlayerCamPivot.Find("camRoot");
                 }
@@ -26,22 +26,28 @@ namespace VehicleFramework.VehicleComponents
             }
         }
         private readonly Dictionary<string, Transform> cameras = new();
-        private ModVehicle mv = null;
-        public void Start()
+        private ModVehicle mv = null!;
+        private void Awake()
         {
             mv = GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
-                Logger.Error("MVCameraController did not detect a ModVehicle in the parents of this GameObject: " + gameObject.name);
-                enabled = false;
+                throw Admin.SessionManager.Fatal("MVCameraController did not detect a ModVehicle in the parents of this GameObject: " + gameObject.name);
             }
+        }
+        public void Start()
+        {
+            if(PlayerCamPivot == null)
+            {
+                throw Admin.SessionManager.Fatal("MVCameraController could not find the Player camera pivot.");
+            }   
             AddCamera(PlayerCamPivot, playerCameraState);
         }
         public void Update()
         {
             if(playerCamActual == null)
             {
-                Transform _ = PlayerCam;
+                Transform? _ = PlayerCam;
             }
             if(mv.IsPlayerControlling())
             {
@@ -84,6 +90,10 @@ namespace VehicleFramework.VehicleComponents
         }
         public void MovePlayerCameraToTransform(Transform destination)
         {
+            if (PlayerCam == null)
+            {
+                throw Admin.SessionManager.Fatal("MVCameraController could not find the PlayerCam.");
+            }
             PlayerCam.SetParent(destination);
             PlayerCam.localPosition = Vector3.zero;
             PlayerCam.localRotation = Quaternion.identity;

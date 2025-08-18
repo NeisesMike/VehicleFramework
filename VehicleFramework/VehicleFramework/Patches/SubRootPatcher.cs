@@ -62,7 +62,7 @@ namespace VehicleFramework.Patches
 		}
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(SubRoot.GetOxygenManager))]
-		public static bool GetOxygenManagerPrefix(SubRoot __instance, ref OxygenManager __result)
+		public static bool GetOxygenManagerPrefix(SubRoot __instance, ref OxygenManager? __result)
 		{
 			if (__instance.GetComponent<ModVehicle>())
 			{
@@ -83,7 +83,7 @@ namespace VehicleFramework.Patches
 		}
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(SubRoot.GetModulesRoot))]
-		public static bool GetModulesRootPrefix(SubRoot __instance, ref Transform __result)
+		public static bool GetModulesRootPrefix(SubRoot __instance, ref Transform? __result)
 		{
 			if (__instance.GetComponent<ModVehicle>())
 			{

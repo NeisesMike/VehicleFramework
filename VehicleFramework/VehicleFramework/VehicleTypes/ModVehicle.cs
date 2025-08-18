@@ -8,6 +8,7 @@ using VehicleFramework.VehicleComponents;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
 using VehicleFramework.Admin;
+using System.Runtime.Remoting.Messaging;
 
 namespace VehicleFramework
 {
@@ -37,7 +38,7 @@ namespace VehicleFramework
         {
             get
             {
-                GameObject storageRO = transform.Find("StorageRootObject")?.gameObject;
+                GameObject? storageRO = transform.Find("StorageRootObject")?.gameObject;
                 if (storageRO == null)
                 {
                     storageRO = new("StorageRootObject");
@@ -50,7 +51,7 @@ namespace VehicleFramework
         {
             get
             {
-                GameObject storageRO = transform.Find("ModulesRootObject")?.gameObject;
+                GameObject? storageRO = transform.Find("ModulesRootObject")?.gameObject;
                 if (storageRO == null)
                 {
                     storageRO = new("ModulesRootObject");
@@ -59,31 +60,29 @@ namespace VehicleFramework
                 return storageRO;
             }
         }
-        public virtual List<VehicleParts.VehicleBattery> Batteries => new();
-        public virtual List<VehicleParts.VehicleUpgrades> Upgrades => new();
-        public virtual VFEngine VFEngine { get; set; }
-        public virtual ModVehicleEngine Engine { get; set; } // prefer to use VFEngine.
+        public virtual List<VehicleParts.VehicleBattery>? Batteries => new();
+        public virtual List<VehicleParts.VehicleUpgrades>? Upgrades => new();
+        public virtual VFEngine? VFEngine { get; set; }
         public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
-        public virtual GameObject BoundingBox => null; // Prefer to use BoundingBoxCollider directly (don't use this)
-        public virtual BoxCollider BoundingBoxCollider { get; set; }
-        public virtual Sprite PingSprite => Assets.StaticAssets.DefaultPingSprite;
-        public virtual Sprite SaveFileSprite => Assets.StaticAssets.DefaultSaveFileSprite; // I think I can use SpriteHelper.CreateSpriteFromAtlasSprite for this now. But do I want to?
-        public virtual List<GameObject> WaterClipProxies => new();
-        public virtual List<VehicleParts.VehicleStorage> InnateStorages => new();
-        public virtual List<VehicleParts.VehicleStorage> ModularStorages => new();
-        public virtual List<VehicleParts.VehicleFloodLight> HeadLights => new();
-        public virtual List<GameObject> CanopyWindows => new();
-        public virtual Dictionary<TechType, int> Recipe => new() { { TechType.Titanium, 1 } };
-        public virtual List<VehicleParts.VehicleBattery> BackupBatteries => new();
-        public virtual Sprite UnlockedSprite => null;
-        public virtual GameObject LeviathanGrabPoint => gameObject;
-        public virtual Sprite CraftingSprite => StaticAssets.ModVehicleIcon;
-        public virtual List<Transform> LavaLarvaAttachPoints => new();
-        public virtual List<VehicleParts.VehicleCamera> Cameras => new();
+        public virtual BoxCollider? BoundingBoxCollider { get; set; }
+        public virtual Sprite? PingSprite => Assets.StaticAssets.DefaultPingSprite;
+        public virtual Sprite? SaveFileSprite => Assets.StaticAssets.DefaultSaveFileSprite; // I think I can use SpriteHelper.CreateSpriteFromAtlasSprite for this now. But do I want to?
+        public virtual List<GameObject>? WaterClipProxies => new();
+        public virtual List<VehicleParts.VehicleStorage>? InnateStorages => new();
+        public virtual List<VehicleParts.VehicleStorage>? ModularStorages => new();
+        public virtual List<VehicleParts.VehicleFloodLight>? HeadLights => new();
+        public virtual List<GameObject>? CanopyWindows => new();
+        public virtual Dictionary<TechType, int>? Recipe => new() { { TechType.Titanium, 1 } };
+        public virtual List<VehicleParts.VehicleBattery>? BackupBatteries => new();
+        public virtual Sprite? UnlockedSprite => null;
+        public virtual GameObject? LeviathanGrabPoint => gameObject;
+        public virtual Sprite? CraftingSprite => StaticAssets.ModVehicleIcon;
+        public virtual List<Transform>? LavaLarvaAttachPoints => new();
+        public virtual List<VehicleParts.VehicleCamera>? Cameras => new();
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => string.Empty;
-        public virtual Sprite EncyclopediaImage => null;
-        public virtual Sprite ModuleBackgroundImage => SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
+        public virtual Sprite? EncyclopediaImage => null;
+        public virtual Sprite? ModuleBackgroundImage => SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
         public virtual int BaseCrushDepth => 250;
         public virtual int MaxHealth => 100;
         public virtual int Mass => 1000;
@@ -97,7 +96,7 @@ namespace VehicleFramework
         public virtual int CrushDamage => MaxHealth / 15;
         public virtual int CrushPeriod => 1;
         public virtual PilotingStyleEnum PilotingStyle => PilotingStyleEnum.Other; // used by Echelon, Odyssey, Blossom
-        public virtual List<Collider> DenyBuildingColliders => new();
+        public virtual List<Collider>? DenyBuildingColliders => new();
         public virtual float GhostAdultBiteDamage => 150f;
         public virtual float GhostJuvenileBiteDamage => 100f;
         public virtual float ReaperBiteDamage => 120f;
@@ -110,7 +109,7 @@ namespace VehicleFramework
         public virtual Color ConstructionGhostColor { get; set; } = Color.black;
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
         public virtual bool AutoApplyShaders { get; set; } = true;
-        public virtual List<TMPro.TextMeshProUGUI> SubNameDecals => null;
+        public virtual List<TMPro.TextMeshProUGUI>? SubNameDecals => null;
         public virtual Quaternion CyclopsDockRotation => Quaternion.identity;
         #endregion
 
@@ -130,17 +129,16 @@ namespace VehicleFramework
 
             gameObject.EnsureComponent<AutoPilot>();
 
-            if (BoundingBoxCollider == null && BoundingBox != null)
-            {
-                BoundingBoxCollider = BoundingBox.GetComponentInChildren<BoxCollider>(true);
-            }
             if(VFEngine == null)
             {
                 VFEngine = GetComponent<VFEngine>();
             }
             VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
-            Upgrades.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
+            if(Upgrades != null)
+            {
+                Upgrades.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
+            }
             var warpChipThing = GetComponent("TelePingVehicleInstance");
             if(warpChipThing != null)
             {
@@ -243,7 +241,7 @@ namespace VehicleFramework
             };
             Admin.UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
         }
-        public override InventoryItem GetSlotItem(int slotID)
+        public override InventoryItem? GetSlotItem(int slotID)
         {
             if (slotID < 0 || slotID >= this.slotIDs.Length)
             {
@@ -264,7 +262,10 @@ namespace VehicleFramework
         public override void SubConstructionComplete()
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
-            pingInstance.enabled = true;
+            if(pingInstance != null)
+            {
+                pingInstance.enabled = true;
+            }
             worldForces.handleGravity = true;
             BuildBotManager.ResetGhostMaterial();
         }
@@ -367,21 +368,20 @@ namespace VehicleFramework
             {
                 IsUnderCommand = true;
                 Player.main.SetScubaMaskActive(false);
-                try
+                if(CanopyWindows != null)
                 {
-                    foreach (GameObject window in CanopyWindows)
+                    foreach (GameObject window in CanopyWindows.Where(x => x != null))
                     {
-                        window?.SetActive(false);
+                        window.SetActive(false);
                     }
-                }
-                catch (Exception)
-                {
-                    //It's okay if the vehicle doesn't have a canopy
                 }
                 Player.main.lastValidSub = GetComponent<SubRoot>();
                 Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
                 NotifyStatus(PlayerStatus.OnPlayerEntry);
-                pingInstance.enabled = false;
+                if (pingInstance != null)
+                {
+                    pingInstance.enabled = false;
+                }
             }
         }
         public virtual void PlayerExit()
@@ -389,16 +389,12 @@ namespace VehicleFramework
             Logger.DebugLog("start modvehicle player exit");
             if (IsUnderCommand)
             {
-                try
+                if (CanopyWindows != null)
                 {
-                    foreach (GameObject window in CanopyWindows)
+                    foreach (GameObject window in CanopyWindows.Where(x => x != null))
                     {
-                        window?.SetActive(true);
+                        window.SetActive(true);
                     }
-                }
-                catch (Exception)
-                {
-                    //It's okay if the vehicle doesn't have a canopy
                 }
             }
             IsUnderCommand = false;
@@ -413,12 +409,18 @@ namespace VehicleFramework
             NotifyStatus(PlayerStatus.OnPlayerExit);
             Player.main.transform.SetParent(null);
             Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
-            pingInstance.enabled = true;
+            if (pingInstance != null)
+            {
+                pingInstance.enabled = true;
+            }
         }
         public virtual void SubConstructionBeginning()
         {
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
-            pingInstance.enabled = false;
+            if (pingInstance != null)
+            {
+                pingInstance.enabled = false;
+            }
             worldForces.handleGravity = false;
         }
         public virtual void OnAIBatteryReload()
@@ -447,7 +449,7 @@ namespace VehicleFramework
                 GameObject newAIBattery = result.Get();
                 newAIBattery.GetComponent<Battery>().charge = 200;
                 newAIBattery.transform.SetParent(StorageRootObject.transform);
-                if (AIEnergyInterface)
+                if (AIEnergyInterface != null)
                 {
                     AIEnergyInterface.sources.First().battery = newAIBattery.GetComponent<Battery>();
                     AIEnergyInterface.sources.First().batterySlot.AddItem(newAIBattery.GetComponent<Pickupable>());
@@ -517,7 +519,7 @@ namespace VehicleFramework
         }
         public virtual Vector3 GetBoundingDimensions()
         {
-            BoxCollider box = BoundingBoxCollider;
+            BoxCollider? box = BoundingBoxCollider;
             if (box == null)
             {
                 return Vector3.zero;
@@ -528,7 +530,7 @@ namespace VehicleFramework
         }
         public virtual Vector3 GetDifferenceFromCenter()
         {
-            BoxCollider box = BoundingBoxCollider;
+            BoxCollider? box = BoundingBoxCollider;
             if (box != null)
             {
                 Vector3 colliderCenterWorld = box.transform.TransformPoint(box.center);
@@ -561,7 +563,10 @@ namespace VehicleFramework
             {
                 return;
             }
-            pingInstance.enabled = false;
+            if (pingInstance != null)
+            {
+                pingInstance.enabled = false;
+            }
             void OnCutOpen(Sealed sealedComp)
             {
                 OnSalvage();
@@ -595,23 +600,26 @@ namespace VehicleFramework
             IEnumerator DropLoot(Vector3 place, GameObject root)
             {
                 TaskResult<GameObject> result = new();
-                foreach (KeyValuePair<TechType, int> item in Recipe)
+                if (Recipe != null)
                 {
-                    for (int i = 0; i < item.Value; i++)
+                    foreach (KeyValuePair<TechType, int> item in Recipe)
                     {
-                        yield return null;
-                        if (UnityEngine.Random.value < 0.6f)
+                        for (int i = 0; i < item.Value; i++)
                         {
-                            continue;
+                            yield return null;
+                            if (UnityEngine.Random.value < 0.6f)
+                            {
+                                continue;
+                            }
+                            yield return CraftData.InstantiateFromPrefabAsync(item.Key, result, false);
+                            GameObject go = result.Get();
+                            Vector3 loc = place + 1.2f * UnityEngine.Random.onUnitSphere;
+                            Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
+                            go.transform.position = loc;
+                            go.transform.eulerAngles = rot;
+                            var rb = go.EnsureComponent<Rigidbody>();
+                            rb.isKinematic = false;
                         }
-                        yield return CraftData.InstantiateFromPrefabAsync(item.Key, result, false);
-                        GameObject go = result.Get();
-                        Vector3 loc = place + 1.2f * UnityEngine.Random.onUnitSphere;
-                        Vector3 rot = 360 * UnityEngine.Random.onUnitSphere;
-                        go.transform.position = loc;
-                        go.transform.eulerAngles = rot;
-                        var rb = go.EnsureComponent<Rigidbody>();
-                        rb.isKinematic = false;
                     }
                 }
                 while (root != null)
@@ -625,22 +633,13 @@ namespace VehicleFramework
         public virtual void HandleOtherPilotingAnimations(bool isPiloting){}
         public virtual bool IsPlayerControlling()
         {
-            if (this as VehicleTypes.Submarine != null)
+            return this switch
             {
-                return (this as VehicleTypes.Submarine).IsPlayerPiloting();
-            }
-            else if (this as VehicleTypes.Submersible != null)
-            {
-                return (this as VehicleTypes.Submersible).IsUnderCommand;
-            }
-            else if (this as VehicleTypes.Drone != null)
-            {
-                return (this as VehicleTypes.Drone).IsUnderCommand;
-            }
-            else // this is just a ModVehicle
-            {
-                return false;
-            }
+                VehicleTypes.Submarine sub => sub.IsPlayerPiloting(),
+                VehicleTypes.Submersible subbie => subbie.IsUnderCommand,
+                VehicleTypes.Drone drone => drone.IsUnderCommand,
+                _ => false
+            };
         }
         public virtual void OnFinishedLoading()
         {
@@ -673,14 +672,14 @@ namespace VehicleFramework
                 IsPlayerDry = value;
             }
         }
-        public FMOD_CustomEmitter lightsOnSound = null;
-        public FMOD_CustomEmitter lightsOffSound = null;
-        public List<GameObject> lights = new();
-        public List<GameObject> volumetricLights = new();
-        public PingInstance pingInstance = null;
-        public HeadLightsController headlights;
-        public EnergyInterface AIEnergyInterface;
-        public AutoPilotVoice voice;
+        public FMOD_CustomEmitter? lightsOnSound = null;
+        public FMOD_CustomEmitter? lightsOffSound = null;
+        internal List<GameObject> lights = new();
+        internal List<GameObject> volumetricLights = new();
+        public PingInstance? pingInstance = null;
+        public HeadLightsController? headlights;
+        public EnergyInterface? AIEnergyInterface;
+        public AutoPilotVoice? voice;
         public bool isInited = false;
         // if the player toggles the power off,
         // the vehicle is called "powered off,"
@@ -688,11 +687,11 @@ namespace VehicleFramework
         public bool isPoweredOn = true;
         public FMOD_StudioEventEmitter? ambienceSound;
         public int numEfficiencyModules = 0;
-        public PowerManager powerMan = null;
+        public PowerManager? powerMan = null;
         public bool IsPlayerDry = false;
         public bool isScuttled = false;
         public bool IsUndockingAnimating = false;
-        public List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
+        private List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
         public TechType TechType => GetComponent<TechTag>().type;
         public bool IsConstructed => vfxConstructing == null || vfxConstructing.IsConstructed();
         #endregion
@@ -701,7 +700,7 @@ namespace VehicleFramework
         private bool _IsUnderCommand = false;
         private int numArmorModules = 0;
         protected bool IsVehicleDocked = false;
-        private string[] _slotIDs = null;
+        private string[]? _slotIDs = null;
         protected internal Color baseColor = Color.white;
         protected internal Color interiorColor = Color.white;
         protected internal Color stripeColor = Color.white;
@@ -785,9 +784,12 @@ namespace VehicleFramework
         }
         private void SetStorageModule(int slotID, bool activated)
         {
-            foreach (var sto in InnateStorages)
+            if (InnateStorages != null)
             {
-                sto.Container.SetActive(true);
+                foreach (var sto in InnateStorages)
+                {
+                    sto.Container.SetActive(true);
+                }
             }
             if (ModularStorages == null)
             {
@@ -802,15 +804,16 @@ namespace VehicleFramework
             modSto.Container.SetActive(activated);
             if (activated)
             {
-                var modularContainer = GetSeamothStorageContainer(slotID);
+                var modularContainer = GetSeamothStorageContainer(slotID) ?? throw Admin.SessionManager.Fatal("ModVehicle failed to get SeamothStorageContainer for slotID: " + slotID.ToString());
                 modularContainer.height = modSto.Height;
                 modularContainer.width = modSto.Width;
-                ModGetStorageInSlot(slotID, TechType.VehicleStorageModule).Resize(modSto.Width, modSto.Height);
+                var storageInSlot = ModGetStorageInSlot(slotID, TechType.VehicleStorageModule) ?? throw SessionManager.Fatal(mySubName + " failed to get storage in slot: " + slotID.ToString() + " for TechType: " + TechType.VehicleStorageModule.ToString());
+                storageInSlot.Resize(modSto.Width, modSto.Height);
             }
         }
-        internal SeamothStorageContainer GetSeamothStorageContainer(int slotID)
+        internal SeamothStorageContainer? GetSeamothStorageContainer(int slotID)
         {
-            InventoryItem slotItem = this.GetSlotItem(slotID);
+            InventoryItem? slotItem = this.GetSlotItem(slotID);
             if (slotItem == null)
             {
                 Logger.Warn("Warning: failed to get item for that slotID: " + slotID.ToString());
@@ -825,10 +828,14 @@ namespace VehicleFramework
             SeamothStorageContainer component = item.GetComponent<SeamothStorageContainer>();
             return component;
         }
-        internal ItemsContainer ModGetStorageInSlot(int slotID, TechType techType)
+        internal ItemsContainer? ModGetStorageInSlot(int slotID, TechType techType)
         {
             if (techType == EnumHelper.GetInnateStorageType())
             {
+                if (InnateStorages == null)
+                {
+                    throw Admin.SessionManager.Fatal($"ModVehicle {name} failed to get InnateStorages for slotID: {slotID} for TechType: {techType.AsString()}");
+                }
                 InnateStorageContainer vsc;
                 if (0 <= slotID && slotID < InnateStorages.Count)
                 {
@@ -843,13 +850,7 @@ namespace VehicleFramework
             }
             else if (techType == TechType.VehicleStorageModule)
             {
-                SeamothStorageContainer component = GetSeamothStorageContainer(slotID);
-                if (component == null)
-                {
-                    Logger.Warn("Warning: failed to get storage-container for that slotID: " + slotID.ToString());
-                    return null;
-                }
-                return component.container;
+                return GetSeamothStorageContainer(slotID)?.container ?? throw Admin.SessionManager.Fatal($"ModVehicle {name} failed to get SeamothStorageContainer for slotID: {slotID} for TechType: {techType.AsString()}");
             }
             else
             {
@@ -921,10 +922,11 @@ namespace VehicleFramework
                 myPlayer.playerController.ForceControllerSize();
                 myPlayer.transform.parent = null;
             }
-            Submersible mvSubmersible = this as Submersible;
-            Walker mvWalker = this as Walker;
-            Skimmer mvSkimmer = this as Skimmer;
-            Submarine mvSubmarine = this as Submarine;
+
+            Submersible? mvSubmersible = this as Submersible;
+            //Walker? mvWalker = this as Walker;
+            //Skimmer mvSkimmer = this as Skimmer;
+            Submarine? mvSubmarine = this as Submarine;
             if (Drone.mountedDrone != null)
             {
                 Drone.mountedDrone.StopControlling();
@@ -944,6 +946,7 @@ namespace VehicleFramework
                 mvSubmersible.StopPiloting();
                 return;
             }
+            /*
             else if (mvWalker != null)
             {
                 DoExitActions(ref myMode);
@@ -958,6 +961,7 @@ namespace VehicleFramework
                 mvSkimmer.StopPiloting();
                 return;
             }
+            */
             else if (mvSubmarine != null)
             {
                 // check if we're level by comparing pitch and roll
@@ -991,9 +995,12 @@ namespace VehicleFramework
                     return;
                 }
 
-                mvSubmarine.VFEngine.KillMomentum();
+                if(mvSubmarine.VFEngine != null)
+                {
+                    mvSubmarine.VFEngine.KillMomentum();
+                }
 
-                if(mvSubmarine.PilotSeat.ExitLocation == null)
+                if (mvSubmarine.PilotSeat.ExitLocation == null)
                 {
                     Player.main.transform.position = mvSubmarine.PilotSeat.Seat.transform.position - mvSubmarine.PilotSeat.Seat.transform.forward * 1 + mvSubmarine.PilotSeat.Seat.transform.up * 1f;
                 }
@@ -1044,11 +1051,14 @@ namespace VehicleFramework
         }
         public bool HasRoomFor(Pickupable pickup)
         {
-            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
+            if (InnateStorages != null)
             {
-                if (container.HasRoomFor(pickup))
+                foreach (var container in InnateStorages.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
                 {
-                    return true;
+                    if (container.HasRoomFor(pickup))
+                    {
+                        return true;
+                    }
                 }
             }
             foreach(var container in ModularStorageInput.GetAllModularStorageContainers(this))
@@ -1062,13 +1072,16 @@ namespace VehicleFramework
         }
         public bool HasInStorage(TechType techType, int count=1)
         {
-            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
+            if (InnateStorages != null)
             {
-                if (container.Contains(techType))
+                foreach (var container in InnateStorages.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
                 {
-                    if (container.GetCount(techType) >= count)
+                    if (container.Contains(techType))
                     {
-                        return true;
+                        if (container.GetCount(techType) >= count)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
@@ -1094,18 +1107,21 @@ namespace VehicleFramework
                 }
                 return false;
             }
-            foreach (var container in InnateStorages?.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
+            if (InnateStorages != null)
             {
-                if (container.HasRoomFor(pickup))
+                foreach (var container in InnateStorages.Select(x => x.Container.GetComponent<InnateStorageContainer>().Container))
                 {
-                    string arg = Language.main.Get(pickup.GetTechName());
-                    ErrorMessage.AddMessage(Language.main.GetFormat<string>("VehicleAddedToStorage", arg));
-                    uGUI_IconNotifier.main.Play(pickup.GetTechType(), uGUI_IconNotifier.AnimationType.From, null);
-                    pickup.Initialize();
-                    InventoryItem item = new(pickup);
-                    container.UnsafeAdd(item);
-                    pickup.PlayPickupSound();
-                    return true;
+                    if (container.HasRoomFor(pickup))
+                    {
+                        string arg = Language.main.Get(pickup.GetTechName());
+                        ErrorMessage.AddMessage(Language.main.GetFormat<string>("VehicleAddedToStorage", arg));
+                        uGUI_IconNotifier.main.Play(pickup.GetTechType(), uGUI_IconNotifier.AnimationType.From, null);
+                        pickup.Initialize();
+                        InventoryItem item = new(pickup);
+                        container.UnsafeAdd(item);
+                        pickup.PlayPickupSound();
+                        return true;
+                    }
                 }
             }
             foreach (var container in ModularStorageInput.GetAllModularStorageContainers(this))
@@ -1205,7 +1221,7 @@ namespace VehicleFramework
         }
         internal static void MaybeControlRotation(Vehicle veh)
         {
-            ModVehicle mv = veh as ModVehicle;
+            ModVehicle? mv = veh as ModVehicle;
             if (mv == null
                 || !veh.GetPilotingMode()
                 || !mv.IsUnderCommand
@@ -1221,18 +1237,19 @@ namespace VehicleFramework
         }
         public static EnergyMixin GetEnergyMixinFromVehicle(Vehicle veh)
         {
-            if ((veh as ModVehicle) == null)
+            ModVehicle? mv = veh as ModVehicle;
+            if (mv == null)
             {
                 return veh.GetComponent<EnergyMixin>();
             }
             else
             {
-                return (veh as ModVehicle).energyInterface.sources.First();
+                return mv.energyInterface.sources.First();
             }
         }
         public static void TeleportPlayer(Vector3 destination)
         {
-            ModVehicle mv = Player.main.GetModVehicle();
+            ModVehicle? mv = Player.main.GetModVehicle();
             UWE.Utils.EnterPhysicsSyncSection();
             Player.main.SetCurrentSub(null, true);
             Player.main.playerController.SetEnabled(false);
@@ -1296,17 +1313,18 @@ namespace VehicleFramework
             }
             if (Boolean.Parse(simpleData[isControlling]))
             {
-                if (this as Drone == null)
+                Drone? drone = this as Drone;
+                if (drone == null)
                 {
                     BeginPiloting();
                 }
                 else
                 {
-                    (this as Drone).BeginControlling();
+                    drone.BeginControlling();
                 }
             }
             SetName(simpleData[mySubName]);
-            Submarine sub = this as Submarine;
+            Submarine? sub = this as Submarine;
             sub?.PaintVehicleDefaultStyle(simpleData[mySubName]);
             if (Boolean.Parse(simpleData[defaultColorName]))
             {
@@ -1354,19 +1372,23 @@ namespace VehicleFramework
         protected virtual void OnGameLoaded() { }
 
         private const string StorageSaveName = "Storage";
-        private Dictionary<string, List<Tuple<TechType, float, TechType>>> loadedStorageData = null;
+        private Dictionary<string, List<Tuple<TechType, float, TechType>>>? loadedStorageData = null;
         private readonly Dictionary<string, List<Tuple<TechType, float, TechType>>> innateStorageSaveData = new();
         internal void SaveInnateStorage(string path, List<Tuple<TechType, float, TechType>> storageData)
         {
+            if(InnateStorages == null)
+            {
+                return;
+            }
             innateStorageSaveData.Add(path, storageData);
-            if(innateStorageSaveData.Count() == InnateStorages.Count())
+            if(innateStorageSaveData.Count == InnateStorages.Count)
             {
                 // write it out
                 SaveLoad.JsonInterface.Write(this, StorageSaveName, innateStorageSaveData);
                 innateStorageSaveData.Clear();
             }
         }
-        internal List<Tuple<TechType, float, TechType>> ReadInnateStorage(string path)
+        internal List<Tuple<TechType, float, TechType>>? ReadInnateStorage(string path)
         {
             loadedStorageData ??= SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
             if (loadedStorageData == null)
@@ -1384,23 +1406,23 @@ namespace VehicleFramework
         }
 
         private const string BatterySaveName = "Batteries";
-        private Dictionary<string, Tuple<TechType, float>> loadedBatteryData = null;
+        private Dictionary<string, Tuple<TechType, float>>? loadedBatteryData = null;
         private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new();
         internal void SaveBatteryData(string path, Tuple<TechType, float> batteryData)
         {
             int batteryCount = 0;
-            if (Batteries != null) batteryCount += Batteries.Count();
-            if (BackupBatteries != null) batteryCount += BackupBatteries.Count();
+            if (Batteries != null) batteryCount += Batteries.Count;
+            if (BackupBatteries != null) batteryCount += BackupBatteries.Count;
 
             batterySaveData.Add(path, batteryData);
-            if (batterySaveData.Count() == batteryCount)
+            if (batterySaveData.Count == batteryCount)
             {
                 // write it out
                 SaveLoad.JsonInterface.Write(this, BatterySaveName, batterySaveData);
                 batterySaveData.Clear();
             }
         }
-        internal Tuple<TechType, float> ReadBatteryData(string path)
+        internal Tuple<TechType, float>? ReadBatteryData(string path)
         {
             loadedBatteryData ??= SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
             if (loadedBatteryData == null)

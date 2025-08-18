@@ -17,14 +17,22 @@ namespace VehicleFramework.Patches.CompatibilityPatches
         [HarmonyPrefix]
         public static bool Prefix(object __instance)
         {
-            FieldInfo field = __instance.GetType().GetField("ping");
-            PingInstance ping = field.GetValue(__instance) as PingInstance;
-            foreach(var mvPIs in VehicleManager.mvPings)
+            FieldInfo? field = __instance.GetType()?.GetField("ping");
+            PingInstance? ping = field?.GetValue(__instance) as PingInstance;
+            if(ping == null)
+            {
+                return true; // If we can't get the ping, we don't need to do anything.
+            }
+            foreach (var mvPIs in VehicleManager.mvPings)
             {
                 if (mvPIs.pingType == ping.pingType)
                 {
-                    FieldInfo field2 = __instance.GetType().GetField("icon");
-                    uGUI_Icon icon = field2.GetValue(__instance) as uGUI_Icon;
+                    FieldInfo? field2 = __instance.GetType()?.GetField("icon");
+                    uGUI_Icon? icon = field2?.GetValue(__instance) as uGUI_Icon;
+                    if(icon == null)
+                    {
+                        return true; // If we can't get the icon, we don't need to do anything.
+                    }
                     icon.sprite = SpriteManager.Get(TechType.Exosuit);
                     foreach (var mvType in VehicleManager.vehicleTypes)
                     {

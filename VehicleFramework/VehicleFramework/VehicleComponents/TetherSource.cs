@@ -29,7 +29,7 @@ namespace VehicleFramework
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
                 }
-                BoxCollider collider = mv.BoundingBoxCollider;
+                BoxCollider? collider = mv.BoundingBoxCollider;
                 if(collider == null)
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
@@ -86,7 +86,7 @@ namespace VehicleFramework
         }
         private void Start()
         {
-            if (mv.BoundingBoxCollider == null || mv.TetherSources.Count() == 0)
+            if (mv.BoundingBoxCollider == null || mv.TetherSources == null || mv.TetherSources.Count == 0)
             {
                 isSimple = true;
             }

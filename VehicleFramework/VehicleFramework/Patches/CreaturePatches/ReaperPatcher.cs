@@ -22,7 +22,7 @@ namespace VehicleFramework.Patches.LeviathanPatches
 			// This postfix basically executes the OnTouch function again but only for the GrabModVehicle case.
 			if(collider.gameObject.GetComponent<Player>() != null)
             {
-				ModVehicle maybeMV = collider.gameObject.GetComponent<Player>().GetModVehicle();
+				ModVehicle? maybeMV = collider.gameObject.GetComponent<Player>().GetModVehicle();
 				if (maybeMV != null)
                 {
 					// Don't let the reaper grab the player from inside the ModVehicle
@@ -70,9 +70,10 @@ namespace VehicleFramework.Patches.LeviathanPatches
 		[HarmonyPatch(nameof(ReaperLeviathan.Update))]
 		public static void UpdatePostfix(ReaperLeviathan __instance)
 		{
-			if ((__instance.holdingVehicle as ModVehicle) != null)
+			ModVehicle? mv = __instance.holdingVehicle as ModVehicle;
+            if (mv != null && mv.LeviathanGrabPoint != null)
 			{
-				Vector3 diff = (__instance.holdingVehicle as ModVehicle).LeviathanGrabPoint.transform.position - (__instance.holdingVehicle as ModVehicle).transform.position;
+				Vector3 diff = mv.LeviathanGrabPoint.transform.position - mv.transform.position;
 				__instance.holdingVehicle.transform.position -= diff;
 			}
 		}

@@ -23,7 +23,7 @@ namespace VehicleFramework.SaveLoad
             }
             Write<T>($"{fileTitle}-{prefabID.Id}", data);
         }
-        public static T Read<T>(Component comp, string fileTitle)
+        public static T? Read<T>(Component comp, string fileTitle)
         {
             if (comp == null)
             {
@@ -73,7 +73,7 @@ namespace VehicleFramework.SaveLoad
                 Logger.LogException($"Failed to write file {uniqueFileName}!", e);
             }
         }
-        public static T Read<T>(string uniqueFileName)
+        public static T? Read<T>(string uniqueFileName)
         {
             string fileName;
             try

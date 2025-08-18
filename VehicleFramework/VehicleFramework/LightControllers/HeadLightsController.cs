@@ -20,7 +20,7 @@ namespace VehicleFramework
         private ModVehicle MV => GetComponent<ModVehicle>();
         protected override void HandleLighting(bool active)
         {
-            MV.HeadLights.ForEach(x => x.Light.SetActive(active));
+            MV.HeadLights?.ForEach(x => x.Light.SetActive(active));
             foreach (var component in GetComponentsInChildren<ILightsStatusListener>())
             {
                 if (active)
@@ -38,13 +38,13 @@ namespace VehicleFramework
         {
             if(turnOn)
             {
-                MV.lightsOnSound.Stop();
-                MV.lightsOnSound.Play();
+                MV.lightsOnSound?.Stop();
+                MV.lightsOnSound?.Play();
             }
             else
             {
-                MV.lightsOffSound.Stop();
-                MV.lightsOffSound.Play();
+                MV.lightsOffSound?.Stop();
+                MV.lightsOffSound?.Play();
             }
         }
 

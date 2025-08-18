@@ -6,6 +6,7 @@ namespace VehicleFramework.VehicleComponents
 {
 	// damage from anywhere can wreck certain subsystems
 	// then they must be repaired on-site.
+	/*
 	public static class VehicleDamageTrackerExtensions
 	{
 		public static VehicleDamageTracker WithSubsystem(this VehicleDamageTracker vdt, Subsystem sys)
@@ -30,7 +31,7 @@ namespace VehicleFramework.VehicleComponents
 			}
 		}
     }
-
+	*/
     /*
     
     A simple accounting of things that deal damage in Subnautica.

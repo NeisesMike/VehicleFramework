@@ -29,7 +29,7 @@ namespace VehicleFramework.UpgradeTypes
     }
     public abstract class ModVehicleArm : ModVehicleUpgrade
     {
-        internal GameObject armPrefab = null; // this gets set by UpgradeRegistrar.RegisterArmUpgradeActions using this.GetArmPrefab
+        internal GameObject? armPrefab = null; // this gets set by UpgradeRegistrar.RegisterArmUpgradeActions using this.GetArmPrefab
         public override string Description => "This is an arm module.";
         public override QuickSlotType QuickSlotType => QuickSlotType.Selectable; // must be either selectable or selectablechargeable (only matters for exosuit?)
         public virtual ArmEnergyCosts EnergyCosts => default;
@@ -69,7 +69,7 @@ namespace VehicleFramework.UpgradeTypes
         {
             // reset the arm if need be
         }
-        public virtual GameObject GetInteractableRoot(GameObject arm, Vehicle vehicle, GameObject target)
+        public virtual GameObject? GetInteractableRoot(GameObject arm, Vehicle vehicle, GameObject target)
         {
             // target is the camera's LookTarget.
             // the return value becomes Exosuit.activeTarget,

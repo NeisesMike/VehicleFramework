@@ -24,7 +24,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Vehicle.OnUpgradeModuleToggle))]
         public static void VehicleOnUpgradeModuleTogglePostfix(Vehicle __instance, int slotID, bool active)
         {
-            Exosuit exo = __instance as Exosuit;
+            Exosuit? exo = __instance as Exosuit;
             if (exo != null)
             {
                 TechType techType = exo.modules.GetTechTypeInSlot(exo.slotIDs[slotID]);
@@ -43,7 +43,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Vehicle.OnUpgradeModuleUse))]
         public static void VehicleOnUpgradeModuleUsePostfix(Vehicle __instance, TechType techType, int slotID)
         {
-            Exosuit exo = __instance as Exosuit;
+            Exosuit? exo = __instance as Exosuit;
             if (exo != null)
             {
                 UpgradeTypes.SelectableActionParams param = new UpgradeTypes.SelectableActionParams
@@ -143,7 +143,7 @@ namespace VehicleFramework.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Exosuit.GetArmPrefab))]
-        public static void ExosuitGetArmPrefabPostfix(Exosuit __instance, TechType techType, ref GameObject __result)
+        public static void ExosuitGetArmPrefabPostfix(Exosuit __instance, TechType techType, ref GameObject? __result)
         {
             if (__result == null)
             {
@@ -154,7 +154,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Exosuit.SpawnArm))]
         public static bool ExosuitSpawnArmPrefix(Exosuit __instance, TechType techType, Transform parent, ref IExosuitArm __result)
         {
-            ModVehicleArm armLogic = VFArm.GetModVehicleArm(techType);
+            ModVehicleArm? armLogic = VFArm.GetModVehicleArm(techType);
             if (armLogic != null)
             {
                 GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(__instance.GetArmPrefab(techType));
@@ -172,7 +172,7 @@ namespace VehicleFramework.Patches
         public static void ExosuitOnUpgradeModuleChangePostfix(Exosuit __instance, int slotID, TechType techType, bool added)
         {
             // only work on arms here. Other types of modules are covered in VanillaUpgradeMaker.
-            ModVehicleArm armLogic = VFArm.GetModVehicleArm(techType);
+            ModVehicleArm? armLogic = VFArm.GetModVehicleArm(techType);
             if (armLogic != null)
             {
                 UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams

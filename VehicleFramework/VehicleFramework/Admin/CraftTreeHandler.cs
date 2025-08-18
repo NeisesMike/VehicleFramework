@@ -93,7 +93,7 @@ namespace VehicleFramework.Admin
                 TraceCraftingPath(vType, upgrade.CraftingPath, (x,y) => AddCraftingTab(x, y.name, y.displayName, y.icon));
             }
         }
-        internal static string[] TraceCraftingPath(VehicleType vType, List<CraftingNode> path, Action<string[], CraftingNode> perNodeAction)
+        internal static string[] TraceCraftingPath(VehicleType vType, List<CraftingNode> path, Action<string[], CraftingNode>? perNodeAction)
         {
             string[] pathCurrently = UpgradeTypeToPath(vType);
             foreach (var node in path)

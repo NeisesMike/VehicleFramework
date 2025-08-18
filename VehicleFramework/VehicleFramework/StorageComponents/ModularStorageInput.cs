@@ -10,8 +10,12 @@ namespace VehicleFramework
 	public class ModularStorageInput : StorageInput
 	{
 		public override void OpenFromExternal()
-		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
+        {
+            if (mv == null)
+            {
+                throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
+            }
+            ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
@@ -20,15 +24,19 @@ namespace VehicleFramework
 			}
 		}
 		protected override void OpenPDA()
-		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
+        {
+            if (mv == null)
+            {
+                throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
+            }
+            ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
 			storageInSlot ??= gameObject.GetComponent<SeamothStorageContainer>().container;
 
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
 				Inventory.main.SetUsedStorage(storageInSlot, false);
-				if (!pda.Open(PDATab.Inventory, this.tr, new PDA.OnClose(this.OnClosePDA)))
+				if (!pda.Open(PDATab.Inventory, transform, new PDA.OnClose(this.OnClosePDA)))
 				{
 					this.OnClosePDA(pda);
 					return;

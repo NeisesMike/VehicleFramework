@@ -42,7 +42,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(PlaceTool.LateUpdate))]
         public static void LateUpdatePrefix(PlaceTool __instance)
         {
-            SubRoot subroot = Player.main?.currentSub;
+            SubRoot? subroot = Player.main?.currentSub;
             if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>())
             {
                 if (__instance.usingPlayer != null)

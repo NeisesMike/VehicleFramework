@@ -11,7 +11,7 @@ namespace VehicleFramework
 			Normal,
 			Storage
         }
-		public GameObject droneHUD = null;
+		public GameObject? droneHUD = null;
 		private bool IsStorageHUD()
 		{
 			return textStorage != null;
@@ -23,10 +23,18 @@ namespace VehicleFramework
 
 		private void DeactivateAll()
 		{
-			root.SetActive(false);
+			if(root == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: root is null!");
+            }
+            root.SetActive(false);
+			if(droneHUD == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD is null!");
+            }
 			droneHUD.SetActive(false);
 		}
-		private bool ShouldIDie(ModVehicle mv, PDA pda)
+		private bool ShouldIDie(ModVehicle? mv, PDA? pda)
 		{
 			if (mv == null || pda == null)
 			{
@@ -77,23 +85,31 @@ namespace VehicleFramework
 				DeactivateAll();
 				return;
 			}
-			ModVehicle mv = Player.main.GetModVehicle();
-			PDA pda = Player.main.GetPDA();
+			ModVehicle? mv = Player.main.GetModVehicle();
+			PDA? pda = Player.main.GetPDA();
 			if (ShouldIDie(mv, pda))
 			{
 				DeactivateAll();
 				return;
 			}
 
-			root.transform.localPosition = Vector3.zero;
+            if (root == null)
+            {
+                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: root is null!");
+            }
+            root.transform.localPosition = Vector3.zero;
 
 			bool mvflag = !pda.isInUse;
 			bool droneflag = mvflag && (VehicleTypes.Drone.mountedDrone != null);
 			if (root.activeSelf != mvflag)
 			{
 				root.SetActive(mvflag);
-			}
-			if (droneHUD.activeSelf != droneflag)
+            }
+            if (droneHUD == null)
+            {
+                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD is null!");
+            }
+            if (droneHUD.activeSelf != droneflag)
 			{
 				droneHUD.SetActive(droneflag);
 			}
@@ -110,8 +126,17 @@ namespace VehicleFramework
 			}
 		}
 		public void DroneUpdate()
-		{
-			VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+        {
+            if (droneHUD == null)
+            {
+                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD is null!");
+            }
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+            if (drone == null)
+            {
+                droneHUD.transform.Find("Connecting").gameObject.SetActive(false);
+                return;
+            }
 			if (drone.IsConnecting)
 			{
 				droneHUD.transform.Find("Connecting").gameObject.SetActive(true);
@@ -120,22 +145,40 @@ namespace VehicleFramework
 			{
 				droneHUD.transform.Find("Connecting").gameObject.SetActive(false);
 			}
+			if(drone.pairedStation == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: drone.pairedStation is null!");
+            }
 			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
 			droneHUD.transform.Find("Title/DistanceText").gameObject.GetComponent<TextMeshProUGUI>().text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", Language.main.Get("CameraDroneDistance"), (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", Language.main.Get("MeterSuffix"));
 		}
 		public void UpdateHealth()
 		{
-			Player.main.GetModVehicle().GetHUDValues(out float num, out float _);
+			ModVehicle? mv = Player.main.GetModVehicle();
+            if (mv == null)
+			{
+				return;
+			}
+            mv.GetHUDValues(out float num, out float _);
 			int num3 = Mathf.CeilToInt(num * 100f);
 			if (lastHealth != num3)
 			{
 				lastHealth = num3;
-				textHealth.text = IntStringCache.GetStringForInt(lastHealth);
+                if (textHealth == null)
+                {
+                    throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textHealth is null!");
+                }
+                textHealth.text = IntStringCache.GetStringForInt(lastHealth);
 			}
 		}
 		public void UpdateTemperature()
-		{
-			float temperature = Player.main.GetModVehicle().GetTemperature();
+        {
+            ModVehicle? mv = Player.main.GetModVehicle();
+            if (mv == null)
+            {
+                return;
+            }
+            float temperature = mv.GetTemperature();
 			temperatureSmoothValue = ((temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(temperatureSmoothValue, temperature, ref temperatureVelocity, 1f));
 			int tempNum;
 			if (MainPatcher.NautilusConfig.IsFahrenheit)
@@ -149,7 +192,15 @@ namespace VehicleFramework
 			if (lastTemperature != tempNum)
 			{
 				lastTemperature = tempNum;
-				textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
+                if (textTemperature == null)
+                {
+                    throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textTemperature is null!");
+                }
+                if (textTemperatureSuffix == null)
+                {
+                    throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textTemperatureSuffix is null!");
+                }
+                textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
 				textTemperatureSuffix.color = new Color32(byte.MaxValue, 220, 0, byte.MaxValue);
 				if (MainPatcher.NautilusConfig.IsFahrenheit)
 				{
@@ -162,13 +213,22 @@ namespace VehicleFramework
 			}
 		}
 		public void UpdatePower()
-		{
-			Player.main.GetModVehicle().GetHUDValues(out float _, out float num2);
+        {
+            ModVehicle? mv = Player.main.GetModVehicle();
+            if (mv == null)
+            {
+                return;
+            }
+            mv.GetHUDValues(out float _, out float num2);
 			int num4 = Mathf.CeilToInt(num2 * 100f);
 			if (lastPower != num4)
 			{
 				lastPower = num4;
-				textPower.text = IntStringCache.GetStringForInt(lastPower);
+                if (textPower == null)
+                {
+                    throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textPower is null!");
+                }
+                textPower.text = IntStringCache.GetStringForInt(lastPower);
 			}
 		}
 		public void UpdateStorage()
@@ -176,8 +236,13 @@ namespace VehicleFramework
 			if (textStorage == null)
 			{
 				return;
-			}
-			Player.main.GetModVehicle().GetStorageValues(out int stored, out int capacity);
+            }
+            ModVehicle? mv = Player.main.GetModVehicle();
+            if (mv == null)
+            {
+                return;
+            }
+            mv.GetStorageValues(out int stored, out int capacity);
 			if (capacity > 0)
 			{
 				int ratio = (100 * stored) / capacity;
@@ -190,17 +255,17 @@ namespace VehicleFramework
 		}
 		public const float temperatureSmoothTime = 1f;
 		[AssertNotNull]
-		public GameObject root;
+		public GameObject? root;
 		[AssertNotNull]
-		public TextMeshProUGUI textHealth;
-		[AssertNotNull]
-		public TextMeshProUGUI textPower;
-		[AssertNotNull]
-		public TextMeshProUGUI textTemperature;
-		[AssertNotNull]
-		public TextMeshProUGUI textTemperatureSuffix;
-		[AssertNotNull]
-		public TextMeshProUGUI textStorage;
+		public TextMeshProUGUI? textHealth;
+        [AssertNotNull]
+		public TextMeshProUGUI? textPower;
+        [AssertNotNull]
+		public TextMeshProUGUI? textTemperature;
+        [AssertNotNull]
+		public TextMeshProUGUI? textTemperatureSuffix;
+        [AssertNotNull]
+		public TextMeshProUGUI textStorage = null!;
 		public int lastHealth = int.MinValue;
 		public int lastPower = int.MinValue;
 		public int lastTemperature = int.MinValue;

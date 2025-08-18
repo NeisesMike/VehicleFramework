@@ -7,7 +7,7 @@ namespace VehicleFramework
         private ModVehicle MV => GetComponent<ModVehicle>();
         protected virtual void Awake()
         {
-            if (MV.volumetricLights == null || MV.volumetricLights.Count < 1)
+            if (MV.volumetricLights.Count < 1)
             {
                 Component.DestroyImmediate(this);
             }

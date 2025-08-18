@@ -30,15 +30,15 @@ namespace VehicleFramework.VehicleComponents
                 _isAttached = value;
             }
         }
-        private Transform attachedPlatform = null;
-        public Action Attach = null;
-        public Action Detach = null;
+        private Transform? attachedPlatform = null;
+        public Action? Attach = null;
+        public Action? Detach = null;
         public float MagnetDistance = 1f;
         public bool recharges = true;
         public float rechargeRate = 0.5f; // transfer 0.5 energy per second
         public static int colliderPairsPerFrame = 20;
 
-        private Coroutine CollisionHandling = null;
+        private Coroutine? CollisionHandling = null;
         private IEnumerator IgnoreCollisionWithHost(bool shouldIgnore)
         {
             if (MyVehicle == null || MyVehicle.useRigidbody == null || attachedPlatform == null) yield break;
@@ -75,7 +75,7 @@ namespace VehicleFramework.VehicleComponents
             Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint3")}", duration: 3f);
             // Once all collisions with the host are ignored, this vehicle begins to detect collisions again.
             MyVehicle.useRigidbody.detectCollisions = true;
-            if (MyVehicle is ModVehicle mv)
+            if (MyVehicle is ModVehicle mv && mv.BoundingBoxCollider != null)
             {
                 // Why the hell does bounding box collider become enabled sometime after we detectCollisions:=true ???
                 yield return new WaitUntil(() => mv.BoundingBoxCollider.enabled);
@@ -83,7 +83,7 @@ namespace VehicleFramework.VehicleComponents
             }
             CollisionHandling = null;
         }
-        public void HandleAttachment(bool isAttached, Transform platform = null)
+        public void HandleAttachment(bool isAttached, Transform? platform = null)
         {
             MyVehicle.teleporting = isAttached; // a little hack to ensure the vehicle gets IsKinematic:=true every frame
             IsAttached = isAttached;
@@ -112,7 +112,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 CollisionHandling = Admin.SessionManager.StartCoroutine(IgnoreCollisionWithHost(false));
                 MyVehicle.transform.SetParent(serializerObject);
-                if (attachedPlatform?.GetComponent<ModVehicle>())
+                if (attachedPlatform?.GetComponent<ModVehicle>() != null)
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass -= MyVehicle.useRigidbody.mass;
                 }
@@ -193,7 +193,7 @@ namespace VehicleFramework.VehicleComponents
         public MagnetStruct CheckPlacement()
         {
             RaycastHit[] allHits;
-            if(MyVehicle is ModVehicle mv)
+            if(MyVehicle is ModVehicle mv && mv.BoundingBoxCollider != null)
             {
                 allHits = Physics.BoxCastAll(mv.BoundingBoxCollider.bounds.center, mv.GetBoundingDimensions() / 2f, -transform.up, transform.rotation, MagnetDistance);
             }
@@ -247,7 +247,7 @@ namespace VehicleFramework.VehicleComponents
                     {
                         MyVehicle.DeselectSlots();
                     }
-                    else if(MyVehicle is VehicleTypes.Drone && (MyVehicle as VehicleTypes.Drone).IsPlayerControlling())
+                    else if(MyVehicle is VehicleTypes.Drone drone && drone.IsPlayerControlling())
                     {
                         MyVehicle.DeselectSlots();
                     }
@@ -273,7 +273,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public void UpdateRecharge()
         {
-            if (recharges && IsAttached && attachedPlatform)
+            if (recharges && IsAttached && attachedPlatform != null)
             {
                 float consumePerFrame = rechargeRate * Time.deltaTime;
                 float canConsume = MyVehicle.energyInterface.TotalCanConsume(out _);

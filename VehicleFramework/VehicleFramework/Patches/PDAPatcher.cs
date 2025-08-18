@@ -17,7 +17,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(PDA.Close))]
         public static void ClosePostfix()
         {
-            VehicleTypes.Submarine mv = Player.main.GetVehicle() as VehicleTypes.Submarine;
+            VehicleTypes.Submarine? mv = Player.main.GetVehicle() as VehicleTypes.Submarine;
             if (mv != null && !mv.IsPlayerControlling())
             {
                 uGUI.main.quickSlots.SetTarget(null);

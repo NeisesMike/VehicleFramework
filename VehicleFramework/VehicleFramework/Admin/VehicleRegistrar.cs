@@ -118,6 +118,7 @@ namespace VehicleFramework
                     return false;
                 }
             }
+            /*
             Walker? Walker = mv as Walker;
             if (Walker != null)
             {
@@ -136,6 +137,7 @@ namespace VehicleFramework
                     return false;
                 }
             }
+            */
             return true;
         }
         public static bool ValidateRegistration(ModVehicle mv, bool verbose)
@@ -207,7 +209,7 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.CanopyWindows were provided. These must be specified to handle window transparencies.");
                 }
-                if((mv.BoundingBoxCollider ?? mv.BoundingBox?.GetComponentInChildren<BoxCollider>(true)) == null)
+                if(mv.BoundingBoxCollider == null)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No BoundingBox BoxCollider was provided. If a BoundingBox GameObject was provided, it did not have a BoxCollider. Tether range is 10 meters. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
                 }
@@ -304,7 +306,7 @@ namespace VehicleFramework
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.LeviathanGrabPoint was provided. This is where leviathans attach to the vehicle. The root object will be used instead.");
                 }
-                if (mv.VFEngine == null && mv.Engine == null)
+                if (mv.VFEngine == null)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ModVehicleEngine was passed for registration. A default engine will be chosen.");
                 }

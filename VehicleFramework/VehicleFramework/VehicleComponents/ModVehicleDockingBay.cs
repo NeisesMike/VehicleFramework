@@ -14,13 +14,13 @@ namespace VehicleFramework.VehicleComponents
                 mv.PlayerEntry();
             }
         }
-        protected override void OnStartedUndocking(bool withPlayer)
+        protected override void OnStartedUndocking(bool withPlayer, Vehicle cdVehicle)
         {
             if (withPlayer)
             {
                 mv.PlayerExit();
             }
-            base.OnStartedUndocking(withPlayer);
+            base.OnStartedUndocking(withPlayer, cdVehicle);
         }
         protected override void TryRechargeDockedVehicle()
         {
@@ -31,6 +31,10 @@ namespace VehicleFramework.VehicleComponents
             float dockRecharge = Math.Min(1, dockDesires);
             if (charge > dockRecharge && dockRecharge > 0)
             {
+                if (mv.powerMan == null)
+                {
+                    throw Admin.SessionManager.Fatal("MV.powerMan is null! Cannot drain power!");
+                }
                 float actual = mv.powerMan.TrySpendEnergy(dockRecharge);
                 currentDockedVehicle.AddEnergy(actual);
             }

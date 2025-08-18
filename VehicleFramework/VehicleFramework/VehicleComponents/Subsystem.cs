@@ -2,6 +2,7 @@
 
 namespace VehicleFramework.VehicleComponents
 {
+    /*
     public static class SubsystemExtensions
     {
         public static Subsystem WithMaxHealth(this Subsystem sys, float health)
@@ -85,4 +86,5 @@ namespace VehicleFramework.VehicleComponents
             liveMixin.health = maxHealth;
         }
     }
+    */
 }

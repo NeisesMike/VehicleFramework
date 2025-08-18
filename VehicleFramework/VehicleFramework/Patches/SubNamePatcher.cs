@@ -29,6 +29,10 @@ namespace VehicleFramework.Patches
         }
         private static void SetSubNameDecals(ModVehicle mv)
         {
+            if(mv.SubNameDecals == null)
+            {
+                return;
+            }
             foreach (var tmprougui in mv.SubNameDecals)
             {
                 tmprougui.font = Nautilus.Utility.FontUtils.Aller_Rg;
@@ -44,9 +48,12 @@ namespace VehicleFramework.Patches
             }
             mv.nameColor = color;
             SetSubNameDecals(mv);
-            foreach (var tmprougui in mv.SubNameDecals)
+            if (mv.SubNameDecals != null)
             {
-                tmprougui.color = color;
+                foreach (var tmprougui in mv.SubNameDecals)
+                {
+                    tmprougui.color = color;
+                }
             }
             if(mv is VehicleTypes.Submarine sub)
             {

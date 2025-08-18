@@ -22,12 +22,19 @@ namespace VehicleFramework.Patches
 				return;
 			}
 			GameObject gameObject = UWE.Utils.GetEntityRoot(col.gameObject);
-			if (!gameObject)
+			if (gameObject == null)
 			{
-				gameObject = col.gameObject;
+				if (col.gameObject != null)
+                {
+                    gameObject = col.gameObject;
+                }
+				else
+				{
+					return;
+				}
 			}
 			ModVehicle componentInHierarchy2 = UWE.Utils.GetComponentInHierarchy<ModVehicle>(gameObject);
-			if (componentInHierarchy2)
+			if (componentInHierarchy2 != null)
 			{
 				PrecursorDoorMotorMode precursorDoorMotorMode = __instance.setToMotorModeOnEnter;
 				if (precursorDoorMotorMode == PrecursorDoorMotorMode.Auto)

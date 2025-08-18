@@ -13,12 +13,12 @@ namespace VehicleFramework
      */
     public static class HUDBuilder
     {
-        public static bool IsVR = false;
+        internal static bool IsVR = false;
         static List<GameObject> GetAllObjectsInScene()
         {
             List<GameObject> objectsInScene = new();
 
-            foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+            foreach (GameObject go in Resources.FindObjectsOfTypeAll<GameObject>())
             {
                 if (go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)
                     continue;
@@ -28,12 +28,12 @@ namespace VehicleFramework
 
             return objectsInScene;
         }
-        public static GameObject TryGetVRVehicleCanvas()
+        public static GameObject? TryGetVRVehicleCanvas()
         {
             // Here we ensure we have a reference to the freshest copy of VRVehicleCanvas
             // The base game has a memory leak, in which VRVehicleCanvas is not cleaned up across exit-reload
             // so we fix that here
-            GameObject VRVehicleCanvas = null;
+            GameObject? VRVehicleCanvas = null;
             foreach (GameObject go in GetAllObjectsInScene())
             {
                 if (go.name == "VRVehicleCanvas")
@@ -48,7 +48,7 @@ namespace VehicleFramework
                     }
                 }
             }
-            if (VRVehicleCanvas)
+            if (VRVehicleCanvas != null)
             {
                 GameObject seenTag = GameObject.Instantiate(new GameObject(), VRVehicleCanvas.transform);
                 seenTag.name = "ModVehicle";
@@ -57,7 +57,7 @@ namespace VehicleFramework
         }
         public static void DecideBuildHUD()
         {
-            GameObject VRVehicleCanvas = TryGetVRVehicleCanvas();
+            GameObject? VRVehicleCanvas = TryGetVRVehicleCanvas();
             if(UnityEngine.XR.XRSettings.enabled)
             {
                 IsVR = true;
@@ -138,6 +138,11 @@ namespace VehicleFramework
             storageTextObject.name = "StorageValue";
             ret.textStorage = storageTextObject.GetComponent<TMPro.TextMeshProUGUI>();
 
+            if(ret.textStorage == null)
+            {
+                throw Admin.SessionManager.Fatal("HUDBuilder: textStorage is null!");
+            }   
+
             BuildDroneHUD(ret, mvHUDElementsRoot);
         }
         public static void BuildDroneHUD(uGUI_VehicleHUD ret, GameObject hudRoot)
@@ -180,7 +185,7 @@ namespace VehicleFramework
             {
                 List<GameObject> objectsInScene = new();
 
-                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                foreach (GameObject go in Resources.FindObjectsOfTypeAll<GameObject>())
                 {
                     if (go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)
                         continue;
@@ -192,7 +197,7 @@ namespace VehicleFramework
             }
 
 
-            GameObject VRVehicleCanvas = null;
+            GameObject? VRVehicleCanvas = null;
 
 
             foreach (GameObject go in GetAllObjectsInScene())
@@ -204,6 +209,11 @@ namespace VehicleFramework
                         VRVehicleCanvas = go;
                     }
                 }
+            }
+
+            if(VRVehicleCanvas == null)
+            {
+                throw Admin.SessionManager.Fatal("VRVehicleCanvas not found in scene!");
             }
 
             GameObject seamothHUDElementsRoot = VRVehicleCanvas.transform.Find("Seamoth").gameObject;

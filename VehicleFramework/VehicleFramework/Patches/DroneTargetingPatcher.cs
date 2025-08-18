@@ -18,7 +18,7 @@ namespace VehicleFramework.Patches
         }
 
         [HarmonyPrefix]
-        public static bool GetTargetPrefix(Targeting __instance, GameObject ignoreObj, float maxDistance, out GameObject result, out float distance, ref bool __result)
+        public static bool GetTargetPrefix(Targeting __instance, GameObject ignoreObj, float maxDistance, out GameObject? result, out float distance, ref bool __result)
         {
             if (ignoreObj != Player.main.gameObject)
             {
@@ -45,10 +45,14 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Inventory.Pickup))]
         public static bool PickupPrefix(Inventory __instance, Pickupable pickupable, ref bool __result)
         {
-            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
             if(drone == null)
             {
                 return true;
+            }
+            if(drone.InnateStorages == null)
+            {
+                return false;
             }
             foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
             {
@@ -75,19 +79,22 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Pickupable.OnHandHover))]
         public static void PickupableOnHandHoverPostfix(Pickupable __instance, GUIHand hand)
         {
-            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
             if (drone == null || !hand.IsFreeToInteract() || !__instance.isPickupable)
             {
                 return;
             }
             bool hasRoomFor = false;
-            foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+            if (drone.InnateStorages != null)
             {
-                var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
-                if (cont.HasRoomFor(__instance))
+                foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
                 {
-                    hasRoomFor = true;
-                    break;
+                    var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
+                    if (cont.HasRoomFor(__instance))
+                    {
+                        hasRoomFor = true;
+                        break;
+                    }
                 }
             }
             TechType techType = __instance.GetTechType();
@@ -115,19 +122,22 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Pickupable.OnHandClick))]
         public static bool PickupableOnHandClickPostfix(Pickupable __instance, GUIHand hand)
         {
-            VehicleTypes.Drone drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
             if (drone == null || !hand.IsFreeToInteract() || !__instance.isPickupable)
             {
                 return true;
             }
             bool hasRoomFor = false;
-            foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+            if (drone.InnateStorages != null)
             {
-                var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
-                if (cont.HasRoomFor(__instance))
+                foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
                 {
-                    hasRoomFor = true;
-                    break;
+                    var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
+                    if (cont.HasRoomFor(__instance))
+                    {
+                        hasRoomFor = true;
+                        break;
+                    }
                 }
             }
             if (hasRoomFor)

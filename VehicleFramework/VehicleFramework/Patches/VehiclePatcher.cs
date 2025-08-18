@@ -94,12 +94,11 @@ namespace VehicleFramework
         public static void GetAllStoragesPostfix(Vehicle __instance, ref List<IItemsContainer> containers)
         {
             ModVehicle? mv = __instance as ModVehicle;
-            if (mv == null)
+            if (mv == null || mv.InnateStorages == null)
             {
                 return;
             }
-
-            foreach (var tmp in ((ModVehicle)__instance).InnateStorages)
+            foreach (var tmp in mv.InnateStorages)
             {
                 containers.Add(tmp.Container.GetComponent<InnateStorageContainer>().Container);
             }

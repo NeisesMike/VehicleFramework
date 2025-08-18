@@ -54,6 +54,10 @@ namespace VehicleFramework.Patches
             {
                 if (mv.upgradesInput == __instance)
                 {
+                    if(ModuleBuilder.main == null)
+                    {
+                        throw Admin.SessionManager.Fatal("ModuleBuilder.main is null! Cannot set background image for VehicleUpgradeConsoleInput.");
+                    }
                     ModuleBuilder.main.BackgroundSprite = mv.ModuleBackgroundImage;
                     break;
                 }

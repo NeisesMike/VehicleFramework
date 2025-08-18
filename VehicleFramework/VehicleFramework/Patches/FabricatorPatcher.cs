@@ -22,7 +22,11 @@ namespace VehicleFramework.Patches
 				hasFuel = true,
 				isPowered = true
 			};
-			__result = mv.powerMan.EvaluatePowerStatus() == goodPS;
+			if(mv.powerMan == null)
+			{
+				throw Admin.SessionManager.Fatal("FabricatorPatcher: mv.powerMan is null! This should never happen!");
+            }
+            __result = mv.powerMan.EvaluatePowerStatus() == goodPS;
 			return false;
 		}
 	}
@@ -44,7 +48,7 @@ namespace VehicleFramework.Patches
 				// if powerRelay.powerPreview was null, we must be talking about a ModVehicle
 				// (it was never assigned because PowerRelay.Start is skipped for ModVehicles)
 				// so let's check for one
-				ModVehicle mv = null;
+				ModVehicle? mv = null;
 				foreach (ModVehicle tempMV in VehicleManager.VehiclesInPlay)
 				{
 					if (tempMV.IsUnderCommand)
@@ -63,7 +67,11 @@ namespace VehicleFramework.Patches
 					// we found the ModVehicle from whose fabricator we're trying to drain power
 					float WantToSpend = 5f;
 					float SpendTolerance = 4.99f;
-					float energySpent = mv.powerMan.TrySpendEnergy(WantToSpend);
+					if(mv.powerMan == null)
+					{
+						throw Admin.SessionManager.Fatal("CrafterLogicPatcher: mv.powerMan is null! This should never happen!");
+                    }
+                    float energySpent = mv.powerMan.TrySpendEnergy(WantToSpend);
 					__result = SpendTolerance <= energySpent;
 					return false;
 				}

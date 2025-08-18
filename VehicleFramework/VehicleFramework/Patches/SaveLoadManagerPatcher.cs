@@ -13,7 +13,7 @@ namespace VehicleFramework.Patches
     public class SaveLoadManagerPatcher
     {
         public const string SaveFileSpritesFileName = "SaveFileSprites";
-        public static Dictionary<string, List<string>> hasTechTypeGameInfo = new();
+        internal static Dictionary<string, List<string>> hasTechTypeGameInfo = new();
 
         // This patch collects hasTechTypeGameInfo, in order to have save file sprites displayed on the save cards
         [HarmonyPostfix]
@@ -48,7 +48,7 @@ namespace VehicleFramework.Patches
             try
             {
                 string jsonContent = File.ReadAllText(savePath);
-                List<string> hasTechTypes = JsonConvert.DeserializeObject<List<string>>(jsonContent);
+                List<string>? hasTechTypes = JsonConvert.DeserializeObject<List<string>>(jsonContent);
                 if (hasTechTypes != null)
                 {
                     if (hasTechTypeGameInfo.ContainsKey(slotName))

@@ -44,7 +44,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(PowerRelay.GetPower))]
         public static bool GetPowerPrefix(PowerRelay __instance, ref float __result)
         {
-            ModVehicle mv = __instance?.gameObject?.GetComponent<ModVehicle>();
+            ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
             if (mv != null)
             {
                 if (mv.energyInterface != null)

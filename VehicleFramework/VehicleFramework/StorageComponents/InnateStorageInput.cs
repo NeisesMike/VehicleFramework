@@ -6,7 +6,11 @@ namespace VehicleFramework
     {
 		public override void OpenFromExternal()
 		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
+			if(mv == null)
+			{
+				throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenFromExternal.");
+            }
+            ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
@@ -16,12 +20,16 @@ namespace VehicleFramework
 		}
 		protected override void OpenPDA()
 		{
-			ItemsContainer storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
+			if (mv == null)
+			{
+				throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
+			}
+			ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
 				Inventory.main.SetUsedStorage(storageInSlot, false);
-				if (!pda.Open(PDATab.Inventory, this.tr, new PDA.OnClose(this.OnClosePDA)))
+				if (!pda.Open(PDATab.Inventory, transform, new PDA.OnClose(this.OnClosePDA)))
 				{
 					this.OnClosePDA(pda);
 					return;

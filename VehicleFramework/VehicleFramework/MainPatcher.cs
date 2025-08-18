@@ -14,8 +14,6 @@ namespace VehicleFramework
     public class MainPatcher : BaseUnityPlugin
     {
         public static MainPatcher Instance { get; private set; } = null!;
-        internal static SaveLoad.SaveData? SaveFileData { get; private set; }
-
         internal static VFConfig VFConfig { get; private set; } = null!;
         internal static VehicleFrameworkNautilusConfig NautilusConfig { get; private set; } = null!;
 
@@ -67,10 +65,7 @@ namespace VehicleFramework
         }
         public void Patch()
         {
-            SaveLoad.SaveData saveData = Nautilus.Handlers.SaveDataHandler.RegisterSaveDataCache<SaveLoad.SaveData>();
-
-            // Update the player position before saving it
-            saveData.OnStartedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
+            Nautilus.Utility.SaveUtils.RegisterOnSaveEvent(() => 
             {
                 try
                 {
@@ -80,25 +75,7 @@ namespace VehicleFramework
                 {
                     VehicleFramework.Logger.LogException("Failed to detach all magnet boots!", ex);
                 }
-                try
-                {
-                    VehicleManager.CreateSaveFileData(sender, e);
-                }
-                catch(Exception ex)
-                {
-                    VehicleFramework.Logger.LogException("Failed to Create Save File Data!", ex);
-                }
-            };
-
-            saveData.OnFinishedSaving += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
-            {
-                //VehicleComponents.MagnetBoots.AttachAll();
-            };
-
-            saveData.OnFinishedLoading += (object sender, Nautilus.Json.JsonFileEventArgs e) =>
-            {
-                SaveFileData = e.Instance as SaveLoad.SaveData;
-            };
+            });
 
             void SetWorldNotLoaded()
             {
@@ -172,7 +149,7 @@ namespace VehicleFramework
             // do this here because it happens only once
             SceneManager.sceneUnloaded += Admin.GameStateWatcher.OnResetScene;
         }
-        public void PostPatch()
+        public static void PostPatch()
         {
             //VehicleBuilder.ScatterDataBoxes(craftables);
         }

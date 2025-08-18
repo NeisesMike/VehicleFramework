@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
+using VehicleFramework.BaseVehicle;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -19,8 +20,8 @@ namespace VehicleFramework.VehicleComponents
 
     public abstract class DockingBay : MonoBehaviour
     {
-        public Vehicle currentDockedVehicle { get; protected set; }
-        private Coroutine dockAnimation = null;
+        public Vehicle? currentDockedVehicle { get; protected set; }
+        private Coroutine? dockAnimation = null;
 
         public abstract Transform GetDockedPosition(Vehicle dockedVehicle);
         public abstract Transform PlayerExitLocation { get; }
@@ -79,20 +80,20 @@ namespace VehicleFramework.VehicleComponents
             }
             return Admin.GameObjectManager<Vehicle>.FindNearestSuch(transform.position, IsValidDockingTarget);
         }
-        protected virtual void UpdateDockedVehicle()
+        protected virtual void UpdateDockedVehicle(Vehicle cdVehicle)
         {
-            currentDockedVehicle.transform.position = GetDockedPosition(currentDockedVehicle).position;
-            currentDockedVehicle.transform.rotation = GetDockedPosition(currentDockedVehicle).rotation;
-            currentDockedVehicle.liveMixin.shielded = true;
-            currentDockedVehicle.useRigidbody.detectCollisions = false;
-            currentDockedVehicle.crushDamage.enabled = false;
-            currentDockedVehicle.UpdateCollidersForDocking(true);
-            if (currentDockedVehicle is SeaMoth)
+            cdVehicle.transform.position = GetDockedPosition(cdVehicle).position;
+            cdVehicle.transform.rotation = GetDockedPosition(cdVehicle).rotation;
+            cdVehicle.liveMixin.shielded = true;
+            cdVehicle.useRigidbody.detectCollisions = false;
+            cdVehicle.crushDamage.enabled = false;
+            cdVehicle.UpdateCollidersForDocking(true);
+            if (cdVehicle is SeaMoth seamoth)
             {
-                (currentDockedVehicle as SeaMoth).toggleLights.SetLightsActive(false);
-                currentDockedVehicle.GetComponent<SeaMoth>().enabled = true; // why is this necessary?
+                seamoth.toggleLights.SetLightsActive(false);
+                cdVehicle.GetComponent<SeaMoth>().enabled = true; // why is this necessary?
             }
-            else if(currentDockedVehicle is ModVehicle mv)
+            else if(cdVehicle is ModVehicle mv && mv.headlights != null)
             {
                 if (mv.headlights.IsLightsOn)
                 {
@@ -144,11 +145,11 @@ namespace VehicleFramework.VehicleComponents
                 GetComponent<VehicleTypes.Submarine>().PlayerEntry();
             }
         }
-        protected virtual void OnStartedUndocking(bool withPlayer)
+        protected virtual void OnStartedUndocking(bool withPlayer, Vehicle cdVehicle)
         {
-            HandleDockDoors(currentDockedVehicle.GetTechType(), true);
-            currentDockedVehicle.useRigidbody.velocity = Vector3.zero;
-            currentDockedVehicle.transform.SetParent(this.transform.parent);
+            HandleDockDoors(cdVehicle.GetTechType(), true);
+            cdVehicle.useRigidbody.velocity = Vector3.zero;
+            cdVehicle.transform.SetParent(this.transform.parent);
             if (withPlayer)
             {
                 // disabling the avatarinputhandler is a brutish way to do this
@@ -158,29 +159,29 @@ namespace VehicleFramework.VehicleComponents
                 // since vehicle collisions aren't re-enabled until undocking is complete
                 AvatarInputHandler.main.gameObject.SetActive(false);
             }
-            if(currentDockedVehicle is SeaMoth || currentDockedVehicle is Exosuit)
+            if(cdVehicle is SeaMoth || cdVehicle is Exosuit)
             {
-                currentDockedVehicle.EnterVehicle(Player.main, true, true);
+                cdVehicle.EnterVehicle(Player.main, true, true);
             }
-            if(currentDockedVehicle is ModVehicle mv)
+            if(cdVehicle is ModVehicle mv)
             {
                 mv.OnVehicleUndocked();
                 mv.useRigidbody.detectCollisions = false;
             }
         }
-        protected virtual IEnumerator DoUndockingAnimations()
+        protected virtual IEnumerator DoUndockingAnimations(Vehicle cdVehicle)
         {
-            UndockAction(currentDockedVehicle);
+            UndockAction(cdVehicle);
             // wait until the vehicle is "just" far enough away.
             // Should probably disallow undocking if a collider is too close, lest we clip into it.
-            yield return new WaitUntil(() => Vector3.Distance(currentDockedVehicle.transform.position, DockTrigger.position) > DockingDistanceThreshold);
+            yield return new WaitUntil(() => Vector3.Distance(cdVehicle.transform.position, DockTrigger.position) > DockingDistanceThreshold);
         }
-        protected virtual void OnFinishedUndocking(bool hasPlayer)
+        protected virtual void OnFinishedUndocking(bool hasPlayer, Vehicle cdVehicle)
         {
-            currentDockedVehicle.liveMixin.shielded = false;
-            currentDockedVehicle.useRigidbody.detectCollisions = true;
-            currentDockedVehicle.crushDamage.enabled = true;
-            currentDockedVehicle.UpdateCollidersForDocking(false);
+            cdVehicle.liveMixin.shielded = false;
+            cdVehicle.useRigidbody.detectCollisions = true;
+            cdVehicle.crushDamage.enabled = true;
+            cdVehicle.UpdateCollidersForDocking(false);
             if (hasPlayer)
             {
                 AvatarInputHandler.main.gameObject.SetActive(true);
@@ -207,7 +208,7 @@ namespace VehicleFramework.VehicleComponents
             {
                 HandleDockDoors(currentDockedVehicle.GetTechType(), false);
                 TryRechargeDockedVehicle();
-                UpdateDockedVehicle();
+                UpdateDockedVehicle(currentDockedVehicle);
             }
         }
         private void TryAttachVehicle()
@@ -251,11 +252,11 @@ namespace VehicleFramework.VehicleComponents
             {
                 yield break;
             }
-            OnStartedUndocking(withPlayer);
+            OnStartedUndocking(withPlayer, currentDockedVehicle);
             currentDockedVehicle.docked = false;
-            dockAnimation = Admin.SessionManager.StartCoroutine(DoUndockingAnimations());
+            dockAnimation = Admin.SessionManager.StartCoroutine(DoUndockingAnimations(currentDockedVehicle));
             yield return dockAnimation;
-            OnFinishedUndocking(withPlayer);
+            OnFinishedUndocking(withPlayer, currentDockedVehicle);
             currentDockedVehicle = null;
             dockAnimation = null;
         }

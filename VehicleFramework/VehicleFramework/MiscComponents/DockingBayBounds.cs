@@ -31,7 +31,7 @@ namespace VehicleFramework.MiscComponents
         internal float x = 0;
         internal float y = 0;
         internal float z = 0;
-        internal Func<VehicleDockingBay, ModVehicle, bool> IsVehicleSmallEnoughOverride = null;
+        internal Func<VehicleDockingBay, ModVehicle, bool>? IsVehicleSmallEnoughOverride = null;
 
         public bool IsVehicleSmallEnough(VehicleDockingBay bay, ModVehicle mv)
         {

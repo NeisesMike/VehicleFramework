@@ -11,7 +11,7 @@ namespace VehicleFramework
 {
     public static class ExtensionMethods
     {
-        public static ModVehicle GetModVehicle(this Player player)
+        public static ModVehicle? GetModVehicle(this Player player)
         {
             return 
                 VehicleTypes.Drone.mountedDrone
@@ -40,9 +40,9 @@ namespace VehicleFramework
         {
             void UndockModVehicle(Vehicle thisVehicle)
             {
-                if (vehicle is ModVehicle)
+                if (vehicle is ModVehicle mv)
                 {
-                    (vehicle as ModVehicle).OnVehicleUndocked();
+                    mv.OnVehicleUndocked();
                     vehicle.useRigidbody.detectCollisions = true;
                 }
             }
@@ -55,7 +55,7 @@ namespace VehicleFramework
             VehicleDockingBay thisBay = theseBays.First();
             Admin.SessionManager.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
             thisBay.vehicle_docked_param = false;
-            Player toUndock = vehicle.liveMixin.IsAlive() && !Admin.ConsoleCommands.isUndockConsoleCommand ? Player.main : null;
+            Player? toUndock = vehicle.liveMixin.IsAlive() && !Admin.ConsoleCommands.isUndockConsoleCommand ? Player.main : null;
             Admin.SessionManager.StartCoroutine(vehicle.Undock(toUndock, thisBay.transform.position.y));
             SkyEnvironmentChanged.Broadcast(vehicle.gameObject, (GameObject)null);
             thisBay.dockedVehicle = null;

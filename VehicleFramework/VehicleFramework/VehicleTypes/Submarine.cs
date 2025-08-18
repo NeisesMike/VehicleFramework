@@ -19,36 +19,36 @@ namespace VehicleFramework.VehicleTypes
     {
         public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
-        public virtual List<VehicleParts.VehicleFloodLight> FloodLights => null;
-        public virtual List<GameObject> TetherSources => null;
-        public virtual GameObject ControlPanel => null;
-        public virtual GameObject Fabricator => null;
-        public virtual GameObject ColorPicker => null;
-        public virtual GameObject SteeringWheelLeftHandTarget => null;
-        public virtual GameObject SteeringWheelRightHandTarget => null;
-        public virtual List<Light> InteriorLights => null;
-        public virtual List<GameObject> NavigationPortLights => null;
-        public virtual List<GameObject> NavigationStarboardLights => null;
-        public virtual List<GameObject> NavigationPositionLights => null;
-        public virtual List<GameObject> NavigationWhiteStrobeLights => null;
-        public virtual List<GameObject> NavigationRedStrobeLights => null;
+        public virtual List<VehicleParts.VehicleFloodLight>? FloodLights => null;
+        public virtual List<GameObject>? TetherSources => null;
+        public virtual GameObject? ControlPanel => null;
+        public virtual GameObject? Fabricator => null;
+        public virtual GameObject? ColorPicker => null;
+        public virtual GameObject? SteeringWheelLeftHandTarget => null;
+        public virtual GameObject? SteeringWheelRightHandTarget => null;
+        public virtual List<Light>? InteriorLights => null;
+        public virtual List<GameObject>? NavigationPortLights => null;
+        public virtual List<GameObject>? NavigationStarboardLights => null;
+        public virtual List<GameObject>? NavigationPositionLights => null;
+        public virtual List<GameObject>? NavigationWhiteStrobeLights => null;
+        public virtual List<GameObject>? NavigationRedStrobeLights => null;
         public virtual float ExitPitchLimit => 4f;
         public virtual float ExitRollLimit => 4f;
         public virtual float ExitVelocityLimit => 0.5f;
-        public virtual GameObject RespawnPoint => null;
+        public virtual GameObject? RespawnPoint => null;
         public virtual bool DoesAutolevel => true;
 
 
-        public ControlPanel controlPanelLogic;
+        public ControlPanel? controlPanelLogic;
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
 
         public Transform? thisStopPilotingLocation;
 
-        public FloodLightsController floodlights;
-        public InteriorLightsController interiorlights;
-        public NavigationLightsController navlights;
-        public GameObject fabricator = null; //fabricator
+        public FloodLightsController? floodlights;
+        public InteriorLightsController? interiorlights;
+        public NavigationLightsController? navlights;
+        public GameObject ?fabricator = null; //fabricator
 
         public override bool CanPilot()
         {
@@ -84,7 +84,11 @@ namespace VehicleFramework.VehicleTypes
         }
         private void EnsureColorPickerEnabled()
         {
-            ActualEditScreen = ColorPicker?.transform.Find("EditScreen")?.gameObject;
+            if(ColorPicker == null || ColorPicker.transform.Find("EditScreen") == null)
+            {
+                return;
+            }
+            ActualEditScreen = ColorPicker.transform.Find("EditScreen").gameObject;
             if(ActualEditScreen == null)
             {
                 return;
@@ -152,7 +156,7 @@ namespace VehicleFramework.VehicleTypes
                 Player.main.transform.SetParent(transform);
                 if (thisStopPilotingLocation == null)
                 {
-                    if(TetherSources.First() != null)
+                    if(TetherSources != null && TetherSources.Count != 0)
                     {
                         Logger.Warn("Warning: pilot exit location was null. Defaulting to first tether.");
                         Player.main.transform.position = TetherSources[0].transform.position;
@@ -217,7 +221,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void SubConstructionComplete()
         {
-            if (!pingInstance.enabled)
+            if (pingInstance != null && !pingInstance.enabled)
             {
                 // Setup the color picker with the submarine's name
                 var active = transform.Find("ColorPicker/EditScreen/Active");
@@ -318,6 +322,10 @@ namespace VehicleFramework.VehicleTypes
 
         public virtual void SetColorPickerUIColor(string name, Color col)
         {
+            if(ActualEditScreen == null)
+            {
+                return;
+            }
             ActualEditScreen.transform.Find("Active/" + name + "/SelectedColor").GetComponent<Image>().color = col;
         }
         public virtual void OnColorChange(ColorChangeEventData eventData)
@@ -328,6 +336,10 @@ namespace VehicleFramework.VehicleTypes
             string selectedTab = "";
             foreach (string tab in tabnames)
             {
+                if (ActualEditScreen == null)
+                {
+                    continue;
+                }
                 if (ActualEditScreen.transform.Find("Active/" + tab + "/Background").gameObject.activeSelf)
                 {
                     selectedTab = tab;
@@ -356,6 +368,10 @@ namespace VehicleFramework.VehicleTypes
                 default:
                     break;
             }
+            if (ActualEditScreen == null)
+            {
+                return;
+            }
             ActualEditScreen.transform.Find("Active/MainExterior/SelectedColor").GetComponent<Image>().color = baseColor;
         }
         public virtual void OnNameChange(string e) // why is this independent from OnNameChange?
@@ -381,10 +397,14 @@ namespace VehicleFramework.VehicleTypes
             return;
         }
 
-        public GameObject ActualEditScreen = null;
+        public GameObject? ActualEditScreen = null;
 
         public IEnumerator SetupColorPicker()
         {
+            if(ColorPicker == null)
+            {
+                yield break;
+            }
             UnityAction CreateAction(string name)
             {
                 void Action()
@@ -399,7 +419,7 @@ namespace VehicleFramework.VehicleTypes
                 return Action;
             }
 
-            GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>()?.ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
+            GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
 
             if (console == null)
             {

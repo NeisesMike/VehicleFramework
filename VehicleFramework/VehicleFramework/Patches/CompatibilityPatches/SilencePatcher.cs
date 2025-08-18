@@ -13,7 +13,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
         [HarmonyPatch(nameof(Player.CanBeAttacked))]
         public static void PlayerCanBeAttackedHarmonyPostfix(ref bool __result)
         {
-            ModVehicle mv = Player.main.GetModVehicle();
+            ModVehicle? mv = Player.main.GetModVehicle();
             if (mv != null)
             {
                 if (GetComponentByName(mv.gameObject))

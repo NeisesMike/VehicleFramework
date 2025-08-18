@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.Networking;
-using System.Reflection;
-using System.IO;
-using VehicleFramework.VehicleTypes;
-using VehicleFramework.Patches;
+﻿using UnityEngine;
 
 namespace VehicleFramework.Engines
 {
     public abstract class VFEngine : MonoBehaviour, IScuttleListener
     {
-        protected ModVehicle MV => GetComponent<ModVehicle>();
-        protected Rigidbody RB => MV.useRigidbody;
+        internal ModVehicle MV
+        {
+            get
+            {
+                ModVehicle mv = GetComponent<ModVehicle>();
+                if(mv == null)
+                {
+                    throw Admin.SessionManager.Fatal($"No ModVehicle component found on {transform.name}. VFEngine requires a ModVehicle component.");
+                }
+                return mv;
+            }
+        }
+        protected Rigidbody RB => MV.useRigidbody ?? throw Admin.SessionManager.Fatal($"No MV.useRigidbody component found on {transform.name}. VFEngine requires a ModVehicle.useRigidbody component.");
         protected Vector3 CenterOfMass { get; set; } = Vector3.zero;
         protected float AngularDrag { get; set; } = 5f;
 
@@ -96,6 +96,10 @@ namespace VehicleFramework.Engines
             float scalarFactor = 1.0f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+            if(MV.powerMan == null)
+            {
+                throw Admin.SessionManager.Fatal($"No PowerManager found on {transform.name}. VFEngine requires a ModVehicle with a PowerManager component.");
+            }
             MV.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         } // public for historical reasons
         #endregion

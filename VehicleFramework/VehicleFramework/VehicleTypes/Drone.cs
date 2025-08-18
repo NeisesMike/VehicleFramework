@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VehicleFramework.Engines;
 using UnityEngine;
+using VehicleFramework.VehicleComponents;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -169,7 +170,11 @@ namespace VehicleFramework.VehicleTypes
         }
         public void SwapToPlayerCamera()
         {
-            camControl.MovePlayerCameraToTransform(camControl.PlayerCamPivot);
+            if(MVCameraController.PlayerCamPivot == null)
+            {
+                throw Admin.SessionManager.Fatal("MVCameraController.PlayerCamPivot is null! Cannot swap to player camera!");
+            }
+            camControl.MovePlayerCameraToTransform(MVCameraController.PlayerCamPivot);
             Player.main.SetHeadVisible(false);
         }
         public override void OnPlayerDocked(Vector3 exitLocation)

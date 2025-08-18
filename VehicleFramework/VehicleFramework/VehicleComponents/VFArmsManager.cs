@@ -67,7 +67,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public void SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {
-            GameObject armPrefab = arm.armPrefab;
+            GameObject armPrefab = arm.armPrefab ?? throw Admin.SessionManager.Fatal($"No arm prefab found for {arm.GetType()}! Please set the armPrefab field before calling SpawnArm.");
             if (isLeft && leftArm == null)
             {
                 leftArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);

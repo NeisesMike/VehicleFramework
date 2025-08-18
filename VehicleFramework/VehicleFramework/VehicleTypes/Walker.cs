@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace VehicleFramework.VehicleTypes
 {
+    /*
     public abstract class Walker : ModVehicle
     {
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; }
@@ -42,4 +43,5 @@ namespace VehicleFramework.VehicleTypes
 
         }
     }
+    */
 }

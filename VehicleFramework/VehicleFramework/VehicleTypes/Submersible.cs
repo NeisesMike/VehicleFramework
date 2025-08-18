@@ -16,8 +16,8 @@ namespace VehicleFramework.VehicleTypes
     { 
         public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
         public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
-        public virtual GameObject SteeringWheelLeftHandTarget { get; }
-        public virtual GameObject SteeringWheelRightHandTarget { get; }
+        public virtual GameObject? SteeringWheelLeftHandTarget { get; }
+        public virtual GameObject? SteeringWheelRightHandTarget { get; }
         public override PilotingStyleEnum PilotingStyle => PilotingStyleEnum.Seamoth;
         public override bool CanPilot()
         {

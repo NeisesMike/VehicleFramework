@@ -94,6 +94,11 @@ namespace VehicleFramework
                     {
                         vs.Container.SetActive(false);
 
+                        if(SeamothHelper.Seamoth == null)
+                        {
+                            throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+                        }
+
                         FMODAsset storageCloseSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().closeSound;
                         FMODAsset storageOpenSound = SeamothHelper.Seamoth.transform.Find("Storage/Storage1").GetComponent<SeamothStorageInput>().openSound;
                         var inp = vs.Container.EnsureComponent<ModularStorageInput>();
@@ -159,30 +164,16 @@ namespace VehicleFramework
                 Logger.Error(e.ToString());
                 return false;
             }
-            try
+            if (mv.BoundingBoxCollider == null)
             {
-                if (mv.BoundingBoxCollider == null)
-                {
-                    mv.BoundingBoxCollider = mv.BoundingBox.GetComponentInChildren<BoxCollider>(true);
-                }
+                mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();
+                mv.BoundingBoxCollider.size = new(6, 8, 12);
                 mv.BoundingBoxCollider.enabled = false;
+                Logger.Warn("The " + mv.name + " has been given a default BoundingBox of size 6x8x12.");
             }
-            catch (Exception e)
+            else
             {
-                Logger.WarnException("There was a problem setting up the BoundingBoxCollider. If your vehicle uses 'BoundingBox', use 'BoundingBoxCollider' instead.", e);
-                try
-                {
-                    mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();
-                    mv.BoundingBoxCollider.size = new(6, 8, 12);
-                    mv.BoundingBoxCollider.enabled = false;
-                    Logger.Warn("The " + mv.name + " has been given a default BoundingBox of size 6x8x12.");
-                }
-                catch
-                {
-                    Logger.Error("I couldn't provide a bounding box for this vehicle. See the following error:");
-                    Logger.Error(e.ToString());
-                    return false;
-                }
+                mv.BoundingBoxCollider.enabled = false;
             }
             return true;
         }
@@ -217,7 +208,7 @@ namespace VehicleFramework
             // Configure the Control Panel
             try
             {
-                if (mv.ControlPanel)
+                if (mv.ControlPanel != null)
                 {
                     mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
                     mv.controlPanelLogic.mv = mv;
@@ -270,6 +261,14 @@ namespace VehicleFramework
         }
         public static void SetupEnergyInterface(ModVehicle mv)
         {
+            if(mv.Batteries == null)
+            {
+                return;
+            }
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new();
             if(mv.Batteries.Count() == 0)
@@ -284,7 +283,7 @@ namespace VehicleFramework
                 energyMixin.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
                 energyMixin.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
                 energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
-                energyMixin.controlledObjects = new GameObject[] { };
+                energyMixin.controlledObjects = Array.Empty<GameObject>();
                 energyMixins.Add(energyMixin);
             }
             foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
@@ -324,6 +323,10 @@ namespace VehicleFramework
                 mv.AIEnergyInterface = mv.energyInterface;
                 return;
             }
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new();
             foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
@@ -356,6 +359,10 @@ namespace VehicleFramework
         }
         public static void SetupLightSounds(ModVehicle mv)
         {
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             FMOD_StudioEventEmitter[] fmods = SeamothHelper.Seamoth.GetComponents<FMOD_StudioEventEmitter>();
             foreach (FMOD_StudioEventEmitter fmod in fmods)
             {
@@ -375,6 +382,10 @@ namespace VehicleFramework
         }
         public static void SetupHeadLights(ModVehicle mv)
         {
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
             if (mv.HeadLights != null)
             {
@@ -398,6 +409,10 @@ namespace VehicleFramework
         }
         public static void SetupFloodLights(Submarine mv)
         {
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
             if (mv.FloodLights != null)
             {
@@ -421,6 +436,10 @@ namespace VehicleFramework
         }
         public static void SetupVolumetricLights(ModVehicle mv)
         {
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
             Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
@@ -508,48 +527,22 @@ namespace VehicleFramework
         }
         public static void SetupEngine(Submarine mv)
         {
-            if(mv.VFEngine == null)
-            {
-                if(mv.Engine == null)
-                {
-                    mv.VFEngine = mv.gameObject.AddComponent<OdysseyEngine>();
-                }
-                else
-                {
-                    mv.VFEngine = mv.Engine;
-                }
-            }
+            mv.VFEngine ??= mv.gameObject.AddComponent<OdysseyEngine>();
         }
         public static void SetupEngine(Submersible mv)
         {
-            if (mv.VFEngine == null)
-            {
-                if (mv.Engine == null)
-                {
-                    mv.VFEngine = mv.gameObject.AddComponent<CricketEngine>();
-                }
-                else
-                {
-                    mv.VFEngine = mv.Engine;
-                }
-            }
+            mv.VFEngine ??= mv.gameObject.AddComponent<CricketEngine>();
         }
         public static void SetupEngine(Drone mv)
         {
-            if (mv.VFEngine == null)
-            {
-                if (mv.Engine == null)
-                {
-                    mv.VFEngine = mv.gameObject.AddComponent<CricketEngine>();
-                }
-                else
-                {
-                    mv.VFEngine = mv.Engine;
-                }
-            }
+            mv.VFEngine ??= mv.gameObject.AddComponent<CricketEngine>();
         }
         public static void SetupWorldForces(ModVehicle mv)
         {
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             mv.worldForces = CopyComponent<WorldForces>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject)
                 ?? throw Admin.SessionManager.Fatal($"Failed to copy WorldForces from {SeamothHelper.Seamoth.name} to {mv.gameObject.name}!");
             mv.worldForces.useRigidbody = mv.useRigidbody;
@@ -571,6 +564,10 @@ namespace VehicleFramework
             mv.stabilizeRoll = true;
             mv.controlSheme = Admin.EnumHelper.GetScheme();
             mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
             mv.splashSound = SeamothHelper.Seamoth.GetComponent<SeaMoth>().splashSound;
             // TODO
@@ -580,6 +577,10 @@ namespace VehicleFramework
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             foreach (var thisCE in SeamothHelper.Seamoth.GetComponentsInChildren<FMOD_CustomEmitter>())
             {
                 if (thisCE.name == "crushDamageSound")
@@ -608,6 +609,10 @@ namespace VehicleFramework
             if (mv.WaterClipProxies != null)
             {
                 // Enable water clipping for proper interaction with the surface of the ocean
+                if (SeamothHelper.Seamoth == null)
+                {
+                    throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+                }
                 WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
                 foreach (GameObject proxy in mv.WaterClipProxies)
                 {
@@ -632,6 +637,10 @@ namespace VehicleFramework
         public static void SetupCollisionSound(ModVehicle mv)
         {
             var colsound = mv.gameObject.EnsureComponent<CollisionSound>();
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             var seamothColSound = SeamothHelper.Seamoth.GetComponent<CollisionSound>();
             colsound.hitSoundSmall = seamothColSound.hitSoundSmall;
             colsound.hitSoundSlow = seamothColSound.hitSoundSlow;
@@ -653,6 +662,10 @@ namespace VehicleFramework
             // TODO: this might not work, might need to put it in a VehicleStatusListener
             var sod = mv.gameObject.EnsureComponent<SoundOnDamage>();
             sod.damageType = DamageType.Normal;
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             sod.sound = SeamothHelper.Seamoth.GetComponent<SoundOnDamage>().sound;
         }
         public static void SetupDealDamageOnImpact(ModVehicle mv)
@@ -680,6 +693,10 @@ namespace VehicleFramework
 
             // add temperaturedamage
             var tempdamg = mv.gameObject.EnsureComponent<TemperatureDamage>();
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             tempdamg.lavaDatabase = SeamothHelper.Seamoth.GetComponent<TemperatureDamage>().lavaDatabase;
             tempdamg.liveMixin = mv.liveMixin;
             tempdamg.baseDamagePerSecond = 2.0f; // 10 times what the seamoth takes, since the Atrama 
@@ -705,7 +722,7 @@ namespace VehicleFramework
         }
         public static void SetupLavaLarvaAttachPoints(ModVehicle mv)
         {
-            if (mv.LavaLarvaAttachPoints.Count() > 0)
+            if (mv.LavaLarvaAttachPoints != null && mv.LavaLarvaAttachPoints.Count > 0)
             {
                 GameObject attachParent = new("AttachedLavaLarvae");
                 attachParent.transform.SetParent(mv.transform);
@@ -749,7 +766,7 @@ namespace VehicleFramework
         }
         public static void SetupCameraController(ModVehicle mv)
         {
-            if (mv.Cameras.Any())
+            if (mv.Cameras != null && mv.Cameras.Count != 0)
             {
                 var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
                 mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
@@ -757,8 +774,10 @@ namespace VehicleFramework
         }
         public static void SetupDenyBuildingTags(ModVehicle mv)
         {
-            mv.DenyBuildingColliders
-                .ForEach(x => x.tag = Builder.denyBuildingTag);
+            if(mv.DenyBuildingColliders != null)
+            {
+                mv.DenyBuildingColliders.ForEach(x => x.tag = Builder.denyBuildingTag);
+            }
         }
 
         #endregion
@@ -833,6 +852,10 @@ namespace VehicleFramework
         }
         public static void ApplyGlassMaterial(ModVehicle mv)
         {
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
             // Add the [marmoset] shader to all renderers
             foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true))
             {

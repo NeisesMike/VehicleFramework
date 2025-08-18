@@ -49,21 +49,21 @@ namespace VehicleFramework.VehicleComponents
     }
     public class MaterialReactor : HandTarget, IHandTarget, IProtoTreeEventListener
     {
-        private ModVehicle mv;
-        private ReactorBattery reactorBattery;
+        private ModVehicle mv = null!;
+        private ReactorBattery reactorBattery = null!;
         private float capacity = 0;
         public string interactText = "Material Reactor";
         public string cannotRemoveMessage = "Can't remove items being consumed by a Material Reactor";
         public bool canViewWhitelist = true;
         public bool listPotentials = true;
-        public Action<PDA> OnClosePDAAction = null;
-        public Action<int> UpdateVisuals = null;
+        public Action<PDA>? OnClosePDAAction = null;
+        public Action<int>? UpdateVisuals = null;
         private readonly Dictionary<TechType, float> maxEnergies = new();
         private readonly Dictionary<TechType, float> rateEnergies = new();
         private readonly Dictionary<InventoryItem, float> currentEnergies = new();
         private readonly Dictionary<TechType, TechType> spentMaterialIndex = new();
-        private ItemsContainer container;
-        private Coroutine OutputReactorDataCoroutine = null;
+        private ItemsContainer container = null!;
+        private Coroutine? OutputReactorDataCoroutine = null;
         private bool isInitialized = false;
         private const string saveFileName = "MaterialReactor";
         private const string newSaveFileName = "Reactor";
@@ -109,11 +109,19 @@ namespace VehicleFramework.VehicleComponents
                 }
             }
             mv = modVehicle;
+            if (mv == null)
+            {
+                throw Admin.SessionManager.Fatal($"Material Reactor {label} could not be initialized! mv is null.");
+            }
             capacity = totalCapacity;
             container = new(width, height, transform, label, null);
             container.onAddItem += OnAddItem;
             container.isAllowedToRemove = IsAllowedToRemove;
             container.SetAllowedTechTypes(iMaterialData.SelectMany(x => new List<TechType>() { x.inputTechType, x.outputTechType }).ToArray());
+            if (container == null)
+            {
+                throw Admin.SessionManager.Fatal($"Material Reactor {label} could not be initialized! ItemsContainer is null.");
+            }
             foreach (var reagent in iMaterialData)
             {
                 maxEnergies.Add(reagent.inputTechType, reagent.totalEnergy);
@@ -129,6 +137,10 @@ namespace VehicleFramework.VehicleComponents
             reactorBattery = batteryObj.AddComponent<ReactorBattery>();
             reactorBattery.SetCapacity(capacity);
             eMix.battery = reactorBattery;
+            if (reactorBattery == null)
+            {
+                throw Admin.SessionManager.Fatal($"Material Reactor {label} could not be initialized! reactorBattery is null.");
+            }
             mv.energyInterface.sources = mv.energyInterface.sources.Append(eMix).ToArray();
             gameObject.AddComponent<ChildObjectIdentifier>();
             isInitialized = true;
@@ -320,12 +332,15 @@ namespace VehicleFramework.VehicleComponents
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            var saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, newSaveFileName);
+            List<Tuple<TechType, float>>? saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, newSaveFileName);
             if(saveDict == default)
             {
                 saveDict = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float>>>(mv, saveFileName);
             }
-            Admin.SessionManager.StartCoroutine(LoadSaveDict(saveDict));
+            if(saveDict != null)
+            {
+                Admin.SessionManager.StartCoroutine(LoadSaveDict(saveDict));
+            }
         }
         private List<Tuple<TechType, float>> GetSaveDict()
         {
@@ -361,7 +376,7 @@ namespace VehicleFramework.VehicleComponents
             Dictionary<InventoryItem, float> changesPending = new();
             foreach (var reactant in currentEnergies)
             {
-                Tuple<TechType, float> selectedReactant = default;
+                Tuple<TechType, float>? selectedReactant = default;
                 foreach (var savedReactant in saveDict)
                 {
                     if (reactant.Key.techType == savedReactant.Item1)
@@ -370,6 +385,10 @@ namespace VehicleFramework.VehicleComponents
                         changesPending.Add(reactant.Key, savedReactant.Item2);
                         break;
                     }
+                }
+                if(selectedReactant == null)
+                {
+                    continue;
                 }
                 saveDict.Remove(selectedReactant);
             }

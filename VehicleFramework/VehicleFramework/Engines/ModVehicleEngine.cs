@@ -15,8 +15,6 @@ namespace VehicleFramework.Engines
 {
     public abstract class ModVehicleEngine : VFEngine
     {
-        public ModVehicle mv = null!;
-        public Rigidbody rb = null!;
         private EngineSounds? _sounds = null;
         public EngineSounds? Sounds
         {
@@ -26,13 +24,17 @@ namespace VehicleFramework.Engines
             }
             set
             {
+                if(value == null)
+                {
+                    return;
+                }
                 _sounds = value;
                 EngineSource1.clip = value.hum;
                 EngineSource2.clip = value.whistle;
             }
         }
-        private AudioSource EngineSource1;
-        private AudioSource EngineSource2;
+        private AudioSource EngineSource1 = null!;
+        private AudioSource EngineSource2 = null!;
 
         #region public_fields
         public float WhistleFactor = 0.4f;
@@ -200,8 +202,6 @@ namespace VehicleFramework.Engines
         #region unity_signals
         public virtual void Awake()
         {
-            mv = GetComponent<ModVehicle>();
-            rb = GetComponent<Rigidbody>();
             // register self with mainpatcher, for on-the-fly voice selection updating
             EngineSoundsManager.engines.Add(this);
         }
@@ -291,6 +291,10 @@ namespace VehicleFramework.Engines
             float scalarFactor = 1.0f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+            if(MV.powerMan == null)
+            {
+                throw Admin.SessionManager.Fatal("MV.powerMan is null! Cannot drain power!");
+            }
             MV.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
         public override void KillMomentum()
@@ -377,7 +381,7 @@ namespace VehicleFramework.Engines
         }
         protected virtual void PlayEngineHum()
         {
-            float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value * SoundSystem.GetMasterVolume();
+            float configVolume = VehicleConfig.GetConfig(MV).EngineVolume.Value * SoundSystem.GetMasterVolume();
             EngineSource1.volume = EngineHum / 10f * configVolume * HumFactor;
             if (MV.IsPowered())
             {
@@ -412,7 +416,7 @@ namespace VehicleFramework.Engines
             {
                 if (isReadyToWhistle && moveDirection.magnitude > 0)
                 {
-                    float configVolume = VehicleConfig.GetConfig(mv).EngineVolume.Value * SoundSystem.GetMasterVolume();
+                    float configVolume = VehicleConfig.GetConfig(MV).EngineVolume.Value * SoundSystem.GetMasterVolume();
                     EngineSource2.volume = configVolume * 0.4f * WhistleFactor;
                     EngineSource2.Play();
                 }

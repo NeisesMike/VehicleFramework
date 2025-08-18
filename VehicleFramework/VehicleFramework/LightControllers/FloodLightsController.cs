@@ -9,6 +9,10 @@ namespace VehicleFramework
         private Submarine MV => GetComponent<Submarine>();
         protected override void HandleLighting(bool active)
         {
+            if(MV.FloodLights == null)
+            {
+                return;
+            }
             MV.FloodLights.ForEach(x => x.Light.SetActive(active));
             if (active)
             {
@@ -42,13 +46,13 @@ namespace VehicleFramework
         {
             if (playSound)
             {
-                MV.lightsOnSound.Stop();
-                MV.lightsOnSound.Play();
+                MV.lightsOnSound?.Stop();
+                MV.lightsOnSound?.Play();
             }
             else
             {
-                MV.lightsOffSound.Stop();
-                MV.lightsOffSound.Play();
+                MV.lightsOffSound?.Stop();
+                MV.lightsOffSound?.Play();
             }
         }
         protected virtual void Awake()

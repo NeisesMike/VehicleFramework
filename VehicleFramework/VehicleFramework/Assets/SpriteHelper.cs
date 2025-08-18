@@ -7,19 +7,19 @@ namespace VehicleFramework.Assets
 {
     public static class SpriteHelper
     {
-        internal static Sprite GetSpriteInternal(string name)
+        internal static Sprite? GetSpriteInternal(string name)
         {
             string modPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string fullPath = Path.Combine(modPath, "Sprites", name);
             return GetSpriteGeneric(fullPath);
         }
-        public static Sprite GetSprite(string relativePath)
+        public static Sprite? GetSprite(string relativePath)
         {
             string modPath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             string fullPath = Path.Combine(modPath, relativePath);
             return GetSpriteGeneric(fullPath);
         }
-        private static Sprite GetSpriteGeneric(string fullPath)
+        private static Sprite? GetSpriteGeneric(string fullPath)
         {
             try
             {
