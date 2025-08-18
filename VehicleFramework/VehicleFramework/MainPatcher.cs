@@ -27,23 +27,23 @@ namespace VehicleFramework
             Nautilus.Handlers.LanguageHandler.RegisterLocalizationFolder();
             SetupInstance();
             VehicleFramework.Logger.MyLog = base.Logger;
-            if (VehicleFramework.Logger.MyLog is null)
+            if (VehicleFramework.Logger.MyLog == null)
             {
-                throw Admin.SessionManager.Fatal("VehicleFramework.Logger.MyLog is null in Awake!");
+                throw Admin.SessionManager.Fatal("VehicleFramework.Logger.MyLog == null in Awake!");
             }
-            if (Instance is null)
+            if (Instance == null)
             {
-                throw Admin.SessionManager.Fatal("Instance is null in Awake!");
+                throw Admin.SessionManager.Fatal("Instance == null in Awake!");
             }
             VFConfig = new();
-            if (VFConfig is null)
+            if (VFConfig == null)
             {
-                throw Admin.SessionManager.Fatal("VFConfig is null in Awake!");
+                throw Admin.SessionManager.Fatal("VFConfig == null in Awake!");
             }
             NautilusConfig = Nautilus.Handlers.OptionsPanelHandler.RegisterModOptions<VehicleFrameworkNautilusConfig>();
-            if(NautilusConfig is null)
+            if(NautilusConfig == null)
             {
-                throw Admin.SessionManager.Fatal("NautilusConfig is null in Awake!");
+                throw Admin.SessionManager.Fatal("NautilusConfig == null in Awake!");
             }
             PrePatch();
         }
@@ -178,7 +178,7 @@ namespace VehicleFramework
         }
         private void SetupInstance()
         {
-            if (Instance is null)
+            if (Instance == null)
             {
                 Instance = this;
                 return;

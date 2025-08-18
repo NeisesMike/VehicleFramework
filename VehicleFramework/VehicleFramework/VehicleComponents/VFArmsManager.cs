@@ -68,19 +68,19 @@ namespace VehicleFramework.VehicleComponents
         public void SpawnArm(ModVehicle mv, ModVehicleArm arm, bool isLeft)
         {
             GameObject armPrefab = arm.armPrefab;
-            if (isLeft && leftArm is null)
+            if (isLeft && leftArm == null)
             {
                 leftArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
                 leftArm.transform.SetParent(mv.transform);
                 leftArm.transform.localRotation = Quaternion.identity;
-                if (mv.Arms.leftArmPlacement is not null)
+                if (mv.Arms.leftArmPlacement != null)
                 {
                     leftArm.transform.localPosition = mv.Arms.leftArmPlacement.localPosition;
                     leftArm.transform.localRotation = mv.Arms.leftArmPlacement.localRotation;
                 }
                 else
                 {
-                    if(myDrone is not null)
+                    if(myDrone != null)
                     {
                         leftArm.transform.localPosition = myDrone.CameraLocation.localPosition
                             - Vector3.right;
@@ -95,7 +95,7 @@ namespace VehicleFramework.VehicleComponents
                 }
                 leftArm.name = "LeftArm";
             }
-            else if (!isLeft && rightArm is null)
+            else if (!isLeft && rightArm == null)
             {
                 rightArm = UnityEngine.Object.Instantiate<GameObject>(armPrefab);
                 rightArm.transform.SetParent(mv.transform);
@@ -105,14 +105,14 @@ namespace VehicleFramework.VehicleComponents
                     rightArm.transform.localScale.y,
                     rightArm.transform.localScale.z
                 );
-                if (mv.Arms.rightArmPlacement is not null)
+                if (mv.Arms.rightArmPlacement != null)
                 {
                     rightArm.transform.localPosition = mv.Arms.rightArmPlacement.localPosition;
                     rightArm.transform.localRotation = mv.Arms.rightArmPlacement.localRotation;
                 }
                 else
                 {
-                    if (myDrone is not null)
+                    if (myDrone != null)
                     {
                         rightArm.transform.localPosition = myDrone.CameraLocation.localPosition
                             + Vector3.right;
@@ -151,7 +151,7 @@ namespace VehicleFramework.VehicleComponents
             mv.GetQuickSlotType(slotID, out TechType techType);
             if (isLeft)
             {
-                if (leftArm is not null)
+                if (leftArm != null)
                 {
                     return new ArmActionParams
                     {
@@ -164,7 +164,7 @@ namespace VehicleFramework.VehicleComponents
             }
             else
             {
-                if (rightArm is not null)
+                if (rightArm != null)
                 {
                     return new ArmActionParams
                     {

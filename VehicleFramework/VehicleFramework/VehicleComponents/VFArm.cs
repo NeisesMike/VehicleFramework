@@ -67,7 +67,7 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            if(armDeclaration is null)
+            if(armDeclaration == null)
             {
                 cooldownDuration = 0;
                 return false;
@@ -87,7 +87,7 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            if (armDeclaration is null)
+            if (armDeclaration == null)
             {
                 cooldownDuration = 0;
                 return false;
@@ -107,7 +107,7 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            if (armDeclaration is null)
+            if (armDeclaration == null)
             {
                 cooldownDuration = 0;
                 return false;
@@ -127,7 +127,7 @@ namespace VehicleFramework.VehicleComponents
                 techType = TechType,
                 arm = gameObject
             };
-            if (armDeclaration is null)
+            if (armDeclaration == null)
             {
                 return false;
             }
@@ -139,7 +139,7 @@ namespace VehicleFramework.VehicleComponents
 
         void IExosuitArm.Update(ref Quaternion aimDirection) // happens every frame the player is inside and has control over the exosuit
         {
-            if (armDeclaration is null)
+            if (armDeclaration == null)
             {
                 return;
             }
@@ -148,7 +148,7 @@ namespace VehicleFramework.VehicleComponents
 
         void IExosuitArm.ResetArm() // called OnPilotExit
         {
-            if (armDeclaration is null)
+            if (armDeclaration == null)
             {
                 return;
             }

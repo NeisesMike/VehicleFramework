@@ -37,21 +37,21 @@ namespace VehicleFramework
         public static void Register()
         {
             VehicleAssets DSAssets = AssetBundleInterface.GetVehicleAssetsFromBundle("dronestation", "DroneStation", "DSSpriteAtlas", "", "DSCrafterSprite", "Fragment", "DSUnlockSprite");
-            if(DSAssets.model is null)
+            if(DSAssets.model == null)
             {
-                throw Admin.SessionManager.Fatal("Drone Station model is null, cannot register Drone Station!");
+                throw Admin.SessionManager.Fatal("Drone Station model == null, cannot register Drone Station!");
             }
-            if (DSAssets.crafter is null)
+            if (DSAssets.crafter == null)
             {
-                throw Admin.SessionManager.Fatal("Drone Station crafter is null, cannot register Drone Station!");
+                throw Admin.SessionManager.Fatal("Drone Station crafter == null, cannot register Drone Station!");
             }
-            if (DSAssets.unlock is null)
+            if (DSAssets.unlock == null)
             {
-                throw Admin.SessionManager.Fatal("Drone Station unlock is null, cannot register Drone Station!");
+                throw Admin.SessionManager.Fatal("Drone Station unlock == null, cannot register Drone Station!");
             }
-            if (DSAssets.fragment is null)
+            if (DSAssets.fragment == null)
             {
-                throw Admin.SessionManager.Fatal("Drone Station fragment is null, cannot register Drone Station!");
+                throw Admin.SessionManager.Fatal("Drone Station fragment == null, cannot register Drone Station!");
             }
             TechType consoleTT = RegisterConsole(DSAssets.model, DSAssets.crafter, DSAssets.unlock);
             List<Vector3> spawnLocations = new()

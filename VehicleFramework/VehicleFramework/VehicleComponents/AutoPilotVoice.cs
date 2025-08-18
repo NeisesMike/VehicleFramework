@@ -66,7 +66,7 @@ namespace VehicleFramework
         }
         public void Awake()
         {
-            if(MV is null)
+            if(MV == null)
             {
                 throw Admin.SessionManager.Fatal("AutoPilotVoice is not attached to a ModVehicle!");
             }
@@ -79,7 +79,7 @@ namespace VehicleFramework
             {
                 aiEI = MV.energyInterface;
             }
-            if (aiEI is null)
+            if (aiEI == null)
             {
                 throw Admin.SessionManager.Fatal(MV.GetName() + " does not have an EnergyInterface!");
             }
@@ -100,7 +100,7 @@ namespace VehicleFramework
         private void SetupSpeakers()
         {
             //speakers.Add(mv.VehicleModel.EnsureComponent<AudioSource>());
-            if (Sub is not null)
+            if (Sub != null)
             {
                 speakers.Add(Sub.PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
                 foreach (var ps in Sub.Hatches)
@@ -112,7 +112,7 @@ namespace VehicleFramework
                     speakers.Add(ps.EnsureComponent<AudioSource>().Register());
                 }
             }
-            if (Subbie is not null)
+            if (Subbie != null)
             {
                 speakers.Add(Subbie.PilotSeat.Seat.EnsureComponent<AudioSource>().Register());
                 foreach (var ps in Subbie.Hatches)
@@ -203,7 +203,7 @@ namespace VehicleFramework
         }
         public void EnqueueClip(AudioClip? clip)
         {
-            if (MV && aiEI.hasCharge && clip is not null && isReadyToSpeak && MV.IsConstructed)
+            if (MV && aiEI.hasCharge && clip != null && isReadyToSpeak && MV.IsConstructed)
             {
                 speechQueue.Enqueue(clip, 0);
             }
@@ -240,7 +240,7 @@ namespace VehicleFramework
         public string UhOh = Language.main.Get("VFSubtitleUhOh");
         private void CreateSubtitle(AudioClip clip)
         {
-            if(clip == null || voice is null)
+            if(clip == null || voice == null)
             {
                 return;
             }

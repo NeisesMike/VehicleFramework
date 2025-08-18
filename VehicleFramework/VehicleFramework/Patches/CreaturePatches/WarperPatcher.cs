@@ -21,7 +21,7 @@ namespace VehicleFramework.Patches.CreaturePatches
             {
                 VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
                 VehicleTypes.Submarine? sub = Player.main?.GetVehicle() as VehicleTypes.Submarine;
-                if (drone is not null || sub is not null)
+                if (drone != null || sub != null)
                 {
                     __result = new SwimRandom();
                 }
@@ -42,7 +42,7 @@ namespace VehicleFramework.Patches.CreaturePatches
             VehicleTypes.Submarine? mySub = target.GetComponent<VehicleTypes.Submarine>()
                 ?? myPlayer?.GetVehicle() as VehicleTypes.Submarine;
 
-            if(mySub is null)
+            if(mySub == null)
             {
                 return true;
             }

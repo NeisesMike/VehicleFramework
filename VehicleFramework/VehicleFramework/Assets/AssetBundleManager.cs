@@ -45,9 +45,9 @@ namespace VehicleFramework.Assets
                 Logger.LogException($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. Make sure the name is correct.", e);
                 return;
             }
-            if(bundle is null)
+            if(bundle == null)
             {
-                throw Admin.SessionManager.Fatal($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. The bundle is null.");
+                throw Admin.SessionManager.Fatal($"AssetBundleInterface failed to load AssetBundle with the path: {bundlePath}. The bundle == null.");
             }
         }
         internal SpriteAtlas? GetSpriteAtlas(string spriteAtlasName)

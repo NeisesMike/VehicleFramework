@@ -16,7 +16,7 @@ namespace VehicleFramework.SaveLoad
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
             Dictionary<string, InventoryItem> upgradeList = mv.modules.equipment;
-            if (upgradeList is null)
+            if (upgradeList == null)
             {
                 return;
             }

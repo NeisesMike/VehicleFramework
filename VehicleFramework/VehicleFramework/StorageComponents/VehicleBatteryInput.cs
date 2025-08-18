@@ -5,12 +5,12 @@ namespace VehicleFramework
 {
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{
-		public EnergyMixin mixin;
+		public EnergyMixin? mixin;
 
 		// need this SerializeField attribute or else assignment in
 		// VehicleBuilder is not propogated to instances
 		[SerializeField]
-		internal string tooltip;
+		internal string? tooltip;
 
 		public void OnHandHover(GUIHand hand)
 		{
@@ -24,7 +24,7 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null)
+			if (VehicleTypes.Drone.mountedDrone != null || mixin == null)
 			{
 				return;
 			}

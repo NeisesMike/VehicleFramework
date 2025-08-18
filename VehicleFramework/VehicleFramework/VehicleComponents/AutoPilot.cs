@@ -20,7 +20,7 @@ namespace VehicleFramework
         public Submersible? Subbie => GetComponent<Submersible>();
         public LiveMixin LiveMixin => MV.liveMixin;
         public EnergyInterface MyEI => MV.energyInterface;
-        private bool HasSomePower => !isPoweredDown || (AutoPilotEI is not null && AutoPilotEI.hasCharge);
+        private bool HasSomePower => !isPoweredDown || (AutoPilotEI != null && AutoPilotEI.hasCharge);
 
         public enum HealthState
         {
@@ -88,7 +88,7 @@ namespace VehicleFramework
         private bool isPoweredDown = false;
         public void Awake()
         {
-            if (MV is null)
+            if (MV == null)
             {
                 throw Admin.SessionManager.Fatal("AutoPilotVoice is not attached to a ModVehicle!");
             }
@@ -120,7 +120,7 @@ namespace VehicleFramework
             {
                 MaybeRefillOxygen();
             }
-            if (Sub is not null && Sub.DoesAutolevel && MV.VFEngine is Engines.ModVehicleEngine)
+            if (Sub != null && Sub.DoesAutolevel && MV.VFEngine is Engines.ModVehicleEngine)
             {
                 MaybeAutoLevel(Sub);
                 CheckForDoubleTap(Sub);

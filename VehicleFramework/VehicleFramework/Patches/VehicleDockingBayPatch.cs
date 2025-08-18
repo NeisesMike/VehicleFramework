@@ -51,7 +51,7 @@ namespace VehicleFramework.Patches
         }
         private static void HandleMVDocked(Vehicle vehicle, VehicleDockingBay dock)
         {
-            ModVehicle mv = vehicle as ModVehicle;
+            ModVehicle? mv = vehicle as ModVehicle;
             if (mv != null)
             {
                 Moonpool moonpool = dock.GetComponentInParent<Moonpool>();
@@ -79,11 +79,8 @@ namespace VehicleFramework.Patches
         // This patch animates the docking bay arms as if a seamoth is docked
         public static void LateUpdatePostfix(VehicleDockingBay __instance)
         {
-            ModVehicle mv = __instance.dockedVehicle as ModVehicle;
-            if (mv != null)
-            {
-                mv.AnimateMoonPoolArms(__instance);
-            }
+            ModVehicle? mv = __instance.dockedVehicle as ModVehicle;
+            mv?.AnimateMoonPoolArms(__instance);
         }
 
         [HarmonyPostfix]
@@ -114,7 +111,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleDockingBay.UpdateDockedPosition))]
         public static bool UpdateDockedPositionPrefix(VehicleDockingBay __instance, Vehicle vehicle, float interpfraction)
         {
-            ModVehicle mv = vehicle as ModVehicle;
+            ModVehicle? mv = vehicle as ModVehicle;
             if (mv == null)
             {
                 return true;

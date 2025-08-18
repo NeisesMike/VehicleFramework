@@ -96,7 +96,7 @@ namespace VehicleFramework.VehicleTypes
         private Transform? previousParent = null;
         private void SetupTemporaryParent()
         {
-            if(pairedStation is null)
+            if(pairedStation == null)
             {
                 throw Admin.SessionManager.Fatal($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
             }
@@ -109,7 +109,7 @@ namespace VehicleFramework.VehicleTypes
         }
         private void DestroyTemporaryParent()
         {
-            if (pairedStation is null)
+            if (pairedStation == null)
             {
                 throw Admin.SessionManager.Fatal($"{subName.GetName()} has no paired station! Please set the paired station before calling BeginControlling.");
             }

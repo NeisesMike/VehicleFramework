@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.VehicleParts;
 //using VehicleFramework.Localization;
 
 namespace VehicleFramework
@@ -13,10 +14,10 @@ namespace VehicleFramework
 	public class VehicleHatch : HandTarget, IHandTarget, IDockListener
 	{
 		private bool isLive = true;
-		public ModVehicle mv;
-		public Transform EntryLocation;
-		public Transform ExitLocation;
-		public Transform SurfaceExitLocation;
+		public required ModVehicle mv;
+		public required Transform EntryLocation;
+		public required Transform ExitLocation;
+		public Transform? SurfaceExitLocation;
 		public string EnterHint = Language.main.Get("VFEnterVehicle");
 		public string ExitHint = Language.main.Get("VFExitVehicle");
 
@@ -27,9 +28,10 @@ namespace VehicleFramework
 				return;
 			}
 			HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
-			if ((mv as Submarine != null))
+			Submarine? Sub = mv as Submarine;
+			if (Sub != null)
 			{
-				if ((mv as Submarine).IsPlayerInside())
+				if (Sub.IsPlayerInside())
 				{
 					HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, ExitHint);
 				}
@@ -52,12 +54,14 @@ namespace VehicleFramework
 			}
 			Player.main.rigidBody.velocity = Vector3.zero;
 			Player.main.rigidBody.angularVelocity = Vector3.zero;
-			if ((mv as Submarine != null))
-			{
-				if ((mv as Submarine).IsPlayerInside())
+            Submarine? Sub = mv as Submarine;
+            Submersible? Subbie = mv as Submersible;
+            if (Sub != null)
+            {
+				if (Sub.IsPlayerInside())
 				{
 					mv.PlayerExit();
-					if (mv.transform.position.y < -3f)
+					if (mv.transform.position.y < -3f || SurfaceExitLocation == null)
 					{
 						Player.main.transform.position = ExitLocation.position;
 					}
@@ -69,14 +73,14 @@ namespace VehicleFramework
 				else
 				{
 					Player.main.transform.position = EntryLocation.position;
-					(mv as Submarine).PlayerEntry();
+                    Sub.PlayerEntry();
 				}
 			}
-			else if (mv as Submersible != null && !mv.isScuttled)
+			else if (Subbie != null && !mv.isScuttled)
 			{
-				Player.main.transform.position = (mv as Submersible).PilotSeat.SitLocation.transform.position;
-				Player.main.transform.rotation = (mv as Submersible).PilotSeat.SitLocation.transform.rotation;
-				(mv as Submersible).PlayerEntry();
+				Player.main.transform.position = Subbie.PilotSeat.SitLocation.transform.position;
+				Player.main.transform.rotation = Subbie.PilotSeat.SitLocation.transform.rotation;
+                Subbie.PlayerEntry();
 			}
 			/*
 			if (mv as Walker != null)
@@ -96,6 +100,10 @@ namespace VehicleFramework
 
 		public IEnumerator ExitToSurface()
 		{
+			if(SurfaceExitLocation == null)
+			{
+				yield break;
+			}
 			int tryCount = 0;
 			float playerHeightBefore = Player.main.transform.position.y;
 			while (Player.main.transform.position.y < 2 + playerHeightBefore)
@@ -120,5 +128,14 @@ namespace VehicleFramework
 		{
 			isLive = true;
 		}
-	}
+
+        internal static void Create(VehicleHatchStruct vhs, ModVehicle mv)
+        {
+            var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
+            hatch.mv = mv;
+            hatch.EntryLocation = vhs.EntryLocation;
+            hatch.ExitLocation = vhs.ExitLocation;
+            hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+        }
+    }
 }

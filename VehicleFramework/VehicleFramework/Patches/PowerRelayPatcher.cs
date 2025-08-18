@@ -18,7 +18,7 @@ namespace VehicleFramework.Patches
          * We don't set powerRelay because we need CurrentSub.
          * And CurrentSub calls OnPlayerEntered.
          * And OnPlayerEntered plays a voice notification we don't set up,
-         * but only when powerRelay is not null.
+         * but only when powerRelay != null.
          * So this avoids an error appearing
      */
 

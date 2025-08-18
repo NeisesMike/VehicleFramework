@@ -10,8 +10,8 @@ namespace VehicleFramework
     public static class SeamothHelper
     {
         internal static TaskResult<GameObject> request = new();
-        private static Coroutine cor = null;
-        public static GameObject Seamoth
+        private static Coroutine? cor = null;
+        public static GameObject? Seamoth
         {
             get
             {
@@ -50,8 +50,8 @@ namespace VehicleFramework
     public static class PrawnHelper
     {
         internal static TaskResult<GameObject> request = new();
-        private static Coroutine cor = null;
-        public static GameObject Prawn
+        private static Coroutine? cor = null;
+        public static GameObject? Prawn
         {
             get
             {

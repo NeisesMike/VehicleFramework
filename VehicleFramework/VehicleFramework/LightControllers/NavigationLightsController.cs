@@ -57,7 +57,7 @@ namespace VehicleFramework
         protected void Start()
         {
             rb = GetComponent<Rigidbody>();
-            if(rb is null)
+            if(rb == null)
             {
                 throw Admin.SessionManager.Fatal(MV.GetName() + " has no Rigidbody! Please add a Rigidbody to the GameObject before starting the NavigationLightsController.");
             }

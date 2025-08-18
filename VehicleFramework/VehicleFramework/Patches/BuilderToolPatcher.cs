@@ -17,7 +17,7 @@ namespace VehicleFramework.Patches
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             SubRoot? subroot = Player.main?.currentSub;
-            if (subroot is not null && subroot.GetComponent<VehicleTypes.Submarine>() != null && c != null)
+            if (subroot != null && subroot.GetComponent<VehicleTypes.Submarine>() != null && c != null)
             {
                 if (c.gameObject.GetComponent<LargeWorldEntity>() != null)
                 {

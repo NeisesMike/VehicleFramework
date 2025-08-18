@@ -686,7 +686,7 @@ namespace VehicleFramework
         // the vehicle is called "powered off,"
         // because it is unusable yet the batteries are not empty
         public bool isPoweredOn = true;
-        public FMOD_StudioEventEmitter ambienceSound;
+        public FMOD_StudioEventEmitter? ambienceSound;
         public int numEfficiencyModules = 0;
         public PowerManager powerMan = null;
         public bool IsPlayerDry = false;
@@ -789,7 +789,7 @@ namespace VehicleFramework
             {
                 sto.Container.SetActive(true);
             }
-            if (ModularStorages is null)
+            if (ModularStorages == null)
             {
                 return;
             }

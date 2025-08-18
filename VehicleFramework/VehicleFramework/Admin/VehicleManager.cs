@@ -51,7 +51,11 @@ namespace VehicleFramework
         internal static void CreateSaveFileData(object sender, Nautilus.Json.JsonFileEventArgs e)
         {
             // See SaveData.cs
-            SaveData data = e.Instance as SaveData;
+            SaveData? data = e.Instance as SaveData;
+            if(data == null)
+            {
+                return;
+            }
             data.UpgradeLists = SaveManager.SerializeUpgrades();
             data.InnateStorages = SaveManager.SerializeInnateStorage();
             data.ModularStorages = SaveManager.SerializeModularStorage();
@@ -65,6 +69,10 @@ namespace VehicleFramework
         }
         private static IEnumerator LoadVehicle(ModVehicle mv)
         {
+            if(MainPatcher.SaveFileData == null)
+            {
+                yield break;
+            }
             // See SaveData.cs
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady());
@@ -76,8 +84,8 @@ namespace VehicleFramework
             Coroutine db = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeBatteries(MainPatcher.SaveFileData, mv));
             yield return ModuleGetter; // can't access the modular storage until it's been getted
             Coroutine dms = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeModularStorage(MainPatcher.SaveFileData, mv));
-            Coroutine da = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.SaveFileData, mv as Submarine));
-            Coroutine dbb = null;
+            Coroutine da = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeAesthetics(MainPatcher.SaveFileData, mv));
+            Coroutine? dbb = null;
             if (mv as Submarine != null)
             {
                 dbb = Admin.SessionManager.StartCoroutine(SaveManager.DeserializeBackupBatteries(MainPatcher.SaveFileData, mv as Submarine));

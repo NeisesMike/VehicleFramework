@@ -11,7 +11,7 @@ namespace VehicleFramework
 		{ 
 			get
             {
-                if (_container is null)
+                if (_container == null)
                 {
                     _container = new(this.width, this.height, this.storageRoot.transform, this.storageLabel, null);
                     _container.SetAllowedTechTypes(this.allowedTech);
@@ -72,7 +72,7 @@ namespace VehicleFramework
             inp.mv = mv;
             inp.slotID = storageID;
             inp.model = vs.Container;
-            if (vs.Container.GetComponentInChildren<Collider>() is null)
+            if (vs.Container.GetComponentInChildren<Collider>() == null)
             {
                 inp.collider = vs.Container.EnsureComponent<BoxCollider>();
             }

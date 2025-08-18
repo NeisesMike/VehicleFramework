@@ -42,7 +42,7 @@ namespace VehicleFramework
         {
             if (Player.main != null)
             {
-                foreach (var tmp in VoiceManager.voices.Where(x => x != null && x.MV is not null && x.MV.GetComponent<TechTag>() != null))
+                foreach (var tmp in VoiceManager.voices.Where(x => x != null && x.MV != null && x.MV.GetComponent<TechTag>() != null))
                 {
                     string voiceName = VehicleConfig.main[tmp.MV.GetType().ToString()].AutopilotVoice.Value;
                     VoiceManager.UpdateDefaultVoice(tmp.MV, voiceName);
@@ -54,7 +54,7 @@ namespace VehicleFramework
         {
             if (Player.main != null)
             {
-                foreach (var tmp in EngineSoundsManager.engines.Where(x => x != null && x.mv is not null && x.mv.GetComponent<TechTag>() != null))
+                foreach (var tmp in EngineSoundsManager.engines.Where(x => x != null && x.mv != null && x.mv.GetComponent<TechTag>() != null))
                 {
                     string soundsName = VehicleConfig.main[tmp.mv.GetType().ToString()].EngineSounds.Value;
                     EngineSoundsManager.UpdateDefaultVoice(tmp.mv, soundsName);

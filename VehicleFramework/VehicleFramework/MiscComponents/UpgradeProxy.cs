@@ -21,6 +21,10 @@ namespace VehicleFramework.MiscComponents
         public IEnumerator GetSeamothBitsASAP()
         {
             yield return Admin.SessionManager.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            if(SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("UpgradeProxy: SeamothHelper.Seamoth is null! Cannot proceed with upgrade proxy setup.");
+            }
             GameObject module = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/engine_console_key_02_geo").gameObject;
             for (int i = 0; i < proxies.Count; i++)
             {

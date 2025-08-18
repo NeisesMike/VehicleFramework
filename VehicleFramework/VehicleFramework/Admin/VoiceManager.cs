@@ -191,7 +191,7 @@ namespace VehicleFramework
         }
         internal static VehicleVoice GetDefaultVoice(ModVehicle mv)
         {
-            if(mv is null)
+            if(mv == null)
             {
                 Logger.Error("Cannot get default voice for null ModVehicle!");
                 return silentVoice;
@@ -272,7 +272,7 @@ namespace VehicleFramework
                 throw Admin.SessionManager.Fatal("ERROR: Silence.ogg not found. Directory error.");
             }
             silence = DownloadHandlerAudioClip.GetContent(www);
-            if(silence is null)
+            if(silence == null)
             {
                 throw Admin.SessionManager.Fatal("ERROR: Silence.ogg could not be loaded. Directory error.");
             }

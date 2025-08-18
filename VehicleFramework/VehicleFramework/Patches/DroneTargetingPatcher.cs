@@ -26,7 +26,7 @@ namespace VehicleFramework.Patches
                 distance = 0;
                 return true;
             }
-            if (VehicleTypes.Drone.mountedDrone is null)
+            if (VehicleTypes.Drone.mountedDrone == null)
             {
                 result = null;
                 distance = 0;

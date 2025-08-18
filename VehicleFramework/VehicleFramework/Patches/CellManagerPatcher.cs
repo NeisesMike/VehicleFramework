@@ -18,7 +18,7 @@ namespace VehicleFramework.Patches
             
             if (__instance.streamer == null || __instance.streamer.globalRoot == null)
             {
-                // Sometimes this function is called when streamer.globalRoot is null.
+                // Sometimes this function is called when streamer.globalRoot == null.
                 // Not sure why or by whom.
                 // All it does is set the parent, so we'll do that as soon as we possibly can.
                 Admin.SessionManager.StartCoroutine(SetParentEventually(__instance, ent));

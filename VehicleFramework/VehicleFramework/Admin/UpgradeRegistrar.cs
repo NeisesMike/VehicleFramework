@@ -86,9 +86,9 @@ namespace VehicleFramework.Admin
                 Logger.Error($"UpgradeRegistrar Error: ModVehicleUpgrade {upgrade.ClassId} cannot have empty recipe!");
                 return false;
             }
-            if (upgrade as ModVehicleArm != null)
+            if (upgrade is ModVehicleArm arm)
             {
-                if ((upgrade as ModVehicleArm).QuickSlotType != QuickSlotType.Selectable && (upgrade as ModVehicleArm).QuickSlotType != QuickSlotType.SelectableChargeable)
+                if (arm.QuickSlotType != QuickSlotType.Selectable && arm.QuickSlotType != QuickSlotType.SelectableChargeable)
                 {
                     Logger.Error($"UpgradeRegistrar Error: ModVehicleArm {upgrade.ClassId} must have QuickSlotType Selectable or SelectableChargeable!");
                     return false;
@@ -202,10 +202,10 @@ namespace VehicleFramework.Admin
                         {
                             upgrade.OnRemoved(param);
                         }
-                        if (upgrade as ModVehicleArm != null && param.vehicle as ModVehicle != null)
+                        if (upgrade is ModVehicleArm arm && param.vehicle is ModVehicle)
                         {
                             var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
-                            armsManager.UpdateArms(upgrade as ModVehicleArm, param.slotID);
+                            armsManager.UpdateArms(arm, param.slotID);
                         }
                     }
                     else if(param.cyclops != null)

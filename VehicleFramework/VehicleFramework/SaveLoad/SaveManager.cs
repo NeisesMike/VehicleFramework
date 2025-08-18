@@ -261,9 +261,9 @@ namespace VehicleFramework.SaveLoad
         {
             return new();
         }
-        internal static IEnumerator DeserializeBackupBatteries(SaveData data, Submarine mv)
+        internal static IEnumerator DeserializeBackupBatteries(SaveData data, Submarine? mv)
         {
-            if (data == null || mv == null || data.BackupBatteries == null)
+            if (mv == null || data.BackupBatteries == null)
             {
                 yield break;
             }
@@ -272,7 +272,7 @@ namespace VehicleFramework.SaveLoad
             {
                 if (MatchMv(mv, slot.Item1))
                 {
-                    if(mv.BackupBatteries is null || mv.BackupBatteries.Count == 0)
+                    if(mv.BackupBatteries == null || mv.BackupBatteries.Count == 0)
                     {
                         continue;
                     }
@@ -353,7 +353,7 @@ namespace VehicleFramework.SaveLoad
                         {
                             Submarine mvSub = mv as Submarine;
                             var active = mvSub.ColorPicker?.transform.Find("EditScreen/Active");
-                            if (active is null)
+                            if (active == null)
                             {
                                 continue;
                             }

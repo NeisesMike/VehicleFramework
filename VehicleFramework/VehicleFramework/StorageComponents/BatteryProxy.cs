@@ -4,13 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleParts;
 
 namespace VehicleFramework.StorageComponents
 {
     public class BatteryProxy : MonoBehaviour
     {
-        public Transform proxy = null!;
-        public EnergyMixin mixin = null!;
+        public Transform? proxy = null;
+        public EnergyMixin? mixin = null;
+
+        internal static void Create(VehicleBattery vb, EnergyMixin energyMixin)
+        {
+            var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
+            model.proxy = vb.BatteryProxy;
+            model.mixin = energyMixin;
+        }
 
         public void Awake()
         {
@@ -18,10 +26,9 @@ namespace VehicleFramework.StorageComponents
         }
         public IEnumerator GetSeamothBitsASAP()
         {
-            if (proxy is null || mixin is null)
+            if (proxy == null || mixin == null)
             {
-                // reload reload condition ?
-                // no...
+                Component.DestroyImmediate(this);
                 yield break;
             }
             yield return Admin.SessionManager.StartCoroutine(SeamothHelper.EnsureSeamoth());

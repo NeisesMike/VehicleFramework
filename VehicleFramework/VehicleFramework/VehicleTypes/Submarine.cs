@@ -43,7 +43,7 @@ namespace VehicleFramework.VehicleTypes
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
 
-        public Transform thisStopPilotingLocation;
+        public Transform? thisStopPilotingLocation;
 
         public FloodLightsController floodlights;
         public InteriorLightsController interiorlights;
@@ -61,7 +61,7 @@ namespace VehicleFramework.VehicleTypes
             floodlights = gameObject.AddComponent<FloodLightsController>();
             interiorlights = gameObject.AddComponent<InteriorLightsController>();
             navlights = gameObject.AddComponent<NavigationLightsController>();
-            gameObject.EnsureComponent<TetherSource>().mv = this;
+            gameObject.EnsureComponent<TetherSource>();
             controlPanelLogic?.Init();
         }
         public override void Start()
@@ -401,7 +401,7 @@ namespace VehicleFramework.VehicleTypes
 
             GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>()?.ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
 
-            if (console is null)
+            if (console == null)
             {
                 yield return Admin.SessionManager.StartCoroutine(Builder.BeginAsync(TechType.BaseUpgradeConsole));
                 Builder.ghostModel.GetComponentInChildren<BaseGhost>().OnPlace();

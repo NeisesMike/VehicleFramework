@@ -18,10 +18,10 @@ namespace VehicleFramework
      */
     public class TetherSource : MonoBehaviour, IScuttleListener, IDockListener
     {
-        public Submarine mv = null;
+        private Submarine mv = null!;
         private bool isLive = true;
-        public bool isSimple;
-        public Bounds bounds
+        private bool isSimple;
+        private Bounds Bounds
         {
             get
             {
@@ -76,7 +76,15 @@ namespace VehicleFramework
             }
         }
 
-        public void Start()
+        private void Awake()
+        {
+            mv = GetComponentInParent<Submarine>();
+            if(mv == null)
+            {
+                throw Admin.SessionManager.Fatal("TetherSource: No Submarine component found in parent hierarchy. TetherSource must be a child of a Submarine.");
+            }
+        }
+        private void Start()
         {
             if (mv.BoundingBoxCollider == null || mv.TetherSources.Count() == 0)
             {
@@ -92,7 +100,7 @@ namespace VehicleFramework
             Player.main.StartCoroutine(ManageTether());
         }
 
-        public void TryToDropLeash()
+        private void TryToDropLeash()
         {
             if (mv.IsPlayerControlling())
             {
@@ -107,7 +115,7 @@ namespace VehicleFramework
             }
             else
             {
-                if (!bounds.Contains(Player.main.transform.position))
+                if (!Bounds.Contains(Player.main.transform.position))
                 {
                     MVExit();
                 }
@@ -138,7 +146,7 @@ namespace VehicleFramework
             Admin.SessionManager.StartCoroutine(PleaseEnableColliders());
         }
 
-        public void TryToEstablishLeash()
+        private void TryToEstablishLeash()
         {
             bool PlayerWithinLeash(GameObject tetherSrc)
             {
@@ -173,7 +181,7 @@ namespace VehicleFramework
 
         }
 
-        public IEnumerator ManageTether()
+        private IEnumerator ManageTether()
         {
             yield return new WaitForSeconds(3f);
             while (true)

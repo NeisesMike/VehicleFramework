@@ -6,6 +6,7 @@ using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.MiscComponents;
+using VehicleFramework.StorageComponents;
 //using VehicleFramework.Localization;
 
 namespace VehicleFramework
@@ -100,7 +101,7 @@ namespace VehicleFramework
                         inp.slotID = iter;
                         iter++;
                         inp.model = vs.Container;
-                        if (vs.Container.GetComponentInChildren<Collider>() is null)
+                        if (vs.Container.GetComponentInChildren<Collider>() == null)
                         {
                             inp.collider = vs.Container.EnsureComponent<BoxCollider>();
                         }
@@ -122,23 +123,28 @@ namespace VehicleFramework
                     foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
                     {
                         VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                        vuci.flap = vu.Flap.transform;
-                        vuci.anglesOpened = vu.AnglesOpened;
-                        vuci.anglesClosed = vu.AnglesClosed;
+                        vuci.flap = vu.Flap?.transform ?? vu.Interface.transform;
+                        vuci.anglesOpened = vu.AnglesOpened ?? Vector3.zero;
+                        vuci.anglesClosed = vu.AnglesClosed ?? Vector3.zero;
                         vuci.collider = vuci.GetComponentInChildren<Collider>();
                         mv.upgradesInput = vuci;
                         var up = vu.Interface.EnsureComponent<UpgradeProxy>();
-                        up.proxies = vu.ModuleProxies;
+                        up.proxies = vu.ModuleProxies ?? new();
 
                         SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vu.Interface.transform);
                         vu.Interface.EnsureComponent<SaveLoad.VFUpgradesIdentifier>();
                     }
-                    if(mv.Upgrades.Count() == 0)
+                    if(mv.Upgrades.Count == 0)
                     {
                         VehicleUpgradeConsoleInput vuci = mv.VehicleModel.EnsureComponent<VehicleUpgradeConsoleInput>();
                         vuci.enabled = false;
-                        vuci.collider = mv.VehicleModel.AddComponent<BoxCollider>();
-                        (vuci.collider as BoxCollider).size = Vector3.zero;
+                        BoxCollider innerCollider = mv.VehicleModel.AddComponent<BoxCollider>();
+                        vuci.collider = innerCollider;
+                        if (innerCollider == null)
+                        {
+                            throw Admin.SessionManager.Fatal($"Failed to add a BoxCollider to {mv.GetName()}.VehicleModel!");
+                        }
+                        innerCollider.size = Vector3.zero;
                         mv.upgradesInput = vuci;
                     }
                 }
@@ -199,11 +205,7 @@ namespace VehicleFramework
             {
                 foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
-                    hatch.mv = mv;
-                    hatch.EntryLocation = vhs.EntryLocation;
-                    hatch.ExitLocation = vhs.ExitLocation;
-                    hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+                    VehicleHatch.Create(vhs, mv);
                 }
             }
             catch (Exception e)
@@ -254,11 +256,7 @@ namespace VehicleFramework
             {
                 foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
-                    hatch.mv = mv;
-                    hatch.EntryLocation = vhs.EntryLocation;
-                    hatch.ExitLocation = vhs.ExitLocation;
-                    hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+                    VehicleHatch.Create(vhs, mv);
                 }
             }
             catch (Exception e)
@@ -306,9 +304,7 @@ namespace VehicleFramework
                 tmp.mixin = energyMixin;
                 tmp.tooltip = "VFVehicleBattery";
 
-                var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
-                model.proxy = vb.BatteryProxy;
-                model.mixin = energyMixin;
+                BatteryProxy.Create(vb, energyMixin);
 
                 SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vb.BatterySlot.transform);
                 vb.BatterySlot.EnsureComponent<SaveLoad.VFBatteryIdentifier>();
@@ -349,9 +345,7 @@ namespace VehicleFramework
                 tmp.mixin = em;
                 tmp.tooltip = "VFAutoPilotBattery";
 
-                var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
-                model.proxy = vb.BatteryProxy;
-                model.mixin = em;
+                BatteryProxy.Create(vb, em);
 
                 SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vb.BatterySlot.transform);
                 vb.BatterySlot.EnsureComponent<SaveLoad.VFBatteryIdentifier>();
@@ -454,7 +448,8 @@ namespace VehicleFramework
                 lvlMeshRenderer.shadowCastingMode = seamothVLMR.shadowCastingMode;
                 lvlMeshRenderer.renderingLayerMask = seamothVLMR.renderingLayerMask;
 
-                var leftVFX = CopyComponent(seamothHeadLight.GetComponent<VFXVolumetricLight>(), pc.Light);
+                var leftVFX = CopyComponent(seamothHeadLight.GetComponent<VFXVolumetricLight>(), pc.Light) ??
+                    throw Admin.SessionManager.Fatal($"Failed to copy VFXVolumetricLight from {seamothHeadLight.name} to {pc.Light.name}!");
                 leftVFX.lightSource = pc.Light.GetComponent<Light>();
                 leftVFX.color = pc.Color;
                 leftVFX.volumGO = volumetricLight;
@@ -555,7 +550,8 @@ namespace VehicleFramework
         }
         public static void SetupWorldForces(ModVehicle mv)
         {
-            mv.worldForces = CopyComponent<WorldForces>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject);
+            mv.worldForces = CopyComponent<WorldForces>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().worldForces, mv.gameObject)
+                ?? throw Admin.SessionManager.Fatal($"Failed to copy WorldForces from {SeamothHelper.Seamoth.name} to {mv.gameObject.name}!");
             mv.worldForces.useRigidbody = mv.useRigidbody;
             mv.worldForces.underwaterGravity = 0f;
             mv.worldForces.aboveWaterGravity = 9.8f;
@@ -776,12 +772,14 @@ namespace VehicleFramework
                 Logger.Error("Failed to SetupObjects for ModVehicle.");
                 return false;
             }
-            if ((mv as Submarine != null) && !SetupObjects(mv as Submarine))
+            Submarine? Sub = mv as Submarine;
+            if (Sub != null && !SetupObjects(Sub))
             {
                 Logger.Error("Failed to SetupObjects for Submarine.");
                 return false;
             }
-            if ((mv as Submersible != null) && !SetupObjects(mv as Submersible))
+            Submersible? Subbie = mv as Submersible;
+            if (Subbie != null && !SetupObjects(Subbie))
             {
                 Logger.Error("Failed to SetupObjects for Submersible.");
                 return false;
@@ -810,20 +808,21 @@ namespace VehicleFramework
             SetupDenyBuildingTags(mv);
             mv.collisionModel = mv.CollisionModel;
 
-            if (mv as Submarine != null)
+            if (Sub != null)
             {
-                SetupEngine(mv as Submarine);
-                SetupFloodLights(mv as Submarine);
+                SetupEngine(Sub);
+                SetupFloodLights(Sub);
                 PowerRelay powerRelay = mv.gameObject.AddComponent<PowerRelay>(); // See PowerRelayPatcher. Allows Submarines to recharge batteries.
-                SetupSubRoot(mv as Submarine, powerRelay); // depends on SetupWorldForces
+                SetupSubRoot(Sub, powerRelay); // depends on SetupWorldForces
             }
-            if (mv as Submersible != null)
+            if (Subbie != null)
             {
-                SetupEngine(mv as Submersible);
+                SetupEngine(Subbie);
             }
-            if (mv as Drone != null)
+            Drone? myDrone = mv as Drone;
+            if (myDrone != null)
             {
-                SetupEngine(mv as Drone);
+                SetupEngine(myDrone);
             }
 
             // ApplyShaders should happen last
@@ -888,7 +887,7 @@ namespace VehicleFramework
                 }
             }
         }
-        public static T CopyComponent<T>(T original, GameObject destination) where T : Component
+        public static T? CopyComponent<T>(T original, GameObject destination) where T : Component
         {
             System.Type type = original.GetType();
             Component copy = destination.EnsureComponent(type);
@@ -918,7 +917,7 @@ namespace VehicleFramework
             }
             return PingManager.sCachedPingTypeStrings.Get(inputType);
         }
-        public static Sprite GetPingTypeSprite(SpriteManager.Group _, string name, Sprite defaultSprite = null)
+        public static Sprite GetPingTypeSprite(SpriteManager.Group _, string name, Sprite? defaultSprite)
         {
             foreach (VehicleEntry ve in VehicleManager.vehicleTypes)
             {

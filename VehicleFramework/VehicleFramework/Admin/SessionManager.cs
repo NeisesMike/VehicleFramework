@@ -13,26 +13,26 @@ namespace VehicleFramework.Admin
     {
         public static Coroutine StartCoroutine(IEnumerator coroutine)
         {
-            if (coroutine is null)
+            if (coroutine == null)
             {
-                throw Fatal("Input coroutine is null in SessionManager.StartCoroutine!");
+                throw Fatal("Input coroutine == null in SessionManager.StartCoroutine!");
             }
-            if (MainPatcher.Instance is null)
+            if (MainPatcher.Instance == null)
             {
-                ErrorMessage.AddError("MainPatcher Instance is null in SessionManager.StartCoroutine!");
-                throw Fatal("MainPatcher Instance is null in SessionManager.StartCoroutine!");
+                ErrorMessage.AddError("MainPatcher Instance == null in SessionManager.StartCoroutine!");
+                throw Fatal("MainPatcher Instance == null in SessionManager.StartCoroutine!");
             }
             return MainPatcher.Instance.StartCoroutine(coroutine);
         }
         public static void StopCoroutine(Coroutine? coroutine)
         {
-            if (coroutine is null)
+            if (coroutine == null)
             {
                 return;
             }
-            if (MainPatcher.Instance is null)
+            if (MainPatcher.Instance == null)
             {
-                throw Fatal("MainPatcher Instance is null in SessionManager.StopCoroutine!");
+                throw Fatal("MainPatcher Instance == null in SessionManager.StopCoroutine!");
             }
             MainPatcher.Instance.StopCoroutine(coroutine);
         }

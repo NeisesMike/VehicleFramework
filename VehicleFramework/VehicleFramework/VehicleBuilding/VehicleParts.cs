@@ -11,10 +11,10 @@ namespace VehicleFramework.VehicleParts
     {
         public GameObject Seat;
         public GameObject SitLocation;
-        public Transform LeftHandLocation;
-        public Transform RightHandLocation;
-        public Transform ExitLocation;
-        public VehiclePilotSeat(GameObject iSeat, GameObject iSitLocation, Transform iLeftHand, Transform iRightHand, Transform iExit)
+        public Transform? LeftHandLocation;
+        public Transform? RightHandLocation;
+        public Transform? ExitLocation;
+        public VehiclePilotSeat(GameObject iSeat, GameObject iSitLocation, Transform? iLeftHand, Transform? iRightHand, Transform? iExit)
         {
             Seat = iSeat;
             SitLocation = iSitLocation;
@@ -28,8 +28,8 @@ namespace VehicleFramework.VehicleParts
         public GameObject Hatch;
         public Transform EntryLocation;
         public Transform ExitLocation;
-        public Transform SurfaceExitLocation;
-        public VehicleHatchStruct(GameObject iHatch, Transform iEntry, Transform iExit, Transform iSurfaceExit)
+        public Transform? SurfaceExitLocation;
+        public VehicleHatchStruct(GameObject iHatch, Transform iEntry, Transform iExit, Transform? iSurfaceExit)
         {
             Hatch = iHatch;
             EntryLocation = iEntry;
@@ -52,11 +52,11 @@ namespace VehicleFramework.VehicleParts
     public struct VehicleUpgrades
     {
         public GameObject Interface;
-        public GameObject Flap;
-        public Vector3 AnglesOpened;
-        public Vector3 AnglesClosed;
-        public List<Transform> ModuleProxies;
-        public VehicleUpgrades(GameObject iInterface, GameObject iFlap, Vector3 iOpenAngles, Vector3 iClosedAngles, List<Transform> iProxies = null)
+        public GameObject? Flap;
+        public Vector3? AnglesOpened;
+        public Vector3? AnglesClosed;
+        public List<Transform>? ModuleProxies;
+        public VehicleUpgrades(GameObject iInterface, GameObject? iFlap, Vector3? iOpenAngles, Vector3? iClosedAngles, List<Transform>? iProxies = null)
         {
             Interface = iInterface;
             Flap = iFlap;
@@ -68,8 +68,8 @@ namespace VehicleFramework.VehicleParts
     public struct VehicleBattery
     {
         public GameObject BatterySlot;
-        public Transform BatteryProxy;
-        public VehicleBattery(GameObject iBatterySlot, Transform iBatteryProxy)
+        public Transform? BatteryProxy;
+        public VehicleBattery(GameObject iBatterySlot, Transform? iBatteryProxy)
         {
             BatterySlot = iBatterySlot;
             BatteryProxy = iBatteryProxy;
@@ -94,11 +94,11 @@ namespace VehicleFramework.VehicleParts
 
     public struct VehicleArmsProxy
     {
-        public GameObject originalLeftArm;
-        public GameObject originalRightArm;
-        public Transform leftArmPlacement;
-        public Transform rightArmPlacement;
-        public VehicleArmsProxy(GameObject originalLeft, GameObject originalRight, Transform leftArmPlace, Transform rightArmPlace)
+        public GameObject? originalLeftArm;
+        public GameObject? originalRightArm;
+        public Transform? leftArmPlacement;
+        public Transform? rightArmPlacement;
+        public VehicleArmsProxy(GameObject? originalLeft, GameObject? originalRight, Transform? leftArmPlace, Transform? rightArmPlace)
         {
             originalLeftArm = originalLeft;
             originalRightArm = originalRight;

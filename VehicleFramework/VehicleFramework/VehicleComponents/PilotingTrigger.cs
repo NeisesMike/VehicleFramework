@@ -11,17 +11,17 @@ namespace VehicleFramework
 {
     public class PilotingTrigger : HandTarget, IHandTarget, IScuttleListener, IDockListener
     {
-        public ModVehicle mv;
-        public Transform exit;
+        public required ModVehicle mv;
+        public Transform? exit;
         private bool isLive = true;
         void IHandTarget.OnHandClick(GUIHand hand)
         {
             if (!mv.GetPilotingMode() && mv.IsPowered() && isLive)
             {
-                // TODO multiplayer?
-                if(mv as Submarine != null)
+                Submarine? Sub = mv as Submarine;
+                if(Sub != null)
                 {
-                    (mv as Submarine).thisStopPilotingLocation = exit;
+                    Sub.thisStopPilotingLocation = exit;
                 }
                 mv.BeginPiloting();
             }

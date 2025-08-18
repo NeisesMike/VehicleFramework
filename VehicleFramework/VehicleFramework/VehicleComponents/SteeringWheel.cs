@@ -12,7 +12,7 @@ namespace VehicleFramework.VehicleComponents
     // with the movements of the vehicle.
     public class SteeringWheel : MonoBehaviour
     {
-        public Rigidbody useRigidbody => GetComponentInParent<ModVehicle>()?.useRigidbody;
+        public Rigidbody useRigidbody = null!;
         // Store the current Z rotation and the velocity used by SmoothDamp
         private float initialYawRotation = 0f;
         private float currentYawRotation = 0f;
@@ -29,6 +29,22 @@ namespace VehicleFramework.VehicleComponents
             minusY,
             z,
             minusZ
+        }
+        private void Awake()
+        {
+            Vehicle vehicle = GetComponentInParent<Vehicle>();
+            if(vehicle == null)
+            {
+                Debug.LogError("SteeringWheel component requires a parent Vehicle.");
+                enabled = false; // Disable this component if no Vehicle is found
+                return;
+            }
+            useRigidbody = vehicle.useRigidbody;
+            if(useRigidbody == null)
+            {
+                Debug.LogError("SteeringWheel component requires a parent Vehicle with a Rigidbody.");
+                enabled = false; // Disable this component if no Rigidbody is found
+            }
         }
         public void Start()
         {

@@ -199,7 +199,7 @@ namespace VehicleFramework
             {
                 if(go.name == "VRVehicleCanvas")
                 {
-                    if(go.transform.Find("ModVehicle") is null)
+                    if(go.transform.Find("ModVehicle") == null)
                     {
                         VRVehicleCanvas = go;
                     }

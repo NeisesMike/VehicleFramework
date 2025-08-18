@@ -85,43 +85,52 @@ namespace VehicleFramework
                 RegistrationQueue.Dequeue().Invoke();
             }
         }
-        public static bool ValidateAll(ModVehicle mv, bool verbose)
+        public static bool ValidateAll(ModVehicle? mv, bool verbose)
         {
-            if (mv as Submarine != null)
+            if(mv == null)
             {
-                if (!ValidateRegistration(mv as Submarine, verbose))
+                throw Admin.SessionManager.Fatal("A null ModVehicle was passed for registration.");
+            }
+            Submarine? Sub = mv as Submarine;
+            if (Sub != null)
+            {
+                if (!ValidateRegistration(Sub, verbose))
                 {
                     Logger.Error("Invalid Submarine Registration for the " + mv.gameObject.name + ". Next.");
                     return false;
                 }
             }
-            if (mv as Submersible != null)
+            Submersible? Subbie = mv as Submersible;
+            if (Subbie != null)
             {
-                if (!ValidateRegistration(mv as Submersible, verbose))
+                if (!ValidateRegistration(Subbie, verbose))
                 {
                     Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
                     return false;
                 }
             }
-            if (mv as Drone != null)
+            Drone? Drone = mv as Drone;
+            if (Drone != null)
             {
-                if (!ValidateRegistration(mv as Drone, verbose))
+                if (!ValidateRegistration(Drone, verbose))
                 {
                     Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
                     return false;
                 }
             }
-            if (mv as Walker != null)
+            Walker? Walker = mv as Walker;
+            if (Walker != null)
             {
-                if (!ValidateRegistration(mv as Walker, verbose))
+                if (!ValidateRegistration(Walker, verbose))
                 {
                     Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
                     return false;
                 }
             }
-            if (mv as Skimmer != null)
+            Skimmer? Skimmer = mv as Skimmer;
+            if (Skimmer != null)
             {
-                if (!ValidateRegistration(mv as Skimmer, verbose))
+                if (!ValidateRegistration(Skimmer, verbose))
                 {
                     Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
                     return false;
@@ -134,7 +143,7 @@ namespace VehicleFramework
             string thisName = "";
             try
             {
-                if (mv is null)
+                if (mv == null)
                 {
                     Logger.Error("An null mod vehicle was passed for registration.");
                     return false;
@@ -166,35 +175,35 @@ namespace VehicleFramework
                     Logger.Error(thisName + " A non-positive mass was passed for registration. Don't do that.");
                     return false;
                 }
-                if (mv.InnateStorages is null || mv.InnateStorages.Count == 0)
+                if (mv.InnateStorages == null || mv.InnateStorages.Count == 0)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.InnateStorages were provided. These are lockers the vehicle always has.");
                 }
-                if (mv.ModularStorages is null || mv.ModularStorages.Count == 0)
+                if (mv.ModularStorages == null || mv.ModularStorages.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " No ModVehicle.ModularStorages were provided. These are lockers that can be unlocked with upgrades.");
                 }
-                if (mv.Upgrades is null || mv.Upgrades.Count == 0)
+                if (mv.Upgrades == null || mv.Upgrades.Count == 0)
                 {
                     Logger.Warn(thisName + " No ModVehicle.Upgrades were provided. These specify interfaces the player can click to insert and remove upgrades.");
                 }
-                if (mv.Batteries is null || mv.Batteries.Count == 0)
+                if (mv.Batteries == null || mv.Batteries.Count == 0)
                 {
                     Logger.Warn(thisName + " No ModVehicle.Batteries were provided. These are necessary to power the engines. This vehicle will be always powered.");
                 }
-                if (mv.BackupBatteries is null || mv.BackupBatteries.Count == 0)
+                if (mv.BackupBatteries == null || mv.BackupBatteries.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " No ModVehicle.BackupBatteries were provided. This collection of batteries belong to the AI and will be used exclusively for life support, auto-leveling, and other AI tasks. The AI will use the main batteries instead.");
                 }
-                if (mv.HeadLights is null || mv.HeadLights.Count == 0)
+                if (mv.HeadLights == null || mv.HeadLights.Count == 0)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.HeadLights were provided. These lights would be activated when the player right clicks while piloting.");
                 }
-                if (mv.WaterClipProxies is null || mv.WaterClipProxies.Count == 0)
+                if (mv.WaterClipProxies == null || mv.WaterClipProxies.Count == 0)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.WaterClipProxies were provided. These are necessary to keep the ocean surface out of the vehicle.");
                 }
-                if (mv.CanopyWindows is null || mv.CanopyWindows.Count == 0)
+                if (mv.CanopyWindows == null || mv.CanopyWindows.Count == 0)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.CanopyWindows were provided. These must be specified to handle window transparencies.");
                 }
@@ -231,12 +240,12 @@ namespace VehicleFramework
                         Logger.Error(thisName + " A null VehicleUpgrades.Interface was provided. There would be no way to upgrade this vehicle.");
                         return false;
                     }
-                    if (vu.Flap is null)
+                    if (vu.Flap == null)
                     {
                         Logger.Error(thisName + " A null VehicleUpgrades.Flap was provided. The upgrades interface requires this. It will be rotated by the angles in this struct when activated. You can set the rotation angle to zero to take no action.");
                         return false;
                     }
-                    if (vu.ModuleProxies is null)
+                    if (vu.ModuleProxies == null)
                     {
                         VerboseLog(LogType.Log, verbose, thisName + " A null VehicleUpgrades.ModuleProxies was provided. VehicleFramework will not provide a model for this upgrade slot.");
                     }
@@ -339,36 +348,36 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.Hatches is null || mv.Hatches.Count == 0)
+                if (mv.Hatches == null || mv.Hatches.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
                     return false;
                 }
-                if (mv.FloodLights is null || mv.FloodLights.Count == 0)
+                if (mv.FloodLights == null || mv.FloodLights.Count == 0)
                 {
                     VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.FloodLights were provided. These lights would be activated on the control panel.");
                 }
-                if (mv.NavigationPortLights is null || mv.NavigationPortLights.Count == 0)
+                if (mv.NavigationPortLights == null || mv.NavigationPortLights.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
                 }
-                if (mv.NavigationStarboardLights is null || mv.NavigationStarboardLights.Count == 0)
+                if (mv.NavigationStarboardLights == null || mv.NavigationStarboardLights.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
                 }
-                if (mv.NavigationPositionLights is null || mv.NavigationPositionLights.Count == 0)
+                if (mv.NavigationPositionLights == null || mv.NavigationPositionLights.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
                 }
-                if (mv.NavigationWhiteStrobeLights is null || mv.NavigationWhiteStrobeLights.Count == 0)
+                if (mv.NavigationWhiteStrobeLights == null || mv.NavigationWhiteStrobeLights.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
                 }
-                if (mv.NavigationRedStrobeLights is null || mv.NavigationRedStrobeLights.Count == 0)
+                if (mv.NavigationRedStrobeLights == null || mv.NavigationRedStrobeLights.Count == 0)
                 {
                     VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
                 }
-                if (mv.TetherSources is null || mv.TetherSources.Count == 0)
+                if (mv.TetherSources == null || mv.TetherSources.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.TetherSources were provided. These are necessary to keep the player 'grounded' within the vehicle.");
                     return false;
@@ -493,7 +502,7 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.Hatches is null || mv.Hatches.Count == 0)
+                if (mv.Hatches == null || mv.Hatches.Count == 0)
                 {
                     Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
                     return false;
@@ -535,12 +544,12 @@ namespace VehicleFramework
                         Logger.Error(thisName + " A null VehicleHatchStruct.Hatch was provided. There would be no way to enter/exit this vehicle.");
                         return false;
                     }
-                    if (vhs.ExitLocation is null)
+                    if (vhs.ExitLocation == null)
                     {
                         Logger.Error(thisName + " A null VehicleHatchStruct.ExitLocation was provided. There would be no way to enter/exit this vehicle.");
                         return false;
                     }
-                    if (vhs.SurfaceExitLocation is null)
+                    if (vhs.SurfaceExitLocation == null)
                     {
                         VerboseLog(LogType.Warn, verbose, thisName + " A null VehicleHatchStruct.SurfaceExitLocation was provided. You might need this if you exit weirdly near the surface.");
                     }
@@ -583,7 +592,7 @@ namespace VehicleFramework
             try
             {
                 thisName = mv.name + ": ";
-                if (mv.CameraLocation is null)
+                if (mv.CameraLocation == null)
                 {
                     Logger.Error(thisName + " No Drone.CameraLocation was provided. This is where VF will place the camera while the Drone is remotely piloted.");
                     return false;

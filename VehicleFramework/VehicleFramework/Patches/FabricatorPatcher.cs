@@ -13,7 +13,7 @@ namespace VehicleFramework.Patches
 		public static bool HasEnoughPowerPrefix(GhostCrafter __instance, ref bool __result)
 		{
 			ModVehicle mv = __instance.GetComponentInParent<ModVehicle>();
-			if (mv is null || !GameModeUtils.RequiresPower())
+			if (mv == null || !GameModeUtils.RequiresPower())
 			{
 				return true;
 			}
@@ -53,7 +53,7 @@ namespace VehicleFramework.Patches
 						break;
 					}
 				}
-				if (mv is null)
+				if (mv == null)
 				{
 					Logger.Error("ConsumeEnergyPrefix ERROR: PowerRelay was null, but we weren't in a ModVehicle.");
 					return true;

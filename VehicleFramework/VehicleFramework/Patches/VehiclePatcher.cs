@@ -33,7 +33,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.OnHandHover))]
         public static bool OnHandHoverPrefix(Vehicle __instance)
         {
-            ModVehicle mv = __instance as ModVehicle;
+            ModVehicle? mv = __instance as ModVehicle;
             if (mv == null)
             {
                 if (VehicleTypes.Drone.mountedDrone != null)
@@ -67,7 +67,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.ApplyPhysicsMove))]
         private static bool ApplyPhysicsMovePrefix(Vehicle __instance, ref bool ___wasAboveWater, ref VehicleAccelerationModifier[] ___accelerationModifiers)
         {
-            ModVehicle mv = __instance as ModVehicle;
+            ModVehicle? mv = __instance as ModVehicle;
             if (mv != null)
             {
                 return false;
@@ -79,7 +79,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.LazyInitialize))]
         public static bool LazyInitializePrefix(Vehicle __instance, ref EnergyInterface ___energyInterface)
         {
-            ModVehicle mv = __instance as ModVehicle;
+            ModVehicle? mv = __instance as ModVehicle;
             if (mv == null)
             {
                 return true;
@@ -93,7 +93,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.GetAllStorages))]
         public static void GetAllStoragesPostfix(Vehicle __instance, ref List<IItemsContainer> containers)
         {
-            ModVehicle mv = __instance as ModVehicle;
+            ModVehicle? mv = __instance as ModVehicle;
             if (mv == null)
             {
                 return;
@@ -109,7 +109,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.IsPowered))]
         public static void IsPoweredPostfix(Vehicle __instance, ref EnergyInterface ___energyInterface, ref bool __result)
         {
-            ModVehicle mv = __instance as ModVehicle;
+            ModVehicle? mv = __instance as ModVehicle;
             if (mv == null)
             {
                 return;
@@ -153,7 +153,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.GetPilotingMode))]
         public static bool GetPilotingModePrefix(Vehicle __instance, ref bool __result)
         {
-            VehicleTypes.Drone mv = __instance as VehicleTypes.Drone;
+            VehicleTypes.Drone? mv = __instance as VehicleTypes.Drone;
             if (mv == null)
             {
                 return true;
@@ -173,8 +173,12 @@ namespace VehicleFramework
                     yield break;
                 }
                 yield return new WaitUntil(() => baseCell.Find("BaseMoonpool(Clone)") != null);
-                var thisBasesBays = baseCell?.GetAllComponentsInChildren<VehicleDockingBay>();
+                VehicleDockingBay[]? thisBasesBays = baseCell.GetAllComponentsInChildren<VehicleDockingBay>();
                 const float expectedMaxDistance = 5f;
+                if(thisBasesBays == null)
+                {
+                    yield break;
+                }
                 foreach (VehicleDockingBay bay in thisBasesBays)
                 {
                     if(Vector3.Distance(__instance.transform.position, bay.transform.position) < expectedMaxDistance)
