@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using HarmonyLib;
 using System.Reflection.Emit;
 
-namespace VehicleFramework.Patches
+namespace VehicleFramework.Patches.Core
 {
     public static class DroneTranspilerHelper
     {
         public static bool IsPlayerUsingDrone()
         {
-            return VehicleTypes.Drone.mountedDrone != null;
+            return VehicleTypes.Drone.MountedDrone != null;
         }
 
         public static IEnumerable<CodeInstruction> SkipForDrones(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

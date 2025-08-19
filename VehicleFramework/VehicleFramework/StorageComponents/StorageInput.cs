@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 //using VehicleFramework.Localization;
 
-namespace VehicleFramework
+namespace VehicleFramework.StorageComponents
 {
 	public abstract class StorageInput : HandTarget, IHandTarget
 	{
@@ -42,7 +43,7 @@ namespace VehicleFramework
 			mv = modVe.gameObject.GetComponent<ModVehicle>();
 			SetEnabled(true);
 		}
-		protected void OnDisable()
+		protected static void OnDisable()
 		{
 
 		}
@@ -57,6 +58,7 @@ namespace VehicleFramework
 			seq.Set(0, false, null);
 			gameObject.GetComponentInParent<ModVehicle>().OnStorageOpen(transform.name, false);
 			Utils.PlayFMODAsset(this.closeSound, base.transform, 1f);
+			Logger.DebugLog($"pda closed: {pda?.name ?? string.Empty}");
 		}
 		protected void UpdateColliderState()
 		{
@@ -82,7 +84,7 @@ namespace VehicleFramework
 		}
 		public void OnHandHover(GUIHand hand)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null)
+			if (VehicleTypes.Drone.MountedDrone != null)
 			{
 				return;
 			}
@@ -106,7 +108,7 @@ namespace VehicleFramework
 		}
 		public void OnHandClick(GUIHand hand)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null)
+			if (VehicleTypes.Drone.MountedDrone != null)
 			{
 				return;
 			}

@@ -2,6 +2,7 @@
 using System.Linq;
 using HarmonyLib;
 using System.Reflection.Emit;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: ensure bleeders deal damage in an intuitive way
 // VALUE: high

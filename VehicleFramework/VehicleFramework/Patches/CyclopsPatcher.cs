@@ -3,6 +3,8 @@ using System.Collections;
 using System.Linq;
 using HarmonyLib;
 using System.Reflection.Emit;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.StorageComponents;
 
 // PURPOSE: allow the Cyclops dock terminal to display ModVehicle data. 
 // VALUE: High.
@@ -85,7 +87,7 @@ namespace VehicleFramework.Patches
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(CyclopsVehicleStorageTerminalManager.StorageButtonClick))]
-        public static void StorageButtonClickPostfix(CyclopsVehicleStorageTerminalManager __instance, CyclopsVehicleStorageTerminalManager.VehicleStorageType type, int slotID)
+        public static void StorageButtonClickPostfix(CyclopsVehicleStorageTerminalManager __instance, int slotID)
         {
             if (__instance.dockedVehicleType == CyclopsVehicleStorageTerminalManager.DockedVehicleType.Seamoth)
             {

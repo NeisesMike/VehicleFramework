@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using System.Collections.Generic;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Prevent ModVehicles from entering "moon gates"
 // VALUE: high, for the sake of world consistency
@@ -21,9 +22,9 @@ namespace VehicleFramework.Patches
             {
                 return;
             }
-            if (MVs.ContainsKey(mv))
+            if (MVs.TryGetValue(mv, out int value))
             {
-                MVs[mv]++;
+                MVs[mv] = ++value;
             }
             else
             {

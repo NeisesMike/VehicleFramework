@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VehicleFramework.Engines;
 using VehicleFramework;
 using UnityEngine;
-using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleBuilding;
 
 namespace VehicleFramework.Composition
 {
@@ -172,7 +172,7 @@ namespace VehicleFramework.Composition
             IReadOnlyList<VehicleStorage>? innateStorages = null,
             IReadOnlyList<VehicleStorage>? modularStorages = null,
             IReadOnlyList<VehicleFloodLight>? headlights = null,
-            IReadOnlyList<VehicleFloodLight>? floodlights = null,
+            //IReadOnlyList<VehicleFloodLight>? floodlights = null,
             IReadOnlyList<GameObject>? canopyWindows = null,
             IReadOnlyList<VehicleBattery>? backupBatteries = null,
             IReadOnlyList<Collider>? denyBuildingColliders = null,

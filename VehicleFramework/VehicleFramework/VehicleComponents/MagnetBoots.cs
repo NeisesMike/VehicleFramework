@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Extensions;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -36,7 +38,7 @@ namespace VehicleFramework.VehicleComponents
         public float MagnetDistance = 1f;
         public bool recharges = true;
         public float rechargeRate = 0.5f; // transfer 0.5 energy per second
-        public static int colliderPairsPerFrame = 20;
+        public static int ColliderPairsPerFrame { get; set; }
 
         private Coroutine? CollisionHandling = null;
         private IEnumerator IgnoreCollisionWithHost(bool shouldIgnore)
@@ -64,7 +66,7 @@ namespace VehicleFramework.VehicleComponents
                     Physics.IgnoreCollision(left, right, shouldIgnore);
                     //Logger.Log($"{left.gameObject.name} and {right.gameObject.name}");
                     ignoreCounter++;
-                    if (ignoreCounter >= colliderPairsPerFrame)
+                    if (ignoreCounter >= ColliderPairsPerFrame)
                     {
                         // only only a few collider pairs per frame, so it never chugs.
                         ignoreCounter = 0;
@@ -337,7 +339,7 @@ namespace VehicleFramework.VehicleComponents
         private IEnumerator InternalLoad()
         {
             // why isn't this invoked?
-            yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted && Admin.GameStateWatcher.IsWorldSettled && Admin.GameStateWatcher.isWorldLoaded);
+            yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted && Admin.GameStateWatcher.IsWorldSettled && Admin.GameStateWatcher.IsWorldLoaded);
             bool loadedWasAttached = SaveLoad.JsonInterface.Read<bool>(MyVehicle, SaveFileSaveName);
             if (loadedWasAttached)
             {

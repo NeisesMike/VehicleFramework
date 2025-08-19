@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleBuilding;
+using VehicleFramework.Assets;
 
 namespace VehicleFramework.StorageComponents
 {
@@ -42,7 +43,7 @@ namespace VehicleFramework.StorageComponents
             for (int i = 0; i < seamothEnergyMixin.batteryModels.Length; i++)
             {
                 var but = seamothEnergyMixin.batteryModels[i];
-                EnergyMixin.BatteryModels mod = new EnergyMixin.BatteryModels
+                EnergyMixin.BatteryModels mod = new()
                 {
                     model = GameObject.Instantiate(but.model),
                     techType = but.techType

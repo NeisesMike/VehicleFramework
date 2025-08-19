@@ -6,8 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleComponents
 {
     /*
      * Tether Sources are meant to be placed throughout the Submarine.
@@ -136,7 +137,7 @@ namespace VehicleFramework
                     .Where(x => !x.enabled) // collisionModel is set active again
                     .Where(x => x != mv.BoundingBoxCollider) // want this to remain disabled
                     .ToList();
-                while (effectedColliders.Where(x => x.enabled).Count() == 0)
+                while (!effectedColliders.Any(x => x.enabled))
                 {
                     yield return new WaitForSeconds(5);
                     effectedColliders.ForEach(x => x.enabled = true);
@@ -148,7 +149,7 @@ namespace VehicleFramework
 
         private void TryToEstablishLeash()
         {
-            bool PlayerWithinLeash(GameObject tetherSrc)
+            static bool PlayerWithinLeash(GameObject tetherSrc)
             {
                 float radius = 0.75f;
                 if (tetherSrc.GetComponentInChildren<SphereCollider>(true) != null)
@@ -172,7 +173,7 @@ namespace VehicleFramework
                 }
                 else
                 {
-                    if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Count() > 0)
+                    if (mv.TetherSources.Where(x => PlayerWithinLeash(x)).Any())
                     {
                         mv.PlayerEntry();
                     }

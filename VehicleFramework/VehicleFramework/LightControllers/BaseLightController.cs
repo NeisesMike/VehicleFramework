@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json.Linq;
+using UnityEngine;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.LightControllers
 {
     public abstract class BaseLightController : MonoBehaviour, IPowerChanged, IScuttleListener, IDockListener
     {
@@ -16,20 +18,24 @@ namespace VehicleFramework
             }
             private set
             {
-                bool oldValue = _isLightsOn;
-                if (canLightsBeEnabled && !isScuttled && !isDocked)
-                {
-                    _isLightsOn = value;
-                }
-                else
-                {
-                    _isLightsOn = false;
-                }
-                HandleLighting(IsLightsOn);
-                if(oldValue != IsLightsOn)
-                {
-                    HandleSound(IsLightsOn);
-                }
+                BumpLights(value);
+            }
+        }
+        private void BumpLights(bool value)
+        {
+            bool oldValue = _isLightsOn;
+            if (canLightsBeEnabled && !isScuttled && !isDocked)
+            {
+                _isLightsOn = value;
+            }
+            else
+            {
+                _isLightsOn = false;
+            }
+            HandleLighting(IsLightsOn);
+            if (oldValue != IsLightsOn)
+            {
+                HandleSound(IsLightsOn);
             }
         }
         protected abstract void HandleLighting(bool active);
@@ -41,28 +47,28 @@ namespace VehicleFramework
         void IPowerChanged.OnPowerChanged(bool hasBatteryPower, bool isSwitchedOn)
         {
             canLightsBeEnabled = hasBatteryPower && isSwitchedOn;
-            IsLightsOn = IsLightsOn;
+            BumpLights(IsLightsOn);
         }
 
         void IScuttleListener.OnScuttle()
         {
             isScuttled = true;
-            IsLightsOn = IsLightsOn;
+            BumpLights(IsLightsOn);
         }
         void IScuttleListener.OnUnscuttle()
         {
             isScuttled = false;
-            IsLightsOn = IsLightsOn;
+            BumpLights(IsLightsOn);
         }
         void IDockListener.OnDock()
         {
             isDocked = true;
-            IsLightsOn = IsLightsOn;
+            BumpLights(IsLightsOn);
         }
         void IDockListener.OnUndock()
         {
             isDocked = false;
-            IsLightsOn = IsLightsOn;
+            BumpLights(IsLightsOn);
         }
     }
 }

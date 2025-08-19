@@ -3,6 +3,7 @@ using UnityEngine;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Admin;
+using VehicleFramework.VehicleBuilding;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -14,7 +15,7 @@ namespace VehicleFramework.VehicleComponents
         public GameObject? rightArm;
         internal int leftArmSlotID = 0;
         internal int rightArmSlotID = 0;
-        internal Drone? myDrone => GetComponent<Drone>();
+        internal Drone? MyDrone => GetComponent<Drone>();
 
         public void UpdateArms(ModVehicleArm arm, int slotId)
         {
@@ -80,9 +81,9 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else
                 {
-                    if(myDrone != null)
+                    if(MyDrone != null)
                     {
-                        leftArm.transform.localPosition = myDrone.CameraLocation.localPosition
+                        leftArm.transform.localPosition = MyDrone.CameraLocation.localPosition
                             - Vector3.right;
                     }
                     else
@@ -112,9 +113,9 @@ namespace VehicleFramework.VehicleComponents
                 }
                 else
                 {
-                    if (myDrone != null)
+                    if (MyDrone != null)
                     {
-                        rightArm.transform.localPosition = myDrone.CameraLocation.localPosition
+                        rightArm.transform.localPosition = MyDrone.CameraLocation.localPosition
                             + Vector3.right;
                     }
                     else

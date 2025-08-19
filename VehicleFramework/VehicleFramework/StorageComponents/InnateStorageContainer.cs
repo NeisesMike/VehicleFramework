@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Assets;
 
-namespace VehicleFramework
+namespace VehicleFramework.StorageComponents
 {
 	public class InnateStorageContainer : MonoBehaviour, ICraftTarget//, IProtoEventListener, IProtoTreeEventListener
 	{
@@ -58,7 +60,7 @@ namespace VehicleFramework
 			StartCoroutine(GetAndSetTorpedoSlots());
 		}
 
-        internal static void Create(VehicleParts.VehicleStorage vs, ModVehicle mv, int storageID)
+        internal static void Create(VehicleBuilding.VehicleStorage vs, ModVehicle mv, int storageID)
         {
             var cont = vs.Container.EnsureComponent<InnateStorageContainer>();
             cont.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();

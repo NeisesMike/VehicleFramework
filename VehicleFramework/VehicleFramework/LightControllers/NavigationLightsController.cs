@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.LightControllers
 {
     public class NavigationLightsController : BaseLightController
     {
@@ -217,7 +218,7 @@ namespace VehicleFramework
                     break;
             }
         }
-        private void BlinkThisLightOn(Material mat, Color col)
+        private static void BlinkThisLightOn(Material mat, Color col)
         {
             mat.EnableKeyword(Admin.Utils.emissionKeyword);
             mat.EnableKeyword(Admin.Utils.specmapKeyword);
@@ -226,7 +227,7 @@ namespace VehicleFramework
             mat.SetColor(Admin.Utils.colorField, col);
             mat.SetColor(Admin.Utils.glowColorField, col);
         }
-        private void BlinkThisStrobeOn(Material mat, Color col)
+        private static void BlinkThisStrobeOn(Material mat, Color col)
         {
             mat.EnableKeyword(Admin.Utils.emissionKeyword);
             mat.EnableKeyword(Admin.Utils.specmapKeyword);
@@ -235,18 +236,18 @@ namespace VehicleFramework
             mat.SetColor(Admin.Utils.colorField, col);
             mat.SetColor(Admin.Utils.glowColorField, col);
         }
-        private void BlinkThisLightOff(Material mat)
+        private static void BlinkThisLightOff(Material mat)
         {
             mat.DisableKeyword(Admin.Utils.emissionKeyword);
         }
-        private void BlinkOn(List<Material> mats, Color col)
+        private static void BlinkOn(List<Material> mats, Color col)
         {
             foreach (Material mat in mats)
             {
                 BlinkThisLightOn(mat, col);
             }
         }
-        private void BlinkOff(List<Material> mats)
+        private static void BlinkOff(List<Material> mats)
         {
             foreach (Material mat in mats)
             {

@@ -67,9 +67,9 @@ namespace VehicleFramework
         public static void PDANote(string msg, float duration = 1.4f, float delay = 0)
         {
             int id;
-            if(NoteIDsMemory.ContainsKey(msg))
+            if(NoteIDsMemory.TryGetValue(msg, out int value))
             {
-                id = NoteIDsMemory[msg];
+                id = value;
             }
             else
             {

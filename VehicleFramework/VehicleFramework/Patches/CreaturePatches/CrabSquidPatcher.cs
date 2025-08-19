@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: ensures the CrabSquid's EMP disables ModVehicles gracefully
 // VALUE: high
@@ -15,7 +16,7 @@ namespace VehicleFramework.Patches.CreaturePatches
          */
         [HarmonyPrefix]
         [HarmonyPatch(nameof(EnergyMixin.electronicsDisabled), MethodType.Setter)]
-        public static bool electronicsDisabled(EnergyMixin __instance, bool value)
+        public static bool ElectronicsDisabledHarmonyPrefix(EnergyMixin __instance, bool value)
         {
             if (__instance.gameObject.GetComponentInParent<ModVehicle>() != null)
             {

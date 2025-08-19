@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using VehicleFramework.Assets;
 
 // PURPOSE: Allow a seated player to use a Drone Station
 // VALUE: Moderate. Some value for immersion. See BenchPatcher too.

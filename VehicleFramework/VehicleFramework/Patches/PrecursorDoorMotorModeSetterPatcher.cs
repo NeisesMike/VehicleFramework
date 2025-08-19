@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: ModVehicles that go through MoonGates should fall to the ground
 // VALUE: High.

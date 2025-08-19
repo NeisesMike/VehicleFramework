@@ -39,7 +39,7 @@ namespace VehicleFramework.Patches
 			}
 			if (item.techType != TechType.None)
 			{
-				UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+				UpgradeTypes.AddActionParams addedParams = new()
 				{
 					cyclops = Subroot,
 					slotID = GetSlotNumber(slot),
@@ -59,7 +59,7 @@ namespace VehicleFramework.Patches
 			}
 			if (item.techType != TechType.None)
 			{
-				UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+				UpgradeTypes.AddActionParams addedParams = new()
 				{
 					cyclops = Subroot,
 					slotID = GetSlotNumber(slot),

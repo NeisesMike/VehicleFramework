@@ -3,11 +3,14 @@ using Nautilus.Assets.Gadgets;
 using System.Reflection;
 using System.IO;
 using VehicleFramework.Assets;
+using VehicleFramework.Admin;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleBuilding
 {
     internal static class VehicleNautilusInterface
     {
+        internal static readonly string[] stepsToFabricator = new string[] { "Vehicles" };
+
         internal static TechType RegisterVehicle(VehicleEntry vehicle)
         {
             string vehicleKey = vehicle.mv.name;
@@ -22,7 +25,7 @@ namespace VehicleFramework
                                             "recipes",
                                             $"{vehicleKey}_recipe.json");
             Nautilus.Crafting.RecipeData vehicleRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
-            if (vehicleRecipe.Ingredients.Count() == 0)
+            if (vehicleRecipe.Ingredients.Count == 0)
             {
                 // If the custom recipe file doesn't exist, go ahead and make it using the default recipe.
                 vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new Ingredient(x.Key, x.Value)).ToList());
@@ -38,7 +41,7 @@ namespace VehicleFramework
                 vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new Ingredient(x.Key, x.Value)).ToList());
             }
 
-            module_CustomPrefab.SetRecipe(vehicleRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(new string[] { "Vehicles" });
+            module_CustomPrefab.SetRecipe(vehicleRecipe).WithFabricatorType(CraftTree.Type.Constructor).WithStepsToFabricatorTab(stepsToFabricator);
             var scanningGadget = module_CustomPrefab.SetUnlock(vehicle.mv.UnlockedWith)
                 .WithPdaGroupCategory(TechGroup.Constructor, TechCategory.Constructor);
 
@@ -65,7 +68,7 @@ namespace VehicleFramework
                 TechType techType = VehicleNautilusInterface.RegisterVehicle(ve);
                 VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, $"Patched the {ve.name} Craftable");
                 VehicleEntry newVE = new(ve.mv, ve.unique_id, ve.pt, ve.ping_sprite, techType);
-                VehicleManager.vehicleTypes.Add(newVE);
+                Admin.VehicleManager.vehicleTypes.Add(newVE);
             }
             catch(System.Exception e)
             {

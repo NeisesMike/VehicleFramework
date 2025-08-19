@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using VehicleFramework.VehicleBuilding;
 
 // PURPOSE: Ensure VF is compatible with Slot Extender (both can be used to full effect)
 // VALUE: Very high. Excellent mod!
@@ -12,7 +13,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
          * It ensures that our ModVehicle upgrades UI is displayed correctly.
          */
         [HarmonyPrefix]
-        public static bool PrePrefix(object __instance)
+        public static bool PrePrefix()
         {
             if (ModuleBuilder.slotExtenderIsPatched)
             {
@@ -27,7 +28,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
         }
 
         [HarmonyPrefix]
-        public static bool PrePostfix(object __instance)
+        public static bool PrePostfix()
         {
             if (ModuleBuilder.slotExtenderIsPatched)
             {

@@ -6,25 +6,25 @@
 namespace VehicleFramework.Patches
 {
 	[HarmonyPatch(typeof(uGUI_DepthCompass))]
-	class uGUI_DepthCompassPatcher
+	class UGUI_DepthCompassPatcher
 	{
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(uGUI_DepthCompass.IsCompassEnabled))]
-		public static void IsCompassEnabledPostfix(uGUI_DepthCompass __instance, ref bool __result)
+		public static void IsCompassEnabledPostfix(ref bool __result)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null)
+			if (VehicleTypes.Drone.MountedDrone != null)
 			{
 				__result = true;
 			}
 		}
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(uGUI_DepthCompass.GetDepthInfo))]
-		public static void GetDepthInfoPostfix(uGUI_DepthCompass __instance, ref int depth, ref int crushDepth, ref uGUI_DepthCompass.DepthMode __result)
+		public static void GetDepthInfoPostfix(ref int depth, ref int crushDepth, ref uGUI_DepthCompass.DepthMode __result)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null)
+			if (VehicleTypes.Drone.MountedDrone != null)
 			{
 				__result = uGUI_DepthCompass.DepthMode.Submersible;
-				VehicleTypes.Drone.mountedDrone.GetDepth(out depth, out crushDepth);
+				VehicleTypes.Drone.MountedDrone.GetDepth(out depth, out crushDepth);
 			}
 		}
 	}

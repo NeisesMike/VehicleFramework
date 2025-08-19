@@ -4,6 +4,8 @@ using UnityEngine;
 using System.Reflection.Emit;
 using System.Linq;
 using VehicleFramework.MiscComponents;
+using VehicleFramework.Admin;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Prevent Drones from accessing upgrades. Display upgrade module models when appropriate. Display custom upgrade-background images.
 // VALUE: High. Drones would have odd behavior otherwise, and the other functions are important developer utilities.
@@ -17,13 +19,13 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandClick))]
         public static IEnumerable<CodeInstruction> VehicleUpgradeConsoleInputOnHandClickHarmonyTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            return DroneTranspilerHelper.SkipForDrones(instructions, generator);
+            return Core.DroneTranspilerHelper.SkipForDrones(instructions, generator);
         }
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandHover))]
         public static IEnumerable<CodeInstruction> VehicleUpgradeConsoleInputOnHandHoverHarmonyTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            return DroneTranspilerHelper.SkipForDrones(instructions, generator);
+            return Core.DroneTranspilerHelper.SkipForDrones(instructions, generator);
         }
 
         [HarmonyPostfix]
@@ -54,11 +56,11 @@ namespace VehicleFramework.Patches
             {
                 if (mv.upgradesInput == __instance)
                 {
-                    if(ModuleBuilder.main == null)
+                    if(VehicleBuilding.ModuleBuilder.main == null)
                     {
                         throw Admin.SessionManager.Fatal("ModuleBuilder.main is null! Cannot set background image for VehicleUpgradeConsoleInput.");
                     }
-                    ModuleBuilder.main.BackgroundSprite = mv.ModuleBackgroundImage;
+                    VehicleBuilding.ModuleBuilder.main.BackgroundSprite = mv.ModuleBackgroundImage;
                     break;
                 }
             }

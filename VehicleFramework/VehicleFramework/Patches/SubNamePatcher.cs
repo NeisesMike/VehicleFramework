@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Create ModVehicle API for changing colors via normal routines (eg MoonPool terminal)
 // VALUE: High.
@@ -59,6 +60,7 @@ namespace VehicleFramework.Patches
             {
                 sub.PaintVehicleName(mv.subName.GetName(), mv.nameColor, mv.baseColor);
             }
+            Logger.DebugLog($"hsb is {hsb}");
         }
 
         [HarmonyPostfix]

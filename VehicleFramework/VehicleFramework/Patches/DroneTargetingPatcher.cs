@@ -2,6 +2,7 @@
 using HarmonyLib;
 using UnityEngine;
 using System.Reflection;
+using VehicleFramework.StorageComponents;
 
 // PURPOSE: Allow drones to target, hover, and pick things up in an intuitive way.
 // VALUE: High.
@@ -18,7 +19,7 @@ namespace VehicleFramework.Patches
         }
 
         [HarmonyPrefix]
-        public static bool GetTargetPrefix(Targeting __instance, GameObject ignoreObj, float maxDistance, out GameObject? result, out float distance, ref bool __result)
+        public static bool GetTargetPrefix(GameObject ignoreObj, float maxDistance, out GameObject? result, out float distance, ref bool __result)
         {
             if (ignoreObj != Player.main.gameObject)
             {
@@ -26,13 +27,13 @@ namespace VehicleFramework.Patches
                 distance = 0;
                 return true;
             }
-            if (VehicleTypes.Drone.mountedDrone == null)
+            if (VehicleTypes.Drone.MountedDrone == null)
             {
                 result = null;
                 distance = 0;
                 return true;
             }
-            Targeting.AddToIgnoreList(VehicleTypes.Drone.mountedDrone.transform);
+            Targeting.AddToIgnoreList(VehicleTypes.Drone.MountedDrone.transform);
             __result = Targeting.GetTarget(maxDistance, out result, out distance);
             return false;
         }
@@ -43,9 +44,9 @@ namespace VehicleFramework.Patches
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Inventory.Pickup))]
-        public static bool PickupPrefix(Inventory __instance, Pickupable pickupable, ref bool __result)
+        public static bool PickupPrefix(Pickupable pickupable, ref bool __result)
         {
-            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.MountedDrone;
             if(drone == null)
             {
                 return true;
@@ -54,7 +55,7 @@ namespace VehicleFramework.Patches
             {
                 return false;
             }
-            foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+            foreach (VehicleBuilding.VehicleStorage vs in drone.InnateStorages)
             {
                 var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
                 if (cont.HasRoomFor(pickupable))
@@ -79,7 +80,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Pickupable.OnHandHover))]
         public static void PickupableOnHandHoverPostfix(Pickupable __instance, GUIHand hand)
         {
-            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.MountedDrone;
             if (drone == null || !hand.IsFreeToInteract() || !__instance.isPickupable)
             {
                 return;
@@ -87,7 +88,7 @@ namespace VehicleFramework.Patches
             bool hasRoomFor = false;
             if (drone.InnateStorages != null)
             {
-                foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+                foreach (VehicleBuilding.VehicleStorage vs in drone.InnateStorages)
                 {
                     var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
                     if (cont.HasRoomFor(__instance))
@@ -122,7 +123,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Pickupable.OnHandClick))]
         public static bool PickupableOnHandClickPostfix(Pickupable __instance, GUIHand hand)
         {
-            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.MountedDrone;
             if (drone == null || !hand.IsFreeToInteract() || !__instance.isPickupable)
             {
                 return true;
@@ -130,7 +131,7 @@ namespace VehicleFramework.Patches
             bool hasRoomFor = false;
             if (drone.InnateStorages != null)
             {
-                foreach (VehicleParts.VehicleStorage vs in drone.InnateStorages)
+                foreach (VehicleBuilding.VehicleStorage vs in drone.InnateStorages)
                 {
                     var cont = vs.Container.GetComponent<InnateStorageContainer>().Container;
                     if (cont.HasRoomFor(__instance))

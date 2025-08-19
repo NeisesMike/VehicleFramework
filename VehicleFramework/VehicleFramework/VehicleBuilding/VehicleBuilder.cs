@@ -8,8 +8,12 @@ using VehicleFramework.VehicleTypes;
 using VehicleFramework.MiscComponents;
 using VehicleFramework.StorageComponents;
 //using VehicleFramework.Localization;
+using VehicleFramework.Admin;
+using VehicleFramework.Assets;
+using VehicleFramework.Interfaces;
+using VehicleFramework.VehicleComponents;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleBuilding
 {
     public struct VehicleEntry
     {
@@ -34,7 +38,7 @@ namespace VehicleFramework
     {
 
         private static int numVehicleTypes = 0;
-        public static List<ModVehicle> prefabs = new();
+        internal static List<ModVehicle> prefabs = new();
 
         public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
@@ -72,7 +76,7 @@ namespace VehicleFramework
             {
                 if (mv.InnateStorages != null)
                 {
-                    foreach (VehicleParts.VehicleStorage vs in mv.InnateStorages)
+                    foreach (VehicleStorage vs in mv.InnateStorages)
                     {
                         vs.Container.SetActive(false);
                         InnateStorageContainer.Create(vs, mv, iter++);
@@ -90,7 +94,7 @@ namespace VehicleFramework
             {
                 if (mv.ModularStorages != null)
                 {
-                    foreach (VehicleParts.VehicleStorage vs in mv.ModularStorages)
+                    foreach (VehicleStorage vs in mv.ModularStorages)
                     {
                         vs.Container.SetActive(false);
 
@@ -125,7 +129,7 @@ namespace VehicleFramework
             {
                 if (mv.Upgrades != null)
                 {
-                    foreach (VehicleParts.VehicleUpgrades vu in mv.Upgrades)
+                    foreach (VehicleUpgrades vu in mv.Upgrades)
                     {
                         VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
                         vuci.flap = vu.Flap?.transform ?? vu.Interface.transform;
@@ -194,9 +198,9 @@ namespace VehicleFramework
             }
             try
             {
-                foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
+                foreach (VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    VehicleHatch.Create(vhs, mv);
+                    VehicleComponents.VehicleHatch.Create(vhs, mv);
                 }
             }
             catch (Exception e)
@@ -210,7 +214,7 @@ namespace VehicleFramework
             {
                 if (mv.ControlPanel != null)
                 {
-                    mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
+                    mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel.ControlPanel>();
                     mv.controlPanelLogic.mv = mv;
                     if(mv.transform.Find("Control-Panel-Location") != null)
                     {
@@ -245,9 +249,9 @@ namespace VehicleFramework
             }
             try
             {
-                foreach (VehicleParts.VehicleHatchStruct vhs in mv.Hatches)
+                foreach (VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    VehicleHatch.Create(vhs, mv);
+                    VehicleComponents.VehicleHatch.Create(vhs, mv);
                 }
             }
             catch (Exception e)
@@ -271,7 +275,7 @@ namespace VehicleFramework
             }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new();
-            if(mv.Batteries.Count() == 0)
+            if(mv.Batteries.Count == 0)
             {
                 // Configure energy mixin for this battery slot
                 var energyMixin = mv.gameObject.AddComponent<VehicleComponents.ForeverBattery>();
@@ -286,7 +290,7 @@ namespace VehicleFramework
                 energyMixin.controlledObjects = Array.Empty<GameObject>();
                 energyMixins.Add(energyMixin);
             }
-            foreach (VehicleParts.VehicleBattery vb in mv.Batteries)
+            foreach (VehicleBattery vb in mv.Batteries)
             {
                 // Configure energy mixin for this battery slot
                 var energyMixin = vb.BatterySlot.EnsureComponent<EnergyMixin>();
@@ -329,7 +333,7 @@ namespace VehicleFramework
             }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
             List<EnergyMixin> energyMixins = new();
-            foreach (VehicleParts.VehicleBattery vb in mv.BackupBatteries)
+            foreach (VehicleBattery vb in mv.BackupBatteries)
             {
                 // Configure energy mixin for this battery slot
                 var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
@@ -389,7 +393,7 @@ namespace VehicleFramework
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
             if (mv.HeadLights != null)
             {
-                foreach (VehicleParts.VehicleFloodLight pc in mv.HeadLights)
+                foreach (VehicleFloodLight pc in mv.HeadLights)
                 {
                     CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
                     var thisLight = pc.Light.EnsureComponent<Light>();
@@ -416,7 +420,7 @@ namespace VehicleFramework
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
             if (mv.FloodLights != null)
             {
-                foreach (VehicleParts.VehicleFloodLight pc in mv.FloodLights)
+                foreach (VehicleFloodLight pc in mv.FloodLights)
                 {
                     CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
                     var thisLight = pc.Light.EnsureComponent<Light>();
@@ -444,12 +448,12 @@ namespace VehicleFramework
             Transform seamothVL = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left/x_FakeVolumletricLight"); // sic
             MeshFilter seamothVLMF = seamothVL.GetComponent<MeshFilter>();
             MeshRenderer seamothVLMR = seamothVL.GetComponent<MeshRenderer>();
-            List<VehicleParts.VehicleFloodLight> theseLights = mv.HeadLights ?? new();
+            List<VehicleFloodLight> theseLights = mv.HeadLights ?? new();
             if(mv is VehicleTypes.Submarine subma && subma.FloodLights != null)
             {
                 theseLights.AddRange(subma.FloodLights);
             }
-            foreach (VehicleParts.VehicleFloodLight pc in theseLights)
+            foreach (VehicleFloodLight pc in theseLights)
             {
                 GameObject volumetricLight = new("VolumetricLight");
                 volumetricLight.transform.SetParent(pc.Light.transform);
@@ -717,8 +721,7 @@ namespace VehicleFramework
             cr.setupEcoTarget = true;
             cr.setupEcoBehaviours = false;
             cr.addedComponents = new Component[1];
-            cr.addedComponents.Append(et as Component);
-
+            cr.addedComponents[0] = et as Component;
         }
         public static void SetupLavaLarvaAttachPoints(ModVehicle mv)
         {
@@ -731,7 +734,7 @@ namespace VehicleFramework
                 lavaLarvaTarget.energyInterface = mv.energyInterface;
                 lavaLarvaTarget.larvaePrefabRoot = attachParent.transform;
                 lavaLarvaTarget.liveMixin = mv.liveMixin;
-                lavaLarvaTarget.primiryPointsCount = mv.LavaLarvaAttachPoints.Count();
+                lavaLarvaTarget.primiryPointsCount = mv.LavaLarvaAttachPoints.Count;
                 lavaLarvaTarget.vehicle = mv;
                 lavaLarvaTarget.subControl = null;
                 List<LavaLarvaAttachPoint> llapList = new();
@@ -774,10 +777,7 @@ namespace VehicleFramework
         }
         public static void SetupDenyBuildingTags(ModVehicle mv)
         {
-            if(mv.DenyBuildingColliders != null)
-            {
-                mv.DenyBuildingColliders.ForEach(x => x.tag = Builder.denyBuildingTag);
-            }
+            mv.DenyBuildingColliders?.ForEach(x => x.tag = Builder.denyBuildingTag);
         }
 
         #endregion

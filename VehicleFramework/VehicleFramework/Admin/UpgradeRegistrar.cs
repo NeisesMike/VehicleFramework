@@ -7,6 +7,7 @@ using Nautilus.Assets.Gadgets;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.Admin
 {
@@ -34,7 +35,7 @@ namespace VehicleFramework.Admin
     }
     public static class UpgradeRegistrar
     {
-        public static Dictionary<string, Sprite> UpgradeIcons = new(); // indexed by upgrade.ClassId
+        public static Dictionary<string, Sprite> UpgradeIcons { get; private set; } = new(); // indexed by upgrade.ClassId
         internal static List<Action<AddActionParams>> OnAddActions = new();
         internal static List<Action<ToggleActionParams>> OnToggleActions = new();
         internal static List<Action<SelectableChargeableActionParams>> OnSelectChargeActions = new();
@@ -44,7 +45,7 @@ namespace VehicleFramework.Admin
         internal static List<Action<ArmActionParams>> OnArmUpActions = new();
         internal static List<Action<ArmActionParams>> OnArmAltActions = new();
         internal static List<Tuple<Vehicle, int, Coroutine>> toggledActions = new();
-        public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default, bool verbose = false)
+        public static UpgradeTechTypes RegisterUpgrade(ModVehicleUpgrade upgrade, UpgradeCompat compat = default)
         {
             Logger.Log("Registering ModVehicleUpgrade " + upgrade.ClassId + " : " + upgrade.DisplayName);
             bool result = ValidateModVehicleUpgrade(upgrade, compat);

@@ -9,7 +9,7 @@ namespace VehicleFramework.Patches
     {
         public static bool GetDroneInUse()
         {
-            if (VehicleTypes.Drone.mountedDrone != null)
+            if (VehicleTypes.Drone.MountedDrone != null)
             {
                 ErrorMessage.AddWarning("Can't teleport with a Drone");
                 return false;

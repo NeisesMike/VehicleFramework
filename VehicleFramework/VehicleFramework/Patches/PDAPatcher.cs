@@ -3,7 +3,7 @@
 // PURPOSE: ensures QuickSlots display as expected when inside a ModVehicle. Prevents Drones from accessing the Player's inventory.
 // VALUE: High.
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(PDA))]
     public class PDAPatcher
@@ -26,9 +26,9 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(PDA.Open))]
-        public static bool OpenPrefix(PDA __instance)
+        public static bool OpenPrefix()
         {
-            return VehicleTypes.Drone.mountedDrone == null;
+            return VehicleTypes.Drone.MountedDrone == null;
         }
     }
 }

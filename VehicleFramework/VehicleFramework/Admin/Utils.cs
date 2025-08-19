@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.UpgradeTypes;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Extensions;
 
 namespace VehicleFramework.Admin
 {
@@ -64,7 +66,7 @@ namespace VehicleFramework.Admin
         }
         public static void LoadShader(ModVehicle mv, Shader shade)
         {
-            VehicleBuilder.ApplyShaders(mv, shade);
+            VehicleBuilding.VehicleBuilder.ApplyShaders(mv, shade);
         }
         public static bool IsAnAncestorTheCurrentMountedVehicle(Transform current)
         {
@@ -80,7 +82,7 @@ namespace VehicleFramework.Admin
         }
         public static void RegisterDepthModules()
         {
-            UpgradeCompat compat = new UpgradeCompat
+            UpgradeCompat compat = new()
             {
                 skipModVehicle = false,
                 skipCyclops = true,
@@ -134,7 +136,7 @@ namespace VehicleFramework.Admin
         {
             try
             {
-                VehicleEntry ve = VehicleManager.vehicleTypes.Where(x => x.name.Contains(name)).First();
+                VehicleBuilding.VehicleEntry ve = VehicleManager.vehicleTypes.Where(x => x.name.Contains(name)).First();
                 return ve.techType;
             }
             catch

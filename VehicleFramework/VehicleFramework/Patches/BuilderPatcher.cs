@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Extensions;
 
 // PURPOSE: allows Submarines to specify volumes in which things cannot be built or placed
 // VALUE: moderate, as a developer utility
@@ -16,7 +18,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Builder.CheckAsSubModule))]
         public static void BuilderCheckAsSubModulePostfix(ref bool __result)
         {
-            ModVehicle mv = Player.main.GetModVehicle();
+            ModVehicle? mv = Player.main.GetModVehicle();
             if (mv == null || mv is not VehicleTypes.Submarine)
             {
                 return;

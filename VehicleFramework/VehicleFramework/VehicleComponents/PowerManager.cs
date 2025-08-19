@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleComponents
 {
     /*
      * The PowerManager handles all power drains for the ModVehicle.
@@ -26,13 +28,13 @@ namespace VehicleFramework
             }
             public bool hasFuel;
             public bool isPowered;
-            public override bool Equals(object obj) => obj is PowerStatus other && this.Equals(other);
-            public bool Equals(PowerStatus p) => hasFuel == p.hasFuel && isPowered == p.isPowered;
-            public override int GetHashCode() => (hasFuel, isPowered).GetHashCode();
+            public readonly override bool Equals(object obj) => obj is PowerStatus other && this.Equals(other);
+            public readonly bool Equals(PowerStatus p) => hasFuel == p.hasFuel && isPowered == p.isPowered;
+            public readonly override int GetHashCode() => (hasFuel, isPowered).GetHashCode();
             public static bool operator ==(PowerStatus lhs, PowerStatus rhs) => lhs.Equals(rhs);
             public static bool operator !=(PowerStatus lhs, PowerStatus rhs) => !(lhs == rhs);
         }
-        private PowerStatus lastStatus = new PowerStatus { hasFuel = false, isPowered = false };
+        private PowerStatus lastStatus = new() { hasFuel = false, isPowered = false };
         private PowerEvent latestPowerEvent = PowerEvent.OnBatterySafe;
         private bool isHeadlightsOn = false;
         private bool isFloodlightsOn = false;
@@ -40,12 +42,12 @@ namespace VehicleFramework
         private bool isInteriorLightsOn = false;
         private bool isAutoLeveling = false;
         private bool isAutoPiloting = false;
-        private ModVehicle mv => GetComponent<ModVehicle>();
-        private EnergyInterface ei => GetComponent<EnergyInterface>();
+        private ModVehicle MV => GetComponent<ModVehicle>();
+        private EnergyInterface EI => GetComponent<EnergyInterface>();
 
         private PowerEvent EvaluatePowerEvent()
         {
-            mv.energyInterface.GetValues(out float charge, out _);
+            MV.energyInterface.GetValues(out float charge, out _);
             if (charge < 5)
             {
                 return PowerEvent.OnBatteryDepleted;
@@ -65,22 +67,22 @@ namespace VehicleFramework
         }
         public PowerStatus EvaluatePowerStatus()
         {
-            mv.energyInterface.GetValues(out float charge, out _);
+            MV.energyInterface.GetValues(out float charge, out _);
             return new PowerStatus
             {
-                isPowered = mv.isPoweredOn,
+                isPowered = MV.isPoweredOn,
                 hasFuel = charge > 0
             };
         }
         public float TrySpendEnergy(float val)
         {
             float desired = val;
-            float available = ei.TotalCanProvide(out _);
+            float available = EI.TotalCanProvide(out _);
             if (available < desired)
             {
                 desired = available;
             }
-            return ei.ConsumeEnergy(desired);
+            return EI.ConsumeEnergy(desired);
         }
         public void AccountForTheTypicalDrains()
         {
@@ -109,14 +111,14 @@ namespace VehicleFramework
             {
                 float scalarFactor = 1.0f;
                 float basePowerConsumptionPerSecond = .15f;
-                float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+                float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
                 TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
             if (isAutoPiloting)
             {
                 float scalarFactor = 1.0f;
                 float basePowerConsumptionPerSecond = 3f;
-                float upgradeModifier = Mathf.Pow(0.85f, mv.numEfficiencyModules);
+                float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
                 TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
         }

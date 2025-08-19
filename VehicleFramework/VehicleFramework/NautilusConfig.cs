@@ -8,7 +8,7 @@ namespace VehicleFramework
     internal class VehicleFrameworkNautilusConfig : Nautilus.Json.ConfigFile
     {
         [Button(LabelLanguageId = "VFConfigManagerLabel", TooltipLanguageId = "VFConfigManagerTooltip")]
-        public void PrintConfigManagerInfo(ButtonClickedEventArgs e)
+        public static void PrintConfigManagerInfo(ButtonClickedEventArgs _)
         {
             ErrorMessage.AddMessage(Language.main.Get("VFConfigManagerPrintInfo"));
         }
@@ -54,7 +54,7 @@ namespace VehicleFramework
 
         #region cheats
         [Button(LabelLanguageId = "VFDroneStationCheatLabel", TooltipLanguageId = "VFDroneStationCheatTooltip")]
-        public void UnlockDroneStation(ButtonClickedEventArgs e)
+        public static void UnlockDroneStation(ButtonClickedEventArgs _)
         {
             if(Player.main == null)
             {

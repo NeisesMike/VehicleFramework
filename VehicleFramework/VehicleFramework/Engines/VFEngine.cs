@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Interfaces;
 
 namespace VehicleFramework.Engines
 {
@@ -8,12 +10,7 @@ namespace VehicleFramework.Engines
         {
             get
             {
-                ModVehicle mv = GetComponent<ModVehicle>();
-                if(mv == null)
-                {
-                    throw Admin.SessionManager.Fatal($"No ModVehicle component found on {transform.name}. VFEngine requires a ModVehicle component.");
-                }
-                return mv;
+                return GetComponent<ModVehicle>() ?? throw Admin.SessionManager.Fatal($"No ModVehicle component found on {transform.name}. VFEngine requires a ModVehicle component.");
             }
         }
         protected Rigidbody RB => MV.useRigidbody ?? throw Admin.SessionManager.Fatal($"No MV.useRigidbody component found on {transform.name}. VFEngine requires a ModVehicle.useRigidbody component.");

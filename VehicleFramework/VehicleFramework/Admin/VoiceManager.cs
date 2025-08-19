@@ -6,8 +6,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Reflection;
 using System.IO;
+using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleTypes;
 
-namespace VehicleFramework
+namespace VehicleFramework.Admin
 {
     public class VehicleVoice
     {

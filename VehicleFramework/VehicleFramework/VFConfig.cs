@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
-using UnityEngine;
+using VehicleFramework.Admin;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -31,7 +32,7 @@ namespace VehicleFramework
         internal ConfigEntry<int> NumUpgrades { get; set; } = null!;
         internal ConfigEntry<bool> IsArms { get; set; } = null!;
         internal ConfigEntry<bool> UseCustomRecipe { get; set; } = null!;
-        internal ConfigEntry<uGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; } = null!;
+        internal ConfigEntry<MiscComponents.UGUI_VehicleHUD.HUDChoice> HUDChoice { get; set; } = null!;
         internal List<ConfigEntry<bool>> ExternalToggles = new();
         internal List<ConfigEntry<float>> ExternalSliders = new();
         internal List<ConfigEntry<KeyboardShortcut>> ExternalKeybinds = new();
@@ -76,9 +77,9 @@ namespace VehicleFramework
             vConf.EngineSounds = config.Bind<string>(vehicleName, "Engine Sounds", EngineSoundsManager.EngineSoundss.Select(x => x.Key).FirstOrDefault(), new ConfigDescription("Choose engine sounds for this vehicle", new AcceptableValueList<string>(EngineSoundsManager.EngineSoundss.Select(x => x.Key).ToArray())));
             vConf.EngineSounds.SettingChanged += GrabNewEngineSounds;
 
-            vConf.HUDChoice = config.Bind<uGUI_VehicleHUD.HUDChoice>(vehicleName, "HUD Choice", uGUI_VehicleHUD.HUDChoice.Storage, "Choose a HUD option for this vehicle");
+            vConf.HUDChoice = config.Bind<MiscComponents.UGUI_VehicleHUD.HUDChoice>(vehicleName, "HUD Choice", MiscComponents.UGUI_VehicleHUD.HUDChoice.Storage, "Choose a HUD option for this vehicle");
 
-            vConf.NumUpgrades= config.Bind<int>(vehicleName, "Number of Upgrade Slots", mv.NumModules, new ConfigDescription("How many upgrades can this vehicle use? (restart required)", new AcceptableValueRange<int>(0, ModuleBuilder.MaxNumModules)));
+            vConf.NumUpgrades= config.Bind<int>(vehicleName, "Number of Upgrade Slots", mv.NumModules, new ConfigDescription("How many upgrades can this vehicle use? (restart required)", new AcceptableValueRange<int>(0, VehicleBuilding.ModuleBuilder.MaxNumModules)));
             vConf.IsArms = config.Bind<bool>(vehicleName, "Enable Arm Slots", mv.HasArms, new ConfigDescription("Can this vehicle use arm upgrades? (restart required)"));
 
             vConf.UseCustomRecipe = config.Bind<bool>(vehicleName, "Use Custom Recipe", false, new ConfigDescription("Should this vehicle use the custom recipe file in the VehicleFramework/recipes folder? (restart required)"));

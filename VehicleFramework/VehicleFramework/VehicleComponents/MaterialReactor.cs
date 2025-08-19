@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -90,7 +91,7 @@ namespace VehicleFramework.VehicleComponents
                 ErrorMessage.AddWarning($"Material Reactor {label} cannot have negative capacity.");
                 return;
             }
-            if (iMaterialData.Count() == 0)
+            if (iMaterialData.Count == 0)
             {
                 ErrorMessage.AddWarning($"Material Reactor {label} must be able to accept some material.");
                 return;

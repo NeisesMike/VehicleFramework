@@ -1,13 +1,14 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using VehicleFramework.Assets;
 
 // PURPOSE: Prevent switching hotbar items while looking at a drone station. Allows for saner usage of the drone station controls.
 // VALUE: Moderate. Could find another control scheme that doesn't use "select next, select previous."
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(uGUI_QuickSlots))]
-    public class uGUI_QuickSlotsPatcher
+    public class UGUI_QuickSlotsPatcher
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_QuickSlots.HandleInput))]

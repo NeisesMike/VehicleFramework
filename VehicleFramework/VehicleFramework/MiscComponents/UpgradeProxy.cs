@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.Assets;
 
 namespace VehicleFramework.MiscComponents
 {
@@ -37,7 +38,7 @@ namespace VehicleFramework.MiscComponents
                 model.transform.localRotation = Quaternion.identity;
                 model.transform.localScale = Vector3.one;
                 VehicleUpgradeConsoleInput.Slot slot;
-                slot.id = ModuleBuilder.ModVehicleModulePrefix + i;
+                slot.id = VehicleBuilding.ModuleBuilder.ModVehicleModulePrefix + i;
                 slot.model = model;
                 slots.Add(slot);
             }

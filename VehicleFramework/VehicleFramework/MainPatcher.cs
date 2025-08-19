@@ -6,6 +6,7 @@ using System.Collections;
 using BepInEx;
 using UnityEngine.SceneManagement;
 using Nautilus.Handlers;
+using VehicleFramework.VehicleBuilding;
 
 namespace VehicleFramework
 {
@@ -60,8 +61,8 @@ namespace VehicleFramework
             Assets.VFFabricator.CreateAndRegister();
             Admin.CraftTreeHandler.AddFabricatorMenus();
             Admin.Utils.RegisterDepthModules();
-            GetVoices = Admin.SessionManager.StartCoroutine(VoiceManager.LoadAllVoices());
-            GetEngineSounds = Admin.SessionManager.StartCoroutine(EngineSoundsManager.LoadAllVoices());
+            GetVoices = Admin.SessionManager.StartCoroutine(Admin.VoiceManager.LoadAllVoices());
+            GetEngineSounds = Admin.SessionManager.StartCoroutine(Admin.EngineSoundsManager.LoadAllVoices());
         }
         public void Patch()
         {
@@ -79,14 +80,14 @@ namespace VehicleFramework
 
             void SetWorldNotLoaded()
             {
-                Admin.GameStateWatcher.isWorldLoaded = false;
+                Admin.GameStateWatcher.IsWorldLoaded = false;
                 ModuleBuilder.haveWeCalledBuildAllSlots = false;
                 ModuleBuilder.slotExtenderIsPatched = false;
                 ModuleBuilder.slotExtenderHasGreenLight = false;
             }
             void SetWorldLoaded()
             {
-                Admin.GameStateWatcher.isWorldLoaded = true;
+                Admin.GameStateWatcher.IsWorldLoaded = true;
             }
             void OnLoadOnce()
             {

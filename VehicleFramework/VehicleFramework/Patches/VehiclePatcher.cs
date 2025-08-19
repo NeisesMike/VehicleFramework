@@ -4,11 +4,13 @@ using System.Linq;
 using HarmonyLib;
 using System.Reflection.Emit;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.StorageComponents;
 
 // PURPOSE: generally ensures ModVehicles behave like normal Vehicles
 // VALUE: Very high.
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(Vehicle))]
     public class VehiclePatcher
@@ -22,7 +24,7 @@ namespace VehicleFramework
         [HarmonyPatch(nameof(Vehicle.OnHandClick))]
         public static bool OnHandClickPrefix(Vehicle __instance)
         {
-            if (VehicleTypes.Drone.mountedDrone != null || (__instance as ModVehicle) != null)
+            if (VehicleTypes.Drone.MountedDrone != null || (__instance as ModVehicle) != null)
             {
                 return false;
             }
@@ -36,7 +38,7 @@ namespace VehicleFramework
             ModVehicle? mv = __instance as ModVehicle;
             if (mv == null)
             {
-                if (VehicleTypes.Drone.mountedDrone != null)
+                if (VehicleTypes.Drone.MountedDrone != null)
                 {
                     return false;
                 }
@@ -65,14 +67,9 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Vehicle.ApplyPhysicsMove))]
-        private static bool ApplyPhysicsMovePrefix(Vehicle __instance, ref bool ___wasAboveWater, ref VehicleAccelerationModifier[] ___accelerationModifiers)
+        private static bool ApplyPhysicsMovePrefix(Vehicle __instance)
         {
-            ModVehicle? mv = __instance as ModVehicle;
-            if (mv != null)
-            {
-                return false;
-            }
-            return true;
+            return __instance is not ModVehicle;
         }
 
         [HarmonyPrefix]
@@ -106,7 +103,7 @@ namespace VehicleFramework
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Vehicle.IsPowered))]
-        public static void IsPoweredPostfix(Vehicle __instance, ref EnergyInterface ___energyInterface, ref bool __result)
+        public static void IsPoweredPostfix(Vehicle __instance, ref bool __result)
         {
             ModVehicle? mv = __instance as ModVehicle;
             if (mv == null)

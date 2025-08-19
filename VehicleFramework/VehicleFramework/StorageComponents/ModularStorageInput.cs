@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
-namespace VehicleFramework
+namespace VehicleFramework.StorageComponents
 {
 	public class ModularStorageInput : StorageInput
 	{
@@ -55,7 +56,7 @@ namespace VehicleFramework
 				return result;
 			}
 			var containerList = mv.ModulesRootObject.GetComponentsInChildren<SeamothStorageContainer>(true);
-			if (!containerList.Any())
+			if (containerList.Length == 0)
 			{
 				return result;
 			}

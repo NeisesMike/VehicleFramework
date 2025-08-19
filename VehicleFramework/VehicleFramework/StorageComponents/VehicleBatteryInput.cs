@@ -1,7 +1,8 @@
 ﻿//using VehicleFramework.Localization;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
-namespace VehicleFramework
+namespace VehicleFramework.StorageComponents
 {
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{
@@ -14,7 +15,7 @@ namespace VehicleFramework
 
 		public void OnHandHover(GUIHand hand)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null)
+			if (VehicleTypes.Drone.MountedDrone != null)
 			{
 				return;
 			}
@@ -24,7 +25,7 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
-			if (VehicleTypes.Drone.mountedDrone != null || mixin == null)
+			if (VehicleTypes.Drone.MountedDrone != null || mixin == null)
 			{
 				return;
 			}

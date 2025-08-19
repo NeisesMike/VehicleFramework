@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VehicleFramework
+namespace VehicleFramework.ControlPanel
 {
     public class ControlPanelButton : HandTarget, IHandTarget
     {

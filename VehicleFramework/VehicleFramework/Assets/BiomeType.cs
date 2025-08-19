@@ -104,7 +104,7 @@ namespace VehicleFramework.Assets
     public class AbstractBiomeData
     {
         public List<BiomeStruct> biomes = new();
-        public List<BiomeData> ConvertStruct(BiomeStruct biome)
+        public static List<BiomeData> ConvertStruct(BiomeStruct biome)
         {
             return BiomeTypes.GetBiomeData(biome);
         }

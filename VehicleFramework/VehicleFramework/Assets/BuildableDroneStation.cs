@@ -4,16 +4,16 @@ using System.Linq;
 using Nautilus.Assets.Gadgets;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Assets;
+using VehicleFramework.Extensions;
 
-namespace VehicleFramework
+namespace VehicleFramework.Assets
 {
     public static class BuildableDroneStation
     {
-        public const string classID = "DroneStation";
-        public static string displayName = Language.main.Get("VFDroneStationDisplayName");
-        public static string description = Language.main.Get("VFDroneStationDesc");
-        public static string encyclopediaDesc = Language.main.Get("VFDroneStationEncy");
+        private const string classID = "DroneStation";
+        private static readonly string displayName = Language.main.Get("VFDroneStationDisplayName");
+        private static readonly string description = Language.main.Get("VFDroneStationDesc");
+        private static readonly string encyclopediaDesc = Language.main.Get("VFDroneStationEncy");
 
         public static TechType RegisterConsole(GameObject droneStation, Sprite crafter, Sprite unlock)
         {
@@ -191,7 +191,7 @@ namespace VehicleFramework
                     }
                     if(index < 0)
                     {
-                        index = list.Count() - 1;
+                        index = list.Count - 1;
                     }
                     if((list.Count - 1) < index)
                     {
@@ -233,7 +233,7 @@ namespace VehicleFramework
                 PairedDrone.pairedStation = null;
                 PairedDrone = null;
             }
-            if (PairedDrone == null && list.Count() > 0)
+            if (PairedDrone == null && list.Count > 0)
             {
                 // if we ain't never peeped it before, grab one if possible
                 FastenConnection(this, list.First());

@@ -1,7 +1,8 @@
 ﻿using VehicleFramework.VehicleTypes;
 using UnityEngine;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.LightControllers
 {
     public class InteriorLightsController : BaseLightController, IPlayerListener
     {

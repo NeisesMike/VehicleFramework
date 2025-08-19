@@ -35,19 +35,19 @@ namespace VehicleFramework.Admin
             var cyclopsIcon = SpriteManager.Get(TechType.Cyclops) ?? StaticAssets.ModVehicleIcon;
 
             // add MV-universal tab
-            AddCraftingTab(new string[]{ }, UpgradeTypeToPath(VehicleType.ModVehicle).Last(), Language.main.Get("VFMVModules"), vfIcon);
+            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.ModVehicle).Last(), Language.main.Get("VFMVModules"), vfIcon);
             AddCraftingTab(UpgradeTypeToPath(VehicleType.ModVehicle), $"{GeneralTabName}{VehicleType.ModVehicle}", Language.main.Get("VFGeneralTab"), mvIcon);
             // add MV-specific tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Custom).Last(), Language.main.Get("VFSpecificModules"), vfIcon);
+            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Custom).Last(), Language.main.Get("VFSpecificModules"), vfIcon);
             AddCraftingTab(UpgradeTypeToPath(VehicleType.Custom), $"{GeneralTabName}{VehicleType.Custom}", Language.main.Get("VFGeneralTab"), mvIcon);
             // add seamoth tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Seamoth).Last(), Language.main.Get("VFSeamothTab"), seamothIcon);
+            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Seamoth).Last(), Language.main.Get("VFSeamothTab"), seamothIcon);
             AddCraftingTab(UpgradeTypeToPath(VehicleType.Seamoth), $"{GeneralTabName}{VehicleType.Seamoth}", Language.main.Get("VFGeneralTab"), mvIcon);
             // add prawn tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Prawn).Last(), Language.main.Get("VFPrawnTab"), prawnIcon);
+            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Prawn).Last(), Language.main.Get("VFPrawnTab"), prawnIcon);
             AddCraftingTab(UpgradeTypeToPath(VehicleType.Prawn), $"{GeneralTabName}{VehicleType.Prawn}", Language.main.Get("VFGeneralTab"), mvIcon);
             // add cyclops tab
-            AddCraftingTab(new string[] { }, UpgradeTypeToPath(VehicleType.Cyclops).Last(), Language.main.Get("VFCyclopsTab"), cyclopsIcon);
+            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Cyclops).Last(), Language.main.Get("VFCyclopsTab"), cyclopsIcon);
             AddCraftingTab(UpgradeTypeToPath(VehicleType.Cyclops), $"{GeneralTabName}{VehicleType.Cyclops}", Language.main.Get("VFGeneralTab"), mvIcon);
         }
         internal static void EnsureCraftingTabsAvailable(ModVehicleUpgrade upgrade, UpgradeCompat compat)
@@ -117,7 +117,7 @@ namespace VehicleFramework.Admin
                     throw Admin.SessionManager.Fatal($"CraftTreeHandler: Invalid Tab Path: there were crafting nodes in that tab: {thisPath.Last()}. Cannot mix tab nodes and crafting nodes.");
                 }
                 Nautilus.Handlers.CraftTreeHandler.AddTabNode(VFFabricator.TreeType, tabName, displayName, icon ?? StaticAssets.UpgradeIcon, thisPath);
-                if (thisPath.Any())
+                if (thisPath.Length != 0)
                 {
                     TabNodeTabNodes.Add(thisPath.Last());
                 }
@@ -134,7 +134,7 @@ namespace VehicleFramework.Admin
             {
                 innerKnownPaths.RemoveAll(x => x[i] != path[i]);
             }
-            return innerKnownPaths.Any();
+            return innerKnownPaths.Count != 0;
         }
         internal static bool IsValidTabPath(string[] steps)
         {

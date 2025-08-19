@@ -14,7 +14,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(MapRoomCameraScreenFXController.OnPreRender))]
         public static void OnPreRenderPostfix(MapRoomCameraScreenFXController __instance)
         {
-            Drone? drone = Drone.mountedDrone;
+            Drone? drone = Drone.MountedDrone;
             if(drone == null)
             {
                 return;

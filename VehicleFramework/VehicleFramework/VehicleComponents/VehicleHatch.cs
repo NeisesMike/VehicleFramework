@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.VehicleParts;
-//using VehicleFramework.Localization;
+using VehicleFramework.VehicleBuilding;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleComponents
 {
 	public class VehicleHatch : HandTarget, IHandTarget, IDockListener
 	{
@@ -23,7 +23,7 @@ namespace VehicleFramework
 
 		public void OnHandHover(GUIHand hand)
 		{
-			if (!isLive || Drone.mountedDrone != null)
+			if (!isLive || Drone.MountedDrone != null)
 			{
 				return;
 			}
@@ -48,7 +48,7 @@ namespace VehicleFramework
 
 		public void OnHandClick(GUIHand hand)
 		{
-			if (!isLive || Drone.mountedDrone != null)
+			if (!isLive || Drone.MountedDrone != null)
 			{
 				return;
 			}

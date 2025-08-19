@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Admin;
 using VehicleFramework.Assets;
+using VehicleFramework.Extensions;
 
 namespace VehicleFramework.UpgradeTypes
 {

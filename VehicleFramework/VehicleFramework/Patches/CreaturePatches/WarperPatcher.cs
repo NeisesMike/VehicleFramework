@@ -19,7 +19,7 @@ namespace VehicleFramework.Patches.CreaturePatches
             }
             if(__instance.name.Contains("Warper") && __result.GetType().ToString().Contains("RangedAttackLastTarget"))
             {
-                VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+                VehicleTypes.Drone? drone = VehicleTypes.Drone.MountedDrone;
                 VehicleTypes.Submarine? sub = Player.main?.GetVehicle() as VehicleTypes.Submarine;
                 if (drone != null || sub != null)
                 {
@@ -34,7 +34,7 @@ namespace VehicleFramework.Patches.CreaturePatches
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(WarpBall.Warp))]
-        public static bool WarpBallWarpPrefix(GameObject target, ref Vector3 position)
+        public static bool WarpBallWarpPrefix(GameObject target)
         {
             // Warp balls shouldn't effect players in Submarines
 

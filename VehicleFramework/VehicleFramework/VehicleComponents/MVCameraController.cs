@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Interfaces;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -80,12 +81,12 @@ namespace VehicleFramework.VehicleComponents
         }
         public bool SetState(string label)
         {
-            if (state == label || !cameras.ContainsKey(label))
+            if (state == label || !cameras.TryGetValue(label, out Transform? value))
             {
                 return false;
             }
             state = label;
-            MovePlayerCameraToTransform(cameras[label]);
+            MovePlayerCameraToTransform(value);
             return true;
         }
         public void MovePlayerCameraToTransform(Transform destination)

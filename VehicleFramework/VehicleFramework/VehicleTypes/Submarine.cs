@@ -8,7 +8,9 @@ using UnityEngine;
 using VehicleFramework.Engines;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using VehicleFramework.LightControllers;
 //using VehicleFramework.Localization;
+using VehicleFramework.VehicleBuilding;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -17,9 +19,9 @@ namespace VehicleFramework.VehicleTypes
      */
     public abstract class Submarine : ModVehicle
     {
-        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
-        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
-        public virtual List<VehicleParts.VehicleFloodLight>? FloodLights => null;
+        public abstract VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
+        public abstract List<VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
+        public virtual List<VehicleFloodLight>? FloodLights => null;
         public virtual List<GameObject>? TetherSources => null;
         public virtual GameObject? ControlPanel => null;
         public virtual Transform? ControlPanelLocation => null;
@@ -40,7 +42,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual bool DoesAutolevel => true;
 
 
-        public ControlPanel? controlPanelLogic;
+        public ControlPanel.ControlPanel? controlPanelLogic;
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
 
@@ -62,9 +64,9 @@ namespace VehicleFramework.VehicleTypes
             floodlights = gameObject.AddComponent<FloodLightsController>();
             interiorlights = gameObject.AddComponent<InteriorLightsController>();
             navlights = gameObject.AddComponent<NavigationLightsController>();
-            gameObject.EnsureComponent<TetherSource>();
+            gameObject.EnsureComponent<VehicleComponents.TetherSource>();
 
-            ControlPanel?.EnsureComponent<ControlPanel>();
+            ControlPanel?.EnsureComponent<ControlPanel.ControlPanel>();
 
             //controlPanelLogic?.Init();
         }
@@ -111,13 +113,13 @@ namespace VehicleFramework.VehicleTypes
         {
             return isPilotSeated;
         }
-        protected IEnumerator SitDownInChair()
+        protected static IEnumerator SitDownInChair()
         {
             Player.main.playerAnimator.SetBool("chair_sit", true);
             yield return null;
             Player.main.playerAnimator.SetBool("chair_sit", false);
         }
-        protected IEnumerator StandUpFromChair()
+        protected static IEnumerator StandUpFromChair()
         {
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;

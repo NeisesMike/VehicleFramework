@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace VehicleFramework.VehicleParts
+namespace VehicleFramework.VehicleBuilding
 {
     public struct VehiclePilotSeat
     {

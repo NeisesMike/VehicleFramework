@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.StorageComponents;
 
 namespace VehicleFramework.SaveLoad
 {
     internal class VFInnateStorageIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
-        internal ModVehicle mv => GetComponentInParent<ModVehicle>();
+        internal ModVehicle MV => GetComponentInParent<ModVehicle>();
         const string saveFileNameSuffix = "innatestorage";
-        private string SaveFileName => SaveLoadUtils.GetSaveFileName(mv.transform, transform, saveFileNameSuffix);
+        private string SaveFileName => SaveLoadUtils.GetSaveFileName(MV.transform, transform, saveFileNameSuffix);
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
@@ -29,7 +31,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 result.Add(new(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
             }
-            mv.SaveInnateStorage(SaveFileName, result);
+            MV.SaveInnateStorage(SaveFileName, result);
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
@@ -37,12 +39,12 @@ namespace VehicleFramework.SaveLoad
         }
         private IEnumerator LoadInnateStorage()
         {
-            yield return new WaitUntil(() => mv != null);
+            yield return new WaitUntil(() => MV != null);
 
-            var thisStorage = mv.ReadInnateStorage(SaveFileName);
+            var thisStorage = MV.ReadInnateStorage(SaveFileName);
             if (thisStorage == default)
             {
-                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float, TechType>>>(mv, SaveFileName);
+                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float, TechType>>>(MV, SaveFileName);
                 if (thisStorage == default)
                 {
                     yield break;
@@ -55,14 +57,14 @@ namespace VehicleFramework.SaveLoad
                 yield return CraftData.InstantiateFromPrefabAsync(item.Item1, result, false);
                 GameObject thisItem = result.Get();
 
-                thisItem.transform.SetParent(mv.StorageRootObject.transform);
+                thisItem.transform.SetParent(MV.StorageRootObject.transform);
                 try
                 {
                     GetComponent<InnateStorageContainer>().Container.AddItem(thisItem.EnsureComponent<Pickupable>());
                 }
                 catch (Exception e)
                 {
-                    Logger.LogException($"Failed to add storage item {thisItem.name} to innate storage on GameObject {gameObject.name} for {mv.name} : {mv.subName.hullName.text}", e);
+                    Logger.LogException($"Failed to add storage item {thisItem.name} to innate storage on GameObject {gameObject.name} for {MV.name} : {MV.subName.hullName.text}", e);
                 }
                 thisItem.SetActive(false);
                 if (item.Item2 >= 0)
@@ -74,7 +76,7 @@ namespace VehicleFramework.SaveLoad
                     }
                     catch(Exception e)
                     {
-                        Logger.LogException($"Failed to reload battery power for innate storage item {thisItem.name} in innate storage on GameObject {gameObject.name} for {mv.name} : {mv.subName.hullName.text}", e);
+                        Logger.LogException($"Failed to reload battery power for innate storage item {thisItem.name} in innate storage on GameObject {gameObject.name} for {MV.name} : {MV.subName.hullName.text}", e);
                     }
                 }
             }

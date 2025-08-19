@@ -3,7 +3,7 @@
 // PURPOSE: player is "normally grounded" while inside a Submarine
 // VALUE: High.
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(PlayerController))]
     public class PlayerControllerPatcher

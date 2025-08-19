@@ -2,6 +2,7 @@
 using System.Linq;
 using HarmonyLib;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow the spawn console command to work for ModVehicles
 // VALUE: Moderate. Could register a new console command instead.
@@ -13,7 +14,7 @@ namespace VehicleFramework.Patches
     {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(SpawnConsoleCommand.OnConsoleCommand_spawn))]
-        public static void OnConsoleCommand_spawnPostfix(SpawnConsoleCommand __instance, NotificationCenter.Notification n)
+        public static void OnConsoleCommand_spawnPostfix(NotificationCenter.Notification n)
         {
             if (n != null && n.data != null && n.data.Count > 0)
             {
@@ -26,12 +27,12 @@ namespace VehicleFramework.Patches
         }
         public static void FinishAnySpawningVehicles()
         {
-            void FinishHim(ModVehicle mv)
+            static void FinishHim(ModVehicle mv)
             {
                 mv.GetComponentInChildren<VFXConstructing>(true).constructed = 90f;
                 mv.GetComponentInChildren<VFXConstructing>(true).delay = 0f;
             }
-            VehicleManager.VehiclesInPlay
+            Admin.VehicleManager.VehiclesInPlay
                 .Where(x => x != null && x.GetComponentInChildren<VFXConstructing>(true) != null && x.GetComponentInChildren<VFXConstructing>(true).constructed < 100f)
                 .ForEach(x => FinishHim(x));
         }

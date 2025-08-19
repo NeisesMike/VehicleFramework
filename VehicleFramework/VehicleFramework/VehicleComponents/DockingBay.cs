@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
-using VehicleFramework.BaseVehicle;
+//using VehicleFramework.BaseVehicle;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Extensions;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -140,10 +142,7 @@ namespace VehicleFramework.VehicleComponents
                 mv.OnVehicleDocked(Vector3.zero);
             }
             dockingVehicle.transform.SetParent(transform);
-            if(GetComponent<VehicleTypes.Submarine>() != null)
-            {
-                GetComponent<VehicleTypes.Submarine>().PlayerEntry();
-            }
+            GetComponent<VehicleTypes.Submarine>()?.PlayerEntry();
         }
         protected virtual void OnStartedUndocking(bool withPlayer, Vehicle cdVehicle)
         {
@@ -260,7 +259,7 @@ namespace VehicleFramework.VehicleComponents
             CurrentDockedVehicle = null;
             dockAnimation = null;
         }
-        private IEnumerator MoveAndRotate(Vehicle objectToMove, Transform firstTarget, float duration)
+        private static IEnumerator MoveAndRotate(Vehicle objectToMove, Transform firstTarget, float duration)
         {
             // Get starting position and rotation
             Vector3 startPosition = objectToMove.transform.position;

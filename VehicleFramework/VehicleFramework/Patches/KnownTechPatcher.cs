@@ -12,7 +12,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(KnownTech.UnlockAll))]
         public static void KnownTechUnlockAllHarmonyPostfix()
         {
-            VehicleManager.vehicleTypes.ForEach(x => PDAEncyclopedia.Add(x.name, false));
+            Admin.VehicleManager.vehicleTypes.ForEach(x => PDAEncyclopedia.Add(x.name, false));
         }
     }
 }

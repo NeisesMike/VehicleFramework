@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.VehicleComponents;
 
 // PURPOSE: Ensure onboard fabricators are correctly powered. Ensure the constructor cannot build two MVs at once.
 // VALUE: High.
@@ -17,7 +19,7 @@ namespace VehicleFramework.Patches
 			{
 				return true;
 			}
-			PowerManager.PowerStatus goodPS = new PowerManager.PowerStatus
+			PowerManager.PowerStatus goodPS = new()
 			{
 				hasFuel = true,
 				isPowered = true
@@ -36,7 +38,7 @@ namespace VehicleFramework.Patches
 	{
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(CrafterLogic.ConsumeEnergy))]
-		public static bool ConsumeEnergyPrefix(CrafterLogic __instance, ref bool __result, PowerRelay powerRelay, float amount)
+		public static bool ConsumeEnergyPrefix(ref bool __result, PowerRelay powerRelay)
 		{
 			if (!GameModeUtils.RequiresPower())
 			{
@@ -49,7 +51,7 @@ namespace VehicleFramework.Patches
 				// (it was never assigned because PowerRelay.Start is skipped for ModVehicles)
 				// so let's check for one
 				ModVehicle? mv = null;
-				foreach (ModVehicle tempMV in VehicleManager.VehiclesInPlay)
+				foreach (ModVehicle tempMV in Admin.VehicleManager.VehiclesInPlay)
 				{
 					if (tempMV.IsUnderCommand)
 					{
@@ -86,7 +88,7 @@ namespace VehicleFramework.Patches
 	{
 		[HarmonyPrefix]
 		[HarmonyPatch(nameof(ConstructorInput.OnHandClick))]
-		public static bool OnHandClickPrefix(ConstructorInput __instance, GUIHand hand)
+		public static bool OnHandClickPrefix(ConstructorInput __instance)
 		{
 			if (__instance.constructor.building && __instance.constructor.buildTarget?.GetComponent<ModVehicle>() != null)
 			{

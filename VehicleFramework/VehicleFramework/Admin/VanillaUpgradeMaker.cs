@@ -9,7 +9,7 @@ namespace VehicleFramework.Admin
         public static List<TechType> CyclopsUpgradeTechTypes = new();
         internal static Nautilus.Assets.CustomPrefab CreateModuleVanilla(ModVehicleUpgrade upgrade, bool isPdaSetup, Nautilus.Assets.PrefabInfo info)
         {
-            Nautilus.Assets.CustomPrefab prefab = new Nautilus.Assets.CustomPrefab(info);
+            Nautilus.Assets.CustomPrefab prefab = new(info);
             var clone = new Nautilus.Assets.PrefabTemplates.CloneTemplate(info, TechType.SeamothElectricalDefense);
             prefab.SetGameObject(clone);
             if (!isPdaSetup)
@@ -29,7 +29,7 @@ namespace VehicleFramework.Admin
 
         private static Nautilus.Assets.CustomPrefab AddRecipe(this Nautilus.Assets.CustomPrefab customPrefab, ModVehicleUpgrade upgrade, VehicleType vType)
         {
-            Nautilus.Crafting.RecipeData moduleRecipe = new Nautilus.Crafting.RecipeData();
+            Nautilus.Crafting.RecipeData moduleRecipe = new();
             moduleRecipe.Ingredients.AddRange(upgrade.GetRecipe(vType));
 
             string[] steps = upgrade.ResolvePath(vType);
@@ -74,12 +74,10 @@ namespace VehicleFramework.Admin
             if (!compat.skipSeamoth)
             {
                 CreateSelectModuleSeamoth(select, ref utt, isPdaRegistered);
-                isPdaRegistered = true;
             }
             if (!compat.skipExosuit)
             {
                 CreateSelectModuleExosuit(select, ref utt, isPdaRegistered);
-                isPdaRegistered = true;
             }
             if (!compat.skipCyclops)
             {
@@ -96,12 +94,10 @@ namespace VehicleFramework.Admin
             if (!compat.skipSeamoth)
             {
                 CreateChargeModuleSeamoth(selectcharge, ref utt, isPdaRegistered);
-                isPdaRegistered = true;
             }
             if (!compat.skipExosuit)
             {
                 CreateChargeModuleExosuit(selectcharge, ref utt, isPdaRegistered);
-                isPdaRegistered = true;
             }
             if (!compat.skipCyclops)
             {
@@ -118,12 +114,10 @@ namespace VehicleFramework.Admin
             if (!compat.skipSeamoth)
             {
                 CreateToggleModuleSeamoth(toggle, ref utt, isPdaRegistered);
-                isPdaRegistered = true;
             }
             if (!compat.skipExosuit)
             {
                 CreateToggleModuleExosuit(toggle, ref utt, isPdaRegistered);
-                isPdaRegistered = true;
             }
             if (!compat.skipCyclops)
             {
@@ -147,9 +141,9 @@ namespace VehicleFramework.Admin
         internal static void AddPassiveActions(UpgradeModuleGadget gadget, ModVehicleUpgrade upgrade, Nautilus.Assets.PrefabInfo info)
         {
             gadget
-                 .WithOnModuleAdded((Vehicle vehicleInstance, int slotId) =>
+                 .WithOnModuleAdded((vehicleInstance, slotId) =>
                  {
-                     UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+                     UpgradeTypes.AddActionParams addedParams = new()
                      {
                          vehicle = vehicleInstance,
                          slotID = slotId,
@@ -158,9 +152,9 @@ namespace VehicleFramework.Admin
                      };
                      upgrade.OnAdded(addedParams);
                  })
-                 .WithOnModuleRemoved((Vehicle vehicleInstance, int slotId) =>
+                 .WithOnModuleRemoved((vehicleInstance, slotId) =>
                  {
-                     UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+                     UpgradeTypes.AddActionParams addedParams = new()
                      {
                          vehicle = vehicleInstance,
                          slotID = slotId,
@@ -175,9 +169,9 @@ namespace VehicleFramework.Admin
             gadget
                 .WithCooldown(upgrade.Cooldown)
                 .WithEnergyCost(upgrade.EnergyCost)
-                .WithOnModuleUsed((Vehicle vehicleInstance, int slotId, float charge, float chargeFraction) =>
+                .WithOnModuleUsed((vehicleInstance, slotId, charge, chargeFraction) =>
                 {
-                    UpgradeTypes.SelectableActionParams selectParams = new UpgradeTypes.SelectableActionParams
+                    UpgradeTypes.SelectableActionParams selectParams = new()
                     {
                         vehicle = vehicleInstance,
                         slotID = slotId,
@@ -186,12 +180,12 @@ namespace VehicleFramework.Admin
                     upgrade.OnSelected(selectParams);
                 });
         }
-        internal static void AddToggleActions(UpgradeModuleGadget gadget, ToggleableUpgrade upgrade, Nautilus.Assets.PrefabInfo info)
+        internal static void AddToggleActions(UpgradeModuleGadget gadget, Nautilus.Assets.PrefabInfo info)
         {
             gadget
-                .WithOnModuleToggled((Vehicle vehicleInstance, int slotId, float energyCost, bool isActive) =>
+                .WithOnModuleToggled((vehicleInstance, slotId, energyCost, isActive) =>
                 {
-                    UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
+                    UpgradeTypes.ToggleActionParams param = new()
                     {
                         active = isActive,
                         vehicle = vehicleInstance,
@@ -206,9 +200,9 @@ namespace VehicleFramework.Admin
             gadget
                 .WithMaxCharge(upgrade.MaxCharge) // this creates a harmless Nautilus warning
                 .WithEnergyCost(upgrade.EnergyCost) // this creates a harmless Nautilus warning
-                .WithOnModuleUsed((Vehicle vehicleInstance, int slotId, float charge, float chargeFraction) =>
+                .WithOnModuleUsed((vehicleInstance, slotId, charge, chargeFraction) =>
                 {
-                    UpgradeTypes.SelectableChargeableActionParams chargeParams = new UpgradeTypes.SelectableChargeableActionParams
+                    UpgradeTypes.SelectableChargeableActionParams chargeParams = new()
                     {
                         vehicle = vehicleInstance,
                         slotID = slotId,
@@ -251,7 +245,7 @@ namespace VehicleFramework.Admin
             var prefabInfo = Nautilus.Assets.PrefabInfo.WithTechType(upgrade.ClassId + "Cyclops", "Cyclops " + upgrade.DisplayName, "An upgrade for the Cyclops. " + upgrade.Description, unlockAtStart: upgrade.UnlockAtStart)
                 .WithIcon(upgrade.Icon);
             utt.forCyclops = prefabInfo.TechType;
-            Nautilus.Assets.CustomPrefab prefab = new Nautilus.Assets.CustomPrefab(prefabInfo);
+            Nautilus.Assets.CustomPrefab prefab = new(prefabInfo);
             var clone = new Nautilus.Assets.PrefabTemplates.CloneTemplate(prefabInfo, TechType.SeamothElectricalDefense);
             prefab.SetGameObject(clone);
             if (!isPdaSetup)
@@ -351,7 +345,7 @@ namespace VehicleFramework.Admin
                 .AddRecipe(upgrade, vType);
             UpgradeModuleGadget gadget = prefab.SetVehicleUpgradeModule(equipType, QuickSlotType.Toggleable);
             AddPassiveActions(gadget, upgrade, info);
-            AddToggleActions(gadget, upgrade, info);
+            AddToggleActions(gadget, info);
             prefab.Register();
             upgrade.UnlockTechType = info.TechType;
             return info.TechType;

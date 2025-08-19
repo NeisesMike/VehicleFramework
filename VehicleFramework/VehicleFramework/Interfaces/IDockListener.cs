@@ -1,5 +1,5 @@
 ﻿
-namespace VehicleFramework
+namespace VehicleFramework.Interfaces
 {
     public interface IDockListener
     {

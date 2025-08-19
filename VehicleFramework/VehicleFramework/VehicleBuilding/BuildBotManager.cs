@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using VehicleFramework.Assets;
+using VehicleFramework.VehicleTypes;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleBuilding
 {
     //SetupBuildBotPaths is invoked by Player.Start
     public static class BuildBotManager

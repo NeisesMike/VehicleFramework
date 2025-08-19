@@ -6,15 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Patches;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Admin;
 
-namespace VehicleFramework
+namespace VehicleFramework.Extensions
 {
     public static class ExtensionMethods
     {
         public static ModVehicle? GetModVehicle(this Player player)
         {
             return 
-                VehicleTypes.Drone.mountedDrone
+                Drone.MountedDrone
                 ?? player.GetVehicle() as ModVehicle
                 ?? player.currentSub?.GetComponent<ModVehicle>();
         }
@@ -47,16 +49,16 @@ namespace VehicleFramework
                 }
             }
             var theseBays = vehicle.transform.parent?.gameObject?.GetComponentsInChildren<VehicleDockingBay>()?.Where(x => x.dockedVehicle == vehicle);
-            if(theseBays == null || theseBays.Count() == 0)
+            if(theseBays == null || !theseBays.Any())
             {
                 UndockModVehicle(vehicle);
                 return;
             }
             VehicleDockingBay thisBay = theseBays.First();
-            Admin.SessionManager.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
+            SessionManager.StartCoroutine(thisBay.MaybeToggleCyclopsCollision());
             thisBay.vehicle_docked_param = false;
-            Player? toUndock = vehicle.liveMixin.IsAlive() && !Admin.ConsoleCommands.isUndockConsoleCommand ? Player.main : null;
-            Admin.SessionManager.StartCoroutine(vehicle.Undock(toUndock, thisBay.transform.position.y));
+            Player? toUndock = vehicle.liveMixin.IsAlive() && !ConsoleCommands.isUndockConsoleCommand ? Player.main : null;
+            SessionManager.StartCoroutine(vehicle.Undock(toUndock, thisBay.transform.position.y));
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             SkyEnvironmentChanged.Broadcast(vehicle.gameObject, (GameObject)null);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.

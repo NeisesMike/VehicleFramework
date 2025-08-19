@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow ModVehicle upgrade slots to mesh with the game systems
 // VALUE: High
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(Equipment))]
     public class EquipmentPatcher
@@ -126,14 +127,14 @@ namespace VehicleFramework
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Equipment.GetSlotType))]
-        public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result, Dictionary<EquipmentType, List<string>> ___typeToSlots)
+        public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result)
         {
-            if(slot.Contains(ModuleBuilder.ModVehicleModulePrefix))
+            if(slot.Contains(VehicleBuilding.ModuleBuilder.ModVehicleModulePrefix))
             {
                 __result = Admin.EnumHelper.GetModuleType();
                 return false;
             }
-            else if(slot == ModuleBuilder.RightArmSlotName || slot == ModuleBuilder.LeftArmSlotName)
+            else if(slot == VehicleBuilding.ModuleBuilder.RightArmSlotName || slot == VehicleBuilding.ModuleBuilder.LeftArmSlotName)
             {
                 __result = Admin.EnumHelper.GetArmType();
                 return false;

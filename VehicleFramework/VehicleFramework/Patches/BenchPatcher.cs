@@ -2,6 +2,8 @@
 using System.Reflection.Emit;
 using System.Collections.Generic;
 using System;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Extensions;
 
 // PURPOSE: allow intuitive use of drone stations while seated
 // VALUE: Moderate. Some value for immersion. See GUIHandPatcher too.
@@ -26,7 +28,7 @@ namespace VehicleFramework.Patches
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Bench.ExitSittingMode))]
-        public static void BenchExitSittingModePostfix(Bench __instance, Player player, bool skipCinematics)
+        public static void BenchExitSittingModePostfix()
         {
             ModVehicle? mv = Player.main.GetModVehicle();
             if (mv != null)
@@ -75,14 +77,14 @@ namespace VehicleFramework.Patches
             // but do not, at that time, exit the bench.
             // If instead the player died or is underwater,
             // leave the drone AND exit the bench.
-            if (VehicleTypes.Drone.mountedDrone != null)
+            if (VehicleTypes.Drone.MountedDrone != null)
             {
                 if (skipCinematics || player.isUnderwater.value) // these are true for OnDeath and OnUnderwater, respectively
                 {
                     if (player.mode == Player.Mode.LockedPiloting)
                     {
                         // drop the drone controls
-                        VehicleTypes.Drone.mountedDrone.DeselectSlots();
+                        VehicleTypes.Drone.MountedDrone.DeselectSlots();
                     }
                     // Exit the bench normally
                     thisBench.ExitSittingMode(player, skipCinematics);

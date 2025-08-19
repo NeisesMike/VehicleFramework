@@ -14,8 +14,8 @@ namespace VehicleFramework.VehicleTypes
      */
     public abstract class Submersible : ModVehicle
     { 
-        public abstract VehicleParts.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
-        public abstract List<VehicleParts.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
+        public abstract VehicleBuilding.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
+        public abstract List<VehicleBuilding.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
         public virtual GameObject? SteeringWheelLeftHandTarget { get; }
         public virtual GameObject? SteeringWheelRightHandTarget { get; }
         public override PilotingStyleEnum PilotingStyle => PilotingStyleEnum.Seamoth;
@@ -23,7 +23,7 @@ namespace VehicleFramework.VehicleTypes
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
         }
-        protected IEnumerator SitDownInChair()
+        protected static IEnumerator SitDownInChair()
         {
             Player.main.playerAnimator.SetBool("chair_sit", true);
             yield return null;
@@ -32,7 +32,7 @@ namespace VehicleFramework.VehicleTypes
             yield return new WaitForSeconds(0.05f);
             Player.main.playerAnimator.speed = 1f;
         }
-        protected IEnumerator StandUpFromChair()
+        protected static IEnumerator StandUpFromChair()
         {
             Player.main.playerAnimator.SetBool("chair_stand_up", true);
             yield return null;
@@ -42,7 +42,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.playerAnimator.speed = 1f;
             yield return null;
         }
-        public IEnumerator EventuallyStandUp()
+        public static IEnumerator EventuallyStandUp()
         {
             yield return new WaitForSeconds(1f);
             yield return StandUpFromChair();

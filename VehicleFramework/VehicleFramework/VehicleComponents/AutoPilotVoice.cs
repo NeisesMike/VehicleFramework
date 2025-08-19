@@ -9,8 +9,11 @@ using UnityEngine.Networking;
 using System.Reflection;
 using System.IO;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Admin;
+using VehicleFramework.Interfaces;
+using VehicleFramework.Extensions;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleComponents
 {
     public class AutoPilotVoice : MonoBehaviour, IScuttleListener
     {
@@ -107,7 +110,7 @@ namespace VehicleFramework
                 {
                     speakers.Add(ps.Hatch.EnsureComponent<AudioSource>().Register());
                 }
-                foreach (var ps in Sub.TetherSources)
+                foreach (var ps in Sub.TetherSources ?? new List<GameObject>())
                 {
                     speakers.Add(ps.EnsureComponent<AudioSource>().Register());
                 }
@@ -138,7 +141,7 @@ namespace VehicleFramework
         {
             SetupSpeakers();
         }
-        public void SetVoice(VehicleVoice inputVoice)
+        public void SetVoice(Admin.VehicleVoice inputVoice)
         {
             if (!blockVoiceChange)
             {

@@ -1,6 +1,6 @@
 ﻿using VehicleFramework.Admin;
 
-namespace VehicleFramework
+namespace VehicleFramework.StorageComponents
 {
     public class InnateStorageInput : StorageInput
     {

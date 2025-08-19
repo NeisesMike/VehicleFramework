@@ -2,11 +2,12 @@
 using HarmonyLib;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
+using VehicleFramework.Extensions;
 
 // PURPOSE: ensure the Player behaves as expected when ModVehicles are involved
 // VALUE: Very high.
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 { 
     [HarmonyPatch(typeof(Player))]
     public static class PlayerPatcher
@@ -18,22 +19,22 @@ namespace VehicleFramework
          */
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Player.Awake))]
-        public static void AwakePostfix(Player __instance)
+        public static void AwakePostfix()
         {
             new GameObject().AddComponent<Admin.ConsoleCommands>();
-            VehicleFramework.Admin.GameStateWatcher.IsPlayerAwaked = true;
-            VehicleFramework.Assets.FragmentManager.AddScannerDataEntries();
-            HUDBuilder.DecideBuildHUD();
+            Admin.GameStateWatcher.IsPlayerAwaked = true;
+            Assets.FragmentManager.AddScannerDataEntries();
+            VehicleBuilding.HUDBuilder.DecideBuildHUD();
 
             // Setup build bot paths.
             // We have to do this at game-start time,
             // because the new objects we create are wiped on scene-change.
-            Admin.SessionManager.StartCoroutine(BuildBotManager.SetupBuildBotPathsForAllMVs());
+            Admin.SessionManager.StartCoroutine(VehicleBuilding.BuildBotManager.SetupBuildBotPathsForAllMVs());
             return;
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Player.Start))]
-        public static void StartPostfix(Player __instance)
+        public static void StartPostfix()
         {
             VehicleFramework.Admin.GameStateWatcher.IsPlayerStarted = true;
             return;
@@ -139,22 +140,20 @@ namespace VehicleFramework
                         return;
                 }
             }
-            if (Drone.mountedDrone?.lastSubRoot?.powerRelay != null)
+            if (Drone.MountedDrone?.lastSubRoot?.powerRelay != null)
             {
-                __result = Drone.mountedDrone.lastSubRoot.powerRelay.IsPowered();
+                __result = Drone.MountedDrone.lastSubRoot.powerRelay.IsPowered();
                 return;
             }
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Player.IsFreeToInteract))]
-        public static void IsFreeToInteractPostfix(Player __instance, ref bool __result)
+        public static void IsFreeToInteractPostfix(ref bool __result)
         {
-            var list = Admin.GameObjectManager<Drone>.Where(x => x.IsPlayerControlling());
-            if (list.Count() == 0)
+            if (Admin.GameObjectManager<Drone>.Where(x => x.IsPlayerControlling()).Count == 0)
             {
                 return;
             }
-            Drone drone = list.First();
             __result = true;
         }
 
@@ -163,7 +162,7 @@ namespace VehicleFramework
         public static bool UpdatePositionPrefix(Player __instance)
         {
             // don't do this if a drone is being piloted
-            if (Drone.mountedDrone != null)
+            if (Drone.MountedDrone != null)
             {
                 return false;
             }

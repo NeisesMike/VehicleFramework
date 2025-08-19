@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using VehicleFramework.MiscComponents;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleBuilding
 {
     /*
      * This class controls building and configuring the mod vehicle HUD
@@ -91,7 +88,7 @@ namespace VehicleFramework
             mvHUDElementsRoot.transform.Find("Power").localPosition += offset;
             mvHUDElementsRoot.transform.Find("Temperature").localPosition += offset;
 
-            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
+            UGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<UGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
             ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
@@ -110,7 +107,7 @@ namespace VehicleFramework
             mvHUDElementsRoot.transform.localPosition = Vector3.zero;
 
 
-            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<uGUI_VehicleHUD>();
+            UGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.AddComponent<UGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
             var healthObject = mvHUDElementsRoot.transform.Find("Health");
             healthObject.localPosition = offset + new Vector3(-56, -15, 0);
@@ -145,7 +142,7 @@ namespace VehicleFramework
 
             BuildDroneHUD(ret, mvHUDElementsRoot);
         }
-        public static void BuildDroneHUD(uGUI_VehicleHUD ret, GameObject hudRoot)
+        public static void BuildDroneHUD(UGUI_VehicleHUD ret, GameObject hudRoot)
         {
             // copy the CameraScannerRoom hud for now
             GameObject cameraScannerRoomObj = uGUI.main.transform.Find("ScreenCanvas/HUD/Content/CameraScannerRoom").gameObject;
@@ -171,7 +168,7 @@ namespace VehicleFramework
             mvHUDElementsRoot.transform.localScale = 0.8f * Vector3.one;
 
             // Finally we need to add and configure a controller for our new HUD object
-            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
+            UGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<UGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
             ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
@@ -220,7 +217,7 @@ namespace VehicleFramework
             GameObject mvHUDElementsRoot = GameObject.Instantiate(seamothHUDElementsRoot, VRVehicleCanvas.transform);
             mvHUDElementsRoot.name = "ModVehicle";
 
-            uGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<uGUI_VehicleHUD>();
+            UGUI_VehicleHUD ret = uGUI.main.transform.Find("ScreenCanvas/HUD").gameObject.EnsureComponent<UGUI_VehicleHUD>();
             ret.root = mvHUDElementsRoot;
             ret.textHealth = mvHUDElementsRoot.transform.Find("Health").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();

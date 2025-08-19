@@ -64,11 +64,11 @@ namespace VehicleFramework.VehicleComponents
             bool RaycastForward(float distance)
             {
                 RaycastHit[] allHits = Physics.RaycastAll(transform.position, transform.forward, distance);
-                var but = allHits
+                var myHits = allHits
                     .Where(hit => hit.transform.GetComponent<Creature>() == null) // ignore creatures
                     .Where(hit => hit.transform.GetComponent<Player>() == null) // ignore player
                     ;
-                return 0 < but.Count();
+                return myHits.Any();
             }
             bool CheckClose(Vector3 destin, float magnit)
             {

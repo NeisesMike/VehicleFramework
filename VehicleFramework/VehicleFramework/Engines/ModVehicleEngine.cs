@@ -10,6 +10,8 @@ using System.Reflection;
 using System.IO;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Patches;
+using VehicleFramework.Admin;
+using VehicleFramework.Extensions;
 
 namespace VehicleFramework.Engines
 {
@@ -39,7 +41,7 @@ namespace VehicleFramework.Engines
         #region public_fields
         public float WhistleFactor = 0.4f;
         public float HumFactor = 1f;
-        public bool blockVoiceChange => false;
+        public bool BlockVoiceChange { get; set; } = false;
         public virtual bool CanMoveAboveWater { get; set; } = false;
         public virtual bool CanRotateAboveWater { get; set; } = false;
         #endregion
@@ -54,19 +56,19 @@ namespace VehicleFramework.Engines
         protected virtual float STRAFE_ACCEL => STRAFE_MAX_SPEED / 10f;
         protected virtual float VERT_ACCEL => VERT_MAX_SPEED / 10f;
 
-        protected virtual float waterDragDecay => 4.5f;
-        protected virtual float airDragDecay => 1.5f;
+        protected virtual float WaterDragDecay => 4.5f;
+        protected virtual float AirDragDecay => 1.5f;
         protected virtual float DragDecay
         {
             get
             {
                 if (MV.GetIsUnderwater())
                 {
-                    return waterDragDecay;
+                    return WaterDragDecay;
                 }
                 else
                 {
-                    return airDragDecay;
+                    return AirDragDecay;
                 }
             }
         }
@@ -449,7 +451,7 @@ namespace VehicleFramework.Engines
         }
         public void SetEngineSounds(EngineSounds inputVoice)
         {
-            if (!blockVoiceChange)
+            if (!BlockVoiceChange)
             {
                 Sounds = inputVoice;
             }

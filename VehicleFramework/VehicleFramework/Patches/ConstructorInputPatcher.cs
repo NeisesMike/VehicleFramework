@@ -29,7 +29,7 @@ namespace VehicleFramework.Patches
 
         public static bool ReturnValidCraftingPositionSpecial(ConstructorInput instance, Vector3 pollPosition, TechType craftTechType)
         {
-            foreach(var marty in VehicleManager.vehicleTypes)
+            foreach(var marty in Admin.VehicleManager.vehicleTypes)
             {
                 if(marty.techType == craftTechType)
                 {

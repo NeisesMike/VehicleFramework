@@ -5,12 +5,15 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleComponents;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
 using VehicleFramework.Admin;
-using System.Runtime.Remoting.Messaging;
+using VehicleFramework.VehicleBuilding;
+using VehicleFramework.LightControllers;
+using VehicleFramework.StorageComponents;
+using VehicleFramework.Interfaces;
+using VehicleFramework.Extensions;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleTypes
 {
     /*
      * ModVehicle is the primary abstract class provided by Vehicle Framework.
@@ -60,25 +63,25 @@ namespace VehicleFramework
                 return storageRO;
             }
         }
-        public virtual List<VehicleParts.VehicleBattery>? Batteries => new();
-        public virtual List<VehicleParts.VehicleUpgrades>? Upgrades => new();
+        public virtual List<VehicleBuilding.VehicleBattery>? Batteries => new();
+        public virtual List<VehicleBuilding.VehicleUpgrades>? Upgrades => new();
         public virtual VFEngine? VFEngine { get; set; }
-        public virtual VehicleParts.VehicleArmsProxy Arms { get; set; }
+        public virtual VehicleBuilding.VehicleArmsProxy Arms { get; set; }
         public virtual BoxCollider? BoundingBoxCollider { get; set; }
         public virtual Sprite? PingSprite => Assets.StaticAssets.DefaultPingSprite;
         public virtual Sprite? SaveFileSprite => Assets.StaticAssets.DefaultSaveFileSprite; // I think I can use SpriteHelper.CreateSpriteFromAtlasSprite for this now. But do I want to?
         public virtual List<GameObject>? WaterClipProxies => new();
-        public virtual List<VehicleParts.VehicleStorage>? InnateStorages => new();
-        public virtual List<VehicleParts.VehicleStorage>? ModularStorages => new();
-        public virtual List<VehicleParts.VehicleFloodLight>? HeadLights => new();
+        public virtual List<VehicleBuilding.VehicleStorage>? InnateStorages => new();
+        public virtual List<VehicleBuilding.VehicleStorage>? ModularStorages => new();
+        public virtual List<VehicleBuilding.VehicleFloodLight>? HeadLights => new();
         public virtual List<GameObject>? CanopyWindows => new();
         public virtual Dictionary<TechType, int>? Recipe => new() { { TechType.Titanium, 1 } };
-        public virtual List<VehicleParts.VehicleBattery>? BackupBatteries => new();
+        public virtual List<VehicleBuilding.VehicleBattery>? BackupBatteries => new();
         public virtual Sprite? UnlockedSprite => null;
         public virtual GameObject? LeviathanGrabPoint => gameObject;
         public virtual Sprite? CraftingSprite => StaticAssets.ModVehicleIcon;
         public virtual List<Transform>? LavaLarvaAttachPoints => new();
-        public virtual List<VehicleParts.VehicleCamera>? Cameras => new();
+        public virtual List<VehicleBuilding.VehicleCamera>? Cameras => new();
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => string.Empty;
         public virtual Sprite? EncyclopediaImage => null;
@@ -124,8 +127,8 @@ namespace VehicleFramework
             upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
 
             VehicleBuilder.SetupVolumetricLights(this);
-            headlights = gameObject.AddComponent<HeadLightsController>();
-            gameObject.AddComponent<VolumetricLightController>();
+            headlights = gameObject.AddComponent<LightControllers.HeadLightsController>();
+            gameObject.AddComponent<LightControllers.VolumetricLightController>();
 
             gameObject.EnsureComponent<AutoPilot>();
 
@@ -135,10 +138,7 @@ namespace VehicleFramework
             }
             VehicleBuilder.SetupCameraController(this);
             base.LazyInitialize();
-            if(Upgrades != null)
-            {
-                Upgrades.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
-            }
+            Upgrades?.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
             var warpChipThing = GetComponent("TelePingVehicleInstance");
             if(warpChipThing != null)
             {
@@ -180,7 +180,7 @@ namespace VehicleFramework
         public new virtual void OnKill()
         {
             liveMixin.health = 0;
-            if (IsUnderCommand && VehicleTypes.Drone.mountedDrone == null)
+            if (IsUnderCommand && VehicleTypes.Drone.MountedDrone == null)
             {
                 Player.main.playerController.SetEnabled(true);
                 Player.main.mode = Player.Mode.Normal;
@@ -466,7 +466,7 @@ namespace VehicleFramework
                     newPowerCell.SetActive(false);
                 }
             }
-            if (Batteries != null && Batteries.Count() > 0)
+            if (Batteries != null && Batteries.Count > 0)
             {
                 Admin.SessionManager.StartCoroutine(GiveUsABatteryOrGiveUsDeath());
             }
@@ -691,7 +691,7 @@ namespace VehicleFramework
         public bool IsPlayerDry = false;
         public bool isScuttled = false;
         public bool IsUndockingAnimating = false;
-        private List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
+        private readonly List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
         public TechType TechType => GetComponent<TechTag>().type;
         public bool IsConstructed => vfxConstructing == null || vfxConstructing.IsConstructed();
         #endregion
@@ -709,7 +709,7 @@ namespace VehicleFramework
 
         #region internal_methods
         internal List<string> VehicleModuleSlots => GenerateModuleSlots(VehicleConfig.GetConfig(this).NumUpgrades.Value).ToList(); // use config value instead
-        internal List<string> VehicleArmSlots => new() { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
+        internal static List<string> VehicleArmSlots => new() { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
         internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new()
                 {
                     { EnumHelper.GetModuleType(), VehicleModuleSlots },
@@ -895,7 +895,7 @@ namespace VehicleFramework
                     break;
             }
         }
-        private void MyExitLockedMode()
+        private static void MyExitLockedMode()
         {
             GameInput.ClearInput();
             Player.main.transform.parent = null;
@@ -927,9 +927,9 @@ namespace VehicleFramework
             //Walker? mvWalker = this as Walker;
             //Skimmer mvSkimmer = this as Skimmer;
             Submarine? mvSubmarine = this as Submarine;
-            if (Drone.mountedDrone != null)
+            if (Drone.MountedDrone != null)
             {
-                Drone.mountedDrone.StopControlling();
+                Drone.MountedDrone.StopControlling();
                 if (Player.main.GetVehicle() != null)
                 {
                     myPlayer.playerController.SetEnabled(true);
@@ -994,11 +994,8 @@ namespace VehicleFramework
                     }
                     return;
                 }
-
-                if(mvSubmarine.VFEngine != null)
-                {
-                    mvSubmarine.VFEngine.KillMomentum();
-                }
+                
+                mvSubmarine.VFEngine?.KillMomentum();
 
                 if (mvSubmarine.PilotSeat.ExitLocation == null)
                 {
@@ -1159,12 +1156,12 @@ namespace VehicleFramework
                 marty.ForEach(x => x.ForEach(y => ret += y.width * y.height));
                 return ret;
             }
-            int GetInnateCapacity(VehicleParts.VehicleStorage sto)
+            int GetInnateCapacity(VehicleBuilding.VehicleStorage sto)
             {
                 var container = sto.Container.GetComponent<InnateStorageContainer>();
                 return container.Container.sizeX * container.Container.sizeY;
             }
-            int GetInnateStored(VehicleParts.VehicleStorage sto)
+            int GetInnateStored(VehicleBuilding.VehicleStorage sto)
             {
                 int ret = 0;
                 var marty = (IEnumerable<InventoryItem>)sto.Container.GetComponent<InnateStorageContainer>().Container;
@@ -1297,7 +1294,7 @@ namespace VehicleFramework
             // Because Submarines had color changing before I knew how to integrate with the Moonpool
             // The new color changing methods are much simpler, but Odyssey and Beluga use the old methods,
             // So I'll still support them.
-            yield return new WaitUntil(() => Admin.GameStateWatcher.isWorldLoaded);
+            yield return new WaitUntil(() => Admin.GameStateWatcher.IsWorldLoaded);
             yield return new WaitUntil(() => isInitialized);
             var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SimpleDataSaveFileName);
             if (simpleData == null || simpleData.Count == 0)
@@ -1395,9 +1392,9 @@ namespace VehicleFramework
             {
                 return default;
             }
-            if (loadedStorageData.ContainsKey(path))
+            if (loadedStorageData.TryGetValue(path, out List<Tuple<TechType, float, TechType>>? value))
             {
-                return loadedStorageData[path];
+                return value;
             }
             else
             {
@@ -1429,9 +1426,9 @@ namespace VehicleFramework
             {
                 return default;
             }
-            if (loadedBatteryData.ContainsKey(path))
+            if (loadedBatteryData.TryGetValue(path, out Tuple<TechType, float>? value))
             {
-                return loadedBatteryData[path];
+                return value;
             }
             else
             {

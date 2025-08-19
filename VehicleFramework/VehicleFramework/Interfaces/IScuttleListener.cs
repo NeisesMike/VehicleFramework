@@ -1,4 +1,4 @@
-﻿namespace VehicleFramework
+﻿namespace VehicleFramework.Interfaces
 {
     public interface IScuttleListener
     {

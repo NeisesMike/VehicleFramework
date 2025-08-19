@@ -57,7 +57,7 @@ namespace VehicleFramework.Patches
                 }
                 else if(mv is Submarine sub && sub.Hatches.Count > 0)
                 {
-                    text = sub.Hatches.First().Hatch.GetComponent<VehicleHatch>().EnterHint;
+                    text = sub.Hatches.First().Hatch.GetComponent<VehicleComponents.VehicleHatch>().EnterHint;
                 }
                 float energyActual = 0;
                 float energyMax = 0;
@@ -86,7 +86,7 @@ namespace VehicleFramework.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandClick))]
-        public static bool OnHandClickPrefix(DockedVehicleHandTarget __instance, GUIHand hand)
+        public static bool OnHandClickPrefix(DockedVehicleHandTarget __instance)
         {
             Drone? thisDrone = __instance.dockingBay.GetDockedVehicle() as Drone;
             if (thisDrone != null)
@@ -113,11 +113,7 @@ namespace VehicleFramework.Patches
             Transform? moonpoolMaybe = __instance.dockingBay.transform.parent?.parent;
             if (subRootName.Contains("cyclops"))
             {
-                Transform? cyclopsCollisionParent = __instance.dockingBay.transform.parent?.parent?.parent;
-                if(cyclopsCollisionParent == null)
-                {
-                    throw Admin.SessionManager.Fatal("CyclopsCollisionParent == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
-                }
+                Transform? cyclopsCollisionParent = (__instance.dockingBay.transform.parent?.parent?.parent) ?? throw Admin.SessionManager.Fatal("CyclopsCollisionParent == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
                 cyclopsCollisionParent.Find("CyclopsCollision").gameObject.SetActive(false);
             }
             else
@@ -140,11 +136,7 @@ namespace VehicleFramework.Patches
             mv.IsUndockingAnimating = false;
             if (subRootName.Contains("cyclops"))
             {
-                Transform? cyclopsCollisionParent = __instance.dockingBay.transform.parent?.parent?.parent;
-                if (cyclopsCollisionParent == null)
-                {
-                    throw Admin.SessionManager.Fatal("CyclopsCollisionParent == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
-                }
+                Transform? cyclopsCollisionParent = (__instance.dockingBay.transform.parent?.parent?.parent) ?? throw Admin.SessionManager.Fatal("CyclopsCollisionParent == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
                 IEnumerator ReEnableCollisionsInAMoment()
                 {
                     yield return new WaitForSeconds(5);

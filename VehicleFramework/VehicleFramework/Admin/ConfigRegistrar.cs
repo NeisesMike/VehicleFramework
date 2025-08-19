@@ -4,6 +4,7 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using BepInEx.Configuration;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.Admin
 {
@@ -27,9 +28,9 @@ namespace VehicleFramework.Admin
         }
         public T GetValue(string name)
         {
-            if (ExternalConfigs.ContainsKey(name))
+            if (ExternalConfigs.TryGetValue(name, out ConfigEntry<T>? value))
             {
-                return ExternalConfigs[name].Value;
+                return value.Value;
             }
             throw new ArgumentException($"External config for {MyName} does not have a config entry of name {name}.");
         }

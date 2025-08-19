@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleBuilding;
 
 using VehicleFramework.Engines;
 using VehicleFramework;

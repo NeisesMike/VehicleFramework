@@ -4,8 +4,9 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.SaveLoad;
+using VehicleFramework.VehicleBuilding;
 
-namespace VehicleFramework
+namespace VehicleFramework.Admin
 {
     public static class VehicleManager
     {
@@ -24,7 +25,7 @@ namespace VehicleFramework
                 VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "PingType " + pt.ToString() + " was too small. Trying 121.");
                 ret = (PingType)121;
             }
-            while (mvPings.Where(x => x.pingType == ret).Count() > 0)
+            while (mvPings.Where(x => x.pingType == ret).Any())
             {
                 VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "PingType " + ret.ToString() + " was taken.");
                 ret++;

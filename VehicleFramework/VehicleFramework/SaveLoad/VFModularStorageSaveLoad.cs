@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.SaveLoad
 {
@@ -15,7 +16,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static string GetNewSaveFileName(string thisSlotName)
         {
-            return thisSlotName.Substring("Vehicle".Length);
+            return thisSlotName["Vehicle".Length..];
         }
         internal static void SerializeAllModularStorage(ModVehicle mv)
         {
@@ -51,7 +52,7 @@ namespace VehicleFramework.SaveLoad
         }
         internal static IEnumerator DeserializeAllModularStorage(ModVehicle mv)
         {
-            yield return new WaitUntil(() => Admin.GameStateWatcher.isWorldLoaded);
+            yield return new WaitUntil(() => Admin.GameStateWatcher.IsWorldLoaded);
             yield return new WaitUntil(() => mv.upgradesInput.equipment != null);
             foreach(var upgradesLoader in mv.GetComponentsInChildren<VFUpgradesIdentifier>())
             {

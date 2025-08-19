@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleBuilding
 {
     public class ModuleBuilder : MonoBehaviour
     {
-        public static ModuleBuilder? main;
-        public static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new();
+        internal static ModuleBuilder? main;
+        internal static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new();
         public const int MaxNumModules = 18;
-        public bool isEquipmentInit = false;
-        public bool areModulesReady = false;
-        public static bool haveWeCalledBuildAllSlots = false;
-        public static bool slotExtenderIsPatched = false;
-        public static bool slotExtenderHasGreenLight = false;
+        internal bool isEquipmentInit = false;
+        internal bool areModulesReady = false;
+        internal static bool haveWeCalledBuildAllSlots = false;
+        internal static bool slotExtenderIsPatched = false;
+        internal static bool slotExtenderHasGreenLight = false;
         internal const string ModVehicleModulePrefix = "VehicleModule";
         internal const string LeftArmSlotName = "VehicleArmLeft";
         internal const string RightArmSlotName = "VehicleArmRight";
@@ -76,11 +76,7 @@ namespace VehicleFramework
             yield return new WaitUntil(() => haveSlotsBeenInited);
             if (!vehicleAllSlots.ContainsKey("VehicleModule0"))
             {
-                uGUI_Equipment? equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                if(equipment == null)
-                {
-                    throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
-                }
+                uGUI_Equipment? equipment = (uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>()) ?? throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
                 for (int i = 0; i < MaxNumModules; i++)
                 {
                     vehicleAllSlots.Add("VehicleModule" + i.ToString(), equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>());
@@ -90,11 +86,7 @@ namespace VehicleFramework
             }
             else
             {
-                uGUI_Equipment? equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                if (equipment == null)
-                {
-                    throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
-                }
+                uGUI_Equipment? equipment = (uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>()) ?? throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
                 for (int i = 0; i < MaxNumModules; i++)
                 {
                     vehicleAllSlots["VehicleModule" + i.ToString()] = equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>();
@@ -108,11 +100,7 @@ namespace VehicleFramework
             var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
             if (type2 != null)
             {
-                uGUI_Equipment? equipment = uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>();
-                if (equipment == null)
-                {
-                    throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
-                }
+                uGUI_Equipment? equipment = (uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>()) ?? throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
                 ModuleBuilder.slotExtenderHasGreenLight = true;
                 equipment.Awake();
             }

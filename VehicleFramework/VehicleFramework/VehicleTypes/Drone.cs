@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 using VehicleFramework.Engines;
 using UnityEngine;
 using VehicleFramework.VehicleComponents;
+using VehicleFramework.Interfaces;
+using VehicleFramework.Assets;
+using VehicleFramework.Extensions;
 
 namespace VehicleFramework.VehicleTypes
 {
     public abstract class Drone : ModVehicle
     {
         public bool isAsleep = false;
-        public static Drone? mountedDrone = null;
+        public static Drone? MountedDrone { get; private set; } = null;
         public DroneStation? pairedStation = null;
         public const float baseConnectionDistance = 350;
         public float addedConnectionDistance = 0;
@@ -67,7 +70,7 @@ namespace VehicleFramework.VehicleTypes
             //base.EnterVehicle(player, teleport, playEnterAnimation);
         }
         private GUIHand _guihand = null!;
-        private bool guihand
+        private bool Guihand
         {
             set
             {
@@ -124,7 +127,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual void BeginControlling()
         {
             previousMode = Player.main.mode;
-            guihand = true;
+            Guihand = true;
             lastSubRoot = Player.main.GetCurrentSub();
             lastVehicle = Player.main.GetVehicle();
             Player.main.currentMountedVehicle = null;
@@ -140,7 +143,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 this.Undock();
             }
-            mountedDrone = this;
+            MountedDrone = this;
             CheckingPower = Admin.SessionManager.StartCoroutine(CheckPower());
             IsConnecting = true;
         }
@@ -153,10 +156,10 @@ namespace VehicleFramework.VehicleTypes
             Player.main.SetCurrentSub(lastSubRoot, true);
             lastVehicle = null;
             lastSubRoot = null;
-            guihand = false;
+            Guihand = false;
             SwapToPlayerCamera();
             DestroyTemporaryParent();
-            mountedDrone = null;
+            MountedDrone = null;
             pairedStation = null;
             Admin.SessionManager.StopCoroutine(CheckingPower);
             GetComponent<VFEngine>().KillMomentum();
@@ -206,7 +209,7 @@ namespace VehicleFramework.VehicleTypes
         public override void ScuttleVehicle()
         {
             base.ScuttleVehicle();
-            if (mountedDrone == this)
+            if (MountedDrone == this)
             {
                 DeselectSlots();
             }

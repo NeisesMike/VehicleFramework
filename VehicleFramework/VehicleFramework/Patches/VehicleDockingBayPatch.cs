@@ -4,6 +4,7 @@ using HarmonyLib;
 using UnityEngine;
 using System.Reflection.Emit;
 using VehicleFramework.MiscComponents;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow ModVehicles to use in-game docking bays
 // VALUE: High.
@@ -86,7 +87,7 @@ namespace VehicleFramework.Patches
         [HarmonyPostfix]
         [HarmonyPatch(nameof(VehicleDockingBay.DockVehicle))]
         // This patch ensures a modvehicle docks correctly
-        public static void DockVehiclePostfix(VehicleDockingBay __instance, Vehicle vehicle, bool rebuildBase)
+        public static void DockVehiclePostfix(VehicleDockingBay __instance, Vehicle vehicle)
         {
             HandleMVDocked(vehicle, __instance);
         }

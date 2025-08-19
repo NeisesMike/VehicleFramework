@@ -1,5 +1,6 @@
 ﻿using System;
 using HarmonyLib;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: add compatibility for better vehicle storage upgrades
 // VALUE: High. It's a very cool mod.
@@ -13,7 +14,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
          * It allows the storage containers to be added to ModVehicles.
          */
         [HarmonyPrefix]
-        public static bool Prefix(object __instance, Equipment equipment, ref bool __result)
+        public static bool Prefix(Equipment equipment, ref bool __result)
         {
             if (equipment.owner.GetComponent<ModVehicle>() != null)
             {

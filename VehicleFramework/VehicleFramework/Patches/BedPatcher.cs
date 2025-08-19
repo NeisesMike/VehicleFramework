@@ -9,8 +9,8 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(Bed))]
     public class BedPatcher
     {
-        public static Vector3 myRotation = Vector3.zero;
-        public static Vector3 myPosition = Vector3.zero;
+        private static Vector3 myRotation = Vector3.zero;
+        private static Vector3 myPosition = Vector3.zero;
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Bed.EnterInUseMode))]
         public static void BedEnterInUseModePostfix(Bed __instance)

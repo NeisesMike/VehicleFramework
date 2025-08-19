@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using VehicleFramework.VehicleTypes;
 
 // PURPOSE: permit waterclipproxies with negative scaling to act in an intuitive way
 // VALUE: Moderate. Not really sure this is my problem to fix.

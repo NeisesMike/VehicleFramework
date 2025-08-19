@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using TMPro;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.StorageComponents;
+using VehicleFramework.Extensions;
+using VehicleFramework.Assets;
 
 
-namespace VehicleFramework
+namespace VehicleFramework.MiscComponents
 {
-	public class uGUI_VehicleHUD : MonoBehaviour
+	public class UGUI_VehicleHUD : MonoBehaviour
 	{
 		public enum HUDChoice
         {
@@ -16,7 +20,7 @@ namespace VehicleFramework
 		{
 			return textStorage != null;
 		}
-		private bool HasMvStorage(ModVehicle mv)
+		private static bool HasMvStorage(ModVehicle mv)
 		{
 			return mv.InnateStorages != null || ModularStorageInput.GetAllModularStorageContainers(mv).Count > 0;
 		}
@@ -100,7 +104,7 @@ namespace VehicleFramework
             root.transform.localPosition = Vector3.zero;
 
 			bool mvflag = !pda.isInUse;
-			bool droneflag = mvflag && (VehicleTypes.Drone.mountedDrone != null);
+			bool droneflag = mvflag && (VehicleTypes.Drone.MountedDrone != null);
 			if (root.activeSelf != mvflag)
 			{
 				root.SetActive(mvflag);
@@ -131,7 +135,7 @@ namespace VehicleFramework
             {
                 throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD is null!");
             }
-            VehicleTypes.Drone? drone = VehicleTypes.Drone.mountedDrone;
+            VehicleTypes.Drone? drone = VehicleTypes.Drone.MountedDrone;
             if (drone == null)
             {
                 droneHUD.transform.Find("Connecting").gameObject.SetActive(false);

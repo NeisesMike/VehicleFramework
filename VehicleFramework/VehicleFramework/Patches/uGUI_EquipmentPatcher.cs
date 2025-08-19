@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using VehicleFramework.VehicleBuilding;
 
 // PURPOSE: PDA displays ModVehicle upgrades correctly
 // VALUE: Very high.
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(uGUI_Equipment))]
-    public class uGUI_EquipmentPatcher
+    public class UGUI_EquipmentPatcher
     {
         /*
          * This collection of patches ensures our upgrade slots mesh well

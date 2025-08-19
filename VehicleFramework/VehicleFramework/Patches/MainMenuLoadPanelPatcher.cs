@@ -11,11 +11,9 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(MainMenuLoadPanel))]
     public class MainMenuLoadPanelPatcher
     {
-        public static List<string> HasTechTypes = new();
-
         public static void AddLoadButtonSprites(MainMenuLoadButton lb)
         {
-            foreach (var ve in VehicleManager.vehicleTypes)
+            foreach (var ve in Admin.VehicleManager.vehicleTypes)
             {
                 if (ve.mv != null && ve.mv.SaveFileSprite != Assets.StaticAssets.DefaultSaveFileSprite)
                 {
@@ -36,9 +34,8 @@ namespace VehicleFramework.Patches
             // A SaveIcon should be square
             AddLoadButtonSprites(lb);
 
-            if(SaveLoadManagerPatcher.hasTechTypeGameInfo.ContainsKey(lb.saveGame))
+            if(SaveLoadManagerPatcher.hasTechTypeGameInfo.TryGetValue(lb.saveGame, out List<string>? hasTechTypes))
             {
-                List<string> hasTechTypes = SaveLoadManagerPatcher.hasTechTypeGameInfo[lb.saveGame];
                 hasTechTypes.ForEach(x => lb.saveIcons.FindChild(x)?.gameObject.SetActive(true));
             }
 

@@ -8,8 +8,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.VehicleComponents;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.VehicleComponents
 {
     public class AutoPilot : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener, IScuttleListener
     {
@@ -60,7 +61,7 @@ namespace VehicleFramework
         private float smoothTime = 0.3f;
         public float autoLevelRate = 11f;
         private bool _autoLeveling = false;
-        public bool autoLeveling
+        public bool AutoLeveling
         {
             get
             {
@@ -129,16 +130,16 @@ namespace VehicleFramework
         public void MaybeAutoLevel(Submarine mv)
         {
             Vector2 lookDir = GameInput.GetLookDelta();
-            if (autoLeveling && (10f < lookDir.magnitude || !mv.GetIsUnderwater()))
+            if (AutoLeveling && (10f < lookDir.magnitude || !mv.GetIsUnderwater()))
             {
-                autoLeveling = false;
+                AutoLeveling = false;
                 return;
             }
-            if (HasSomePower && (autoLeveling || !mv.IsPlayerControlling()) && mv.GetIsUnderwater())
+            if (HasSomePower && (AutoLeveling || !mv.IsPlayerControlling()) && mv.GetIsUnderwater())
             {
                 if (RollDelta < 0.4f && PitchDelta < 0.4f && mv.useRigidbody.velocity.magnitude < mv.ExitVelocityLimit)
                 {
-                    autoLeveling = false;
+                    AutoLeveling = false;
                     return;
                 }
                 if (RollDelta > 0.4f || PitchDelta > 0.4f)
@@ -160,7 +161,7 @@ namespace VehicleFramework
             {
                 if (Time.time - timeOfLastLevelTap < doubleTapWindow)
                 {
-                    autoLeveling = true;
+                    AutoLeveling = true;
                     var smoothTime1 = 5f * PitchDelta / 90f;
                     var smoothTime2 = 5f * RollDelta / 90f;
                     var smoothTime3 = mv.GetComponent<VehicleFramework.Engines.ModVehicleEngine>().GetTimeToStop();
@@ -289,11 +290,7 @@ namespace VehicleFramework
                 OxygenManager oxygenMgr = Player.main.oxygenMgr;
                 oxygenMgr.GetTotal(out float num, out float num2);
                 float amount = Mathf.Min(num2 - num, MV.oxygenPerSecond * Time.deltaTime) * MV.oxygenEnergyCost;
-                float? result = MV.AIEnergyInterface?.ConsumeEnergy(amount);
-                if(result == null)
-                {
-                    throw Admin.SessionManager.Fatal("AutoPilot.MaybeRefillOxygen: MV.AIEnergyInterface is null!");
-                }
+                float? result = (MV.AIEnergyInterface?.ConsumeEnergy(amount)) ?? throw Admin.SessionManager.Fatal("AutoPilot.MaybeRefillOxygen: MV.AIEnergyInterface is null!");
                 float secondsToAdd = result.Value / MV.oxygenEnergyCost;
                 oxygenMgr.AddOxygen(secondsToAdd);
             }
@@ -376,7 +373,7 @@ namespace VehicleFramework
             AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.EnginePoweringUp);
             if (MV.IsUnderCommand)
             {
-                IEnumerator ShakeCamera()
+                static IEnumerator ShakeCamera()
                 {
                     yield return new WaitForSeconds(4.6f);
                     MainCameraControl.main.ShakeCamera(1f, 0.5f, MainCameraControl.ShakeMode.Linear, 1f);
@@ -390,7 +387,7 @@ namespace VehicleFramework
         {
             Logger.DebugLog("OnPowerDown");
             isPoweredDown = true;
-            autoLeveling = false;
+            AutoLeveling = false;
             AutoPilotVoice?.EnqueueClip(AutoPilotVoice.voice?.EnginePoweringDown);
         }
 

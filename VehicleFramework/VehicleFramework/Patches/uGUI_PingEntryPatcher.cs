@@ -6,10 +6,10 @@ using System.Reflection.Emit;
 // PURPOSE: Allow ModVehicles to use (and have displayed) custom ping sprites.
 // VALUE: Very high.
 
-namespace VehicleFramework
+namespace VehicleFramework.Patches
 {
     [HarmonyPatch(typeof(uGUI_PingEntry))]
-    class uGUI_PingEntryPatcher
+    class UGUI_PingEntryPatcher
     {
         /*
          * This transpiler ensure our ping sprites are used properly by the base-game systems,
@@ -31,9 +31,9 @@ namespace VehicleFramework
                 {
                     if (codes[i].operand.ToString() == "System.String Get(PingType)")
                     {
-                        newCodes[i] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeString));
+                        newCodes[i] = CodeInstruction.Call(typeof(VehicleBuilding.VehicleBuilder), nameof(VehicleBuilding.VehicleBuilder.GetPingTypeString));
                         newCodes[i + 1] = codes[i + 1];
-                        newCodes[i + 2] = CodeInstruction.Call(typeof(VehicleBuilder), nameof(VehicleBuilder.GetPingTypeSprite));
+                        newCodes[i + 2] = CodeInstruction.Call(typeof(VehicleBuilding.VehicleBuilder), nameof(VehicleBuilding.VehicleBuilder.GetPingTypeSprite));
                         i+=2;
                         continue;
                     }
@@ -46,11 +46,11 @@ namespace VehicleFramework
         // This prefix ensures ModVehicles have their names displayed correctly in the ping tab.
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_PingEntry.UpdateLabel))]
-        public static bool uGUI_PingEntryUpdateLabelPrefix(uGUI_PingEntry __instance, PingType type, string name)
+        public static bool UGUI_PingEntryUpdateLabelPrefix(uGUI_PingEntry __instance, PingType type, string name)
         {
-            if(VehicleManager.mvPings.Select(x=>x.pingType).Contains(type))
+            if(Admin.VehicleManager.mvPings.Select(x=>x.pingType).Contains(type))
             {
-                foreach (var mvType in VehicleManager.vehicleTypes)
+                foreach (var mvType in Admin.VehicleManager.vehicleTypes)
                 {
                     if (mvType.pt == type)
                     {

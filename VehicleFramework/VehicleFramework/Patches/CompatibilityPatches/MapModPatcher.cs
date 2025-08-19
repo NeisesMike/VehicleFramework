@@ -23,7 +23,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
             {
                 return true; // If we can't get the ping, we don't need to do anything.
             }
-            foreach (var mvPIs in VehicleManager.mvPings)
+            foreach (var mvPIs in Admin.VehicleManager.mvPings)
             {
                 if (mvPIs.pingType == ping.pingType)
                 {
@@ -34,7 +34,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
                         return true; // If we can't get the icon, we don't need to do anything.
                     }
                     icon.sprite = SpriteManager.Get(TechType.Exosuit);
-                    foreach (var mvType in VehicleManager.vehicleTypes)
+                    foreach (var mvType in Admin.VehicleManager.vehicleTypes)
                     {
                         if (mvType.pt == ping.pingType)
                         {

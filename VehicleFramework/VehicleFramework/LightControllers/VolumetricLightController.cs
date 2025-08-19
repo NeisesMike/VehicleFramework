@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using VehicleFramework.VehicleTypes;
+using VehicleFramework.Interfaces;
 
-namespace VehicleFramework
+namespace VehicleFramework.LightControllers
 {
     public class VolumetricLightController : MonoBehaviour, IPlayerListener, ILightsStatusListener
     {

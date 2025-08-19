@@ -28,7 +28,7 @@ namespace VehicleFramework.Patches
             if (exo != null)
             {
                 TechType techType = exo.modules.GetTechTypeInSlot(exo.slotIDs[slotID]);
-                UpgradeTypes.ToggleActionParams param = new UpgradeTypes.ToggleActionParams
+                UpgradeTypes.ToggleActionParams param = new()
                 {
                     active = active,
                     vehicle = exo,
@@ -46,7 +46,7 @@ namespace VehicleFramework.Patches
             Exosuit? exo = __instance as Exosuit;
             if (exo != null)
             {
-                UpgradeTypes.SelectableActionParams param = new UpgradeTypes.SelectableActionParams
+                UpgradeTypes.SelectableActionParams param = new()
                 {
                     vehicle = __instance,
                     slotID = slotID,
@@ -54,7 +54,7 @@ namespace VehicleFramework.Patches
                 };
                 Admin.UpgradeRegistrar.OnSelectActions.ForEach(x => x(param));
 
-                UpgradeTypes.SelectableChargeableActionParams param2 = new UpgradeTypes.SelectableChargeableActionParams
+                UpgradeTypes.SelectableChargeableActionParams param2 = new()
                 {
                     vehicle = __instance,
                     slotID = slotID,
@@ -143,7 +143,7 @@ namespace VehicleFramework.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Exosuit.GetArmPrefab))]
-        public static void ExosuitGetArmPrefabPostfix(Exosuit __instance, TechType techType, ref GameObject? __result)
+        public static void ExosuitGetArmPrefabPostfix(TechType techType, ref GameObject? __result)
         {
             if (__result == null)
             {
@@ -175,7 +175,7 @@ namespace VehicleFramework.Patches
             ModVehicleArm? armLogic = VFArm.GetModVehicleArm(techType);
             if (armLogic != null)
             {
-                UpgradeTypes.AddActionParams addedParams = new UpgradeTypes.AddActionParams
+                UpgradeTypes.AddActionParams addedParams = new()
                 {
                     vehicle = __instance,
                     slotID = slotID,
