@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.Networking;
-using System.Reflection;
-using System.IO;
-using VehicleFramework.VehicleTypes;
-using VehicleFramework.Patches;
+﻿using UnityEngine;
 using VehicleFramework.Admin;
 using VehicleFramework.Extensions;
 
@@ -62,14 +51,7 @@ namespace VehicleFramework.Engines
         {
             get
             {
-                if (MV.GetIsUnderwater())
-                {
-                    return WaterDragDecay;
-                }
-                else
-                {
-                    return AirDragDecay;
-                }
+                return MV.GetIsUnderwater() ? WaterDragDecay : AirDragDecay;
             }
         }
 
@@ -82,18 +64,7 @@ namespace VehicleFramework.Engines
             }
             set
             {
-                if (value < -REVERSE_TOP_SPEED)
-                {
-                    _forwardMomentum = -REVERSE_TOP_SPEED;
-                }
-                else if (FORWARD_TOP_SPEED < value)
-                {
-                    _forwardMomentum = FORWARD_TOP_SPEED;
-                }
-                else
-                {
-                    _forwardMomentum = value;
-                }
+                _forwardMomentum = Mathf.Clamp(value, -REVERSE_TOP_SPEED, FORWARD_TOP_SPEED);
             }
         }
         protected virtual void UpdateForwardMomentum(float inputMagnitude)
@@ -117,18 +88,7 @@ namespace VehicleFramework.Engines
             }
             set
             {
-                if (value < -STRAFE_MAX_SPEED)
-                {
-                    _rightMomentum = -STRAFE_MAX_SPEED;
-                }
-                else if (STRAFE_MAX_SPEED < value)
-                {
-                    _rightMomentum = STRAFE_MAX_SPEED;
-                }
-                else
-                {
-                    _rightMomentum = value;
-                }
+                _rightMomentum = Mathf.Clamp(value, -STRAFE_MAX_SPEED, STRAFE_MAX_SPEED);
             }
         }
         protected virtual void UpdateRightMomentum(float inputMagnitude)
@@ -148,18 +108,7 @@ namespace VehicleFramework.Engines
             }
             set
             {
-                if (value < -VERT_MAX_SPEED)
-                {
-                    _upMomentum = -VERT_MAX_SPEED;
-                }
-                else if (VERT_MAX_SPEED < value)
-                {
-                    _upMomentum = VERT_MAX_SPEED;
-                }
-                else
-                {
-                    _upMomentum = value;
-                }
+                _upMomentum = Mathf.Clamp(value, -VERT_MAX_SPEED, VERT_MAX_SPEED);
             }
         }
         protected virtual void UpdateUpMomentum(float inputMagnitude)
@@ -176,18 +125,7 @@ namespace VehicleFramework.Engines
             }
             set
             {
-                if (value < 0)
-                {
-                    _engineHum = 0;
-                }
-                else if (10 < value)
-                {
-                    _engineHum = 10;
-                }
-                else
-                {
-                    _engineHum = value;
-                }
+                _engineHum = Mathf.Clamp(value, 0, 10);
             }
         }
         protected virtual void UpdateEngineHum(float inputMagnitude)
@@ -229,30 +167,6 @@ namespace VehicleFramework.Engines
             EngineSource1?.Stop();
             EngineSource2?.Stop();
         }
-        /*
-        public virtual void FixedUpdate()
-        {
-            var fcc = MainCameraControl.main.GetComponent<FreecamController>();
-            bool isFreecam = false;
-            if (fcc.mode || fcc.ghostMode)
-            {
-                isFreecam = true;
-            }
-            Vector3 moveDirection = Vector3.zero;
-            if (mv.GetIsUnderwater() || CanMoveAboveWater)
-            {
-                if (mv.CanPilot() && mv.IsPlayerControlling() && !isFreecam)
-                {
-                    moveDirection = GameInput.GetMoveDirection();
-                    ApplyPlayerControls(moveDirection);
-                    DrainPower(moveDirection);
-                }
-                ExecutePhysicsMove();
-            }
-            DoEngineSounds(moveDirection);
-            ApplyDrag(moveDirection);
-        }
-        */
         #endregion
 
         #region overridden_methods
