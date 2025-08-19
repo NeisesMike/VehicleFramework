@@ -11,52 +11,58 @@ namespace VehicleFramework
 {
     public class ControlPanel : MonoBehaviour, IVehicleStatusListener, IPowerListener, ILightsStatusListener, IAutoPilotListener
     {
-        public Submarine mv;
+        public Submarine mv = null!;
 
-        private GameObject buttonHeadLights;
-        private GameObject buttonNavLights;
-        private GameObject buttonAutoPilot;
-        private GameObject buttonInteriorLights;
-        private GameObject button5;
-        private GameObject buttonDefaultColor;
-        private GameObject buttonFloodLights;
-        private GameObject button8;
-        private GameObject buttonPower;
+        private GameObject? buttonHeadLights;
+        private GameObject? buttonNavLights;
+        private GameObject? buttonAutoPilot;
+        private GameObject? buttonInteriorLights;
+        private GameObject? button5;
+        private GameObject? buttonDefaultColor;
+        private GameObject? buttonFloodLights;
+        private GameObject? button8;
+        private GameObject? buttonPower;
 
-        public void Init()
+        private void Awake()
         {
+            mv = GetComponentInParent<Submarine>();
+            if(mv == null)
+            {
+                throw Admin.SessionManager.Fatal("ControlPanel: could not find parent ModVehicle");
+            }
+
             // find buttons
-            buttonHeadLights = transform.Find("1").gameObject;
-            buttonNavLights = transform.Find("2").gameObject;
-            buttonAutoPilot = transform.Find("3").gameObject;
-            buttonInteriorLights = transform.Find("4").gameObject;
-            button5 = transform.Find("5").gameObject;
-            buttonDefaultColor = transform.Find("6").gameObject;
-            buttonFloodLights = transform.Find("7").gameObject;
-            button8 = transform.Find("8").gameObject;
-            buttonPower = transform.Find("9").gameObject;
+            buttonHeadLights = transform.Find("1")?.gameObject;
+            buttonNavLights = transform.Find("2")?.gameObject;
+            buttonAutoPilot = transform.Find("3")?.gameObject;
+            buttonInteriorLights = transform.Find("4")?.gameObject;
+            button5 = transform.Find("5")?.gameObject;
+            buttonDefaultColor = transform.Find("6")?.gameObject;
+            buttonFloodLights = transform.Find("7")?.gameObject;
+            button8 = transform.Find("8")?.gameObject;
+            buttonPower = transform.Find("9")?.gameObject;
 
             // give buttons their colliders, for touching
-            buttonHeadLights.EnsureComponent<BoxCollider>();
-            buttonNavLights.EnsureComponent<BoxCollider>();
-            buttonAutoPilot.EnsureComponent<BoxCollider>();
-            buttonInteriorLights.EnsureComponent<BoxCollider>();
-            button5.EnsureComponent<BoxCollider>();
-            buttonDefaultColor.EnsureComponent<BoxCollider>();
-            buttonFloodLights.EnsureComponent<BoxCollider>();
-            button8.EnsureComponent<BoxCollider>();
-            buttonPower.EnsureComponent<BoxCollider>();
+            buttonHeadLights?.EnsureComponent<BoxCollider>();
+            buttonNavLights?.EnsureComponent<BoxCollider>();
+            buttonAutoPilot?.EnsureComponent<BoxCollider>();
+            buttonInteriorLights?.EnsureComponent<BoxCollider>();
+            button5?.EnsureComponent<BoxCollider>();
+            buttonDefaultColor?.EnsureComponent<BoxCollider>();
+            buttonFloodLights?.EnsureComponent<BoxCollider>();
+            button8?.EnsureComponent<BoxCollider>();
+            buttonPower?.EnsureComponent<BoxCollider>();
 
             // give buttons their logic, for executing
-            buttonHeadLights.EnsureComponent<ControlPanelButton>().Init(HeadlightsClick, HeadLightsHover);
-            buttonNavLights.EnsureComponent<ControlPanelButton>().Init(NavLightsClick, NavLightsHover);
-            buttonAutoPilot.EnsureComponent<ControlPanelButton>().Init(AutoPilotClick, AutoPilotHover);
-            buttonInteriorLights.EnsureComponent<ControlPanelButton>().Init(InteriorLightsClick, InteriorLightsHover);
-            button5.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
-            buttonDefaultColor.EnsureComponent<ControlPanelButton>().Init(DefaultColorClick, DefaultColorHover);
-            buttonFloodLights.EnsureComponent<ControlPanelButton>().Init(FloodLightsClick, FloodLightsHover);
-            button8.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
-            buttonPower.EnsureComponent<ControlPanelButton>().Init(PowerClick, PowerHover);
+            buttonHeadLights?.EnsureComponent<ControlPanelButton>().Init(HeadlightsClick, HeadLightsHover);
+            buttonNavLights?.EnsureComponent<ControlPanelButton>().Init(NavLightsClick, NavLightsHover);
+            buttonAutoPilot?.EnsureComponent<ControlPanelButton>().Init(AutoPilotClick, AutoPilotHover);
+            buttonInteriorLights?.EnsureComponent<ControlPanelButton>().Init(InteriorLightsClick, InteriorLightsHover);
+            button5?.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
+            buttonDefaultColor?.EnsureComponent<ControlPanelButton>().Init(DefaultColorClick, DefaultColorHover);
+            buttonFloodLights?.EnsureComponent<ControlPanelButton>().Init(FloodLightsClick, FloodLightsHover);
+            button8?.EnsureComponent<ControlPanelButton>().Init(EmptyClick, EmptyHover);
+            buttonPower?.EnsureComponent<ControlPanelButton>().Init(PowerClick, PowerHover);
 
             ResetAllButtonLighting();
         }
@@ -171,7 +177,7 @@ namespace VehicleFramework
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFAutoPilotHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
-        public void SetButtonLightingActive(GameObject button, bool active)
+        public void SetButtonLightingActive(GameObject? button, bool active)
         {
             if (button == null)
             {

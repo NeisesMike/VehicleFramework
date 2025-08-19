@@ -315,6 +315,10 @@ namespace VehicleFramework
             }
             IEnumerator PingPingForAWhile()
             {
+                if(drone.pingInstance == null)
+                {
+                    yield break;
+                }
                 drone.pingInstance.enabled = true;
                 yield return new WaitForSeconds(60);
                 drone.pingInstance.enabled = false;

@@ -70,12 +70,12 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(CyclopsVehicleStorageTerminalManager.VehicleDocked))]
         static void VehicleDockedPostfix(CyclopsVehicleStorageTerminalManager __instance, Vehicle vehicle)
         {
-            if (vehicle is ModVehicle)
+            if (vehicle is ModVehicle mv)
             {
                 __instance.dockedVehicleType = CyclopsVehicleStorageTerminalManager.DockedVehicleType.Seamoth;
                 __instance.usingModulesUIHolder = __instance.seamothModulesUIHolder;
                 __instance.currentScreen = __instance.seamothVehicleScreen;
-                __instance.vehicleUpgradeConsole = (vehicle as ModVehicle).upgradesInput;
+                __instance.vehicleUpgradeConsole = mv.upgradesInput;
                 if (__instance.vehicleUpgradeConsole && __instance.vehicleUpgradeConsole.equipment != null)
                 {
                     //__instance.vehicleUpgradeConsole.equipment.onEquip += __instance.OnEquip;

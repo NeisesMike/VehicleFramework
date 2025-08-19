@@ -12,11 +12,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(ArmsController.Update))]
         public static void ArmsControllerUpdatePostfix()
         {
-            ModVehicle mv = Player.main.GetModVehicle();
-            if (mv != null)
-            {
-                mv.HandlePilotingAnimations();
-            }
+            Player.main.GetModVehicle()?.HandlePilotingAnimations();
         }
     }
 }

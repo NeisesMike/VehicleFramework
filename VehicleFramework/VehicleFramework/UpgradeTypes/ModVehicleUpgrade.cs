@@ -35,7 +35,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual bool UnlockAtStart => true;
         public virtual Color Color => Color.red;
         public virtual float CraftingTime => 3f;
-        public virtual Sprite Icon => StaticAssets.UpgradeIcon;
+        public virtual Sprite? Icon => StaticAssets.UpgradeIcon;
         public virtual TechType UnlockWith => TechType.Constructor;
         public const string DefaultUnlockMessage = "New vehicle upgrade acquired";
         public virtual string UnlockedMessage => DefaultUnlockMessage;
@@ -43,7 +43,7 @@ namespace VehicleFramework.UpgradeTypes
         public virtual string TabName { get; set; } = string.Empty;
         public virtual string TabDisplayName => string.Empty;
         public virtual List<CraftingNode>? CraftingPath { get; set; } = null;
-        public virtual Sprite TabIcon => StaticAssets.UpgradeIcon;
+        public virtual Sprite? TabIcon => StaticAssets.UpgradeIcon;
         public virtual List<Ingredient> Recipe => new() { new Ingredient(TechType.Titanium, 1) };
         public virtual void OnAdded(AddActionParams param)
         {

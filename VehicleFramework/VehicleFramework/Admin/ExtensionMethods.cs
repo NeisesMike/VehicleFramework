@@ -57,7 +57,9 @@ namespace VehicleFramework
             thisBay.vehicle_docked_param = false;
             Player? toUndock = vehicle.liveMixin.IsAlive() && !Admin.ConsoleCommands.isUndockConsoleCommand ? Player.main : null;
             Admin.SessionManager.StartCoroutine(vehicle.Undock(toUndock, thisBay.transform.position.y));
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             SkyEnvironmentChanged.Broadcast(vehicle.gameObject, (GameObject)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             thisBay.dockedVehicle = null;
             UndockModVehicle(vehicle);
         }

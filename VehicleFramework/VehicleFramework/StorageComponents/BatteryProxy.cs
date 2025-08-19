@@ -32,6 +32,10 @@ namespace VehicleFramework.StorageComponents
                 yield break;
             }
             yield return Admin.SessionManager.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            if(SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth == null in BatteryProxy.GetSeamothBitsASAP!");
+            }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
 
             mixin.batteryModels = new EnergyMixin.BatteryModels[seamothEnergyMixin.batteryModels.Length];

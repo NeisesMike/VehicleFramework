@@ -46,6 +46,10 @@ namespace VehicleFramework.Engines
             float scalarFactor = 0.08f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+            if(MV.powerMan == null)
+            {
+                throw Admin.SessionManager.Fatal("MV.powerMan == null in CricketEngine.DrainPower!");
+            }   
             MV.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
     }

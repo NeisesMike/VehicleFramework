@@ -18,18 +18,20 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Bench.EnterSittingMode))]
         public static void BenchEnterSittingModePostfix()
         {
-            if(Player.main.GetModVehicle() != null)
+            ModVehicle? mv = Player.main.GetModVehicle();
+            if (mv != null)
             {
-                Player.main.GetModVehicle().controlSheme = Vehicle.ControlSheme.Mech;
+                mv.controlSheme = Vehicle.ControlSheme.Mech;
             }
         }
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Bench.ExitSittingMode))]
         public static void BenchExitSittingModePostfix(Bench __instance, Player player, bool skipCinematics)
         {
-            if (Player.main.GetModVehicle() != null)
+            ModVehicle? mv = Player.main.GetModVehicle();
+            if (mv != null)
             {
-                Player.main.GetModVehicle().controlSheme = Admin.EnumHelper.GetScheme();
+                mv.controlSheme = Admin.EnumHelper.GetScheme();
             }
         }
 

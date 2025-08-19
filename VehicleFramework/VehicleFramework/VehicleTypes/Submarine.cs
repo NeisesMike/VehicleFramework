@@ -22,6 +22,7 @@ namespace VehicleFramework.VehicleTypes
         public virtual List<VehicleParts.VehicleFloodLight>? FloodLights => null;
         public virtual List<GameObject>? TetherSources => null;
         public virtual GameObject? ControlPanel => null;
+        public virtual Transform? ControlPanelLocation => null;
         public virtual GameObject? Fabricator => null;
         public virtual GameObject? ColorPicker => null;
         public virtual GameObject? SteeringWheelLeftHandTarget => null;
@@ -62,7 +63,10 @@ namespace VehicleFramework.VehicleTypes
             interiorlights = gameObject.AddComponent<InteriorLightsController>();
             navlights = gameObject.AddComponent<NavigationLightsController>();
             gameObject.EnsureComponent<TetherSource>();
-            controlPanelLogic?.Init();
+
+            ControlPanel?.EnsureComponent<ControlPanel>();
+
+            //controlPanelLogic?.Init();
         }
         public override void Start()
         {

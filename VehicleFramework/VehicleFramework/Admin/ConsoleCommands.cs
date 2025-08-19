@@ -109,7 +109,7 @@ namespace VehicleFramework.Admin
 			}
 
 			float distanceToPlayer = float.PositiveInfinity;
-			VehicleDockingBay closestBay = null;
+			VehicleDockingBay? closestBay = null;
 			foreach (var marty in Patches.VehicleDockingBayPatch.dockingBays.Where(x => x != null))
 			{
 				float thisDistance = Vector3.Distance(Player.main.transform.position, marty.transform.position);
@@ -130,9 +130,10 @@ namespace VehicleFramework.Admin
 		}
 		public void OnConsoleCommand_vfdestroy(NotificationCenter.Notification notif)
 		{
-			if (notif.data == null || notif.data.Count < 1)
+			if (notif == null || notif.data == null || notif.data.Count < 1)
 			{
 				ErrorMessage.AddError("vfdestroy error: no vehicle type specified. Ex: \"vfdestroy exosuit\"");
+				return;
 			}
 			string vehicleType = (string)notif.data[0];
 			ErrorMessage.AddWarning($"vfdestroy doing destroy on {vehicleType}");

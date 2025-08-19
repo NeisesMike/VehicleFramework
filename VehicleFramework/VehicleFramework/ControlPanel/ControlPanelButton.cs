@@ -8,8 +8,8 @@ namespace VehicleFramework
 {
     public class ControlPanelButton : HandTarget, IHandTarget
     {
-        private System.Action myClickFunction;
-        private System.Action myHoverFunction;
+        private System.Action? myClickFunction;
+        private System.Action? myHoverFunction;
         public void Init(System.Action clickFunc, System.Action hoverFunc)
         {
             myClickFunction = clickFunc;
@@ -18,12 +18,12 @@ namespace VehicleFramework
 
         void IHandTarget.OnHandClick(GUIHand hand)
         {
-            myClickFunction();
+            myClickFunction?.Invoke();
         }
 
         void IHandTarget.OnHandHover(GUIHand hand)
         {
-            myHoverFunction();
+            myHoverFunction?.Invoke();
         }
     }
 }

@@ -289,7 +289,12 @@ namespace VehicleFramework
                 OxygenManager oxygenMgr = Player.main.oxygenMgr;
                 oxygenMgr.GetTotal(out float num, out float num2);
                 float amount = Mathf.Min(num2 - num, MV.oxygenPerSecond * Time.deltaTime) * MV.oxygenEnergyCost;
-                float secondsToAdd = MV.AIEnergyInterface.ConsumeEnergy(amount) / MV.oxygenEnergyCost;
+                float? result = MV.AIEnergyInterface?.ConsumeEnergy(amount);
+                if(result == null)
+                {
+                    throw Admin.SessionManager.Fatal("AutoPilot.MaybeRefillOxygen: MV.AIEnergyInterface is null!");
+                }
+                float secondsToAdd = result.Value / MV.oxygenEnergyCost;
                 oxygenMgr.AddOxygen(secondsToAdd);
             }
         }

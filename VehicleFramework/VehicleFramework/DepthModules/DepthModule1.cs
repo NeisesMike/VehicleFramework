@@ -17,8 +17,8 @@ namespace VehicleFramework.DepthModules
                     new(TechType.Glass, 3),
                     new(TechType.AluminumOxide, 3)
                 };
-        public override Sprite Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
-        public override Sprite TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
+        public override Sprite? Icon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
+        public override Sprite? TabIcon => Assets.SpriteHelper.GetSprite("Sprites/DepthIcon.png");
         public override string TabName => "MVDM";
         public override string TabDisplayName => Language.main.Get("VFMVDepthModules");
         public override void OnAdded(AddActionParams param)

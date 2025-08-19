@@ -34,7 +34,7 @@ namespace VehicleFramework.Patches.CreaturePatches
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(WarpBall.Warp))]
-        public static bool WarpBallWarpPrefix(WarpBall __instance, GameObject target, ref Vector3 position)
+        public static bool WarpBallWarpPrefix(GameObject target, ref Vector3 position)
         {
             // Warp balls shouldn't effect players in Submarines
 

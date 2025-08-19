@@ -34,7 +34,11 @@ namespace VehicleFramework.Patches.CompatibilityPatches
 
                 if (isBetterVehicleStorageModule)
                 {
-                    InventoryItem slotItem = mv.GetSlotItem(slotID);
+                    InventoryItem? slotItem = mv.GetSlotItem(slotID);
+                    if(slotItem == null)
+                    {
+                        return;
+                    }
 
                     var GetItemsContainerFromIventoryItem = HarmonyLib.AccessTools.Method(type3, "GetItemsContainerFromIventoryItem");
                     object[] GetItemsParams = new object[] { slotItem, techType };

@@ -20,7 +20,7 @@ namespace VehicleFramework.VehicleComponents
 
     public abstract class DockingBay : MonoBehaviour
     {
-        public Vehicle? currentDockedVehicle { get; protected set; }
+        public Vehicle? CurrentDockedVehicle { get; protected set; }
         private Coroutine? dockAnimation = null;
 
         public abstract Transform GetDockedPosition(Vehicle dockedVehicle);
@@ -64,7 +64,7 @@ namespace VehicleFramework.VehicleComponents
         {
             return true;
         }
-        protected virtual void TryRechargeDockedVehicle() { }
+        protected virtual void TryRechargeDockedVehicle(Vehicle cdVehicle) { }
         protected virtual Vehicle GetDockingTarget()
         {
             bool IsValidDockingTarget(Vehicle thisPossibleTarget)
@@ -200,15 +200,15 @@ namespace VehicleFramework.VehicleComponents
             {
                 return;
             }
-            else if (currentDockedVehicle == null)
+            else if (CurrentDockedVehicle == null)
             {
                 TryAttachVehicle();
             }
             else
             {
-                HandleDockDoors(currentDockedVehicle.GetTechType(), false);
-                TryRechargeDockedVehicle();
-                UpdateDockedVehicle(currentDockedVehicle);
+                HandleDockDoors(CurrentDockedVehicle.GetTechType(), false);
+                TryRechargeDockedVehicle(CurrentDockedVehicle);
+                UpdateDockedVehicle(CurrentDockedVehicle);
             }
         }
         private void TryAttachVehicle()
@@ -243,21 +243,21 @@ namespace VehicleFramework.VehicleComponents
             yield return dockAnimation;
             dockTarget.docked = true;
             OnFinishedDocking(dockTarget);
-            currentDockedVehicle = dockTarget;
+            CurrentDockedVehicle = dockTarget;
             dockAnimation = null;
         }
         private IEnumerator InternalDetach(bool withPlayer)
         {
-            if (currentDockedVehicle == null)
+            if (CurrentDockedVehicle == null)
             {
                 yield break;
             }
-            OnStartedUndocking(withPlayer, currentDockedVehicle);
-            currentDockedVehicle.docked = false;
-            dockAnimation = Admin.SessionManager.StartCoroutine(DoUndockingAnimations(currentDockedVehicle));
+            OnStartedUndocking(withPlayer, CurrentDockedVehicle);
+            CurrentDockedVehicle.docked = false;
+            dockAnimation = Admin.SessionManager.StartCoroutine(DoUndockingAnimations(CurrentDockedVehicle));
             yield return dockAnimation;
-            OnFinishedUndocking(withPlayer, currentDockedVehicle);
-            currentDockedVehicle = null;
+            OnFinishedUndocking(withPlayer, CurrentDockedVehicle);
+            CurrentDockedVehicle = null;
             dockAnimation = null;
         }
         private IEnumerator MoveAndRotate(Vehicle objectToMove, Transform firstTarget, float duration)

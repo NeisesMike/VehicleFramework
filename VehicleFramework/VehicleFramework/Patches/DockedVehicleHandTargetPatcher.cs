@@ -47,7 +47,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandHover))]
         public static void OnHandHoverPostfix(DockedVehicleHandTarget __instance)
         {
-            ModVehicle mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
+            ModVehicle? mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
             if (mv != null)
             {
                 string text = mv.subName.hullName.text;
@@ -55,9 +55,9 @@ namespace VehicleFramework.Patches
                 {
                     text = mv.subName.hullName.text;
                 }
-                else if(mv is Submarine && (mv as Submarine).Hatches.Any())
+                else if(mv is Submarine sub && sub.Hatches.Count > 0)
                 {
-                    text = (mv as Submarine).Hatches.First().Hatch.GetComponent<VehicleHatch>().EnterHint;
+                    text = sub.Hatches.First().Hatch.GetComponent<VehicleHatch>().EnterHint;
                 }
                 float energyActual = 0;
                 float energyMax = 0;
@@ -88,13 +88,13 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandClick))]
         public static bool OnHandClickPrefix(DockedVehicleHandTarget __instance, GUIHand hand)
         {
-            Drone thisDrone = __instance.dockingBay.GetDockedVehicle() as Drone;
+            Drone? thisDrone = __instance.dockingBay.GetDockedVehicle() as Drone;
             if (thisDrone != null)
             {
                 return false;
             }
 
-            ModVehicle mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
+            ModVehicle? mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
             if(mv == null)
             {
                 return true;
@@ -110,10 +110,15 @@ namespace VehicleFramework.Patches
 
             mv.IsUndockingAnimating = true;
             string subRootName = __instance.dockingBay.subRoot.name.ToLower();
-            Transform moonpoolMaybe = __instance.dockingBay.transform.parent?.parent;
+            Transform? moonpoolMaybe = __instance.dockingBay.transform.parent?.parent;
             if (subRootName.Contains("cyclops"))
             {
-                __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(false);
+                Transform? cyclopsCollisionParent = __instance.dockingBay.transform.parent?.parent?.parent;
+                if(cyclopsCollisionParent == null)
+                {
+                    throw Admin.SessionManager.Fatal("CyclopsCollisionParent == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
+                }
+                cyclopsCollisionParent.Find("CyclopsCollision").gameObject.SetActive(false);
             }
             else
             {
@@ -126,17 +131,24 @@ namespace VehicleFramework.Patches
             if (__instance.dockingBay.dockedVehicle != null)
             {
                 Admin.SessionManager.StartCoroutine(__instance.dockingBay.dockedVehicle.Undock(Player.main, __instance.dockingBay.transform.position.y));
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 SkyEnvironmentChanged.Broadcast(__instance.dockingBay.dockedVehicle.gameObject, (GameObject)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             __instance.dockingBay.dockedVehicle = null;
 
             mv.IsUndockingAnimating = false;
             if (subRootName.Contains("cyclops"))
             {
+                Transform? cyclopsCollisionParent = __instance.dockingBay.transform.parent?.parent?.parent;
+                if (cyclopsCollisionParent == null)
+                {
+                    throw Admin.SessionManager.Fatal("CyclopsCollisionParent == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
+                }
                 IEnumerator ReEnableCollisionsInAMoment()
                 {
                     yield return new WaitForSeconds(5);
-                    __instance.dockingBay.transform.parent.parent.parent.Find("CyclopsCollision").gameObject.SetActive(true);
+                    cyclopsCollisionParent.Find("CyclopsCollision").gameObject.SetActive(true);
                     mv.useRigidbody.detectCollisions = true;
                 }
                 Admin.SessionManager.StartCoroutine(ReEnableCollisionsInAMoment());
@@ -145,6 +157,10 @@ namespace VehicleFramework.Patches
             {
                 float GetVehicleTop()
                 {
+                    if(mv.BoundingBoxCollider == null)
+                    {
+                        throw Admin.SessionManager.Fatal("mv.BoundingBoxCollider == null in DockedVehicleHandTargetPatch.OnHandClickPrefix!");
+                    }
                     Vector3 worldCenter = mv.BoundingBoxCollider.transform.TransformPoint(mv.BoundingBoxCollider.center);
                     return worldCenter.y + (mv.BoundingBoxCollider.size.y * 0.5f * mv.BoundingBoxCollider.transform.lossyScale.y);
                 }
@@ -166,7 +182,9 @@ namespace VehicleFramework.Patches
                     Admin.SessionManager.StartCoroutine(ReEnableCollisionsInAMoment());
                 }
             }
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             SkyEnvironmentChanged.Broadcast(mv.gameObject, (GameObject)null);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             mv.OnVehicleUndocked();
 
 

@@ -85,7 +85,7 @@ namespace VehicleFramework.Admin
                 }
                 else
                 {
-                    AddCraftingTab(vType, upgrade.TabName, upgrade.TabDisplayName, upgrade.TabIcon);
+                    AddCraftingTab(vType, upgrade.TabName, upgrade.TabDisplayName, upgrade.TabIcon ?? StaticAssets.UpgradeIcon);
                 }
             }
             else

@@ -34,6 +34,10 @@ namespace VehicleFramework
         public static IEnumerator SetupVFXConstructing(GameObject go)
         {
             yield return Admin.SessionManager.StartCoroutine(SeamothHelper.EnsureSeamoth());
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null in BuildBotManager.SetupVFXConstructing!");
+            }   
             GameObject seamoth = SeamothHelper.Seamoth;
             VFXConstructing seamothVFXC = seamoth.GetComponent<VFXConstructing>();
             VFXConstructing rocketPlatformVfx = seamoth.GetComponentInChildren<VFXConstructing>();
@@ -195,7 +199,7 @@ namespace VehicleFramework
         }
         public static void BuildPathsForModVehicle(ModVehicle mv, GameObject pointsRoot)
         {
-            BoxCollider box = mv.BoundingBoxCollider;
+            BoxCollider? box = mv.BoundingBoxCollider;
             if (box != null)
             {
                 Transform A = GetCornerBoxCollider(pointsRoot, box, CornerValue.lefttopfront);
