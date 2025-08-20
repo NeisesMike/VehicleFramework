@@ -1,8 +1,9 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
-using HarmonyLib;
-using UnityEngine;
+using System.Linq;
 using System.Reflection.Emit;
+using UnityEngine;
 using VehicleFramework.MiscComponents;
 using VehicleFramework.VehicleTypes;
 
@@ -188,31 +189,105 @@ namespace VehicleFramework.Patches
 
 
     [HarmonyPatch(typeof(VehicleDockingBay))]
-    public static class VehicleDockingBayPatch2
+    public static class VehicleDockingBayTranspiler
     {
+        // This transpiler ensures that StartCinematicMode is not called for newly docked ModVehicles.
+        // This way, we can skip the animation that almost always makes the player jump through the vehicle wall.
+        // To accomplish this, we make the following edit to the original code:
+        /*
+         * 
+			if (dockedVehicle is Exosuit)
+			{
+				this.exosuitDockPlayerCinematic.StartCinematicMode(player);
+			}
+			else
+			{
+				this.dockPlayerCinematic.StartCinematicMode(player);
+			}
+         */
+        // Becomes this:
+        /*
+			if (dockedVehicle is ModVehicle)
+			{
+			}
+			else if (dockedVehicle is Exosuit)
+			{
+				this.exosuitDockPlayerCinematic.StartCinematicMode(player);
+			}
+			else
+			{
+				this.dockPlayerCinematic.StartCinematicMode(player);
+			}
+         */
+        // But more accurately, this IL code:
+        /*
+         *  //If is Exosuit...
+       One  IL_00B7: ldloc.0
+       two  IL_00B8: isinst    Exosuit
+            IL_00BD: brfalse.s IL_00CD // If not an exosuit, jump to "otherwise, do these actions"
+            
+            // do Exosuit actions
+            IL_00BF: ldarg.0
+            IL_00C0: ldfld     class PlayerCinematicController VehicleDockingBay::exosuitDockPlayerCinematic
+            IL_00C5: ldloc.3
+            IL_00C6: callvirt  instance void PlayerCinematicController::StartCinematicMode(class Player)
+      eight IL_00CB: br.s      IL_00D9 // Exit the conditional block
+
+            // otherwise, do these actions
+            IL_00CD: ldarg.0
+            IL_00CE: ldfld     class PlayerCinematicController VehicleDockingBay::dockPlayerCinematic
+            IL_00D3: ldloc.3
+            IL_00D4: callvirt  instance void PlayerCinematicController::StartCinematicMode(class Player)
+
+            // this is the first line after the conditional block
+            IL_00D9: ldarg.0
+         */
+        // becomes this IL code. The rest is preserved, but the Exosuit check is scooted down to make room for this check.
+        // This check skips the whole conditional branch when the vehicle is a ModVehicle, so it does not call StartCinematicMode.
+        /*
+            IL_00B7: ldloc.0
+            IL_00B8: isinst    ModVehicle
+            IL_00BD: brfalse.s IL_00D9  // If is a ModVehicle, Exit the conditional block
+         */
+
+
+        private static (bool, object?) FindMatchingPattern(CodeInstruction one, CodeInstruction two, CodeInstruction eight)
+        {
+            bool oneRight = one.opcode == OpCodes.Ldloc_0;
+            if(!oneRight) return (false, null);
+
+            bool twoRight = two.opcode == OpCodes.Isinst && two.operand.ToString().Contains("exosuit");
+            if (!twoRight) return (false, null);
+
+            bool eightRight = eight.opcode == OpCodes.Br_S;
+            if(!eightRight) return (false, null);
+
+            return (true, eight.operand);
+        }
+
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(VehicleDockingBay.LateUpdate))]
         public static IEnumerable<CodeInstruction> VehicleDockingBayLateUpdateTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            CodeMatch startCinematicMatch = new(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("StartCinematicMode"));
-
-            var newInstructions = new CodeMatcher(instructions)
-                .MatchForward(false, startCinematicMatch)
-                .Repeat(x =>
-                    x.RemoveInstruction()
-                    .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
-                    .Insert(Transpilers.EmitDelegate<Action<PlayerCinematicController, Player, Vehicle>>(MaybeStartCinematicMode))
-                );
-
-            return newInstructions.InstructionEnumeration();
-        }
-
-        public static void MaybeStartCinematicMode(PlayerCinematicController cinematic, Player player, Vehicle vehicle)
-        {
-            if(vehicle as ModVehicle == null)
+            List<CodeInstruction> codes = new(instructions);
+            List<CodeInstruction> newCodes = new(codes.Count);
+            CodeInstruction myNOP = new(OpCodes.Nop);
+            for (int i = 0; i < codes.Count; i++)
             {
-                cinematic.StartCinematicMode(player);
+                newCodes.Add(myNOP);
             }
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (FindMatchingPattern(codes[i], codes[i + 1], codes[i + 2]) is (true, object operand))
+                {
+                    newCodes[i] = new CodeInstruction(OpCodes.Ldloc_0);
+                    newCodes[i + 1] = new CodeInstruction(OpCodes.Isinst, typeof(ModVehicle));
+                    newCodes[i + 2] = new CodeInstruction(OpCodes.Brfalse_S, operand);
+                    i += 2;
+                    continue;
+                }
+            }
+            return newCodes.AsEnumerable();
         }
     }
 }
