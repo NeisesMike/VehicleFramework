@@ -193,49 +193,43 @@ namespace VehicleFramework.Patches
         {
             Admin.GameObjectManager<Vehicle>.Register(__instance);
         }
-    }
 
-    [HarmonyPatch(typeof(Vehicle))]
-    public class VehiclePatcher2
-    {
-        /* This transpiler makes one part of UpdateEnergyRecharge more generic
-         * Optionally change GetComponentInParent to GetComponentInParentButNotInMe
-         * Simple as.
-         * The purpose is to ensure ModVehicles are recharged while docked.
-         */
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(Vehicle.UpdateEnergyRecharge))]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static bool VehicleUpdateEnergyRechargePrefix(Vehicle __instance)
         {
-            List<CodeInstruction> codes = new(instructions);
-            List<CodeInstruction> newCodes = new(codes.Count);
-            CodeInstruction myNOP = new(OpCodes.Nop);
-            for (int i = 0; i < codes.Count; i++)
+            ModVehicle? mv = __instance as ModVehicle;
+            if (mv == null)
             {
-                newCodes.Add(myNOP);
+                return true;
+
             }
-            for (int i = 0; i < codes.Count; i++)
+            bool flag = false;
+            mv.energyInterface.GetValues(out float num, out float num2);
+            if (mv.docked && mv.timeDocked + 4f < Time.time && num < num2)
             {
-                if (codes[i].opcode == OpCodes.Call && codes[i].operand.ToString().ToLower().Contains("powerrelay"))
+                float amount = Mathf.Min(num2 - num, num2 * 0.0025f);
+                // Can't check mv for GetComponentInParent<PowerRelay> because mv itself has a PowerRelay component
+                // We need to make sure we draw power from the PowerRelay above us
+                PowerRelay componentInParent = mv.transform.parent.GetComponentInParent<PowerRelay>();
+                if (componentInParent == null)
                 {
-                    newCodes[i] = CodeInstruction.Call(typeof(VehiclePatcher2), nameof(VehiclePatcher2.GetPowerRelayAboveVehicle));
+                    Debug.LogError("vehicle is docked but can't access PowerRelay component");
                 }
-                else
+                componentInParent.ConsumeEnergy(amount, out float num3);
+                if (!GameModeUtils.RequiresPower() || num3 > 0f)
                 {
-                    newCodes[i] = codes[i];
+                    mv.energyInterface.AddEnergy(num3);
+                    flag = true;
                 }
             }
-            return newCodes.AsEnumerable();
-        }
-        public static PowerRelay GetPowerRelayAboveVehicle(Vehicle veh)
-        {
-            if ((veh as ModVehicle) == null)
+            if (flag)
             {
-                return veh.GetComponentInParent<PowerRelay>();
+                mv.chargingSound.Play();
+                return false;
             }
-            else
-            {
-                return veh.transform.parent.gameObject.GetComponentInParent<PowerRelay>();
-            }
+            mv.chargingSound.Stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            return false;
         }
     }
 }
