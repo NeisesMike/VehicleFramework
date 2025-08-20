@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using HarmonyLib;
-using System.Reflection.Emit;
 using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Allow battery charges (and Power Relay in general) to work in expected ways on ModVehicles
@@ -74,51 +72,31 @@ namespace VehicleFramework.Patches
             __result = mv.energyInterface.sources.Where(x => x != null).Select(x => x.capacity).Sum();
             return false;
         }
-    }
-
-    [HarmonyPatch(typeof(Charger))]
-    public static class PowerSystemPatcher
-    {
-        public static bool MaybeConsumeEnergy(PowerRelay mvpr, float amount, out float amountConsumed)
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(PowerRelay.ModifyPower))]
+        public static bool PowerRelayModifyPowerPrefix(PowerRelay __instance, float amount, ref float modified, ref bool __result)
         {
-            ModVehicle mv = mvpr.gameObject.GetComponent<ModVehicle>();
+            ModVehicle mv = __instance.gameObject.GetComponent<ModVehicle>();
             if (mv == null)
             {
-                mvpr.ConsumeEnergy(amount, out amountConsumed);
+                return true;
+            }
+            if (mv.energyInterface == null)
+            {
+                __result = false;
+                return false;
+            }
+            float storedPower = mv.energyInterface.TotalCanProvide(out _);
+            if (amount <= storedPower)
+            {
+                modified = mv.energyInterface.ConsumeEnergy(amount);
+                __result = true;
             }
             else
             {
-                amountConsumed = mv.energyInterface.ConsumeEnergy(amount);
+                __result = false;
             }
-            return true;
-        }
-
-        /* This transpiler simply replaces one method call with another.
-         * It calls the method above, which is generic over the replaced method.
-         * It allows special handling in the case of a ModVehicle (which does not have a good PowerRelay, see top of file)
-         */
-        [HarmonyPatch(nameof(Charger.Update))]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            List<CodeInstruction> codes = new(instructions);
-            List<CodeInstruction> newCodes = new(codes.Count);
-            CodeInstruction myNOP = new(OpCodes.Nop);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                newCodes.Add(myNOP);
-            }
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Call && (codes[i].operand.ToString().Contains("ConsumeEnergy")))
-                {
-                    newCodes[i] = CodeInstruction.Call(typeof(PowerSystemPatcher), nameof(PowerSystemPatcher.MaybeConsumeEnergy));
-                }
-                else
-                {
-                    newCodes[i] = codes[i];
-                }
-            }
-            return newCodes.AsEnumerable();
+            return false;
         }
     }
 }
