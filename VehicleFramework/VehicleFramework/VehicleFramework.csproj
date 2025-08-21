@@ -35,6 +35,9 @@
     <Reference Include="0Harmony">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -68,6 +71,9 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -241,7 +247,6 @@
     <Compile Include="VehicleComponents\VFArm.cs" />
     <Compile Include="VehicleComponents\VFArmsManager.cs" />
     <Compile Include="VehicleTypes\Drone.cs" />
-    <Compile Include="VehicleTypes\Skimmer.cs" />
     <Compile Include="VehicleTypes\Submarine.cs" />
     <Compile Include="VehicleTypes\Submersible.cs" />
     <Compile Include="UpgradeModules\UpgradeProxy.cs" />
@@ -292,6 +297,7 @@
     <Compile Include="Interfaces\IVehicleStatusListener.cs" />
     <Compile Include="Admin\VehicleManager.cs" />
     <Compile Include="VehicleBuilding\VehicleParts.cs" />
+    <Compile Include="VehicleTypes\SurfaceVessel.cs" />
     <Compile Include="VehicleTypes\Walker.cs" />
   </ItemGroup>
   <ItemGroup />
