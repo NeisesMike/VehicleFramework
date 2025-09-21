@@ -194,7 +194,7 @@ namespace VehicleFramework.Patches
             Admin.GameObjectManager<Vehicle>.Register(__instance);
         }
 
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         [HarmonyPatch(nameof(Vehicle.UpdateEnergyRecharge))]
         public static bool VehicleUpdateEnergyRechargePrefix(Vehicle __instance)
         {
