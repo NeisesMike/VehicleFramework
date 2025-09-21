@@ -8,6 +8,7 @@ using VehicleFramework.Extensions;
 // PURPOSE: allow intuitive use of drone stations while seated
 // VALUE: Moderate. Some value for immersion. See GUIHandPatcher too.
 
+/*
 namespace VehicleFramework.Patches
 {
     // The transpilers here replace all calls to Bench.ExitSittingMode with Bench.MaybeExitSittingMode,
@@ -101,3 +102,4 @@ namespace VehicleFramework.Patches
 
     }
 }
+*/
