@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using BepInEx;
 using HarmonyLib;
-using System.Collections;
-using BepInEx;
-using UnityEngine.SceneManagement;
 using Nautilus.Handlers;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using VehicleFramework.Patches.CompatibilityPatches;
 using VehicleFramework.VehicleBuilding;
 
 namespace VehicleFramework
@@ -98,37 +100,74 @@ namespace VehicleFramework
             Nautilus.Utility.SaveUtils.RegisterOneTimeUseOnLoadEvent(OnLoadOnce);
 
             Harmony harmony = new(PluginInfo.PLUGIN_GUID);
-            harmony.PatchAll();
-        
+            var assembly = typeof(MainPatcher).Assembly;
+            var patches =
+                AccessTools
+                    .GetTypesFromAssembly(assembly)
+                    .Select(x => (Type: x, Processor: harmony.CreateClassProcessor(x)))
+                    .ToList();
+            //VehicleFramework.Logger.Log($"Identified {patches.Count} types to potentially patch. Patching...");
+            foreach (var patch in patches)
+                //log.Write($"Executing patch {patch.Type}...");
+                try
+                {
+                    patch.Processor.Patch();
+                }
+                catch (Exception e)
+                {
+                    VehicleFramework.Logger.LogException($"Failed to patch {patch.Type}.", e);
+                }
+
             // Patch SubnauticaMap with appropriate ping sprites, lest it crash.
-            var type = Type.GetType("SubnauticaMap.PingMapIcon, SubnauticaMap", false, false);
-            if (type != null)
+            try
             {
-                var pingOriginal = AccessTools.Method(type, "Refresh");
-                HarmonyMethod pingPrefix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.MapModPatcher), "Prefix"));
-                harmony.Patch(pingOriginal, pingPrefix);
+                var type = Type.GetType("SubnauticaMap.PingMapIcon, SubnauticaMap", false, false);
+                if (type != null)
+                {
+                    var pingOriginal = AccessTools.Method(type, "Refresh");
+                    HarmonyMethod pingPrefix = new(AccessTools.Method(typeof(MapModPatcher), nameof(MapModPatcher.Prefix)));
+                    harmony.Patch(pingOriginal, pingPrefix);
+                }
+            }
+            catch(Exception e)
+            {
+                VehicleFramework.Logger.LogException($"Failed to patch SubnauticaMap.Refresh", e);
             }
 
             // Patch SlotExtender, lest it break or break us
-            var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
-            if (type2 != null)
+            try
             {
-                var awakePreOriginal = AccessTools.Method(type2, "Prefix");
-                HarmonyMethod awakePrefix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePrefix"));
-                harmony.Patch(awakePreOriginal, awakePrefix);
+                var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
+                if (type2 != null)
+                {
+                    var awakePreOriginal = AccessTools.Method(type2, "Prefix");
+                    HarmonyMethod awakePrefix = new(AccessTools.Method(typeof(SlotExtenderPatcher), nameof(SlotExtenderPatcher.PrePrefix)));
+                    harmony.Patch(awakePreOriginal, awakePrefix);
 
-                var awakePostOriginal = AccessTools.Method(type2, "Postfix");
-                HarmonyMethod awakePostfix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.SlotExtenderPatcher), "PrePostfix"));
-                harmony.Patch(awakePostOriginal, awakePostfix);
+                    var awakePostOriginal = AccessTools.Method(type2, "Postfix");
+                    HarmonyMethod awakePostfix = new(AccessTools.Method(typeof(SlotExtenderPatcher), nameof(SlotExtenderPatcher.PrePostfix)));
+                    harmony.Patch(awakePostOriginal, awakePostfix);
+                }
+            }
+            catch (Exception e)
+            {
+                VehicleFramework.Logger.LogException($"Failed to patch SlotExtender.uGUI_Equipment_Awake_Patch", e);
             }
 
             // Patch BetterVehicleStorage to add ModVehicle compat
-            var type3 = Type.GetType("BetterVehicleStorage.Managers.StorageModuleMgr, BetterVehicleStorage", false, false);
-            if (type3 != null)
+            try
             {
-                var AllowedToAddOriginal = AccessTools.Method(type3, "AllowedToAdd");
-                HarmonyMethod AllowedToAddPrefix = new(AccessTools.Method(typeof(Patches.CompatibilityPatches.BetterVehicleStoragePatcher), "Prefix"));
-                harmony.Patch(AllowedToAddOriginal, AllowedToAddPrefix);
+                var type3 = Type.GetType("BetterVehicleStorage.Managers.StorageModuleMgr, BetterVehicleStorage", false, false);
+                if (type3 != null)
+                {
+                    var AllowedToAddOriginal = AccessTools.Method(type3, "AllowedToAdd");
+                    HarmonyMethod AllowedToAddPrefix = new(AccessTools.Method(typeof(BetterVehicleStoragePatcher), nameof(BetterVehicleStoragePatcher.Prefix)));
+                    harmony.Patch(AllowedToAddOriginal, AllowedToAddPrefix);
+                }
+            }
+            catch (Exception e)
+            {
+                VehicleFramework.Logger.LogException($"Failed to patch BetterVehicleStorage.AllowedToAdd", e);
             }
             /*
             var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
