@@ -106,11 +106,7 @@ namespace VehicleFramework.Admin
                 RegisterVoice(name, vehicleVoice);
             }, folderWithVoiceFiles);
         }
-        public static void RegisterVoiceWithRelativePath(string name, string relativePathToFolderWithVoiceFiles)
-        {
-            RegisterVoiceWithRelativePath(name, relativePathToFolderWithVoiceFiles, false);
-        }
-        public static void RegisterVoiceWithRelativePath(string name, string relativePathToFolderWithVoiceFiles, bool verbose)
+        public static void RegisterVoiceWithRelativePath(string name, string relativePathToFolderWithVoiceFiles, bool verbose = false)
         {
             string folderWithVoiceFiles = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetCallingAssembly().Location),
