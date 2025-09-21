@@ -18,7 +18,6 @@ namespace VehicleFramework.Patches
         /* This transpiler makes one part of OnHandHover more generic
          * Optionally change GetComponent to GetComponentInChildren
          * Simple as
-         */
         [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandHover))]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -41,6 +40,21 @@ namespace VehicleFramework.Patches
                 }
             }
             return newCodes.AsEnumerable();
+        }
+         */
+
+        [HarmonyTranspiler]
+        [HarmonyPatch(nameof(DockedVehicleHandTarget.OnHandHover))]
+        public static IEnumerable<CodeInstruction> DockedVehicleHandTargetOnHandHoverTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            CodeMatch GetEnergyMixinMatch = new(i => i.opcode == OpCodes.Callvirt && i.operand.ToString().Contains("EnergyMixin"));
+
+            CodeMatcher newInstructions = new CodeMatcher(instructions)
+                .MatchForward(true, GetEnergyMixinMatch)
+                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
+                .Insert(Transpilers.EmitDelegate<Func<EnergyMixin, Vehicle, EnergyMixin?>>(ModVehicle.GetLeastChargedModVehicleEnergyMixinIfNull));
+
+            return newInstructions.InstructionEnumeration();
         }
 
         [HarmonyPostfix]

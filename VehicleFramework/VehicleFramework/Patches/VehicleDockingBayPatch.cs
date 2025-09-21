@@ -270,22 +270,28 @@ namespace VehicleFramework.Patches
         public static IEnumerable<CodeInstruction> VehicleDockingBayLateUpdateTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = new(instructions);
-            List<CodeInstruction> newCodes = new(codes.Count);
+            List<CodeInstruction> newCodes = new();// = new(codes.Count + 2);
+            /*
             CodeInstruction myNOP = new(OpCodes.Nop);
             for (int i = 0; i < codes.Count; i++)
             {
                 newCodes.Add(myNOP);
             }
+            */
+            int endOfMatching = codes.Count - 8;
+
             for (int i = 0; i < codes.Count; i++)
             {
-                if (FindMatchingPattern(codes[i], codes[i + 1], codes[i + 2]) is (true, object operand))
+                if(i < endOfMatching)
                 {
-                    newCodes[i] = new CodeInstruction(OpCodes.Ldloc_0);
-                    newCodes[i + 1] = new CodeInstruction(OpCodes.Isinst, typeof(ModVehicle));
-                    newCodes[i + 2] = new CodeInstruction(OpCodes.Brfalse_S, operand);
-                    i += 2;
-                    continue;
+                    if (FindMatchingPattern(codes[i], codes[i + 1], codes[i + 7]) is (true, object operand))
+                    {
+                        newCodes.Add(new CodeInstruction(OpCodes.Ldloc_0));
+                        newCodes.Add(new CodeInstruction(OpCodes.Isinst, typeof(ModVehicle)));
+                        newCodes.Add(new CodeInstruction(OpCodes.Brfalse_S, operand));
+                    }
                 }
+                newCodes.Add(codes[i]);
             }
             return newCodes.AsEnumerable();
         }
