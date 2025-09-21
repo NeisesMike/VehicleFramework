@@ -116,6 +116,8 @@ namespace VehicleFramework.VehicleTypes
         public virtual Quaternion CyclopsDockRotation => Quaternion.identity;
         #endregion
 
+        public PowerManager PowerMan => gameObject.EnsureComponent<PowerManager>();
+
         #region vehicle_overrides
         public override void Awake()
         {
@@ -157,7 +159,6 @@ namespace VehicleFramework.VehicleTypes
             // so I'm not able to provide the value easily here. Not even sure what a GameInfoIcon is :shrug:
             gameObject.EnsureComponent<GameInfoIcon>().techType = TechType;
             GameInfoIcon.Add(TechType);
-            powerMan = gameObject.EnsureComponent<PowerManager>();
             isInited = true;
         }
         public override void Update()
@@ -687,7 +688,6 @@ namespace VehicleFramework.VehicleTypes
         public bool isPoweredOn = true;
         public FMOD_StudioEventEmitter? ambienceSound;
         public int numEfficiencyModules = 0;
-        public PowerManager? powerMan = null;
         public bool IsPlayerDry = false;
         public bool isScuttled = false;
         public bool IsUndockingAnimating = false;
@@ -1232,17 +1232,18 @@ namespace VehicleFramework.VehicleTypes
             }
             mv.GetComponent<VFEngine>().ControlRotation();
         }
-        public static EnergyMixin GetEnergyMixinFromVehicle(Vehicle veh)
+        public static EnergyMixin? GetLeastChargedModVehicleEnergyMixinIfNull(EnergyMixin em, Vehicle veh)
         {
             ModVehicle? mv = veh as ModVehicle;
-            if (mv == null)
+            if (em != null || mv == null)
             {
-                return veh.GetComponent<EnergyMixin>();
+                return em;
             }
-            else
+            if (mv.energyInterface != null && mv.energyInterface.sources != null && mv.energyInterface.sources.Length != 0)
             {
-                return mv.energyInterface.sources.First();
+                return mv.energyInterface.sources.OrderBy(x => x.charge).First();
             }
+            throw SessionManager.Fatal($"GetLeastChargedModVehicleEnergyMixinIfNull failed to get EnergyMixin for ModVehicle: {mv.GetName()}");
         }
         public static void TeleportPlayer(Vector3 destination)
         {

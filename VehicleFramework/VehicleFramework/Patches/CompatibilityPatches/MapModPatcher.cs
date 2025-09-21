@@ -23,7 +23,7 @@ namespace VehicleFramework.Patches.CompatibilityPatches
             {
                 return true; // If we can't get the ping, we don't need to do anything.
             }
-            foreach (var mvPIs in Admin.VehicleManager.mvPings)
+            foreach (var mvPIs in Admin.VFPingManager.mvPings)
             {
                 if (mvPIs.pingType == ping.pingType)
                 {

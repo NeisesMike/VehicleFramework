@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.VehicleBuilding;
-using VehicleFramework.StorageComponents;
 
 namespace VehicleFramework.Admin;
 
@@ -67,15 +66,11 @@ public static class VehicleRegistrar
             yield return Admin.SessionManager.StartCoroutine(InternalRegisterVehicle(mv, verbose));
         }
     }
-    public static IEnumerator RegisterVehicle(ModVehicle mv)
-    {
-        yield return RegisterVehicle(mv, false);
-    }
     private static IEnumerator InternalRegisterVehicle(ModVehicle mv, bool verbose)
     {
         RegistrySemaphore = true;
         VerboseLog(LogType.Log, verbose, $"The {mv.gameObject.name} is beginning Registration.");
-        PingType registeredPingType = VehicleManager.RegisterPingType((PingType)121, verbose);
+        PingType registeredPingType = VFPingManager.RegisterPingType(mv.name, verbose);
         yield return Admin.SessionManager.StartCoroutine(VehicleBuilder.Prefabricate(mv, registeredPingType, verbose));
         RegistrySemaphore = false;
         Logger.Log($"Finished {mv.gameObject.name} registration.");

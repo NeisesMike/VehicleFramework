@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using HarmonyLib;
-using System.Reflection.Emit;
+using VehicleFramework.Admin;
 
 // PURPOSE: Allow ModVehicles to use (and have displayed) custom ping sprites.
 // VALUE: Very high.
@@ -12,35 +11,19 @@ namespace VehicleFramework.Patches
     class UGUI_PingEntryPatcher
     {
         /*
-         * This transpiler ensure our ping sprites are used properly by the base-game systems,
-         * so that we may display our custom ping sprites on the HUD
+         * Search through our own collection of pings, and if the ping type is one of ours, override the sprite with our own.
          */
+        [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_PingEntry.SetIcon))]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static bool UGUI_PingEntrySetIconPatcher(uGUI_PingEntry __instance, PingType type)
         {
-            List<CodeInstruction> codes = new(instructions);
-            List<CodeInstruction> newCodes = new(codes.Count);
-            CodeInstruction myNOP = new(OpCodes.Nop);
-            for (int i = 0; i < codes.Count; i++)
+            if(Admin.VFPingManager.mvPings.Select(x => x.pingType).Contains(type))
             {
-                newCodes.Add(myNOP);
+                UnityEngine.Sprite returnSprite = VFPingManager.VFGetPingTypeSprite(VFPingManager.VFGetCachedPingTypeString(type));
+                __instance.icon.SetForegroundSprite(returnSprite);
+                return false;
             }
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Callvirt)
-                {
-                    if (codes[i].operand.ToString() == "System.String Get(PingType)")
-                    {
-                        newCodes[i] = CodeInstruction.Call(typeof(VehicleBuilding.VehicleBuilder), nameof(VehicleBuilding.VehicleBuilder.GetPingTypeString));
-                        newCodes[i + 1] = codes[i + 1];
-                        newCodes[i + 2] = CodeInstruction.Call(typeof(VehicleBuilding.VehicleBuilder), nameof(VehicleBuilding.VehicleBuilder.GetPingTypeSprite));
-                        i+=2;
-                        continue;
-                    }
-                }
-                newCodes[i] = codes[i];
-            }
-            return newCodes.AsEnumerable();
+            return true;
         }
 
         // This prefix ensures ModVehicles have their names displayed correctly in the ping tab.
@@ -48,7 +31,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(uGUI_PingEntry.UpdateLabel))]
         public static bool UGUI_PingEntryUpdateLabelPrefix(uGUI_PingEntry __instance, PingType type, string name)
         {
-            if(Admin.VehicleManager.mvPings.Select(x=>x.pingType).Contains(type))
+            if(Admin.VFPingManager.mvPings.Select(x=>x.pingType).Contains(type))
             {
                 foreach (var mvType in Admin.VehicleManager.vehicleTypes)
                 {

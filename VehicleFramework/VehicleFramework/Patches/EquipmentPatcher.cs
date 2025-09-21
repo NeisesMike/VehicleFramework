@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
+using VehicleFramework.Admin;
 using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow ModVehicle upgrade slots to mesh with the game systems
@@ -27,7 +28,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.SetLabel))]
         public static void SetLabelPrefix(Equipment __instance, string l, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!l.Contains("VehicleModule") && !l.Contains("VehicleArm"))
+            if (!l.Contains(VehicleBuilding.ModuleBuilder.VFUpgradePrefix))
             {
                 return;
             }
@@ -44,11 +45,11 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.AddSlot))]
         public static void AddSlotPrefix(Equipment __instance, string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
+            if (!slot.Contains(VehicleBuilding.ModuleBuilder.VFUpgradePrefix))
             {
                 return;
             }
-            ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
+            ModVehicle? mv = __instance.owner?.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
                 return;
@@ -112,7 +113,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.RemoveSlot))]
         public static void RemoveSlot(Equipment __instance, string slot, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
-            if (!slot.Contains("VehicleModule") && !slot.Contains("VehicleArm"))
+            if (!slot.Contains(VehicleBuilding.ModuleBuilder.VFUpgradePrefix))
             {
                 return;
             }
@@ -129,7 +130,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.GetSlotType))]
         public static bool GetSlotTypePrefix(string slot, ref EquipmentType __result)
         {
-            if(slot.Contains(VehicleBuilding.ModuleBuilder.ModVehicleModulePrefix))
+            if(EnumHelper.IsModuleName(slot))
             {
                 __result = Admin.EnumHelper.GetModuleType();
                 return false;

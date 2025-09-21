@@ -5,10 +5,11 @@ namespace VehicleFramework.Admin
 {
     public static class EnumHelper
     {
-        public const string ControlScheme = "VehicleFrameworkScheme";
-        public const string ModuleType = "VehicleFrameworkModuleType";
-        public const string ArmType = "VehicleFrameworkArmType";
-        public const string InnateStorage = "VehicleFrameworkInnateStorage";
+        public const string VFEnumPrefix = "VehicleFrameworkEnum_";
+        public const string ControlScheme = $"{VFEnumPrefix}ControlScheme";
+        public const string ModuleType = $"{VFEnumPrefix}ModuleType";
+        public const string ArmType = $"{VFEnumPrefix}ArmType";
+        public const string InnateStorage = $"{VFEnumPrefix}InnateStorage";
 
         internal static void Setup()
         {
@@ -49,6 +50,10 @@ namespace VehicleFramework.Admin
                 return result;
             }
             throw SessionManager.Fatal($"Could not get the TechType enum for string {InnateStorage}");
+        }
+        public static bool IsModuleName(string name)
+        {
+            return name.StartsWith(VehicleBuilding.ModuleBuilder.ModVehicleModulePrefix) && int.TryParse(name[VehicleBuilding.ModuleBuilder.ModVehicleModulePrefix.Length..], out _);
         }
     }
 }

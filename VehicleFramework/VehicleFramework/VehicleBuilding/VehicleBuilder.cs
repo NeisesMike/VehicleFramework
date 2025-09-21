@@ -560,7 +560,7 @@ namespace VehicleFramework.VehicleBuilding
             mv.pingInstance.origin = mv.transform;
             mv.pingInstance.pingType = pingType;
             mv.pingInstance.SetLabel("Vehicle");
-            VehicleManager.mvPings.Add(mv.pingInstance);
+            VFPingManager.mvPings.Add(mv.pingInstance);
         }
         public static void SetupVehicleConfig(ModVehicle mv)
         {

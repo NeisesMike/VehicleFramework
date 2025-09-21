@@ -15,9 +15,14 @@ namespace VehicleFramework.VehicleBuilding
         internal static bool haveWeCalledBuildAllSlots = false;
         internal static bool slotExtenderIsPatched = false;
         internal static bool slotExtenderHasGreenLight = false;
-        internal const string ModVehicleModulePrefix = "VehicleModule";
-        internal const string LeftArmSlotName = "VehicleArmLeft";
-        internal const string RightArmSlotName = "VehicleArmRight";
+
+
+        internal const string VFUpgradePrefix = "VehicleFrameworkUpgrade";
+        internal const string ModVehicleModulePrefix = $"{VFUpgradePrefix}Module";
+        internal const string LeftArmSlotName = $"{VFUpgradePrefix}LeftArm";
+        internal const string RightArmSlotName = $"{VFUpgradePrefix}RightArm";
+
+        private const string PresenceKey = $"{ModVehicleModulePrefix}0";
 
         public void Awake()
         {
@@ -49,7 +54,7 @@ namespace VehicleFramework.VehicleBuilding
                 {
                     throw Admin.SessionManager.Fatal("ModuleBuilder: BackgroundSprite set before equipment was initialized!");
                 }
-                equipment.transform.Find("VehicleModule0/VehicleModuleBackground(Clone)").GetComponent<UnityEngine.UI.Image>().sprite = setSprite;
+                equipment.transform.Find($"{PresenceKey}/VehicleModuleBackground(Clone)").GetComponent<UnityEngine.UI.Image>().sprite = setSprite;
             }
         }
 
@@ -74,12 +79,12 @@ namespace VehicleFramework.VehicleBuilding
         public IEnumerator BuildAllSlotsInternal()
         {
             yield return new WaitUntil(() => haveSlotsBeenInited);
-            if (!vehicleAllSlots.ContainsKey("VehicleModule0"))
+            if (!vehicleAllSlots.ContainsKey(PresenceKey))
             {
                 uGUI_Equipment? equipment = (uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>()) ?? throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
                 for (int i = 0; i < MaxNumModules; i++)
                 {
-                    vehicleAllSlots.Add("VehicleModule" + i.ToString(), equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>());
+                    vehicleAllSlots.Add($"{ModVehicleModulePrefix}{i}", equipment.transform.Find($"{ModVehicleModulePrefix}{i}").GetComponent<uGUI_EquipmentSlot>());
                 }
                 vehicleAllSlots.Add(ModuleBuilder.LeftArmSlotName, equipment.transform.Find(ModuleBuilder.LeftArmSlotName).GetComponent<uGUI_EquipmentSlot>());
                 vehicleAllSlots.Add(ModuleBuilder.RightArmSlotName, equipment.transform.Find(ModuleBuilder.RightArmSlotName).GetComponent<uGUI_EquipmentSlot>());
@@ -89,7 +94,7 @@ namespace VehicleFramework.VehicleBuilding
                 uGUI_Equipment? equipment = (uGUI_PDA.main.transform.Find("Content/InventoryTab/Equipment")?.GetComponent<uGUI_Equipment>()) ?? throw Admin.SessionManager.Fatal("ModuleBuilder: Equipment not found in PDA!");
                 for (int i = 0; i < MaxNumModules; i++)
                 {
-                    vehicleAllSlots["VehicleModule" + i.ToString()] = equipment.transform.Find("VehicleModule" + i.ToString()).GetComponent<uGUI_EquipmentSlot>();
+                    vehicleAllSlots[$"{ModVehicleModulePrefix}{i}"] = equipment.transform.Find($"{ModVehicleModulePrefix}{i}").GetComponent<uGUI_EquipmentSlot>();
                 }
                 vehicleAllSlots[ModuleBuilder.LeftArmSlotName] = equipment.transform.Find(ModuleBuilder.LeftArmSlotName).GetComponent<uGUI_EquipmentSlot>();
                 vehicleAllSlots[ModuleBuilder.RightArmSlotName] = equipment.transform.Find(ModuleBuilder.RightArmSlotName).GetComponent<uGUI_EquipmentSlot>();
@@ -239,11 +244,11 @@ namespace VehicleFramework.VehicleBuilding
             for (int i=0; i<modules; i++)
             {
                 GameObject thisModule = GetGenericModuleSlot();
-                thisModule.name = "VehicleModule" + i.ToString();
+                thisModule.name = $"{ModVehicleModulePrefix}{i}";
                 thisModule.SetActive(false);
                 thisModule.transform.SetParent(equipment.transform, false);
                 thisModule.transform.localScale = Vector3.one;
-                thisModule.GetComponent<uGUI_EquipmentSlot>().slot = "VehicleModule" + i.ToString();
+                thisModule.GetComponent<uGUI_EquipmentSlot>().slot = thisModule.name;
                 thisModule.GetComponent<uGUI_EquipmentSlot>().manager = equipment;
 
                 LinkModule(ref thisModule);
