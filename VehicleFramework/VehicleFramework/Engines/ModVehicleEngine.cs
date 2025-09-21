@@ -93,10 +93,7 @@ namespace VehicleFramework.Engines
         }
         protected virtual void UpdateRightMomentum(float inputMagnitude)
         {
-            if (inputMagnitude != 0)
-            {
-                RightMomentum += inputMagnitude * STRAFE_ACCEL * Time.fixedDeltaTime;
-            }
+            RightMomentum += inputMagnitude * STRAFE_ACCEL * Time.fixedDeltaTime;
         }
 
         protected float _upMomentum = 0;
@@ -207,11 +204,7 @@ namespace VehicleFramework.Engines
             float scalarFactor = 1.0f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
-            if(MV.powerMan == null)
-            {
-                throw Admin.SessionManager.Fatal("MV.powerMan is null! Cannot drain power!");
-            }
-            MV.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
+            MV.PowerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
         public override void KillMomentum()
         {

@@ -93,22 +93,14 @@ namespace VehicleFramework.Engines
             float scalarFactor = 1.0f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
-            if(MV.powerMan == null)
-            {
-                throw Admin.SessionManager.Fatal($"No PowerManager found on {transform.name}. VFEngine requires a ModVehicle with a PowerManager component.");
-            }
-            MV.powerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
+            MV.PowerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         } // public for historical reasons
         #endregion
 
         #region methods
         public void ApplyPlayerControls(Vector3 moveDirection)
         {
-            var modifiers = GetComponentsInChildren<VehicleAccelerationModifier>();
-            foreach (var modifier in modifiers)
-            {
-                modifier.ModifyAcceleration(ref moveDirection);
-            }
+            GetComponentsInChildren<VehicleAccelerationModifier>().ForEach(x => x.ModifyAcceleration(ref moveDirection));
             MoveWithInput(moveDirection);
             return;
         } // public for historical reasons

@@ -32,11 +32,7 @@ namespace VehicleFramework.VehicleComponents
             float dockRecharge = Math.Min(1, dockDesires);
             if (charge > dockRecharge && dockRecharge > 0)
             {
-                if (MV.powerMan == null)
-                {
-                    throw Admin.SessionManager.Fatal("MV.powerMan is null! Cannot drain power!");
-                }
-                float actual = MV.powerMan.TrySpendEnergy(dockRecharge);
+                float actual = MV.PowerMan.TrySpendEnergy(dockRecharge);
                 cdVehicle.AddEnergy(actual);
             }
         }

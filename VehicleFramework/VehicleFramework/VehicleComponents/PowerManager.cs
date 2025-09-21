@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Interfaces;
+using VehicleFramework.Admin;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -43,11 +44,23 @@ namespace VehicleFramework.VehicleComponents
         private bool isAutoLeveling = false;
         private bool isAutoPiloting = false;
         private ModVehicle MV => GetComponent<ModVehicle>();
-        private EnergyInterface EI => GetComponent<EnergyInterface>();
+        private EnergyInterface EI => MV.energyInterface;
+
+        private void Awake()
+        {
+            if (MV == null)
+            {
+                throw SessionManager.Fatal($"{nameof(PowerManager)}.{nameof(Awake)}(): ModVehicle is null!");
+            }
+            if (EI == null)
+            {
+                throw SessionManager.Fatal($"{MV.GetName()}.TrySpendEnergy(): EnergyInterface is null!");
+            }
+        }
 
         private PowerEvent EvaluatePowerEvent()
         {
-            MV.energyInterface.GetValues(out float charge, out _);
+            EI.GetValues(out float charge, out _);
             if (charge < 5)
             {
                 return PowerEvent.OnBatteryDepleted;
@@ -67,7 +80,7 @@ namespace VehicleFramework.VehicleComponents
         }
         public PowerStatus EvaluatePowerStatus()
         {
-            MV.energyInterface.GetValues(out float charge, out _);
+            EI.GetValues(out float charge, out _);
             return new PowerStatus
             {
                 isPowered = MV.isPoweredOn,
