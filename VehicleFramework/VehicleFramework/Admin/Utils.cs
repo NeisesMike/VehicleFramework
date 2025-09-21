@@ -136,7 +136,7 @@ namespace VehicleFramework.Admin
         {
             try
             {
-                VehicleBuilding.VehicleEntry ve = VehicleManager.vehicleTypes.Where(x => x.name.Contains(name)).First();
+                VehicleBuilding.VehicleEntry ve = VehicleManager.GetVehicleTypesWhere(x => x.name.Contains(name)).First();
                 return ve.techType;
             }
             catch

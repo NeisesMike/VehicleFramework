@@ -71,7 +71,7 @@ namespace VehicleFramework.Admin
 		public void OnConsoleCommand_logvfvehicles(NotificationCenter.Notification _)
 		{
 			VehicleManager.vehicleTypes.Select(x => x.techType).ForEach(x => Logger.Log(x.AsString()));
-		}
+        }
 		public void OnConsoleCommand_logvfvoices(NotificationCenter.Notification _)
 		{
 			VoiceManager.LogAllAvailableVoices();
@@ -83,8 +83,8 @@ namespace VehicleFramework.Admin
 		private static IEnumerator ListSpawnCodes()
 		{
 			List<string> allCodes = new();
-			allCodes.AddRange(VehicleManager.vehicleTypes.Select(x => x.techType.AsString()));
-			allCodes.AddRange(UpgradeRegistrar.UpgradeIcons.Select(x => x.Key));
+			allCodes.AddRange(VehicleManager.VehiclesInPlay.Select(x => x.TechType.AsString()));
+            allCodes.AddRange(UpgradeRegistrar.UpgradeIcons.Select(x => x.Key));
 			foreach (string code in allCodes)
 			{
 				Logger.PDANote(code, 4f);

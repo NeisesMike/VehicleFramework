@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
-using Newtonsoft.Json;
 using UnityEngine;
+using VehicleFramework.Admin;
 
 namespace VehicleFramework.SaveLoad
 {
@@ -64,7 +65,7 @@ namespace VehicleFramework.SaveLoad
             {
                 if(fileName.Length > 260)
                 {
-                    throw new ArgumentException("That file path was too long!");
+                    throw SessionManager.Fatal("That file path was too long!");
                 }
                 File.WriteAllText(fileName, json);
             }

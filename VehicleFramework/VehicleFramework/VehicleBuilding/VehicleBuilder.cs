@@ -19,7 +19,7 @@ namespace VehicleFramework.VehicleBuilding
     {
         public VehicleEntry(ModVehicle inputMv, int id, PingType pt_in, Sprite sprite, TechType tt=(TechType)0)
         {
-            mv = inputMv ?? throw new ArgumentException("Vehicle Entry cannot take a null mod vehicle");
+            mv = inputMv ?? throw SessionManager.Fatal("Vehicle Entry cannot take a null mod vehicle");
             unique_id = id;
             pt = pt_in;
             name = mv.name;

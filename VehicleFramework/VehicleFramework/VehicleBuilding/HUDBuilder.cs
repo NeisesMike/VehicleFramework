@@ -96,6 +96,7 @@ namespace VehicleFramework.VehicleBuilding
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
 
             BuildDroneHUD(ret, mvHUDElementsRoot);
+            ret.Validate();
         }
         public static void BuildStorageHUD()
         {
@@ -138,9 +139,10 @@ namespace VehicleFramework.VehicleBuilding
             if(ret.textStorage == null)
             {
                 throw Admin.SessionManager.Fatal("HUDBuilder: textStorage is null!");
-            }   
+            }
 
             BuildDroneHUD(ret, mvHUDElementsRoot);
+            ret.Validate();
         }
         public static void BuildDroneHUD(UGUI_VehicleHUD ret, GameObject hudRoot)
         {
@@ -174,6 +176,7 @@ namespace VehicleFramework.VehicleBuilding
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.Validate();
         }
         public static void BuildVRHUD_OLD()
         {
@@ -223,6 +226,7 @@ namespace VehicleFramework.VehicleBuilding
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
+            ret.Validate();
         }
     }
 }

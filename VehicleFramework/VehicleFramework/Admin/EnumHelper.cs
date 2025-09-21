@@ -1,4 +1,5 @@
 ﻿using System;
+using static VehicleUpgradeConsoleInput;
 
 namespace VehicleFramework.Admin
 {
@@ -23,7 +24,7 @@ namespace VehicleFramework.Admin
             {
                 return result;
             }
-            throw new ArgumentException($"Could not get the Vehicle.ControlSheme enum for string {ControlScheme}");
+            throw SessionManager.Fatal($"Could not get the Vehicle.ControlSheme enum for string {ControlScheme}");
         }
         public static EquipmentType GetModuleType()
         {
@@ -31,7 +32,7 @@ namespace VehicleFramework.Admin
             {
                 return result;
             }
-            throw new ArgumentException($"Could not get the EquipmentType enum for string {ModuleType}");
+            throw SessionManager.Fatal($"Could not get the EquipmentType enum for string {ModuleType}");
         }
         public static EquipmentType GetArmType()
         {
@@ -39,7 +40,7 @@ namespace VehicleFramework.Admin
             {
                 return result;
             }
-            throw new ArgumentException($"Could not get the EquipmentType enum for string {ArmType}");
+            throw SessionManager.Fatal($"Could not get the EquipmentType enum for string {ArmType}");
         }
         public static TechType GetInnateStorageType()
         {
@@ -47,7 +48,7 @@ namespace VehicleFramework.Admin
             {
                 return result;
             }
-            throw new ArgumentException($"Could not get the TechType enum for string {InnateStorage}");
+            throw SessionManager.Fatal($"Could not get the TechType enum for string {InnateStorage}");
         }
     }
 }

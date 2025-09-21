@@ -32,22 +32,22 @@ namespace VehicleFramework.Admin
             {
                 return value.Value;
             }
-            throw new ArgumentException($"External config for {MyName} does not have a config entry of name {name}.");
+            throw SessionManager.Fatal($"External config for {MyName} does not have a config entry of name {name}.");
         }
         public static ExternalVehicleConfig<T> GetModVehicleConfig(string vehicleName)
         {
-            var MVs = VehicleManager.vehicleTypes.Where(x => x.name.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
-            if (!MVs.Any())
+            var MVs = VehicleManager.GetVehicleTypesWhere(x => x.name.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
+            if (MVs.Count == 0)
             {
                 StringBuilder sb = new();
                 VehicleManager.vehicleTypes.ForEach(x => sb.AppendLine(x.name));
-                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {sb}");
+                throw SessionManager.Fatal($"GetModVehicleConfig: vehicle name does not identify a ModVehicle: {vehicleName}. Options are: {sb}");
             }
-            if (MVs.Count() > 1)
+            if (MVs.Count > 1)
             {
                 StringBuilder sb = new();
                 VehicleManager.vehicleTypes.ForEach(x => sb.AppendLine(x.name));
-                throw new ArgumentException($"GetModVehicleConfig: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches: {sb}");
+                throw SessionManager.Fatal($"GetModVehicleConfig: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count} matches: {sb}");
             }
             ModVehicle mv = MVs.First().mv;
             if (!main.ContainsKey(mv.GetType().ToString()))
@@ -175,14 +175,14 @@ namespace VehicleFramework.Admin
             }
             // wait until the player exists, so that we're sure every vehicle is done with registration
             yield return new UnityEngine.WaitUntil(() => Player.main != null);
-            var MVs = VehicleManager.vehicleTypes.Where(x => x.name.ToLower().Contains(vehicleName.ToLower()));
-            if (!MVs.Any())
+            var MVs = VehicleManager.GetVehicleTypesWhere(x => x.name.ToLower().Contains(vehicleName.ToLower()));
+            if (MVs.Count == 0)
             {
-                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not identify a ModVehicle: {vehicleName}");
+                throw SessionManager.Fatal($"RegisterForModVehicle: vehicle name does not identify a ModVehicle: {vehicleName}");
             }
-            if (MVs.Count() > 1)
+            if (MVs.Count > 1)
             {
-                throw new ArgumentException($"RegisterForModVehicle: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count()} matches.");
+                throw SessionManager.Fatal($"RegisterForModVehicle: vehicle name does not uniquely identify a ModVehicle: {vehicleName}. There were {MVs.Count} matches.");
             }
             ModVehicle mv = MVs.First().mv;
             ConfigFile config = configFile ?? MainPatcher.Instance.Config;
