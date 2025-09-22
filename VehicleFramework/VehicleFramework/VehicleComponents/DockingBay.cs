@@ -2,6 +2,7 @@
 using UnityEngine;
 //using VehicleFramework.BaseVehicle;
 using VehicleFramework.Extensions;
+using VehicleFramework.LightControllers;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -94,11 +95,11 @@ namespace VehicleFramework.VehicleComponents
                 seamoth.toggleLights.SetLightsActive(false);
                 cdVehicle.GetComponent<SeaMoth>().enabled = true; // why is this necessary?
             }
-            else if(cdVehicle is ModVehicle mv && mv.headlights != null)
+            else if(cdVehicle is ModVehicle mv && mv.GetComponent<HeadLightsController>() != null)
             {
-                if (mv.headlights.IsLightsOn)
+                if (mv.GetComponent<HeadLightsController>().IsLightsOn)
                 {
-                    mv.headlights.Toggle();
+                    mv.GetComponent<HeadLightsController>().Toggle();
                 }
             }
         }

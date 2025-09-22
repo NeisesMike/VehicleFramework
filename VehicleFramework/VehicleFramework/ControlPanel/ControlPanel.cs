@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Interfaces;
+using VehicleFramework.LightControllers;
 using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.ControlPanel
@@ -100,7 +101,7 @@ namespace VehicleFramework.ControlPanel
         }
         public void HeadlightsClick()
         {
-            mv.headlights?.Toggle();
+            mv.GetComponent<HeadLightsController>()?.Toggle();
         }
         public static void HeadLightsHover()
         {
