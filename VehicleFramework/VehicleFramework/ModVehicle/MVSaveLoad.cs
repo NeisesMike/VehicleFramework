@@ -168,7 +168,6 @@ namespace VehicleFramework
         {
             int batteryCount = 0;
             if (Batteries != null) batteryCount += Batteries.Count;
-            if (BackupBatteries != null) batteryCount += BackupBatteries.Count;
 
             batterySaveData.Add(path, batteryData);
             if (batterySaveData.Count == batteryCount)

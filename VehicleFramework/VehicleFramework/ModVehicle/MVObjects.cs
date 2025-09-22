@@ -63,7 +63,6 @@ namespace VehicleFramework
         public virtual List<VehicleStorage>? ModularStorages => new();
         public virtual List<VehicleFloodLight>? HeadLights => new();
         public virtual List<GameObject>? CanopyWindows => new();
-        public virtual List<VehicleBattery>? BackupBatteries => new();
         public virtual GameObject? LeviathanGrabPoint => gameObject;
         public virtual List<Transform>? LavaLarvaAttachPoints => new();
         public virtual List<VehicleCamera>? Cameras => new();

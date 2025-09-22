@@ -320,47 +320,6 @@ namespace VehicleFramework.VehicleBuilding
             mv.chargingSound = mv.gameObject.AddComponent<FMOD_CustomLoopingEmitter>();
             mv.chargingSound.asset = SeamothHelper.Seamoth.GetComponent<SeaMoth>().chargingSound.asset;
         }
-        public static void SetupAIEnergyInterface(ModVehicle mv)
-        {
-            if (mv.BackupBatteries == null || mv.BackupBatteries.Count == 0)
-            {
-                mv.AIEnergyInterface = mv.energyInterface;
-                return;
-            }
-            if (SeamothHelper.Seamoth == null)
-            {
-                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
-            }
-            var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
-            List<EnergyMixin> energyMixins = new();
-            foreach (VehicleBattery vb in mv.BackupBatteries)
-            {
-                // Configure energy mixin for this battery slot
-                var em = vb.BatterySlot.EnsureComponent<EnergyMixin>();
-                em.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
-                em.defaultBattery = seamothEnergyMixin.defaultBattery;
-                em.compatibleBatteries = new() { TechType.PowerCell, TechType.PrecursorIonPowerCell };
-                em.soundPowerUp = seamothEnergyMixin.soundPowerUp;
-                em.soundPowerDown = seamothEnergyMixin.soundPowerDown;
-                em.soundBatteryAdd = seamothEnergyMixin.soundBatteryAdd;
-                em.soundBatteryRemove = seamothEnergyMixin.soundBatteryRemove;
-                em.batteryModels = seamothEnergyMixin.batteryModels;
-
-                energyMixins.Add(em);
-
-                var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
-                tmp.mixin = em;
-                tmp.tooltip = "VFAutoPilotBattery";
-
-                BatteryProxy.Create(vb, em);
-
-                SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vb.BatterySlot.transform);
-                vb.BatterySlot.EnsureComponent<SaveLoad.VFBatteryIdentifier>();
-            }
-            // Configure energy interface
-            mv.AIEnergyInterface = mv.BackupBatteries.First().BatterySlot.EnsureComponent<EnergyInterface>();
-            mv.AIEnergyInterface.sources = energyMixins.ToArray();
-        }
         public static void SetupLightSounds(ModVehicle mv)
         {
             if (SeamothHelper.Seamoth == null)
@@ -805,7 +764,6 @@ namespace VehicleFramework.VehicleBuilding
             }
             mv.enabled = false;
             SetupEnergyInterface(mv);
-            SetupAIEnergyInterface(mv);
             mv.enabled = true;
             SetupHeadLights(mv);
             SetupLightSounds(mv);

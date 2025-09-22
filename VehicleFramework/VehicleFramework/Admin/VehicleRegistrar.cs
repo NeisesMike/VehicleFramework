@@ -189,10 +189,6 @@ public static class VehicleRegistrar
             {
                 Logger.Warn(thisName + " No ModVehicle.Batteries were provided. These are necessary to power the engines. This vehicle will be always powered.");
             }
-            if (mv.BackupBatteries == null || mv.BackupBatteries.Count == 0)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " No ModVehicle.BackupBatteries were provided. This collection of batteries belong to the AI and will be used exclusively for life support, auto-leveling, and other AI tasks. The AI will use the main batteries instead.");
-            }
             if (mv.HeadLights == null || mv.HeadLights.Count == 0)
             {
                 VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.HeadLights were provided. These lights would be activated when the player right clicks while piloting.");
@@ -248,7 +244,7 @@ public static class VehicleRegistrar
                     VerboseLog(LogType.Log, verbose, thisName + " A null VehicleUpgrades.ModuleProxies was provided. VehicleFramework will not provide a model for this upgrade slot.");
                 }
             }
-            foreach (VehicleBattery vb in (mv.Batteries ?? Enumerable.Empty<VehicleBattery>()).Concat(mv.BackupBatteries ?? Enumerable.Empty<VehicleBattery>()))
+            foreach (VehicleBattery vb in (mv.Batteries ?? Enumerable.Empty<VehicleBattery>()))
             {
                 if (vb.BatterySlot == null)
                 {

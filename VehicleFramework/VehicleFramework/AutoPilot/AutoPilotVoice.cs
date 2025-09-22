@@ -20,7 +20,6 @@ namespace VehicleFramework.AutoPilot
         public ModVehicle MV => GetComponent<ModVehicle>();
         public Submarine? Sub => GetComponent<Submarine>();
         public Submersible? Subbie => GetComponent<Submersible>();
-        public EnergyInterface aiEI = null!;
         private readonly List<AudioSource> speakers = new();
         private readonly PriorityQueue<AudioClip> speechQueue = new();
         private bool isReadyToSpeak = false; 
@@ -73,19 +72,11 @@ namespace VehicleFramework.AutoPilot
             {
                 throw SessionManager.Fatal("AutoPilotVoice is not attached to a ModVehicle!");
             }
-            isReadyToSpeak = false;
-            if (MV.BackupBatteries != null && MV.BackupBatteries.Count > 0)
-            {
-                aiEI = MV.BackupBatteries[0].BatterySlot.GetComponent<EnergyInterface>();
-            }
-            else
-            {
-                aiEI = MV.energyInterface;
-            }
-            if (aiEI == null)
+            if (MV.energyInterface == null)
             {
                 throw SessionManager.Fatal(MV.GetName() + " does not have an EnergyInterface!");
             }
+            isReadyToSpeak = false;
 
             voice = VoiceManager.GetDefaultVoice(MV);
 
@@ -161,7 +152,7 @@ namespace VehicleFramework.AutoPilot
                     speaker.GetComponent<AudioLowPassFilter>().enabled = true;
                 }
             }
-            if (aiEI.hasCharge && isReadyToSpeak)
+            if (MV.energyInterface.hasCharge && isReadyToSpeak)
             {
                 if (speechQueue.Count > 0)
                 {
@@ -199,14 +190,14 @@ namespace VehicleFramework.AutoPilot
         }
         public void EnqueueClipWithPriority(AudioClip clip, int priority)
         {
-            if (MV && aiEI.hasCharge)
+            if (MV && MV.energyInterface.hasCharge)
             {
                 speechQueue.Enqueue(clip, priority);
             }
         }
         public void EnqueueClip(AudioClip? clip)
         {
-            if (MV && aiEI.hasCharge && clip != null && isReadyToSpeak && MV.IsConstructed)
+            if (MV && MV.energyInterface.hasCharge && clip != null && isReadyToSpeak && MV.IsConstructed)
             {
                 speechQueue.Enqueue(clip, 0);
             }
