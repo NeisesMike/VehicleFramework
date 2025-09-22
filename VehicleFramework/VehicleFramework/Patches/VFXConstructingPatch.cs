@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: configure timeToConstruct. Broadcasts the SubConstructionBeginning signal. Manages the building fx colors.
 // VALUE: Very high. Important ModVehicle and developer utilities.

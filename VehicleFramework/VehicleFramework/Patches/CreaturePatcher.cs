@@ -2,7 +2,6 @@
 using System.Linq;
 using UnityEngine;
 using HarmonyLib;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Interfaces;
 
 // PURPOSE: ModVehicles have an awareness of nearby leviathans

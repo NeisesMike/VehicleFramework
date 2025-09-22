@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: configure how much damage ghost leviathans can do
 // VALUE: Moderate. Convenient for developers.

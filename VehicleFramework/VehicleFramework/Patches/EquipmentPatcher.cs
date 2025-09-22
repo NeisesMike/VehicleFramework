@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
 using VehicleFramework.Admin;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow ModVehicle upgrade slots to mesh with the game systems
 // VALUE: High

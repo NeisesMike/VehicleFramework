@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using HarmonyLib;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Allow battery charges (and Power Relay in general) to work in expected ways on ModVehicles
 // VALUE: High.

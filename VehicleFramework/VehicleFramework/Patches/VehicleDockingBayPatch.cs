@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
 using VehicleFramework.MiscComponents;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow ModVehicles to use in-game docking bays
 // VALUE: High.

@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using System.Collections.Generic;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Prevent ModVehicles from entering "moon gates"
 // VALUE: high, for the sake of world consistency

@@ -3,7 +3,6 @@ using System.Collections;
 using System;
 using HarmonyLib;
 using System.Reflection.Emit;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.StorageComponents;
 
 // PURPOSE: allow the Cyclops dock terminal to display ModVehicle data. 

@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: ensures the CrabSquid's EMP disables ModVehicles gracefully
 // VALUE: high

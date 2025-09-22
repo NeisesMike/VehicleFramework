@@ -4,7 +4,6 @@ using System.Linq;
 using HarmonyLib;
 using System.Reflection.Emit;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.StorageComponents;
 
 // PURPOSE: generally ensures ModVehicles behave like normal Vehicles

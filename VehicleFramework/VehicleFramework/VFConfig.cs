@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 using VehicleFramework.Admin;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {

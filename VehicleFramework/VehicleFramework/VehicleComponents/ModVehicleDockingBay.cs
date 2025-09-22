@@ -1,5 +1,4 @@
 ﻿using System;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.VehicleComponents
 {

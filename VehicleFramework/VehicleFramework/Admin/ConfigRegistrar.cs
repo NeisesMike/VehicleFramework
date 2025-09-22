@@ -4,7 +4,6 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using BepInEx.Configuration;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.Admin
 {

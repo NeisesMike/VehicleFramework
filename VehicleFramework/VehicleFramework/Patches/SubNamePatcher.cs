@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Create ModVehicle API for changing colors via normal routines (eg MoonPool terminal)
 // VALUE: High.

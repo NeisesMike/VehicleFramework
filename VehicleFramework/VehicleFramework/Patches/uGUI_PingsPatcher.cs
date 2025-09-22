@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using VehicleFramework.Admin;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: Allow ModVehicles to use (and have displayed) custom ping sprites.
 // VALUE: Very high.

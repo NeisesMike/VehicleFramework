@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 //using VehicleFramework.Localization;
 
 namespace VehicleFramework.StorageComponents

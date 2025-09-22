@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Extensions;
 
 // PURPOSE: ensure the Silence doesn't kill us in a way that softlocks the game

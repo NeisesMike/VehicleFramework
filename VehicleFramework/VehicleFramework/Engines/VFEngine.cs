@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Interfaces;
 
 namespace VehicleFramework.Engines

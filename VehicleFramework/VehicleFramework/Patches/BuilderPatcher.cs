@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Extensions;
 
 // PURPOSE: allows Submarines to specify volumes in which things cannot be built or placed

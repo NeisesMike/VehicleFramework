@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 //using VehicleFramework.BaseVehicle;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Extensions;
 
 namespace VehicleFramework.VehicleComponents

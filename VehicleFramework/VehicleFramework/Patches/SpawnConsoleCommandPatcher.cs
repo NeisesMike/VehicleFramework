@@ -2,7 +2,6 @@
 using System.Linq;
 using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: allow the spawn console command to work for ModVehicles
 // VALUE: Moderate. Could register a new console command instead.

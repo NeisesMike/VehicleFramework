@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.MiscComponents
 {

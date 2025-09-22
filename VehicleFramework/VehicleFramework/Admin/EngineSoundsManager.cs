@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using VehicleFramework.Engines;
 using VehicleFramework.Admin;
-using VehicleFramework.VehicleTypes;
 using static uGUI_ResourceTracker;
 
 namespace VehicleFramework.Admin

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using VehicleFramework.Assets;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.VehicleBuilding
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 using VehicleFramework.Assets;
 
 namespace VehicleFramework.StorageComponents

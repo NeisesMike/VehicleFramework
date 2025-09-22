@@ -1,6 +1,5 @@
 ﻿using System;
 using HarmonyLib;
-using VehicleFramework.VehicleTypes;
 
 // PURPOSE: add compatibility for better vehicle storage upgrades
 // VALUE: High. It's a very cool mod.

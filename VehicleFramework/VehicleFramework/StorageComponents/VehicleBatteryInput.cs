@@ -1,6 +1,5 @@
 ﻿//using VehicleFramework.Localization;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.StorageComponents
 {
