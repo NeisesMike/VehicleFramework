@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Engines;
-using VehicleFramework.VehicleTypes;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.AutoPilot
 {
     public class AutoPilotNavigator : MonoBehaviour
     {
@@ -72,7 +71,7 @@ namespace VehicleFramework.VehicleComponents
             }
             bool CheckClose(Vector3 destin, float magnit)
             {
-                return (magnit < Vector3.Distance(transform.position, destin)) && RaycastForward(magnit);
+                return magnit < Vector3.Distance(transform.position, destin) && RaycastForward(magnit);
             }
 
             while(20 < Vector3.Distance(transform.position, dest))

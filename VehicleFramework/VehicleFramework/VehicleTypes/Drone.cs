@@ -10,6 +10,7 @@ using VehicleFramework.VehicleComponents;
 using VehicleFramework.Interfaces;
 using VehicleFramework.Assets;
 using VehicleFramework.Extensions;
+using VehicleFramework.AutoPilot;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -62,7 +63,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 Vector3 destination = pairedStation.transform.position;
                 DeselectSlots();
-                GetComponent<VehicleComponents.AutoPilotNavigator>().NaiveGo(destination);
+                GetComponent<AutoPilotNavigator>().NaiveGo(destination);
             }
         }
         public override void EnterVehicle(Player player, bool teleport, bool playEnterAnimation = true)
