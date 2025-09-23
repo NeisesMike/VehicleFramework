@@ -1,14 +1,15 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using VehicleFramework.Extensions;
+using VehicleFramework.VehicleComponents;
 
 // PURPOSE: allows Reaper Leviathans to grab a ModVehicle. Configure how much damage their bite does.
 // VALUE: High.
 
 namespace VehicleFramework.Patches.CreaturePatches
 {
-    [HarmonyPatch(typeof(ReaperMeleeAttack))]
-    class ReaperMeleeAttackPatcher
+	[HarmonyPatch(typeof(ReaperMeleeAttack))]
+	class ReaperMeleeAttackPatcher
 	{
 		/*
 		 * This patch allows Reaper Leviathans to grab a ModVehicle the same way they grab a Seamoth.
@@ -16,23 +17,26 @@ namespace VehicleFramework.Patches.CreaturePatches
 		 * So if when grabbed, the Reaper is too close or too far away,
 		 * all child GameObjects must be moved in relation to the root GameObject.
 		 */
-        [HarmonyPostfix]
+		[HarmonyPostfix]
 		[HarmonyPatch(nameof(ReaperMeleeAttack.OnTouch))]
 		public static void OnTouchPostfix(ReaperMeleeAttack __instance, Collider collider)
-        {
+		{
 			// This postfix basically executes the OnTouch function again but only for the GrabModVehicle case.
-			if(collider.gameObject.GetComponent<Player>() != null)
-            {
+			if (collider.gameObject.GetComponent<Player>() != null)
+			{
 				ModVehicle? maybeMV = collider.gameObject.GetComponent<Player>().GetModVehicle();
 				if (maybeMV != null)
-                {
+				{
 					// Don't let the reaper grab the player from inside the ModVehicle
 					return;
-                }
+				}
 			}
+			MagnetBoots mb = collider.gameObject.GetComponent<MagnetBoots>();
+			if (mb != null && mb.IsAttached) return; // Don't let the reaper grab vehicles with magnet boots attached.
+
 			ModVehicle mv = collider.gameObject.GetComponentInParent<ModVehicle>();
-            if (mv != null)
-            {
+			if (mv != null)
+			{
 				if (__instance.liveMixin.IsAlive() && Time.time > __instance.timeLastBite + __instance.biteInterval)
 				{
 					Creature component = __instance.GetComponent<Creature>();
@@ -72,7 +76,7 @@ namespace VehicleFramework.Patches.CreaturePatches
 		public static void UpdatePostfix(ReaperLeviathan __instance)
 		{
 			ModVehicle? mv = __instance.holdingVehicle as ModVehicle;
-            if (mv != null && mv.LeviathanGrabPoint != null)
+			if (mv != null && mv.LeviathanGrabPoint != null)
 			{
 				Vector3 diff = mv.LeviathanGrabPoint.transform.position - mv.transform.position;
 				__instance.holdingVehicle.transform.position -= diff;
