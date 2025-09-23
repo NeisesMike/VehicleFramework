@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using techTypeString = System.String;
 
 namespace VehicleFramework.SaveLoad
 {
@@ -16,14 +17,14 @@ namespace VehicleFramework.SaveLoad
             EnergyMixin thisEM = GetComponent<EnergyMixin>();
             if (thisEM.batterySlot.storedItem == null)
             {
-                Tuple<TechType, float> emptyBattery = new(0, 0);
+                Tuple<techTypeString, float> emptyBattery = new(TechType.None.AsString(), 0);
                 MV.SaveBatteryData(SaveFileName, emptyBattery);
             }
             else
             {
                 TechType thisTT = thisEM.batterySlot.storedItem.item.GetTechType();
                 float thisEnergy = thisEM.battery.charge;
-                Tuple<TechType, float> thisBattery = new(thisTT, thisEnergy);
+                Tuple<techTypeString, float> thisBattery = new(thisTT.AsString(), thisEnergy);
                 MV.SaveBatteryData(SaveFileName, thisBattery);
             }
         }
@@ -37,14 +38,15 @@ namespace VehicleFramework.SaveLoad
             var thisBattery = MV.ReadBatteryData(SaveFileName);
             if (thisBattery == default)
             {
-                thisBattery = SaveLoad.JsonInterface.Read<Tuple<TechType, float>>(MV, SaveFileName);
+                thisBattery = SaveLoad.JsonInterface.Read<Tuple<techTypeString, float>>(MV, SaveFileName);
             }
-            if (thisBattery == default || thisBattery.Item1 == TechType.None)
+            if (thisBattery == default || string.Equals(thisBattery.Item1, TechType.None.AsString()))
             {
                 yield break;
             }
             TaskResult<GameObject> result = new();
-            yield return CraftData.InstantiateFromPrefabAsync(thisBattery.Item1, result, false);
+            TechTypeExtensions.FromString(thisBattery.Item1, out TechType techType, true);
+            yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
             GameObject thisItem = result.Get();
             try
             {

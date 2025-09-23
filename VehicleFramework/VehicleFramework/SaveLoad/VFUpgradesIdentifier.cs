@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using techTypeString = System.String;
 
 namespace VehicleFramework.SaveLoad
 {
@@ -20,9 +21,9 @@ namespace VehicleFramework.SaveLoad
             {
                 return;
             }
-            Dictionary<string, TechType> result = new();
-            upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType ?? TechType.None));
-            SaveLoad.JsonInterface.Write<Dictionary<string, TechType>>(MV, NewSaveFileName, result);
+            Dictionary<string, techTypeString> result = new();
+            upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType.AsString() ?? TechType.None.AsString()));
+            SaveLoad.JsonInterface.Write<Dictionary<string, techTypeString>>(MV, NewSaveFileName, result);
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
@@ -33,20 +34,21 @@ namespace VehicleFramework.SaveLoad
             yield return new WaitUntil(() => MV != null);
             yield return new WaitUntil(() => MV.upgradesInput.equipment != null);
             MV.UnlockDefaultModuleSlots();
-            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, TechType>>(MV, NewSaveFileName);
+            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, techTypeString>>(MV, NewSaveFileName);
             if(theseUpgrades == default)
             {
-                theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, TechType>>(MV, SaveFileName);
+                theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, techTypeString>>(MV, SaveFileName);
                 if (theseUpgrades == default)
                 {
                     isFinished = true;
                     yield break;
                 }
             }
-            foreach(var upgrade in theseUpgrades.Where(x=>x.Value != TechType.None))
+            foreach (var upgrade in theseUpgrades.Where(x => !string.Equals(x.Value, TechType.None.AsString())))
             {
                 TaskResult<GameObject> result = new();
-                yield return CraftData.InstantiateFromPrefabAsync(upgrade.Value, result, false);
+                TechTypeExtensions.FromString(upgrade.Value, out TechType techType, true);
+                yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
                 try
                 {
                     GameObject thisUpgrade = result.Get();

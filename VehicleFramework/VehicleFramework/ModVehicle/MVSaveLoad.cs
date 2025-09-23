@@ -13,6 +13,7 @@ using VehicleFramework.StorageComponents;
 using VehicleFramework.Interfaces;
 using VehicleFramework.Extensions;
 using VehicleFramework.VehicleTypes;
+using techTypeString = System.String;
 
 namespace VehicleFramework
 {
@@ -128,9 +129,9 @@ namespace VehicleFramework
         protected virtual void OnGameLoaded() { }
 
         private const string StorageSaveName = "Storage";
-        private Dictionary<string, List<Tuple<TechType, float, TechType>>>? loadedStorageData = null;
-        private readonly Dictionary<string, List<Tuple<TechType, float, TechType>>> innateStorageSaveData = new();
-        internal void SaveInnateStorage(string path, List<Tuple<TechType, float, TechType>> storageData)
+        private Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>>? loadedStorageData = null;
+        private readonly Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>> innateStorageSaveData = new();
+        internal void SaveInnateStorage(string path, List<Tuple<techTypeString, float, techTypeString>> storageData)
         {
             if(InnateStorages == null)
             {
@@ -144,14 +145,14 @@ namespace VehicleFramework
                 innateStorageSaveData.Clear();
             }
         }
-        internal List<Tuple<TechType, float, TechType>>? ReadInnateStorage(string path)
+        internal List<Tuple<techTypeString, float, techTypeString>>? ReadInnateStorage(string path)
         {
-            loadedStorageData ??= SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<TechType, float, TechType>>>>(this, StorageSaveName);
+            loadedStorageData ??= SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>>>(this, StorageSaveName);
             if (loadedStorageData == null)
             {
                 return default;
             }
-            if (loadedStorageData.TryGetValue(path, out List<Tuple<TechType, float, TechType>>? value))
+            if (loadedStorageData.TryGetValue(path, out List<Tuple<techTypeString, float, techTypeString>>? value))
             {
                 return value;
             }
@@ -162,9 +163,9 @@ namespace VehicleFramework
         }
 
         private const string BatterySaveName = "Batteries";
-        private Dictionary<string, Tuple<TechType, float>>? loadedBatteryData = null;
-        private readonly Dictionary<string, Tuple<TechType, float>> batterySaveData = new();
-        internal void SaveBatteryData(string path, Tuple<TechType, float> batteryData)
+        private Dictionary<string, Tuple<techTypeString, float>>? loadedBatteryData = null;
+        private readonly Dictionary<string, Tuple<techTypeString, float>> batterySaveData = new();
+        internal void SaveBatteryData(string path, Tuple<techTypeString, float> batteryData)
         {
             int batteryCount = 0;
             if (Batteries != null) batteryCount += Batteries.Count;
@@ -177,14 +178,14 @@ namespace VehicleFramework
                 batterySaveData.Clear();
             }
         }
-        internal Tuple<TechType, float>? ReadBatteryData(string path)
+        internal Tuple<techTypeString, float>? ReadBatteryData(string path)
         {
-            loadedBatteryData ??= SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<TechType, float>>>(this, BatterySaveName);
+            loadedBatteryData ??= SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<techTypeString, float>>>(this, BatterySaveName);
             if (loadedBatteryData == null)
             {
                 return default;
             }
-            if (loadedBatteryData.TryGetValue(path, out Tuple<TechType, float>? value))
+            if (loadedBatteryData.TryGetValue(path, out Tuple<techTypeString, float>? value))
             {
                 return value;
             }

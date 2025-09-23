@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using techTypeString = System.String;
 
 namespace VehicleFramework.SaveLoad
 {
@@ -33,7 +34,7 @@ namespace VehicleFramework.SaveLoad
         }
         private static void SaveThisModularStorage(ModVehicle mv, ItemsContainer container, string slotID)
         {
-            List<Tuple<TechType, float, TechType>> result = new();
+            List<Tuple<techTypeString, float, techTypeString>> result = new();
             foreach (var item in container.ToList())
             {
                 TechType thisItemType = item.item.GetTechType();
@@ -45,7 +46,7 @@ namespace VehicleFramework.SaveLoad
                     batteryChargeIfApplicable = bat.charge;
                     innerBatteryTT = bat.gameObject.GetComponent<TechTag>().type;
                 }
-                result.Add(new(thisItemType, batteryChargeIfApplicable, innerBatteryTT));
+                result.Add(new(thisItemType.AsString(), batteryChargeIfApplicable, innerBatteryTT.AsString()));
             }
             JsonInterface.Write(mv, GetNewSaveFileName(slotID), result);
         }
@@ -72,10 +73,10 @@ namespace VehicleFramework.SaveLoad
         }
         private static IEnumerator LoadThisModularStorage(ModVehicle mv, ItemsContainer container, string slotID)
         {
-            var thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float, TechType>>>(mv, GetNewSaveFileName(slotID));
+            var thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<techTypeString, float, techTypeString>>>(mv, GetNewSaveFileName(slotID));
             if (thisStorage == default)
             {
-                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<TechType, float, TechType>>>(mv, GetSaveFileName(slotID));
+                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<techTypeString, float, techTypeString>>>(mv, GetSaveFileName(slotID));
                 if (thisStorage == default)
                 {
                     yield break;
@@ -84,7 +85,9 @@ namespace VehicleFramework.SaveLoad
             TaskResult<GameObject> result = new();
             foreach (var item in thisStorage)
             {
-                yield return CraftData.InstantiateFromPrefabAsync(item.Item1, result, false);
+                TechTypeExtensions.FromString(item.Item1, out TechType techType, true);
+                TechTypeExtensions.FromString(item.Item3, out TechType innerTechType, true);
+                yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
                 GameObject thisItem = result.Get();
 
                 thisItem.transform.SetParent(mv.StorageRootObject.transform);
@@ -102,7 +105,7 @@ namespace VehicleFramework.SaveLoad
                     // then we have a battery xor we are a battery
                     try
                     {
-                        Admin.SessionManager.StartCoroutine(SaveLoadUtils.ReloadBatteryPower(thisItem, item.Item2, item.Item3));
+                        Admin.SessionManager.StartCoroutine(SaveLoadUtils.ReloadBatteryPower(thisItem, item.Item2, innerTechType));
                     }
                     catch (Exception e)
                     {
