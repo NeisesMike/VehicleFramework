@@ -560,15 +560,15 @@ namespace VehicleFramework
         {
 
         }
-        public virtual void SetBaseColor(Vector3 hsb, Color color)
+        public virtual void PaintBaseColor(Vector3 hsb, Color color)
         {
             baseColor = color;
         }
-        public virtual void SetInteriorColor(Vector3 hsb, Color color)
+        public virtual void PaintInteriorColor(Vector3 hsb, Color color)
         {
             interiorColor = color;
         }
-        public virtual void SetStripeColor(Vector3 hsb, Color color)
+        public virtual void PaintStripeColor(Vector3 hsb, Color color)
         {
             stripeColor = color;
         }
@@ -1094,10 +1094,42 @@ namespace VehicleFramework
             stored = retStored;
             capacity = retCapacity;
         }
+
+        public void SetBaseColor(Color col)
+        {
+            subName.SetColor(0, Vector3.zero, col);
+        }
+        public void SetInteriorColor(Color col)
+        {
+            subName.SetColor(2, Vector3.zero, col);
+        }
+        public void SetStripeColor(Color col)
+        {
+            subName.SetColor(3, Vector3.zero, col);
+        }
         public void SetName(string name)
         {
             vehicleName = name;
             subName.SetName(name);
+        }
+        public void SetName(string name, Color col)
+        {
+            SetName(name);
+            subName.SetColor(1, Vector3.zero, col); // see SubNamePatcher.cs for more details
+        }
+        private bool IsDefaultStyle = false;
+        internal void SetVehicleDefaultStyle()
+        {
+            IsDefaultStyle = true;
+            PaintVehicleDefaultStyle();
+        }
+        internal void SetVehicleDefaultStyle(string name)
+        {
+            SetVehicleDefaultStyle();
+            SetName(name);
+        }
+        public virtual void PaintVehicleDefaultStyle()
+        {
         }
         #endregion
 

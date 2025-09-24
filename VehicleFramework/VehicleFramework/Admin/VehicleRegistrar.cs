@@ -378,7 +378,7 @@ public static class VehicleRegistrar
             }
             if (mv.ColorPicker == null)
             {
-                VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.ColorPicker was provided. You only need this if you implement the necessary painting functions.");
+                VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.ColorPicker was provided. The color picker can provide a friendly UI inside a vehicle for changing its colors.");
             }
             if (mv.Fabricator == null)
             {

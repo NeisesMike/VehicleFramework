@@ -44,16 +44,12 @@ namespace VehicleFramework
                 { interiorColorName, $"#{ColorUtility.ToHtmlStringRGB(interiorColor)}" },
                 { stripeColorName, $"#{ColorUtility.ToHtmlStringRGB(stripeColor)}" },
                 { nameColorName, $"#{ColorUtility.ToHtmlStringRGB(nameColor)}" },
-                { defaultColorName, this is Submarine sub && sub.IsDefaultTexture ? bool.TrueString : bool.FalseString }
+                { defaultColorName, IsDefaultStyle ? bool.TrueString : bool.FalseString }
             };
             SaveLoad.JsonInterface.Write(this, SimpleDataSaveFileName, simpleData);
         }
         private IEnumerator LoadSimpleData()
         {
-            // Need to handle some things specially here for Submarines
-            // Because Submarines had color changing before I knew how to integrate with the Moonpool
-            // The new color changing methods are much simpler, but Odyssey and Beluga use the old methods,
-            // So I'll still support them.
             yield return new WaitUntil(() => GameStateWatcher.IsWorldLoaded);
             yield return new WaitUntil(() => isInitialized);
             var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SimpleDataSaveFileName);
@@ -81,29 +77,25 @@ namespace VehicleFramework
                 }
             }
             SetName(simpleData[mySubName]);
-            Submarine? sub = this as Submarine;
-            sub?.PaintVehicleDefaultStyle(simpleData[mySubName]);
-            if (bool.Parse(simpleData[defaultColorName]))
-            {
-                yield break;
-            }
             if (ColorUtility.TryParseHtmlString(simpleData[baseColorName], out baseColor))
             {
-                subName.SetColor(0, Vector3.zero, baseColor);
-                sub?.PaintVehicleName(simpleData[mySubName], Color.black, baseColor);
+                SetBaseColor(baseColor);
             }
             if (ColorUtility.TryParseHtmlString(simpleData[nameColorName], out nameColor))
             {
-                subName.SetColor(1, Vector3.zero, nameColor);
-                sub?.PaintVehicleName(simpleData[mySubName], nameColor, baseColor);
+                SetName(simpleData[mySubName], nameColor);
             }
             if (ColorUtility.TryParseHtmlString(simpleData[interiorColorName], out interiorColor))
             {
-                subName.SetColor(2, Vector3.zero, interiorColor);
+                SetInteriorColor(interiorColor);
             }
             if (ColorUtility.TryParseHtmlString(simpleData[stripeColorName], out stripeColor))
             {
-                subName.SetColor(3, Vector3.zero, stripeColor);
+                SetStripeColor(stripeColor);
+            }
+            if (bool.Parse(simpleData[defaultColorName]))
+            {
+                SetVehicleDefaultStyle(simpleData[mySubName]);
             }
         }
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)

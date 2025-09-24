@@ -22,10 +22,6 @@ namespace VehicleFramework.Patches
             {
                 SetSubNameDecals(mv);
             }
-            if (mv is VehicleTypes.Submarine sub)
-            {
-                sub.PaintVehicleName(mv.subName.GetName(), mv.nameColor, mv.baseColor);
-            }
         }
         private static void SetSubNameDecals(ModVehicle mv)
         {
@@ -55,10 +51,6 @@ namespace VehicleFramework.Patches
                     tmprougui.color = color;
                 }
             }
-            if(mv is VehicleTypes.Submarine sub)
-            {
-                sub.PaintVehicleName(mv.subName.GetName(), mv.nameColor, mv.baseColor);
-            }
             Logger.DebugLog($"hsb is {hsb}");
         }
 
@@ -73,7 +65,7 @@ namespace VehicleFramework.Patches
             }
             if (index == 0)
             {
-                mv.SetBaseColor(hsb, color);
+                mv.PaintBaseColor(hsb, color);
             }
             else if (index == 1)
             {
@@ -84,11 +76,11 @@ namespace VehicleFramework.Patches
             }
             else if (index == 2)
             {
-                mv.SetInteriorColor(hsb, color);
+                mv.PaintInteriorColor(hsb, color);
             }
             else if (index == 3)
             {
-                mv.SetStripeColor(hsb, color);
+                mv.PaintStripeColor(hsb, color);
             }
             else
             {

@@ -137,7 +137,7 @@ namespace VehicleFramework.ControlPanel
         }
         public void DefaultColorClick()
         {
-            mv.PaintVehicleDefaultStyle(mv.GetName());
+            mv.SetVehicleDefaultStyle(mv.GetName());
         }
         public static void DefaultColorHover()
         {

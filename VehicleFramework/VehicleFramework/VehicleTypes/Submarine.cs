@@ -9,7 +9,7 @@ using VehicleFramework.Engines;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using VehicleFramework.LightControllers;
-//using VehicleFramework.Localization;
+using VehicleFramework.VehicleComponents;
 using VehicleFramework.VehicleBuilding;
 
 namespace VehicleFramework.VehicleTypes
@@ -40,24 +40,18 @@ namespace VehicleFramework.VehicleTypes
         public virtual float ExitVelocityLimit => 0.5f;
         public virtual GameObject? RespawnPoint => null;
         public virtual bool DoesAutolevel => true;
-
-
         public ControlPanel.ControlPanel? controlPanelLogic;
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
-
         public Transform? thisStopPilotingLocation;
-
         public FloodLightsController? floodlights;
         public InteriorLightsController? interiorlights;
         public NavigationLightsController? navlights;
         public GameObject ?fabricator = null; //fabricator
-
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
         }
-
         public override void Awake()
         {
             base.Awake();
@@ -76,33 +70,15 @@ namespace VehicleFramework.VehicleTypes
 
             // now that we're in-game, load the color picker
             // we can't do this before we're in-game because not all assets are ready before the game is started
-            if (ColorPicker != null)
-            {
-                if (ColorPicker.transform.Find("EditScreen") == null)
-                {
-                    Admin.SessionManager.StartCoroutine(SetupColorPicker());
-                }
-                else
-                {
-                    EnsureColorPickerEnabled();
-                }
-            }
+            InitColorPicker();
         }
-        private void EnsureColorPickerEnabled()
+        private void InitColorPicker()
         {
-            if(ColorPicker == null || ColorPicker.transform.Find("EditScreen") == null)
+            if (ColorPicker == null)
             {
                 return;
             }
-            ActualEditScreen = ColorPicker.transform.Find("EditScreen").gameObject;
-            if(ActualEditScreen == null)
-            {
-                return;
-            }
-            // why is canvas sometimes disabled, and Active is sometimes inactive?
-            // Don't know!
-            ActualEditScreen.GetComponent<Canvas>().enabled = true;
-            ActualEditScreen.transform.Find("Active").gameObject.SetActive(true);
+            ColorPicker.EnsureComponent<ColorPicker>().Init(this);
         }
         public bool IsPlayerInside()
         {
@@ -208,7 +184,6 @@ namespace VehicleFramework.VehicleTypes
                     Player.main.playerMotorModeChanged.Trigger(Player.MotorMode.Walk);
                 }
             }
-            EnsureColorPickerEnabled();
         }
         public override void PlayerExit()
         {
@@ -223,25 +198,18 @@ namespace VehicleFramework.VehicleTypes
         public override void SubConstructionBeginning()
         {
             base.SubConstructionBeginning();
-            PaintVehicleDefaultStyle(GetName());
+            SetVehicleDefaultStyle(GetName());
         }
-        public override void SubConstructionComplete()
+        public override void SubConstructionComplete() // deal with this reference to color picker
         {
             if (pingInstance != null && !pingInstance.enabled)
             {
-                // Setup the color picker with the submarine's name
-                var active = transform.Find("ColorPicker/EditScreen/Active");
-                if (active)
-                {
-                    active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = GetName();
-                    active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = GetName();
-                }
+                ColorPicker?.GetComponent<ColorPicker>()?.BumpNameDecals();
                 Admin.SessionManager.StartCoroutine(TrySpawnFabricator());
             }
             base.SubConstructionComplete();
-            PaintNameDefaultStyle(GetName());
+            SetName(GetName());
         }
-
         public override void OnKill()
         {
             bool isplayerinthissub = IsPlayerInside();
@@ -251,7 +219,6 @@ namespace VehicleFramework.VehicleTypes
                 PlayerEntry();
             }
         }
-
         IEnumerator TrySpawnFabricator()
         {
             if(Fabricator == null)
@@ -268,7 +235,6 @@ namespace VehicleFramework.VehicleTypes
             }
             yield return SpawnFabricator(Fabricator.transform);
         }
-
         IEnumerator SpawnFabricator(Transform location)
         {
             TaskResult<GameObject> result = new();
@@ -285,212 +251,15 @@ namespace VehicleFramework.VehicleTypes
             }
             yield break;
         }
-        public virtual void PaintNameDefaultStyle(string name)
-        {
-            OnNameChange(name);
-        }
-        public virtual void PaintVehicleDefaultStyle(string name)
-        {
-            IsDefaultTexture = true;
-            PaintNameDefaultStyle(name);
-        }
-        public enum TextureDefinition : int
-        {
-            twice = 4096,
-            full = 2048,
-            half = 1024
-        }
-        public virtual void PaintVehicleSection(string materialName, Color col)
-        {
-        }
-        public virtual void PaintVehicleName(string name, Color nameColor, Color hullColor)
-        {
-            OnNameChange(name);
-        }
-
-        public bool IsDefaultTexture = true;
-
-        public override void SetBaseColor(Vector3 hsb, Color color)
-        {
-            base.SetBaseColor(hsb, color);
-            PaintVehicleSection("ExteriorMainColor", baseColor);
-        }
-        public override void SetInteriorColor(Vector3 hsb, Color color)
-        {
-            base.SetInteriorColor(hsb, color);
-            PaintVehicleSection("ExteriorPrimaryAccent", interiorColor);
-        }
-        public override void SetStripeColor(Vector3 hsb, Color color)
-        {
-            base.SetStripeColor(hsb, color);
-            PaintVehicleSection("ExteriorSecondaryAccent", stripeColor);
-        }
-
-        public virtual void SetColorPickerUIColor(string name, Color col)
-        {
-            if(ActualEditScreen == null)
-            {
-                return;
-            }
-            ActualEditScreen.transform.Find("Active/" + name + "/SelectedColor").GetComponent<Image>().color = col;
-        }
-        public virtual void OnColorChange(ColorChangeEventData eventData)
-        {
-            // determine which tab is selected
-            // call the desired function
-            List<string> tabnames = new() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
-            string selectedTab = "";
-            foreach (string tab in tabnames)
-            {
-                if (ActualEditScreen == null)
-                {
-                    continue;
-                }
-                if (ActualEditScreen.transform.Find("Active/" + tab + "/Background").gameObject.activeSelf)
-                {
-                    selectedTab = tab;
-                    break;
-                }
-            }
-
-            SetColorPickerUIColor(selectedTab, eventData.color);
-            switch (selectedTab)
-            {
-                case "MainExterior":
-                    IsDefaultTexture = false;
-                    baseColor = eventData.color;
-                    break;
-                case "PrimaryAccent":
-                    IsDefaultTexture = false;
-                    interiorColor = eventData.color;
-                    break;
-                case "SecondaryAccent":
-                    IsDefaultTexture = false;
-                    stripeColor = eventData.color;
-                    break;
-                case "NameLabel":
-                    nameColor = eventData.color;
-                    break;
-                default:
-                    break;
-            }
-            if (ActualEditScreen == null)
-            {
-                return;
-            }
-            ActualEditScreen.transform.Find("Active/MainExterior/SelectedColor").GetComponent<Image>().color = baseColor;
-        }
-        public virtual void OnNameChange(string e) // why is this independent from OnNameChange?
-        {
-            if (vehicleName != e)
-            {
-                SetName(e);
-            }
-        }
-        public virtual void OnColorSubmit() // called by color picker submit button
-        {
-            SetBaseColor(Vector3.zero, baseColor);
-            SetInteriorColor(Vector3.zero, interiorColor);
-            SetStripeColor(Vector3.zero, stripeColor);
-            if (IsDefaultTexture)
-            {
-                PaintVehicleDefaultStyle(GetName());
-            }
-            else
-            {
-                PaintVehicleName(GetName(), nameColor, baseColor);
-            }
-            return;
-        }
-
-        public GameObject? ActualEditScreen = null;
-
-        public IEnumerator SetupColorPicker()
-        {
-            if(ColorPicker == null)
-            {
-                yield break;
-            }
-            UnityAction CreateAction(string name)
-            {
-                void Action()
-                {
-                    List<string> tabnames = new() { "MainExterior", "PrimaryAccent", "SecondaryAccent", "NameLabel" };
-                    foreach (string tab in tabnames.FindAll(x => x != name))
-                    {
-                        ActualEditScreen.transform.Find("Active/" + tab + "/Background").gameObject.SetActive(false);
-                    }
-                    ActualEditScreen.transform.Find("Active/" + name + "/Background").gameObject.SetActive(true);
-                }
-                return Action;
-            }
-
-            GameObject console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
-
-            if (console == null)
-            {
-                yield return Admin.SessionManager.StartCoroutine(Builder.BeginAsync(TechType.BaseUpgradeConsole));
-                Builder.ghostModel.GetComponentInChildren<BaseGhost>().OnPlace();
-                console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
-                Builder.End();
-            }
-            ActualEditScreen = GameObject.Instantiate(console.transform.Find("EditScreen").gameObject);
-            ActualEditScreen.GetComponentInChildren<SubNameInput>().enabled = false;
-            ActualEditScreen.name = "EditScreen";
-            ActualEditScreen.SetActive(true);
-            ActualEditScreen.transform.Find("Inactive").gameObject.SetActive(false);
-            Vector3 originalLocalScale = ActualEditScreen.transform.localScale;
-
-
-            GameObject frame = ColorPicker;
-            ActualEditScreen.transform.SetParent(frame.transform);
-            ActualEditScreen.transform.localPosition = new(.15f, .28f, 0.01f);
-            ActualEditScreen.transform.localEulerAngles = new(0, 180, 0);
-            ActualEditScreen.transform.localScale = originalLocalScale;
-
-            var but = ActualEditScreen.transform.Find("Active/BaseTab");
-            but.name = "MainExterior";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFMainExterior");
-            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("MainExterior"));
-
-            but = ActualEditScreen.transform.Find("Active/NameTab");
-            but.name = "PrimaryAccent";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFPrimaryAccent");
-            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("PrimaryAccent"));
-
-            but = ActualEditScreen.transform.Find("Active/InteriorTab");
-            but.name = "SecondaryAccent";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFSecondaryAccent");
-            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("SecondaryAccent"));
-
-            but = ActualEditScreen.transform.Find("Active/Stripe1Tab");
-            but.name = "NameLabel";
-            but.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = Language.main.Get("VFNameLabel");
-            but.gameObject.EnsureComponent<Button>().onClick.AddListener(CreateAction("NameLabel"));
-
-            GameObject colorPicker = ActualEditScreen.transform.Find("Active/ColorPicker").gameObject;
-            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.RemoveAllListeners();
-            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.AddListener(new(OnColorChange));
-            ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.RemoveAllListeners();
-            ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.AddListener(new UnityAction(OnColorSubmit));
-            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.RemoveAllListeners();
-            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new(OnNameChange));
-
-            EnsureColorPickerEnabled();
-            yield break;
-        }
-
         public override void OnAIBatteryReload()
         {
         }
-
         // this function returns the number of seconds to wait before opening the PDF,
         // to show off the cool animations~
         public override float OnStorageOpen(string name, bool open)
         {
             return 0;
         }
-
         public void EnableFabricator(bool enabled)
         {
             foreach (Transform tran in transform)
