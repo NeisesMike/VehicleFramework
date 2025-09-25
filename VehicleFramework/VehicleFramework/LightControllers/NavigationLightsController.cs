@@ -10,6 +10,12 @@ namespace VehicleFramework.LightControllers
     public class NavigationLightsController : BaseLightController
     {
         VehicleTypes.Submarine MV => GetComponent<VehicleTypes.Submarine>();
+
+        List<GameObject> navStarLights = null!;
+        List<GameObject> navPortLights = null!;
+        List<GameObject> navPosLights = null!;
+        List<GameObject> navRedLights = null!;
+        List<GameObject> navWhiteLights = null!;
         protected override void HandleLighting(bool active)
         {
             if(active)
@@ -45,12 +51,19 @@ namespace VehicleFramework.LightControllers
 
         protected virtual void Awake()
         {
-            bool noPort = MV.NavigationPortLights == null || MV.NavigationPortLights.Count < 1;
-            bool noStar = MV.NavigationStarboardLights == null || MV.NavigationStarboardLights.Count < 1;
-            bool noPosi = MV.NavigationPositionLights == null || MV.NavigationPositionLights.Count < 1;
-            bool noReds = MV.NavigationRedStrobeLights == null || MV.NavigationRedStrobeLights.Count < 1;
-            bool noWhit = MV.NavigationWhiteStrobeLights == null || MV.NavigationWhiteStrobeLights.Count < 1;
-            if (noPort && noStar && noPosi && noReds && noWhit)
+            INavigationLights navigationLights = GetComponent<INavigationLights>();
+            if (navigationLights == null)
+            {
+                throw Admin.SessionManager.Fatal("NavigationLightsController must be attached to a GameObject that implements INavigationLights!");
+            }
+
+            navStarLights = navigationLights.NavigationStarboardLights() ?? new List<GameObject>();
+            navPortLights = navigationLights.NavigationPortLights() ?? new List<GameObject>();
+            navPosLights = navigationLights.NavigationPositionLights() ?? new List<GameObject>();
+            navRedLights = navigationLights.NavigationRedStrobeLights() ?? new List<GameObject>();
+            navWhiteLights = navigationLights.NavigationWhiteStrobeLights() ?? new List<GameObject>();
+
+            if (navStarLights.Count == 0 && navPortLights.Count == 0 && navPosLights.Count == 0 && navRedLights.Count == 0 && navWhiteLights.Count == 0)
             {
                 Component.DestroyImmediate(this);
             }
@@ -62,59 +75,37 @@ namespace VehicleFramework.LightControllers
             {
                 throw Admin.SessionManager.Fatal(MV.GetName() + " has no Rigidbody! Please add a Rigidbody to the GameObject before starting the NavigationLightsController.");
             }
-            if (MV.NavigationPositionLights != null)
-            {
-                foreach (GameObject lightObj in MV.NavigationPositionLights)
-                {
-                    positionMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                }
-                BlinkOn(positionMats, Color.white);
-            }
-            if (MV.NavigationRedStrobeLights != null)
-            {
-                foreach (GameObject lightObj in MV.NavigationRedStrobeLights)
-                {
-                    redStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                    Light light = lightObj.EnsureComponent<Light>();
-                    light.enabled = false;
-                    light.color = Color.red;
-                    light.type = LightType.Point;
-                    light.intensity = 1f;
-                    light.range = 80f;
-                    light.shadows = LightShadows.Hard;
-                    redStrobeLights.Add(light);
-                }
-            }
-            if (MV.NavigationWhiteStrobeLights != null)
-            {
-                foreach (GameObject lightObj in MV.NavigationWhiteStrobeLights)
-                {
-                    whiteStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                    Light light = lightObj.EnsureComponent<Light>();
-                    light.enabled = false;
-                    light.color = Color.white;
-                    light.type = LightType.Point;
-                    light.intensity = 0.5f;
-                    light.range = 80f;
-                    light.shadows = LightShadows.Hard;
-                    whiteStrobeLights.Add(light);
-                }
-            }
-            if (MV.NavigationPortLights != null)
-            {
-                foreach (GameObject lightObj in MV.NavigationPortLights)
-                {
-                    portMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                }
-            }
-            if (MV.NavigationStarboardLights != null)
-            {
-                foreach (GameObject lightObj in MV.NavigationStarboardLights)
-                {
-                    starboardMats.Add(lightObj.GetComponent<MeshRenderer>().material);
-                }
-            }
+            navPosLights.ForEach(x => positionMats.Add(x.GetComponent<MeshRenderer>().material));
+            navPortLights.ForEach(x=> portMats.Add(x.GetComponent<MeshRenderer>().material));
+            navStarLights.ForEach(x => starboardMats.Add(x.GetComponent<MeshRenderer>().material));
+            navRedLights.ForEach(ProcessRedLights);
+            navWhiteLights.ForEach(ProcessWhiteLights);
             Admin.SessionManager.StartCoroutine(ControlLights());
+        }
+
+        private void ProcessRedLights(GameObject lightObj)
+        {
+            redStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+            Light light = lightObj.EnsureComponent<Light>();
+            light.enabled = false;
+            light.color = Color.red;
+            light.type = LightType.Point;
+            light.intensity = 1f;
+            light.range = 80f;
+            light.shadows = LightShadows.Hard;
+            redStrobeLights.Add(light);
+        }
+        private void ProcessWhiteLights(GameObject lightObj)
+        {
+            whiteStrobeMats.Add(lightObj.GetComponent<MeshRenderer>().material);
+            Light light = lightObj.EnsureComponent<Light>();
+            light.enabled = false;
+            light.color = Color.white;
+            light.type = LightType.Point;
+            light.intensity = 0.5f;
+            light.range = 80f;
+            light.shadows = LightShadows.Hard;
+            whiteStrobeLights.Add(light);
         }
 
         Rigidbody rb = null!;
@@ -401,6 +392,7 @@ namespace VehicleFramework.LightControllers
         }
         private IEnumerator ControlLights()
         {
+            BlinkOn(positionMats, Color.white);
             while (true)
             {
                 if (IsLightsOn)

@@ -110,7 +110,7 @@ namespace VehicleFramework.ControlPanel
         }
         public void FloodLightsClick()
         {
-            mv.floodlights?.Toggle();
+            mv.GetComponent<FloodLightsController>()?.Toggle();
         }
         public static void FloodLightsHover()
         {
@@ -119,7 +119,7 @@ namespace VehicleFramework.ControlPanel
         }
         public void NavLightsClick()
         {
-            mv.navlights?.Toggle();
+            mv.GetComponent<NavigationLightsController>()?.Toggle();
         }
         public static void NavLightsHover()
         {
@@ -128,7 +128,7 @@ namespace VehicleFramework.ControlPanel
         }
         public void InteriorLightsClick()
         {
-            mv.interiorlights?.Toggle();
+            mv.GetComponent<InteriorLightsController>()?.Toggle();
         }
         public static void InteriorLightsHover()
         {

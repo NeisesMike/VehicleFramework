@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using VehicleFramework.LightControllers;
 using VehicleFramework.VehicleComponents;
 using VehicleFramework.VehicleBuilding;
+using VehicleFramework.Interfaces;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -30,11 +31,6 @@ namespace VehicleFramework.VehicleTypes
         public virtual GameObject? SteeringWheelLeftHandTarget => null;
         public virtual GameObject? SteeringWheelRightHandTarget => null;
         public virtual List<Light>? InteriorLights => null;
-        public virtual List<GameObject>? NavigationPortLights => null;
-        public virtual List<GameObject>? NavigationStarboardLights => null;
-        public virtual List<GameObject>? NavigationPositionLights => null;
-        public virtual List<GameObject>? NavigationWhiteStrobeLights => null;
-        public virtual List<GameObject>? NavigationRedStrobeLights => null;
         public virtual float ExitPitchLimit => 4f;
         public virtual float ExitRollLimit => 4f;
         public virtual float ExitVelocityLimit => 0.5f;
@@ -44,9 +40,6 @@ namespace VehicleFramework.VehicleTypes
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
         public Transform? thisStopPilotingLocation;
-        public FloodLightsController? floodlights;
-        public InteriorLightsController? interiorlights;
-        public NavigationLightsController? navlights;
         public GameObject ?fabricator = null; //fabricator
         public override bool CanPilot()
         {
@@ -55,9 +48,12 @@ namespace VehicleFramework.VehicleTypes
         public override void Awake()
         {
             base.Awake();
-            floodlights = gameObject.AddComponent<FloodLightsController>();
-            interiorlights = gameObject.AddComponent<InteriorLightsController>();
-            navlights = gameObject.AddComponent<NavigationLightsController>();
+            gameObject.AddComponent<FloodLightsController>();
+            gameObject.AddComponent<InteriorLightsController>();
+            if (this is Interfaces.INavigationLights)
+            {
+                gameObject.AddComponent<NavigationLightsController>();
+            }
             gameObject.EnsureComponent<VehicleComponents.TetherSource>();
 
             ControlPanel?.EnsureComponent<ControlPanel.ControlPanel>();

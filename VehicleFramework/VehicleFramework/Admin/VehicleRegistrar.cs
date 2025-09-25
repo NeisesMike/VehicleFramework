@@ -351,26 +351,6 @@ public static class VehicleRegistrar
             {
                 VerboseLog(LogType.Warn, verbose, thisName + " No ModVehicle.FloodLights were provided. These lights would be activated on the control panel.");
             }
-            if (mv.NavigationPortLights == null || mv.NavigationPortLights.Count == 0)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
-            }
-            if (mv.NavigationStarboardLights == null || mv.NavigationStarboardLights.Count == 0)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
-            }
-            if (mv.NavigationPositionLights == null || mv.NavigationPositionLights.Count == 0)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
-            }
-            if (mv.NavigationWhiteStrobeLights == null || mv.NavigationWhiteStrobeLights.Count == 0)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
-            }
-            if (mv.NavigationRedStrobeLights == null || mv.NavigationRedStrobeLights.Count == 0)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " Some navigation lights were missing.");
-            }
             if (mv.TetherSources == null || mv.TetherSources.Count == 0)
             {
                 Logger.Error(thisName + " No ModVehicle.TetherSources were provided. These are necessary to keep the player 'grounded' within the vehicle.");
