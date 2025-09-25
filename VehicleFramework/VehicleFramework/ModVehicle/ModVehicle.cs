@@ -564,18 +564,6 @@ namespace VehicleFramework
         {
 
         }
-        public virtual void PaintBaseColor(Vector3 hsb, Color color)
-        {
-            baseColor = color;
-        }
-        public virtual void PaintInteriorColor(Vector3 hsb, Color color)
-        {
-            interiorColor = color;
-        }
-        public virtual void PaintStripeColor(Vector3 hsb, Color color)
-        {
-            stripeColor = color;
-        }
         #endregion
 
         #region public_fields
@@ -590,7 +578,6 @@ namespace VehicleFramework
                 _IsUnderCommand = value;
             }
         }
-        internal List<GameObject> volumetricLights = new();
         public bool IsPoweredOn
         {
             // if the player toggles the power off,
@@ -660,7 +647,6 @@ namespace VehicleFramework
                 _isUndockingAnimating = value;
             }
         }
-        private readonly List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
         public TechType TechType => GetComponent<TechTag>().type;
         public bool IsConstructed => vfxConstructing == null || vfxConstructing.IsConstructed();
         #endregion
@@ -674,10 +660,8 @@ namespace VehicleFramework
         private int _numEfficiencyModules = 0;
         private int _numArmorModules = 0;
         private string[]? _slotIDs = null;
-        private Color baseColor = Color.white;
-        private Color interiorColor = Color.white;
-        private Color stripeColor = Color.white;
-        private Color nameColor = Color.black;
+        private readonly List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
+        internal List<GameObject> volumetricLights = new();
         #endregion
 
         #region internal_methods
@@ -1154,43 +1138,6 @@ namespace VehicleFramework
             }
             stored = retStored;
             capacity = retCapacity;
-        }
-
-        public void SetBaseColor(Color col)
-        {
-            subName.SetColor(0, Vector3.zero, col);
-        }
-        public void SetInteriorColor(Color col)
-        {
-            subName.SetColor(2, Vector3.zero, col);
-        }
-        public void SetStripeColor(Color col)
-        {
-            subName.SetColor(3, Vector3.zero, col);
-        }
-        public void SetName(string name)
-        {
-            vehicleName = name;
-            subName.SetName(name);
-        }
-        public void SetName(string name, Color col)
-        {
-            SetName(name);
-            subName.SetColor(1, Vector3.zero, col); // see SubNamePatcher.cs for more details
-        }
-        private bool IsDefaultStyle = false;
-        internal void SetVehicleDefaultStyle()
-        {
-            IsDefaultStyle = true;
-            PaintVehicleDefaultStyle();
-        }
-        internal void SetVehicleDefaultStyle(string name)
-        {
-            SetVehicleDefaultStyle();
-            SetName(name);
-        }
-        public virtual void PaintVehicleDefaultStyle()
-        {
         }
         #endregion
 
