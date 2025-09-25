@@ -34,11 +34,11 @@ namespace VehicleFramework.VehicleTypes
         public virtual float ExitVelocityLimit => 0.5f;
         public virtual GameObject? RespawnPoint => null;
         public virtual bool DoesAutolevel => true;
-        public ControlPanel.ControlPanel? controlPanelLogic;
+        internal ControlPanel.ControlPanel? controlPanelLogic;
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
-        public Transform? thisStopPilotingLocation;
-        public GameObject ?fabricator = null; //fabricator
+        internal Transform? thisStopPilotingLocation;
+        private GameObject? fabricator = null; //fabricator
         public override bool CanPilot()
         {
             return !FPSInputModule.current.lockMovement && IsPowered();
@@ -130,7 +130,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.SetScubaMaskActive(false);
             Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
-            if (!IsVehicleDocked && IsPlayerControlling())
+            if (!IsDocked && IsPlayerControlling())
             {
                 Player.main.transform.SetParent(transform);
                 if (thisStopPilotingLocation == null)
@@ -146,7 +146,7 @@ namespace VehicleFramework.VehicleTypes
                     Player.main.transform.position = thisStopPilotingLocation.position;
                 }
             }
-            if(isScuttled)
+            if(IsScuttled)
             {
                 Admin.SessionManager.StartCoroutine(GrantPlayerInvincibility(3f));
             }
@@ -163,10 +163,10 @@ namespace VehicleFramework.VehicleTypes
         {
             isPlayerInside = true;
             base.PlayerEntry();
-            if (!isScuttled)
+            if (!IsScuttled)
             {
                 Player.main.currentMountedVehicle = this;
-                if (IsVehicleDocked)
+                if (IsDocked)
                 {
 
                 }
@@ -187,7 +187,7 @@ namespace VehicleFramework.VehicleTypes
             isPlayerInside = false;
             base.PlayerExit();
             //Player.main.currentSub = null;
-            if (!IsVehicleDocked)
+            if (!IsDocked)
             {
                 Player.main.transform.SetParent(null);
             }

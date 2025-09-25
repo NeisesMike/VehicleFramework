@@ -26,7 +26,7 @@ namespace VehicleFramework.VehicleComponents
         {
             get
             {
-                if (mv == null || mv.isScuttled)
+                if (mv == null || mv.IsScuttled)
                 {
                     return new Bounds(Vector3.zero, Vector3.zero);
                 }

@@ -82,7 +82,7 @@ namespace VehicleFramework.VehicleComponents
             EI.GetValues(out float charge, out _);
             return new PowerStatus
             {
-                isPowered = MV.isPoweredOn,
+                isPowered = MV.IsPoweredOn,
                 hasFuel = charge > 0
             };
         }
@@ -123,14 +123,14 @@ namespace VehicleFramework.VehicleComponents
             {
                 float scalarFactor = 1.0f;
                 float basePowerConsumptionPerSecond = .15f;
-                float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+                float upgradeModifier = Mathf.Pow(0.85f, MV.NumEfficiencyModules);
                 TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
             if (isAutoPiloting)
             {
                 float scalarFactor = 1.0f;
                 float basePowerConsumptionPerSecond = 3f;
-                float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+                float upgradeModifier = Mathf.Pow(0.85f, MV.NumEfficiencyModules);
                 TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.deltaTime);
             }
         }

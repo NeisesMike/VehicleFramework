@@ -139,7 +139,7 @@ namespace VehicleFramework.VehicleTypes
             uGUI.main.quickSlots.SetTarget(this);
             SwapToDroneCamera();
             NotifyStatus(PlayerStatus.OnPilotBegin);
-            if (IsVehicleDocked)
+            if (IsDocked)
             {
                 this.Undock();
             }

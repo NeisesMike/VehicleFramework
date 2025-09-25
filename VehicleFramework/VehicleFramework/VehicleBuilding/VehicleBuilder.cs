@@ -530,7 +530,6 @@ namespace VehicleFramework.VehicleBuilding
             {
                 throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
             }
-            mv.ambienceSound = CopyComponent<FMOD_StudioEventEmitter>(SeamothHelper.Seamoth.GetComponent<SeaMoth>().ambienceSound, mv.gameObject);
             mv.splashSound = SeamothHelper.Seamoth.GetComponent<SeaMoth>().splashSound;
             // TODO
             //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);

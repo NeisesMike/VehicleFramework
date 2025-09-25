@@ -76,7 +76,7 @@ namespace VehicleFramework.VehicleComponents
                     Sub.PlayerEntry();
 				}
 			}
-			else if (Subbie != null && !mv.isScuttled)
+			else if (Subbie != null && !mv.IsScuttled)
 			{
 				Player.main.transform.position = Subbie.PilotSeat.SitLocation.transform.position;
 				Player.main.transform.rotation = Subbie.PilotSeat.SitLocation.transform.rotation;

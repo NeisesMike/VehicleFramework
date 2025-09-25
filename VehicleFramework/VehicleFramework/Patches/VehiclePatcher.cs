@@ -44,7 +44,7 @@ namespace VehicleFramework.Patches
             }
             else
             {
-                if (mv.isScuttled)
+                if (mv.IsScuttled)
                 {
                     float now = mv.GetComponent<Sealed>().openedAmount;
                     float max = mv.GetComponent<Sealed>().maxOpenedAmount;
@@ -109,7 +109,7 @@ namespace VehicleFramework.Patches
             {
                 return;
             }
-            if (!mv.isPoweredOn)
+            if (!mv.IsPoweredOn)
             {
                 __result = false;
             }

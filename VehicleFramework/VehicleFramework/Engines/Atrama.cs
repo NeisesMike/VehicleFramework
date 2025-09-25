@@ -206,7 +206,7 @@ namespace VehicleFramework.Engines
         {
             float scalarFactor = 0.28f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
-            float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
+            float upgradeModifier = Mathf.Pow(0.85f, MV.NumEfficiencyModules);
             MV.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
     }

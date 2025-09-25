@@ -78,13 +78,12 @@ namespace VehicleFramework
             // so I'm not able to provide the value easily here. Not even sure what a GameInfoIcon is :shrug:
             gameObject.EnsureComponent<GameInfoIcon>().techType = TechType;
             GameInfoIcon.Add(TechType);
-            isInited = true;
         }
         public override void Update()
         {
-            if (isScuttled)
+            if (IsScuttled)
             {
-                if(IsVehicleDocked)
+                if(IsDocked)
                 {
                     this.Undock();
                 }
@@ -284,7 +283,7 @@ namespace VehicleFramework
         public virtual void PlayerEntry()
         {
             Logger.DebugLog("start modvehicle player entry");
-            if (!isScuttled && !IsUnderCommand)
+            if (!IsScuttled && !IsUnderCommand)
             {
                 IsUnderCommand = true;
                 Player.main.SetScubaMaskActive(false);
@@ -394,7 +393,7 @@ namespace VehicleFramework
         public virtual void OnVehicleDocked(Vector3 exitLocation)
         {
             // The Moonpool invokes this once upon vehicle entry into the dock
-            IsVehicleDocked = true;
+            IsDocked = true;
             if (IsUnderCommand)
             {
                 OnPlayerDocked(exitLocation);
@@ -417,11 +416,11 @@ namespace VehicleFramework
         public virtual void OnVehicleUndocked()
         {
             // The Moonpool invokes this once upon vehicle exit from the dock
-            if (!isScuttled && !ConsoleCommands.isUndockConsoleCommand)
+            if (!IsScuttled && !ConsoleCommands.isUndockConsoleCommand)
             {
                 OnPlayerUndocked();
             }
-            IsVehicleDocked = false;
+            IsDocked = false;
             foreach (var component in GetComponentsInChildren<IDockListener>())
             {
                 (component as IDockListener).OnUndock();
@@ -479,7 +478,7 @@ namespace VehicleFramework
         }
         public virtual void ScuttleVehicle()
         {
-            if(isScuttled)
+            if(IsScuttled)
             {
                 return;
             }
@@ -491,13 +490,13 @@ namespace VehicleFramework
             {
                 OnSalvage();
             }
-            isScuttled = true;
+            IsScuttled = true;
             foreach (var component in GetComponentsInChildren<IScuttleListener>())
             {
                 (component as IScuttleListener).OnScuttle();
             }
             WaterClipProxies?.ForEach(x => x.SetActive(false));
-            isPoweredOn = false;
+            IsPoweredOn = false;
             gameObject.EnsureComponent<Scuttler>().Scuttle();
             var sealedThing = gameObject.EnsureComponent<Sealed>();
             sealedThing.openedAmount = 0;
@@ -506,13 +505,13 @@ namespace VehicleFramework
         }
         public virtual void UnscuttleVehicle()
         {
-            isScuttled = false;
+            IsScuttled = false;
             foreach (var component in GetComponentsInChildren<IScuttleListener>())
             {
                 (component as IScuttleListener).OnUnscuttle();
             }
             WaterClipProxies?.ForEach(x => x.SetActive(true));
-            isPoweredOn = true;
+            IsPoweredOn = true;
             gameObject.EnsureComponent<Scuttler>().Unscuttle();
         }
         public virtual void OnSalvage()
@@ -589,34 +588,96 @@ namespace VehicleFramework
             private set
             {
                 _IsUnderCommand = value;
-                IsPlayerDry = value;
             }
         }
         internal List<GameObject> volumetricLights = new();
-        public bool isInited = false;
-        // if the player toggles the power off,
-        // the vehicle is called "powered off,"
-        // because it is unusable yet the batteries are not empty
-        public bool isPoweredOn = true;
-        public FMOD_StudioEventEmitter? ambienceSound;
-        public int numEfficiencyModules = 0;
-        public bool IsPlayerDry = false;
-        public bool isScuttled = false;
-        public bool IsUndockingAnimating = false;
+        public bool IsPoweredOn
+        {
+            // if the player toggles the power off,
+            // the vehicle is called "powered off,"
+            // because it is unusable yet the batteries are not empty
+            get
+            {
+                return _isPoweredOn;
+            }
+            private set
+            {
+                _isPoweredOn = value;
+            }
+        }
+        public bool IsScuttled
+        {
+            get
+            {
+                return _isScuttled;
+            }
+            private set
+            {
+                _isScuttled = value;
+            }
+        }
+        public bool IsDocked
+        {
+            get
+            {
+                return _isDocked;
+            }
+            private set
+            {
+                _isDocked = value;
+            }
+        }
+        public int NumEfficiencyModules
+        {
+            get
+            {
+                return _numEfficiencyModules;
+            }
+            internal set
+            {
+                _numEfficiencyModules = value;
+            }
+        }
+        public int NumArmorModules
+        {
+            get
+            {
+                return _numArmorModules;
+            }
+            internal set
+            {
+                _numArmorModules = value;
+            }
+        }
+        public bool IsUndockingAnimating
+        {
+            get
+            {
+                return _isUndockingAnimating;
+            }
+            internal set
+            {
+                _isUndockingAnimating = value;
+            }
+        }
         private readonly List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
         public TechType TechType => GetComponent<TechTag>().type;
         public bool IsConstructed => vfxConstructing == null || vfxConstructing.IsConstructed();
         #endregion
 
-        #region internal_fields
+        #region private_fields
         private bool _IsUnderCommand = false;
-        private int numArmorModules = 0;
-        protected bool IsVehicleDocked = false;
+        private bool _isScuttled = false;
+        private bool _isPoweredOn = true;
+        private bool _isUndockingAnimating = false;
+        private bool _isDocked = false;
+        private int _numEfficiencyModules = 0;
+        private int _numArmorModules = 0;
         private string[]? _slotIDs = null;
-        protected internal Color baseColor = Color.white;
-        protected internal Color interiorColor = Color.white;
-        protected internal Color stripeColor = Color.white;
-        protected internal Color nameColor = Color.black;
+        private Color baseColor = Color.white;
+        private Color interiorColor = Color.white;
+        private Color stripeColor = Color.white;
+        private Color nameColor = Color.black;
         #endregion
 
         #region internal_methods
@@ -638,15 +699,15 @@ namespace VehicleFramework
         {
             if (techType == TechType.VehicleArmorPlating)
             {
-                _ = added ? numArmorModules++ : numArmorModules--;
-                GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, numArmorModules);
+                _ = added ? NumArmorModules++ : NumArmorModules--;
+                GetComponent<DealDamageOnImpact>().mirroredSelfDamageFraction = 0.5f * Mathf.Pow(0.5f, NumArmorModules);
             }
         }
         private void PowerUpgradeModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehiclePowerUpgradeModule)
             {
-                _ = added ? numEfficiencyModules++ : numEfficiencyModules--;
+                _ = added ? NumEfficiencyModules++ : NumEfficiencyModules--;
             }
         }
         private bool IsAllowedToRemove(Pickupable pickupable, bool verbose)
@@ -772,7 +833,7 @@ namespace VehicleFramework
         }
         internal void TogglePower()
         {
-            isPoweredOn = !isPoweredOn;
+            IsPoweredOn = !IsPoweredOn;
         }
         private void ManagePhysics()
         {
@@ -1176,7 +1237,7 @@ namespace VehicleFramework
             }
             mv.GetComponent<VFEngine>().ControlRotation();
         }
-        public static EnergyMixin? GetLeastChargedModVehicleEnergyMixinIfNull(EnergyMixin em, Vehicle veh)
+        internal static EnergyMixin? GetLeastChargedModVehicleEnergyMixinIfNull(EnergyMixin em, Vehicle veh)
         {
             ModVehicle? mv = veh as ModVehicle;
             if (em != null || mv == null)

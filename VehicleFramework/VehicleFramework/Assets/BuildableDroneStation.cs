@@ -241,7 +241,7 @@ namespace VehicleFramework.Assets
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, BuildScreenText());
             if (GameInput.GetButtonDown(GameInput.Button.LeftHand) && PairedDrone != null)
             {
-                if (PairedDrone.isScuttled || !PairedDrone.energyInterface.hasCharge)
+                if (PairedDrone.IsScuttled || !PairedDrone.energyInterface.hasCharge)
                 {
                     ShowDetails(PairedDrone);
                 }
@@ -271,7 +271,7 @@ namespace VehicleFramework.Assets
         }
         public static string GetStatus(Drone drone)
         {
-            if(drone.isScuttled)
+            if(drone.IsScuttled)
             {
                 return "Destroyed";
             }
@@ -295,7 +295,7 @@ namespace VehicleFramework.Assets
                 return ret;
             }
             ret += $"{Language.main.Get("VFDroneStationHint2")}: {GetStatus(PairedDrone)}\n";
-            if(PairedDrone.isScuttled || !PairedDrone.energyInterface.hasCharge)
+            if(PairedDrone.IsScuttled || !PairedDrone.energyInterface.hasCharge)
             {
                 ret += HandReticle.main.GetText($"{Language.main.Get("VFDroneStationHint3")} ", false, GameInput.Button.LeftHand) + "\n";
             }
@@ -326,7 +326,7 @@ namespace VehicleFramework.Assets
             Admin.SessionManager.StartCoroutine(PingPingForAWhile());
             string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.subName.hullName.text}\n";
             ret += $"{Language.main.Get("VFDroneHint2")}: {Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position))}\n";
-            if(drone.isScuttled)
+            if(drone.IsScuttled)
             {
                 ret += $"{Language.main.Get("VFDroneHint3")}\n";
                 ret += $"{Language.main.Get("VFDroneHint4")}\n";

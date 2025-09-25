@@ -82,7 +82,7 @@ namespace VehicleFramework.VehicleTypes
         public override void PlayerEntry()
         {
             base.PlayerEntry();
-            if (!isScuttled)
+            if (!IsScuttled)
             {
                 Logger.DebugLog("start submersible player entry");
                 Player.main.currentSub = null;
@@ -103,7 +103,7 @@ namespace VehicleFramework.VehicleTypes
             base.PlayerExit();
             Logger.DebugLog("start submersible player exit");
             Logger.DebugLog("end submersible player exit");
-            if (!IsVehicleDocked)
+            if (!IsDocked)
             {
                 Player.main.transform.SetParent(null);
                 Player.main.transform.position = Hatches.First().ExitLocation.position;
