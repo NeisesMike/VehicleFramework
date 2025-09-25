@@ -42,7 +42,7 @@ namespace VehicleFramework.Patches
             {
                 return;
             }
-            mv.nameColor = color;
+            mv.SetName(mv.subName.GetName(), color);
             SetSubNameDecals(mv);
             if (mv.SubNameDecals != null)
             {

@@ -77,21 +77,21 @@ namespace VehicleFramework
                 }
             }
             SetName(simpleData[mySubName]);
-            if (ColorUtility.TryParseHtmlString(simpleData[baseColorName], out baseColor))
+            if (ColorUtility.TryParseHtmlString(simpleData[baseColorName], out Color iBaseColor))
             {
-                SetBaseColor(baseColor);
+                SetBaseColor(iBaseColor);
             }
-            if (ColorUtility.TryParseHtmlString(simpleData[nameColorName], out nameColor))
+            if (ColorUtility.TryParseHtmlString(simpleData[nameColorName], out Color iNameColor))
             {
-                SetName(simpleData[mySubName], nameColor);
+                SetName(simpleData[mySubName], iNameColor);
             }
-            if (ColorUtility.TryParseHtmlString(simpleData[interiorColorName], out interiorColor))
+            if (ColorUtility.TryParseHtmlString(simpleData[interiorColorName], out Color iInteriorColor))
             {
-                SetInteriorColor(interiorColor);
+                SetInteriorColor(iInteriorColor);
             }
-            if (ColorUtility.TryParseHtmlString(simpleData[stripeColorName], out stripeColor))
+            if (ColorUtility.TryParseHtmlString(simpleData[stripeColorName], out Color iStripeColor))
             {
-                SetStripeColor(stripeColor);
+                SetStripeColor(iStripeColor);
             }
             if (bool.Parse(simpleData[defaultColorName]))
             {
