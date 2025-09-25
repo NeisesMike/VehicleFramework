@@ -8,7 +8,7 @@ namespace VehicleFramework.Admin
     public static class VFPingManager
     {
         internal static readonly List<PingInstance> mvPings = new();
-        public static List<PingInstance> GetPingsWhere(Func<PingInstance, bool> match) => mvPings.Where(match).ToList();
+        //public static List<PingInstance> GetPingsWhere(Func<PingInstance, bool> match) => mvPings.Where(match).ToList();
         public static PingType RegisterPingType(string name, bool verbose = false)
         {
             PingType? newPingType = Nautilus.Handlers.EnumHandler.AddEntry<PingType>($"{name}PingType");

@@ -439,7 +439,6 @@ namespace VehicleFramework.VehicleBuilding
                 leftVFX.volumMeshFilter = lvlMeshFilter;
                 leftVFX.angle = (int)pc.Angle;
                 leftVFX.range = pc.Range;
-                mv.lights.Add(pc.Light);
                 mv.volumetricLights.Add(volumetricLight);
             }
         }
@@ -515,11 +514,11 @@ namespace VehicleFramework.VehicleBuilding
         }
         public static void SetupHudPing(ModVehicle mv, PingType pingType)
         {
-            mv.pingInstance = mv.gameObject.EnsureComponent<PingInstance>();
-            mv.pingInstance.origin = mv.transform;
-            mv.pingInstance.pingType = pingType;
-            mv.pingInstance.SetLabel("Vehicle");
-            VFPingManager.mvPings.Add(mv.pingInstance);
+            var temp = mv.gameObject.EnsureComponent<PingInstance>();
+            temp.origin = mv.transform;
+            temp.pingType = pingType;
+            temp.SetLabel("Vehicle");
+            VFPingManager.mvPings.Add(temp);
         }
         public static void SetupVehicleConfig(ModVehicle mv)
         {
@@ -591,7 +590,7 @@ namespace VehicleFramework.VehicleBuilding
         public static void SetupSubName(ModVehicle mv)
         {
             var subname = mv.gameObject.EnsureComponent<SubName>();
-            subname.pingInstance = mv.pingInstance;
+            subname.pingInstance = mv.GetComponent<PingInstance>();
             subname.colorsInitialized = 0;
             subname.hullName = mv.StorageRootObject.AddComponent<TMPro.TextMeshProUGUI>(); // DO NOT push a TMPro.TextMeshProUGUI on the root vehicle object!!!
             mv.subName = subname;

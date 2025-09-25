@@ -315,13 +315,13 @@ namespace VehicleFramework.Assets
             }
             IEnumerator PingPingForAWhile()
             {
-                if(drone.pingInstance == null)
+                if(drone.GetComponent<PingInstance>() == null)
                 {
                     yield break;
                 }
-                drone.pingInstance.enabled = true;
+                drone.GetComponent<PingInstance>().enabled = true;
                 yield return new WaitForSeconds(60);
-                drone.pingInstance.enabled = false;
+                drone.GetComponent<PingInstance>().enabled = false;
             }
             Admin.SessionManager.StartCoroutine(PingPingForAWhile());
             string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.subName.hullName.text}\n";

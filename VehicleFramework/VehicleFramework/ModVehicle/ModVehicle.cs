@@ -182,9 +182,9 @@ namespace VehicleFramework
         public override void SubConstructionComplete()
         {
             Logger.DebugLog("ModVehicle SubConstructionComplete");
-            if(pingInstance != null)
+            if(GetComponent<PingInstance>() != null)
             {
-                pingInstance.enabled = true;
+                GetComponent<PingInstance>().enabled = true;
             }
             worldForces.handleGravity = true;
             BuildBotManager.ResetGhostMaterial();
@@ -301,9 +301,9 @@ namespace VehicleFramework
                     Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
                     NotifyStatus(PlayerStatus.OnPlayerEntry);
                 }
-                if (pingInstance != null)
+                if (GetComponent<PingInstance>() != null)
                 {
-                    pingInstance.enabled = false;
+                    GetComponent<PingInstance>().enabled = false;
                 }
             }
         }
@@ -335,17 +335,17 @@ namespace VehicleFramework
                 Player.main.transform.SetParent(null);
                 Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
             }
-            if (pingInstance != null)
+            if (GetComponent<PingInstance>() != null)
             {
-                pingInstance.enabled = true;
+                GetComponent<PingInstance>().enabled = true;
             }
         }
         public virtual void SubConstructionBeginning()
         {
             Logger.DebugLog("ModVehicle SubConstructionBeginning");
-            if (pingInstance != null)
+            if (GetComponent<PingInstance>() != null)
             {
-                pingInstance.enabled = false;
+                GetComponent<PingInstance>().enabled = false;
             }
             worldForces.handleGravity = false;
         }
@@ -483,9 +483,9 @@ namespace VehicleFramework
             {
                 return;
             }
-            if (pingInstance != null)
+            if (GetComponent<PingInstance>() != null)
             {
-                pingInstance.enabled = false;
+                GetComponent<PingInstance>().enabled = false;
             }
             void OnCutOpen(Sealed sealedComp)
             {
@@ -592,9 +592,7 @@ namespace VehicleFramework
                 IsPlayerDry = value;
             }
         }
-        internal List<GameObject> lights = new();
         internal List<GameObject> volumetricLights = new();
-        public PingInstance? pingInstance = null;
         public bool isInited = false;
         // if the player toggles the power off,
         // the vehicle is called "powered off,"

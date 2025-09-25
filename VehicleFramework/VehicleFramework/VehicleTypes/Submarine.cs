@@ -199,7 +199,7 @@ namespace VehicleFramework.VehicleTypes
         }
         public override void SubConstructionComplete() // deal with this reference to color picker
         {
-            if (pingInstance != null && !pingInstance.enabled)
+            if (GetComponent<PingInstance>() != null && !GetComponent<PingInstance>().enabled)
             {
                 ColorPicker?.GetComponent<ColorPicker>()?.BumpNameDecals();
                 Admin.SessionManager.StartCoroutine(TrySpawnFabricator());
