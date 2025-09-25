@@ -80,7 +80,7 @@ namespace VehicleFramework.Engines
         protected virtual void DoFixedUpdate()
         {
         }
-        public virtual void DrainPower(Vector3 moveDirection)
+        protected virtual void DrainPower(Vector3 moveDirection)
         {
             /* Rationale for these values
              * Seamoth spends this on Update
@@ -97,12 +97,12 @@ namespace VehicleFramework.Engines
         #endregion
 
         #region methods
-        public void ApplyPlayerControls(Vector3 moveDirection)
+        internal protected void ApplyPlayerControls(Vector3 moveDirection)
         {
             GetComponentsInChildren<VehicleAccelerationModifier>().ForEach(x => x.ModifyAcceleration(ref moveDirection));
             MoveWithInput(moveDirection);
             return;
-        } // public for historical reasons
+        }
         #endregion
         void IScuttleListener.OnScuttle()
         {

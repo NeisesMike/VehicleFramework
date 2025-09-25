@@ -192,7 +192,7 @@ namespace VehicleFramework.Engines
             UpdateForwardMomentum(moveInput.z);
             return;
         }
-        public override void DrainPower(Vector3 moveDirection)
+        protected override void DrainPower(Vector3 moveDirection)
         {
             /* Rationale for these values
              * Seamoth spends this on Update

@@ -198,7 +198,7 @@ namespace VehicleFramework.Engines
             RB.AddTorque(MV.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
         }
 
-        public override void DrainPower(Vector3 moveDirection)
+        protected override void DrainPower(Vector3 moveDirection)
         {
             float scalarFactor = 0.23f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
