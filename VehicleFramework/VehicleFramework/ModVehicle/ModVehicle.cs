@@ -592,7 +592,6 @@ namespace VehicleFramework
                 IsPlayerDry = value;
             }
         }
-        public PowerManager PowerMan => gameObject.EnsureComponent<PowerManager>();
         public FMOD_CustomEmitter? lightsOnSound = null;
         public FMOD_CustomEmitter? lightsOffSound = null;
         internal List<GameObject> lights = new();

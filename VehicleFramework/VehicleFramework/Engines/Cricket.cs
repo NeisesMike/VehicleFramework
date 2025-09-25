@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.VehicleComponents;
 
 namespace VehicleFramework.Engines
 {
@@ -46,7 +47,7 @@ namespace VehicleFramework.Engines
             float scalarFactor = 0.08f;
             float basePowerConsumptionPerSecond = moveDirection.x + moveDirection.y + moveDirection.z;
             float upgradeModifier = Mathf.Pow(0.85f, MV.numEfficiencyModules);
-            MV.PowerMan.TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
+            MV.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
     }
 }

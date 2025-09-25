@@ -31,7 +31,7 @@ namespace VehicleFramework.VehicleComponents
             float dockRecharge = Math.Min(1, dockDesires);
             if (charge > dockRecharge && dockRecharge > 0)
             {
-                float actual = MV.PowerMan.TrySpendEnergy(dockRecharge);
+                float actual = MV.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(dockRecharge);
                 cdVehicle.AddEnergy(actual);
             }
         }

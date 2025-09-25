@@ -23,7 +23,7 @@ namespace VehicleFramework.Patches
 				hasFuel = true,
 				isPowered = true
 			};
-            __result = mv.PowerMan.EvaluatePowerStatus() == goodPS;
+            __result = mv.gameObject.EnsureComponent<PowerManager>().EvaluatePowerStatus() == goodPS;
 			return false;
 		}
 	}
@@ -64,7 +64,7 @@ namespace VehicleFramework.Patches
 					// we found the ModVehicle from whose fabricator we're trying to drain power
 					float WantToSpend = 5f;
 					float SpendTolerance = 4.99f;
-                    float energySpent = mv.PowerMan.TrySpendEnergy(WantToSpend);
+                    float energySpent = mv.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(WantToSpend);
 					__result = SpendTolerance <= energySpent;
 					return false;
 				}
