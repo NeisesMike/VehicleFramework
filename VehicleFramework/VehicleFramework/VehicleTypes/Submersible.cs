@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Engines;
+using VehicleFramework.Interfaces;
 
 namespace VehicleFramework.VehicleTypes
 {
@@ -16,8 +17,6 @@ namespace VehicleFramework.VehicleTypes
     { 
         public abstract VehicleBuilding.VehiclePilotSeat PilotSeat { get; } // Need a way to start and stop piloting
         public abstract List<VehicleBuilding.VehicleHatchStruct> Hatches { get; } // Need a way to get in and out.
-        public virtual GameObject? SteeringWheelLeftHandTarget { get; }
-        public virtual GameObject? SteeringWheelRightHandTarget { get; }
         public override PilotingStyleEnum PilotingStyle => PilotingStyleEnum.Seamoth;
         public override bool CanPilot()
         {
@@ -57,7 +56,11 @@ namespace VehicleFramework.VehicleTypes
             Admin.SessionManager.StartCoroutine(SitDownInChair());
             //StartCoroutine(TryStandUpFromChair());
             Player.main.armsController.ikToggleTime = 0;
-            Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
+            if(this is ISteeringWheel wheel)
+            {
+                Player.main.armsController.SetWorldIKTarget(wheel.SteeringWheelLeftHandTarget()?.transform, wheel.SteeringWheelRightHandTarget()?.transform);
+
+            }
         }
         public override void StopPiloting()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VehicleFramework.Interfaces;
 
 namespace VehicleFramework.VehicleComponents
 {
@@ -35,15 +36,17 @@ namespace VehicleFramework.VehicleComponents
             Vehicle vehicle = GetComponentInParent<Vehicle>();
             if(vehicle == null)
             {
-                Debug.LogError("SteeringWheel component requires a parent Vehicle.");
-                enabled = false; // Disable this component if no Vehicle is found
-                return;
+                throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle.");
+            }
+            ISteeringWheel wheel = vehicle.GetComponent<ISteeringWheel>();
+            if(wheel == null)
+            {
+                throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle that implements ISteeringWheel.");
             }
             useRigidbody = vehicle.useRigidbody;
             if(useRigidbody == null)
             {
-                Debug.LogError("SteeringWheel component requires a parent Vehicle with a Rigidbody.");
-                enabled = false; // Disable this component if no Rigidbody is found
+                throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle with a Rigidbody.");
             }
         }
         public void Start()

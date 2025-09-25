@@ -368,14 +368,6 @@ public static class VehicleRegistrar
             {
                 VerboseLog(LogType.Warn, verbose, thisName + " A null ModVehicle.ControlPanel was provided. This is necessary to toggle floodlights.");
             }
-            if (mv.SteeringWheelLeftHandTarget == null)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.SteeringWheelLeftHandTarget was provided. This is what the player's left hand will 'grab' while you pilot.");
-            }
-            if (mv.SteeringWheelRightHandTarget == null)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
-            }
             if (mv.PilotSeat.Seat == null)
             {
                 Logger.Error(thisName + " A null PilotSeat.Seat was provided. There would be no way to pilot this vehicle.");
@@ -480,14 +472,6 @@ public static class VehicleRegistrar
             {
                 Logger.Error(thisName + " No ModVehicle.Hatches were provided. These specify how the player will enter and exit the vehicle.");
                 return false;
-            }
-            if (mv.SteeringWheelLeftHandTarget == null)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.SteeringWheelLeftHandTarget was provided. This is what the player's left hand will 'grab' while you pilot.");
-            }
-            if (mv.SteeringWheelRightHandTarget == null)
-            {
-                VerboseLog(LogType.Log, verbose, thisName + " A null ModVehicle.SteeringWheelRightHandTarget was provided.  This is what the player's right hand will 'grab' while you pilot.");
             }
             if (mv.PilotSeat.Seat == null)
             {

@@ -28,8 +28,6 @@ namespace VehicleFramework.VehicleTypes
         public virtual Transform? ControlPanelLocation => null;
         public virtual GameObject? Fabricator => null;
         public virtual GameObject? ColorPicker => null;
-        public virtual GameObject? SteeringWheelLeftHandTarget => null;
-        public virtual GameObject? SteeringWheelRightHandTarget => null;
         public virtual List<Light>? InteriorLights => null;
         public virtual float ExitPitchLimit => 4f;
         public virtual float ExitRollLimit => 4f;
@@ -110,7 +108,10 @@ namespace VehicleFramework.VehicleTypes
             base.BeginPiloting();
             isPilotSeated = true;
             Player.main.armsController.ikToggleTime = 0;
-            Player.main.armsController.SetWorldIKTarget(SteeringWheelLeftHandTarget?.transform, SteeringWheelRightHandTarget?.transform);
+            if(this is ISteeringWheel wheel)
+            {
+                Player.main.armsController.SetWorldIKTarget(wheel.SteeringWheelLeftHandTarget()?.transform, wheel.SteeringWheelRightHandTarget()?.transform);
+            }
             Player.main.SetCurrentSub(GetComponent<SubRoot>());
         }
         public override void StopPiloting()
