@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     public class ForeverBattery : EnergyMixin
     {

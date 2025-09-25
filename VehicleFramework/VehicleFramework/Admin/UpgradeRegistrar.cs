@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using VehicleFramework.UpgradeTypes;
-using VehicleFramework.VehicleComponents;
 using VehicleFramework.Assets;
 using Nautilus.Assets.Gadgets;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using VehicleFramework.MiscComponents;
 
 namespace VehicleFramework.Admin
 {

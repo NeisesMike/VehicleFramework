@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
+
 //using VehicleFramework.BaseVehicle;
 using VehicleFramework.Extensions;
 using VehicleFramework.LightControllers;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.MiscComponents
 {
     // TODO: disallow undocking when not enough space
 
@@ -41,13 +42,13 @@ namespace VehicleFramework.VehicleComponents
             if (PlayerExitLocation == null)
             {
                 Logger.Log($"{failTransformPrefix} PlayerExitLocation. Destroying this component.");
-                Component.DestroyImmediate(this);
+                DestroyImmediate(this);
                 return;
             }
             if (DockTrigger == null)
             {
                 Logger.Log($"{failTransformPrefix} DockTrigger. Destroying this component.");
-                Component.DestroyImmediate(this);
+                DestroyImmediate(this);
                 return;
             }
         }
@@ -148,7 +149,7 @@ namespace VehicleFramework.VehicleComponents
         {
             HandleDockDoors(cdVehicle.GetTechType(), true);
             cdVehicle.useRigidbody.velocity = Vector3.zero;
-            cdVehicle.transform.SetParent(this.transform.parent);
+            cdVehicle.transform.SetParent(transform.parent);
             if (withPlayer)
             {
                 // disabling the avatarinputhandler is a brutish way to do this

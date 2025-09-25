@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     public struct MaterialReactorData
     {
@@ -32,7 +32,7 @@ namespace VehicleFramework.VehicleComponents
         string IBattery.GetChargeValueText()
         {
             float arg = currentCharge / totalCapacity;
-            return Language.main.GetFormat<float, int, float>("BatteryCharge", arg, Mathf.RoundToInt(currentCharge), totalCapacity);
+            return Language.main.GetFormat("BatteryCharge", arg, Mathf.RoundToInt(currentCharge), totalCapacity);
         }
         internal void SetCapacity(float capacity)
         {
@@ -152,7 +152,7 @@ namespace VehicleFramework.VehicleComponents
                 string errorMsg = $"Material Reactor must be manually initialized. Destroying.";
                 Logger.Error(errorMsg);
                 ErrorMessage.AddWarning(errorMsg);
-                Component.DestroyImmediate(this);
+                DestroyImmediate(this);
                 return;
             }
             var reactants = currentEnergies.Keys.ToList();
@@ -182,7 +182,7 @@ namespace VehicleFramework.VehicleComponents
                             }
                         }
                         reactantPair.Key.container = null;
-                        GameObject.DestroyImmediate(reactantPair.Key.item.gameObject);
+                        DestroyImmediate(reactantPair.Key.item.gameObject);
                     }
                 }
             }
@@ -328,7 +328,7 @@ namespace VehicleFramework.VehicleComponents
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
-            SaveLoad.JsonInterface.Write<List<Tuple<TechType, float>>>(mv, newSaveFileName, GetSaveDict());
+            SaveLoad.JsonInterface.Write(mv, newSaveFileName, GetSaveDict());
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {

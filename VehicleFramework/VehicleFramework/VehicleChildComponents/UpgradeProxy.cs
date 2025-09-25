@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Assets;
 
-namespace VehicleFramework.MiscComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     public class UpgradeProxy : MonoBehaviour
     {

@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using VehicleFramework.Interfaces;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     /*
      * ColorPicker is a component that provides a color picker UI for changing vehicle colors.
@@ -68,7 +68,7 @@ namespace VehicleFramework.VehicleComponents
                 console = Resources.FindObjectsOfTypeAll<BaseUpgradeConsoleGeometry>().ToList().Find(x => x.gameObject.name.Contains("Short")).gameObject;
                 Builder.End();
             }
-            ActualEditScreen = GameObject.Instantiate(console.transform.Find(EditScreenName).gameObject);
+            ActualEditScreen = Instantiate(console.transform.Find(EditScreenName).gameObject);
             ActualEditScreen.GetComponentInChildren<SubNameInput>().enabled = false;
             ActualEditScreen.name = EditScreenName;
             ActualEditScreen.SetActive(true);

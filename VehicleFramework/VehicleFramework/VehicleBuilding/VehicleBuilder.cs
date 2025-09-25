@@ -5,13 +5,12 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Engines;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.MiscComponents;
 using VehicleFramework.StorageComponents;
 //using VehicleFramework.Localization;
 using VehicleFramework.Admin;
 using VehicleFramework.Assets;
 using VehicleFramework.Interfaces;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleChildComponents;
 
 namespace VehicleFramework.VehicleBuilding
 {
@@ -200,7 +199,7 @@ namespace VehicleFramework.VehicleBuilding
             {
                 foreach (VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    VehicleComponents.VehicleHatch.Create(vhs, mv);
+                    VehicleChildComponents.VehicleHatch.Create(vhs, mv);
                 }
             }
             catch (Exception e)
@@ -251,7 +250,7 @@ namespace VehicleFramework.VehicleBuilding
             {
                 foreach (VehicleHatchStruct vhs in mv.Hatches)
                 {
-                    VehicleComponents.VehicleHatch.Create(vhs, mv);
+                    VehicleChildComponents.VehicleHatch.Create(vhs, mv);
                 }
             }
             catch (Exception e)
@@ -278,7 +277,7 @@ namespace VehicleFramework.VehicleBuilding
             if(mv.Batteries.Count == 0)
             {
                 // Configure energy mixin for this battery slot
-                var energyMixin = mv.gameObject.AddComponent<VehicleComponents.ForeverBattery>();
+                var energyMixin = mv.gameObject.AddComponent<ForeverBattery>();
                 energyMixin.storageRoot = mv.StorageRootObject.GetComponent<ChildObjectIdentifier>();
                 energyMixin.defaultBattery = seamothEnergyMixin.defaultBattery;
                 energyMixin.compatibleBatteries = seamothEnergyMixin.compatibleBatteries;

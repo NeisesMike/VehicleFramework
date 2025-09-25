@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Interfaces;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     // This component can be added to a steering wheel
     // in order to make it animate in a way that corresponds

@@ -7,7 +7,7 @@ using UnityEngine;
 using VehicleFramework.Admin;
 using VehicleFramework.UpgradeTypes;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.MiscComponents
 {
     // This class is for Exosuit (Prawn) only.
     // This component is added to each arm GameObject.

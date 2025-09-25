@@ -71,7 +71,7 @@ namespace VehicleFramework.Patches
                 }
                 else if(mv is Submarine sub && sub.Hatches.Count > 0)
                 {
-                    text = sub.Hatches.First().Hatch.GetComponent<VehicleComponents.VehicleHatch>().EnterHint;
+                    text = sub.Hatches.First().Hatch.GetComponent<VehicleChildComponents.VehicleHatch>().EnterHint;
                 }
                 float energyActual = 0;
                 float energyMax = 0;

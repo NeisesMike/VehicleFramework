@@ -9,9 +9,9 @@ using VehicleFramework.Engines;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using VehicleFramework.LightControllers;
-using VehicleFramework.VehicleComponents;
 using VehicleFramework.VehicleBuilding;
 using VehicleFramework.Interfaces;
+using VehicleFramework.VehicleChildComponents;
 
 namespace VehicleFramework.VehicleTypes
 {

@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using VehicleFramework.VehicleComponents;
 using VehicleFramework.UpgradeTypes;
+using VehicleFramework.MiscComponents;
 
 // PURPOSE: allow VF upgrades for the Prawn to be used as expected
 // VALUE: High.
