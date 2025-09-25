@@ -74,5 +74,8 @@ namespace VehicleFramework
         public virtual Sprite? CraftingSprite => StaticAssets.ModVehicleIcon;
         public virtual Sprite? EncyclopediaImage => null;
         public virtual Sprite? ModuleBackgroundImage => SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
+
+        public virtual FMOD_CustomEmitter? LightsOnSound { get; set; } = null;
+        public virtual FMOD_CustomEmitter? LightsOffSound { get; set; } = null;
     }
 }

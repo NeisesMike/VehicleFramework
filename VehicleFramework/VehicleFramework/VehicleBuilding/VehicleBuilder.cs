@@ -333,13 +333,13 @@ namespace VehicleFramework.VehicleBuilding
                 {
                     var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
                     ce.asset = fmod.asset;
-                    mv.lightsOnSound = ce;
+                    mv.LightsOnSound ??= ce;
                 }
                 else if (fmod.asset.name == "seamoth_light_off")
                 {
                     var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
                     ce.asset = fmod.asset;
-                    mv.lightsOffSound = ce;
+                    mv.LightsOffSound ??= ce;
                 }
             }
         }

@@ -592,8 +592,6 @@ namespace VehicleFramework
                 IsPlayerDry = value;
             }
         }
-        public FMOD_CustomEmitter? lightsOnSound = null;
-        public FMOD_CustomEmitter? lightsOffSound = null;
         internal List<GameObject> lights = new();
         internal List<GameObject> volumetricLights = new();
         public PingInstance? pingInstance = null;
