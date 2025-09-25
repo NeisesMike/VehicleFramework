@@ -295,9 +295,12 @@ namespace VehicleFramework
                         window.SetActive(false);
                     }
                 }
-                Player.main.lastValidSub = GetComponent<SubRoot>();
-                Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
-                NotifyStatus(PlayerStatus.OnPlayerEntry);
+                if ((this as Drone) == null)
+                {
+                    Player.main.lastValidSub = GetComponent<SubRoot>();
+                    Player.main.SetCurrentSub(GetComponent<SubRoot>(), true);
+                    NotifyStatus(PlayerStatus.OnPlayerEntry);
+                }
                 if (pingInstance != null)
                 {
                     pingInstance.enabled = false;
@@ -318,17 +321,20 @@ namespace VehicleFramework
                 }
             }
             IsUnderCommand = false;
-            if(Player.main.GetCurrentSub() == GetComponent<SubRoot>())
+            if ((this as Drone) == null)
             {
-                Player.main.SetCurrentSub(null);
+                if (Player.main.GetCurrentSub() == GetComponent<SubRoot>())
+                {
+                    Player.main.SetCurrentSub(null);
+                }
+                if (Player.main.GetVehicle() == this)
+                {
+                    Player.main.currentMountedVehicle = null;
+                }
+                NotifyStatus(PlayerStatus.OnPlayerExit);
+                Player.main.transform.SetParent(null);
+                Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
             }
-            if(Player.main.GetVehicle() == this)
-            {
-                Player.main.currentMountedVehicle = null;
-            }
-            NotifyStatus(PlayerStatus.OnPlayerExit);
-            Player.main.transform.SetParent(null);
-            Player.main.TryEject(); // for DeathRun Remade Compat. See its patch in PlayerPatcher.cs
             if (pingInstance != null)
             {
                 pingInstance.enabled = true;
@@ -580,7 +586,7 @@ namespace VehicleFramework
             {
                 return _IsUnderCommand;
             }
-            protected set
+            private set
             {
                 _IsUnderCommand = value;
                 IsPlayerDry = value;

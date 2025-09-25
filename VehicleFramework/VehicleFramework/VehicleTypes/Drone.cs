@@ -135,8 +135,7 @@ namespace VehicleFramework.VehicleTypes
             SetupTemporaryParent();
             Player.main.EnterLockedMode(temporaryParent.transform, false); // must precede SetCurrentSub, so that the player is never "Underwater" (Player.UpdateIsUnderwater)
             Player.main.SetCurrentSub(null, true);
-            IsUnderCommand = true;
-            Player.main.SetScubaMaskActive(false);
+            PlayerEntry();
             uGUI.main.quickSlots.SetTarget(this);
             SwapToDroneCamera();
             NotifyStatus(PlayerStatus.OnPilotBegin);
@@ -151,7 +150,8 @@ namespace VehicleFramework.VehicleTypes
         public virtual void StopControlling()
         {
             base.StopPiloting();
-            IsUnderCommand = false;
+            PlayerExit();
+            Player.main.SetScubaMaskActive(false);
             Player.main.mode = previousMode;
             Player.main.currentMountedVehicle = lastVehicle;
             Player.main.SetCurrentSub(lastSubRoot, true);
