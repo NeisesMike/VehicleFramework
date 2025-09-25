@@ -19,10 +19,11 @@ namespace VehicleFramework
     /*
      * ModVehicle is the primary abstract class provided by Vehicle Framework.
      * All VF vehicles inherit from ModVehicle.
-     * This file holds those configuration values that can be set by the modder.
+     * This file holds those virtual members of ModVehicles that do not require assets (models, sprites, etc)
      */
     public abstract partial class ModVehicle : Vehicle, ICraftTarget, IProtoTreeEventListener
     {
+        public virtual VFEngine? VFEngine { get; set; }
         public virtual int BaseCrushDepth => 250;
         public virtual int MaxHealth => 100;
         public virtual int Mass => 1000;
@@ -49,15 +50,8 @@ namespace VehicleFramework
         public virtual bool AutoApplyShaders { get; set; } = true;
         public virtual List<TMPro.TextMeshProUGUI>? SubNameDecals => null;
         public virtual Quaternion CyclopsDockRotation => Quaternion.identity;
-
-        public virtual Sprite? PingSprite => StaticAssets.DefaultPingSprite;
-        public virtual Sprite? SaveFileSprite => StaticAssets.DefaultSaveFileSprite;
         public virtual Dictionary<TechType, int>? Recipe => new() { { TechType.Titanium, 1 } };
-        public virtual Sprite? UnlockedSprite => null;
-        public virtual Sprite? CraftingSprite => StaticAssets.ModVehicleIcon;
         public virtual string Description => "A vehicle";
         public virtual string EncyclopediaEntry => string.Empty;
-        public virtual Sprite? EncyclopediaImage => null;
-        public virtual Sprite? ModuleBackgroundImage => SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
     }
 }

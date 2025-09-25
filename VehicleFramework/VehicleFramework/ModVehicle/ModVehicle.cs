@@ -32,7 +32,6 @@ namespace VehicleFramework
             Other
         }
         #endregion
-        public virtual VFEngine? VFEngine { get; set; }
 
         #region vehicle_overrides
         public override void Awake()

@@ -19,7 +19,7 @@ namespace VehicleFramework
     /*
      * ModVehicle is the primary abstract class provided by Vehicle Framework.
      * All VF vehicles inherit from ModVehicle.
-     * This file holds those object references to children of the MV root object.
+     * This file holds those virtual members of ModVehicles that require assets (models, sprites, etc)
      */
     public abstract partial class ModVehicle : Vehicle, ICraftTarget, IProtoTreeEventListener
     {
@@ -67,5 +67,12 @@ namespace VehicleFramework
         public virtual List<Transform>? LavaLarvaAttachPoints => new();
         public virtual List<VehicleCamera>? Cameras => new();
         public virtual List<Collider>? DenyBuildingColliders => new();
+
+        public virtual Sprite? PingSprite => StaticAssets.DefaultPingSprite;
+        public virtual Sprite? SaveFileSprite => StaticAssets.DefaultSaveFileSprite;
+        public virtual Sprite? UnlockedSprite => null;
+        public virtual Sprite? CraftingSprite => StaticAssets.ModVehicleIcon;
+        public virtual Sprite? EncyclopediaImage => null;
+        public virtual Sprite? ModuleBackgroundImage => SpriteHelper.GetSprite("Sprites/VFModuleBackground.png");
     }
 }
