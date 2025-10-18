@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HarmonyLib;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework.VehicleTypes;
-using VehicleFramework.VehicleBuilding;
 using VehicleFramework.Interfaces;
+using VehicleFramework.VehicleBuilding;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.VehicleChildComponents
 {
@@ -41,7 +42,7 @@ namespace VehicleFramework.VehicleChildComponents
 				}
 			}
 			else if (mv as Submersible != null)// || (mv as Walker != null)) || (mv as Skimmer != null))
-            {
+			{
 				HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, EnterHint);
 			}
 		}
@@ -54,10 +55,10 @@ namespace VehicleFramework.VehicleChildComponents
 			}
 			Player.main.rigidBody.velocity = Vector3.zero;
 			Player.main.rigidBody.angularVelocity = Vector3.zero;
-            Submarine? Sub = mv as Submarine;
-            Submersible? Subbie = mv as Submersible;
-            if (Sub != null)
-            {
+			Submarine? Sub = mv as Submarine;
+			Submersible? Subbie = mv as Submersible;
+			if (Sub != null)
+			{
 				if (Sub.IsPlayerInside())
 				{
 					mv.PlayerExit();
@@ -73,14 +74,14 @@ namespace VehicleFramework.VehicleChildComponents
 				else
 				{
 					Player.main.transform.position = EntryLocation.position;
-                    Sub.PlayerEntry();
+					Sub.PlayerEntry();
 				}
 			}
 			else if (Subbie != null && !mv.IsScuttled)
 			{
 				Player.main.transform.position = Subbie.PilotSeat.SitLocation.transform.position;
 				Player.main.transform.rotation = Subbie.PilotSeat.SitLocation.transform.rotation;
-                Subbie.PlayerEntry();
+				Subbie.PlayerEntry();
 			}
 			/*
 			if (mv as Walker != null)
@@ -100,7 +101,7 @@ namespace VehicleFramework.VehicleChildComponents
 
 		public IEnumerator ExitToSurface()
 		{
-			if(SurfaceExitLocation == null)
+			if (SurfaceExitLocation == null)
 			{
 				yield break;
 			}
@@ -129,13 +130,19 @@ namespace VehicleFramework.VehicleChildComponents
 			isLive = true;
 		}
 
-        internal static void Create(VehicleHatchStruct vhs, ModVehicle mv)
-        {
-            var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
-            hatch.mv = mv;
-            hatch.EntryLocation = vhs.EntryLocation;
-            hatch.ExitLocation = vhs.ExitLocation;
-            hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
-        }
-    }
+		internal static void Create(VehicleHatchStruct vhs, ModVehicle mv)
+		{
+			var hatch = vhs.Hatch.EnsureComponent<VehicleHatch>();
+			hatch.mv = mv;
+			hatch.EntryLocation = vhs.EntryLocation;
+			hatch.ExitLocation = vhs.ExitLocation;
+			hatch.SurfaceExitLocation = vhs.SurfaceExitLocation;
+		}
+
+		public static void SetHintStrings(Submarine sub, string enterHint, string exitHint)
+		{
+			sub.Hatches.ForEach(x => x.Hatch.GetComponent<VehicleFramework.VehicleChildComponents.VehicleHatch>().EnterHint = enterHint);
+			sub.Hatches.ForEach(x => x.Hatch.GetComponent<VehicleFramework.VehicleChildComponents.VehicleHatch>().ExitHint = exitHint);
+		}
+	}
 }
