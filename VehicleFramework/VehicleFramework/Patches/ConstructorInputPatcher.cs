@@ -33,7 +33,13 @@ namespace VehicleFramework.Patches
                 return false;
             }
             duration = 10f;
-            __instance.Craft(techType, duration);
+
+            if ((__instance as Crafter)._logic != null && (__instance as Crafter)._logic.Craft(techType, duration))
+            {
+                (__instance as Crafter).state = true;
+                (__instance as Crafter).OnCraftingBegin(techType, duration);
+            }
+
             return false;
         }
 
