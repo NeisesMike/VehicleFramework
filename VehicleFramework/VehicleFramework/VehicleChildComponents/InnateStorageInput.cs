@@ -1,16 +1,17 @@
 ﻿using VehicleFramework.Admin;
+using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework.StorageComponents
 {
-    public class InnateStorageInput : StorageInput
-    {
+	public class InnateStorageInput : StorageInput
+	{
 		public override void OpenFromExternal()
 		{
-			if(mv == null)
+			if (mv == null)
 			{
 				throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenFromExternal.");
-            }
-            ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
+			}
+			ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, EnumHelper.GetInnateStorageType());
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
@@ -39,6 +40,10 @@ namespace VehicleFramework.StorageComponents
 			{
 				this.OnClosePDA(null);
 			}
+		}
+		public static void SetDisplayName(Submarine sub, string displayName)
+		{
+			sub.InnateStorages?.ForEach(x => x.Container.GetComponent<InnateStorageInput>().DisplayName = displayName);
 		}
 	}
 }
