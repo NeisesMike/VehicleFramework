@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using Nautilus.Options;
+﻿using Nautilus.Options;
 using Nautilus.Options.Attributes;
+using System.Reflection;
+using UnityEngine;
 
 namespace VehicleFramework
 {
@@ -8,7 +9,8 @@ namespace VehicleFramework
     internal class VehicleFrameworkNautilusConfig : Nautilus.Json.ConfigFile
     {
         [Button(LabelLanguageId = "VFConfigManagerLabel", TooltipLanguageId = "VFConfigManagerTooltip")]
-        public static void PrintConfigManagerInfo(ButtonClickedEventArgs _)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Config will totally die if this is marked static.")]
+        public void PrintConfigManagerInfo(ButtonClickedEventArgs _)
         {
             ErrorMessage.AddMessage(Language.main.Get("VFConfigManagerPrintInfo"));
         }
@@ -54,7 +56,8 @@ namespace VehicleFramework
 
         #region cheats
         [Button(LabelLanguageId = "VFDroneStationCheatLabel", TooltipLanguageId = "VFDroneStationCheatTooltip")]
-        public static void UnlockDroneStation(ButtonClickedEventArgs _)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Config will totally die if this is marked static.")]
+        public void UnlockDroneStation(ButtonClickedEventArgs _)
         {
             if(Player.main == null)
             {
