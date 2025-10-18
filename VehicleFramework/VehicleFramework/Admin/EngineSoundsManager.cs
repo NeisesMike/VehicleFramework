@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using VehicleFramework.Engines;
 using VehicleFramework.Admin;
 using static uGUI_ResourceTracker;
+using UnityEngine.UIElements;
 
 namespace VehicleFramework.Admin
 {
@@ -110,8 +111,17 @@ namespace VehicleFramework.Admin
             catch(Exception e)
             {
                 Logger.Warn($"No default engine sounds for vehicle type: {mv.GetName()}. Using Shiruba.");
-                Logger.LogException($"Exception Caught: ", e);
-                return EngineSoundss.First().Value;
+                Logger.WarnException($"Exception Caught for TechType: {mv.TechType.AsString()}: ", e);
+                if(EngineSoundss.Count != 0)
+                {
+                    Logger.Warn("No default engine sounds for vehicle. Using the first available engine sounds instead.");
+                    return EngineSoundss.First().Value;
+                }
+                else
+                {
+                    Logger.Warn("No default engine sounds for vehicle. Using Silence.");
+                    return new EngineSounds { hum = VoiceManager.silence, whistle = VoiceManager.silence };
+                }
             }
         }
         internal static IEnumerator LoadAllVoices()

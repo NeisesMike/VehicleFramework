@@ -33,8 +33,8 @@ namespace VehicleFramework
         public static void WarnException(string message, System.Exception e, bool outputToScreen = false)
         {
             Warn(message);
-            Warn(e.Message);
-            Warn(e.StackTrace);
+            Warn("> " + e.Message);
+            Warn("> " + e.StackTrace);
             if (outputToScreen)
             {
                 ErrorMessage.AddWarning(message);
@@ -43,8 +43,8 @@ namespace VehicleFramework
         public static void LogException(string message, System.Exception e, bool outputToScreen = false)
         {
             Error(message);
-            Error(e.Message);
-            Error(e.StackTrace);
+            Error("> " + e.Message);
+            Error("> " + e.StackTrace);
             if (outputToScreen)
             {
                 ErrorMessage.AddError(message);

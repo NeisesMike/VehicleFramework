@@ -201,17 +201,17 @@ namespace VehicleFramework.Admin
             catch (KeyNotFoundException e)
             {
                 Logger.Warn($"Default voice option not found for vehicle: {mv.GetName()}.");
-                Logger.LogException($"KeyNotFound: ", e);
+                Logger.WarnException($"KeyNotFound: ", e);
                 goto exit;
             }
             catch (ArgumentNullException e)
             {
-                Logger.LogException($"That mv.name was null: {mv.GetName()}.", e);
+                Logger.WarnException($"That mv.name was null: {mv.GetName()}.", e);
                 goto exit;
             }
             catch (Exception e)
             {
-                Logger.LogException($"GetDefaultVoice option failed: {mv.GetName()}.", e);
+                Logger.WarnException($"GetDefaultVoice option failed: {mv.GetName()}.", e);
                 goto exit;
             }
 
@@ -222,15 +222,15 @@ namespace VehicleFramework.Admin
             catch (KeyNotFoundException e)
             {
                 Logger.Warn($"Default voice not found for vehicle: {mv.GetName()}.");
-                Logger.LogException($"KeyNotFound: ", e);
+                Logger.WarnException($"KeyNotFound: ", e);
             }
             catch (ArgumentNullException e)
             {
-                Logger.LogException($"That default voice index was null: {mv.GetName()}.", e);
+                Logger.WarnException($"That default voice index was null: {mv.GetName()}.", e);
             }
             catch (Exception e)
             {
-                Logger.LogException($"GetDefaultVoice failed: {mv.GetName()}.", e);
+                Logger.WarnException($"GetDefaultVoice failed: {mv.GetName()}.", e);
             }
 
         exit:
