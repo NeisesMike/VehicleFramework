@@ -19,61 +19,61 @@ namespace VehicleFramework.MiscComponents
 		private string _labelMeterSuffix = "";
 
 		public enum HUDChoice
-        {
+		{
 			Normal,
 			Storage
-        }
+		}
 		public GameObject droneHUD = null!;
 
-        internal void Validate()
-        {
-            if (root == null)
-            {
-                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: root is null!");
-            }
-            if (droneHUD == null)
-            {
-                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD is null!");
-            }
-            _droneConnecting = droneHUD.transform.Find("Connecting");
+		internal void Validate()
+		{
+			if (root == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: root is null!");
+			}
+			if (droneHUD == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD is null!");
+			}
+			_droneConnecting = droneHUD.transform.Find("Connecting");
 			if (_droneConnecting == null)
 			{
 				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD.Connecting is null!");
-            }
-            _droneDistanceText = droneHUD.transform.Find("Title/DistanceText").GetComponent<TextMeshProUGUI>();
+			}
+			_droneDistanceText = droneHUD.transform.Find("Title/DistanceText").GetComponent<TextMeshProUGUI>();
 			if (_droneDistanceText == null)
-            {
+			{
 				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: droneHUD.DistanceText is null!");
-            }
-            if (textPower == null)
-            {
-                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textPower is null!");
-            }
-            if (textHealth == null)
-            {
-                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textHealth is null!");
-            }
-            if (textTemperature == null)
-            {
-                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textTemperature is null!");
-            }
-            if (textTemperatureSuffix == null)
-            {
-                throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textTemperatureSuffix is null!");
-            }
-            _labelDroneDistance = Language.main.Get("CameraDroneDistance");
+			}
+			if (textPower == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textPower is null!");
+			}
+			if (textHealth == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textHealth is null!");
+			}
+			if (textTemperature == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textTemperature is null!");
+			}
+			if (textTemperatureSuffix == null)
+			{
+				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: textTemperatureSuffix is null!");
+			}
+			_labelDroneDistance = Language.main.Get("CameraDroneDistance");
 			_labelMeterSuffix = Language.main.Get("MeterSuffix");
-            root.transform.localPosition = Vector3.zero; // do this once
-            validated = true;
-        }
-        private void Start()
-        {
+			root.transform.localPosition = Vector3.zero; // do this once
+			validated = true;
+		}
+		private void Start()
+		{
 			if (!validated)
 			{
 				throw SessionManager.Fatal("uGUI_VehicleHUD: Not validated in Start!");
 			}
-        }
-        private bool IsStorageHUD()
+		}
+		private bool IsStorageHUD()
 		{
 			return textStorage != null;
 		}
@@ -84,7 +84,7 @@ namespace VehicleFramework.MiscComponents
 
 		private void DeactivateAll()
 		{
-            root.SetActive(false);
+			root.SetActive(false);
 			droneHUD.SetActive(false);
 		}
 		private bool ShouldIDie(ModVehicle mv, PDA? pda)
@@ -96,9 +96,9 @@ namespace VehicleFramework.MiscComponents
 				return true;
 			}
 
-            if (IsStorageHUD())
-            {
-                if (HasMvStorage(mv))
+			if (IsStorageHUD())
+			{
+				if (HasMvStorage(mv))
 				{
 					switch (VehicleConfig.GetConfig(mv).HUDChoice.Value)
 					{
@@ -110,13 +110,13 @@ namespace VehicleFramework.MiscComponents
 							return false;
 					}
 				}
-                else
+				else
 				{
 					// I'm the storage HUD, but I can't be displayed. I should die.
 					return true;
 				}
-            }
-            else
+			}
+			else
 			{
 				switch (VehicleConfig.GetConfig(mv).HUDChoice.Value)
 				{
@@ -131,33 +131,28 @@ namespace VehicleFramework.MiscComponents
 
 			return true;
 		}
-        public void Update()
+		public void Update()
 		{
-            var player = Player.main;
-            if (player == null) { DeactivateAll(); return; }
+			var player = Player.main;
+			if (player == null) { DeactivateAll(); return; }
 
-            _mv = player.GetModVehicle();
-            _pda = player.GetPDA();
+			_mv = player.GetModVehicle();
+			_pda = player.GetPDA();
 
-			if(_mv == null)
-			{
-				return;
-			}
-
-            if (ShouldIDie(_mv, _pda))
+			if (_mv == null || ShouldIDie(_mv, _pda))
 			{
 				DeactivateAll();
 				return;
 			}
-            root.transform.localPosition = Vector3.zero;
+			root.transform.localPosition = Vector3.zero;
 
 			bool mvflag = !_pda.isInUse;
 			bool droneflag = mvflag && (VehicleTypes.Drone.MountedDrone != null);
 			if (root.activeSelf != mvflag)
 			{
 				root.SetActive(mvflag);
-            }
-            if (droneHUD.activeSelf != droneflag)
+			}
+			if (droneHUD.activeSelf != droneflag)
 			{
 				droneHUD.SetActive(droneflag);
 			}
@@ -198,17 +193,17 @@ namespace VehicleFramework.MiscComponents
 		}
 		public void UpdateHealth(ModVehicle mv)
 		{
-            mv.GetHUDValues(out float num, out float _);
+			mv.GetHUDValues(out float num, out float _);
 			int num3 = Mathf.CeilToInt(num * 100f);
 			if (lastHealth != num3)
 			{
 				lastHealth = num3;
-                textHealth.text = IntStringCache.GetStringForInt(lastHealth);
+				textHealth.text = IntStringCache.GetStringForInt(lastHealth);
 			}
 		}
 		public void UpdateTemperature(ModVehicle mv)
-        {
-            float temperature = mv.GetTemperature();
+		{
+			float temperature = mv.GetTemperature();
 			temperatureSmoothValue = ((temperatureSmoothValue < -10000f) ? temperature : Mathf.SmoothDamp(temperatureSmoothValue, temperature, ref temperatureVelocity, 1f));
 			int tempNum;
 			if (MainPatcher.NautilusConfig.IsFahrenheit)
@@ -222,7 +217,7 @@ namespace VehicleFramework.MiscComponents
 			if (lastTemperature != tempNum)
 			{
 				lastTemperature = tempNum;
-                textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
+				textTemperature.text = IntStringCache.GetStringForInt(lastTemperature);
 				textTemperatureSuffix.color = new Color32(byte.MaxValue, 220, 0, byte.MaxValue);
 				if (MainPatcher.NautilusConfig.IsFahrenheit)
 				{
@@ -235,18 +230,18 @@ namespace VehicleFramework.MiscComponents
 			}
 		}
 		public void UpdatePower(ModVehicle mv)
-        {
-            mv.GetHUDValues(out float _, out float num2);
+		{
+			mv.GetHUDValues(out float _, out float num2);
 			int num4 = Mathf.CeilToInt(num2 * 100f);
 			if (lastPower != num4)
 			{
 				lastPower = num4;
-                textPower.text = IntStringCache.GetStringForInt(lastPower);
+				textPower.text = IntStringCache.GetStringForInt(lastPower);
 			}
 		}
 		public void UpdateStorage(ModVehicle mv)
 		{
-            mv.GetStorageValues(out int stored, out int capacity);
+			mv.GetStorageValues(out int stored, out int capacity);
 			if (capacity > 0)
 			{
 				int ratio = (100 * stored) / capacity;
@@ -264,11 +259,11 @@ namespace VehicleFramework.MiscComponents
 		public TextMeshProUGUI textHealth = null!;
 		[AssertNotNull]
 		public TextMeshProUGUI textPower = null!;
-        [AssertNotNull]
+		[AssertNotNull]
 		public TextMeshProUGUI textTemperature = null!;
-        [AssertNotNull]
+		[AssertNotNull]
 		public TextMeshProUGUI textTemperatureSuffix = null!;
-        [AssertNotNull]
+		[AssertNotNull]
 		public TextMeshProUGUI textStorage = null!;
 		public int lastHealth = int.MinValue;
 		public int lastPower = int.MinValue;
@@ -277,5 +272,5 @@ namespace VehicleFramework.MiscComponents
 		public float temperatureVelocity;
 		[AssertLocalization]
 		public const string thermometerFormatKey = "ThermometerFormat";
-    }
+	}
 }
