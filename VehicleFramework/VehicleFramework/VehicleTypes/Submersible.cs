@@ -58,7 +58,7 @@ namespace VehicleFramework.VehicleTypes
             Player.main.armsController.ikToggleTime = 0;
             if(this is ISteeringWheel wheel)
             {
-                Player.main.armsController.SetWorldIKTarget(wheel.SteeringWheelLeftHandTarget()?.transform, wheel.SteeringWheelRightHandTarget()?.transform);
+                Player.main.armsController.SetWorldIKTarget(wheel.GetSteeringWheelLeftHandTarget()?.transform, wheel.GetSteeringWheelRightHandTarget()?.transform);
 
             }
         }

@@ -2,9 +2,9 @@
 
 namespace VehicleFramework.Interfaces
 {
-    internal interface ISteeringWheel
+    public interface ISteeringWheel
     {
-        public GameObject? SteeringWheelLeftHandTarget();
-        public GameObject? SteeringWheelRightHandTarget();
+        public GameObject? GetSteeringWheelLeftHandTarget();
+        public GameObject? GetSteeringWheelRightHandTarget();
     }
 }
