@@ -103,10 +103,13 @@ namespace VehicleFramework.VehicleChildComponents
 
             GameObject colorPicker = ActualEditScreen.transform.Find("Active/ColorPicker").gameObject;
             colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.RemoveAllListeners();
+            colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.m_Calls.m_PersistentCalls.Clear();
             colorPicker.GetComponentInChildren<uGUI_ColorPicker>().onColorChange.AddListener(new(OnColorChange));
             ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.RemoveAllListeners();
+            ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.m_Calls.m_PersistentCalls.Clear();
             ActualEditScreen.transform.Find("Active/Button").GetComponent<Button>().onClick.AddListener(new UnityAction(OnColorSubmit));
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.RemoveAllListeners();
+            ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.m_Calls.m_PersistentCalls.Clear();
             ActualEditScreen.transform.Find("Active/InputField").GetComponent<uGUI_InputField>().onEndEdit.AddListener(new(OnNameChange));
 
             EnsureColorPickerEnabled();
