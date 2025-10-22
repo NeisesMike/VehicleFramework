@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Linq;
 using UnityEngine;
 
 // PURPOSE: Create ModVehicle API for changing colors via normal routines (eg MoonPool terminal)
@@ -25,7 +26,7 @@ namespace VehicleFramework.Patches
         }
         private static void SetSubNameDecals(ModVehicle mv)
         {
-            if(mv.SubNameDecals == null)
+            if (mv.SubNameDecals == null)
             {
                 return;
             }
@@ -42,15 +43,8 @@ namespace VehicleFramework.Patches
             {
                 return;
             }
-            mv.SetName(mv.subName.GetName(), color);
             SetSubNameDecals(mv);
-            if (mv.SubNameDecals != null)
-            {
-                foreach (var tmprougui in mv.SubNameDecals)
-                {
-                    tmprougui.color = color;
-                }
-            }
+            mv.SubNameDecals?.Where(x => x != null).ForEach(x => x.color = color);
             Logger.DebugLog($"hsb is {hsb}");
         }
 
