@@ -49,6 +49,7 @@ namespace VehicleFramework.Patches
 
             CodeMatcher newInstructions = new CodeMatcher(instructions)
                 .MatchForward(true, GetEnergyMixinMatch)
+                .Advance(1)
                 .InsertAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
                 .Insert(Transpilers.EmitDelegate<Func<EnergyMixin, Vehicle, EnergyMixin?>>(ModVehicle.GetLeastChargedModVehicleEnergyMixinIfNull));
 
