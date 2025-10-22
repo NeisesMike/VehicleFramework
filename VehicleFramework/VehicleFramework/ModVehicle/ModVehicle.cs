@@ -43,6 +43,7 @@ namespace VehicleFramework
             upgradeOnAddedActions.Add(ArmorPlatingModuleAction);
             upgradeOnAddedActions.Add(PowerUpgradeModuleAction);
 
+
             VehicleBuilder.SetupVolumetricLights(this);
             gameObject.AddComponent<HeadLightsController>();
             gameObject.AddComponent<VolumetricLightController>();
@@ -60,7 +61,7 @@ namespace VehicleFramework
             LazyInitialize();
             Upgrades?.ForEach(x => x.Interface.GetComponent<VehicleUpgradeConsoleInput>().equipment = modules);
             var warpChipThing = GetComponent("TelePingVehicleInstance");
-            if(warpChipThing != null)
+            if (warpChipThing != null)
             {
                 DestroyImmediate(warpChipThing);
             }
@@ -1185,16 +1186,16 @@ namespace VehicleFramework
         }
         internal static EnergyMixin? GetLeastChargedModVehicleEnergyMixinIfNull(EnergyMixin em, Vehicle veh)
         {
-            ModVehicle? mv = veh as ModVehicle;
-            if (em != null || mv == null)
+            if(veh is ModVehicle mv)
             {
-                return em;
+                EnergyMixin? leastPoweredMixin = mv.energyInterface?.sources?.OrderBy(x => x.charge)?.FirstOrDefault();
+                if(leastPoweredMixin == null)
+                {
+                    Logger.Warn("In ModVehicle.GetLeastChargedModVehicleEnergyMixinIfNull, failed to get least powered EnergyMixin for ModVehicle: " + mv.GetName());
+                }
+                return mv.energyInterface?.sources?.OrderBy(x => x.charge)?.FirstOrDefault();
             }
-            if (mv.energyInterface != null && mv.energyInterface.sources != null && mv.energyInterface.sources.Length != 0)
-            {
-                return mv.energyInterface.sources.OrderBy(x => x.charge).First();
-            }
-            throw SessionManager.Fatal($"GetLeastChargedModVehicleEnergyMixinIfNull failed to get EnergyMixin for ModVehicle: {mv.GetName()}");
+            return em;
         }
         public static void TeleportPlayer(Vector3 destination)
         {
