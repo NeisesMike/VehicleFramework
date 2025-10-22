@@ -47,7 +47,6 @@ namespace VehicleFramework
             gameObject.AddComponent<HeadLightsController>();
             gameObject.AddComponent<VolumetricLightController>();
 
-            gameObject.EnsureComponent<AutoPilot.AutoPilot>();
             gameObject.EnsureComponent<AutoPilotVoice>();
             gameObject.EnsureComponent<AutoPilotOxygen>();
             gameObject.EnsureComponent<AutoPilotSignals>();

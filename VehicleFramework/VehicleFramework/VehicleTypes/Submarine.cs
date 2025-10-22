@@ -46,6 +46,7 @@ namespace VehicleFramework.VehicleTypes
         public override void Awake()
         {
             base.Awake();
+            gameObject.EnsureComponent<AutoPilot.AutoPilot>();
             gameObject.AddComponent<FloodLightsController>();
             gameObject.AddComponent<InteriorLightsController>();
             if (this is Interfaces.INavigationLights)
