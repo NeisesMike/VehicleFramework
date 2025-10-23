@@ -48,7 +48,6 @@ namespace VehicleFramework
         public virtual Color ConstructionGhostColor { get; set; } = Color.black;
         public virtual Color ConstructionWireframeColor { get; set; } = Color.black;
         public virtual bool AutoApplyShaders { get; set; } = true;
-        public virtual List<TMPro.TextMeshProUGUI>? SubNameDecals => null;
         public virtual Quaternion CyclopsDockRotation => Quaternion.identity;
         public virtual Dictionary<TechType, int>? Recipe => new() { { TechType.Titanium, 1 } };
         public virtual string Description => "A vehicle";

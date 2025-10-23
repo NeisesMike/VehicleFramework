@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System.Linq;
 using UnityEngine;
 
 // PURPOSE: Create ModVehicle API for changing colors via normal routines (eg MoonPool terminal)
@@ -15,15 +14,9 @@ namespace VehicleFramework.Patches
         public static void SubNameSetNamePostfix(SubName __instance)
         {
             ModVehicle mv = __instance.GetComponent<ModVehicle>();
-            if(mv == null)
-            {
-                return;
-            }
-            if (mv.SubNameDecals != null)
-            {
-                SetSubNameDecals(mv);
-            }
+            mv?.PaintName(mv.subName.GetName());
         }
+        /*
         private static void SetSubNameDecals(ModVehicle mv)
         {
             if (mv.SubNameDecals == null)
@@ -34,20 +27,10 @@ namespace VehicleFramework.Patches
             {
                 tmprougui.font = Nautilus.Utility.FontUtils.Aller_Rg;
                 tmprougui.text = mv.subName.GetName();
+                tmprougui.color = color;
             }
         }
-
-        private static void SetSubNameDecalsWithColor(ModVehicle mv, Vector3 hsb, Color color)
-        {
-            if (mv == null)
-            {
-                return;
-            }
-            SetSubNameDecals(mv);
-            mv.SubNameDecals?.Where(x => x != null).ForEach(x => x.color = color);
-            Logger.DebugLog($"hsb is {hsb}");
-        }
-
+        */
         [HarmonyPostfix]
         [HarmonyPatch(nameof(SubName.SetColor))]
         public static void SubNameSetColorPostfix(SubName __instance, int index, Vector3 hsb, Color color)
@@ -63,10 +46,7 @@ namespace VehicleFramework.Patches
             }
             else if (index == 1)
             {
-                if (mv.SubNameDecals != null)
-                {
-                    SetSubNameDecalsWithColor(mv, hsb, color);
-                }
+                mv.PaintNameColor(mv.subName.GetName(), hsb, color);
             }
             else if (index == 2)
             {

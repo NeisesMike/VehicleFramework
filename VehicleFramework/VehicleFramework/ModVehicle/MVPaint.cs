@@ -46,6 +46,12 @@ namespace VehicleFramework
         protected internal virtual void PaintVehicleDefaultStyle()
         {
         }
+        protected internal virtual void PaintName(string name)
+        {
+        }
+        protected internal virtual void PaintNameColor(string name, Vector3 hsb, Color color)
+        {
+        }
         #endregion
 
         #region public_methods
