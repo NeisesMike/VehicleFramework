@@ -32,6 +32,15 @@ namespace VehicleFramework
         private bool IsDefaultStyle = false;
         #endregion
 
+        #region readonly_properties
+        // These properties are read-only, but can be accessed to get the current colors.
+        public Color BaseColor => baseColor;
+        public Color InteriorColor => interiorColor;
+        public Color StripeColor => stripeColor;
+        public string VehicleName => vehicleName;
+        public Color NameColor => nameColor;
+        #endregion
+
         #region virtual_methods
         // These methods can be overridden by the vehicle class to customize painting behavior.
         protected internal virtual void PaintBaseColor(Vector3 hsb, Color color)
@@ -88,8 +97,8 @@ namespace VehicleFramework
         }
         public void SetVehicleDefaultStyle(string name)
         {
-            SetVehicleDefaultStyle();
             SetName(name);
+            SetVehicleDefaultStyle();
         }
         #endregion
 
