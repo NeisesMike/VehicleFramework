@@ -76,6 +76,11 @@ namespace VehicleFramework
                     drone.BeginControlling();
                 }
             }
+            if (bool.Parse(simpleData[defaultColorName]))
+            {
+                SetVehicleDefaultStyle(simpleData[mySubName]);
+                yield break;
+            }
             SetName(simpleData[mySubName]);
             if (ColorUtility.TryParseHtmlString(simpleData[baseColorName], out Color iBaseColor))
             {
@@ -92,10 +97,6 @@ namespace VehicleFramework
             if (ColorUtility.TryParseHtmlString(simpleData[stripeColorName], out Color iStripeColor))
             {
                 SetStripeColor(iStripeColor);
-            }
-            if (bool.Parse(simpleData[defaultColorName]))
-            {
-                SetVehicleDefaultStyle(simpleData[mySubName]);
             }
         }
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
