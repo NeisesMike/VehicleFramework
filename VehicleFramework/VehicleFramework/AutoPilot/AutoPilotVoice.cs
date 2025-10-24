@@ -240,75 +240,75 @@ namespace VehicleFramework.AutoPilot
             }
             if(clip == voice.BatteriesDepleted)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {BatteriesDepleted}");
+                Logger.PDANote($"{MV.HullName}: {BatteriesDepleted}");
             }
             else if (clip == voice.BatteriesNearlyEmpty)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {BatteriesNearlyEmpty}");
+                Logger.PDANote($"{MV.HullName}: {BatteriesNearlyEmpty}");
             }
             else if (clip == voice.PowerLow)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {PowerLow}");
+                Logger.PDANote($"{MV.HullName}: {PowerLow}");
             }
             else if (clip == voice.EnginePoweringDown)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {EnginePoweringDown}");
+                Logger.PDANote($"{MV.HullName}: {EnginePoweringDown}");
             }
             else if (clip == voice.EnginePoweringUp)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {EnginePoweringUp}");
+                Logger.PDANote($"{MV.HullName}: {EnginePoweringUp}");
             }
             else if (clip == voice.Goodbye)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {Goodbye}");
+                Logger.PDANote($"{MV.HullName}: {Goodbye}");
             }
             else if (clip == voice.HullFailureImminent)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {HullFailureImminent}");
+                Logger.PDANote($"{MV.HullName}: {HullFailureImminent}");
             }
             else if (clip == voice.HullIntegrityCritical)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {HullIntegrityCritical}");
+                Logger.PDANote($"{MV.HullName}: {HullIntegrityCritical}");
             }
             else if (clip == voice.HullIntegrityLow)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {HullIntegrityLow}");
+                Logger.PDANote($"{MV.HullName}: {HullIntegrityLow}");
             }
             else if (clip == voice.Leveling)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {Leveling}");
+                Logger.PDANote($"{MV.HullName}: {Leveling}");
             }
             else if (clip == voice.WelcomeAboard)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {WelcomeAboard}");
+                Logger.PDANote($"{MV.HullName}: {WelcomeAboard}");
             }
             else if (clip == voice.OxygenProductionOffline)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {OxygenProductionOffline}");
+                Logger.PDANote($"{MV.HullName}: {OxygenProductionOffline}");
             }
             else if (clip == voice.WelcomeAboardAllSystemsOnline)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {WelcomeAboardAllSystemsOnline}");
+                Logger.PDANote($"{MV.HullName}: {WelcomeAboardAllSystemsOnline}");
             }
             else if (clip == voice.MaximumDepthReached)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {MaximumDepthReached}");
+                Logger.PDANote($"{MV.HullName}: {MaximumDepthReached}");
             }
             else if (clip == voice.PassingSafeDepth)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {PassingSafeDepth}");
+                Logger.PDANote($"{MV.HullName}: {PassingSafeDepth}");
             }
             else if (clip == voice.LeviathanDetected)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {LeviathanDetected}");
+                Logger.PDANote($"{MV.HullName}: {LeviathanDetected}");
             }
             else if (clip == voice.UhOh)
             {
-                Logger.PDANote($"{MV.subName.hullName.text}: {UhOh}");
+                Logger.PDANote($"{MV.HullName}: {UhOh}");
             }
             else
             {
-                Logger.Warn($"Vehicle {MV.subName.hullName.text} with voice {name} did not recognize clip {clip.name}");
+                Logger.Warn($"Vehicle {MV.HullName} with voice {name} did not recognize clip {clip.name}");
             }
         }
         #endregion

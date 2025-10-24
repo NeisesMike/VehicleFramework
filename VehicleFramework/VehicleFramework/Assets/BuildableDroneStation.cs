@@ -289,7 +289,7 @@ namespace VehicleFramework.Assets
         }
         public string BuildScreenText()
         {
-            string ret = $"{Language.main.Get("VFDroneHint1")}: {((PairedDrone != null) ? PairedDrone.GetName() : $"[{Language.main.Get("VFDroneStationHint1")}]")}\n";
+            string ret = $"{Language.main.Get("VFDroneHint1")}: {((PairedDrone != null) ? PairedDrone.HullName : $"[{Language.main.Get("VFDroneStationHint1")}]")}\n";
             if (PairedDrone == null)
             {
                 return ret;
@@ -324,7 +324,7 @@ namespace VehicleFramework.Assets
                 drone.GetComponent<PingInstance>().enabled = false;
             }
             Admin.SessionManager.StartCoroutine(PingPingForAWhile());
-            string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.subName.hullName.text}\n";
+            string ret = $"{Language.main.Get("VFDroneHint1")}:  + {drone.HullName}\n";
             ret += $"{Language.main.Get("VFDroneHint2")}: {Mathf.CeilToInt(Vector3.Distance(drone.transform.position, transform.position))}\n";
             if(drone.IsScuttled)
             {

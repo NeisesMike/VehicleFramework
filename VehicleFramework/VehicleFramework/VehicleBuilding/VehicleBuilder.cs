@@ -614,7 +614,7 @@ namespace VehicleFramework.VehicleBuilding
         public static void SetupConstructionObstacle(ModVehicle mv)
         {
             var co = mv.gameObject.EnsureComponent<ConstructionObstacle>();
-            co.reason = mv.name + " is in the way.";
+            co.reason = $"{mv.HullName} is in the way.";
         }
         public static void SetupSoundOnDamage(ModVehicle mv)
         {

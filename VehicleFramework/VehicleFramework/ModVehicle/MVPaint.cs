@@ -37,8 +37,8 @@ namespace VehicleFramework
         public Color BaseColor => baseColor;
         public Color InteriorColor => interiorColor;
         public Color StripeColor => stripeColor;
-        public string VehicleName => vehicleName;
         public Color NameColor => nameColor;
+        public string HullName => subName.GetName();
         #endregion
 
         #region virtual_methods

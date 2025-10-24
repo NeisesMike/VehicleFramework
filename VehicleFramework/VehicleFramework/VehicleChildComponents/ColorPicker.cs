@@ -167,7 +167,7 @@ namespace VehicleFramework.VehicleChildComponents
         }
         private void OnNameChange(string e) // why is this independent from OnNameChange?
         {
-            if (!string.Equals(MV.vehicleName, e))
+            if (!string.Equals(MV.HullName, e))
             {
                 MV.SetName(e);
             }
@@ -191,7 +191,7 @@ namespace VehicleFramework.VehicleChildComponents
             }
             if (tempNameLabel.Item1)
             {
-                MV.SetName(MV.GetName(), tempNameLabel.Item2);
+                MV.SetName(MV.HullName, tempNameLabel.Item2);
                 tempNameLabel = (false, Color.white);
             }
         }
@@ -208,8 +208,8 @@ namespace VehicleFramework.VehicleChildComponents
             var active = transform.Find("EditScreen/Active");
             if (active)
             {
-                active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = MV.GetName();
-                active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = MV.GetName();
+                active.transform.Find("InputField").GetComponent<uGUI_InputField>().text = MV.HullName;
+                active.transform.Find("InputField/Text").GetComponent<TMPro.TextMeshProUGUI>().text = MV.HullName;
             }
         }
 

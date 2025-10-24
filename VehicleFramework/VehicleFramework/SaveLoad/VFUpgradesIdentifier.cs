@@ -59,7 +59,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 catch (Exception e)
                 {
-                    Logger.LogException($"Failed to load upgrade {upgrade.Value} in slot {upgrade.Key} for {MV.name} : {MV.subName.hullName.text}", e);
+                    Logger.LogException($"Failed to load upgrade {upgrade.Value} in slot {upgrade.Key} for {MV.name} : {MV.HullName}", e);
                     continue;
                 }
             }

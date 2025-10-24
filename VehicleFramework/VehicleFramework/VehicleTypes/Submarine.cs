@@ -196,7 +196,7 @@ namespace VehicleFramework.VehicleTypes
         public override void SubConstructionBeginning()
         {
             base.SubConstructionBeginning();
-            SetVehicleDefaultStyle(GetName());
+            SetVehicleDefaultStyle(HullName);
         }
         public override void SubConstructionComplete() // deal with this reference to color picker
         {
@@ -206,7 +206,7 @@ namespace VehicleFramework.VehicleTypes
                 Admin.SessionManager.StartCoroutine(TrySpawnFabricator());
             }
             base.SubConstructionComplete();
-            SetName(GetName());
+            SetName(HullName);
         }
         public override void OnKill()
         {

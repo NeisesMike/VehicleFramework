@@ -14,7 +14,7 @@ namespace VehicleFramework.Patches
         public static void SubNameSetNamePostfix(SubName __instance)
         {
             ModVehicle mv = __instance.GetComponent<ModVehicle>();
-            mv?.PaintName(mv.subName.GetName());
+            mv?.PaintName(mv.HullName);
         }
         /*
         private static void SetSubNameDecals(ModVehicle mv)
@@ -46,7 +46,7 @@ namespace VehicleFramework.Patches
             }
             else if (index == 1)
             {
-                mv.PaintNameColor(mv.subName.GetName(), hsb, color);
+                mv.PaintNameColor(mv.HullName, hsb, color);
             }
             else if (index == 2)
             {

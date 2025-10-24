@@ -57,7 +57,7 @@ namespace VehicleFramework.Patches
                 }
                 else
                 {
-                    HandReticle.main.SetText(HandReticle.TextType.Hand, mv.GetName(), true, GameInput.Button.None);
+                    HandReticle.main.SetText(HandReticle.TextType.Hand, mv.HullName, true, GameInput.Button.None);
                 }
                 return false;
             }

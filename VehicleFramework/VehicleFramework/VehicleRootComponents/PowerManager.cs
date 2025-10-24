@@ -53,7 +53,7 @@ namespace VehicleFramework.VehicleComponents
             }
             if (EI == null)
             {
-                throw SessionManager.Fatal($"{MV.GetName()}.TrySpendEnergy(): EnergyInterface is null!");
+                throw SessionManager.Fatal($"{MV.HullName}.TrySpendEnergy(): EnergyInterface is null!");
             }
         }
 

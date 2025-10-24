@@ -65,12 +65,8 @@ namespace VehicleFramework.Patches
             ModVehicle? mv = __instance.dockingBay.GetDockedVehicle() as ModVehicle;
             if (mv != null)
             {
-                string text = mv.subName.hullName.text;
-                if((mv as Drone) != null)
-                {
-                    text = mv.subName.hullName.text;
-                }
-                else if(mv is Submarine sub && sub.Hatches.Count > 0)
+                string text = mv.HullName;
+                if(mv is Submarine sub && sub.Hatches.Count > 0)
                 {
                     text = sub.Hatches.First().Hatch.GetComponent<VehicleChildComponents.VehicleHatch>().EnterHint;
                 }

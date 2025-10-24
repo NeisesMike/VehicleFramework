@@ -39,7 +39,7 @@ namespace VehicleFramework
             {
                 { isControlling, IsPlayerControlling() ? bool.TrueString : bool.FalseString },
                 { isInside, IsUnderCommand ? bool.TrueString : bool.FalseString },
-                { mySubName, subName.hullName.text },
+                { mySubName, HullName },
                 { baseColorName, $"#{ColorUtility.ToHtmlStringRGB(baseColor)}" },
                 { interiorColorName, $"#{ColorUtility.ToHtmlStringRGB(interiorColor)}" },
                 { stripeColorName, $"#{ColorUtility.ToHtmlStringRGB(stripeColor)}" },

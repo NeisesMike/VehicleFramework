@@ -14,6 +14,7 @@ using VehicleFramework.Interfaces;
 using VehicleFramework.Extensions;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.AutoPilot;
+using VehicleFramework.SaveLoad;
 
 namespace VehicleFramework
 {
@@ -791,7 +792,7 @@ namespace VehicleFramework
             {
                 if (InnateStorages == null)
                 {
-                    throw SessionManager.Fatal($"ModVehicle {name} failed to get InnateStorages for slotID: {slotID} for TechType: {techType.AsString()}");
+                    throw SessionManager.Fatal($"ModVehicle {HullName} failed to get InnateStorages for slotID: {slotID} for TechType: {techType.AsString()}");
                 }
                 InnateStorageContainer vsc;
                 if (0 <= slotID && slotID < InnateStorages.Count)
@@ -807,7 +808,7 @@ namespace VehicleFramework
             }
             else if (techType == TechType.VehicleStorageModule)
             {
-                return GetSeamothStorageContainer(slotID)?.container ?? throw SessionManager.Fatal($"ModVehicle {name} failed to get SeamothStorageContainer for slotID: {slotID} for TechType: {techType.AsString()}");
+                return GetSeamothStorageContainer(slotID)?.container ?? throw SessionManager.Fatal($"ModVehicle {HullName} failed to get SeamothStorageContainer for slotID: {slotID} for TechType: {techType.AsString()}");
             }
             else
             {
@@ -1191,7 +1192,7 @@ namespace VehicleFramework
                 EnergyMixin? leastPoweredMixin = mv.energyInterface?.sources?.OrderBy(x => x.charge)?.FirstOrDefault();
                 if(leastPoweredMixin == null)
                 {
-                    Logger.Warn("In ModVehicle.GetLeastChargedModVehicleEnergyMixinIfNull, failed to get least powered EnergyMixin for ModVehicle: " + mv.GetName());
+                    Logger.Warn("In ModVehicle.GetLeastChargedModVehicleEnergyMixinIfNull, failed to get least powered EnergyMixin for ModVehicle: " + mv.HullName);
                 }
                 return mv.energyInterface?.sources?.OrderBy(x => x.charge)?.FirstOrDefault();
             }
