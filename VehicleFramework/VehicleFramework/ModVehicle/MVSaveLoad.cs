@@ -121,31 +121,37 @@ namespace VehicleFramework
         protected virtual void OnGameSaved() { }
         protected virtual void OnGameLoaded() { }
 
+        #region saveloadmethods
+        // The following methods handle saving/loading innate storage and battery data for the vehicle.
+        // They are here in ModVehicle so that they can be saved/loaded all at once.
+        // They *could* be saved independently, in different files, but that would cause very long names that can cause errors.
+        // Not to mention that fewer files is generally better for performance.
+
         private const string StorageSaveName = "Storage";
         private Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>>? loadedStorageData = null;
         private readonly Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>> innateStorageSaveData = new();
-        internal void SaveInnateStorage(string path, List<Tuple<techTypeString, float, techTypeString>> storageData)
+        internal void SaveInnateStorage(string childPath, List<Tuple<techTypeString, float, techTypeString>> storageData)
         {
             if(InnateStorages == null)
             {
                 return;
             }
-            innateStorageSaveData.Add(path, storageData);
+            innateStorageSaveData.Add(childPath, storageData);
             if(innateStorageSaveData.Count == InnateStorages.Count)
             {
-                // write it out
+                // write it out once all innate storages have saved their data
                 SaveLoad.JsonInterface.Write(this, StorageSaveName, innateStorageSaveData);
                 innateStorageSaveData.Clear();
             }
         }
-        internal List<Tuple<techTypeString, float, techTypeString>>? ReadInnateStorage(string path)
+        internal List<Tuple<techTypeString, float, techTypeString>>? ReadInnateStorage(string childPath)
         {
             loadedStorageData ??= SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>>>(this, StorageSaveName);
             if (loadedStorageData == null)
             {
                 return default;
             }
-            if (loadedStorageData.TryGetValue(path, out List<Tuple<techTypeString, float, techTypeString>>? value))
+            if (loadedStorageData.TryGetValue(childPath, out List<Tuple<techTypeString, float, techTypeString>>? value))
             {
                 return value;
             }
@@ -158,12 +164,12 @@ namespace VehicleFramework
         private const string BatterySaveName = "Batteries";
         private Dictionary<string, Tuple<techTypeString, float>>? loadedBatteryData = null;
         private readonly Dictionary<string, Tuple<techTypeString, float>> batterySaveData = new();
-        internal void SaveBatteryData(string path, Tuple<techTypeString, float> batteryData)
+        internal void SaveBatteryData(string childPath, Tuple<techTypeString, float> batteryData)
         {
             int batteryCount = 0;
             if (Batteries != null) batteryCount += Batteries.Count;
 
-            batterySaveData.Add(path, batteryData);
+            batterySaveData.Add(childPath, batteryData);
             if (batterySaveData.Count == batteryCount)
             {
                 // write it out
@@ -171,14 +177,14 @@ namespace VehicleFramework
                 batterySaveData.Clear();
             }
         }
-        internal Tuple<techTypeString, float>? ReadBatteryData(string path)
+        internal Tuple<techTypeString, float>? ReadBatteryData(string childPath)
         {
             loadedBatteryData ??= SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<techTypeString, float>>>(this, BatterySaveName);
             if (loadedBatteryData == null)
             {
                 return default;
             }
-            if (loadedBatteryData.TryGetValue(path, out Tuple<techTypeString, float>? value))
+            if (loadedBatteryData.TryGetValue(childPath, out Tuple<techTypeString, float>? value))
             {
                 return value;
             }
@@ -187,5 +193,6 @@ namespace VehicleFramework
                 return default;
             }
         }
+        #endregion
     }
 }

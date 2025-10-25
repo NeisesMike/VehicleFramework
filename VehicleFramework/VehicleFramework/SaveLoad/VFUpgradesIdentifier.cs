@@ -11,9 +11,7 @@ namespace VehicleFramework.SaveLoad
     {
         internal bool isFinished = false;
         internal ModVehicle MV => GetComponentInParent<ModVehicle>();
-        const string saveFileNameSuffix = "upgrades";
-        private string SaveFileName => SaveLoadUtils.GetSaveFileName(MV.transform, transform, saveFileNameSuffix);
-        private const string NewSaveFileName = "Upgrades";
+        private const string SaveFileTitle = "Upgrades";
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
             Dictionary<string, InventoryItem> upgradeList = MV.modules.equipment;
@@ -23,7 +21,7 @@ namespace VehicleFramework.SaveLoad
             }
             Dictionary<string, techTypeString> result = new();
             upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType.AsString() ?? TechType.None.AsString()));
-            SaveLoad.JsonInterface.Write<Dictionary<string, techTypeString>>(MV, NewSaveFileName, result);
+            SaveLoad.JsonInterface.Write<Dictionary<string, techTypeString>>(MV, SaveFileTitle, result);
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
@@ -34,15 +32,11 @@ namespace VehicleFramework.SaveLoad
             yield return new WaitUntil(() => MV != null);
             yield return new WaitUntil(() => MV.upgradesInput.equipment != null);
             MV.UnlockDefaultModuleSlots();
-            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, techTypeString>>(MV, NewSaveFileName);
+            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, techTypeString>>(MV, SaveFileTitle);
             if(theseUpgrades == default)
             {
-                theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, techTypeString>>(MV, SaveFileName);
-                if (theseUpgrades == default)
-                {
-                    isFinished = true;
-                    yield break;
-                }
+                isFinished = true;
+                yield break;
             }
             foreach (var upgrade in theseUpgrades.Where(x => !string.Equals(x.Value, TechType.None.AsString())))
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using techTypeString = System.String;
 
@@ -9,8 +8,7 @@ namespace VehicleFramework.SaveLoad
     internal class VFBatteryIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
         internal ModVehicle MV => GetComponentInParent<ModVehicle>();
-        const string saveFileNameSuffix = "battery";
-        private string SaveFileName => SaveLoadUtils.GetSaveFileName(MV.transform, transform, saveFileNameSuffix);
+        private string ChildPath => SaveLoadUtils.GetSaveFileName(MV.transform, transform, "battery");
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
@@ -18,14 +16,14 @@ namespace VehicleFramework.SaveLoad
             if (thisEM.batterySlot.storedItem == null)
             {
                 Tuple<techTypeString, float> emptyBattery = new(TechType.None.AsString(), 0);
-                MV.SaveBatteryData(SaveFileName, emptyBattery);
+                MV.SaveBatteryData(ChildPath, emptyBattery);
             }
             else
             {
                 TechType thisTT = thisEM.batterySlot.storedItem.item.GetTechType();
                 float thisEnergy = thisEM.battery.charge;
                 Tuple<techTypeString, float> thisBattery = new(thisTT.AsString(), thisEnergy);
-                MV.SaveBatteryData(SaveFileName, thisBattery);
+                MV.SaveBatteryData(ChildPath, thisBattery);
             }
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
@@ -35,10 +33,10 @@ namespace VehicleFramework.SaveLoad
         private IEnumerator LoadBattery()
         {
             yield return new WaitUntil(() => MV != null);
-            var thisBattery = MV.ReadBatteryData(SaveFileName);
+            var thisBattery = MV.ReadBatteryData(ChildPath);
             if (thisBattery == default)
             {
-                thisBattery = SaveLoad.JsonInterface.Read<Tuple<techTypeString, float>>(MV, SaveFileName);
+                thisBattery = SaveLoad.JsonInterface.Read<Tuple<techTypeString, float>>(MV, ChildPath);
             }
             if (thisBattery == default || string.Equals(thisBattery.Item1, TechType.None.AsString()))
             {

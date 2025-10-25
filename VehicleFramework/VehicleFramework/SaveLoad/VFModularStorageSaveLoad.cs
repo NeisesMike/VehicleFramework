@@ -9,14 +9,9 @@ namespace VehicleFramework.SaveLoad
 {
     internal static class VFModularStorageSaveLoad
     {
-        const string saveFileNameSuffix = "modularstorage";
         internal static string GetSaveFileName(string thisSlotName)
         {
-            return $"{thisSlotName}-{saveFileNameSuffix}";
-        }
-        internal static string GetNewSaveFileName(string thisSlotName)
-        {
-            return thisSlotName["Vehicle".Length..];
+            return thisSlotName["Vehicle".Length..]; // Remove the "Vehicle" prefix from the slot name
         }
         internal static void SerializeAllModularStorage(ModVehicle mv)
         {
@@ -48,7 +43,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 result.Add(new(thisItemType.AsString(), batteryChargeIfApplicable, innerBatteryTT.AsString()));
             }
-            JsonInterface.Write(mv, GetNewSaveFileName(slotID), result);
+            JsonInterface.Write(mv, GetSaveFileName(slotID), result);
         }
         internal static IEnumerator DeserializeAllModularStorage(ModVehicle mv)
         {
@@ -73,14 +68,10 @@ namespace VehicleFramework.SaveLoad
         }
         private static IEnumerator LoadThisModularStorage(ModVehicle mv, ItemsContainer container, string slotID)
         {
-            var thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<techTypeString, float, techTypeString>>>(mv, GetNewSaveFileName(slotID));
+            var thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<techTypeString, float, techTypeString>>>(mv, GetSaveFileName(slotID));
             if (thisStorage == default)
             {
-                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<techTypeString, float, techTypeString>>>(mv, GetSaveFileName(slotID));
-                if (thisStorage == default)
-                {
-                    yield break;
-                }
+                yield break;
             }
             TaskResult<GameObject> result = new();
             foreach (var item in thisStorage)

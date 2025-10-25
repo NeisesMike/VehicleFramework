@@ -11,8 +11,7 @@ namespace VehicleFramework.SaveLoad
     internal class VFInnateStorageIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
         internal ModVehicle MV => GetComponentInParent<ModVehicle>();
-        const string saveFileNameSuffix = "innatestorage";
-        private string SaveFileName => SaveLoadUtils.GetSaveFileName(MV.transform, transform, saveFileNameSuffix);
+        private string ChildPath => SaveLoadUtils.GetSaveFileName(MV.transform, transform, "innatestorage");
 
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
@@ -31,7 +30,7 @@ namespace VehicleFramework.SaveLoad
                 }
                 result.Add(new(thisItemType.AsString(), batteryChargeIfApplicable, innerBatteryTT.AsString()));
             }
-            MV.SaveInnateStorage(SaveFileName, result);
+            MV.SaveInnateStorage(ChildPath, result);
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
@@ -41,14 +40,10 @@ namespace VehicleFramework.SaveLoad
         {
             yield return new WaitUntil(() => MV != null);
 
-            var thisStorage = MV.ReadInnateStorage(SaveFileName);
+            var thisStorage = MV.ReadInnateStorage(ChildPath);
             if (thisStorage == default)
             {
-                thisStorage = SaveLoad.JsonInterface.Read<List<Tuple<techTypeString, float, techTypeString>>>(MV, SaveFileName);
-                if (thisStorage == default)
-                {
-                    yield break;
-                }
+                yield break;
             }
 
             TaskResult<GameObject> result = new();
@@ -83,7 +78,5 @@ namespace VehicleFramework.SaveLoad
                 }
             }
         }
-
-        
     }
 }
