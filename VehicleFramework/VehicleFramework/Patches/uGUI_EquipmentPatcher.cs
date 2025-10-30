@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using HarmonyLib;
+using UnityEngine;
 using VehicleFramework.VehicleBuilding;
 
 // PURPOSE: PDA displays ModVehicle upgrades correctly
@@ -51,6 +53,33 @@ namespace VehicleFramework.Patches
         {
             ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
             ___allSlots = ModuleBuilder.vehicleAllSlots;
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(uGUI_Equipment.Init))]
+        public static void OnDragHoverExitPatch(uGUI_Equipment __instance, Equipment equipment)
+        {
+            equipment.owner.GetComponent<ModVehicle>()?.UnlockDefaultModuleSlots();
+            // The following was an attempt to fix the "slots don't appear unless the PDA has be opened once already" issue. Unsuccessful.
+            /*
+            ModVehicle? mv = equipment.owner.GetComponent<ModVehicle>();
+            if (mv == null)
+            {
+                return;
+            }
+            if (ModuleBuilder.slotExtenderHasGreenLight)
+            {
+                mv.UnlockDefaultModuleSlots();
+            }
+            else
+            {
+                IEnumerator UnlockDefaultSlotsASAP()
+                {
+                    yield return new WaitUntil(() => ModuleBuilder.slotExtenderHasGreenLight);
+                    __instance.Init(equipment);
+                }
+                Admin.SessionManager.StartCoroutine(UnlockDefaultSlotsASAP());
+            }
+            */
         }
     }
 }
