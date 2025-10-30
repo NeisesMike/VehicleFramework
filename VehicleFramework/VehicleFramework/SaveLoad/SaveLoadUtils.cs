@@ -52,7 +52,7 @@ namespace VehicleFramework.SaveLoad
             }
             return result;
         }
-        internal static string GetSaveFileName(Transform root, Transform target, string fileSuffix)
+        internal static string GetUniqueNameForChild(Transform root, Transform target, string fileSuffix)
         {
             return $"{GetTransformPath(root, target)}-{fileSuffix}";
         }

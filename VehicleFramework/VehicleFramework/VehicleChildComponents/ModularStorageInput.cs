@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+using VehicleFramework.SaveLoad;
 
 namespace VehicleFramework.StorageComponents
 {
 	public class ModularStorageInput : StorageInput
 	{
+		public override void Awake()
+		{
+			base.Awake();
+			gameObject.EnsureComponent<VFStorageIdentifier>();
+		}
 		public override void OpenFromExternal()
-        {
-            if (mv == null)
-            {
-                throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
-            }
-            ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
+		{
+			if (mv == null)
+			{
+				throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
+			}
+			ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
 			if (storageInSlot != null)
 			{
 				PDA pda = Player.main.GetPDA();
@@ -24,12 +26,12 @@ namespace VehicleFramework.StorageComponents
 			}
 		}
 		protected override void OpenPDA()
-        {
-            if (mv == null)
-            {
-                throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
-            }
-            ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
+		{
+			if (mv == null)
+			{
+				throw Admin.SessionManager.Fatal($"{transform.name} has no ModVehicle component! Please set the ModVehicle before calling OpenPDA.");
+			}
+			ItemsContainer? storageInSlot = mv.ModGetStorageInSlot(slotID, TechType.VehicleStorageModule);
 			storageInSlot ??= gameObject.GetComponent<SeamothStorageContainer>().container;
 
 			if (storageInSlot != null)

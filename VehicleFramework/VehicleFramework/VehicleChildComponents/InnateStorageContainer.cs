@@ -88,7 +88,7 @@ namespace VehicleFramework.StorageComponents
 			vs.Container.SetActive(true);
 
 			SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vs.Container.transform);
-			vs.Container.EnsureComponent<SaveLoad.VFInnateStorageIdentifier>();
+			vs.Container.EnsureComponent<SaveLoad.VFStorageIdentifier>();
 		}
 
 		public string storageLabel = "StorageLabel";

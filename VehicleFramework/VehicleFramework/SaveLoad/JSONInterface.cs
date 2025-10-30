@@ -121,5 +121,18 @@ namespace VehicleFramework.SaveLoad
             }
             return Path.Combine(configFolderPath, $"{innerName}.json");
         }
+        internal static bool IsJsonSerializable(object obj)
+        {
+            try
+            {
+                JsonConvert.SerializeObject(obj);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
 }

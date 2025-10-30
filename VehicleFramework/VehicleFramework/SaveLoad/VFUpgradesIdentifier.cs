@@ -3,42 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VehicleFramework.Interfaces;
 using techTypeString = System.String;
+using upgradesData = System.Collections.Generic.Dictionary<System.String, System.String>;
+using Newtonsoft.Json.Linq;
 
 namespace VehicleFramework.SaveLoad
 {
-    internal class VFUpgradesIdentifier : MonoBehaviour, IProtoTreeEventListener
+    internal class VFUpgradesIdentifier : MonoBehaviour, ISaveLoadListener
     {
         internal bool isFinished = false;
         internal ModVehicle MV => GetComponentInParent<ModVehicle>();
-        private const string SaveFileTitle = "Upgrades";
-        void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
+        bool ISaveLoadListener.IsReady()
         {
-            Dictionary<string, InventoryItem> upgradeList = MV.modules.equipment;
-            if (upgradeList == null)
-            {
-                return;
-            }
-            Dictionary<string, techTypeString> result = new();
-            upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType.AsString() ?? TechType.None.AsString()));
-            SaveLoad.JsonInterface.Write<Dictionary<string, techTypeString>>(MV, SaveFileTitle, result);
+            return MV != null;
         }
-        void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
+        private IEnumerator LoadUpgrades(upgradesData datum)
         {
-            Admin.SessionManager.StartCoroutine(LoadUpgrades());
-        }
-        private IEnumerator LoadUpgrades()
-        {
-            yield return new WaitUntil(() => MV != null);
-            yield return new WaitUntil(() => MV.upgradesInput.equipment != null);
-            MV.UnlockDefaultModuleSlots();
-            var theseUpgrades = SaveLoad.JsonInterface.Read<Dictionary<string, techTypeString>>(MV, SaveFileTitle);
-            if(theseUpgrades == default)
+            if (datum == default)
             {
                 isFinished = true;
                 yield break;
             }
-            foreach (var upgrade in theseUpgrades.Where(x => !string.Equals(x.Value, TechType.None.AsString())))
+            yield return new WaitUntil(() => MV != null);
+            yield return new WaitUntil(() => MV.upgradesInput.equipment != null);
+            MV.UnlockDefaultModuleSlots();
+            foreach (var upgrade in datum.Where(x => !string.Equals(x.Value, TechType.None.AsString())))
             {
                 TaskResult<GameObject> result = new();
                 TechTypeExtensions.FromString(upgrade.Value, out TechType techType, true);
@@ -58,6 +48,29 @@ namespace VehicleFramework.SaveLoad
                 }
             }
             isFinished = true;
+        }
+        string ISaveLoadListener.SaveDataKey => "CoreUpgrades";
+        object? ISaveLoadListener.SaveData()
+        {
+            Dictionary<string, InventoryItem> upgradeList = MV.modules.equipment;
+            if (upgradeList == null)
+            {
+                return null;
+            }
+            upgradesData result = new();
+            upgradeList.ForEach(x => result.Add(x.Key, x.Value?.techType.AsString() ?? TechType.None.AsString()));
+            return result;
+        }
+        void ISaveLoadListener.LoadData(JToken? data)
+        {
+            if (data == null) return;
+            if (data is not JObject _)
+                throw new Newtonsoft.Json.JsonException("Expected a JSON object for Dictionary<string,string>.");
+            upgradesData? loadData = data.ToObject<upgradesData>();
+            if (loadData != null)
+            {
+                Admin.SessionManager.StartCoroutine(LoadUpgrades(loadData));
+            }
         }
     }
 }

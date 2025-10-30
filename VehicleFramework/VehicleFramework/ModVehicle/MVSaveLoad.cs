@@ -14,6 +14,9 @@ using VehicleFramework.Interfaces;
 using VehicleFramework.Extensions;
 using VehicleFramework.VehicleTypes;
 using techTypeString = System.String;
+using VehicleFramework.SaveLoad;
+using System.Collections.ObjectModel;
+using Newtonsoft.Json.Linq;
 
 namespace VehicleFramework
 {
@@ -33,9 +36,9 @@ namespace VehicleFramework
         private const string nameColorName = "NameColor";
         private const string defaultColorName = "DefaultColor";
         private const string SimpleDataSaveFileName = "SimpleData";
-        private void SaveSimpleData()
+        internal Dictionary<string, string> SaveSimpleData()
         {
-            Dictionary<string, string> simpleData = new()
+            return new()
             {
                 { isControlling, IsPlayerControlling() ? bool.TrueString : bool.FalseString },
                 { isInside, IsUnderCommand ? bool.TrueString : bool.FalseString },
@@ -46,13 +49,10 @@ namespace VehicleFramework
                 { nameColorName, $"#{ColorUtility.ToHtmlStringRGB(nameColor)}" },
                 { defaultColorName, IsDefaultStyle ? bool.TrueString : bool.FalseString }
             };
-            SaveLoad.JsonInterface.Write(this, SimpleDataSaveFileName, simpleData);
         }
-        private IEnumerator LoadSimpleData()
+        internal IEnumerator LoadSimpleData(Dictionary<string, string> simpleData)
         {
-            yield return new WaitUntil(() => GameStateWatcher.IsWorldLoaded);
-            yield return new WaitUntil(() => isInitialized);
-            var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SimpleDataSaveFileName);
+            //var simpleData = SaveLoad.JsonInterface.Read<Dictionary<string, string>>(this, SimpleDataSaveFileName);
             if (simpleData == null || simpleData.Count == 0)
             {
                 yield break;
@@ -101,97 +101,86 @@ namespace VehicleFramework
         }
         void IProtoTreeEventListener.OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
+            gameObject.EnsureComponent<VFSimpleSaveLoad>();
             try
             {
-                SaveSimpleData();
-                SaveLoad.VFModularStorageSaveLoad.SerializeAllModularStorage(this);
+                SaveEverything();
             }
             catch(Exception e)
             {
-                Logger.LogException($"Failed to save simple data for ModVehicle {name}", e);
+                Logger.LogException($"Failed to save simple data for ModVehicle {HullName}", e);
             }
-            OnGameSaved();
+            try
+            {
+                OnGameSaved();
+            }
+            catch (Exception e)
+            {
+                Logger.LogException($"Failed OnGameSaved(); for ModVehicle {HullName}", e);
+            }
         }
         void IProtoTreeEventListener.OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
-            SessionManager.StartCoroutine(LoadSimpleData());
-            SessionManager.StartCoroutine(SaveLoad.VFModularStorageSaveLoad.DeserializeAllModularStorage(this));
-            OnGameLoaded();
+            gameObject.EnsureComponent<VFSimpleSaveLoad>();
+            try
+            {
+                LoadEverything();
+            }
+            catch(Exception e)
+            {
+                Logger.LogException($"Failed to load simple data for ModVehicle {HullName}", e);
+            }
+            try
+            {
+                OnGameLoaded();
+            }
+            catch (Exception e)
+            {
+                Logger.LogException($"Failed OnGameLoaded(); for ModVehicle {HullName}", e);
+            }
         }
         protected virtual void OnGameSaved() { }
         protected virtual void OnGameLoaded() { }
 
-        #region saveloadmethods
-        // The following methods handle saving/loading innate storage and battery data for the vehicle.
-        // They are here in ModVehicle so that they can be saved/loaded all at once.
-        // They *could* be saved independently, in different files, but that would cause very long names that can cause errors.
-        // Not to mention that fewer files is generally better for performance.
-
-        private const string StorageSaveName = "Storage";
-        private Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>>? loadedStorageData = null;
-        private readonly Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>> innateStorageSaveData = new();
-        internal void SaveInnateStorage(string childPath, List<Tuple<techTypeString, float, techTypeString>> storageData)
+        #region SaveLoad
+        private const string SaveFileSuffix = "data";
+        private void SaveEverything()
         {
-            if(InnateStorages == null)
+            Dictionary<string, object> PendingSaveData = new();
+            var saveLoadlisteners = GetComponentsInChildren<ISaveLoadListener>();
+            foreach (var saveLoader in saveLoadlisteners)
             {
-                return;
+                object? saveLoaderData = saveLoader.SaveData();
+                if (saveLoaderData == null) continue;
+                if (JsonInterface.IsJsonSerializable(saveLoaderData) == false)
+                {
+                    Logger.Warn($"SaveLoadListener on {saveLoader.SaveDataKey} returned data that is not JSON serializable! Data type: {saveLoaderData.GetType()}");
+                    continue;
+                }
+                PendingSaveData.Add(saveLoader.SaveDataKey, saveLoaderData);
             }
-            innateStorageSaveData.Add(childPath, storageData);
-            if(innateStorageSaveData.Count == InnateStorages.Count)
-            {
-                // write it out once all innate storages have saved their data
-                SaveLoad.JsonInterface.Write(this, StorageSaveName, innateStorageSaveData);
-                innateStorageSaveData.Clear();
-            }
+            JsonInterface.Write<Dictionary<string, object>>(this, SaveFileSuffix, PendingSaveData);
         }
-        internal List<Tuple<techTypeString, float, techTypeString>>? ReadInnateStorage(string childPath)
+        private void LoadEverything()
         {
-            loadedStorageData ??= SaveLoad.JsonInterface.Read<Dictionary<string, List<Tuple<techTypeString, float, techTypeString>>>>(this, StorageSaveName);
-            if (loadedStorageData == null)
-            {
-                return default;
-            }
-            if (loadedStorageData.TryGetValue(childPath, out List<Tuple<techTypeString, float, techTypeString>>? value))
-            {
-                return value;
-            }
-            else
-            {
-                return default;
-            }
+            Admin.SessionManager.StartCoroutine(WaitForListeners());
         }
-
-        private const string BatterySaveName = "Batteries";
-        private Dictionary<string, Tuple<techTypeString, float>>? loadedBatteryData = null;
-        private readonly Dictionary<string, Tuple<techTypeString, float>> batterySaveData = new();
-        internal void SaveBatteryData(string childPath, Tuple<techTypeString, float> batteryData)
+        private IEnumerator WaitForListeners()
         {
-            int batteryCount = 0;
-            if (Batteries != null) batteryCount += Batteries.Count;
-
-            batterySaveData.Add(childPath, batteryData);
-            if (batterySaveData.Count == batteryCount)
+            ReadOnlyDictionary<string, JToken>? PendingLoadData = JsonInterface.Read<ReadOnlyDictionary<string, JToken>>(this, SaveFileSuffix);
+            if (PendingLoadData == null)
             {
-                // write it out
-                SaveLoad.JsonInterface.Write(this, BatterySaveName, batterySaveData);
-                batterySaveData.Clear();
+                Logger.Log("No save data found to load!");
+                yield break;
             }
+            ModularStorages?.ForEach(x => x.Container.EnsureComponent<VFStorageIdentifier>()); //Normally added by ModularStorageInput, who might not have awaked yet.
+            GetComponentsInChildren<ISaveLoadListener>(true).ForEach(x => Admin.SessionManager.StartCoroutine(WaitForListener(PendingLoadData, x)));
         }
-        internal Tuple<techTypeString, float>? ReadBatteryData(string childPath)
+        private static IEnumerator WaitForListener(ReadOnlyDictionary<string, JToken> pendingLoadData, ISaveLoadListener listener)
         {
-            loadedBatteryData ??= SaveLoad.JsonInterface.Read<Dictionary<string, Tuple<techTypeString, float>>>(this, BatterySaveName);
-            if (loadedBatteryData == null)
-            {
-                return default;
-            }
-            if (loadedBatteryData.TryGetValue(childPath, out Tuple<techTypeString, float>? value))
-            {
-                return value;
-            }
-            else
-            {
-                return default;
-            }
+            yield return new WaitUntil(listener.IsReady);
+            //Logger.Log($"Loading data for {HullName} : {loadDatum.Key}");
+            pendingLoadData.Where(x=> x.Key == listener.SaveDataKey).ForEach(x => listener.LoadData(x.Value));
         }
         #endregion
     }
