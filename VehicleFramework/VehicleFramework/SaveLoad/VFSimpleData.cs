@@ -22,11 +22,11 @@ namespace VehicleFramework.SaveLoad
         {
             if (data == null) return;
             if (data is not JObject _)
-                throw new Newtonsoft.Json.JsonException("Expected a JSON object for Tuple<string,float>.");
+                throw new Newtonsoft.Json.JsonException("Expected a JSON object for Dictionary<string,string>.");
             Dictionary<string, string>? loadData = data.ToObject<Dictionary<string, string>>();
             if (loadData != null)
             {
-                MV.LoadSimpleData(loadData);
+                Admin.SessionManager.StartCoroutine(MV.LoadSimpleData(loadData));
             }
         }
         object? ISaveLoadListener.SaveData()

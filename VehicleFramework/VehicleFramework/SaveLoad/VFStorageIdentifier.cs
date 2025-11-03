@@ -22,7 +22,7 @@ namespace VehicleFramework.SaveLoad
         {
             if (data == null) return;
             if (data is not JArray _)
-                throw new Newtonsoft.Json.JsonException("Expected a JSON object for List<Tuple<string,string>>.");
+                throw new Newtonsoft.Json.JsonException("Expected a JSON object for List<Tuple<string,float,string>>.");
             storageData? loadData = data.ToObject<storageData>();
             if (loadData != null)
             {

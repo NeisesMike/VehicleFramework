@@ -167,7 +167,7 @@ namespace VehicleFramework.Patches
                 {
                     yield break;
                 }
-                yield return new WaitUntil(() => baseCell.Find("BaseMoonpool(Clone)") != null);
+                yield return new WaitUntil(() => baseCell?.Find("BaseMoonpool(Clone)") != null);
                 VehicleDockingBay[]? thisBasesBays = baseCell.GetAllComponentsInChildren<VehicleDockingBay>();
                 const float expectedMaxDistance = 5f;
                 if(thisBasesBays == null)
