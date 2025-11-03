@@ -18,6 +18,14 @@ namespace VehicleFramework.Patches
          * with the base-game uGUI_Equipment system.
          * That is, we ensure here that our PDA displays ModVehicle upgrades correctly
          */
+
+        private static Dictionary<string, uGUI_EquipmentSlot> GetAllSlotsWithVFSlots(Dictionary<string, uGUI_EquipmentSlot> existingSlots)
+        {
+            return existingSlots
+                            .Concat(ModuleBuilder.vehicleAllSlots.Where(kvp => !existingSlots.ContainsKey(kvp.Key)))
+                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(uGUI_Equipment.Awake))]
         public static void AwakePostfix(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
@@ -30,29 +38,26 @@ namespace VehicleFramework.Patches
                 ModuleBuilder.main.isEquipmentInit = true;
                 ModuleBuilder.vehicleAllSlots = ___allSlots;
                 ModuleBuilder.main.BuildAllSlots();
-                ___allSlots = ModuleBuilder.vehicleAllSlots;
+                ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
             }
         }
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverEnter))]
         public static void OnDragHoverEnterPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
-            ___allSlots = ModuleBuilder.vehicleAllSlots;
+            ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
         }
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverStay))]
         public static void OnDragHoverStayPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
-            ___allSlots = ModuleBuilder.vehicleAllSlots;
+            ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
         }
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverExit))]
         public static void OnDragHoverExitPatch(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            ___allSlots.Where(x => !ModuleBuilder.vehicleAllSlots.Contains(x)).ForEach(x => ModuleBuilder.vehicleAllSlots.Add(x.Key, x.Value));
-            ___allSlots = ModuleBuilder.vehicleAllSlots;
+            ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
         }
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_Equipment.Init))]
