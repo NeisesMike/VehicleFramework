@@ -51,7 +51,76 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
   </PropertyGroup>
 
-  <Target Name="CopyToBepInEx" AfterTargets="Build" Condition="Exists('$(SubnauticaDirTrimmed)')">
+	
+	<PropertyGroup>
+		<!-- Where we will generate the source so it is NOT picked up implicitly -->
+		<BuildInfoFile>$(IntermediateOutputPath)GeneratedVersion.cs</BuildInfoFile>
+	</PropertyGroup>
+
+	<Target Name="GenerateBuildInfo" BeforeTargets="CoreCompile">
+		<!-- Create counter if missing -->
+		<WriteLinesToFile File="buildcounter.txt" Lines="0" Overwrite="false" Condition="!Exists('buildcounter.txt')" />
+
+		<!-- Read the current counter -->
+		<ReadLinesFromFile File="buildcounter.txt">
+			<Output TaskParameter="Lines" ItemName="BuildNumber" />
+		</ReadLinesFromFile>
+
+		<PropertyGroup>
+			<!-- Collapse item list to a property -->
+			<_Raw>@(BuildNumber)</_Raw>
+			<!-- Trim whitespace (Regex.Replace is static; allowed in MSBuild) -->
+			<_Trimmed>$([System.Text.RegularExpressions.Regex]::Replace('$(_Raw)', '^\s+|\s+$', ''))</_Trimmed>
+			<!-- Default to 0 if empty -->
+			<_Base>$([MSBuild]::ValueOrDefault('$(_Trimmed)', '0'))</_Base>
+			<!-- Parse and increment -->
+			<_BaseInt>$([System.Int32]::Parse('$(_Base)'))</_BaseInt>
+			<_Next>$([MSBuild]::Add($(_BaseInt), 1))</_Next>
+		</PropertyGroup>
+
+		<!-- Persist the incremented value for the NEXT build -->
+		<WriteLinesToFile File="buildcounter.txt" Lines="$(_Next)" Overwrite="true" />
+
+		<!-- Generate a const usable in attributes for THIS build -->
+		<!-- Use $(_Base) to keep this build's value stable; switch to $(_Next) if you prefer post-increment -->
+		<PropertyGroup>
+			<Semicolon>$([MSBuild]::Escape(';'))</Semicolon>
+			<!-- becomes %3B -->
+		</PropertyGroup>
+		<ItemGroup>
+			<BuildInfoContent Include="internal static class BuildInfo {" />
+			<BuildInfoContent Include="    public const string BuildVersion = &quot;$(_Base)&quot;$(Semicolon)" />
+			<BuildInfoContent Include="}" />
+		</ItemGroup>
+
+		<WriteLinesToFile
+			File="$(BuildInfoFile)"
+			Lines="@(BuildInfoContent)"
+			Overwrite="true" />
+	</Target>
+
+	<ItemGroup>
+	  <Compile Remove="GeneratedVersion.cs" />
+	</ItemGroup>
+
+	<!-- Because the file is in obj\ (IntermediateOutputPath), it is excluded by default.
+     Explicitly include it so there is NO duplicate Compile warning. -->
+	<ItemGroup>
+		<Compile Include="$(BuildInfoFile)" />
+	</ItemGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+	<Target Name="CopyToBepInEx" AfterTargets="Build" Condition="Exists('$(SubnauticaDirTrimmed)')">
     <MakeDir Directories="$(BepInExPlugins)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExPlugins)" SkipUnchangedFiles="true" />
   </Target>
