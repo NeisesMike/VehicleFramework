@@ -6,7 +6,7 @@ namespace VehicleFramework.Engines
 {
     public abstract class VFEngine : MonoBehaviour, IScuttleListener
     {
-        internal ModVehicle MV
+        internal protected ModVehicle MV
         {
             get
             {
