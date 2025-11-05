@@ -29,7 +29,7 @@ namespace VehicleFramework
         private Color interiorColor = Color.white;
         private Color stripeColor = Color.white;
         private Color nameColor = Color.black;
-        private bool IsDefaultStyle = false;
+        private bool _isDefaultStyle = false;
         #endregion
 
         #region readonly_properties
@@ -39,6 +39,17 @@ namespace VehicleFramework
         public Color StripeColor => stripeColor;
         public Color NameColor => nameColor;
         public string HullName => subName.GetName();
+        public bool IsDefaultStyle
+        {
+            get
+            {
+                return _isDefaultStyle;
+            }
+            private set
+            {
+                _isDefaultStyle = value;
+            }
+        }
         #endregion
 
         #region virtual_methods
