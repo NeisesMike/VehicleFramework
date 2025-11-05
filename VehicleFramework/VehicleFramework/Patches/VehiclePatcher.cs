@@ -168,13 +168,14 @@ namespace VehicleFramework.Patches
                     yield break;
                 }
                 yield return new WaitUntil(() => baseCell?.Find("BaseMoonpool(Clone)") != null);
-                VehicleDockingBay[]? thisBasesBays = baseCell.GetAllComponentsInChildren<VehicleDockingBay>();
+                yield return new WaitUntil(() => baseCell?.Find("BaseMoonpool(Clone)") != null);
+                VehicleDockingBay[]? thisBasesBays = baseCell?.GetAllComponentsInChildren<VehicleDockingBay>();
                 const float expectedMaxDistance = 5f;
                 if(thisBasesBays == null)
                 {
                     yield break;
                 }
-                foreach (VehicleDockingBay bay in thisBasesBays)
+                foreach (VehicleDockingBay bay in thisBasesBays.Where(x => x != null))
                 {
                     if(Vector3.Distance(__instance.transform.position, bay.transform.position) < expectedMaxDistance)
                     {
