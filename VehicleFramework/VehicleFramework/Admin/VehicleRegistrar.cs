@@ -41,6 +41,10 @@ public static class VehicleRegistrar
     }
     public static IEnumerator RegisterVehicle(ModVehicle mv, bool verbose = false)
     {
+        if (mv == null)
+        {
+            throw Admin.SessionManager.Fatal("A null ModVehicle was passed for registration.");
+        }
         if (VehicleManager.vehicleTypes.Where(x => x.name == mv.gameObject.name).Any())
         {
             VerboseLog(LogType.Warn, verbose, $"{mv.gameObject.name} was already registered.");
