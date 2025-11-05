@@ -648,6 +648,7 @@ namespace VehicleFramework.VehicleBuilding
         #endregion
         internal static bool Instrument(ModVehicle mv, PingType pingType)
         {
+            SetupSubName(mv); // Prepare mv.HullName for use in error messages
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
 
@@ -680,7 +681,6 @@ namespace VehicleFramework.VehicleBuilding
             SetupHudPing(mv, pingType);
             SetupCrushDamage(mv); // must be after liveMixin
             SetupWaterClipping(mv);
-            SetupSubName(mv);
             SetupCollisionSound(mv);
             SetupOutOfBoundsWarp(mv);
             SetupConstructionObstacle(mv);
