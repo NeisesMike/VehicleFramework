@@ -241,6 +241,7 @@ namespace VehicleFramework.MiscComponents
 		}
 		public void UpdateStorage(ModVehicle mv)
 		{
+			if (textStorage == null) return;
 			mv.GetStorageValues(out int stored, out int capacity);
 			if (capacity > 0)
 			{
