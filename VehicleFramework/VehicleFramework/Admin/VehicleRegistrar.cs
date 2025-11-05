@@ -91,32 +91,37 @@ public static class VehicleRegistrar
         {
             throw Admin.SessionManager.Fatal("A null ModVehicle was passed for registration.");
         }
-        Submarine? Sub = mv as Submarine;
-        if (Sub != null)
+        if(!ValidateRegistration(mv as ModVehicle, verbose))
         {
-            if (!ValidateRegistration(Sub, verbose))
-            {
-                Logger.Error("Invalid Submarine Registration for the " + mv.gameObject.name + ". Next.");
-                return false;
-            }
+            Logger.Error($"Invalid ModVehicle Registration for the {mv.gameObject.name}. Next.");
+            return false;
         }
-        Submersible? Subbie = mv as Submersible;
-        if (Subbie != null)
+        switch (mv)
         {
-            if (!ValidateRegistration(Subbie, verbose))
-            {
-                Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+            case Submarine Sub:
+                if (!ValidateRegistration(Sub, verbose))
+                {
+                    Logger.Error($"Invalid Submarine Registration for the {mv.gameObject.name}. Next.");
+                    return false;
+                }
+                break;
+            case Submersible Subbie:
+                if (!ValidateRegistration(Subbie, verbose))
+                {
+                    Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+                break;
+            case Drone drone:
+                if (!ValidateRegistration(drone, verbose))
+                {
+                    Logger.Error("Invalid Drone Registration for the " + mv.gameObject.name + ". Next.");
+                    return false;
+                }
+                break;
+            default:
+                Logger.Error("Unknown ModVehicle type for the " + mv.gameObject.name + ". Next.");
                 return false;
-            }
-        }
-        Drone? Drone = mv as Drone;
-        if (Drone != null)
-        {
-            if (!ValidateRegistration(Drone, verbose))
-            {
-                Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
-                return false;
-            }
         }
         /*
         Walker? Walker = mv as Walker;
@@ -124,7 +129,7 @@ public static class VehicleRegistrar
         {
             if (!ValidateRegistration(Walker, verbose))
             {
-                Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                Logger.Error("Invalid Walker Registration for the " + mv.gameObject.name + ". Next.");
                 return false;
             }
         }
@@ -133,7 +138,7 @@ public static class VehicleRegistrar
         {
             if (!ValidateRegistration(Skimmer, verbose))
             {
-                Logger.Error("Invalid Submersible Registration for the " + mv.gameObject.name + ". Next.");
+                Logger.Error("Invalid Skimmer Registration for the " + mv.gameObject.name + ". Next.");
                 return false;
             }
         }
@@ -207,7 +212,7 @@ public static class VehicleRegistrar
             }
             if(mv.BoundingBoxCollider == null)
             {
-                VerboseLog(LogType.Warn, verbose, thisName + " No BoundingBox BoxCollider was provided. If a BoundingBox GameObject was provided, it did not have a BoxCollider. Tether range is 10 meters. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
+                VerboseLog(LogType.Warn, verbose, thisName + " No BoundingBox BoxCollider was provided. Tether range is 10 meters. This vehicle will not be able to dock in the Moonpool. The build bots will assume this vehicle is 6m x 8m x 12m.");
             }
             if (mv.CollisionModel == null || mv.CollisionModel.Length == 0)
             {
@@ -338,10 +343,6 @@ public static class VehicleRegistrar
     }
     public static bool ValidateRegistration(Submarine mv, bool verbose)
     {
-        if (!ValidateRegistration(mv as ModVehicle, verbose))
-        {
-            return false;
-        }
         string thisName = "";
         try
         {
@@ -464,10 +465,6 @@ public static class VehicleRegistrar
     }
     public static bool ValidateRegistration(Submersible mv, bool verbose)
     {
-        if (!ValidateRegistration(mv as ModVehicle, verbose))
-        {
-            return false;
-        }
         string thisName = "";
         try
         {
@@ -546,10 +543,6 @@ public static class VehicleRegistrar
     }
     public static bool ValidateRegistration(Drone mv, bool verbose)
     {
-        if (!ValidateRegistration(mv as ModVehicle, verbose))
-        {
-            return false;
-        }
         string thisName = "";
         try
         {
