@@ -132,9 +132,37 @@ namespace VehicleFramework.VehicleBuilding
             }
             return true;
         }
+        private static bool ValidateConsole(ModVehicle mv, VehicleUpgrades vu)
+        {
+            if (vu.Interface == null)
+            {
+                Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} The VehicleUpgrade.Interface was null.");
+                return false;
+            }
+            if (vu.Interface.GetComponentInChildren<Collider>() == null)
+            {
+                Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} There is no Collider on the VehicleUpgrade.Interface.");
+                return false;
+            }
+            return true;
+        }
+        private static void InnerSetupConsole(ModVehicle mv, VehicleUpgrades vu)
+        {
+            VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
+            vuci.flap = vu.Flap?.transform ?? vu.Interface.transform;
+            vuci.anglesOpened = vu.AnglesOpened ?? Vector3.zero;
+            vuci.anglesClosed = vu.AnglesClosed ?? Vector3.zero;
+            vuci.collider = vuci.GetComponentInChildren<Collider>();
+            mv.upgradesInput = vuci;
+            var up = vu.Interface.EnsureComponent<UpgradeProxy>();
+            up.proxies = vu.ModuleProxies ?? new();
+            SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vu.Interface.transform);
+            vu.Interface.EnsureComponent<SaveLoad.VFUpgradesIdentifier>();
+        }
         internal static bool SetupUpgradesConsole(ModVehicle mv)
         {
-            List<VehicleUpgrades>? ups = mv?.Upgrades;
+            if (mv == null) return false;
+            List<VehicleUpgrades>? ups = mv.Upgrades;
             if (ups == null || ups.Count == 0)
             {
                 VehicleUpgradeConsoleInput vuci = mv.VehicleModel.EnsureComponent<VehicleUpgradeConsoleInput>();
@@ -145,39 +173,12 @@ namespace VehicleFramework.VehicleBuilding
                 mv.upgradesInput = vuci;
                 return true;
             }
-            bool ValidateConsole(VehicleUpgrades vu)
-            {
-                if (vu.Interface == null)
-                {
-                    Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} The VehicleUpgrade.Interface was null.");
-                    return false;
-                }
-                if (vu.Interface.GetComponentInChildren<Collider>() == null)
-                {
-                    Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} There is no Collider on the VehicleUpgrade.Interface.");
-                    return false;
-                }
-                return true;
-            }
-            void InnerSetupConsole(VehicleUpgrades vu)
-            {
-                VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                vuci.flap = vu.Flap?.transform ?? vu.Interface.transform;
-                vuci.anglesOpened = vu.AnglesOpened ?? Vector3.zero;
-                vuci.anglesClosed = vu.AnglesClosed ?? Vector3.zero;
-                vuci.collider = vuci.GetComponentInChildren<Collider>();
-                mv.upgradesInput = vuci;
-                var up = vu.Interface.EnsureComponent<UpgradeProxy>();
-                up.proxies = vu.ModuleProxies ?? new();
-                SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vu.Interface.transform);
-                vu.Interface.EnsureComponent<SaveLoad.VFUpgradesIdentifier>();
-            }
-            if (ups.Select(ValidateConsole).Where(x => x == false).Any())
+            if (ups.Select(x => ValidateConsole(mv, x)).Where(x => x == false).Any())
             {
                 Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} Failed to Validate the Upgrade Console.");
                 return false;
             }
-            ups.ForEach(InnerSetupConsole);
+            ups.ForEach(x => InnerSetupConsole(mv, x));
             return true;
         }
         internal static void SetupBoundingBox(ModVehicle mv)

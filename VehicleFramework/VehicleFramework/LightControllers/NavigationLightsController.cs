@@ -51,12 +51,7 @@ namespace VehicleFramework.LightControllers
 
         protected virtual void Awake()
         {
-            INavigationLights navigationLights = GetComponent<INavigationLights>();
-            if (navigationLights == null)
-            {
-                throw Admin.SessionManager.Fatal("NavigationLightsController must be attached to a GameObject that implements INavigationLights!");
-            }
-
+            INavigationLights navigationLights = GetComponent<INavigationLights>() ?? throw Admin.SessionManager.Fatal("NavigationLightsController must be attached to a GameObject that implements INavigationLights!");
             navStarLights = navigationLights.NavigationStarboardLights() ?? new List<GameObject>();
             navPortLights = navigationLights.NavigationPortLights() ?? new List<GameObject>();
             navPosLights = navigationLights.NavigationPositionLights() ?? new List<GameObject>();

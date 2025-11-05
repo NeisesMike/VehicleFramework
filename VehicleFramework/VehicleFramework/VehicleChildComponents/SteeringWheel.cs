@@ -33,16 +33,8 @@ namespace VehicleFramework.VehicleChildComponents
         }
         private void Awake()
         {
-            Vehicle vehicle = GetComponentInParent<Vehicle>();
-            if(vehicle == null)
-            {
-                throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle.");
-            }
-            ISteeringWheel wheel = vehicle.GetComponent<ISteeringWheel>();
-            if(wheel == null)
-            {
-                throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle that implements ISteeringWheel.");
-            }
+            Vehicle vehicle = GetComponentInParent<Vehicle>() ?? throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle.");
+            _ = vehicle.GetComponent<ISteeringWheel>() ?? throw Admin.SessionManager.Fatal("SteeringWheel component requires a parent Vehicle that implements ISteeringWheel.");
             useRigidbody = vehicle.useRigidbody;
             if(useRigidbody == null)
             {
