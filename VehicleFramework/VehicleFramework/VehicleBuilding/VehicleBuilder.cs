@@ -184,7 +184,15 @@ namespace VehicleFramework.VehicleBuilding
         {
             if (mv.BoundingBoxCollider == null)
             {
-                mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();
+                mv.BoundingBoxCollider = mv.VehicleModel.GetComponent<BoxCollider>();
+            }
+            if (mv.BoundingBoxCollider == null)
+            {
+                mv.BoundingBoxCollider = mv.VehicleModel.AddComponent<BoxCollider>();
+                if(mv.BoundingBoxCollider == null)
+                {
+                    throw Admin.SessionManager.Fatal($"Failed to SetupBoundingBox for ModVehicle: {mv.HullName}. Check the BoundingBoxCollider override.");
+                }
                 mv.BoundingBoxCollider.size = new(6, 8, 12);
                 Logger.Warn($"The {mv.HullName} has been given a default BoundingBox of size 6x8x12.");
             }
