@@ -49,5 +49,26 @@ namespace VehicleFramework.VehicleChildComponents
         {
             isLive = true;
         }
+
+        internal static void Create(ModVehicle mv)
+        {
+            switch(mv)
+            {
+                case Submarine sub:
+                    mv.playerPosition = sub.PilotSeat.SitLocation;
+                    PilotingTrigger subpt = sub.PilotSeat.Seat.EnsureComponent<PilotingTrigger>();
+                    subpt.mv = mv;
+                    subpt.exit = sub.PilotSeat.ExitLocation;
+                    break;
+                case Submersible submer:
+                    mv.playerPosition = submer.PilotSeat.SitLocation;
+                    PilotingTrigger submerpt = submer.PilotSeat.Seat.EnsureComponent<PilotingTrigger>();
+                    submerpt.mv = mv;
+                    submerpt.exit = submer.PilotSeat.ExitLocation;
+                    break;
+                default:
+                    return;
+            }
+        }
     }
 }

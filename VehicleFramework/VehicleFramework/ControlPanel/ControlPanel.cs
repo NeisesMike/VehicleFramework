@@ -302,5 +302,19 @@ namespace VehicleFramework.ControlPanel
             SetButtonLightingActive(buttonInteriorLights, false);
             SetButtonLightingActive(buttonNavLights, false);
         }
+        internal static void Create(Submarine mv)
+        {
+            if (mv.ControlPanel != null)
+            {
+                mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
+                mv.controlPanelLogic.mv = mv;
+                if (mv.transform.Find("Control-Panel-Location") != null)
+                {
+                    mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
+                    mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
+                    GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
+                }
+            }
+        }
     }
 }

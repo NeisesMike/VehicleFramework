@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VehicleFramework.Engines;
-using VehicleFramework.VehicleTypes;
-using VehicleFramework.StorageComponents;
-//using VehicleFramework.Localization;
 using VehicleFramework.Admin;
 using VehicleFramework.Assets;
-using VehicleFramework.Interfaces;
+using VehicleFramework.Engines;
+using VehicleFramework.StorageComponents;
 using VehicleFramework.VehicleChildComponents;
+using VehicleFramework.VehicleTypes;
+using static ConsoleInput;
 
 namespace VehicleFramework.VehicleBuilding
 {
@@ -33,13 +32,12 @@ namespace VehicleFramework.VehicleBuilding
         public TechType techType;
     }
 
-    public static class VehicleBuilder
+    // You must not pass null ModVehicles to VehicleBuilder.
+    internal static class VehicleBuilder
     {
-
         private static int numVehicleTypes = 0;
         internal static List<ModVehicle> prefabs = new();
-
-        public static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
+        internal static IEnumerator Prefabricate(ModVehicle mv, PingType pingType, bool verbose)
         {
             VehicleRegistrar.VerboseLog(VehicleRegistrar.LogType.Log, verbose, "Prefabricating the " + mv.gameObject.name);
             yield return Admin.SessionManager.StartCoroutine(SeamothHelper.EnsureSeamoth());
@@ -59,17 +57,17 @@ namespace VehicleFramework.VehicleBuilding
             VehicleManager.vehicleTypes.Remove(naiveVE); // must remove this vehicle entry bc PatchCraftable adds a more complete one (with tech type)
             mv.gameObject.SetActive(true);
         }
-
-        #region setup_funcs
-        public static bool SetupObjects(ModVehicle mv)
+        private static string GetBuilderErrorPrefix(ModVehicle mv, string issueBlockName)
         {
-
+            return $"[VehicleBuilder] Error while building vehicle '{mv?.HullName ?? "NULL MODVEHICLE"}' regarding {issueBlockName}:";
+        }
+        #region setup_funcs
+        internal static bool SetupInnateStorages(ModVehicle mv)
+        {
             // Wow, look at this:
             // This Nautilus line might be super nice if it works for us
             // allow it to be opened as a storage container:
             //PrefabUtils.AddStorageContainer(obj, "StorageRoot", "TallLocker", 3, 8, true);
-
-
             int iter = 0;
             try
             {
@@ -84,11 +82,19 @@ namespace VehicleFramework.VehicleBuilding
             }
             catch (Exception e)
             {
-                Logger.Error("There was a problem setting up the Innate Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
+                Logger.Error($"{GetBuilderErrorPrefix(mv, "Innate Storage")} Probably for some InnateStorage innate, we have innate.Container==null. Check your ModVehicle.InnateStorages override.");
                 Logger.Error(e.ToString());
                 return false;
             }
-            iter = 0;
+            return true;
+        }
+        internal static bool SetupModularStorages(ModVehicle mv)
+        {
+            // Wow, look at this:
+            // This Nautilus line might be super nice if it works for us
+            // allow it to be opened as a storage container:
+            //PrefabUtils.AddStorageContainer(obj, "StorageRoot", "TallLocker", 3, 8, true);
+            int iter = 0;
             try
             {
                 if (mv.ModularStorages != null)
@@ -97,7 +103,7 @@ namespace VehicleFramework.VehicleBuilding
                     {
                         vs.Container.SetActive(false);
 
-                        if(SeamothHelper.Seamoth == null)
+                        if (SeamothHelper.Seamoth == null)
                         {
                             throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
                         }
@@ -120,161 +126,101 @@ namespace VehicleFramework.VehicleBuilding
             }
             catch (Exception e)
             {
-                Logger.Error("There was a problem setting up the Modular Storage. Check VehicleStorage.Container and ModVehicle.StorageRootObject");
+                Logger.Error($"{GetBuilderErrorPrefix(mv, "Modular Storage")} Probably for some VehicleStorage modular, we have modular.Container==null. Check your ModVehicle.ModularStorages override.");
                 Logger.Error(e.ToString());
                 return false;
             }
-            try
+            return true;
+        }
+        internal static bool SetupUpgradesConsole(ModVehicle mv)
+        {
+            List<VehicleUpgrades>? ups = mv?.Upgrades;
+            if (ups == null || ups.Count == 0)
             {
-                if (mv.Upgrades != null)
-                {
-                    foreach (VehicleUpgrades vu in mv.Upgrades)
-                    {
-                        VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
-                        vuci.flap = vu.Flap?.transform ?? vu.Interface.transform;
-                        vuci.anglesOpened = vu.AnglesOpened ?? Vector3.zero;
-                        vuci.anglesClosed = vu.AnglesClosed ?? Vector3.zero;
-                        vuci.collider = vuci.GetComponentInChildren<Collider>();
-                        mv.upgradesInput = vuci;
-                        var up = vu.Interface.EnsureComponent<UpgradeProxy>();
-                        up.proxies = vu.ModuleProxies ?? new();
-
-                        SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vu.Interface.transform);
-                        vu.Interface.EnsureComponent<SaveLoad.VFUpgradesIdentifier>();
-                    }
-                    if(mv.Upgrades.Count == 0)
-                    {
-                        VehicleUpgradeConsoleInput vuci = mv.VehicleModel.EnsureComponent<VehicleUpgradeConsoleInput>();
-                        vuci.enabled = false;
-                        BoxCollider innerCollider = mv.VehicleModel.AddComponent<BoxCollider>();
-                        vuci.collider = innerCollider;
-                        if (innerCollider == null)
-                        {
-                            throw Admin.SessionManager.Fatal($"Failed to add a BoxCollider to {mv.GetName()}.VehicleModel!");
-                        }
-                        innerCollider.size = Vector3.zero;
-                        mv.upgradesInput = vuci;
-                    }
-                }
-                else
-                {
-                    Logger.Warn("The ModVehicle.Upgrades was null.");
-                }
+                VehicleUpgradeConsoleInput vuci = mv.VehicleModel.EnsureComponent<VehicleUpgradeConsoleInput>();
+                vuci.enabled = false;
+                BoxCollider innerCollider = mv.VehicleModel.AddComponent<BoxCollider>();
+                vuci.collider = innerCollider;
+                innerCollider.size = Vector3.zero;
+                mv.upgradesInput = vuci;
+                return true;
             }
-            catch (Exception e)
+            bool ValidateConsole(VehicleUpgrades vu)
             {
-                Logger.Error("There was a problem setting up the Upgrades Interface. Check VehicleUpgrades.Interface and .Flap");
-                Logger.Error(e.ToString());
+                if (vu.Interface == null)
+                {
+                    Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} The VehicleUpgrade.Interface was null.");
+                    return false;
+                }
+                if (vu.Interface.GetComponentInChildren<Collider>() == null)
+                {
+                    Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} There is no Collider on the VehicleUpgrade.Interface.");
+                    return false;
+                }
+                return true;
+            }
+            void InnerSetupConsole(VehicleUpgrades vu)
+            {
+                VehicleUpgradeConsoleInput vuci = vu.Interface.EnsureComponent<VehicleUpgradeConsoleInput>();
+                vuci.flap = vu.Flap?.transform ?? vu.Interface.transform;
+                vuci.anglesOpened = vu.AnglesOpened ?? Vector3.zero;
+                vuci.anglesClosed = vu.AnglesClosed ?? Vector3.zero;
+                vuci.collider = vuci.GetComponentInChildren<Collider>();
+                mv.upgradesInput = vuci;
+                var up = vu.Interface.EnsureComponent<UpgradeProxy>();
+                up.proxies = vu.ModuleProxies ?? new();
+                SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vu.Interface.transform);
+                vu.Interface.EnsureComponent<SaveLoad.VFUpgradesIdentifier>();
+            }
+            if (ups.Select(ValidateConsole).Where(x => x == false).Any())
+            {
+                Logger.Error($"{GetBuilderErrorPrefix(mv, "Upgrades Console")} Failed to Validate the Upgrade Console.");
                 return false;
             }
+            ups.ForEach(InnerSetupConsole);
+            return true;
+        }
+        internal static void SetupBoundingBox(ModVehicle mv)
+        {
             if (mv.BoundingBoxCollider == null)
             {
                 mv.BoundingBoxCollider = mv.gameObject.AddComponent<BoxCollider>();
                 mv.BoundingBoxCollider.size = new(6, 8, 12);
-                mv.BoundingBoxCollider.enabled = false;
-                Logger.Warn("The " + mv.name + " has been given a default BoundingBox of size 6x8x12.");
+                Logger.Warn($"The {mv.HullName} has been given a default BoundingBox of size 6x8x12.");
             }
-            else
-            {
-                mv.BoundingBoxCollider.enabled = false;
-            }
-            return true;
+            mv.BoundingBoxCollider.enabled = false;
         }
-        public static bool SetupObjects(Submarine mv)
+        internal static bool SetupObjects(ModVehicle mv)
         {
-            try
-            {
-                mv.playerPosition = mv.PilotSeat.SitLocation;
-                PilotingTrigger pt = mv.PilotSeat.Seat.EnsureComponent<PilotingTrigger>();
-                pt.mv = mv;
-                pt.exit = mv.PilotSeat.ExitLocation;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the PilotSeats. Check VehiclePilotSeat.Seat");
-                Logger.Error(e.ToString());
-                return false;
-            }
-            try
-            {
-                foreach (VehicleHatchStruct vhs in mv.Hatches)
-                {
-                    VehicleChildComponents.VehicleHatch.Create(vhs, mv);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the Hatches. Check VehicleHatchStruct.Hatch");
-                Logger.Error(e.ToString());
-                return false;
-            }
-            // Configure the Control Panel
-            try
-            {
-                if (mv.ControlPanel != null)
-                {
-                    mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel.ControlPanel>();
-                    mv.controlPanelLogic.mv = mv;
-                    if(mv.transform.Find("Control-Panel-Location") != null)
-                    {
-                        mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;
-                        mv.ControlPanel.transform.localRotation = mv.transform.Find("Control-Panel-Location").localRotation;
-                        GameObject.Destroy(mv.transform.Find("Control-Panel-Location").gameObject);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the Control Panel. Check ModVehicle.ControlPanel and ensure \"Control-Panel-Location\" exists at the top level of your model. While you're at it, check that \"Fabricator-Location\" is at the top level of your model too.");
-                Logger.Error(e.ToString());
-                return false;
-            }
-            return true;
+            SetupBoundingBox(mv);
+            bool result = SetupInnateStorages(mv) &&
+                SetupModularStorages(mv) &&
+                SetupUpgradesConsole(mv);
+            return result;
         }
-        public static bool SetupObjects(Submersible mv)
+        internal static void SetupObjects(Submarine mv)
         {
-            try
-            {
-                mv.playerPosition = mv.PilotSeat.SitLocation;
-                PilotingTrigger pt = mv.PilotSeat.Seat.EnsureComponent<PilotingTrigger>();
-                pt.mv = mv;
-                pt.exit = mv.PilotSeat.ExitLocation;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the PilotSeats. Check VehiclePilotSeat.Seat");
-                Logger.Error(e.ToString());
-                return false;
-            }
-            try
-            {
-                foreach (VehicleHatchStruct vhs in mv.Hatches)
-                {
-                    VehicleChildComponents.VehicleHatch.Create(vhs, mv);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("There was a problem setting up the Hatches. Check VehicleHatchStruct.Hatch");
-                Logger.Error(e.ToString());
-                return false;
-            }
-            // Configure the Control Panel
-            return true;
+            PilotingTrigger.Create(mv);
+            mv.Hatches?.ForEach(x => VehicleChildComponents.VehicleHatch.Create(x, mv));
+            ControlPanel.ControlPanel.Create(mv);
         }
-        public static void SetupEnergyInterface(ModVehicle mv)
+        internal static void SetupObjects(Submersible mv)
         {
-            if(mv.Batteries == null)
-            {
-                return;
-            }
+            PilotingTrigger.Create(mv);
+            mv.Hatches?.ForEach(x => VehicleChildComponents.VehicleHatch.Create(x, mv));
+        }
+        internal static void SetupEnergyInterface(ModVehicle mv)
+        {
             if (SeamothHelper.Seamoth == null)
             {
                 throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
             }
             var seamothEnergyMixin = SeamothHelper.Seamoth.GetComponent<EnergyMixin>();
+            mv.chargingSound = mv.gameObject.AddComponent<FMOD_CustomLoopingEmitter>();
+            mv.chargingSound.asset = SeamothHelper.Seamoth.GetComponent<SeaMoth>().chargingSound.asset;
+            var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
             List<EnergyMixin> energyMixins = new();
-            if(mv.Batteries.Count == 0)
+            if (mv.Batteries == null || mv.Batteries.Count == 0)
             {
                 // Configure energy mixin for this battery slot
                 var energyMixin = mv.gameObject.AddComponent<ForeverBattery>();
@@ -288,6 +234,9 @@ namespace VehicleFramework.VehicleBuilding
                 energyMixin.batteryModels = seamothEnergyMixin.batteryModels;
                 energyMixin.controlledObjects = Array.Empty<GameObject>();
                 energyMixins.Add(energyMixin);
+                eInterf.sources = energyMixins.ToArray();
+                mv.energyInterface = eInterf;
+                return;
             }
             foreach (VehicleBattery vb in mv.Batteries)
             {
@@ -305,28 +254,21 @@ namespace VehicleFramework.VehicleBuilding
                 var tmp = vb.BatterySlot.EnsureComponent<VehicleBatteryInput>();
                 tmp.mixin = energyMixin;
                 tmp.tooltip = "VFVehicleBattery";
-
                 BatteryProxy.Create(vb, energyMixin);
-
                 SaveLoad.SaveLoadUtils.EnsureUniqueNameAmongSiblings(vb.BatterySlot.transform);
                 vb.BatterySlot.EnsureComponent<SaveLoad.VFBatteryIdentifier>();
+                eInterf.sources = energyMixins.ToArray();
+                mv.energyInterface = eInterf;
             }
-            // Configure energy interface
-            var eInterf = mv.gameObject.EnsureComponent<EnergyInterface>();
-            eInterf.sources = energyMixins.ToArray();
-            mv.energyInterface = eInterf;
-
-            mv.chargingSound = mv.gameObject.AddComponent<FMOD_CustomLoopingEmitter>();
-            mv.chargingSound.asset = SeamothHelper.Seamoth.GetComponent<SeaMoth>().chargingSound.asset;
         }
-        public static void SetupLightSounds(ModVehicle mv)
+        internal static void SetupLightSounds(ModVehicle mv)
         {
             if (SeamothHelper.Seamoth == null)
             {
                 throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
             }
             FMOD_StudioEventEmitter[] fmods = SeamothHelper.Seamoth.GetComponents<FMOD_StudioEventEmitter>();
-            foreach (FMOD_StudioEventEmitter fmod in fmods)
+            foreach (FMOD_StudioEventEmitter fmod in fmods.Where(x => x?.asset != null))
             {
                 if (fmod.asset.name == "seamoth_light_on")
                 {
@@ -342,61 +284,35 @@ namespace VehicleFramework.VehicleBuilding
                 }
             }
         }
-        public static void SetupHeadLights(ModVehicle mv)
+        internal static void SetupLights(ModVehicle mv, List<VehicleFloodLight>? lights)
         {
+            if (lights == null || lights.Count == 0)
+            {
+                return;
+            }
             if (SeamothHelper.Seamoth == null)
             {
                 throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
             }
             GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
-            if (mv.HeadLights != null)
+            foreach (VehicleFloodLight pc in lights)
             {
-                foreach (VehicleFloodLight pc in mv.HeadLights)
-                {
-                    CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
-                    var thisLight = pc.Light.EnsureComponent<Light>();
-                    thisLight.type = LightType.Spot;
-                    thisLight.spotAngle = pc.Angle;
-                    thisLight.innerSpotAngle = pc.Angle * .75f;
-                    thisLight.color = pc.Color;
-                    thisLight.intensity = pc.Intensity;
-                    thisLight.range = pc.Range;
-                    thisLight.shadows = LightShadows.Hard;
-                    thisLight.gameObject.SetActive(false);
+                CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
+                var thisLight = pc.Light.EnsureComponent<Light>();
+                thisLight.type = LightType.Spot;
+                thisLight.spotAngle = pc.Angle;
+                thisLight.innerSpotAngle = pc.Angle * .75f;
+                thisLight.color = pc.Color;
+                thisLight.intensity = pc.Intensity;
+                thisLight.range = pc.Range;
+                thisLight.shadows = LightShadows.Hard;
+                thisLight.gameObject.SetActive(false);
 
-                    var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
-                    RLS.hostLight = thisLight;
-                }
+                var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
+                RLS.hostLight = thisLight;
             }
         }
-        public static void SetupFloodLights(Submarine mv)
-        {
-            if (SeamothHelper.Seamoth == null)
-            {
-                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
-            }
-            GameObject seamothHeadLight = SeamothHelper.Seamoth.transform.Find("lights_parent/light_left").gameObject;
-            if (mv.FloodLights != null)
-            {
-                foreach (VehicleFloodLight pc in mv.FloodLights)
-                {
-                    CopyComponent(seamothHeadLight.GetComponent<LightShadowQuality>(), pc.Light);
-                    var thisLight = pc.Light.EnsureComponent<Light>();
-                    thisLight.type = LightType.Spot;
-                    thisLight.spotAngle = pc.Angle;
-                    thisLight.innerSpotAngle = pc.Angle * .75f;
-                    thisLight.color = pc.Color;
-                    thisLight.intensity = pc.Intensity;
-                    thisLight.range = pc.Range;
-                    thisLight.shadows = LightShadows.Hard;
-                    pc.Light.SetActive(false);
-
-                    var RLS = mv.gameObject.AddComponent<RegistredLightSource>();
-                    RLS.hostLight = thisLight;
-                }
-            }
-        }
-        public static void SetupVolumetricLights(ModVehicle mv)
+        internal static void SetupVolumetricLights(ModVehicle mv)
         {
             if (SeamothHelper.Seamoth == null)
             {
@@ -441,7 +357,7 @@ namespace VehicleFramework.VehicleBuilding
                 mv.volumetricLights.Add(volumetricLight);
             }
         }
-        public static void SetupLiveMixin(ModVehicle mv)
+        internal static void SetupLiveMixin(ModVehicle mv)
         {
             var liveMixin = mv.gameObject.EnsureComponent<LiveMixin>();
             var lmData = ScriptableObject.CreateInstance<LiveMixinData>();
@@ -468,7 +384,7 @@ namespace VehicleFramework.VehicleBuilding
             liveMixin.data = lmData;
             mv.liveMixin = liveMixin;
         }
-        public static void SetupRigidbody(ModVehicle mv)
+        internal static void SetupRigidbody(ModVehicle mv)
         {
             var rb = mv.gameObject.EnsureComponent<Rigidbody>();
             /* 
@@ -486,19 +402,31 @@ namespace VehicleFramework.VehicleBuilding
             rb.useGravity = false;
             mv.useRigidbody = rb;
         }
-        public static void SetupEngine(Submarine mv)
+        internal static void SetupEngine(ModVehicle mv)
         {
-            mv.VFEngine ??= mv.gameObject.AddComponent<OdysseyEngine>();
+            mv.stabilizeRoll = true;
+            mv.controlSheme = Admin.EnumHelper.GetScheme();
+            mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
+            switch (mv)
+            {
+                case Submarine:
+                    mv.VFEngine ??= mv.gameObject.AddComponent<OdysseyEngine>();
+                    break;
+                case Submersible:
+                    mv.VFEngine ??= mv.gameObject.AddComponent<CricketEngine>();
+                    break;
+                case Drone:
+                    mv.VFEngine ??= mv.gameObject.AddComponent<CricketEngine>();
+                    break;
+            }
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
+            mv.splashSound = SeamothHelper.Seamoth.GetComponent<SeaMoth>().splashSound;
+            //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
         }
-        public static void SetupEngine(Submersible mv)
-        {
-            mv.VFEngine ??= mv.gameObject.AddComponent<CricketEngine>();
-        }
-        public static void SetupEngine(Drone mv)
-        {
-            mv.VFEngine ??= mv.gameObject.AddComponent<CricketEngine>();
-        }
-        public static void SetupWorldForces(ModVehicle mv)
+        internal static void SetupWorldForces(ModVehicle mv)
         {
             if (SeamothHelper.Seamoth == null)
             {
@@ -511,7 +439,7 @@ namespace VehicleFramework.VehicleBuilding
             mv.worldForces.aboveWaterGravity = 9.8f;
             mv.worldForces.waterDepth = 0f;
         }
-        public static void SetupHudPing(ModVehicle mv, PingType pingType)
+        internal static void SetupHudPing(ModVehicle mv, PingType pingType)
         {
             var temp = mv.gameObject.EnsureComponent<PingInstance>();
             temp.origin = mv.transform;
@@ -519,21 +447,7 @@ namespace VehicleFramework.VehicleBuilding
             temp.SetLabel("Vehicle");
             VFPingManager.mvPings.Add(temp);
         }
-        public static void SetupVehicleConfig(ModVehicle mv)
-        {
-            // add various vehicle things
-            mv.stabilizeRoll = true;
-            mv.controlSheme = Admin.EnumHelper.GetScheme();
-            mv.mainAnimator = mv.gameObject.EnsureComponent<Animator>();
-            if (SeamothHelper.Seamoth == null)
-            {
-                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
-            }
-            mv.splashSound = SeamothHelper.Seamoth.GetComponent<SeaMoth>().splashSound;
-            // TODO
-            //atrama.vehicle.bubbles = CopyComponent<ParticleSystem>(seamoth.GetComponent<SeaMoth>().bubbles, atrama.vehicle.gameObject);
-        }
-        public static void SetupCrushDamage(ModVehicle mv)
+        internal static void SetupCrushDamage(ModVehicle mv)
         {
             var ce = mv.gameObject.AddComponent<FMOD_CustomEmitter>();
             ce.restartOnPlay = true;
@@ -564,28 +478,29 @@ namespace VehicleFramework.VehicleBuilding
             // TODO: this is of type VoiceNotification
             mv.crushDamage.crushDepthUpdate = null;
         }
-        public static void SetupWaterClipping(ModVehicle mv)
+        internal static void SetupWaterClipping(ModVehicle mv)
         {
-            if (mv.WaterClipProxies != null)
+            if (mv.WaterClipProxies == null)
             {
-                // Enable water clipping for proper interaction with the surface of the ocean
-                if (SeamothHelper.Seamoth == null)
-                {
-                    throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
-                }
-                WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
-                foreach (GameObject proxy in mv.WaterClipProxies)
-                {
-                    WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
-                    waterClip.shape = WaterClipProxy.Shape.Box;
-                    //"""Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.""" -Lee23
-                    waterClip.clipMaterial = seamothWCP.clipMaterial;
-                    //"""You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.""" -Lee23
-                    waterClip.gameObject.layer = seamothWCP.gameObject.layer;
-                }
+                return;
+            }
+            // Enable water clipping for proper interaction with the surface of the ocean
+            if (SeamothHelper.Seamoth == null)
+            {
+                throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
+            }
+            WaterClipProxy seamothWCP = SeamothHelper.Seamoth.GetComponentInChildren<WaterClipProxy>();
+            foreach (GameObject proxy in mv.WaterClipProxies)
+            {
+                WaterClipProxy waterClip = proxy.AddComponent<WaterClipProxy>();
+                waterClip.shape = WaterClipProxy.Shape.Box;
+                //"""Apply the seamoth's clip material. No idea what shader it uses or what settings it actually has, so this is an easier option. Reuse the game's assets.""" -Lee23
+                waterClip.clipMaterial = seamothWCP.clipMaterial;
+                //"""You need to do this. By default the layer is 0. This makes it displace everything in the default rendering layer. We only want to displace water.""" -Lee23
+                waterClip.gameObject.layer = seamothWCP.gameObject.layer;
             }
         }
-        public static void SetupSubName(ModVehicle mv)
+        internal static void SetupSubName(ModVehicle mv)
         {
             var subname = mv.gameObject.EnsureComponent<SubName>();
             subname.pingInstance = mv.GetComponent<PingInstance>();
@@ -594,7 +509,7 @@ namespace VehicleFramework.VehicleBuilding
             mv.subName = subname;
             mv.SetName(mv.vehicleDefaultName);
         }
-        public static void SetupCollisionSound(ModVehicle mv)
+        internal static void SetupCollisionSound(ModVehicle mv)
         {
             var colsound = mv.gameObject.EnsureComponent<CollisionSound>();
             if (SeamothHelper.Seamoth == null)
@@ -607,16 +522,16 @@ namespace VehicleFramework.VehicleBuilding
             colsound.hitSoundMedium = seamothColSound.hitSoundMedium;
             colsound.hitSoundFast = seamothColSound.hitSoundFast;
         }
-        public static void SetupOutOfBoundsWarp(ModVehicle mv)
+        internal static void SetupOutOfBoundsWarp(ModVehicle mv)
         {
             mv.gameObject.EnsureComponent<OutOfBoundsWarp>();
         }
-        public static void SetupConstructionObstacle(ModVehicle mv)
+        internal static void SetupConstructionObstacle(ModVehicle mv)
         {
             var co = mv.gameObject.EnsureComponent<ConstructionObstacle>();
             co.reason = $"{mv.HullName} is in the way.";
         }
-        public static void SetupSoundOnDamage(ModVehicle mv)
+        internal static void SetupSoundOnDamage(ModVehicle mv)
         {
             // TODO: we could have unique sounds for each damage type
             // TODO: this might not work, might need to put it in a VehicleStatusListener
@@ -628,7 +543,7 @@ namespace VehicleFramework.VehicleBuilding
             }
             sod.sound = SeamothHelper.Seamoth.GetComponent<SoundOnDamage>().sound;
         }
-        public static void SetupDealDamageOnImpact(ModVehicle mv)
+        internal static void SetupDealDamageOnImpact(ModVehicle mv)
         {
             var ddoi = mv.gameObject.EnsureComponent<DealDamageOnImpact>();
             // NEWNEW
@@ -647,7 +562,7 @@ namespace VehicleFramework.VehicleBuilding
             ddoi.prevPosition = Vector3.zero;
             ddoi.allowDamageToPlayer = false;
         }
-        public static void SetupDamageComponents(ModVehicle mv)
+        internal static void SetupDamageComponents(ModVehicle mv)
         {
             // add vfxvehicledamages... or not
 
@@ -679,97 +594,91 @@ namespace VehicleFramework.VehicleBuilding
             cr.addedComponents = new Component[1];
             cr.addedComponents[0] = et as Component;
         }
-        public static void SetupLavaLarvaAttachPoints(ModVehicle mv)
+        internal static void SetupLavaLarvaAttachPoints(ModVehicle mv)
         {
-            if (mv.LavaLarvaAttachPoints != null && mv.LavaLarvaAttachPoints.Count > 0)
+            if (mv.LavaLarvaAttachPoints == null || mv.LavaLarvaAttachPoints.Count == 0)
             {
-                GameObject attachParent = new("AttachedLavaLarvae");
-                attachParent.transform.SetParent(mv.transform);
-                attachParent.AddComponent<EcoTarget>().SetTargetType(EcoTargetType.HeatSource);
-                var lavaLarvaTarget = attachParent.AddComponent<LavaLarvaTarget>();
-                lavaLarvaTarget.energyInterface = mv.energyInterface;
-                lavaLarvaTarget.larvaePrefabRoot = attachParent.transform;
-                lavaLarvaTarget.liveMixin = mv.liveMixin;
-                lavaLarvaTarget.primiryPointsCount = mv.LavaLarvaAttachPoints.Count;
-                lavaLarvaTarget.vehicle = mv;
-                lavaLarvaTarget.subControl = null;
-                List<LavaLarvaAttachPoint> llapList = new();
-                foreach (var llap in mv.LavaLarvaAttachPoints)
-                {
-                    GameObject llapGO = new();
-                    llapGO.transform.SetParent(attachParent.transform);
-                    var thisLlap = llapGO.AddComponent<LavaLarvaAttachPoint>();
-                    thisLlap.Clear();
-                    llapList.Add(thisLlap);
-                    llapGO.transform.localPosition = attachParent.transform.InverseTransformPoint(llap.position);
-                    llapGO.transform.localEulerAngles = attachParent.transform.InverseTransformDirection(llap.eulerAngles);
-                }
-                lavaLarvaTarget.attachPoints = llapList.ToArray();
+                return;
             }
+            GameObject attachParent = new("AttachedLavaLarvae");
+            attachParent.transform.SetParent(mv.transform);
+            attachParent.AddComponent<EcoTarget>().SetTargetType(EcoTargetType.HeatSource);
+            var lavaLarvaTarget = attachParent.AddComponent<LavaLarvaTarget>();
+            lavaLarvaTarget.energyInterface = mv.energyInterface;
+            lavaLarvaTarget.larvaePrefabRoot = attachParent.transform;
+            lavaLarvaTarget.liveMixin = mv.liveMixin;
+            lavaLarvaTarget.primiryPointsCount = mv.LavaLarvaAttachPoints.Count;
+            lavaLarvaTarget.vehicle = mv;
+            lavaLarvaTarget.subControl = null;
+            List<LavaLarvaAttachPoint> llapList = new();
+            foreach (var llap in mv.LavaLarvaAttachPoints)
+            {
+                GameObject llapGO = new();
+                llapGO.transform.SetParent(attachParent.transform);
+                var thisLlap = llapGO.AddComponent<LavaLarvaAttachPoint>();
+                thisLlap.Clear();
+                llapList.Add(thisLlap);
+                llapGO.transform.localPosition = attachParent.transform.InverseTransformPoint(llap.position);
+                llapGO.transform.localEulerAngles = attachParent.transform.InverseTransformDirection(llap.eulerAngles);
+            }
+            lavaLarvaTarget.attachPoints = llapList.ToArray();
         }
-        public static void SetupSubRoot(Submarine mv, PowerRelay powerRelay)
+        internal static void SetupSubRoot(Submarine mv, PowerRelay powerRelay)
         {
             var subroot = mv.gameObject.EnsureComponent<SubRoot>();
             subroot.rb = mv.useRigidbody;
             subroot.worldForces = mv.worldForces;
             subroot.modulesRoot = mv.modulesRoot.transform;
             subroot.powerRelay = powerRelay;
-            if (mv.RespawnPoint == null)
-            {
-                mv.gameObject.EnsureComponent<RespawnPoint>();
-            }
-            else
-            {
-                mv.RespawnPoint.EnsureComponent<RespawnPoint>();
-            }
+            (mv.RespawnPoint ?? mv.gameObject).EnsureComponent<RespawnPoint>();
         }
-        public static void SetupCameraController(ModVehicle mv)
+        internal static void SetupCameraController(ModVehicle mv)
         {
-            if (mv.Cameras != null && mv.Cameras.Count != 0)
+            if (mv.Cameras == null || mv.Cameras.Count == 0)
             {
-                var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
-                mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
+                return;
             }
+            var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
+            mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
         }
-        public static void SetupDenyBuildingTags(ModVehicle mv)
+        internal static void SetupDenyBuildingTags(ModVehicle mv)
         {
             mv.DenyBuildingColliders?.ForEach(x => x.tag = Builder.denyBuildingTag);
         }
-
         #endregion
-        public static bool Instrument(ModVehicle mv, PingType pingType)
+        internal static bool Instrument(ModVehicle mv, PingType pingType)
         {
             mv.StorageRootObject.EnsureComponent<ChildObjectIdentifier>();
             mv.modulesRoot = mv.ModulesRootObject.EnsureComponent<ChildObjectIdentifier>();
-            
-            if(!SetupObjects(mv as ModVehicle))
+
+            if (!SetupObjects(mv as ModVehicle))
             {
                 Logger.Error("Failed to SetupObjects for ModVehicle.");
                 return false;
             }
-            Submarine? Sub = mv as Submarine;
-            if (Sub != null && !SetupObjects(Sub))
+
+            switch (mv)
             {
-                Logger.Error("Failed to SetupObjects for Submarine.");
-                return false;
+                case Submarine sub:
+                    SetupObjects(sub);
+                    break;
+                case Submersible subbie:
+                    SetupObjects(subbie);
+                    break;
+                default:
+                    break;
             }
-            Submersible? Subbie = mv as Submersible;
-            if (Subbie != null && !SetupObjects(Subbie))
-            {
-                Logger.Error("Failed to SetupObjects for Submersible.");
-                return false;
-            }
+
             mv.enabled = false;
             SetupEnergyInterface(mv);
             mv.enabled = true;
-            SetupHeadLights(mv);
+            SetupLights(mv, mv.HeadLights);
             SetupLightSounds(mv);
             SetupLiveMixin(mv);
             SetupRigidbody(mv);
             SetupWorldForces(mv);
             SetupHudPing(mv, pingType);
-            SetupVehicleConfig(mv);
-            SetupCrushDamage(mv);
+            SetupCrushDamage(mv); // must be after liveMixin
             SetupWaterClipping(mv);
             SetupSubName(mv);
             SetupCollisionSound(mv);
@@ -782,21 +691,22 @@ namespace VehicleFramework.VehicleBuilding
             SetupDenyBuildingTags(mv);
             mv.collisionModel = mv.CollisionModel;
 
-            if (Sub != null)
+            switch (mv)
             {
-                SetupEngine(Sub);
-                SetupFloodLights(Sub);
-                PowerRelay powerRelay = mv.gameObject.AddComponent<PowerRelay>(); // See PowerRelayPatcher. Allows Submarines to recharge batteries.
-                SetupSubRoot(Sub, powerRelay); // depends on SetupWorldForces
-            }
-            if (Subbie != null)
-            {
-                SetupEngine(Subbie);
-            }
-            Drone? myDrone = mv as Drone;
-            if (myDrone != null)
-            {
-                SetupEngine(myDrone);
+                case Submarine sub:
+                    SetupEngine(sub);
+                    SetupLights(sub, sub.FloodLights);
+                    PowerRelay powerRelay = mv.gameObject.AddComponent<PowerRelay>(); // See PowerRelayPatcher. Allows Submarines to recharge batteries.
+                    SetupSubRoot(sub, powerRelay); // depends on SetupWorldForces
+                    break;
+                case Submersible subbie:
+                    SetupEngine(subbie);
+                    break;
+                case Drone drone:
+                    SetupEngine(drone);
+                    break;
+                default:
+                    break;
             }
 
             // ApplyShaders should happen last
@@ -805,25 +715,24 @@ namespace VehicleFramework.VehicleBuilding
 
             return true;
         }
-        public static void ApplyGlassMaterial(ModVehicle mv)
+        internal static void ApplyGlassMaterial(ModVehicle mv)
         {
+            if(mv.CanopyWindows == null || mv.CanopyWindows.Count == 0)
+            {
+                return;
+            }
             if (SeamothHelper.Seamoth == null)
             {
                 throw Admin.SessionManager.Fatal("SeamothHelper.Seamoth is null! Did you forget to call SeamothHelper.EnsureSeamoth()?");
             }
             // Add the [marmoset] shader to all renderers
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true))
+            foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true).Where(x => mv.CanopyWindows.Contains(x.gameObject)))
             {
-                if (mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
-                {
-                    var seamothGlassMaterial = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
-                    renderer.material = seamothGlassMaterial;
-                    renderer.material = seamothGlassMaterial; // this is the right line
-                    continue;
-                }
+                var seamothGlassMaterial = SeamothHelper.Seamoth.transform.Find("Model/Submersible_SeaMoth/Submersible_seaMoth_geo/Submersible_SeaMoth_glass_interior_geo").GetComponent<SkinnedMeshRenderer>().material;
+                renderer.material = seamothGlassMaterial; // this is the right line
             }
         }
-        public static void ApplyShaders(ModVehicle mv, Shader shader)
+        internal static void ApplyShaders(ModVehicle mv, Shader shader)
         {
             if (mv.AutoApplyShaders)
             {
@@ -831,38 +740,30 @@ namespace VehicleFramework.VehicleBuilding
                 ApplyGlassMaterial(mv);
             }
         }
-        public static void ForceApplyShaders(ModVehicle mv, Shader shader)
+        internal static void ForceApplyShaders(ModVehicle mv, Shader shader)
         {
-            if(shader == null)
+            if (shader == null)
             {
-                Logger.Error("Tried to apply a null Shader.");
+                Logger.Warn("Tried to apply a null Shader.");
                 return;
             }
-            // Add the [marmoset] shader to all renderers
-            foreach (var renderer in mv.gameObject.GetComponentsInChildren<Renderer>(true))
+            bool IsValidTarget(Renderer rend)
             {
-                // skip some materials
-                if (renderer.gameObject.GetComponent<Skybox>())
+                if (rend.gameObject.GetComponent<SkipMarmo>())
                 {
-                    // I feel okay using Skybox as the designated "don't apply marmoset to me" component.
-                    // I think there's no reason a vehicle should have a skybox anywhere.
-                    // And if there is, I'm sure that developer can work around this.
-                    Component.DestroyImmediate(renderer.gameObject.GetComponent<Skybox>());
-                    continue;
+                    return false;
                 }
-                if (renderer.gameObject.name.ToLower().Contains("light"))
+                if (mv.CanopyWindows != null && mv.CanopyWindows.Contains(rend.gameObject))
                 {
-                    continue;
+                    return false;
                 }
-                if (mv.CanopyWindows != null && mv.CanopyWindows.Contains(renderer.gameObject))
-                {
-                    continue;
-                }
-                foreach (Material mat in renderer.materials)
-                {
-                    // give it the marmo shader, no matter what
-                    mat.shader = shader;
-                }
+                return true;
+            }
+            // Add the [marmoset] shader to all renderers
+            foreach (var material in mv.gameObject.GetComponentsInChildren<Renderer>(true).Where(IsValidTarget).SelectMany(x => x.materials))
+            {
+                // give it the marmo shader, no matter what
+                material.shader = shader;
             }
         }
         public static T? CopyComponent<T>(T original, GameObject destination) where T : Component
