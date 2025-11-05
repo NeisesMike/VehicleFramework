@@ -1,7 +1,7 @@
 ﻿//using VehicleFramework.Localization;
 using UnityEngine;
 
-namespace VehicleFramework.StorageComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     public class VehicleBatteryInput : HandTarget, IHandTarget
 	{

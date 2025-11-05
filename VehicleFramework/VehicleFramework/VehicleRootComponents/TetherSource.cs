@@ -8,7 +8,7 @@ using UnityEngine;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Interfaces;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     /*
      * Tether Sources are meant to be placed throughout the Submarine.

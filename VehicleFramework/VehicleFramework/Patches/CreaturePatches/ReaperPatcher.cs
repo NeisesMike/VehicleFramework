@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using VehicleFramework.Extensions;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleRootComponents;
 
 // PURPOSE: allows Reaper Leviathans to grab a ModVehicle. Configure how much damage their bite does.
 // VALUE: High.

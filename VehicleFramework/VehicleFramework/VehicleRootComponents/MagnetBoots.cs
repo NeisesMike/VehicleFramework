@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using VehicleFramework.Extensions;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     public class MagnetBoots : MonoBehaviour, IProtoTreeEventListener
     {

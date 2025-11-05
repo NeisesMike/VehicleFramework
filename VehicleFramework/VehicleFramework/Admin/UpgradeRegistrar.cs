@@ -204,7 +204,7 @@ namespace VehicleFramework.Admin
                         }
                         if (upgrade is ModVehicleArm arm && param.vehicle is ModVehicle)
                         {
-                            var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleComponents.VFArmsManager>();
+                            var armsManager = param.vehicle.gameObject.EnsureComponent<VehicleRootComponents.VFArmsManager>();
                             armsManager.UpdateArms(arm, param.slotID);
                         }
                     }

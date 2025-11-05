@@ -7,7 +7,7 @@ using UnityEngine;
 using VehicleFramework.Interfaces;
 using VehicleFramework.Admin;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     /*
      * The PowerManager handles all power drains for the ModVehicle.

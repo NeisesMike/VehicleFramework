@@ -4,7 +4,7 @@ using UnityEngine;
 using VehicleFramework.Assets;
 using VehicleFramework.VehicleTypes;
 
-namespace VehicleFramework.StorageComponents
+namespace VehicleFramework.VehicleChildComponents
 {
 	public class InnateStorageContainer : MonoBehaviour, ICraftTarget//, IProtoEventListener, IProtoTreeEventListener
 	{

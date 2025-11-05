@@ -2,7 +2,7 @@
 using System.Linq;
 using VehicleFramework.SaveLoad;
 
-namespace VehicleFramework.StorageComponents
+namespace VehicleFramework.VehicleChildComponents
 {
 	public class ModularStorageInput : StorageInput
 	{

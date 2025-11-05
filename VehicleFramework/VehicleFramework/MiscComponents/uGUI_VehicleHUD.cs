@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
-using VehicleFramework.StorageComponents;
+using VehicleFramework.VehicleChildComponents;
 using VehicleFramework.Extensions;
 using VehicleFramework.Admin;
 

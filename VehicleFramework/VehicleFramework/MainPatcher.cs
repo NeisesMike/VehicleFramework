@@ -72,7 +72,7 @@ namespace VehicleFramework
             {
                 try
                 {
-                    VehicleComponents.MagnetBoots.DetachAll();
+                    VehicleRootComponents.MagnetBoots.DetachAll();
                 }
                 catch (Exception ex)
                 {

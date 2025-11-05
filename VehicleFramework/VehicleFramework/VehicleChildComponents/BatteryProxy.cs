@@ -7,7 +7,7 @@ using UnityEngine;
 using VehicleFramework.VehicleBuilding;
 using VehicleFramework.Assets;
 
-namespace VehicleFramework.StorageComponents
+namespace VehicleFramework.VehicleChildComponents
 {
     public class BatteryProxy : MonoBehaviour
     {
@@ -16,7 +16,7 @@ namespace VehicleFramework.StorageComponents
 
         internal static void Create(VehicleBattery vb, EnergyMixin energyMixin)
         {
-            var model = vb.BatterySlot.gameObject.EnsureComponent<StorageComponents.BatteryProxy>();
+            var model = vb.BatterySlot.gameObject.EnsureComponent<VehicleChildComponents.BatteryProxy>();
             model.proxy = vb.BatteryProxy;
             model.mixin = energyMixin;
         }

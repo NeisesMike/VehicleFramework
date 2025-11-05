@@ -6,7 +6,6 @@ using UnityEngine;
 using VehicleFramework.Admin;
 using VehicleFramework.Assets;
 using VehicleFramework.Engines;
-using VehicleFramework.StorageComponents;
 using VehicleFramework.VehicleChildComponents;
 using VehicleFramework.VehicleTypes;
 using static ConsoleInput;
@@ -647,7 +646,7 @@ namespace VehicleFramework.VehicleBuilding
             {
                 return;
             }
-            var camController = mv.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
+            var camController = mv.gameObject.EnsureComponent<VehicleRootComponents.MVCameraController>();
             mv.Cameras.ForEach(x => camController.AddCamera(x.camera, x.name));
         }
         internal static void SetupDenyBuildingTags(ModVehicle mv)

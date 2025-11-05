@@ -5,7 +5,7 @@ using VehicleFramework.VehicleTypes;
 using VehicleFramework.Admin;
 using VehicleFramework.VehicleBuilding;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     // This component is applied to ModVehicles.
     // It manages ModVehicleArms and their actions.

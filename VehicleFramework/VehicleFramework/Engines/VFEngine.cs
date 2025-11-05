@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using VehicleFramework.Interfaces;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleRootComponents;
 
 namespace VehicleFramework.Engines
 {

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-//using VehicleFramework.Localization;
+﻿using UnityEngine;
 
-namespace VehicleFramework.StorageComponents
+namespace VehicleFramework.VehicleChildComponents
 {
 	public abstract class StorageInput : HandTarget, IHandTarget
 	{

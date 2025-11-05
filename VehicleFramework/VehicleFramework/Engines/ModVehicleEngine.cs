@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using VehicleFramework.Admin;
 using VehicleFramework.Extensions;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleRootComponents;
 
 namespace VehicleFramework.Engines
 {

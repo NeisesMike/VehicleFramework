@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleRootComponents;
 
 // PURPOSE: Ensure onboard fabricators are correctly powered. Ensure the constructor cannot build two MVs at once.
 // VALUE: High.

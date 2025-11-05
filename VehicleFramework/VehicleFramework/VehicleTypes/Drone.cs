@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VehicleFramework.Engines;
 using UnityEngine;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleRootComponents;
 using VehicleFramework.Interfaces;
 using VehicleFramework.Assets;
 using VehicleFramework.Extensions;
@@ -22,7 +22,7 @@ namespace VehicleFramework.VehicleTypes
         public const float baseConnectionDistance = 350;
         public float addedConnectionDistance = 0;
         public abstract Transform CameraLocation { get; }
-        private VehicleComponents.MVCameraController camControl = null!;
+        private VehicleRootComponents.MVCameraController camControl = null!;
         private const GameInput.Button AutoHomeButton = GameInput.Button.PDA;
         private bool _IsConnecting = false;
         public bool IsConnecting
@@ -51,7 +51,7 @@ namespace VehicleFramework.VehicleTypes
         public override void Awake()
         {
             base.Awake();
-            camControl = CameraLocation.gameObject.EnsureComponent<VehicleComponents.MVCameraController>();
+            camControl = CameraLocation.gameObject.EnsureComponent<VehicleRootComponents.MVCameraController>();
             Admin.GameObjectManager<Drone>.Register(this);
             replenishesOxygen = false;
             gameObject.AddComponent<VFXSchoolFishRepulsor>();

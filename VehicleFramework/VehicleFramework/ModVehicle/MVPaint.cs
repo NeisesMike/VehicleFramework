@@ -10,9 +10,9 @@ using VehicleFramework.Engines;
 using VehicleFramework.Extensions;
 using VehicleFramework.Interfaces;
 using VehicleFramework.LightControllers;
-using VehicleFramework.StorageComponents;
+using VehicleFramework.VehicleChildComponents;
 using VehicleFramework.VehicleBuilding;
-using VehicleFramework.VehicleComponents;
+using VehicleFramework.VehicleRootComponents;
 using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework

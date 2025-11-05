@@ -53,7 +53,7 @@ namespace VehicleFramework.VehicleTypes
             {
                 gameObject.AddComponent<NavigationLightsController>();
             }
-            gameObject.EnsureComponent<VehicleComponents.TetherSource>();
+            gameObject.EnsureComponent<VehicleRootComponents.TetherSource>();
 
             ControlPanel?.EnsureComponent<ControlPanel.ControlPanel>();
 

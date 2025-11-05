@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     public class Scuttler : MonoBehaviour
     {

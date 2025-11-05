@@ -1,7 +1,7 @@
 ﻿using System;
 using VehicleFramework.MiscComponents;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     public abstract class ModVehicleDockingBay : DockingBay
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Interfaces;
 
-namespace VehicleFramework.VehicleComponents
+namespace VehicleFramework.VehicleRootComponents
 {
     public class MVCameraController : MonoBehaviour, IPlayerListener
     {

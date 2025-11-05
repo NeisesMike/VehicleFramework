@@ -2,7 +2,7 @@
 using HarmonyLib;
 using UnityEngine;
 using System.Reflection;
-using VehicleFramework.StorageComponents;
+using VehicleFramework.VehicleChildComponents;
 
 // PURPOSE: Allow drones to target, hover, and pick things up in an intuitive way.
 // VALUE: High.
