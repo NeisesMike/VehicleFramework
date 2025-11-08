@@ -51,6 +51,7 @@ namespace VehicleFramework.VehicleTypes
         public override void Awake()
         {
             base.Awake();
+            Component.DestroyImmediate(gameObject.EnsureComponent<AutoPilotOxygen>());
             camControl = CameraLocation.gameObject.EnsureComponent<VehicleRootComponents.MVCameraController>();
             Admin.GameObjectManager<Drone>.Register(this);
             replenishesOxygen = false;
