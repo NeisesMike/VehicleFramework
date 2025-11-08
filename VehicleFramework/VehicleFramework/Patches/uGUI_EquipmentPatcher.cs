@@ -61,8 +61,9 @@ namespace VehicleFramework.Patches
         }
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_Equipment.Init))]
-        public static void OnDragHoverExitPatch(Equipment equipment)
+        public static void OnDragHoverExitPatch(Equipment equipment, ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
+            ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
             equipment.owner.GetComponent<ModVehicle>()?.UnlockDefaultModuleSlots();
             // The following was an attempt to fix the "slots don't appear unless the PDA has be opened once already" issue. Unsuccessful.
             /*

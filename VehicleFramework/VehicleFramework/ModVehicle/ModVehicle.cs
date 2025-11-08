@@ -242,11 +242,17 @@ namespace VehicleFramework
             GetComponent<VFArmsManager>()?.DoArmUp(false);
         }
         public override string[] slotIDs
-        { // You probably do not want to override this
+        { // You probably do not want to override this. Override GetVehicleModuleSlots or GetVehicleArmSlots instead.
             get
             {
-                _slotIDs ??= GenerateSlotIDs(VehicleConfig.GetConfig(this).NumUpgrades.Value, VehicleConfig.GetConfig(this).IsArms.Value);
-                return _slotIDs;
+                if (HasArms)
+                {
+                    return VehicleTypeToSlots.Values.SelectMany(x => x).ToArray();
+                }
+                else
+                {
+                    return VehicleTypeToSlots[EnumHelper.GetModuleType()].ToArray();
+                }
             }
         }
         public override string vehicleDefaultName
@@ -565,6 +571,7 @@ namespace VehicleFramework
         {
 
         }
+        protected virtual int UpgradeModuleCount => VehicleConfig.GetConfig(this).NumUpgrades.Value;
         #endregion
 
         #region public_fields
@@ -660,19 +667,16 @@ namespace VehicleFramework
         private bool _isDocked = false;
         private int _numEfficiencyModules = 0;
         private int _numArmorModules = 0;
-        private string[]? _slotIDs = null;
         private readonly List<Action<int, TechType, bool>> upgradeOnAddedActions = new();
         internal List<GameObject> volumetricLights = new();
+        internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new()
+                {
+                    { EnumHelper.GetModuleType(), GetVehicleModuleSlots() },
+                    { EnumHelper.GetArmType(), GetVehicleArmSlots() }
+                };
         #endregion
 
         #region internal_methods
-        internal List<string> VehicleModuleSlots => GenerateModuleSlots(VehicleConfig.GetConfig(this).NumUpgrades.Value).ToList(); // use config value instead
-        internal static List<string> VehicleArmSlots => new() { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
-        internal Dictionary<EquipmentType, List<string>> VehicleTypeToSlots => new()
-                {
-                    { EnumHelper.GetModuleType(), VehicleModuleSlots },
-                    { EnumHelper.GetArmType(), VehicleArmSlots }
-                };
         private void StorageModuleAction(int slotID, TechType techType, bool added)
         {
             if (techType == TechType.VehicleStorageModule)
@@ -971,6 +975,19 @@ namespace VehicleFramework
             MyExitLockedMode();
             return;
         }
+        private List<string> GetVehicleModuleSlots()
+        {
+            List<string> retIDs = new();
+            for (int i = 0; i < UpgradeModuleCount; i++)
+            {
+                retIDs.Add(ModuleBuilder.ModVehicleModulePrefix + i.ToString());
+            }
+            return retIDs;
+        }
+        private List<string> GetVehicleArmSlots()
+        {
+            return new() { ModuleBuilder.LeftArmSlotName, ModuleBuilder.RightArmSlotName };
+        }
         #endregion
 
         #region public_methods
@@ -1143,32 +1160,6 @@ namespace VehicleFramework
         #endregion
 
         #region static_methods
-        private static string[] GenerateModuleSlots(int modules)
-        {
-            string[] retIDs;
-            retIDs = new string[modules];
-            for (int i = 0; i < modules; i++)
-            {
-                retIDs[i] = ModuleBuilder.ModVehicleModulePrefix + i.ToString();
-            }
-            return retIDs;
-        }
-        private static string[] GenerateSlotIDs(int modules, bool arms)
-        {
-            string[] retIDs;
-            int numUpgradesTotal = arms ? modules + 2 : modules;
-            retIDs = new string[numUpgradesTotal];
-            for (int i = 0; i < modules; i++)
-            {
-                retIDs[i] = ModuleBuilder.ModVehicleModulePrefix + i.ToString();
-            }
-            if (arms)
-            {
-                retIDs[modules] = ModuleBuilder.LeftArmSlotName;
-                retIDs[modules + 1] = ModuleBuilder.RightArmSlotName;
-            }
-            return retIDs;
-        }
         internal static void MaybeControlRotation(Vehicle veh)
         {
             ModVehicle? mv = veh as ModVehicle;
