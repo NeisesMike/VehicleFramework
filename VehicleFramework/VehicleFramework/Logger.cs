@@ -30,6 +30,13 @@ namespace VehicleFramework
                 MyLog.LogInfo($"[DebugLog]: {message}");
             }
         }
+        public static void DebugException(string message, System.Exception e, bool outputToScreen = false)
+        {
+            if (MainPatcher.NautilusConfig.IsDebugLogging)
+            {
+                WarnException($"[DebugLog]: {message}", e, outputToScreen);
+            }
+        }
         public static void WarnException(string message, System.Exception e, bool outputToScreen = false)
         {
             Warn(message);
