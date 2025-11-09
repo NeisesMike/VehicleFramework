@@ -51,18 +51,9 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandClick))]
         public static void VehicleUpgradeConsoleInputOnHandClickHarmonyPostfix(VehicleUpgradeConsoleInput __instance)
         {
-            foreach (var mv in VehicleManager.VehiclesInPlay.Where(x => x != null))
-            {
-                if (mv.upgradesInput == __instance)
-                {
-                    if(VehicleBuilding.ModuleBuilder.main == null)
-                    {
-                        throw Admin.SessionManager.Fatal("ModuleBuilder.main is null! Cannot set background image for VehicleUpgradeConsoleInput.");
-                    }
-                    VehicleBuilding.ModuleBuilder.main.BackgroundSprite = mv.ModuleBackgroundImage;
-                    break;
-                }
-            }
+            ModVehicle thisMV = VehicleManager.VehiclesInPlay.Where(x => x != null).First(x => x.upgradesInput == __instance);
+            VehicleBuilding.ModuleBuilder.BackgroundSprite = thisMV.ModuleBackgroundImage;
+            VehicleBuilding.ModuleBuilder.SignalUpgradePDAOpened(__instance);
         }
     }
 }

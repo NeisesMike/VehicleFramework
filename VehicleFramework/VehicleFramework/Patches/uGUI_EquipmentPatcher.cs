@@ -21,6 +21,7 @@ namespace VehicleFramework.Patches
 
         private static Dictionary<string, uGUI_EquipmentSlot> GetAllSlotsWithVFSlots(Dictionary<string, uGUI_EquipmentSlot> existingSlots)
         {
+            ModuleBuilder.BuildAllSlots();
             return existingSlots
                             .Concat(ModuleBuilder.vehicleAllSlots.Where(kvp => !existingSlots.ContainsKey(kvp.Key)))
                             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -30,16 +31,7 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(uGUI_Equipment.Awake))]
         public static void AwakePostfix(ref Dictionary<string, uGUI_EquipmentSlot> ___allSlots)
         {
-            if (!ModuleBuilder.haveWeCalledBuildAllSlots)
-            {
-                ModuleBuilder.haveWeCalledBuildAllSlots = true;
-                ModuleBuilder.main = Player.main.gameObject.AddComponent<ModuleBuilder>();
-                ModuleBuilder.main.GrabComponents();
-                ModuleBuilder.main.isEquipmentInit = true;
-                ModuleBuilder.vehicleAllSlots = ___allSlots;
-                ModuleBuilder.main.BuildAllSlots();
-                ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
-            }
+            ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
         }
         [HarmonyPrefix]
         [HarmonyPatch(nameof(uGUI_Equipment.OnDragHoverEnter))]
@@ -65,27 +57,6 @@ namespace VehicleFramework.Patches
         {
             ___allSlots = GetAllSlotsWithVFSlots(___allSlots);
             equipment.owner.GetComponent<ModVehicle>()?.UnlockDefaultModuleSlots();
-            // The following was an attempt to fix the "slots don't appear unless the PDA has be opened once already" issue. Unsuccessful.
-            /*
-            ModVehicle? mv = equipment.owner.GetComponent<ModVehicle>();
-            if (mv == null)
-            {
-                return;
-            }
-            if (ModuleBuilder.slotExtenderHasGreenLight)
-            {
-                mv.UnlockDefaultModuleSlots();
-            }
-            else
-            {
-                IEnumerator UnlockDefaultSlotsASAP()
-                {
-                    yield return new WaitUntil(() => ModuleBuilder.slotExtenderHasGreenLight);
-                    __instance.Init(equipment);
-                }
-                Admin.SessionManager.StartCoroutine(UnlockDefaultSlotsASAP());
-            }
-            */
         }
     }
 }

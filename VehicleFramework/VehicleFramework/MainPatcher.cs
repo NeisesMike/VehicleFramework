@@ -83,9 +83,7 @@ namespace VehicleFramework
             void SetWorldNotLoaded()
             {
                 Admin.GameStateWatcher.IsWorldLoaded = false;
-                ModuleBuilder.haveWeCalledBuildAllSlots = false;
-                ModuleBuilder.slotExtenderIsPatched = false;
-                ModuleBuilder.slotExtenderHasGreenLight = false;
+                ModuleBuilder.Reset();
             }
             void SetWorldLoaded()
             {
