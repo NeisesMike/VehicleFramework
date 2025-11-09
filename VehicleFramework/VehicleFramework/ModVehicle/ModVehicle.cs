@@ -572,6 +572,20 @@ namespace VehicleFramework
 
         }
         protected virtual int UpgradeModuleCount => VehicleConfig.GetConfig(this).NumUpgrades.Value;
+        protected virtual List<int> UpgradeSlotChoices()
+        {
+            if(UpgradeModuleCount > ModuleBuilder.MaxNumModules)
+            {
+                Logger.Error($"The {HullName} has UpgradeModuleCount greater than ModuleBuilder.MaxNumModules. Capping to {ModuleBuilder.MaxNumModules}");
+            }
+            int maxModules = Math.Min(UpgradeModuleCount, ModuleBuilder.MaxNumModules);
+            List<int> result = new();
+            for (int i = 0; i < maxModules; i++)
+            {
+                result.Add(i);
+            }
+            return result;
+        }
         #endregion
 
         #region public_fields
@@ -977,12 +991,11 @@ namespace VehicleFramework
         }
         private List<string> GetVehicleModuleSlots()
         {
-            List<string> retIDs = new();
-            for (int i = 0; i < UpgradeModuleCount; i++)
+            if(UpgradeSlotChoices().Count > ModuleBuilder.MaxNumModules)
             {
-                retIDs.Add(ModuleBuilder.ModVehicleModulePrefix + i.ToString());
+                throw Admin.SessionManager.Fatal($"The {HullName} has more upgrade slots than ModuleBuilder.MaxNumModules. Capping to {ModuleBuilder.MaxNumModules}");
             }
-            return retIDs;
+            return UpgradeSlotChoices().Select(i => $"{ModuleBuilder.ModVehicleModulePrefix}{i}").ToList();
         }
         private List<string> GetVehicleArmSlots()
         {

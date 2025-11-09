@@ -8,7 +8,7 @@ using static VFXParticlesPool;
 
 namespace VehicleFramework.VehicleBuilding
 {
-    internal class ModuleBuilder
+    public static class ModuleBuilder
     {
         internal static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new();
         public const int MaxNumModules = 18;
@@ -268,7 +268,12 @@ namespace VehicleFramework.VehicleBuilding
 
                 if (i == 0)
                 {
-                    AddBackgroundImage(ref thisModule);
+                    AddBackgroundImage(ref thisModule, i);
+                    thisModule.AddComponent<UpgradeSlotListener>().Privilege();
+                }
+                else
+                {
+                    thisModule.AddComponent<UpgradeSlotListener>();
                 }
             }
 
@@ -341,7 +346,7 @@ namespace VehicleFramework.VehicleBuilding
 
             thisModule.transform.localPosition = new(thisX, thisY, 0);
         }
-        private static void AddBackgroundImage(ref GameObject parent)
+        private static void AddBackgroundImage(ref GameObject parent, int index)
         {
             if(ModulesBackground == null)
             {
