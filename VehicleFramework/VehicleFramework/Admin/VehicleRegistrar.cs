@@ -245,8 +245,7 @@ public static class VehicleRegistrar
                 }
                 if (vu.Flap == null)
                 {
-                    Logger.Error(thisName + " A null VehicleUpgrades.Flap was provided. The upgrades interface requires this. It will be rotated by the angles in this struct when activated. You can set the rotation angle to zero to take no action.");
-                    return false;
+                    VerboseLog(LogType.Log, verbose, thisName + " A null VehicleUpgrades.Flap was provided. The upgrades interface requires this. It will be rotated by the angles in this struct when activated. You can set the rotation angle to zero to take no action.");
                 }
                 if (vu.ModuleProxies == null)
                 {
