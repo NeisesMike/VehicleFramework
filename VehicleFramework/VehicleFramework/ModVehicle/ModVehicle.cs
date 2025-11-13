@@ -375,15 +375,17 @@ namespace VehicleFramework
             {
                 yield return new WaitForSeconds(2.5f);
 
-                // give us an AI battery please
                 TaskResult<GameObject> result = new();
                 yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
+                if (StorageRootObject == null) yield break;
                 GameObject newAIBattery = result.Get();
                 newAIBattery.GetComponent<Battery>().charge = 200;
                 newAIBattery.transform.SetParent(StorageRootObject.transform);
                 if (!energyInterface.hasCharge)
                 {
                     yield return CraftData.InstantiateFromPrefabAsync(TechType.PowerCell, result, false);
+                    if (StorageRootObject == null) yield break;
+                    if (Batteries?.First().BatterySlot?.gameObject == null) yield break;
                     GameObject newPowerCell = result.Get();
                     newPowerCell.GetComponent<Battery>().charge = 200;
                     newPowerCell.transform.SetParent(StorageRootObject.transform);
@@ -435,6 +437,7 @@ namespace VehicleFramework
             IEnumerator EnsureCollisionsEnabledEventually()
             {
                 yield return new WaitForSeconds(5f);
+                if(useRigidbody == null) yield break;
                 useRigidbody.detectCollisions = true;
             }
             SessionManager.StartCoroutine(EnsureCollisionsEnabledEventually());
@@ -1211,10 +1214,20 @@ namespace VehicleFramework
             IEnumerator waitForTeleport()
             {
                 yield return null;
+                if(Player.main == null || mv?.GetComponent<SubRoot>() == null)
+                {
+                    UWE.Utils.ExitPhysicsSyncSection();
+                    yield break;
+                }
                 Player.main.SetPosition(destination);
                 Player.main.SetCurrentSub(mv?.GetComponent<SubRoot>(), true);
                 Player.main.playerController.SetEnabled(true);
                 yield return null;
+                if (Player.main == null || mv?.GetComponent<SubRoot>() == null)
+                {
+                    UWE.Utils.ExitPhysicsSyncSection();
+                    yield break;
+                }
                 UWE.Utils.ExitPhysicsSyncSection();
             }
             SessionManager.StartCoroutine(waitForTeleport());

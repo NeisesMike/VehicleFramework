@@ -192,6 +192,7 @@ namespace VehicleFramework.VehicleChildComponents
         {
             TaskResult<GameObject> result = new();
             yield return CraftData.InstantiateFromPrefabAsync(toAdd, result, false);
+            if (container == null) yield break;
             GameObject spentMaterial = result.Get();
             spentMaterial.SetActive(false);
             try

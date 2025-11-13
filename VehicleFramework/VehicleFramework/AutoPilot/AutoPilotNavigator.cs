@@ -45,6 +45,7 @@ namespace VehicleFramework.AutoPilot
                 float now = Time.time;
                 while(Time.time < now + 0.1f)
                 {
+                    if (engine == null) yield break;
                     engine.ApplyPlayerControls(Vector3.forward * power);
                     engine.ExecutePhysicsMove();
                     yield return new WaitForFixedUpdate();
@@ -55,6 +56,7 @@ namespace VehicleFramework.AutoPilot
                 float now = Time.time;
                 while (Time.time < now + 0.1f && 4 < gameObject.GetComponent<Rigidbody>().velocity.magnitude)
                 {
+                    if (engine == null) yield break;
                     engine.ApplyPlayerControls(-Vector3.forward);
                     engine.ExecutePhysicsMove();
                     yield return new WaitForFixedUpdate();
@@ -77,6 +79,7 @@ namespace VehicleFramework.AutoPilot
             while(20 < Vector3.Distance(transform.position, dest))
             {
                 yield return new WaitForFixedUpdate();
+                if (transform == null) yield break;
                 FaceDestinationFrame(dest);
                 if (CheckClose(dest, 5f))
                 {
@@ -86,7 +89,8 @@ namespace VehicleFramework.AutoPilot
                 if (CheckClose(dest, 25f))
                 {
                     yield return Admin.SessionManager.StartCoroutine(BreakLoop());
-                    if(gameObject.GetComponent<Rigidbody>().velocity.magnitude < 0.1f)
+                    if(gameObject?.GetComponent<Rigidbody>() == null) yield break;
+                    if (gameObject.GetComponent<Rigidbody>().velocity.magnitude < 0.1f)
                     {
                         Logger.PDANote(Language.main.Get("VFAutopilotHint1"));
                         yield break;

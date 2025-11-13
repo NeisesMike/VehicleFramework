@@ -350,6 +350,7 @@ namespace VehicleFramework.LightControllers
             {
                 for (int i = 0; i < sequenceLength - n; i++)
                 {
+                    if (portMats == null || starboardMats == null) yield break;
                     if (0 <= i && i < m)
                     {
                         if (isPortSide)
@@ -374,6 +375,7 @@ namespace VehicleFramework.LightControllers
                     }
                     yield return new WaitForSeconds(0.25f / (sequenceLength - n));
                 }
+                if (portMats == null || starboardMats == null) yield break;
                 if (isPortSide)
                 {
                     BlinkThisLightOff(portMats[m - 1]);
@@ -390,6 +392,7 @@ namespace VehicleFramework.LightControllers
             BlinkOn(positionMats, Color.white);
             while (true)
             {
+                if (MV == null || rb == null) yield break;
                 if (IsLightsOn)
                 {
                     EnableLightClass(LightClass.Positions);

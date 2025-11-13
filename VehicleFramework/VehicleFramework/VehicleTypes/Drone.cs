@@ -45,6 +45,7 @@ namespace VehicleFramework.VehicleTypes
         {
             yield return new WaitForSeconds(0.1f);
             yield return new WaitUntil(() => LargeWorldStreamer.main.isIdle);
+            if (GetComponent<VFEngine>() == null) yield break;
             IsConnecting = false;
             GetComponent<VFEngine>().enabled = true;
         }

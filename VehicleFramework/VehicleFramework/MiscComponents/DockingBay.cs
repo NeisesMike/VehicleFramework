@@ -241,6 +241,10 @@ namespace VehicleFramework.MiscComponents
             OnStartedDocking();
             dockAnimation = Admin.SessionManager.StartCoroutine(DoDockingAnimations(dockTarget, 1f, 1f));
             yield return dockAnimation;
+            if (dockTarget == null)
+            {
+                yield break;
+            }
             dockTarget.docked = true;
             OnFinishedDocking(dockTarget);
             CurrentDockedVehicle = dockTarget;
@@ -256,6 +260,10 @@ namespace VehicleFramework.MiscComponents
             CurrentDockedVehicle.docked = false;
             dockAnimation = Admin.SessionManager.StartCoroutine(DoUndockingAnimations(CurrentDockedVehicle));
             yield return dockAnimation;
+            if (CurrentDockedVehicle == null)
+            {
+                yield break;
+            }
             OnFinishedUndocking(withPlayer, CurrentDockedVehicle);
             CurrentDockedVehicle = null;
             dockAnimation = null;
@@ -272,6 +280,7 @@ namespace VehicleFramework.MiscComponents
             // Move and rotate over the given duration
             while (elapsedTime < duration)
             {
+                if (objectToMove == null) yield break;
                 elapsedTime += Time.deltaTime;
                 // Interpolate position and rotation
                 objectToMove.transform.position = Vector3.Lerp(startPosition, midPosition, elapsedTime / duration);

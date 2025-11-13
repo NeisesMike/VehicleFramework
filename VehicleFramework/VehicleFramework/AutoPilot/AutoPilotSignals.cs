@@ -253,6 +253,7 @@ namespace VehicleFramework.AutoPilot
                 static IEnumerator ShakeCamera()
                 {
                     yield return new WaitForSeconds(4.6f);
+                    if (MainCameraControl.main == null) yield break;
                     MainCameraControl.main.ShakeCamera(1f, 0.5f, MainCameraControl.ShakeMode.Linear, 1f);
                 }
                 Admin.SessionManager.StartCoroutine(ShakeCamera());

@@ -135,6 +135,7 @@ namespace VehicleFramework.Assets
             IEnumerator WaitThenAct()
             {
                 yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted);
+                if (transform == null) yield break;
                 Drone nearest = Admin.GameObjectManager<Drone>.FindNearestSuch(transform.position);
                 DroneStation.FastenConnection(this, nearest);
                 if (GetComponent<Rigidbody>())
@@ -315,12 +316,10 @@ namespace VehicleFramework.Assets
             }
             IEnumerator PingPingForAWhile()
             {
-                if(drone.GetComponent<PingInstance>() == null)
-                {
-                    yield break;
-                }
+                if (drone.GetComponent<PingInstance>() == null) yield break;
                 drone.GetComponent<PingInstance>().enabled = true;
                 yield return new WaitForSeconds(60);
+                if (drone.GetComponent<PingInstance>() == null) yield break;
                 drone.GetComponent<PingInstance>().enabled = false;
             }
             Admin.SessionManager.StartCoroutine(PingPingForAWhile());
