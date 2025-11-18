@@ -80,21 +80,34 @@ namespace VehicleFramework.Patches
             {
                 return true;
             }
-            if (mv.energyInterface == null)
+            if (mv.energyInterface?.sources == null)
             {
                 __result = false;
                 return false;
             }
-            float storedPower = mv.energyInterface.TotalCanProvide(out _);
-            if (amount <= storedPower)
+            if (!GameModeUtils.RequiresPower())
             {
-                modified = mv.energyInterface.ConsumeEnergy(amount);
+                modified = 0f;
                 __result = true;
+                return false;
             }
-            else
+            var canProvide = mv.energyInterface.TotalCanProvide(out _);
+            var canConsume = mv.energyInterface.TotalCanConsume(out _);
+            if (amount < 0 && canProvide < -amount)
             {
+                Logger.DebugLog($"Insufficient power: {-amount} >= {canProvide}");
                 __result = false;
+                return false;
             }
+            if (amount > 0 && canConsume < amount)
+            {
+                Logger.DebugLog($"Insufficient capacity to receive: {amount} >= {canConsume}");
+                __result = false;
+                return false;
+            }
+            var rs = modified = amount;
+            mv.energyInterface.ModifyCharge(amount);
+            __result = true;
             return false;
         }
     }
