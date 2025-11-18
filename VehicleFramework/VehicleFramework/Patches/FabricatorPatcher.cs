@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Linq;
 using VehicleFramework.VehicleRootComponents;
 
 // PURPOSE: Ensure onboard fabricators are correctly powered. Ensure the constructor cannot build two MVs at once.
@@ -40,34 +41,26 @@ namespace VehicleFramework.Patches
 				// If this is Creative or something, don't even bother
 				return true;
 			}
+
+			ModVehicle mv = Admin.VehicleManager.GetVehiclesWhere(x => x.IsUnderCommand).FirstOrDefault();
+			if (mv == null || powerRelay == null)
+			{
+				// Only do something if we're in a ModVehicle
+				// Only do something if the input PowerRelay is not null
+				return true;
+			}
+
 			if (powerRelay.powerPreview == null)
 			{
 				// if powerRelay.powerPreview was null, we must be talking about a ModVehicle
 				// (it was never assigned because PowerRelay.Start is skipped for ModVehicles)
 				// so let's check for one
-				ModVehicle? mv = null;
-				foreach (ModVehicle tempMV in Admin.VehicleManager.VehiclesInPlay)
-				{
-					if (tempMV.IsUnderCommand)
-					{
-						mv = tempMV;
-						break;
-					}
-				}
-				if (mv == null)
-				{
-					Logger.Error("ConsumeEnergyPrefix ERROR: PowerRelay was null, but we weren't in a ModVehicle.");
-					return true;
-				}
-				else
-				{
-					// we found the ModVehicle from whose fabricator we're trying to drain power
-					float WantToSpend = 5f;
-					float SpendTolerance = 4.99f;
-                    float energySpent = mv.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(WantToSpend);
-					__result = SpendTolerance <= energySpent;
-					return false;
-				}
+				// we found the ModVehicle from whose fabricator we're trying to drain power
+				float WantToSpend = 5f;
+				float SpendTolerance = 4.99f;
+				float energySpent = mv.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(WantToSpend);
+				__result = SpendTolerance <= energySpent;
+				return false;
 			}
 			// we should never make it here... so let the base game throw an error :shrug:
 			return true;
