@@ -11,21 +11,25 @@ namespace VehicleFramework.Patches
     [HarmonyPatch(typeof(ConstructorInput))]
     public class ConstructorInputPatcher
     {
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(ConstructorInput.Craft))]
-        public static bool ConstructorInputCraftHarmonyPrefix(ConstructorInput __instance, TechType techType, float duration)
+        public static void ConstructorInputCraftHarmonyPostfix(ConstructorInput __instance, TechType techType, float duration)
         {
+            if ((__instance as Crafter).state == true) // constructor is acting, must have made a decision already
+            {
+                return;
+            }
             if (!Admin.VehicleManager.vehicleTypes.Select(x => x.techType).Contains(techType))
             {
                 // Only do something for ModVehicles
-                return true;
+                return;
             }
             Vector3 zero = Vector3.zero;
             Quaternion identity = Quaternion.identity;
             __instance.GetCraftTransform(techType, ref zero, ref identity);
             if (!CrafterLogic.ConsumeResources(techType))
             {
-                return false;
+                return;
             }
             duration = 10f;
 
@@ -35,7 +39,10 @@ namespace VehicleFramework.Patches
                 (__instance as Crafter).OnCraftingBegin(techType, duration);
             }
 
-            return false;
+            // Remove the "You need deeper water" sound from the queue
+            PDASounds.queue.queue.RemoveAll(s => s.sound == __instance.invalidNotification.sound.id);
+
+            return;
         }
     }
 }
