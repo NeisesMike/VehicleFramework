@@ -4,6 +4,6 @@ namespace VehicleFramework
     {
         public const string PLUGIN_GUID = "com.mikjaw.subnautica.vehicleframework.mod";
         public const string PLUGIN_NAME = "VehicleFramework";
-        public const string PLUGIN_VERSION = $"2.0.0.{BuildInfo.BuildVersion}";
+        public const string PLUGIN_VERSION = $"2.0.1.{BuildInfo.BuildVersion}";
     }
 }
