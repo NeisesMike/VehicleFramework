@@ -1214,8 +1214,14 @@ namespace VehicleFramework
             IEnumerator waitForTeleport()
             {
                 yield return null;
-                if(Player.main == null || mv?.GetComponent<SubRoot>() == null)
+                if (Player.main == null)
                 {
+                    UWE.Utils.ExitPhysicsSyncSection();
+                    yield break;
+                }
+                if(mv?.GetComponent<SubRoot>() == null)
+                {
+                    Player.main.playerController.SetEnabled(true);
                     UWE.Utils.ExitPhysicsSyncSection();
                     yield break;
                 }

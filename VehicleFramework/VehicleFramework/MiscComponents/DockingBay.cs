@@ -143,7 +143,6 @@ namespace VehicleFramework.MiscComponents
                 mv.OnVehicleDocked(Vector3.zero);
             }
             dockingVehicle.transform.SetParent(transform);
-            GetComponent<VehicleTypes.Submarine>()?.PlayerEntry();
         }
         protected virtual void OnStartedUndocking(bool withPlayer, Vehicle cdVehicle)
         {
