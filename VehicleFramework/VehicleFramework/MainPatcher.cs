@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VehicleFramework.Admin;
 using VehicleFramework.Patches.CompatibilityPatches;
 using VehicleFramework.VehicleBuilding;
+using static HandReticle;
 
 namespace VehicleFramework
 {
@@ -88,6 +90,14 @@ namespace VehicleFramework
             void SetWorldLoaded()
             {
                 Admin.GameStateWatcher.IsWorldLoaded = true;
+
+                foreach (var vehicleTechType in VehicleManager.vehicleTypes.Where(x => x.mv != null).Select(x => x.techType).Where(x => !PDAScanner.ContainsCompleteEntry(x)))
+                {
+                    if (!PDAScanner.GetPartialEntryByKey(vehicleTechType, out PDAScanner.Entry entry))
+                    {
+                        entry = PDAScanner.Add(vehicleTechType, 0);
+                    }
+                }
             }
             void OnLoadOnce()
             {
