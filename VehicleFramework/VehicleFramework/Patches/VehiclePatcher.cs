@@ -112,6 +112,13 @@ namespace VehicleFramework.Patches
             if (!mv.IsPoweredOn)
             {
                 __result = false;
+                return;
+            }
+            PowerRelay powerRelay = mv.GetComponent<PowerRelay>();
+            if (powerRelay != null && powerRelay.IsPowered())
+            {
+                __result = true;
+                return;
             }
         }
 

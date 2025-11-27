@@ -101,7 +101,19 @@ namespace VehicleFramework.ControlPanel
         }
         public void HeadlightsClick()
         {
-            mv.GetComponent<HeadLightsController>()?.Toggle();
+            HeadLightsController hlc = mv.GetComponent<HeadLightsController>();
+            if (hlc == null) return;
+            if (mv.IsPowered())
+            {
+                hlc.Toggle();
+            }
+            else
+            {
+                if (hlc.IsLightsOn)
+                {
+                    hlc.Toggle();
+                }
+            }
         }
         public static void HeadLightsHover()
         {
@@ -110,7 +122,19 @@ namespace VehicleFramework.ControlPanel
         }
         public void FloodLightsClick()
         {
-            mv.GetComponent<FloodLightsController>()?.Toggle();
+            FloodLightsController flc = mv.GetComponent<FloodLightsController>();
+            if (flc == null) return;
+            if (mv.IsPowered())
+            {
+                flc.Toggle();
+            }
+            else
+            {
+                if (flc.IsLightsOn)
+                {
+                    flc.Toggle();
+                }
+            }
         }
         public static void FloodLightsHover()
         {
@@ -119,7 +143,19 @@ namespace VehicleFramework.ControlPanel
         }
         public void NavLightsClick()
         {
-            mv.GetComponent<NavigationLightsController>()?.Toggle();
+            NavigationLightsController nlc = mv.GetComponent<NavigationLightsController>();
+            if (nlc == null) return;
+            if (mv.IsPowered())
+            {
+                nlc.Toggle();
+            }
+            else
+            {
+                if (nlc.IsLightsOn)
+                {
+                    nlc.Toggle();
+                }
+            }
         }
         public static void NavLightsHover()
         {
@@ -128,7 +164,19 @@ namespace VehicleFramework.ControlPanel
         }
         public void InteriorLightsClick()
         {
-            mv.GetComponent<InteriorLightsController>()?.Toggle();
+            InteriorLightsController ilc = mv.GetComponent<InteriorLightsController>();
+            if (ilc == null) return;
+            if (mv.IsPowered())
+            {
+                ilc.Toggle();
+            }
+            else
+            {
+                if (ilc.IsLightsOn)
+                {
+                    ilc.Toggle();
+                }
+            }
         }
         public static void InteriorLightsHover()
         {
@@ -137,7 +185,10 @@ namespace VehicleFramework.ControlPanel
         }
         public void DefaultColorClick()
         {
-            mv.SetVehicleDefaultStyle(mv.HullName);
+            if (mv.IsPowered())
+            {
+                mv.SetVehicleDefaultStyle(mv.HullName);
+            }
         }
         public static void DefaultColorHover()
         {
@@ -146,10 +197,17 @@ namespace VehicleFramework.ControlPanel
         }
         public void PowerClick()
         {
-            mv.energyInterface.GetValues(out float charge, out _);
-            if (0 < charge)
+            if (mv.IsPowered())
             {
                 mv.TogglePower();
+            }
+            else
+            {
+                mv.energyInterface.GetValues(out float charge, out _);
+                if (0 < charge)
+                {
+                    mv.TogglePower();
+                }
             }
         }
         public static void PowerHover()
@@ -157,11 +215,14 @@ namespace VehicleFramework.ControlPanel
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFPowerHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
         }
-        public static void AutoPilotClick()
+        public void AutoPilotClick()
         {
-            // TODO
+            if (mv.IsPowered())
+            {
+                // todo
+            }
         }
-        public static void AutoPilotHover()
+        public void AutoPilotHover()
         {
             HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, Language.main.Get("VFAutoPilotHover"));
             HandReticle.main.SetIcon(HandReticle.IconType.Hand, 1f);
