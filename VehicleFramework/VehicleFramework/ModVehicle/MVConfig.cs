@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using VehicleFramework.Engines;
-using VehicleFramework.VehicleRootComponents;
-using VehicleFramework.Assets;
-using VehicleFramework.Admin;
-using VehicleFramework.VehicleBuilding;
-using VehicleFramework.LightControllers;
-using VehicleFramework.VehicleChildComponents;
-using VehicleFramework.Interfaces;
-using VehicleFramework.Extensions;
-using VehicleFramework.VehicleTypes;
 
 namespace VehicleFramework
 {
@@ -28,7 +16,7 @@ namespace VehicleFramework
         public virtual int MaxHealth => 100;
         public virtual int Mass => 1000;
         public virtual int NumModules => 4;
-        public virtual bool HasArms => false;
+        public virtual bool HasArms => VehicleConfig.GetConfig(this)?.IsArms?.Value ?? false;
         public virtual TechType UnlockedWith => TechType.Constructor;
         public virtual string UnlockedMessage => "New vehicle blueprint acquired";
         public virtual int CrushDepthUpgrade1 => 300;
