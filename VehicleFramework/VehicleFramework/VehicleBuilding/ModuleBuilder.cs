@@ -13,8 +13,6 @@ namespace VehicleFramework.VehicleBuilding
         internal static Dictionary<string, uGUI_EquipmentSlot> vehicleAllSlots = new();
         public const int MaxNumModules = 18;
         internal static bool areModulesReady = false;
-        internal static bool slotExtenderIsPatched = false;
-        internal static bool slotExtenderHasGreenLight = false;
         private static bool isPDAFirstOpenFixed = false;
 
 
@@ -64,10 +62,15 @@ namespace VehicleFramework.VehicleBuilding
         private static Transform? TopLeftSlot = null;
         private static Transform? BottomRightSlot = null;
 
+        //private static Vector3 OriginalTopLeftSlotPosition = new(-286.000f, 207.250f, 0); // desired placement
+        //private static Vector3 OriginalBottomRightSlotPosition = new(143.000f, -362.750f, 0); // desired placement
+        private static Vector3 AdjustedTopLeftSlotPosition = new Vector3(-143f, 129.301f, 0);
+        private static Vector3 AdjustedBottomRightSlotPosition = new Vector3(143f, -156.502f, 0);
+
         internal static void Reset()
         {
             vehicleAllSlots.Clear();
-            areModulesReady = slotExtenderHasGreenLight = slotExtenderIsPatched = isPDAFirstOpenFixed = false;
+            areModulesReady = isPDAFirstOpenFixed = false;
         }
         internal static void SignalUpgradePDAOpened(VehicleUpgradeConsoleInput instance)
         {
@@ -117,15 +120,6 @@ namespace VehicleFramework.VehicleBuilding
                 }
                 vehicleAllSlots[ModuleBuilder.LeftArmSlotName] = Equipment.transform.Find(ModuleBuilder.LeftArmSlotName).GetComponent<uGUI_EquipmentSlot>();
                 vehicleAllSlots[ModuleBuilder.RightArmSlotName] = Equipment.transform.Find(ModuleBuilder.RightArmSlotName).GetComponent<uGUI_EquipmentSlot>();
-            }
-
-            // Now that we've gotten the data we need,
-            // we can let slot extender mangle it
-            var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
-            if (type2 != null)
-            {
-                ModuleBuilder.slotExtenderHasGreenLight = true;
-                Equipment.Awake();
             }
         }
         private static void BuildGenericModulesASAP()
@@ -333,11 +327,11 @@ namespace VehicleFramework.VehicleBuilding
             {
                 throw Admin.SessionManager.Fatal("ModuleBuilder: bottomRightSlot is null, cannot copy background components!");
             }
-            float centerX = (TopLeftSlot.localPosition.x + BottomRightSlot.localPosition.x) / 2;
-            float centerY = (TopLeftSlot.localPosition.y + BottomRightSlot.localPosition.y) / 2;
+            float centerX = (AdjustedTopLeftSlotPosition.x + AdjustedBottomRightSlotPosition.x) / 2;
+            float centerY = (AdjustedTopLeftSlotPosition.y + AdjustedBottomRightSlotPosition.y) / 2;
 
-            float stepX = Mathf.Abs(TopLeftSlot.localPosition.x - centerX);
-            float stepY = Mathf.Abs(TopLeftSlot.localPosition.y - centerY);
+            float stepX = Mathf.Abs(AdjustedTopLeftSlotPosition.x - centerX);
+            float stepY = Mathf.Abs(AdjustedTopLeftSlotPosition.y - centerY);
 
             Vector3 arrayOrigin = new(centerX - 2 * stepX, centerY - 2.5f * stepY, 0);
 

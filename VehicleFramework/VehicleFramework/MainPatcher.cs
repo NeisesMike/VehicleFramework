@@ -142,26 +142,6 @@ namespace VehicleFramework
                 VehicleFramework.Logger.LogException($"Failed to patch SubnauticaMap.Refresh", e);
             }
 
-            // Patch SlotExtender, lest it break or break us
-            try
-            {
-                var type2 = Type.GetType("SlotExtender.Patches.uGUI_Equipment_Awake_Patch, SlotExtender", false, false);
-                if (type2 != null)
-                {
-                    var awakePreOriginal = AccessTools.Method(type2, "Prefix");
-                    HarmonyMethod awakePrefix = new(AccessTools.Method(typeof(SlotExtenderPatcher), nameof(SlotExtenderPatcher.PrePrefix)));
-                    harmony.Patch(awakePreOriginal, awakePrefix);
-
-                    var awakePostOriginal = AccessTools.Method(type2, "Postfix");
-                    HarmonyMethod awakePostfix = new(AccessTools.Method(typeof(SlotExtenderPatcher), nameof(SlotExtenderPatcher.PrePostfix)));
-                    harmony.Patch(awakePostOriginal, awakePostfix);
-                }
-            }
-            catch (Exception e)
-            {
-                VehicleFramework.Logger.LogException($"Failed to patch SlotExtender.uGUI_Equipment_Awake_Patch", e);
-            }
-
             // Patch BetterVehicleStorage to add ModVehicle compat
             try
             {
