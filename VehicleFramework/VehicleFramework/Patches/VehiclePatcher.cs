@@ -168,6 +168,10 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Vehicle.ReAttach))]
         public static bool VehicleReAttachPrefix(Vehicle __instance)
         {
+            if(__instance?.transform?.parent == null)
+            {
+                return true;
+            }
             IEnumerator NotifyDockingBay(Transform baseCell)
             {
                 if(baseCell == null)
