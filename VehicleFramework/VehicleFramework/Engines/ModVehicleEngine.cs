@@ -215,17 +215,14 @@ namespace VehicleFramework.Engines
         }
         public override void ControlRotation()
         {
-            if (CanRotate())
-            {
-                // Control rotation
-                float pitchFactor = 1.4f;
-                float yawFactor = 1.4f;
-                Vector2 mouseDir = GameInput.GetLookDelta();
-                float xRot = mouseDir.x;
-                float yRot = mouseDir.y;
-                RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-                RB.AddTorque(MV.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
-            }
+            // Control rotation
+            float pitchFactor = 1.4f;
+            float yawFactor = 1.4f;
+            Vector2 mouseDir = GameInput.GetLookDelta();
+            float xRot = mouseDir.x;
+            float yRot = mouseDir.y;
+            RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+            RB.AddTorque(MV.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
         }
         #endregion
 

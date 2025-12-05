@@ -104,6 +104,13 @@ namespace VehicleFramework.Engines
             MoveWithInput(moveDirection);
             return;
         }
+        internal protected void ApplyRotationControls()
+        {
+            if (CanRotate())
+            {
+                ControlRotation();
+            }
+        }
         #endregion
         void IScuttleListener.OnScuttle()
         {

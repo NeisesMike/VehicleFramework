@@ -1190,7 +1190,7 @@ namespace VehicleFramework
             {
                 return;
             }
-            mv.GetComponent<VFEngine>().ControlRotation();
+            mv.GetComponent<VFEngine>().ApplyRotationControls();
         }
         internal static EnergyMixin? GetLeastChargedModVehicleEnergyMixinIfNull(EnergyMixin em, Vehicle veh)
         {
