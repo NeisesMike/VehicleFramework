@@ -113,6 +113,7 @@ namespace VehicleFramework.Engines
             if (CanRotate())
             {
                 Vector2 mouseDir = GameInput.GetLookDelta();
+                mouseDir *= VehicleConfig.GetConfig(MV).LookSensitivity.Value;
                 ControlRotation(mouseDir);
 
 #pragma warning disable CS0618 // 'OldFoo' is obsolete: 'Use NewFoo instead.'

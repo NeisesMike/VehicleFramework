@@ -23,9 +23,9 @@ namespace VehicleFramework
             main.Add(mv.GetType().ToString(), thisConf);
             return thisConf;
         }
-        internal ConfigEntry<bool> IsEnabled { get; set; } = null!;
         internal ConfigEntry<float> AutopilotVolume { get; set; } = null!;
         internal ConfigEntry<float> EngineVolume { get; set; } = null!;
+        internal ConfigEntry<float> LookSensitivity { get; set; } = null!;
         internal ConfigEntry<string> AutopilotVoice { get; set; } = null!;
         internal ConfigEntry<string> EngineSounds { get; set; } = null!;
         internal ConfigEntry<int> NumUpgrades { get; set; } = null!;
@@ -69,6 +69,7 @@ namespace VehicleFramework
             string vehicleName = mv.GetType().ToString();
             vConf.AutopilotVolume = config.Bind<float>(vehicleName, "Autopilot Volume", 0.5f, new ConfigDescription("How loud is the autopilot voice", new AcceptableValueRange<float>(0, 1)));
             vConf.EngineVolume = config.Bind<float>(vehicleName, "Engine Volume", 0.5f, new ConfigDescription("How loud are the engine sounds", new AcceptableValueRange<float>(0, 1)));
+            vConf.LookSensitivity = config.Bind<float>(vehicleName, "Look Sensitivity", 1f, new ConfigDescription("Adjust the sensitivity of the vehicle rotation", new AcceptableValueRange<float>(0, 10)));
 
             vConf.AutopilotVoice = config.Bind<string>(vehicleName, "Autopilot Voice", VoiceManager.vehicleVoices.Select(x => x.Key).FirstOrDefault(), new ConfigDescription("Choose an autopilot voice for this vehicle", new AcceptableValueList<string>(VoiceManager.vehicleVoices.Select(x => x.Key).ToArray())));
             vConf.AutopilotVoice.SettingChanged += GrabNewVoiceLines;
