@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VehicleFramework.Interfaces;
 using VehicleFramework.VehicleRootComponents;
 
@@ -43,7 +44,7 @@ namespace VehicleFramework.Engines
 
         #region abstract_members
         protected abstract void MoveWithInput(Vector3 moveInput);
-        public abstract void ControlRotation();
+        public abstract void ControlRotation(Vector2 lookInput);
         public abstract void KillMomentum();
         #endregion
 
@@ -95,6 +96,9 @@ namespace VehicleFramework.Engines
             float upgradeModifier = Mathf.Pow(0.85f, MV.NumEfficiencyModules);
             MV.gameObject.EnsureComponent<PowerManager>().TrySpendEnergy(scalarFactor * basePowerConsumptionPerSecond * upgradeModifier * Time.fixedDeltaTime);
         }
+
+        [Obsolete("This method was removed. Use ControlRotation(Vector2) as a drop in replacement.", false)]
+        public virtual void ControlRotation() { }
         #endregion
 
         #region methods
@@ -108,7 +112,12 @@ namespace VehicleFramework.Engines
         {
             if (CanRotate())
             {
+                Vector2 mouseDir = GameInput.GetLookDelta();
+                ControlRotation(mouseDir);
+
+#pragma warning disable CS0618 // 'OldFoo' is obsolete: 'Use NewFoo instead.'
                 ControlRotation();
+#pragma warning restore CS0618
             }
         }
         #endregion

@@ -21,11 +21,10 @@ namespace VehicleFramework.Engines
             base.Awake();
             GetComponent<WorldForces>().handleGravity = false;
         }
-        public override void ControlRotation()
+        public override void ControlRotation(Vector2 lookInput)
         {
             float yawFactor = 1.4f;
-            Vector2 mouseDir = GameInput.GetLookDelta();
-            float xRot = mouseDir.x;
+            float xRot = lookInput.x;
             RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
             // don't accept pitch inputs!
         }

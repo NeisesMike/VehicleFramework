@@ -190,14 +190,13 @@ namespace VehicleFramework.Engines
             float topMomentum = FORWARD_TOP_SPEED + STRAFE_MAX_SPEED + VERT_MAX_SPEED;
             return totalMomentumNow / topMomentum;
         }
-        public override void ControlRotation()
+        public override void ControlRotation(Vector2 lookInput)
         {
             // Control rotation
             float pitchFactor = 1.2f * (1.5f - GetCurrentPercentOfTopSpeed());
             float yawFactor = 1f * (1.5f - GetCurrentPercentOfTopSpeed());
-            Vector2 mouseDir = GameInput.GetLookDelta();
-            float xRot = mouseDir.x;
-            float yRot = mouseDir.y;
+            float xRot = lookInput.x;
+            float yRot = lookInput.y;
             RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
             RB.AddTorque(MV.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
         }
