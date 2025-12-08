@@ -79,7 +79,7 @@ namespace VehicleFramework.MiscComponents
 		}
 		private static bool HasMvStorage(ModVehicle mv)
 		{
-			return mv.InnateStorages != null || ModularStorageInput.GetAllModularStorageContainers(mv).Count > 0;
+			return mv.InnateStorages != null || (mv.ModularStorages != null && ModularStorageInput.GetAllModularStorageContainers(mv).Count > 0);
 		}
 
 		private void DeactivateAll()
