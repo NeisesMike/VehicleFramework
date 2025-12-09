@@ -35,7 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.44" />
+    <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.47" />
   </ItemGroup>
 
   <!-- Prefer not to hardcode paths; make it configurable -->
@@ -93,10 +93,7 @@
 			<BuildInfoContent Include="}" />
 		</ItemGroup>
 
-		<WriteLinesToFile
-			File="$(BuildInfoFile)"
-			Lines="@(BuildInfoContent)"
-			Overwrite="true" />
+		<WriteLinesToFile File="$(BuildInfoFile)" Lines="@(BuildInfoContent)" Overwrite="true" />
 	</Target>
 
 	<ItemGroup>

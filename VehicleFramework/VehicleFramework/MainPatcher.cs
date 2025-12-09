@@ -2,20 +2,17 @@
 using HarmonyLib;
 using Nautilus.Handlers;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VehicleFramework.Admin;
 using VehicleFramework.Patches.CompatibilityPatches;
 using VehicleFramework.VehicleBuilding;
-using static HandReticle;
 
 namespace VehicleFramework
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, "1.0.0.32")]
+    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
     public class MainPatcher : BaseUnityPlugin
     {
         public static MainPatcher Instance { get; private set; } = null!;
