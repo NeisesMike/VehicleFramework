@@ -138,7 +138,7 @@ namespace VehicleFramework.VehicleRootComponents
                     return;
                 }
             }
-            Admin.SessionManager.StartCoroutine(FindStoreInfoIdentifier());
+            StartCoroutine(FindStoreInfoIdentifier());
         }
         private void OnEnable()
         {
@@ -159,10 +159,10 @@ namespace VehicleFramework.VehicleRootComponents
         {
             while (serializerObject == null)
             {
-                serializerObject = transform.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
+                serializerObject = transform?.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
                 yield return null;
             }
-            Admin.SessionManager.StartCoroutine(InternalLoad());
+            StartCoroutine(InternalLoad());
         }
         public void Update()
         {
