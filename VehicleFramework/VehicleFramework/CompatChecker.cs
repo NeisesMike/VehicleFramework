@@ -17,6 +17,7 @@ namespace VehicleFramework
                 CheckForFlareDurationIndicator();
                 CheckForBuildingTweaks();
                 CheckForVanillaExpanded();
+                CheckForAutoSave();
             }
             catch(Exception e)
             {
@@ -87,6 +88,15 @@ namespace VehicleFramework
             {
                 ShowError("Some vehicles not compatible with Vanilla Expanded!");
                 Logger.Log("Vanilla Expanded has a patch on UniqueIdentifier.Awake that throws an error (dereferences null) during many Vehicle Framework setup methods. If you choose to continue, some vehicles, buildables, and fragments may simply not appear.");
+            }
+        }
+        private static void CheckForAutoSave()
+        {
+            const string autosaveGUID = "Dingo.SN.SubnauticaAutosave";
+            if (Chainloader.PluginInfos.ContainsKey(autosaveGUID))
+            {
+                ShowError("Autosave can interrupt Vehicle Framework saving and loading your vehicles.");
+                Logger.Log("The Autosave mod Dingo.SN.SubnauticaAutosave does not necessarily capture VF data. If you have any information about this, please let me know! If you find that your upgrades/storage/batteries are missing, please uninstall the autosave mod and try loading the game again.");
             }
         }
         #endregion
