@@ -27,6 +27,12 @@ namespace VehicleFramework.VehicleBuilding
             Nautilus.Crafting.RecipeData vehicleRecipe = Nautilus.Utility.JsonUtils.Load<Nautilus.Crafting.RecipeData>(jsonRecipeFileName, false, new Nautilus.Json.Converters.CustomEnumConverter());
             if (vehicleRecipe.Ingredients.Count == 0)
             {
+                if(File.Exists(jsonRecipeFileName))
+                {
+                    string warningMessage = $"Vehicle Framework Warning: The custom recipe file for {vehicleKey} exists but could not be loaded. Reverting to default recipe.";
+                    ErrorMessage.AddError(warningMessage);
+                    Logger.Warn(warningMessage);
+                }
                 // If the custom recipe file doesn't exist, go ahead and make it using the default recipe.
                 vehicleRecipe.Ingredients.AddRange(vehicle.mv.Recipe.Select(x => new Ingredient(x.Key, x.Value)).ToList());
                 Nautilus.Utility.JsonUtils.Save<Nautilus.Crafting.RecipeData>(vehicleRecipe, jsonRecipeFileName, new Nautilus.Json.Converters.CustomEnumConverter());
