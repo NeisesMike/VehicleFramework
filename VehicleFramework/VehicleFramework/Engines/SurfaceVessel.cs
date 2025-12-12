@@ -23,9 +23,9 @@ namespace VehicleFramework.Engines
         }
         public override void ControlRotation(Vector2 lookInput)
         {
-            float yawFactor = 1.4f;
+            float yawFactor = 1.4f / 60f;
             float xRot = lookInput.x;
-            RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
+            RB.AddTorque(MV.transform.up * xRot * yawFactor, ForceMode.VelocityChange);
             // don't accept pitch inputs!
         }
         protected override void MoveWithInput(Vector3 moveDirection)

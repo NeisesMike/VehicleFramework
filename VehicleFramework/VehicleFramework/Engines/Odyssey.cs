@@ -189,12 +189,12 @@ namespace VehicleFramework.Engines
         public override void ControlRotation(Vector2 lookInput)
         {
             // Control rotation
-            float pitchFactor = 1.5f * (1.5f - GetCurrentPercentOfTopSpeed());
-            float yawFactor = 1.5f * (1.5f - GetCurrentPercentOfTopSpeed());
+            float pitchFactor = 1.5f * (1.5f - GetCurrentPercentOfTopSpeed()) / 60f;
+            float yawFactor = 1.5f * (1.5f - GetCurrentPercentOfTopSpeed()) / 60f;
             float xRot = lookInput.x;
             float yRot = lookInput.y;
-            RB.AddTorque(MV.transform.up * xRot * yawFactor * Time.deltaTime, ForceMode.VelocityChange);
-            RB.AddTorque(MV.transform.right * yRot * -pitchFactor * Time.deltaTime, ForceMode.VelocityChange);
+            RB.AddTorque(MV.transform.up * xRot * yawFactor, ForceMode.VelocityChange);
+            RB.AddTorque(MV.transform.right * yRot * -pitchFactor, ForceMode.VelocityChange);
         }
 
         protected override void DrainPower(Vector3 moveDirection)
