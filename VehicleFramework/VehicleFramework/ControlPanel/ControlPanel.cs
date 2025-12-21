@@ -367,8 +367,7 @@ namespace VehicleFramework.ControlPanel
         {
             if (mv.ControlPanel != null)
             {
-                mv.controlPanelLogic = mv.ControlPanel.EnsureComponent<ControlPanel>();
-                mv.controlPanelLogic.mv = mv;
+                mv.ControlPanel.EnsureComponent<ControlPanel>().mv = mv;
                 if (mv.transform.Find("Control-Panel-Location") != null)
                 {
                     mv.ControlPanel.transform.localPosition = mv.transform.Find("Control-Panel-Location").localPosition;

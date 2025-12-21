@@ -34,7 +34,6 @@ namespace VehicleFramework.VehicleTypes
         public virtual float ExitVelocityLimit => 0.5f;
         public virtual GameObject? RespawnPoint => null;
         public virtual bool DoesAutolevel => true;
-        internal ControlPanel.ControlPanel? controlPanelLogic;
         private bool isPilotSeated = false;
         private bool isPlayerInside = false; // You can be inside a scuttled submarine yet not dry.
         internal Transform? thisStopPilotingLocation;
