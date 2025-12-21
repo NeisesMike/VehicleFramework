@@ -55,7 +55,7 @@ namespace VehicleFramework.VehicleRootComponents
                 .Where(x => x.GetComponentInParent<Player>() == null)
                 .Where(x => x.enabled && x.gameObject.activeInHierarchy);
 
-            Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint2")}", duration: 3f);
+            Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint2")}", duration: 3f); // boots engaging...
             foreach (Collider left in attachedVehicleColliders)
             {
                 foreach (Collider right in hostColliders)
@@ -73,7 +73,7 @@ namespace VehicleFramework.VehicleRootComponents
                     }
                 }
             }
-            Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint3")}", duration: 3f);
+            Logger.PDANote($"{MyVehicle.GetName()} {Language.main.Get("VFMagnetBootsHint3")}", duration: 3f); // boots are ready!
             // Once all collisions with the host are ignored, this vehicle begins to detect collisions again.
             MyVehicle.useRigidbody.detectCollisions = true;
             if (MyVehicle is ModVehicle mv && mv.BoundingBoxCollider != null)
@@ -84,7 +84,7 @@ namespace VehicleFramework.VehicleRootComponents
             }
             CollisionHandling = null;
         }
-        public void HandleAttachment(bool isAttached, Transform? platform = null)
+        public void HandleAttachment(bool isAttached, Transform? platform = null, bool skipCollisionHandling = false)
         {
             MyVehicle.teleporting = isAttached; // a little hack to ensure the vehicle gets IsKinematic:=true every frame
             IsAttached = isAttached;
@@ -95,9 +95,9 @@ namespace VehicleFramework.VehicleRootComponents
                 attachedPlatform = platform;
                 if (CollisionHandling != null)
                 {
-                    Admin.SessionManager.StopCoroutine(CollisionHandling);
+                    StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = Admin.SessionManager.StartCoroutine(IgnoreCollisionWithHost(true));
+                CollisionHandling = StartCoroutine(IgnoreCollisionWithHost(true));
                 if (attachedPlatform.GetComponent<ModVehicle>())
                 {
                     attachedPlatform.GetComponent<ModVehicle>().useRigidbody.mass += MyVehicle.useRigidbody.mass;
@@ -109,9 +109,9 @@ namespace VehicleFramework.VehicleRootComponents
                 Detach?.Invoke();
                 if (CollisionHandling != null)
                 {
-                    Admin.SessionManager.StopCoroutine(CollisionHandling);
+                    StopCoroutine(CollisionHandling);
                 }
-                CollisionHandling = Admin.SessionManager.StartCoroutine(IgnoreCollisionWithHost(false));
+                CollisionHandling = StartCoroutine(IgnoreCollisionWithHost(false));
                 MyVehicle.transform.SetParent(serializerObject);
                 if (attachedPlatform?.GetComponent<ModVehicle>() != null)
                 {
@@ -119,7 +119,11 @@ namespace VehicleFramework.VehicleRootComponents
                 }
                 attachedPlatform = null;
             }
-            //MyVehicle.collisionModel.SetActive(!isAttached);
+        }
+        private void Awake()
+        {
+            SaveLoadManager.notificationSaveInProgress -= ListenForSave; // unsubscribe is safe, even it not already added
+            SaveLoadManager.notificationSaveInProgress += ListenForSave;
         }
         public void Start()
         {
@@ -159,10 +163,15 @@ namespace VehicleFramework.VehicleRootComponents
         {
             while (serializerObject == null)
             {
-                serializerObject = transform?.parent?.GetComponent<StoreInformationIdentifier>()?.transform;
+                serializerObject = gameObject.GetComponentInParent<StoreInformationIdentifier>()?.transform;
                 yield return null;
             }
-            StartCoroutine(InternalLoad());
+            yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted && Admin.GameStateWatcher.IsWorldSettled && Admin.GameStateWatcher.IsWorldLoaded);
+            bool loadedWasAttached = SaveLoad.JsonInterface.Read<bool>(MyVehicle, SaveFileSaveName);
+            if (loadedWasAttached)
+            {
+                TryMagnets(true, CheckPlacement(), false);
+            }
         }
         public void Update()
         {
@@ -255,7 +264,7 @@ namespace VehicleFramework.VehicleRootComponents
                 }
                 else if(verbose)
                 {
-                    Logger.PDANote(Language.main.Get("VFMagnetBootsHint1"));
+                    Logger.PDANote(Language.main.Get("VFMagnetBootsHint1")); // no viable target found
                 }
             }
         }
@@ -303,26 +312,29 @@ namespace VehicleFramework.VehicleRootComponents
         }
 
         private static List<MagnetBoots> previouslyAttached = new();
-        internal static void DetachAll()
+        internal static void ListenForSave(bool isSavingInProgress)
         {
-            previouslyAttached = new();
-            static void DetachAndNotify(MagnetBoots boots)
+            // This strategy works, but seamoth on Cyclops is saved as "not attached" even if it was attached when saving started and ended.
+            if (isSavingInProgress)
             {
-                if (boots.IsAttached)
+                //DetachAll();
+                previouslyAttached = new();
+                static void DetachAndNotify(MagnetBoots boots)
                 {
-                    boots.HandleAttachment(false);
-                    previouslyAttached.Add(boots);
+                    if (boots.IsAttached)
+                    {
+                        boots.HandleAttachment(false);
+                        previouslyAttached.Add(boots);
+                    }
                 }
+                KnownMagnetBoots.ForEach(DetachAndNotify);
             }
-            KnownMagnetBoots.ForEach(DetachAndNotify);
-            SaveLoadManager.notificationSaveInProgress -= AttachAll; // unsubscribe is safe, even it not already added
-            SaveLoadManager.notificationSaveInProgress += AttachAll;
-        }
-        internal static void AttachAll(bool isSavingInProgress)
-        {
-            if (isSavingInProgress) return;
-            previouslyAttached.ForEach(x => x.TryMagnets(true, x.CheckPlacement(), false));
-            previouslyAttached.Clear();
+            else
+            {
+                //AttachAll();
+                previouslyAttached.ForEach(x => x.TryMagnets(true, x.CheckPlacement(), false));
+                previouslyAttached.Clear();
+            }
         }
 
         private const string SaveFileSaveName = "MagnetBoots";
@@ -335,16 +347,5 @@ namespace VehicleFramework.VehicleRootComponents
             // Do nothing. This component is only added once upgrades have been deserialized.
             // By that point, MagnetBoots has missed the opportunity to receive this signal.
         }
-        private IEnumerator InternalLoad()
-        {
-            // why isn't this invoked?
-            yield return new WaitUntil(() => Admin.GameStateWatcher.IsPlayerStarted && Admin.GameStateWatcher.IsWorldSettled && Admin.GameStateWatcher.IsWorldLoaded);
-            bool loadedWasAttached = SaveLoad.JsonInterface.Read<bool>(MyVehicle, SaveFileSaveName);
-            if (loadedWasAttached)
-            {
-                TryMagnets(true, CheckPlacement(), false);
-            }
-        }
-
     }
 }

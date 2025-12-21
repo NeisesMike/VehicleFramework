@@ -67,18 +67,6 @@ namespace VehicleFramework
         }
         public void Patch()
         {
-            Nautilus.Utility.SaveUtils.RegisterOnSaveEvent(() => 
-            {
-                try
-                {
-                    VehicleRootComponents.MagnetBoots.DetachAll();
-                }
-                catch (Exception ex)
-                {
-                    VehicleFramework.Logger.LogException("Failed to detach all magnet boots!", ex);
-                }
-            });
-
             void SetWorldNotLoaded()
             {
                 Admin.GameStateWatcher.IsWorldLoaded = false;
