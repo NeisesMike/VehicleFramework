@@ -1,7 +1,4 @@
 ﻿using BepInEx.Bootstrap;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 namespace VehicleFramework
@@ -40,17 +37,16 @@ namespace VehicleFramework
         #region checks
         private static void CheckForBepInExPackUpdate()
         {
-            if (Chainloader.PluginInfos.ContainsKey("Tobey.Subnautica.ConfigHandler"))
+            // BepInEx does not itself expose a version number.
+            static Version GetBepInExAssemblyVersion()
             {
-                Version target = new("1.0.2");
-                if (Chainloader.PluginInfos["Tobey.Subnautica.ConfigHandler"].Metadata.Version.CompareTo(target) < 0)
-                {
-                    ShowWarning("There is a BepInEx Pack update available!");
-                }
+                var asm = typeof(BepInEx.Bootstrap.Chainloader).Assembly;
+                return asm.GetName().Version;
             }
-            else
+            Version target = new(5, 4, 23, 4);
+            if (GetBepInExAssemblyVersion().CompareTo(target) < 0)
             {
-                ShowWarning("There is a BepInEx Pack update available!");
+                ShowWarning("There is a BepInEx Pack update available on Nexus!");
             }
         }
         private static void CheckForNautilusUpdate()
