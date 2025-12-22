@@ -1,0 +1,118 @@
+﻿{
+  "VFVehicle": "Jármű",
+  "VFEnterVehicle": "Belépés a járműbe",
+  "VFExitVehicle": "Kilépés a járműből",
+  "VFOpenStorage": "Tároló megnyitása",
+  "VFStartPiloting": "Irányítás megkezdése",
+  "VFNameLabel": "Név",
+
+  "VFHeadlightsButtonLabel": "Fényszórók",
+  "VFHeadlightsButtonTooltip": "Kattints a fényszórók be- vagy kikapcsolásához",
+  "VFLeftClickHeadlightsLabel": "Fényszórók váltása (bal klikk)",
+  "VFLeftClickHeadlightsTooltip": "Bal klikk a fényszórók váltásához",
+  "VFRightClickHeadlightsLabel": "Fényszórók váltása (jobb klikk)",
+  "VFRightClickHeadlightsTooltip": "Jobb klikk a fényszórók váltásához",
+  "VFHeadLightsHover": "Fényszórók váltása",
+  "VFFloodLightsHover": "Reflektorok",
+  "VFNavLightsHover": "Navigációs fények",
+  "VFFlashingLightsLabel": "Villogó fények",
+  "VFFlashingLightsTooltip": "Villogó fények bekapcsolása",
+  "VFInteriorLightsHover": "Belső világítás váltása",
+
+  "VFCameraHint": "Kamera tipp:",
+  "VFPrevCameraLabel": "Előző kamera",
+  "VFPrevCameraTooltip": "Váltás az előző kamerára",
+  "VFNextCameraLabel": "Következő kamera",
+  "VFNextCameraTooltip": "Váltás a következő kamerára",
+  "VFExitCameraLabel": "Kilépés a kamerából",
+  "VFExitCameraTooltip": "Kattints a kamera elhagyásához",
+
+  "VFConfigManagerLabel": "További beállítások elérése",
+  "VFConfigManagerTooltip": "További beállítások ablakának megnyitása",
+  "VFConfigManagerPrintInfo": "Nexus beállítások betöltése",
+  "VFDebugLogLabel": "Hibakeresési napló",
+  "VFDebugLogTooltip": "Részletes hibakeresési napló megjelenítése",
+
+  "VFMVModules": "Jármű modulok",
+  "VFMVDepthModules": "Mélység modulok",
+  "VFSpecificModules": "Speciális modulok",
+  "VFDepth1FriendlyString": "Mélység modul MK1",
+  "VFDepth1Description": "Növeli a maximális mélységet. Nem kompatibilis más mélység modulokkal.",
+  "VFDepth2FriendlyString": "Mélység modul MK2",
+  "VFDepth2Description": "Tovább növeli a maximális mélységet. Nem kompatibilis más mélység modulokkal.",
+  "VFDepth3FriendlyString": "Mélység modul MK3",
+  "VFDepth3Description": "Jelentősen növeli a maximális mélységet. Nem kompatibilis más mélység modulokkal.",
+
+  "VFSeamothTab": "Seamoth modul",
+  "VFPrawnTab": "Prawn modul",
+  "VFCyclopsTab": "Cyclops modul",
+  "VFGeneralTab": "Általános",
+
+  "VFVehicleBattery": "Jármű akkumulátor",
+  "VFAutoPilotBattery": "Autopilóta akkumulátor",
+
+  "VFAutoPilotHover": "Autopilóta aktív (hamarosan elérhető)",
+
+  "VFMagBootsButtonLabel": "Mágneses csizmák váltása",
+  "VFMagBootsButtonTooltip": "Kattints a mágneses csizmák be- vagy kikapcsolásához",
+
+  "VFDroneStationCheatLabel": "Drónállomás aktiválása",
+  "VFDroneStationCheatTooltip": "Kattints a drónállomás aktiválásához játékban",
+  "VFDroneStationError": "Ez a csalás csak játék közben elérhető",
+
+  "VFSubtitlesLabel": "Autopilóta feliratok",
+  "VFSubtitlesTooltip": "Feliratok be- vagy kikapcsolása",
+
+  "VFEmptyHover": "Nincs elérhető művelet",
+  "VFPowerHover": "Energiaváltás",
+  "VFDefaultColorHover": "Alapértelmezett színek visszaállítása",
+  "VFPrimaryAccent": "Elsődleges szín",
+  "VFSecondaryAccent": "Másodlagos szín",
+
+  "VFMagnetBootsHint1": "Közeli felszín észlelve",
+  "VFMagnetBootsHint2": "Aktiválás indul...",
+  "VFMagnetBootsHint3": "Mágneses csizmák aktiválva",
+
+  "VFDroneHint1": "Drón aktiválva",
+  "VFDroneHint2": "Távolság",
+  "VFDroneHint3": "Állapot: Hiba",
+  "VFDroneHint4": "Javasolt eszközök a javításhoz",
+  "VFDroneHint5": "Állapot: Nincs akkumulátor",
+  "VFDroneHint6": "Cserélj akkumulátort",
+  "VFDroneHint7": "Drón megjelenítve a HUD-on",
+  "VFDroneHint8": "Drón leállítva (nincs akkumulátor)",
+  "VFDroneHint9": "Drón kikapcsolása",
+  "VFDroneHint10": "Drón visszahívása az állomásra",
+
+  "VFDroneStationHint1": "Állomás nem található",
+  "VFDroneStationHint2": "Állapot",
+  "VFDroneStationHint3": "Szükséges jármű",
+  "VFDroneStationHint4": "Jelenlegi kapcsolat",
+  "VFDroneStationHint5": "Másik drón",
+  "VFDroneStationHint6": "Utolsó drón",
+
+  "VFAutopilotHint1": "Autopilóta leállítva. Útvonal megszakítva.",
+
+  "VFMaterialReactorHint1": "Ez a reaktor az alábbi anyagokat támogatja:",
+  "VFMaterialReactorHint2": "Ez a reaktor az alábbi anyagokat és energiaforrásokat támogatja:",
+  "VFMaterialReactorHint3": "Reaktor részleteinek megjelenítése",
+  "VFMaterialReactorHint4": "Energia állapot",
+  "VFUndockHint1": "Jármű lekapcsolása az állomásról",
+  "VFUndockHint2": "Jármű nincs csatlakoztatva",
+  "VFUndockHint3": "Állomás nem felismerve",
+
+  "VFDeconstructionHint": "Építési fázis",
+
+  "VFTooFast": "Túl gyors! Duplaklikk az autopilóta megállításához",
+  "VFTooSteep": "Túl meredek! Duplaklikk a szintezéshez",
+
+  "VFSubtitleBatteriesDepleted": "Az akkumulátorok kimerültek!",
+  "VFSubtitleBatteriesNearlyEmpty": "Az akkumulátorok majdnem üresek!",
+  "VFSubtitlePowerLow": "Alacsony energia!",
+  "VFSubtitleEnginePoweringDown": "Motor leállítása!",
+  "VFSubtitleEnginePoweringUp": "Motor indítása!",
+  "VFSubtitleGoodbye": "Viszlát",
+  "VFSubtitleHullFailureImminent": "Figyelem! A hajótest hamarosan meghibásodik!",
+  "VFSubtitleHullIntegrityCritical": "Figyelem! Kritikus hajótest integritás!",
+  "VFSubtitleHullIntegrityLow": "Figyelem! Alacsony hajótest integritás!"
+}

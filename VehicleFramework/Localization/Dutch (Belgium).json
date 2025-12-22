@@ -1,0 +1,118 @@
+﻿{
+  "VFVehicle": "Voertuig",
+  "VFEnterVehicle": "Voertuig betreden",
+  "VFExitVehicle": "Voertuig verlaten",
+  "VFOpenStorage": "Opslag openen",
+  "VFStartPiloting": "Besturen starten",
+  "VFNameLabel": "Naam",
+
+  "VFHeadlightsButtonLabel": "Koplampen",
+  "VFHeadlightsButtonTooltip": "Klik om de koplampen aan of uit te zetten",
+  "VFLeftClickHeadlightsLabel": "Koplampen wisselen (linkerklik)",
+  "VFLeftClickHeadlightsTooltip": "Linkerklik om koplampen te wisselen",
+  "VFRightClickHeadlightsLabel": "Koplampen wisselen (rechterklik)",
+  "VFRightClickHeadlightsTooltip": "Rechterklik om koplampen te wisselen",
+  "VFHeadLightsHover": "Koplampen wisselen",
+  "VFFloodLightsHover": "Schijnwerpers",
+  "VFNavLightsHover": "Navigatielichten",
+  "VFFlashingLightsLabel": "Knipperlichten",
+  "VFFlashingLightsTooltip": "Knipperlichten activeren",
+  "VFInteriorLightsHover": "Interieurverlichting wisselen",
+
+  "VFCameraHint": "Camera-tip:",
+  "VFPrevCameraLabel": "Vorige camera",
+  "VFPrevCameraTooltip": "Wissel naar vorige camera",
+  "VFNextCameraLabel": "Volgende camera",
+  "VFNextCameraTooltip": "Wissel naar volgende camera",
+  "VFExitCameraLabel": "Camera verlaten",
+  "VFExitCameraTooltip": "Klik om de camera te verlaten",
+
+  "VFConfigManagerLabel": "Meer instellingen openen",
+  "VFConfigManagerTooltip": "Open het venster voor extra instellingen",
+  "VFConfigManagerPrintInfo": "Nexus-instellingen laden",
+  "VFDebugLogLabel": "Debuglogboek",
+  "VFDebugLogTooltip": "Toon gedetailleerd debuglogboek",
+
+  "VFMVModules": "Voertuigmodules",
+  "VFMVDepthModules": "Dieptemodules",
+  "VFSpecificModules": "Specifieke modules",
+  "VFDepth1FriendlyString": "Dieptemodule MK1",
+  "VFDepth1Description": "Verhoogt de maximale diepte. Niet compatibel met andere dieptemodules.",
+  "VFDepth2FriendlyString": "Dieptemodule MK2",
+  "VFDepth2Description": "Verhoogt de maximale diepte verder. Niet compatibel met andere dieptemodules.",
+  "VFDepth3FriendlyString": "Dieptemodule MK3",
+  "VFDepth3Description": "Verhoogt de maximale diepte aanzienlijk. Niet compatibel met andere dieptemodules.",
+
+  "VFSeamothTab": "Seamoth Module",
+  "VFPrawnTab": "Prawn Module",
+  "VFCyclopsTab": "Cyclops Module",
+  "VFGeneralTab": "Algemeen",
+
+  "VFVehicleBattery": "Voertuigbatterij",
+  "VFAutoPilotBattery": "Autopilootbatterij",
+
+  "VFAutoPilotHover": "Autopiloot actief (binnenkort beschikbaar)",
+
+  "VFMagBootsButtonLabel": "Magnetische laarzen wisselen",
+  "VFMagBootsButtonTooltip": "Klik om magnetische laarzen aan of uit te zetten",
+
+  "VFDroneStationCheatLabel": "Dronestation activeren",
+  "VFDroneStationCheatTooltip": "Klik om een dronestation in te schakelen in het spel",
+  "VFDroneStationError": "Deze cheat is enkel in-game beschikbaar",
+
+  "VFSubtitlesLabel": "Autopiloot ondertitels",
+  "VFSubtitlesTooltip": "Ondertitels aan- of uitzetten",
+
+  "VFEmptyHover": "Geen actie beschikbaar",
+  "VFPowerHover": "Stroom wisselen",
+  "VFDefaultColorHover": "Standaardkleuren herstellen",
+  "VFPrimaryAccent": "Primaire kleur",
+  "VFSecondaryAccent": "Secundaire kleur",
+
+  "VFMagnetBootsHint1": "Nabij oppervlak gedetecteerd",
+  "VFMagnetBootsHint2": "Activatie starten...",
+  "VFMagnetBootsHint3": "Magnetische laarzen geactiveerd",
+
+  "VFDroneHint1": "Drone geactiveerd",
+  "VFDroneHint2": "Afstand",
+  "VFDroneHint3": "Status: Fout",
+  "VFDroneHint4": "Aanbevolen gereedschap voor herstel",
+  "VFDroneHint5": "Status: Geen batterij",
+  "VFDroneHint6": "Vervang de batterij",
+  "VFDroneHint7": "Drone zichtbaar op HUD",
+  "VFDroneHint8": "Drone uitgeschakeld (geen batterij)",
+  "VFDroneHint9": "Drone uitschakelen",
+  "VFDroneHint10": "Drone terugroepen naar station",
+
+  "VFDroneStationHint1": "Station niet gevonden",
+  "VFDroneStationHint2": "Status",
+  "VFDroneStationHint3": "Voertuig vereist",
+  "VFDroneStationHint4": "Huidige verbinding",
+  "VFDroneStationHint5": "Andere drone",
+  "VFDroneStationHint6": "Laatste drone",
+
+  "VFAutopilotHint1": "Autopiloot gestopt. Route onderbroken.",
+
+  "VFMaterialReactorHint1": "Deze reactor ondersteunt de volgende materialen:",
+  "VFMaterialReactorHint2": "Deze reactor ondersteunt de volgende materialen en energiebronnen:",
+  "VFMaterialReactorHint3": "Reactordetails weergeven",
+  "VFMaterialReactorHint4": "Energie-status",
+  "VFUndockHint1": "Voertuig ontkoppelen van station",
+  "VFUndockHint2": "Geen voertuig verbonden",
+  "VFUndockHint3": "Station niet herkend",
+
+  "VFDeconstructionHint": "Constructiefase",
+
+  "VFTooFast": "Te snel! Dubbelklik om de autopiloot te stoppen",
+  "VFTooSteep": "Te steil! Dubbelklik om te nivelleren",
+
+  "VFSubtitleBatteriesDepleted": "Batterijen leeg!",
+  "VFSubtitleBatteriesNearlyEmpty": "Batterijen bijna leeg!",
+  "VFSubtitlePowerLow": "Stroom bijna op!",
+  "VFSubtitleEnginePoweringDown": "Motor uitschakelen!",
+  "VFSubtitleEnginePoweringUp": "Motor inschakelen!",
+  "VFSubtitleGoodbye": "Vaarwel",
+  "VFSubtitleHullFailureImminent": "Waarschuwing! Rompdefect op komst!",
+  "VFSubtitleHullIntegrityCritical": "Waarschuwing! Kritieke rompstructuur!",
+  "VFSubtitleHullIntegrityLow": "Waarschuwing! Lage rompstructuur!"
+}

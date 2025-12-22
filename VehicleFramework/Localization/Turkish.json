@@ -1,0 +1,153 @@
+﻿{
+    // GENERAL UI LABELS
+    "VFVehicle": "Araç",
+    "VFEnterVehicle": "Araca Gir",
+    "VFExitVehicle": "Araçtan ayrıl",
+    "VFOpenStorage": "Depoyu aç",
+    "VFStartPiloting": "Denizaltıyı kullan",
+    "VFNameLabel": "AD",
+
+    // LIGHTS
+    "VFHeadlightsButtonLabel": "Dış Projektörleri Aç/Kapat",
+    "VFHeadlightsButtonTooltip": "Kullanma sırasında araç farlarını açmak/kapatmak için bu düğmeye basın.",
+    "VFLeftClickHeadlightsLabel": "Dış Projektörleri Aç/Kapat(Sol Tık)",
+    "VFLeftClickHeadlightsTooltip": "Dış Projektörleri açmak/kapatmak için sol tıklamaya (veya sol tetiğe) izin verin.",
+    "VFRightClickHeadlightsLabel": "Dış Projektörleri Aç/Kapat(Sağ Tık)",
+    "VFRightClickHeadlightsTooltip": "Dış Projektörleri açmak/kapatmak için sağ tıklamaya (veya sağ tetiğe) izin verin.",
+    "VFHeadLightsHover": "Dış Projektörleri Aç/Kapat",
+    "VFFloodLightsHover": "İç Aydınlatmayı Aç/Kapat",
+    "VFNavLightsHover": "Navigasyon Aydınlatmasını Aç/Kapat",
+    "VFFlashingLightsLabel": "Yanıp Sönen Işıklar",
+    "VFFlashingLightsTooltip": "Aracın dış kısmındaki yanıp sönen ışıkları (navigasyon ışıkları) etkinleştirin.",
+    "VFInteriorLightsHover": "İç Aydınlatmayı Aç/Kapat",
+
+    // CAMERA CONTROLS
+    "VFCameraHint": "Kamera Kontrolleri:",
+    "VFPrevCameraLabel": "Önceki Kamera",
+    "VFPrevCameraTooltip": "Önceki araç kamerasına geçmek için bu düğmeye basın.",
+    "VFNextCameraLabel": "Sonraki Kamera",
+    "VFNextCameraTooltip": "Sonraki araç kamerasına geçmek için bu düğmeye basın.",
+    "VFExitCameraLabel": "Kameradan Çık",
+    "VFExitCameraTooltip": "Araç kamerası görünümünden çıkmak için bu düğmeye basın.",
+
+    // CONFIG / DEBUGGING
+    "VFConfigManagerLabel": "Daha Fazla Seçenek için Config Manager'a bakın",
+    "VFConfigManagerTooltip": "Araç başına seçenekler için Config Manager modunu indirin!",
+    "VFConfigManagerPrintInfo": "Nexus'tan Config Manager modunu indirin!",
+    "VFDebugLogLabel": "Hata Ayıklama Günlükleri",
+    "VFDebugLogTooltip": "Hata ayıklama amacıyla ekstra günlük ifadelerini etkinleştirin.",
+    "VFFahrenheit" : "Fahrenheit kullan",
+    "VFFahrenheitTooltip" : "VF araçlarındaki Celsius ölçümlerini Fahrenheit eşdeğerleriyle değiştirin.",
+
+    // MODULES / UPGRADES
+    "VFMVModules": "VF Araç Yükseltmeleri",
+    "VFMVDepthModules": "Derinlik Modülleri",
+    "VFSpecificModules": "Özel Araç Yükseltmeleri",
+    "VFDepth1FriendlyString": "1.düzey Araç derinlik modülü",
+    "VFDepth1Description": "Güvenli dalış derinliğini arttırır. Birden fazla kullanılamaz.",
+    "VFDepth2FriendlyString": "2.düzey Araç derinlik modülü",
+    "VFDepth2Description": "Güvenli dalış derinliğini önemli ölçüde arttırır. Birden fazla kullanılamaz.",
+    "VFDepth3FriendlyString": "3.düzey Araç derinlik modülü",
+    "VFDepth3Description": "Dalış derinliğini en yüksek düzeye çıkarır. Birden fazla kullanılamaz.",
+
+    // UPGRADE TABS
+    "VFSeamothTab": "Seamoth Yükseltmeleri",
+    "VFPrawnTab": "Suban Giysi Yükseltmeleri",
+    "VFCyclopsTab": "Cyclops Yükseltmeleri",
+    "VFGeneralTab": "Genel",
+
+    // BATTERY
+    "VFVehicleBattery": "Araç Pili",
+    "VFAutoPilotBattery": "Oto Pilot Pili",
+
+    // AUTOPILOT
+    "VFAutoPilotHover": "Oto Pilotu Aç (Yakında Gelecek)",
+
+    // MAGNET BOOTS
+    "VFMagBootsButtonLabel": "Manyetikleşmeyi Aç/Kapat",
+    "VFMagBootsButtonTooltip": "Manyetikleşmeyi açmak/kapatmak için bu düğmeye basın.",
+
+    // DRONE STATION
+    "VFDroneStationCheatLabel": "Drone İstasyonunun Kilidini Aç",
+    "VFDroneStationCheatTooltip": "Mevcut oyunda Drone İstasyonunun kilidini açmak için buna basın.",
+    "VFDroneStationError": "Bu hile yalnızca oyun sırasında kullanılabilir.",
+
+    // SUBTITLES SETTINGS
+    "VFSubtitlesLabel": "Oto Pilot Altyazıları",
+    "VFSubtitlesTooltip": "Oto pilot konuşmaları için altyazıları etkinleştirin.",
+
+    // VARIOUS HOVERS
+    "VFEmptyHover": "Faydasız",
+    "VFPowerHover": "Gücü Aç/Kapat",
+    "VFDefaultColorHover": "Varsayılan Renklere Dön",
+    "VFPrimaryAccent": "1. ŞERİT",
+    "VFSecondaryAccent": "2. ŞERİT",
+	
+    // VF Fabricator
+    "VFFabricatorDisplayName" : "VF üretici",
+    "VFFabricatorDesc" : "Bu üretici Seamoth, Suban, Cyclops ve diğer birçok araç için yükseltmeler üretebilir.",
+    
+    // Drone Station
+    "VFDroneStationDisplayName" : "Drone istasyonu",
+    "VFDroneStationDesc" : "Bu terminal drone'ları uzaktan kontrol etmek için kullanılabilir.",
+    "VFDroneStationEncy" : "Drone istasyonu yakındaki herhangi bir drone aracına uzaktan bağlanmak ve pilotluk yapmak için kullanılabilir. Drone istasyonu, kullanıcıları uzak tehditlerden korumak için radyo teknolojisini geliştiriyor.\n - Bağlantı Aralığı: ~600 metre\n - Şunlar için tasarlandı: Bölmeler ve Denizaltılar - Drone'ları otomatik olarak kendisine döndürebilir\n",
+    "VFDroneStationUnlockText" : "Drone Gerekli",
+
+    // HINTS (Grouped)
+    "VFMagnetBootsHint1": "Yakınlarda manyetik bir yüzey yok.",
+    "VFMagnetBootsHint2": "manyetikleşiyor...",
+    "VFMagnetBootsHint3": "manyetikleşme tamamlandı!",
+    
+    "VFDroneHint1": "Şimdiki Drone",
+    "VFDroneHint2": "Mesafe",
+    "VFDroneHint3": "Durum: Hasarlı",
+    "VFDroneHint4": "Önerilen Eylem: Lazer kesiciyle sökün.",
+    "VFDroneHint5": "Durum: Düşük Güç",
+    "VFDroneHint6": "Önerilen Eylem: Güç kaynağını değiştirin.",
+    "VFDroneHint7": "Drone bir dakika boyunca Baş Üstü Ekranda görünecek.",
+    "VFDroneHint8": "Drone Bağlantısı Kesildi (Düşük Güç)",
+    "VFDroneHint9": "Drone'un bağlantısını kesin",
+    "VFDroneHint10": "Drone istasyonuna dön",
+
+    "VFDroneStationHint1": "Hiçbiri Algılanmadı",
+    "VFDroneStationHint2": "Durum",
+    "VFDroneStationHint3": "Ayrıntıları İste",
+    "VFDroneStationHint4": "Bağlan",
+    "VFDroneStationHint5": "Sonraki Drone'a Geç",
+    "VFDroneStationHint6": "Önceki Drone'a Dön",
+
+    "VFAutopilotHint1": "Oto pilot navigasyonu durduruldu. Yol belli değil.",
+
+    "VFMaterialReactorHint1": "Bu malzeme reaktörü şu malzemeleri kabul eder:",
+    "VFMaterialReactorHint2": "Bu malzeme reaktörü, aşağıdaki enerji potansiyellerine sahip olan malzemeleri kabul eder:",
+    "VFMaterialReactorHint3": "Reaktör Verilerini Gör",
+    "VFMaterialReactorHint4": "güç seviyesi",
+
+    "VFUndockHint1": "Aracı istasyondan ayır",
+    "VFUndockHint2": "Demirlenmiş araç yok.",
+    "VFUndockHint3": "Demirleme İstasyonu yok.",
+
+    "VFDeconstructionHint": "İnşa Düzeyi",
+
+    "VFTooFast": "Hız çok yüksek.\nOtomatik frenlemek için iki kez dokunun.",
+    "VFTooSteep": "Açı çok dik.\nOtomatik dengelemek için iki kez dokunun.",
+
+    // SUBTITLES (Grouped)
+    "VFSubtitleBatteriesDepleted": "Piller tükendi!",
+    "VFSubtitleBatteriesNearlyEmpty": "Piller neredeyse tükendi!",
+    "VFSubtitlePowerLow": "Enerji düşük!",
+    "VFSubtitleEnginePoweringDown": "Motor Durduruluyor",
+    "VFSubtitleEnginePoweringUp": "Motor Çalıştırılıyor",
+    "VFSubtitleGoodbye": "Görüşürüz.",
+    "VFSubtitleHullFailureImminent": "Acil durum! Gövde arızaya yakın!",
+    "VFSubtitleHullIntegrityCritical": "Uyarı! Gövde bütünlüğü kritik!",
+    "VFSubtitleHullIntegrityLow": "Uyarı! Gövde bütünlüğü düşük!",
+    "VFSubtitleLeveling": "Dengeleniyor...",
+    "VFSubtitleWelcomeAboard": "Araca hoş geldin kaptan",
+    "VFSubtitleOxygenProductionOffline": "Yalnızca acil durum gücü! Oksijen üretimi çevrimdışı!",
+    "VFSubtitleWelcomeAboardAllSystemsOnline": "Denizaltıya hoş geldin kaptan. Tüm sistemler çalışır durumda.",
+    "VFSubtitleMaximumDepthReached": "Uyarı! Maksimum derinliğe ulaşıldı! Gövde hasarı yaklaşıyor!",
+    "VFSubtitlePassingSafeDepth": "Uyarı! Maksimum derinlik yakın!",
+    "VFSubtitleLeviathanDetected": "Canavar tespit edildi!",
+    "VFSubtitleUhOh": "Uh oh!"
+}

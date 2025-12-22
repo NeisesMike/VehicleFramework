@@ -1,0 +1,118 @@
+﻿{
+  "VFVehicle": "Feithicil",
+  "VFEnterVehicle": "Téigh isteach sa fheithicil",
+  "VFExitVehicle": "Éalain as an bhfeithicil",
+  "VFOpenStorage": "Oscail stóráil",
+  "VFStartPiloting": "Tosaigh ag tiomáint",
+  "VFNameLabel": "Ainm",
+
+  "VFHeadlightsButtonLabel": "Solais cinn",
+  "VFHeadlightsButtonTooltip": "Cliceáil chun solais cinn a chasadh nó a mhúchadh",
+  "VFLeftClickHeadlightsLabel": "Athraigh solais (cliceáil clé)",
+  "VFLeftClickHeadlightsTooltip": "Cliceáil clé chun solais a athrú",
+  "VFRightClickHeadlightsLabel": "Athraigh solais (cliceáil deas)",
+  "VFRightClickHeadlightsTooltip": "Cliceáil deas chun solais a athrú",
+  "VFHeadLightsHover": "Athraigh solais",
+  "VFFloodLightsHover": "Solais na tuile",
+  "VFNavLightsHover": "Solais na ngnáthóga",
+  "VFFlashingLightsLabel": "Solais ag lasadh",
+  "VFFlashingLightsTooltip": "Tosaigh na solais ag lasadh",
+  "VFInteriorLightsHover": "Athraigh solais istigh",
+
+  "VFCameraHint": "Comhairle ceamara:",
+  "VFPrevCameraLabel": "Ceamara roimhe seo",
+  "VFPrevCameraTooltip": "Athraigh go dtí an ceamara roimhe seo",
+  "VFNextCameraLabel": "Ceamara seo chugainn",
+  "VFNextCameraTooltip": "Athraigh go dtí an ceamara seo chugainn",
+  "VFExitCameraLabel": "Éalain ón gceamara",
+  "VFExitCameraTooltip": "Cliceáil chun éalú ón gceamara",
+
+  "VFConfigManagerLabel": "Rochtain ar socruithe breise",
+  "VFConfigManagerTooltip": "Oscail an fhuinneog socruithe breise",
+  "VFConfigManagerPrintInfo": "Ag luchtú socruithe Nexus",
+  "VFDebugLogLabel": "Log na dífhabhtacháin",
+  "VFDebugLogTooltip": "Taispeánann an log dífhabhtacháin mionsonraithe",
+
+  "VFMVModules": "Modúil feithicle",
+  "VFMVDepthModules": "Modúil doimhneachta",
+  "VFSpecificModules": "Modúil sonraithe",
+  "VFDepth1FriendlyString": "Modúl doimhneachta MK1",
+  "VFDepth1Description": "Tugann sé deimhneacht níos mó. Ní féidir é a úsáid le modúil eile.",
+  "VFDepth2FriendlyString": "Modúl doimhneachta MK2",
+  "VFDepth2Description": "Tugann sé deimhneacht níos mó. Ní féidir é a úsáid le modúil eile.",
+  "VFDepth3FriendlyString": "Modúl doimhneachta MK3",
+  "VFDepth3Description": "Tugann sé deimhneacht mhór níos mó. Ní féidir é a úsáid le modúil eile.",
+
+  "VFSeamothTab": "Modúl Seamoth",
+  "VFPrawnTab": "Modúl Prawn",
+  "VFCyclopsTab": "Modúl Cyclops",
+  "VFGeneralTab": "Ginearálta",
+
+  "VFVehicleBattery": "Cadhnra feithicle",
+  "VFAutoPilotBattery": "Cadhnra autopilota",
+
+  "VFAutoPilotHover": "Autopilota gníomhach (le teacht go luath)",
+
+  "VFMagBootsButtonLabel": "Athraigh bróga maighnéadacha",
+  "VFMagBootsButtonTooltip": "Cliceáil chun bróga maighnéadacha a chasadh nó a mhúchadh",
+
+  "VFDroneStationCheatLabel": "Gníomhachtú stáisiún drón",
+  "VFDroneStationCheatTooltip": "Cliceáil chun an stáisiún drón a gníomhachtú i gcúrsaí cluiche",
+  "VFDroneStationError": "Níl an cleas seo ar fáil ach i gcúrsaí cluiche",
+
+  "VFSubtitlesLabel": "Subtitles autopilota",
+  "VFSubtitlesTooltip": "Cliceáil chun na subtítlí a ghníomhachtú nó a mhúchadh",
+
+  "VFEmptyHover": "Gníomh nach bhfuil ann",
+  "VFPowerHover": "Athraigh cumhacht",
+  "VFDefaultColorHover": "Athraigh go dtí na dathanna réamhshocraithe",
+  "VFPrimaryAccent": "Dath príomhúil",
+  "VFSecondaryAccent": "Dath tánaisteach",
+
+  "VFMagnetBootsHint1": "I gcóngaracht na dromchla",
+  "VFMagnetBootsHint2": "Gníomhachtú ag tosú...",
+  "VFMagnetBootsHint3": "Bróga maighnéadacha gníomhachtaithe",
+
+  "VFDroneHint1": "Drón gníomhachtaithe",
+  "VFDroneHint2": "Achair",
+  "VFDroneHint3": "Stádas: Earráid",
+  "VFDroneHint4": "Uirlisí le haghaidh damáiste molta",
+  "VFDroneHint5": "Stádas: Cadhnra as láthair",
+  "VFDroneHint6": "Athsholáthair cadhnra",
+  "VFDroneHint7": "Is féidir an drón a fheiceáil san HUD",
+  "VFDroneHint8": "Drón as feidhm (cadhnra as láthair)",
+  "VFDroneHint9": "Múchadh drón",
+  "VFDroneHint10": "Tóg drón ar ais chuig stáisiún",
+
+  "VFDroneStationHint1": "Stáisiún nach fuarthas",
+  "VFDroneStationHint2": "Stádas",
+  "VFDroneStationHint3": "Árthach riachtanach",
+  "VFDroneStationHint4": "Ceangal faoi láthair",
+  "VFDroneStationHint5": "Drón eile",
+  "VFDroneStationHint6": "Drón deireanach",
+
+  "VFAutopilotHint1": "Autopilota díghníomhachtaithe. Stopadh an cosán",
+
+  "VFMaterialReactorHint1": "Tacaíonn an reaktóir seo leis na hábhair seo:",
+  "VFMaterialReactorHint2": "Tacaíonn an reaktóir seo leis na hábhair seo agus le cumhacht seo:",
+  "VFMaterialReactorHint3": "Taispeáin mionsonraí reaktóra",
+  "VFMaterialReactorHint4": "Stádas cumhachta",
+  "VFUndockHint1": "Déan an feithicil a dhícheangal ón stáisiún",
+  "VFUndockHint2": "Níl an feithicil ceangailte",
+  "VFUndockHint3": "Stáisiún neamh-aithnithe",
+
+  "VFDeconstructionHint": "Céim tógála",
+
+  "VFTooFast": "Ró-ghasta! Cliceáil dúbailte chun autopilota a stopadh",
+  "VFTooSteep": "Ró-ghéar! Cliceáil dúbailte chun an eitleán a leibhéil",
+
+  "VFSubtitleBatteriesDepleted": "Cadhnra as láimh!",
+  "VFSubtitleBatteriesNearlyEmpty": "Cadhnra beagnach folamh!",
+  "VFSubtitlePowerLow": "Cumhacht íseal!",
+  "VFSubtitleEnginePoweringDown": "Ingné á dhúnadh!",
+  "VFSubtitleEnginePoweringUp": "Ingné á thosú!",
+  "VFSubtitleGoodbye": "Slán",
+  "VFSubtitleHullFailureImminent": "Rabhadh! Féachfaidh an coibhéiseach seo briste!",
+  "VFSubtitleHullIntegrityCritical": "Rabhadh! Integritatea ceanglóir aois deacair!",
+  "VFSubtitleHullIntegrityLow": "Rabhadh! Coilsíoch ag aige!"
+}
