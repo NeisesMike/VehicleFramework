@@ -8,12 +8,8 @@
     "VFNameLabel": "AD",
 
     // LIGHTS
-    "VFHeadlightsButtonLabel": "Dış Projektörleri Aç/Kapat",
-    "VFHeadlightsButtonTooltip": "Kullanma sırasında araç farlarını açmak/kapatmak için bu düğmeye basın.",
-    "VFLeftClickHeadlightsLabel": "Dış Projektörleri Aç/Kapat(Sol Tık)",
-    "VFLeftClickHeadlightsTooltip": "Dış Projektörleri açmak/kapatmak için sol tıklamaya (veya sol tetiğe) izin verin.",
-    "VFRightClickHeadlightsLabel": "Dış Projektörleri Aç/Kapat(Sağ Tık)",
-    "VFRightClickHeadlightsTooltip": "Dış Projektörleri açmak/kapatmak için sağ tıklamaya (veya sağ tetiğe) izin verin.",
+    "OptionVFHeadlightsButton": "Dış Projektörleri Aç/Kapat",
+    "OptionDesc_VFHeadlightsButton": "Kullanma sırasında araç farlarını açmak/kapatmak için bu düğmeye basın.",
     "VFHeadLightsHover": "Dış Projektörleri Aç/Kapat",
     "VFFloodLightsHover": "İç Aydınlatmayı Aç/Kapat",
     "VFNavLightsHover": "Navigasyon Aydınlatmasını Aç/Kapat",
@@ -23,12 +19,12 @@
 
     // CAMERA CONTROLS
     "VFCameraHint": "Kamera Kontrolleri:",
-    "VFPrevCameraLabel": "Önceki Kamera",
-    "VFPrevCameraTooltip": "Önceki araç kamerasına geçmek için bu düğmeye basın.",
-    "VFNextCameraLabel": "Sonraki Kamera",
-    "VFNextCameraTooltip": "Sonraki araç kamerasına geçmek için bu düğmeye basın.",
-    "VFExitCameraLabel": "Kameradan Çık",
-    "VFExitCameraTooltip": "Araç kamerası görünümünden çıkmak için bu düğmeye basın.",
+    "OptionVFPrevCameraButton": "Önceki Kamera",
+    "OptionDesc_VFPrevCameraButton": "Önceki araç kamerasına geçmek için bu düğmeye basın.",
+    "OptionVFNextCameraButton": "Sonraki Kamera",
+    "OptionDesc_VFNextCameraButton": "Sonraki araç kamerasına geçmek için bu düğmeye basın.",
+    "OptionVFExitCameraButton": "Kameradan Çık",
+    "OptionDesc_VFExitCameraButton": "Araç kamerası görünümünden çıkmak için bu düğmeye basın.",
 
     // CONFIG / DEBUGGING
     "VFConfigManagerLabel": "Daha Fazla Seçenek için Config Manager'a bakın",
@@ -64,8 +60,8 @@
     "VFAutoPilotHover": "Oto Pilotu Aç (Yakında Gelecek)",
 
     // MAGNET BOOTS
-    "VFMagBootsButtonLabel": "Manyetikleşmeyi Aç/Kapat",
-    "VFMagBootsButtonTooltip": "Manyetikleşmeyi açmak/kapatmak için bu düğmeye basın.",
+    "OptionVFMagBootsButton": "Manyetikleşmeyi Aç/Kapat",
+    "OptionDesc_VFMagBootsButton": "Manyetikleşmeyi açmak/kapatmak için bu düğmeye basın.",
 
     // DRONE STATION
     "VFDroneStationCheatLabel": "Drone İstasyonunun Kilidini Aç",

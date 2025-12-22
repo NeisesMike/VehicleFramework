@@ -6,12 +6,8 @@
   "VFStartPiloting": "Starta körning",
   "VFNameLabel": "Namn",
 
-  "VFHeadlightsButtonLabel": "Strålkastarknapp",
-  "VFHeadlightsButtonTooltip": "Klicka för att slå på eller av strålkastarna",
-  "VFLeftClickHeadlightsLabel": "Byt strålkastare (vänsterklick)",
-  "VFLeftClickHeadlightsTooltip": "Vänsterklicka för att byta strålkastare",
-  "VFRightClickHeadlightsLabel": "Byt strålkastare (högerklick)",
-  "VFRightClickHeadlightsTooltip": "Högerklicka för att byta strålkastare",
+  "OptionVFHeadlightsButton": "Strålkastarknapp",
+  "OptionDesc_VFHeadlightsButton": "Klicka för att slå på eller av strålkastarna",
   "VFHeadLightsHover": "Byt strålkastare",
   "VFFloodLightsHover": "Flodljus",
   "VFNavLightsHover": "Navigationsljus",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Byt inre ljus",
 
   "VFCameraHint": "Kameratips:",
-  "VFPrevCameraLabel": "Föregående kamera",
-  "VFPrevCameraTooltip": "Byt till föregående kamera",
-  "VFNextCameraLabel": "Nästa kamera",
-  "VFNextCameraTooltip": "Byt till nästa kamera",
-  "VFExitCameraLabel": "Gå ut ur kameraläget",
-  "VFExitCameraTooltip": "Gå ut ur kameraläget",
+  "OptionVFPrevCameraButton": "Föregående kamera",
+  "OptionDesc_VFPrevCameraButton": "Byt till föregående kamera",
+  "OptionVFNextCameraButton": "Nästa kamera",
+  "OptionDesc_VFNextCameraButton": "Byt till nästa kamera",
+  "OptionVFExitCameraButton": "Gå ut ur kameraläget",
+  "OptionDesc_VFExitCameraButton": "Gå ut ur kameraläget",
 
   "VFConfigManagerLabel": "Gå till konfigurationsinställningarna för fler alternativ",
   "VFConfigManagerTooltip": "Gå till inställningar för att se fler alternativ!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilotläge aktiverat (kommande)",
 
-  "VFMagBootsButtonLabel": "Byt magnetiska stövlar",
-  "VFMagBootsButtonTooltip": "Slå på eller av magnetiska stövlar",
+  "OptionVFMagBootsButton": "Byt magnetiska stövlar",
+  "OptionDesc_VFMagBootsButton": "Slå på eller av magnetiska stövlar",
 
   "VFDroneStationCheatLabel": "Aktivera drönstation",
   "VFDroneStationCheatTooltip": "Klicka här för att aktivera drönstation i spelet",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan upptäckt!",
   "VFSubtitleUhOh": "Oj då!"
 }
+

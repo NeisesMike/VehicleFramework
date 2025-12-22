@@ -6,12 +6,8 @@
   "VFStartPiloting": "Започване на управление",
   "VFNameLabel": "Етикет за име",
 
-  "VFHeadlightsButtonLabel": "Превключване на фаровете",
-  "VFHeadlightsButtonTooltip": "Натиснете този бутон, за да превключите фаровете по време на управление.",
-  "VFLeftClickHeadlightsLabel": "Превключване на фаровете (ляв бутон)",
-  "VFLeftClickHeadlightsTooltip": "Позволява активиране на фаровете с ляв клик или ляв тригер.",
-  "VFRightClickHeadlightsLabel": "Превключване на фаровете (десен бутон)",
-  "VFRightClickHeadlightsTooltip": "Позволява активиране на фаровете с десен клик или десен тригер.",
+  "OptionVFHeadlightsButton": "Превключване на фаровете",
+  "OptionDesc_VFHeadlightsButton": "Натиснете този бутон, за да превключите фаровете по време на управление.",
   "VFHeadLightsHover": "Превключване на фаровете",
   "VFFloodLightsHover": "Превключване на прожекторите",
   "VFNavLightsHover": "Превключване на навигационните светлини",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Превключване на вътрешното осветление",
 
   "VFCameraHint": "Управление на камерата:",
-  "VFPrevCameraLabel": "Предишна камера",
-  "VFPrevCameraTooltip": "Превключете към предишната камера на превозното средство.",
-  "VFNextCameraLabel": "Следваща камера",
-  "VFNextCameraTooltip": "Превключете към следващата камера на превозното средство.",
-  "VFExitCameraLabel": "Изход от камерата",
-  "VFExitCameraTooltip": "Изход от изгледа на камерата.",
+  "OptionVFPrevCameraButton": "Предишна камера",
+  "OptionDesc_VFPrevCameraButton": "Превключете към предишната камера на превозното средство.",
+  "OptionVFNextCameraButton": "Следваща камера",
+  "OptionDesc_VFNextCameraButton": "Превключете към следващата камера на превозното средство.",
+  "OptionVFExitCameraButton": "Изход от камерата",
+  "OptionDesc_VFExitCameraButton": "Изход от изгледа на камерата.",
 
   "VFConfigManagerLabel": "Вижте мениджъра на конфигурации за повече опции",
   "VFConfigManagerTooltip": "Изтеглете мода за мениджър на конфигурации за допълнителни настройки!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Отваряне на автопилот (Очаквайте скоро)",
 
-  "VFMagBootsButtonLabel": "Превключване на магнитни ботуши",
-  "VFMagBootsButtonTooltip": "Превключване на магнитните ботуши.",
+  "OptionVFMagBootsButton": "Превключване на магнитни ботуши",
+  "OptionDesc_VFMagBootsButton": "Превключване на магнитните ботуши.",
 
   "VFDroneStationCheatLabel": "Отключване на станцията за дронове",
   "VFDroneStationCheatTooltip": "Натиснете, за да отключите станцията за дронове в текущата игра.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Обнаружен Левиатан!",
   "VFSubtitleUhOh": "Опа!"
 }
+

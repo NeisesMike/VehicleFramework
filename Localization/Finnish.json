@@ -6,12 +6,8 @@
   "VFStartPiloting": "Aloita ohjaus",
   "VFNameLabel": "Nimi-teksti",
 
-  "VFHeadlightsButtonLabel": "Ajovalojen kytkin",
-  "VFHeadlightsButtonTooltip": "Napsauta ajovalojen vaihtamiseksi ajon aikana.",
-  "VFLeftClickHeadlightsLabel": "Ajovalojen kytkin (vasen klikkaus)",
-  "VFLeftClickHeadlightsTooltip": "Vaihda ajovalot vasemmalla hiiren painikkeella.",
-  "VFRightClickHeadlightsLabel": "Ajovalojen kytkin (oikea klikkaus)",
-  "VFRightClickHeadlightsTooltip": "Vaihda ajovalot oikealla hiiren painikkeella.",
+  "OptionVFHeadlightsButton": "Ajovalojen kytkin",
+  "OptionDesc_VFHeadlightsButton": "Napsauta ajovalojen vaihtamiseksi ajon aikana.",
   "VFHeadLightsHover": "Ajovalojen kytkin",
   "VFFloodLightsHover": "Tulvavalot",
   "VFNavLightsHover": "Liikennevalot",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Sisävalojen kytkin",
 
   "VFCameraHint": "Kameran ohjauksen vihjeet:",
-  "VFPrevCameraLabel": "Edellinen kamera",
-  "VFPrevCameraTooltip": "Vaihda edelliseen kameraan.",
-  "VFNextCameraLabel": "Seuraava kamera",
-  "VFNextCameraTooltip": "Vaihda seuraavaan kameraan.",
-  "VFExitCameraLabel": "Poistu kamerasta",
-  "VFExitCameraTooltip": "Poistu kameran näkymästä.",
+  "OptionVFPrevCameraButton": "Edellinen kamera",
+  "OptionDesc_VFPrevCameraButton": "Vaihda edelliseen kameraan.",
+  "OptionVFNextCameraButton": "Seuraava kamera",
+  "OptionDesc_VFNextCameraButton": "Vaihda seuraavaan kameraan.",
+  "OptionVFExitCameraButton": "Poistu kamerasta",
+  "OptionDesc_VFExitCameraButton": "Poistu kameran näkymästä.",
 
   "VFConfigManagerLabel": "Mene asetusten hallintaan mukautettujen asetusten vuoksi",
   "VFConfigManagerTooltip": "Lataa asetusten hallinta, jossa on enemmän valintoja!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilotti käynnissä (päivitys pian)",
 
-  "VFMagBootsButtonLabel": "Magneettikenkien kytkin",
-  "VFMagBootsButtonTooltip": "Kytke magneettikengät päälle tai pois.",
+  "OptionVFMagBootsButton": "Magneettikenkien kytkin",
+  "OptionDesc_VFMagBootsButton": "Kytke magneettikengät päälle tai pois.",
 
   "VFDroneStationCheatLabel": "Avaa drone-asema",
   "VFDroneStationCheatTooltip": "Klikkaa tähän avataksesi drone-aseman nykyisessä pelissä.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan havaittu!",
   "VFSubtitleUhOh": "Ups!"
 }
+

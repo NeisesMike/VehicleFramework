@@ -6,12 +6,8 @@
   "VFStartPiloting": "Sākt pilotēšanu",
   "VFNameLabel": "Nosaukums",
 
-  "VFHeadlightsButtonLabel": "Priekšu lukturi",
-  "VFHeadlightsButtonTooltip": "Noklikšķiniet, lai ieslēgtu vai izslēgtu lukturus",
-  "VFLeftClickHeadlightsLabel": "Mainīt lukturus (kreisais peles pogas)",
-  "VFLeftClickHeadlightsTooltip": "Noklikšķiniet ar kreiso peles pogu, lai mainītu lukturus",
-  "VFRightClickHeadlightsLabel": "Mainīt lukturus (labais peles pogas)",
-  "VFRightClickHeadlightsTooltip": "Noklikšķiniet ar labo peles pogu, lai mainītu lukturus",
+  "OptionVFHeadlightsButton": "Priekšu lukturi",
+  "OptionDesc_VFHeadlightsButton": "Noklikšķiniet, lai ieslēgtu vai izslēgtu lukturus",
   "VFHeadLightsHover": "Mainīt lukturus",
   "VFFloodLightsHover": "Pārplūduma lukturi",
   "VFNavLightsHover": "Navigācijas lukturi",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Mainīt iekšējos apgaismojumus",
 
   "VFCameraHint": "Kameru padoms:",
-  "VFPrevCameraLabel": "Iepriekšējā kamera",
-  "VFPrevCameraTooltip": "Pāriet uz iepriekšējo kameru",
-  "VFNextCameraLabel": "Nākošā kamera",
-  "VFNextCameraTooltip": "Pāriet uz nākamo kameru",
-  "VFExitCameraLabel": "Iziet no kameras",
-  "VFExitCameraTooltip": "Iziet no kameras",
+  "OptionVFPrevCameraButton": "Iepriekšējā kamera",
+  "OptionDesc_VFPrevCameraButton": "Pāriet uz iepriekšējo kameru",
+  "OptionVFNextCameraButton": "Nākošā kamera",
+  "OptionDesc_VFNextCameraButton": "Pāriet uz nākamo kameru",
+  "OptionVFExitCameraButton": "Iziet no kameras",
+  "OptionDesc_VFExitCameraButton": "Iziet no kameras",
 
   "VFConfigManagerLabel": "Piekļuve papildu iestatījumiem",
   "VFConfigManagerTooltip": "Atveriet papildu iestatījumu logu!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilots ieslēgts (drīzumā pieejams)",
 
-  "VFMagBootsButtonLabel": "Mainīt magnētiskos zābakus",
-  "VFMagBootsButtonTooltip": "Ieslēdziet vai izslēdziet magnētiskos zābakus",
+  "OptionVFMagBootsButton": "Mainīt magnētiskos zābakus",
+  "OptionDesc_VFMagBootsButton": "Ieslēdziet vai izslēdziet magnētiskos zābakus",
 
   "VFDroneStationCheatLabel": "Ieslēgt dronu staciju",
   "VFDroneStationCheatTooltip": "Noklikšķiniet šeit, lai spēlē ieslēgtu dronu staciju",
@@ -124,3 +120,4 @@
   "VFSubtitleLeviathanDetected": "Leviatāns atklāts!",
   "VFSubtitleUhOh": "Ups!"
 }
+

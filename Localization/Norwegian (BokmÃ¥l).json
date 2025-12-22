@@ -6,12 +6,8 @@
   "VFStartPiloting": "Start piloting",
   "VFNameLabel": "Navn",
 
-  "VFHeadlightsButtonLabel": "Hovedlys knapp",
-  "VFHeadlightsButtonTooltip": "Klikk for å slå på eller av lysene",
-  "VFLeftClickHeadlightsLabel": "Bytt lys (venstreklikk)",
-  "VFLeftClickHeadlightsTooltip": "Venstreklikk for å bytte lys",
-  "VFRightClickHeadlightsLabel": "Bytt lys (høyreklikk)",
-  "VFRightClickHeadlightsTooltip": "Høyreklikk for å bytte lys",
+  "OptionVFHeadlightsButton": "Hovedlys knapp",
+  "OptionDesc_VFHeadlightsButton": "Klikk for å slå på eller av lysene",
   "VFHeadLightsHover": "Bytt lys",
   "VFFloodLightsHover": "Flomlys",
   "VFNavLightsHover": "Navigasjonslys",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Bytt interiørlys",
 
   "VFCameraHint": "Kameratips:",
-  "VFPrevCameraLabel": "Forrige kamera",
-  "VFPrevCameraTooltip": "Bytt til forrige kamera",
-  "VFNextCameraLabel": "Neste kamera",
-  "VFNextCameraTooltip": "Bytt til neste kamera",
-  "VFExitCameraLabel": "Forlat kamera",
-  "VFExitCameraTooltip": "Forlat kamera",
+  "OptionVFPrevCameraButton": "Forrige kamera",
+  "OptionDesc_VFPrevCameraButton": "Bytt til forrige kamera",
+  "OptionVFNextCameraButton": "Neste kamera",
+  "OptionDesc_VFNextCameraButton": "Bytt til neste kamera",
+  "OptionVFExitCameraButton": "Forlat kamera",
+  "OptionDesc_VFExitCameraButton": "Forlat kamera",
 
   "VFConfigManagerLabel": "Tilgang til innstillinger for ekstra alternativer",
   "VFConfigManagerTooltip": "Åpne innstillinger for ekstra alternativer!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilot aktivert (kommer snart)",
 
-  "VFMagBootsButtonLabel": "Bytt magnetstøvler",
-  "VFMagBootsButtonTooltip": "Slå på eller av magnetstøvlene",
+  "OptionVFMagBootsButton": "Bytt magnetstøvler",
+  "OptionDesc_VFMagBootsButton": "Slå på eller av magnetstøvlene",
 
   "VFDroneStationCheatLabel": "Slå på dronestasjon",
   "VFDroneStationCheatTooltip": "Klikk her for å aktivere dronestasjon i spillet",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan oppdaget!",
   "VFSubtitleUhOh": "Oops!"
 }
+

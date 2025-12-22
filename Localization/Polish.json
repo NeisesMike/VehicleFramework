@@ -6,12 +6,8 @@
   "VFStartPiloting": "Rozpocznij pilotowanie",
   "VFNameLabel": "Nazwa",
 
-  "VFHeadlightsButtonLabel": "Przycisk świateł",
-  "VFHeadlightsButtonTooltip": "Kliknij, aby włączyć lub wyłączyć światła",
-  "VFLeftClickHeadlightsLabel": "Zmień światła (lewy klik)",
-  "VFLeftClickHeadlightsTooltip": "Lewy klik, aby przełączyć światła",
-  "VFRightClickHeadlightsLabel": "Zmień światła (prawy klik)",
-  "VFRightClickHeadlightsTooltip": "Prawy klik, aby przełączyć światła",
+  "OptionVFHeadlightsButton": "Przycisk świateł",
+  "OptionDesc_VFHeadlightsButton": "Kliknij, aby włączyć lub wyłączyć światła",
   "VFHeadLightsHover": "Zmień światła",
   "VFFloodLightsHover": "Światła pomocnicze",
   "VFNavLightsHover": "Światła nawigacyjne",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Zmień światła wewnętrzne",
 
   "VFCameraHint": "Wskazówki dotyczące kamery:",
-  "VFPrevCameraLabel": "Poprzednia kamera",
-  "VFPrevCameraTooltip": "Przełącz na poprzednią kamerę",
-  "VFNextCameraLabel": "Następna kamera",
-  "VFNextCameraTooltip": "Przełącz na następną kamerę",
-  "VFExitCameraLabel": "Opuszcz kamerę",
-  "VFExitCameraTooltip": "Opuszcz kamerę",
+  "OptionVFPrevCameraButton": "Poprzednia kamera",
+  "OptionDesc_VFPrevCameraButton": "Przełącz na poprzednią kamerę",
+  "OptionVFNextCameraButton": "Następna kamera",
+  "OptionDesc_VFNextCameraButton": "Przełącz na następną kamerę",
+  "OptionVFExitCameraButton": "Opuszcz kamerę",
+  "OptionDesc_VFExitCameraButton": "Opuszcz kamerę",
 
   "VFConfigManagerLabel": "Dostęp do ustawień dla dodatkowych opcji",
   "VFConfigManagerTooltip": "Otwórz ustawienia dla dodatkowych opcji!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilot włączony (dostępne wkrótce)",
 
-  "VFMagBootsButtonLabel": "Zmień buty magnetyczne",
-  "VFMagBootsButtonTooltip": "Włącz lub wyłącz buty magnetyczne",
+  "OptionVFMagBootsButton": "Zmień buty magnetyczne",
+  "OptionDesc_VFMagBootsButton": "Włącz lub wyłącz buty magnetyczne",
 
   "VFDroneStationCheatLabel": "Włącz stację dronów",
   "VFDroneStationCheatTooltip": "Kliknij tutaj, aby włączyć stację dronów w grze",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Wykryto Leviathana!",
   "VFSubtitleUhOh": "Ups!"
 }
+

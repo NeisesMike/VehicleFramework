@@ -6,12 +6,8 @@
   "VFStartPiloting": "Flug starten",
   "VFNameLabel": "Namensschild",
 
-  "VFHeadlightsButtonLabel": "Scheinwerfer umschalten",
-  "VFHeadlightsButtonTooltip": "Drücken Sie diese Schaltfläche, um die Scheinwerfer während des Flugs ein- oder auszuschalten.",
-  "VFLeftClickHeadlightsLabel": "Scheinwerfer umschalten (linksklick)",
-  "VFLeftClickHeadlightsTooltip": "Ermöglicht das Steuern der Scheinwerfer mit einem linken Klick oder dem linken Abzug.",
-  "VFRightClickHeadlightsLabel": "Scheinwerfer umschalten (rechter Klick)",
-  "VFRightClickHeadlightsTooltip": "Ermöglicht das Steuern der Scheinwerfer mit einem rechten Klick oder dem rechten Abzug.",
+  "OptionVFHeadlightsButton": "Scheinwerfer umschalten",
+  "OptionDesc_VFHeadlightsButton": "Drücken Sie diese Schaltfläche, um die Scheinwerfer während des Flugs ein- oder auszuschalten.",
   "VFHeadLightsHover": "Scheinwerfer umschalten",
   "VFFloodLightsHover": "Flutlicht umschalten",
   "VFNavLightsHover": "Navigationslichter umschalten",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Innenbeleuchtung umschalten",
 
   "VFCameraHint": "Kamera Steuerung:",
-  "VFPrevCameraLabel": "Vorherige Kamera",
-  "VFPrevCameraTooltip": "Wechselt zur vorherigen Kamera des Fahrzeugs.",
-  "VFNextCameraLabel": "Nächste Kamera",
-  "VFNextCameraTooltip": "Wechselt zur nächsten Kamera des Fahrzeugs.",
-  "VFExitCameraLabel": "Kamera verlassen",
-  "VFExitCameraTooltip": "Verlässt die Kameravorschau.",
+  "OptionVFPrevCameraButton": "Vorherige Kamera",
+  "OptionDesc_VFPrevCameraButton": "Wechselt zur vorherigen Kamera des Fahrzeugs.",
+  "OptionVFNextCameraButton": "Nächste Kamera",
+  "OptionDesc_VFNextCameraButton": "Wechselt zur nächsten Kamera des Fahrzeugs.",
+  "OptionVFExitCameraButton": "Kamera verlassen",
+  "OptionDesc_VFExitCameraButton": "Verlässt die Kameravorschau.",
 
   "VFConfigManagerLabel": "Für weitere Optionen besuchen Sie das Konfigurationsmanagement",
   "VFConfigManagerTooltip": "Laden Sie das Konfigurationsmodul für zusätzliche Einstellungen herunter!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilot aktivieren (kommt bald)",
 
-  "VFMagBootsButtonLabel": "Magnetstiefel umschalten",
-  "VFMagBootsButtonTooltip": "Schaltet die Magnetstiefel ein oder aus.",
+  "OptionVFMagBootsButton": "Magnetstiefel umschalten",
+  "OptionDesc_VFMagBootsButton": "Schaltet die Magnetstiefel ein oder aus.",
 
   "VFDroneStationCheatLabel": "Drohnenstation freischalten",
   "VFDroneStationCheatTooltip": "Klicken Sie hier, um die Drohnenstation im aktuellen Spiel freizuschalten.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan entdeckt!",
   "VFSubtitleUhOh": "Ups!"
 }
+

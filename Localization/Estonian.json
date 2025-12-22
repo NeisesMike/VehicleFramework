@@ -6,12 +6,8 @@
   "VFStartPiloting": "Alusta juhtimist",
   "VFNameLabel": "Nime silt",
 
-  "VFHeadlightsButtonLabel": "Esitulede lüliti",
-  "VFHeadlightsButtonTooltip": "Klõpsa esitulede vaheldamiseks juhtimise ajal.",
-  "VFLeftClickHeadlightsLabel": "Esitulede lüliti (vasak klõps)",
-  "VFLeftClickHeadlightsTooltip": "Võimaldab esitulesid vahetada vasaku hiireklõpsu või vasaku nupuga.",
-  "VFRightClickHeadlightsLabel": "Esitulede lüliti (parem klõps)",
-  "VFRightClickHeadlightsTooltip": "Võimaldab esitulesid vahetada parema hiireklõpsu või parema nupuga.",
+  "OptionVFHeadlightsButton": "Esitulede lüliti",
+  "OptionDesc_VFHeadlightsButton": "Klõpsa esitulede vaheldamiseks juhtimise ajal.",
   "VFHeadLightsHover": "Esitulede lüliti",
   "VFFloodLightsHover": "Üleujutuse tuled",
   "VFNavLightsHover": "Liiklusmärgituled",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Sisevalgustite lüliti",
 
   "VFCameraHint": "Kaamera juhtimise näpunäited:",
-  "VFPrevCameraLabel": "Eelmine kaamera",
-  "VFPrevCameraTooltip": "Vaheta eelnevasse kaamerasse.",
-  "VFNextCameraLabel": "Järgmine kaamera",
-  "VFNextCameraTooltip": "Vaheta järgmisse kaamerasse.",
-  "VFExitCameraLabel": "Välju kaamerast",
-  "VFExitCameraTooltip": "Välju kaamera vaatesse.",
+  "OptionVFPrevCameraButton": "Eelmine kaamera",
+  "OptionDesc_VFPrevCameraButton": "Vaheta eelnevasse kaamerasse.",
+  "OptionVFNextCameraButton": "Järgmine kaamera",
+  "OptionDesc_VFNextCameraButton": "Vaheta järgmisse kaamerasse.",
+  "OptionVFExitCameraButton": "Välju kaamerast",
+  "OptionDesc_VFExitCameraButton": "Välju kaamera vaatesse.",
 
   "VFConfigManagerLabel": "Kohandatud seadete jaoks mine seadistuste haldurisse",
   "VFConfigManagerTooltip": "Laadi üles seadistuste haldur rohkemate valikutega!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopiloodi käivitamine (peagi)",
 
-  "VFMagBootsButtonLabel": "Magneetkingade lüliti",
-  "VFMagBootsButtonTooltip": "Lülita sisse või välja magnetkingad.",
+  "OptionVFMagBootsButton": "Magneetkingade lüliti",
+  "OptionDesc_VFMagBootsButton": "Lülita sisse või välja magnetkingad.",
 
   "VFDroneStationCheatLabel": "Droonide jaama avamine",
   "VFDroneStationCheatTooltip": "Klõpsa siia, et avada droonide jaam praeguses mängus.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan tuvastatud!",
   "VFSubtitleUhOh": "Ups!"
 }
+

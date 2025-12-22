@@ -6,12 +6,8 @@
   "VFStartPiloting": "启动驾驶",
   "VFNameLabel": "名称标签",
 
-  "VFHeadlightsButtonLabel": "车灯开关",
-  "VFHeadlightsButtonTooltip": "点击切换车灯",
-  "VFLeftClickHeadlightsLabel": "车灯开关（左键点击）",
-  "VFLeftClickHeadlightsTooltip": "左键点击切换车灯",
-  "VFRightClickHeadlightsLabel": "车灯开关（右键点击）",
-  "VFRightClickHeadlightsTooltip": "右键点击切换车灯",
+  "OptionVFHeadlightsButton": "车灯开关",
+  "OptionDesc_VFHeadlightsButton": "点击切换车灯",
   "VFHeadLightsHover": "车灯开关",
   "VFFloodLightsHover": "辅助灯",
   "VFNavLightsHover": "导航灯",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "内部灯光开关",
 
   "VFCameraHint": "摄像机提示：",
-  "VFPrevCameraLabel": "上一摄像机",
-  "VFPrevCameraTooltip": "切换到上一个摄像机",
-  "VFNextCameraLabel": "下一个摄像机",
-  "VFNextCameraTooltip": "切换到下一个摄像机",
-  "VFExitCameraLabel": "退出摄像机",
-  "VFExitCameraTooltip": "退出摄像机模式",
+  "OptionVFPrevCameraButton": "上一摄像机",
+  "OptionDesc_VFPrevCameraButton": "切换到上一个摄像机",
+  "OptionVFNextCameraButton": "下一个摄像机",
+  "OptionDesc_VFNextCameraButton": "切换到下一个摄像机",
+  "OptionVFExitCameraButton": "退出摄像机",
+  "OptionDesc_VFExitCameraButton": "退出摄像机模式",
 
   "VFConfigManagerLabel": "访问管理设置以获得更多自定义选项",
   "VFConfigManagerTooltip": "打开管理设置以获得更多选项！",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "自动驾驶启用（即将推出）",
 
-  "VFMagBootsButtonLabel": "磁性靴开关",
-  "VFMagBootsButtonTooltip": "启用或禁用磁性靴",
+  "OptionVFMagBootsButton": "磁性靴开关",
+  "OptionDesc_VFMagBootsButton": "启用或禁用磁性靴",
 
   "VFDroneStationCheatLabel": "开启无人机站",
   "VFDroneStationCheatTooltip": "点击这里在当前游戏中开启无人机站。",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "发现 Leviathan！",
   "VFSubtitleUhOh": "哎呀！"
 }
+

@@ -6,12 +6,8 @@
   "VFStartPiloting": "Bắt đầu lái",
   "VFNameLabel": "Nhãn tên",
 
-  "VFHeadlightsButtonLabel": "Nút đèn pha",
-  "VFHeadlightsButtonTooltip": "Nhấn để chuyển đổi đèn pha",
-  "VFLeftClickHeadlightsLabel": "Chuyển đổi đèn pha (nhấp chuột trái)",
-  "VFLeftClickHeadlightsTooltip": "Nhấp chuột trái để chuyển đổi đèn pha",
-  "VFRightClickHeadlightsLabel": "Chuyển đổi đèn pha (nhấp chuột phải)",
-  "VFRightClickHeadlightsTooltip": "Nhấp chuột phải để chuyển đổi đèn pha",
+  "OptionVFHeadlightsButton": "Nút đèn pha",
+  "OptionDesc_VFHeadlightsButton": "Nhấn để chuyển đổi đèn pha",
   "VFHeadLightsHover": "Chuyển đổi đèn pha",
   "VFFloodLightsHover": "Đèn chiếu sáng phụ",
   "VFNavLightsHover": "Đèn định vị",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Chuyển đổi đèn nội thất",
 
   "VFCameraHint": "Gợi ý máy ảnh:",
-  "VFPrevCameraLabel": "Máy ảnh trước",
-  "VFPrevCameraTooltip": "Chuyển sang máy ảnh trước",
-  "VFNextCameraLabel": "Máy ảnh tiếp theo",
-  "VFNextCameraTooltip": "Chuyển sang máy ảnh tiếp theo",
-  "VFExitCameraLabel": "Thoát máy ảnh",
-  "VFExitCameraTooltip": "Thoát chế độ máy ảnh",
+  "OptionVFPrevCameraButton": "Máy ảnh trước",
+  "OptionDesc_VFPrevCameraButton": "Chuyển sang máy ảnh trước",
+  "OptionVFNextCameraButton": "Máy ảnh tiếp theo",
+  "OptionDesc_VFNextCameraButton": "Chuyển sang máy ảnh tiếp theo",
+  "OptionVFExitCameraButton": "Thoát máy ảnh",
+  "OptionDesc_VFExitCameraButton": "Thoát chế độ máy ảnh",
 
   "VFConfigManagerLabel": "Truy cập cài đặt quản lý để có thêm tùy chỉnh",
   "VFConfigManagerTooltip": "Mở cài đặt quản lý để có thêm tùy chọn!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Tự động lái bật (sắp ra mắt)",
 
-  "VFMagBootsButtonLabel": "Chuyển đổi giày từ tính",
-  "VFMagBootsButtonTooltip": "Bật hoặc tắt giày từ tính",
+  "OptionVFMagBootsButton": "Chuyển đổi giày từ tính",
+  "OptionDesc_VFMagBootsButton": "Bật hoặc tắt giày từ tính",
 
   "VFDroneStationCheatLabel": "Bật trạm drone",
   "VFDroneStationCheatTooltip": "Nhấn vào đây để bật trạm drone trong trò chơi hiện tại.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Phát hiện Leviathan!",
   "VFSubtitleUhOh": "Ôi không!"
 }
+

@@ -6,12 +6,8 @@
   "VFStartPiloting": "Pradėti pilotavimą",
   "VFNameLabel": "Pavadinimas",
 
-  "VFHeadlightsButtonLabel": "Priekiniai žibintai",
-  "VFHeadlightsButtonTooltip": "Spustelėkite, kad įjungtumėte arba išjungtumėte žibintus",
-  "VFLeftClickHeadlightsLabel": "Pakeisti žibintus (kairysis pelės mygtukas)",
-  "VFLeftClickHeadlightsTooltip": "Kairysis pelės mygtukas, kad pakeistumėte žibintus",
-  "VFRightClickHeadlightsLabel": "Pakeisti žibintus (dešinysis pelės mygtukas)",
-  "VFRightClickHeadlightsTooltip": "Dešinysis pelės mygtukas, kad pakeistumėte žibintus",
+  "OptionVFHeadlightsButton": "Priekiniai žibintai",
+  "OptionDesc_VFHeadlightsButton": "Spustelėkite, kad įjungtumėte arba išjungtumėte žibintus",
   "VFHeadLightsHover": "Pakeisti žibintus",
   "VFFloodLightsHover": "Potvynio žibintai",
   "VFNavLightsHover": "Navigacijos žibintai",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Pakeisti vidaus apšvietimą",
 
   "VFCameraHint": "Kameros patarimas:",
-  "VFPrevCameraLabel": "Pirmas kamera",
-  "VFPrevCameraTooltip": "Pereiti į pirmąją kamerą",
-  "VFNextCameraLabel": "Kita kamera",
-  "VFNextCameraTooltip": "Pereiti į kitą kamerą",
-  "VFExitCameraLabel": "Išeiti iš kameros",
-  "VFExitCameraTooltip": "Išeiti iš kameros",
+  "OptionVFPrevCameraButton": "Pirmas kamera",
+  "OptionDesc_VFPrevCameraButton": "Pereiti į pirmąją kamerą",
+  "OptionVFNextCameraButton": "Kita kamera",
+  "OptionDesc_VFNextCameraButton": "Pereiti į kitą kamerą",
+  "OptionVFExitCameraButton": "Išeiti iš kameros",
+  "OptionDesc_VFExitCameraButton": "Išeiti iš kameros",
 
   "VFConfigManagerLabel": "Prieiga prie papildomų nustatymų",
   "VFConfigManagerTooltip": "Atidarykite papildomų nustatymų langą!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilotas įjungtas (greitai bus prieinamas)",
 
-  "VFMagBootsButtonLabel": "Keisti magnetinius batus",
-  "VFMagBootsButtonTooltip": "Įjunkite arba išjunkite magnetinius batus",
+  "OptionVFMagBootsButton": "Keisti magnetinius batus",
+  "OptionDesc_VFMagBootsButton": "Įjunkite arba išjunkite magnetinius batus",
 
   "VFDroneStationCheatLabel": "Įjungti dronų stotį",
   "VFDroneStationCheatTooltip": "Spustelėkite čia, kad įjungtumėte dronų stotį žaidime",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviatanas aptiktas!",
   "VFSubtitleUhOh": "Oops!"
 }
+

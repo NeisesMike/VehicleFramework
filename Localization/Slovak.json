@@ -6,12 +6,8 @@
   "VFStartPiloting": "Začnite pilotovať",
   "VFNameLabel": "Názov",
 
-  "VFHeadlightsButtonLabel": "Tlačidlo svetlometu",
-  "VFHeadlightsButtonTooltip": "Kliknite pre zapnutie alebo vypnutie svetlometov",
-  "VFLeftClickHeadlightsLabel": "Zmeniť svetlomety (ľavé kliknutie)",
-  "VFLeftClickHeadlightsTooltip": "Ľavé kliknutie na zmenu svetlometov",
-  "VFRightClickHeadlightsLabel": "Zmeniť svetlomety (pravé kliknutie)",
-  "VFRightClickHeadlightsTooltip": "Pravé kliknutie na zmenu svetlometov",
+  "OptionVFHeadlightsButton": "Tlačidlo svetlometu",
+  "OptionDesc_VFHeadlightsButton": "Kliknite pre zapnutie alebo vypnutie svetlometov",
   "VFHeadLightsHover": "Zmeniť svetlomety",
   "VFFloodLightsHover": "Povodňové svetlá",
   "VFNavLightsHover": "Navigačné svetlá",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Zmeniť vnútorné svetlá",
 
   "VFCameraHint": "Tipy na kameru:",
-  "VFPrevCameraLabel": "Predchádzajúca kamera",
-  "VFPrevCameraTooltip": "Prepnúť na predchádzajúcu kameru",
-  "VFNextCameraLabel": "Ďalšia kamera",
-  "VFNextCameraTooltip": "Prepnúť na ďalšiu kameru",
-  "VFExitCameraLabel": "Opustite režim kamery",
-  "VFExitCameraTooltip": "Opustite režim kamery",
+  "OptionVFPrevCameraButton": "Predchádzajúca kamera",
+  "OptionDesc_VFPrevCameraButton": "Prepnúť na predchádzajúcu kameru",
+  "OptionVFNextCameraButton": "Ďalšia kamera",
+  "OptionDesc_VFNextCameraButton": "Prepnúť na ďalšiu kameru",
+  "OptionVFExitCameraButton": "Opustite režim kamery",
+  "OptionDesc_VFExitCameraButton": "Opustite režim kamery",
 
   "VFConfigManagerLabel": "Prejdite do nastavení pre ďalšie možnosti",
   "VFConfigManagerTooltip": "Prejdite do nastavení pre ďalšie možnosti!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Aktivovaný autopilot (príde čoskoro)",
 
-  "VFMagBootsButtonLabel": "Zmeniť magnetické topánky",
-  "VFMagBootsButtonTooltip": "Zapnúť alebo vypnúť magnetické topánky",
+  "OptionVFMagBootsButton": "Zmeniť magnetické topánky",
+  "OptionDesc_VFMagBootsButton": "Zapnúť alebo vypnúť magnetické topánky",
 
   "VFDroneStationCheatLabel": "Aktivovať stanicu drónov",
   "VFDroneStationCheatTooltip": "Kliknite tu pre aktivovanie drónovej stanice v hre",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan zistený!",
   "VFSubtitleUhOh": "Oj!"
 }
+

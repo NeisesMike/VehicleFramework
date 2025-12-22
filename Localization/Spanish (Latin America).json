@@ -6,12 +6,8 @@
   "VFStartPiloting": "Comenzar a pilotar",
   "VFNameLabel": "Etiqueta de nombre",
 
-  "VFHeadlightsButtonLabel": "Interruptor de faros",
-  "VFHeadlightsButtonTooltip": "Presiona para alternar los faros mientras pilotas.",
-  "VFLeftClickHeadlightsLabel": "Interruptor de faros (clic izquierdo)",
-  "VFLeftClickHeadlightsTooltip": "Te permite alternar los faros con clic izquierdo o presión del joystick izquierdo.",
-  "VFRightClickHeadlightsLabel": "Interruptor de faros (clic derecho)",
-  "VFRightClickHeadlightsTooltip": "Te permite alternar los faros con clic derecho o presión del joystick derecho.",
+  "OptionVFHeadlightsButton": "Interruptor de faros",
+  "OptionDesc_VFHeadlightsButton": "Presiona para alternar los faros mientras pilotas.",
   "VFHeadLightsHover": "Interruptor de faros",
   "VFFloodLightsHover": "Interruptor de luces de inundación",
   "VFNavLightsHover": "Interruptor de luces de navegación",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Interruptor de luces interiores",
 
   "VFCameraHint": "Controles de cámara:",
-  "VFPrevCameraLabel": "Cámara anterior",
-  "VFPrevCameraTooltip": "Cambia a la cámara anterior del vehículo.",
-  "VFNextCameraLabel": "Siguiente cámara",
-  "VFNextCameraTooltip": "Cambia a la siguiente cámara del vehículo.",
-  "VFExitCameraLabel": "Salir de la cámara",
-  "VFExitCameraTooltip": "Salir de la vista de la cámara.",
+  "OptionVFPrevCameraButton": "Cámara anterior",
+  "OptionDesc_VFPrevCameraButton": "Cambia a la cámara anterior del vehículo.",
+  "OptionVFNextCameraButton": "Siguiente cámara",
+  "OptionDesc_VFNextCameraButton": "Cambia a la siguiente cámara del vehículo.",
+  "OptionVFExitCameraButton": "Salir de la cámara",
+  "OptionDesc_VFExitCameraButton": "Salir de la vista de la cámara.",
 
   "VFConfigManagerLabel": "Para más opciones, visita el administrador de configuración",
   "VFConfigManagerTooltip": "¡Descarga el administrador de configuración para más ajustes!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Activación de piloto automático (próximamente)",
 
-  "VFMagBootsButtonLabel": "Interruptor de botas magnéticas",
-  "VFMagBootsButtonTooltip": "Activa o desactiva las botas magnéticas.",
+  "OptionVFMagBootsButton": "Interruptor de botas magnéticas",
+  "OptionDesc_VFMagBootsButton": "Activa o desactiva las botas magnéticas.",
 
   "VFDroneStationCheatLabel": "Desbloquear estación de drones",
   "VFDroneStationCheatTooltip": "Haz clic aquí para desbloquear la estación de drones en la partida actual.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "¡Leviatán detectado!",
   "VFSubtitleUhOh": "¡Vaya!"
 }
+

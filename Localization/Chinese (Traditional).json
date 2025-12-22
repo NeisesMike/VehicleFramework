@@ -6,12 +6,8 @@
   "VFStartPiloting": "啟動駕駛",
   "VFNameLabel": "名稱標籤",
 
-  "VFHeadlightsButtonLabel": "車燈開關",
-  "VFHeadlightsButtonTooltip": "點擊切換車燈",
-  "VFLeftClickHeadlightsLabel": "車燈開關（左鍵點擊）",
-  "VFLeftClickHeadlightsTooltip": "左鍵點擊切換車燈",
-  "VFRightClickHeadlightsLabel": "車燈開關（右鍵點擊）",
-  "VFRightClickHeadlightsTooltip": "右鍵點擊切換車燈",
+  "OptionVFHeadlightsButton": "車燈開關",
+  "OptionDesc_VFHeadlightsButton": "點擊切換車燈",
   "VFHeadLightsHover": "車燈開關",
   "VFFloodLightsHover": "輔助燈",
   "VFNavLightsHover": "導航燈",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "內部燈光開關",
 
   "VFCameraHint": "攝影機提示：",
-  "VFPrevCameraLabel": "上一攝影機",
-  "VFPrevCameraTooltip": "切換到上一個攝影機",
-  "VFNextCameraLabel": "下一攝影機",
-  "VFNextCameraTooltip": "切換到下一個攝影機",
-  "VFExitCameraLabel": "退出攝影機",
-  "VFExitCameraTooltip": "退出攝影機模式",
+  "OptionVFPrevCameraButton": "上一攝影機",
+  "OptionDesc_VFPrevCameraButton": "切換到上一個攝影機",
+  "OptionVFNextCameraButton": "下一攝影機",
+  "OptionDesc_VFNextCameraButton": "切換到下一個攝影機",
+  "OptionVFExitCameraButton": "退出攝影機",
+  "OptionDesc_VFExitCameraButton": "退出攝影機模式",
 
   "VFConfigManagerLabel": "訪問管理設置以獲得更多自定義選項",
   "VFConfigManagerTooltip": "打開管理設置以獲得更多選項！",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "自動駕駛啟用（即將推出）",
 
-  "VFMagBootsButtonLabel": "磁性靴開關",
-  "VFMagBootsButtonTooltip": "啟用或禁用磁性靴",
+  "OptionVFMagBootsButton": "磁性靴開關",
+  "OptionDesc_VFMagBootsButton": "啟用或禁用磁性靴",
 
   "VFDroneStationCheatLabel": "開啟無人機站",
   "VFDroneStationCheatTooltip": "點擊這裡在當前遊戲中開啟無人機站。",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "發現 Leviathan！",
   "VFSubtitleUhOh": "哎呀！"
 }
+

@@ -6,12 +6,8 @@
   "VFStartPiloting": "Avvia la guida",
   "VFNameLabel": "Nome",
 
-  "VFHeadlightsButtonLabel": "Fari",
-  "VFHeadlightsButtonTooltip": "Clicca per accendere o spegnere i fari",
-  "VFLeftClickHeadlightsLabel": "Cambia fari (clic sinistro)",
-  "VFLeftClickHeadlightsTooltip": "Clicca sinistro per cambiare i fari",
-  "VFRightClickHeadlightsLabel": "Cambia fari (clic destro)",
-  "VFRightClickHeadlightsTooltip": "Clicca destro per cambiare i fari",
+  "OptionVFHeadlightsButton": "Fari",
+  "OptionDesc_VFHeadlightsButton": "Clicca per accendere o spegnere i fari",
   "VFHeadLightsHover": "Cambia fari",
   "VFFloodLightsHover": "Fari a inondazione",
   "VFNavLightsHover": "Lucine di navigazione",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Cambia luci interne",
 
   "VFCameraHint": "Suggerimento telecamera:",
-  "VFPrevCameraLabel": "Telecamera precedente",
-  "VFPrevCameraTooltip": "Cambia alla telecamera precedente",
-  "VFNextCameraLabel": "Telecamera successiva",
-  "VFNextCameraTooltip": "Cambia alla telecamera successiva",
-  "VFExitCameraLabel": "Esci dalla telecamera",
-  "VFExitCameraTooltip": "Clicca per uscire dalla telecamera",
+  "OptionVFPrevCameraButton": "Telecamera precedente",
+  "OptionDesc_VFPrevCameraButton": "Cambia alla telecamera precedente",
+  "OptionVFNextCameraButton": "Telecamera successiva",
+  "OptionDesc_VFNextCameraButton": "Cambia alla telecamera successiva",
+  "OptionVFExitCameraButton": "Esci dalla telecamera",
+  "OptionDesc_VFExitCameraButton": "Clicca per uscire dalla telecamera",
 
   "VFConfigManagerLabel": "Accedi alle impostazioni aggiuntive",
   "VFConfigManagerTooltip": "Apri la finestra delle impostazioni aggiuntive",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilota attivo (disponibile a breve)",
 
-  "VFMagBootsButtonLabel": "Cambia stivali magnetici",
-  "VFMagBootsButtonTooltip": "Clicca per accendere o spegnere gli stivali magnetici",
+  "OptionVFMagBootsButton": "Cambia stivali magnetici",
+  "OptionDesc_VFMagBootsButton": "Clicca per accendere o spegnere gli stivali magnetici",
 
   "VFDroneStationCheatLabel": "Abilita stazione drone",
   "VFDroneStationCheatTooltip": "Clicca per abilitare la stazione drone nel gioco",
@@ -124,3 +120,4 @@
   "VFSubtitleLeviathanDetected": "Leviatano rilevato!",
   "VFSubtitleUhOh": "Oh no!"
 }
+

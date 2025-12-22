@@ -6,12 +6,8 @@
   "VFStartPiloting": "Začít řídit",
   "VFNameLabel": "Štítek jména",
 
-  "VFHeadlightsButtonLabel": "Přepnout světlomety",
-  "VFHeadlightsButtonTooltip": "Stiskněte toto tlačítko pro zapnutí nebo vypnutí světlometů během řízení.",
-  "VFLeftClickHeadlightsLabel": "Přepnout světlomety (levé tlačítko)",
-  "VFLeftClickHeadlightsTooltip": "Umožňuje ovládání světlometů levým kliknutím nebo levým spouštěčem.",
-  "VFRightClickHeadlightsLabel": "Přepnout světlomety (pravé tlačítko)",
-  "VFRightClickHeadlightsTooltip": "Umožňuje ovládání světlometů pravým kliknutím nebo pravým spouštěčem.",
+  "OptionVFHeadlightsButton": "Přepnout světlomety",
+  "OptionDesc_VFHeadlightsButton": "Stiskněte toto tlačítko pro zapnutí nebo vypnutí světlometů během řízení.",
   "VFHeadLightsHover": "Přepnout světlomety",
   "VFFloodLightsHover": "Přepnout reflektory",
   "VFNavLightsHover": "Přepnout navigační světla",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Přepnout vnitřní osvětlení",
 
   "VFCameraHint": "Ovládání kamery:",
-  "VFPrevCameraLabel": "Předchozí kamera",
-  "VFPrevCameraTooltip": "Přepnout na předchozí kameru na vozidle.",
-  "VFNextCameraLabel": "Další kamera",
-  "VFNextCameraTooltip": "Přepnout na další kameru na vozidle.",
-  "VFExitCameraLabel": "Opustit kameru",
-  "VFExitCameraTooltip": "Opustit pohled kamery.",
+  "OptionVFPrevCameraButton": "Předchozí kamera",
+  "OptionDesc_VFPrevCameraButton": "Přepnout na předchozí kameru na vozidle.",
+  "OptionVFNextCameraButton": "Další kamera",
+  "OptionDesc_VFNextCameraButton": "Přepnout na další kameru na vozidle.",
+  "OptionVFExitCameraButton": "Opustit kameru",
+  "OptionDesc_VFExitCameraButton": "Opustit pohled kamery.",
 
   "VFConfigManagerLabel": "Pro více možností navštivte správce konfigurace",
   "VFConfigManagerTooltip": "Stáhněte si mod konfigurace pro další nastavení!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Otevřít autopilota (již brzy)",
 
-  "VFMagBootsButtonLabel": "Přepnout magnetické boty",
-  "VFMagBootsButtonTooltip": "Přepnout magnetické boty.",
+  "OptionVFMagBootsButton": "Přepnout magnetické boty",
+  "OptionDesc_VFMagBootsButton": "Přepnout magnetické boty.",
 
   "VFDroneStationCheatLabel": "Odemknout stanici dronů",
   "VFDroneStationCheatTooltip": "Klikněte pro odemknutí stanice dronů v aktuální hře.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Zjištěn leviatan!",
   "VFSubtitleUhOh": "Ajaj!"
 }
+

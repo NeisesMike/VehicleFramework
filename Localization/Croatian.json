@@ -6,12 +6,8 @@
   "VFStartPiloting": "Pokreni piloting",
   "VFNameLabel": "Oznaka imena",
 
-  "VFHeadlightsButtonLabel": "Prekidač svjetala",
-  "VFHeadlightsButtonTooltip": "Kliknite za promjenu svjetala dok vozite.",
-  "VFLeftClickHeadlightsLabel": "Prekidač svjetala (lijevi klik)",
-  "VFLeftClickHeadlightsTooltip": "Promijenite svjetla lijevim klikom.",
-  "VFRightClickHeadlightsLabel": "Prekidač svjetala (desni klik)",
-  "VFRightClickHeadlightsTooltip": "Promijenite svjetla desnim klikom.",
+  "OptionVFHeadlightsButton": "Prekidač svjetala",
+  "OptionDesc_VFHeadlightsButton": "Kliknite za promjenu svjetala dok vozite.",
   "VFHeadLightsHover": "Prekidač svjetala",
   "VFFloodLightsHover": "Dodatna svjetla",
   "VFNavLightsHover": "Navigacijska svjetla",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Prekidač unutarnjeg osvjetljenja",
 
   "VFCameraHint": "Savjet za kameru:",
-  "VFPrevCameraLabel": "Prethodna kamera",
-  "VFPrevCameraTooltip": "Prebaci na prethodnu kameru.",
-  "VFNextCameraLabel": "Sljedeća kamera",
-  "VFNextCameraTooltip": "Prebaci na sljedeću kameru.",
-  "VFExitCameraLabel": "Izlaz iz kamere",
-  "VFExitCameraTooltip": "Napustite način kamere.",
+  "OptionVFPrevCameraButton": "Prethodna kamera",
+  "OptionDesc_VFPrevCameraButton": "Prebaci na prethodnu kameru.",
+  "OptionVFNextCameraButton": "Sljedeća kamera",
+  "OptionDesc_VFNextCameraButton": "Prebaci na sljedeću kameru.",
+  "OptionVFExitCameraButton": "Izlaz iz kamere",
+  "OptionDesc_VFExitCameraButton": "Napustite način kamere.",
 
   "VFConfigManagerLabel": "Pristupite postavkama upravljanja za više prilagodbenih opcija",
   "VFConfigManagerTooltip": "Otvorite postavke upravljanja za više opcija!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilot aktiviran (uskoro dostupno)",
 
-  "VFMagBootsButtonLabel": "Prekidač magnetskih čizama",
-  "VFMagBootsButtonTooltip": "Omogućite ili onemogućite magnetske čizme.",
+  "OptionVFMagBootsButton": "Prekidač magnetskih čizama",
+  "OptionDesc_VFMagBootsButton": "Omogućite ili onemogućite magnetske čizme.",
 
   "VFDroneStationCheatLabel": "Otvorite stanicu drona",
   "VFDroneStationCheatTooltip": "Kliknite ovdje za otvaranje stanice drona u trenutnoj igri.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan detektiran!",
   "VFSubtitleUhOh": "Ups!"
 }
+

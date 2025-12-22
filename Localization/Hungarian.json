@@ -6,12 +6,8 @@
   "VFStartPiloting": "Irányítás megkezdése",
   "VFNameLabel": "Név",
 
-  "VFHeadlightsButtonLabel": "Fényszórók",
-  "VFHeadlightsButtonTooltip": "Kattints a fényszórók be- vagy kikapcsolásához",
-  "VFLeftClickHeadlightsLabel": "Fényszórók váltása (bal klikk)",
-  "VFLeftClickHeadlightsTooltip": "Bal klikk a fényszórók váltásához",
-  "VFRightClickHeadlightsLabel": "Fényszórók váltása (jobb klikk)",
-  "VFRightClickHeadlightsTooltip": "Jobb klikk a fényszórók váltásához",
+  "OptionVFHeadlightsButton": "Fényszórók",
+  "OptionDesc_VFHeadlightsButton": "Kattints a fényszórók be- vagy kikapcsolásához",
   "VFHeadLightsHover": "Fényszórók váltása",
   "VFFloodLightsHover": "Reflektorok",
   "VFNavLightsHover": "Navigációs fények",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Belső világítás váltása",
 
   "VFCameraHint": "Kamera tipp:",
-  "VFPrevCameraLabel": "Előző kamera",
-  "VFPrevCameraTooltip": "Váltás az előző kamerára",
-  "VFNextCameraLabel": "Következő kamera",
-  "VFNextCameraTooltip": "Váltás a következő kamerára",
-  "VFExitCameraLabel": "Kilépés a kamerából",
-  "VFExitCameraTooltip": "Kattints a kamera elhagyásához",
+  "OptionVFPrevCameraButton": "Előző kamera",
+  "OptionDesc_VFPrevCameraButton": "Váltás az előző kamerára",
+  "OptionVFNextCameraButton": "Következő kamera",
+  "OptionDesc_VFNextCameraButton": "Váltás a következő kamerára",
+  "OptionVFExitCameraButton": "Kilépés a kamerából",
+  "OptionDesc_VFExitCameraButton": "Kattints a kamera elhagyásához",
 
   "VFConfigManagerLabel": "További beállítások elérése",
   "VFConfigManagerTooltip": "További beállítások ablakának megnyitása",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilóta aktív (hamarosan elérhető)",
 
-  "VFMagBootsButtonLabel": "Mágneses csizmák váltása",
-  "VFMagBootsButtonTooltip": "Kattints a mágneses csizmák be- vagy kikapcsolásához",
+  "OptionVFMagBootsButton": "Mágneses csizmák váltása",
+  "OptionDesc_VFMagBootsButton": "Kattints a mágneses csizmák be- vagy kikapcsolásához",
 
   "VFDroneStationCheatLabel": "Drónállomás aktiválása",
   "VFDroneStationCheatTooltip": "Kattints a drónállomás aktiválásához játékban",
@@ -116,3 +112,4 @@
   "VFSubtitleHullIntegrityCritical": "Figyelem! Kritikus hajótest integritás!",
   "VFSubtitleHullIntegrityLow": "Figyelem! Alacsony hajótest integritás!"
 }
+

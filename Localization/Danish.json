@@ -6,12 +6,8 @@
   "VFStartPiloting": "Begynd styring",
   "VFNameLabel": "Navnemærkat",
 
-  "VFHeadlightsButtonLabel": "Skift forlygter",
-  "VFHeadlightsButtonTooltip": "Tryk på denne knap for at tænde eller slukke forlygterne under styring.",
-  "VFLeftClickHeadlightsLabel": "Skift forlygter (venstre klik)",
-  "VFLeftClickHeadlightsTooltip": "Tillader forlygtestyring med venstre klik eller venstre aftrækker.",
-  "VFRightClickHeadlightsLabel": "Skift forlygter (højre klik)",
-  "VFRightClickHeadlightsTooltip": "Tillader forlygtestyring med højre klik eller højre aftrækker.",
+  "OptionVFHeadlightsButton": "Skift forlygter",
+  "OptionDesc_VFHeadlightsButton": "Tryk på denne knap for at tænde eller slukke forlygterne under styring.",
   "VFHeadLightsHover": "Skift forlygter",
   "VFFloodLightsHover": "Skift oversvømmelseslys",
   "VFNavLightsHover": "Skift navigationslys",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Skift interiørlys",
 
   "VFCameraHint": "Kamera kontrol:",
-  "VFPrevCameraLabel": "Forrige kamera",
-  "VFPrevCameraTooltip": "Skift til det forrige kamera på køretøjet.",
-  "VFNextCameraLabel": "Næste kamera",
-  "VFNextCameraTooltip": "Skift til det næste kamera på køretøjet.",
-  "VFExitCameraLabel": "Forlad kamera",
-  "VFExitCameraTooltip": "Forlad kameravisning.",
+  "OptionVFPrevCameraButton": "Forrige kamera",
+  "OptionDesc_VFPrevCameraButton": "Skift til det forrige kamera på køretøjet.",
+  "OptionVFNextCameraButton": "Næste kamera",
+  "OptionDesc_VFNextCameraButton": "Skift til det næste kamera på køretøjet.",
+  "OptionVFExitCameraButton": "Forlad kamera",
+  "OptionDesc_VFExitCameraButton": "Forlad kameravisning.",
 
   "VFConfigManagerLabel": "For flere muligheder, besøg konfigurationshåndteringen",
   "VFConfigManagerTooltip": "Download konfigurationsmodden for yderligere indstillinger!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Åbn autopilot (kommer snart)",
 
-  "VFMagBootsButtonLabel": "Skift magnetstøvler",
-  "VFMagBootsButtonTooltip": "Tænd eller sluk magnetstøvlerne.",
+  "OptionVFMagBootsButton": "Skift magnetstøvler",
+  "OptionDesc_VFMagBootsButton": "Tænd eller sluk magnetstøvlerne.",
 
   "VFDroneStationCheatLabel": "Lås dronestation op",
   "VFDroneStationCheatTooltip": "Klik for at låse op for dronestationen i det aktuelle spil.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan opdaget!",
   "VFSubtitleUhOh": "Ups!"
 }
+

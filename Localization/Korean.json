@@ -6,12 +6,8 @@
   "VFStartPiloting": "파일럿 시작",
   "VFNameLabel": "이름",
 
-  "VFHeadlightsButtonLabel": "전조등",
-  "VFHeadlightsButtonTooltip": "전조등을 켜거나 끄려면 클릭하십시오",
-  "VFLeftClickHeadlightsLabel": "전조등 변경 (왼쪽 클릭)",
-  "VFLeftClickHeadlightsTooltip": "왼쪽 클릭하여 전조등을 변경하십시오",
-  "VFRightClickHeadlightsLabel": "전조등 변경 (오른쪽 클릭)",
-  "VFRightClickHeadlightsTooltip": "오른쪽 클릭하여 전조등을 변경하십시오",
+  "OptionVFHeadlightsButton": "전조등",
+  "OptionDesc_VFHeadlightsButton": "전조등을 켜거나 끄려면 클릭하십시오",
   "VFHeadLightsHover": "전조등 변경",
   "VFFloodLightsHover": "홍수등",
   "VFNavLightsHover": "항법등",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "내부 조명 변경",
 
   "VFCameraHint": "카메라 힌트:",
-  "VFPrevCameraLabel": "이전 카메라",
-  "VFPrevCameraTooltip": "이전 카메라로 전환",
-  "VFNextCameraLabel": "다음 카메라",
-  "VFNextCameraTooltip": "다음 카메라로 전환",
-  "VFExitCameraLabel": "카메라 종료",
-  "VFExitCameraTooltip": "카메라를 종료하려면 클릭하십시오",
+  "OptionVFPrevCameraButton": "이전 카메라",
+  "OptionDesc_VFPrevCameraButton": "이전 카메라로 전환",
+  "OptionVFNextCameraButton": "다음 카메라",
+  "OptionDesc_VFNextCameraButton": "다음 카메라로 전환",
+  "OptionVFExitCameraButton": "카메라 종료",
+  "OptionDesc_VFExitCameraButton": "카메라를 종료하려면 클릭하십시오",
 
   "VFConfigManagerLabel": "추가 설정 접근",
   "VFConfigManagerTooltip": "추가 설정 창을 열기",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "자동 조종 장치 켜짐 (곧 제공 예정)",
 
-  "VFMagBootsButtonLabel": "자기 부상 부츠 변경",
-  "VFMagBootsButtonTooltip": "자기 부상 부츠를 켜거나 끄려면 클릭하십시오",
+  "OptionVFMagBootsButton": "자기 부상 부츠 변경",
+  "OptionDesc_VFMagBootsButton": "자기 부상 부츠를 켜거나 끄려면 클릭하십시오",
 
   "VFDroneStationCheatLabel": "드론 스테이션 활성화",
   "VFDroneStationCheatTooltip": "게임에서 드론 스테이션을 활성화하려면 클릭하십시오",
@@ -124,3 +120,4 @@
   "VFSubtitleLeviathanDetected": "레비아탄이 탐지되었습니다!",
   "VFSubtitleUhOh": "어이구!"
 }
+

@@ -6,12 +6,8 @@
   "VFStartPiloting": "Εκκίνηση πτήσης",
   "VFNameLabel": "Ετικέτα ονόματος",
 
-  "VFHeadlightsButtonLabel": "Εναλλαγή φώτων",
-  "VFHeadlightsButtonTooltip": "Πατήστε για να ενεργοποιήσετε ή να απενεργοποιήσετε τα φώτα κατά την πτήση.",
-  "VFLeftClickHeadlightsLabel": "Εναλλαγή φώτων (αριστερό κλικ)",
-  "VFLeftClickHeadlightsTooltip": "Επιτρέπει την εναλλαγή των φώτων με αριστερό κλικ ή αριστερό πάτημα του μοχλού.",
-  "VFRightClickHeadlightsLabel": "Εναλλαγή φώτων (δεξί κλικ)",
-  "VFRightClickHeadlightsTooltip": "Επιτρέπει την εναλλαγή των φώτων με δεξί κλικ ή δεξί πάτημα του μοχλού.",
+  "OptionVFHeadlightsButton": "Εναλλαγή φώτων",
+  "OptionDesc_VFHeadlightsButton": "Πατήστε για να ενεργοποιήσετε ή να απενεργοποιήσετε τα φώτα κατά την πτήση.",
   "VFHeadLightsHover": "Εναλλαγή φώτων",
   "VFFloodLightsHover": "Εναλλαγή προβολέων",
   "VFNavLightsHover": "Εναλλαγή φωτεινών σηματοδοτών",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Εναλλαγή εσωτερικού φωτισμού",
 
   "VFCameraHint": "Έλεγχος κάμερας:",
-  "VFPrevCameraLabel": "Προηγούμενη κάμερα",
-  "VFPrevCameraTooltip": "Αλλάξτε στην προηγούμενη κάμερα του οχήματος.",
-  "VFNextCameraLabel": "Επόμενη κάμερα",
-  "VFNextCameraTooltip": "Αλλάξτε στην επόμενη κάμερα του οχήματος.",
-  "VFExitCameraLabel": "Έξοδος από την κάμερα",
-  "VFExitCameraTooltip": "Βγείτε από την προεπισκόπηση κάμερας.",
+  "OptionVFPrevCameraButton": "Προηγούμενη κάμερα",
+  "OptionDesc_VFPrevCameraButton": "Αλλάξτε στην προηγούμενη κάμερα του οχήματος.",
+  "OptionVFNextCameraButton": "Επόμενη κάμερα",
+  "OptionDesc_VFNextCameraButton": "Αλλάξτε στην επόμενη κάμερα του οχήματος.",
+  "OptionVFExitCameraButton": "Έξοδος από την κάμερα",
+  "OptionDesc_VFExitCameraButton": "Βγείτε από την προεπισκόπηση κάμερας.",
 
   "VFConfigManagerLabel": "Για περισσότερες επιλογές, επισκεφθείτε το διαχειριστή διαμόρφωσης",
   "VFConfigManagerTooltip": "Κατεβάστε το διαχειριστή διαμόρφωσης για επιπλέον ρυθμίσεις!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Ενεργοποίηση αυτόματου πιλότου (έρχεται σύντομα)",
 
-  "VFMagBootsButtonLabel": "Εναλλαγή μαγνητικών μπότες",
-  "VFMagBootsButtonTooltip": "Ενεργοποιεί ή απενεργοποιεί τις μαγνητικές μπότες.",
+  "OptionVFMagBootsButton": "Εναλλαγή μαγνητικών μπότες",
+  "OptionDesc_VFMagBootsButton": "Ενεργοποιεί ή απενεργοποιεί τις μαγνητικές μπότες.",
 
   "VFDroneStationCheatLabel": "Ξεκλείδωμα σταθμού drone",
   "VFDroneStationCheatTooltip": "Κάντε κλικ εδώ για να ξεκλειδώσετε το σταθμό drone στο τρέχον παιχνίδι.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Εντοπίστηκε Λεβιάθαν!",
   "VFSubtitleUhOh": "Ωχ!"
 }
+

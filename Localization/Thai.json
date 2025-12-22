@@ -6,12 +6,8 @@
   "VFStartPiloting": "เริ่มขับ",
   "VFNameLabel": "ชื่อ",
 
-  "VFHeadlightsButtonLabel": "ปุ่มไฟหน้า",
-  "VFHeadlightsButtonTooltip": "คลิกเพื่อเปิดหรือปิดไฟหน้า",
-  "VFLeftClickHeadlightsLabel": "เปลี่ยนไฟหน้า (คลิกซ้าย)",
-  "VFLeftClickHeadlightsTooltip": "คลิกซ้ายเพื่อเปลี่ยนไฟหน้า",
-  "VFRightClickHeadlightsLabel": "เปลี่ยนไฟหน้า (คลิกขวา)",
-  "VFRightClickHeadlightsTooltip": "คลิกขวาเพื่อเปลี่ยนไฟหน้า",
+  "OptionVFHeadlightsButton": "ปุ่มไฟหน้า",
+  "OptionDesc_VFHeadlightsButton": "คลิกเพื่อเปิดหรือปิดไฟหน้า",
   "VFHeadLightsHover": "เปลี่ยนไฟหน้า",
   "VFFloodLightsHover": "ไฟฉาย",
   "VFNavLightsHover": "ไฟนำทาง",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "เปลี่ยนไฟภายใน",
 
   "VFCameraHint": "คำแนะนำกล้อง:",
-  "VFPrevCameraLabel": "กล้องก่อนหน้า",
-  "VFPrevCameraTooltip": "สลับไปยังกล้องก่อนหน้า",
-  "VFNextCameraLabel": "กล้องถัดไป",
-  "VFNextCameraTooltip": "สลับไปยังกล้องถัดไป",
-  "VFExitCameraLabel": "ออกจากโหมดกล้อง",
-  "VFExitCameraTooltip": "ออกจากโหมดกล้อง",
+  "OptionVFPrevCameraButton": "กล้องก่อนหน้า",
+  "OptionDesc_VFPrevCameraButton": "สลับไปยังกล้องก่อนหน้า",
+  "OptionVFNextCameraButton": "กล้องถัดไป",
+  "OptionDesc_VFNextCameraButton": "สลับไปยังกล้องถัดไป",
+  "OptionVFExitCameraButton": "ออกจากโหมดกล้อง",
+  "OptionDesc_VFExitCameraButton": "ออกจากโหมดกล้อง",
 
   "VFConfigManagerLabel": "ไปที่การตั้งค่าคอนฟิกเพื่อดูตัวเลือกเพิ่มเติม",
   "VFConfigManagerTooltip": "ไปที่การตั้งค่าเพื่อดูตัวเลือกเพิ่มเติม!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "โหมดขับอัตโนมัติเปิดใช้งาน (ใช้ในอนาคต)",
 
-  "VFMagBootsButtonLabel": "เปลี่ยนรองเท้าแม่เหล็ก",
-  "VFMagBootsButtonTooltip": "เปิดหรือปิดรองเท้าแม่เหล็ก",
+  "OptionVFMagBootsButton": "เปลี่ยนรองเท้าแม่เหล็ก",
+  "OptionDesc_VFMagBootsButton": "เปิดหรือปิดรองเท้าแม่เหล็ก",
 
   "VFDroneStationCheatLabel": "เปิดใช้งานสถานีโดรน",
   "VFDroneStationCheatTooltip": "คลิกที่นี่เพื่อเปิดใช้งานสถานีโดรนในเกมนี้",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "ตรวจพบ Leviathan!",
   "VFSubtitleUhOh": "โอ้ไม่!"
 }
+

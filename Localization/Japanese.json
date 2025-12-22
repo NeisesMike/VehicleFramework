@@ -6,12 +6,8 @@
   "VFStartPiloting": "操縦を開始",
   "VFNameLabel": "名前",
 
-  "VFHeadlightsButtonLabel": "ヘッドライト",
-  "VFHeadlightsButtonTooltip": "ヘッドライトをオンまたはオフにするにはクリックしてください",
-  "VFLeftClickHeadlightsLabel": "ヘッドライトの変更（左クリック）",
-  "VFLeftClickHeadlightsTooltip": "左クリックでヘッドライトを変更します",
-  "VFRightClickHeadlightsLabel": "ヘッドライトの変更（右クリック）",
-  "VFRightClickHeadlightsTooltip": "右クリックでヘッドライトを変更します",
+  "OptionVFHeadlightsButton": "ヘッドライト",
+  "OptionDesc_VFHeadlightsButton": "ヘッドライトをオンまたはオフにするにはクリックしてください",
   "VFHeadLightsHover": "ヘッドライトの変更",
   "VFFloodLightsHover": "フラッドライト",
   "VFNavLightsHover": "航行灯",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "内部照明の変更",
 
   "VFCameraHint": "カメラヒント:",
-  "VFPrevCameraLabel": "前のカメラ",
-  "VFPrevCameraTooltip": "前のカメラに切り替え",
-  "VFNextCameraLabel": "次のカメラ",
-  "VFNextCameraTooltip": "次のカメラに切り替え",
-  "VFExitCameraLabel": "カメラを終了",
-  "VFExitCameraTooltip": "カメラを終了するにはクリックしてください",
+  "OptionVFPrevCameraButton": "前のカメラ",
+  "OptionDesc_VFPrevCameraButton": "前のカメラに切り替え",
+  "OptionVFNextCameraButton": "次のカメラ",
+  "OptionDesc_VFNextCameraButton": "次のカメラに切り替え",
+  "OptionVFExitCameraButton": "カメラを終了",
+  "OptionDesc_VFExitCameraButton": "カメラを終了するにはクリックしてください",
 
   "VFConfigManagerLabel": "追加設定にアクセス",
   "VFConfigManagerTooltip": "追加設定ウィンドウを開く",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "自動操縦がオンです（近日提供予定）",
 
-  "VFMagBootsButtonLabel": "マグネットブーツの変更",
-  "VFMagBootsButtonTooltip": "マグネットブーツをオンまたはオフにするにはクリックしてください",
+  "OptionVFMagBootsButton": "マグネットブーツの変更",
+  "OptionDesc_VFMagBootsButton": "マグネットブーツをオンまたはオフにするにはクリックしてください",
 
   "VFDroneStationCheatLabel": "ドローンステーションを有効にする",
   "VFDroneStationCheatTooltip": "ゲーム内でドローンステーションを有効にするにはクリックしてください",
@@ -124,3 +120,4 @@
   "VFSubtitleLeviathanDetected": "レヴィアサンが検出されました！",
   "VFSubtitleUhOh": "おっと！"
 }
+

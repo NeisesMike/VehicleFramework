@@ -6,12 +6,8 @@
   "VFStartPiloting": "Розпочати керування",
   "VFNameLabel": "Позначка імені",
 
-  "VFHeadlightsButtonLabel": "Кнопка фар",
-  "VFHeadlightsButtonTooltip": "Натисніть, щоб переключити фари",
-  "VFLeftClickHeadlightsLabel": "Перемикайте фари (ліва кнопка миші)",
-  "VFLeftClickHeadlightsTooltip": "Натискайте ліву кнопку миші, щоб перемикати фари",
-  "VFRightClickHeadlightsLabel": "Перемикайте фари (права кнопка миші)",
-  "VFRightClickHeadlightsTooltip": "Натискайте праву кнопку миші, щоб перемикати фари",
+  "OptionVFHeadlightsButton": "Кнопка фар",
+  "OptionDesc_VFHeadlightsButton": "Натисніть, щоб переключити фари",
   "VFHeadLightsHover": "Перемикайте фари",
   "VFFloodLightsHover": "Фари для освітлення",
   "VFNavLightsHover": "Навігаційні вогні",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Перемикайте внутрішнє освітлення",
 
   "VFCameraHint": "Підказка камери:",
-  "VFPrevCameraLabel": "Попередня камера",
-  "VFPrevCameraTooltip": "Перемкнути на попередню камеру",
-  "VFNextCameraLabel": "Наступна камера",
-  "VFNextCameraTooltip": "Перемкнути на наступну камеру",
-  "VFExitCameraLabel": "Вийти з камери",
-  "VFExitCameraTooltip": "Вийти з режиму камери",
+  "OptionVFPrevCameraButton": "Попередня камера",
+  "OptionDesc_VFPrevCameraButton": "Перемкнути на попередню камеру",
+  "OptionVFNextCameraButton": "Наступна камера",
+  "OptionDesc_VFNextCameraButton": "Перемкнути на наступну камеру",
+  "OptionVFExitCameraButton": "Вийти з камери",
+  "OptionDesc_VFExitCameraButton": "Вийти з режиму камери",
 
   "VFConfigManagerLabel": "Перейдіть до налаштувань для додаткової настройки",
   "VFConfigManagerTooltip": "Відкрийте налаштування для додаткових опцій!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Автопілот увімкнено (скоро буде доступно)",
 
-  "VFMagBootsButtonLabel": "Перемикайте магнітні черевики",
-  "VFMagBootsButtonTooltip": "Увімкніть або вимкніть магнітні черевики",
+  "OptionVFMagBootsButton": "Перемикайте магнітні черевики",
+  "OptionDesc_VFMagBootsButton": "Увімкніть або вимкніть магнітні черевики",
 
   "VFDroneStationCheatLabel": "Увімкнути станцію дронів",
   "VFDroneStationCheatTooltip": "Натискайте тут, щоб увімкнути станцію дронів в поточній грі.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Виявлено Левіафана!",
   "VFSubtitleUhOh": "Ой-ой!"
 }
+

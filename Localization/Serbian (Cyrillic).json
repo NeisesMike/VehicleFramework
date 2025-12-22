@@ -6,12 +6,8 @@
   "VFStartPiloting": "Почните пилотирање",
   "VFNameLabel": "Назив",
 
-  "VFHeadlightsButtonLabel": "Тастер фарова",
-  "VFHeadlightsButtonTooltip": "Кликните да бисте укључили или искључили фарове",
-  "VFLeftClickHeadlightsLabel": "Промените фарове (леви клик)",
-  "VFLeftClickHeadlightsTooltip": "Леви клик за промену фарова",
-  "VFRightClickHeadlightsLabel": "Промените фарове (десни клик)",
-  "VFRightClickHeadlightsTooltip": "Десни клик за промену фарова",
+  "OptionVFHeadlightsButton": "Тастер фарова",
+  "OptionDesc_VFHeadlightsButton": "Кликните да бисте укључили или искључили фарове",
   "VFHeadLightsHover": "Промените фарове",
   "VFFloodLightsHover": "Поплавна светла",
   "VFNavLightsHover": "Навигациона светла",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Промените унутрашња светла",
 
   "VFCameraHint": "Савети за камеру:",
-  "VFPrevCameraLabel": "Претходна камера",
-  "VFPrevCameraTooltip": "Пребаците на претходну камеру",
-  "VFNextCameraLabel": "Наредна камера",
-  "VFNextCameraTooltip": "Пребаците на наредну камеру",
-  "VFExitCameraLabel": "Напустите режим камере",
-  "VFExitCameraTooltip": "Напустите режим камере",
+  "OptionVFPrevCameraButton": "Претходна камера",
+  "OptionDesc_VFPrevCameraButton": "Пребаците на претходну камеру",
+  "OptionVFNextCameraButton": "Наредна камера",
+  "OptionDesc_VFNextCameraButton": "Пребаците на наредну камеру",
+  "OptionVFExitCameraButton": "Напустите режим камере",
+  "OptionDesc_VFExitCameraButton": "Напустите режим камере",
 
   "VFConfigManagerLabel": "Идите у подешавања за више опција",
   "VFConfigManagerTooltip": "Идите у подешавања за више опција!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Аутопилот активиран (долази ускоро)",
 
-  "VFMagBootsButtonLabel": "Промените магнетне ципеле",
-  "VFMagBootsButtonTooltip": "Укључите или искључите магнетне ципеле",
+  "OptionVFMagBootsButton": "Промените магнетне ципеле",
+  "OptionDesc_VFMagBootsButton": "Укључите или искључите магнетне ципеле",
 
   "VFDroneStationCheatLabel": "Активирајте станицу дронова",
   "VFDroneStationCheatTooltip": "Кликните овде да активирате станицу дронова у игри",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Левијатан откривен!",
   "VFSubtitleUhOh": "Ох!"
 }
+

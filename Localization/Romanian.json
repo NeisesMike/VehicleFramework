@@ -6,12 +6,8 @@
   "VFStartPiloting": "Începe pilotajul",
   "VFNameLabel": "Nume",
 
-  "VFHeadlightsButtonLabel": "Buton faruri",
-  "VFHeadlightsButtonTooltip": "Apasă pentru a porni sau opri farurile",
-  "VFLeftClickHeadlightsLabel": "Schimbă farurile (click stânga)",
-  "VFLeftClickHeadlightsTooltip": "Click stânga pentru a schimba farurile",
-  "VFRightClickHeadlightsLabel": "Schimbă farurile (click dreapta)",
-  "VFRightClickHeadlightsTooltip": "Click dreapta pentru a schimba farurile",
+  "OptionVFHeadlightsButton": "Buton faruri",
+  "OptionDesc_VFHeadlightsButton": "Apasă pentru a porni sau opri farurile",
   "VFHeadLightsHover": "Schimbă farurile",
   "VFFloodLightsHover": "Faruri suplimentare",
   "VFNavLightsHover": "Lumini de navigație",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Schimbă lumina interioară",
 
   "VFCameraHint": "Sfaturi cameră:",
-  "VFPrevCameraLabel": "Cameră precedentă",
-  "VFPrevCameraTooltip": "Schimbă la camera precedentă",
-  "VFNextCameraLabel": "Cameră următoare",
-  "VFNextCameraTooltip": "Schimbă la camera următoare",
-  "VFExitCameraLabel": "Ieși din modul cameră",
-  "VFExitCameraTooltip": "Ieși din modul cameră",
+  "OptionVFPrevCameraButton": "Cameră precedentă",
+  "OptionDesc_VFPrevCameraButton": "Schimbă la camera precedentă",
+  "OptionVFNextCameraButton": "Cameră următoare",
+  "OptionDesc_VFNextCameraButton": "Schimbă la camera următoare",
+  "OptionVFExitCameraButton": "Ieși din modul cameră",
+  "OptionDesc_VFExitCameraButton": "Ieși din modul cameră",
 
   "VFConfigManagerLabel": "Accesează setările pentru opțiuni suplimentare",
   "VFConfigManagerTooltip": "Accesează setările pentru opțiuni suplimentare!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autolentă activată (va fi disponibilă în curând)",
 
-  "VFMagBootsButtonLabel": "Schimbă bocanci magnetici",
-  "VFMagBootsButtonTooltip": "Activează sau dezactivează bocancii magnetici",
+  "OptionVFMagBootsButton": "Schimbă bocanci magnetici",
+  "OptionDesc_VFMagBootsButton": "Activează sau dezactivează bocancii magnetici",
 
   "VFDroneStationCheatLabel": "Activează stația de drone",
   "VFDroneStationCheatTooltip": "Apasă aici pentru a activa stația de drone în joc",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan detectat!",
   "VFSubtitleUhOh": "Ups!"
 }
+

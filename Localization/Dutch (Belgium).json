@@ -6,12 +6,8 @@
   "VFStartPiloting": "Besturen starten",
   "VFNameLabel": "Naam",
 
-  "VFHeadlightsButtonLabel": "Koplampen",
-  "VFHeadlightsButtonTooltip": "Klik om de koplampen aan of uit te zetten",
-  "VFLeftClickHeadlightsLabel": "Koplampen wisselen (linkerklik)",
-  "VFLeftClickHeadlightsTooltip": "Linkerklik om koplampen te wisselen",
-  "VFRightClickHeadlightsLabel": "Koplampen wisselen (rechterklik)",
-  "VFRightClickHeadlightsTooltip": "Rechterklik om koplampen te wisselen",
+  "OptionVFHeadlightsButton": "Koplampen",
+  "OptionDesc_VFHeadlightsButton": "Klik om de koplampen aan of uit te zetten",
   "VFHeadLightsHover": "Koplampen wisselen",
   "VFFloodLightsHover": "Schijnwerpers",
   "VFNavLightsHover": "Navigatielichten",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Interieurverlichting wisselen",
 
   "VFCameraHint": "Camera-tip:",
-  "VFPrevCameraLabel": "Vorige camera",
-  "VFPrevCameraTooltip": "Wissel naar vorige camera",
-  "VFNextCameraLabel": "Volgende camera",
-  "VFNextCameraTooltip": "Wissel naar volgende camera",
-  "VFExitCameraLabel": "Camera verlaten",
-  "VFExitCameraTooltip": "Klik om de camera te verlaten",
+  "OptionVFPrevCameraButton": "Vorige camera",
+  "OptionDesc_VFPrevCameraButton": "Wissel naar vorige camera",
+  "OptionVFNextCameraButton": "Volgende camera",
+  "OptionDesc_VFNextCameraButton": "Wissel naar volgende camera",
+  "OptionVFExitCameraButton": "Camera verlaten",
+  "OptionDesc_VFExitCameraButton": "Klik om de camera te verlaten",
 
   "VFConfigManagerLabel": "Meer instellingen openen",
   "VFConfigManagerTooltip": "Open het venster voor extra instellingen",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopiloot actief (binnenkort beschikbaar)",
 
-  "VFMagBootsButtonLabel": "Magnetische laarzen wisselen",
-  "VFMagBootsButtonTooltip": "Klik om magnetische laarzen aan of uit te zetten",
+  "OptionVFMagBootsButton": "Magnetische laarzen wisselen",
+  "OptionDesc_VFMagBootsButton": "Klik om magnetische laarzen aan of uit te zetten",
 
   "VFDroneStationCheatLabel": "Dronestation activeren",
   "VFDroneStationCheatTooltip": "Klik om een dronestation in te schakelen in het spel",
@@ -116,3 +112,4 @@
   "VFSubtitleHullIntegrityCritical": "Waarschuwing! Kritieke rompstructuur!",
   "VFSubtitleHullIntegrityLow": "Waarschuwing! Lage rompstructuur!"
 }
+

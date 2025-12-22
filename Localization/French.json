@@ -6,12 +6,8 @@
   "VFStartPiloting": "Commencer à piloter",
   "VFNameLabel": "Nom-texte",
 
-  "VFHeadlightsButtonLabel": "Commutateur des phares",
-  "VFHeadlightsButtonTooltip": "Cliquez pour changer les phares pendant la conduite.",
-  "VFLeftClickHeadlightsLabel": "Commutateur des phares (clic gauche)",
-  "VFLeftClickHeadlightsTooltip": "Changez les phares avec le clic gauche.",
-  "VFRightClickHeadlightsLabel": "Commutateur des phares (clic droit)",
-  "VFRightClickHeadlightsTooltip": "Changez les phares avec le clic droit.",
+  "OptionVFHeadlightsButton": "Commutateur des phares",
+  "OptionDesc_VFHeadlightsButton": "Cliquez pour changer les phares pendant la conduite.",
   "VFHeadLightsHover": "Commutateur des phares",
   "VFFloodLightsHover": "Phares supplémentaires",
   "VFNavLightsHover": "Feux de navigation",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Commutateur des lumières intérieures",
 
   "VFCameraHint": "Astuce pour la caméra :",
-  "VFPrevCameraLabel": "Caméra précédente",
-  "VFPrevCameraTooltip": "Changez pour la caméra précédente.",
-  "VFNextCameraLabel": "Caméra suivante",
-  "VFNextCameraTooltip": "Changez pour la caméra suivante.",
-  "VFExitCameraLabel": "Quitter la caméra",
-  "VFExitCameraTooltip": "Quittez la vue caméra.",
+  "OptionVFPrevCameraButton": "Caméra précédente",
+  "OptionDesc_VFPrevCameraButton": "Changez pour la caméra précédente.",
+  "OptionVFNextCameraButton": "Caméra suivante",
+  "OptionDesc_VFNextCameraButton": "Changez pour la caméra suivante.",
+  "OptionVFExitCameraButton": "Quitter la caméra",
+  "OptionDesc_VFExitCameraButton": "Quittez la vue caméra.",
 
   "VFConfigManagerLabel": "Accédez à la gestion des paramètres pour plus d'options personnalisées",
   "VFConfigManagerTooltip": "Ouvrez la gestion des paramètres pour plus de choix !",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilote activé (mise à jour bientôt)",
 
-  "VFMagBootsButtonLabel": "Commutateur des bottes magnétiques",
-  "VFMagBootsButtonTooltip": "Activez ou désactivez les bottes magnétiques.",
+  "OptionVFMagBootsButton": "Commutateur des bottes magnétiques",
+  "OptionDesc_VFMagBootsButton": "Activez ou désactivez les bottes magnétiques.",
 
   "VFDroneStationCheatLabel": "Ouvrir la station de drones",
   "VFDroneStationCheatTooltip": "Cliquez ici pour ouvrir la station de drones dans le jeu actuel.",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Léviathan détecté !",
   "VFSubtitleUhOh": "Oups !"
 }
+

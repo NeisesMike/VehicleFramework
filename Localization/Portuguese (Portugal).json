@@ -6,12 +6,8 @@
   "VFStartPiloting": "Iniciar pilotagem",
   "VFNameLabel": "Nome",
 
-  "VFHeadlightsButtonLabel": "Botão de faróis",
-  "VFHeadlightsButtonTooltip": "Clique para ativar ou desativar os faróis",
-  "VFLeftClickHeadlightsLabel": "Alterar faróis (clique esquerdo)",
-  "VFLeftClickHeadlightsTooltip": "Clique esquerdo para alternar os faróis",
-  "VFRightClickHeadlightsLabel": "Alterar faróis (clique direito)",
-  "VFRightClickHeadlightsTooltip": "Clique direito para alternar os faróis",
+  "OptionVFHeadlightsButton": "Botão de faróis",
+  "OptionDesc_VFHeadlightsButton": "Clique para ativar ou desativar os faróis",
   "VFHeadLightsHover": "Alterar faróis",
   "VFFloodLightsHover": "Faróis auxiliares",
   "VFNavLightsHover": "Luzes de navegação",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Alterar luzes interiores",
 
   "VFCameraHint": "Dicas de câmera:",
-  "VFPrevCameraLabel": "Câmera anterior",
-  "VFPrevCameraTooltip": "Alternar para a câmera anterior",
-  "VFNextCameraLabel": "Câmera seguinte",
-  "VFNextCameraTooltip": "Alternar para a próxima câmera",
-  "VFExitCameraLabel": "Sair do modo de câmera",
-  "VFExitCameraTooltip": "Sair do modo de câmera",
+  "OptionVFPrevCameraButton": "Câmera anterior",
+  "OptionDesc_VFPrevCameraButton": "Alternar para a câmera anterior",
+  "OptionVFNextCameraButton": "Câmera seguinte",
+  "OptionDesc_VFNextCameraButton": "Alternar para a próxima câmera",
+  "OptionVFExitCameraButton": "Sair do modo de câmera",
+  "OptionDesc_VFExitCameraButton": "Sair do modo de câmera",
 
   "VFConfigManagerLabel": "Acessar configurações para opções extras",
   "VFConfigManagerTooltip": "Acessar configurações para opções extras!",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Piloto automático ativado (disponível em breve)",
 
-  "VFMagBootsButtonLabel": "Alterar botas magnéticas",
-  "VFMagBootsButtonTooltip": "Ativar ou desativar as botas magnéticas",
+  "OptionVFMagBootsButton": "Alterar botas magnéticas",
+  "OptionDesc_VFMagBootsButton": "Ativar ou desativar as botas magnéticas",
 
   "VFDroneStationCheatLabel": "Ativar estação de drones",
   "VFDroneStationCheatTooltip": "Clique aqui para ativar a estação de drones no jogo",
@@ -125,3 +121,4 @@
   "VFSubtitleLeviathanDetected": "Leviathan detectado!",
   "VFSubtitleUhOh": "Ops!"
 }
+

@@ -6,12 +6,8 @@
   "VFStartPiloting": "Tosaigh ag tiomáint",
   "VFNameLabel": "Ainm",
 
-  "VFHeadlightsButtonLabel": "Solais cinn",
-  "VFHeadlightsButtonTooltip": "Cliceáil chun solais cinn a chasadh nó a mhúchadh",
-  "VFLeftClickHeadlightsLabel": "Athraigh solais (cliceáil clé)",
-  "VFLeftClickHeadlightsTooltip": "Cliceáil clé chun solais a athrú",
-  "VFRightClickHeadlightsLabel": "Athraigh solais (cliceáil deas)",
-  "VFRightClickHeadlightsTooltip": "Cliceáil deas chun solais a athrú",
+  "OptionVFHeadlightsButton": "Solais cinn",
+  "OptionDesc_VFHeadlightsButton": "Cliceáil chun solais cinn a chasadh nó a mhúchadh",
   "VFHeadLightsHover": "Athraigh solais",
   "VFFloodLightsHover": "Solais na tuile",
   "VFNavLightsHover": "Solais na ngnáthóga",
@@ -20,12 +16,12 @@
   "VFInteriorLightsHover": "Athraigh solais istigh",
 
   "VFCameraHint": "Comhairle ceamara:",
-  "VFPrevCameraLabel": "Ceamara roimhe seo",
-  "VFPrevCameraTooltip": "Athraigh go dtí an ceamara roimhe seo",
-  "VFNextCameraLabel": "Ceamara seo chugainn",
-  "VFNextCameraTooltip": "Athraigh go dtí an ceamara seo chugainn",
-  "VFExitCameraLabel": "Éalain ón gceamara",
-  "VFExitCameraTooltip": "Cliceáil chun éalú ón gceamara",
+  "OptionVFPrevCameraButton": "Ceamara roimhe seo",
+  "OptionDesc_VFPrevCameraButton": "Athraigh go dtí an ceamara roimhe seo",
+  "OptionVFNextCameraButton": "Ceamara seo chugainn",
+  "OptionDesc_VFNextCameraButton": "Athraigh go dtí an ceamara seo chugainn",
+  "OptionVFExitCameraButton": "Éalain ón gceamara",
+  "OptionDesc_VFExitCameraButton": "Cliceáil chun éalú ón gceamara",
 
   "VFConfigManagerLabel": "Rochtain ar socruithe breise",
   "VFConfigManagerTooltip": "Oscail an fhuinneog socruithe breise",
@@ -53,8 +49,8 @@
 
   "VFAutoPilotHover": "Autopilota gníomhach (le teacht go luath)",
 
-  "VFMagBootsButtonLabel": "Athraigh bróga maighnéadacha",
-  "VFMagBootsButtonTooltip": "Cliceáil chun bróga maighnéadacha a chasadh nó a mhúchadh",
+  "OptionVFMagBootsButton": "Athraigh bróga maighnéadacha",
+  "OptionDesc_VFMagBootsButton": "Cliceáil chun bróga maighnéadacha a chasadh nó a mhúchadh",
 
   "VFDroneStationCheatLabel": "Gníomhachtú stáisiún drón",
   "VFDroneStationCheatTooltip": "Cliceáil chun an stáisiún drón a gníomhachtú i gcúrsaí cluiche",
@@ -116,3 +112,4 @@
   "VFSubtitleHullIntegrityCritical": "Rabhadh! Integritatea ceanglóir aois deacair!",
   "VFSubtitleHullIntegrityLow": "Rabhadh! Coilsíoch ag aige!"
 }
+

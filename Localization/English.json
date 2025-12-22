@@ -8,12 +8,8 @@
     "VFNameLabel": "Name Label",
 
     // LIGHTS
-    "VFHeadlightsButtonLabel": "Headlights Toggle",
-    "VFHeadlightsButtonTooltip": "Press this button to toggle vehicle headlights while piloting.",
-    "VFLeftClickHeadlightsLabel": "Toggle Headlights (Left Click)",
-    "VFLeftClickHeadlightsTooltip": "Allow left-click (or left trigger) to activate headlights.",
-    "VFRightClickHeadlightsLabel": "Toggle Headlights (Right Click)",
-    "VFRightClickHeadlightsTooltip": "Allow right-click (or right trigger) to activate headlights.",
+    "OptionVFHeadlightsButton": "Headlights Toggle",
+    "OptionDesc_VFHeadlightsButton": "Press this button to toggle vehicle headlights while piloting.",
     "VFHeadLightsHover": "Toggle Headlights",
     "VFFloodLightsHover": "Toggle Flood Lights",
     "VFNavLightsHover": "Toggle Nav Lights",
@@ -23,12 +19,12 @@
 
     // CAMERA CONTROLS
     "VFCameraHint": "Camera Controls:",
-    "VFPrevCameraLabel": "Camera Previous",
-    "VFPrevCameraTooltip": "Press this button to switch to the previous vehicle camera.",
-    "VFNextCameraLabel": "Camera Next",
-    "VFNextCameraTooltip": "Press this button to switch to the next vehicle camera.",
-    "VFExitCameraLabel": "Camera Exit",
-    "VFExitCameraTooltip": "Press this button to exit vehicle camera view.",
+    "OptionVFPrevCameraButton": "Camera Previous",
+    "OptionDesc_VFPrevCameraButton": "Press this button to switch to the previous vehicle camera.",
+    "OptionVFNextCameraButton": "Camera Next",
+    "OptionDesc_VFNextCameraButton": "Press this button to switch to the next vehicle camera.",
+    "OptionVFExitCameraButton": "Camera Exit",
+    "OptionDesc_VFExitCameraButton": "Press this button to exit vehicle camera view.",
 
     // CONFIG / DEBUGGING
     "VFConfigManagerLabel": "See Config Manager for More Options",
@@ -64,8 +60,8 @@
     "VFAutoPilotHover": "Open Auto-Pilot (Coming Soon)",
 
     // MAGNET BOOTS
-    "VFMagBootsButtonLabel": "Magnet Boots Toggle",
-    "VFMagBootsButtonTooltip": "Toggle magnet boots.",
+    "OptionVFMagBootsButton": "Magnet Boots Toggle",
+    "OptionDesc_VFMagBootsButton": "Toggle magnet boots.",
 
     // DRONE STATION
     "VFDroneStationCheatLabel": "Unlock Drone Station",
@@ -151,3 +147,4 @@
     "VFSubtitleLeviathanDetected": "Leviathan detected!",
     "VFSubtitleUhOh": "Uh oh!"
 }
+
