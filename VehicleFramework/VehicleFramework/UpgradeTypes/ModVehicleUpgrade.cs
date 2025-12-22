@@ -111,6 +111,14 @@ namespace VehicleFramework.UpgradeTypes
             }
             return vehicle.GetCurrentUpgrades().Where(x => x.Contains(ClassId)).Count();
         }
+        public int GetNumberInstalled(SubRoot Cyclops)
+        {
+            if (Cyclops == null)
+            {
+                return 0;
+            }
+            return Cyclops.GetCurrentUpgrades().Where(x => x.Contains(ClassId)).Count();
+        }
         internal string[] ResolvePath(VehicleType vType)
         {
             // If TabName is string.Empty, use $"{CraftTreeHandler.GeneralTabName}{vType}"
