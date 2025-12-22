@@ -13,7 +13,7 @@ namespace VehicleFramework
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
-    public class MainPatcher : BaseUnityPlugin
+    public partial class MainPatcher : BaseUnityPlugin
     {
         public static MainPatcher Instance { get; private set; } = null!;
         internal static VFConfig VFConfig { get; private set; } = null!;
