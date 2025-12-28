@@ -13,7 +13,7 @@ namespace VehicleFramework.AutoPilot
 {
     public class AutoPilotSignals : MonoBehaviour, IVehicleStatusListener, IPlayerListener, IPowerListener, ILightsStatusListener, IAutoPilotListener, IScuttleListener
     {
-        public AutoPilotVoice? AutoPilotVoice;
+        public AutoPilotVoice? AutoPilotVoice => MV?.GetComponent<AutoPilotVoice>();
         public ModVehicle MV => GetComponent<ModVehicle>();
         public LiveMixin LiveMixin => MV.liveMixin;
 
@@ -52,7 +52,11 @@ namespace VehicleFramework.AutoPilot
         {
             if (MV == null)
             {
-                throw Admin.SessionManager.Fatal("AutoPilotVoice is not attached to a ModVehicle!");
+                throw Admin.SessionManager.Fatal("AutoPilotSignals is not attached to a ModVehicle!");
+            }
+            if (AutoPilotVoice == null)
+            {
+                throw Admin.SessionManager.Fatal("AutoPilotSignals does not have an AutoPilotVoice!");
             }
             healthStatus = HealthState.Safe;
             powerStatus = PowerState.Safe;
