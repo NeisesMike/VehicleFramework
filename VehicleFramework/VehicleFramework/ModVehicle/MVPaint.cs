@@ -74,34 +74,53 @@ namespace VehicleFramework
         }
         #endregion
 
+        #region internal_methods
+        // These are the methods that do important bookkeeping for color changes.
+        internal void LogisticalSetBaseColor(Color col)
+        {
+            IsDefaultStyle = false;
+            baseColor = col;
+        }
+        internal void LogisticalSetInteriorColor(Color col)
+        {
+            IsDefaultStyle = false;
+            interiorColor = col;
+        }
+        internal void LogisticalSetStripeColor(Color col)
+        {
+            IsDefaultStyle = false;
+            stripeColor = col;
+        }
+        internal void LogisticalSetName(string name)
+        {
+            vehicleName = name;
+        }
+        internal void LogisticalSetName(string name, Color col)
+        {
+            IsDefaultStyle = false;
+        }
+        #endregion
+
         #region public_methods
         // These are the methods that should be called to effect a color change.
         public void SetBaseColor(Color col)
         {
-            IsDefaultStyle = false;
             subName.SetColor(0, Vector3.zero, col);
-            baseColor = col;
         }
         public void SetInteriorColor(Color col)
         {
-            IsDefaultStyle = false;
             subName.SetColor(2, Vector3.zero, col);
-            interiorColor = col;
         }
         public void SetStripeColor(Color col)
         {
-            IsDefaultStyle = false;
             subName.SetColor(3, Vector3.zero, col);
-            stripeColor = col;
         }
         public void SetName(string name)
         {
-            vehicleName = name;
             subName.SetName(name);
         }
         public void SetName(string name, Color col)
         {
-            IsDefaultStyle = false;
             SetName(name);
             subName.SetColor(1, Vector3.zero, col); // see SubNamePatcher.cs for more details
         }
