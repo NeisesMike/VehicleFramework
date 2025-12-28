@@ -278,7 +278,10 @@ namespace VehicleFramework
             NotifyStatus(PlayerStatus.OnPilotBegin);
             if (gameObject.GetComponentInChildren<MVCameraController>() != null)
             {
-                Logger.PDANote($"{Language.main.Get("VFCameraHint")} {MainPatcher.Instance.NextCameraKey}, {MainPatcher.Instance.PreviousCameraKey}, and {MainPatcher.Instance.ExitCameraKey}");
+                string NextButton = HandReticle.main.GetText("", false, MainPatcher.Instance.NextCameraKey);
+                string PrevButton = HandReticle.main.GetText("", false, MainPatcher.Instance.PreviousCameraKey);
+                string ExitButton = HandReticle.main.GetText("", false, MainPatcher.Instance.ExitCameraKey);
+                Logger.PDANote($"{Language.main.Get("VFCameraHint")} {NextButton}, {PrevButton}, and {ExitButton}");
             }
         }
         public virtual void StopPiloting()
