@@ -252,7 +252,25 @@ namespace VehicleFramework.Assets
                     PairedDrone.BeginControlling();
                 }
             }
-            List<Drone> availableDrones = list.Where(x => GetComponentInParent<Player>() == null).ToList();
+            bool ValidDrone(Drone d)
+            {
+                if (GetComponentInParent<Player>() != null) // drones not in our inventory
+                {
+                    return false;
+                }
+                if (d.IsScuttled && Drone.baseConnectionDistance + d.addedConnectionDistance < Vector3.Distance(transform.position, d.transform.position))
+                {
+                    // destroyed drones within range
+                    return false;
+                }
+                if (!d.energyInterface.hasCharge && Drone.baseConnectionDistance + d.addedConnectionDistance + 200 < Vector3.Distance(transform.position, d.transform.position))
+                {
+                    // low power drones within range
+                    return false;
+                }
+                return true;
+            }
+            List<Drone> availableDrones = list.Where(ValidDrone).ToList();
             if (availableDrones.Count > 0)
             {
                 Drone? selected = null;
@@ -295,6 +313,7 @@ namespace VehicleFramework.Assets
             {
                 return ret;
             }
+            ret += $"{Language.main.Get("VFDroneHint2")}: {Mathf.CeilToInt(Vector3.Distance(PairedDrone.transform.position, transform.position))}\n";
             ret += $"{Language.main.Get("VFDroneStationHint2")}: {GetStatus(PairedDrone)}\n";
             if(PairedDrone.IsScuttled || !PairedDrone.energyInterface.hasCharge)
             {

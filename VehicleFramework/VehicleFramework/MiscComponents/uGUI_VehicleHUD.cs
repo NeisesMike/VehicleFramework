@@ -189,7 +189,8 @@ namespace VehicleFramework.MiscComponents
 				throw Admin.SessionManager.Fatal("uGUI_VehicleHUD: drone.pairedStation is null!");
 			}
 			int distance = Mathf.CeilToInt(Vector3.Distance(drone.transform.position, drone.pairedStation.transform.position));
-			_droneDistanceText.text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", _labelDroneDistance, (distance >= 0) ? IntStringCache.GetStringForInt(distance) : "--", _labelMeterSuffix);
+			int maxDistance = Mathf.CeilToInt(VehicleTypes.Drone.baseConnectionDistance + drone.addedConnectionDistance);
+            _droneDistanceText.text = string.Format("<color=#6EFEFFFF>{0}</color> <size=26>{1} {2}</size>", _labelDroneDistance, (distance >= 0) ? $"{IntStringCache.GetStringForInt(distance)} / {maxDistance}" : "--", _labelMeterSuffix);
 		}
 		public void UpdateHealth(ModVehicle mv)
 		{
