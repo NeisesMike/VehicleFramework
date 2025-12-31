@@ -51,7 +51,8 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(VehicleUpgradeConsoleInput.OnHandClick))]
         public static void VehicleUpgradeConsoleInputOnHandClickHarmonyPostfix(VehicleUpgradeConsoleInput __instance)
         {
-            ModVehicle thisMV = VehicleManager.VehiclesInPlay.Where(x => x != null).First(x => x.upgradesInput == __instance);
+            ModVehicle? thisMV = VehicleManager.VehiclesInPlay.Where(x => x != null)?.First(x => x.upgradesInput == __instance);
+            if (thisMV == null) return;
             VehicleBuilding.ModuleBuilder.BackgroundSprite = thisMV.ModuleBackgroundImage;
             VehicleBuilding.ModuleBuilder.SignalUpgradePDAOpened(__instance);
         }
