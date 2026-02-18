@@ -176,6 +176,8 @@ namespace VehicleFramework.VehicleBuilding
             ret.textPower = mvHUDElementsRoot.transform.Find("Power").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperature = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue").GetComponent<TMPro.TextMeshProUGUI>();
             ret.textTemperatureSuffix = mvHUDElementsRoot.transform.Find("Temperature/TemperatureValue/TemperatureSuffix").GetComponent<TMPro.TextMeshProUGUI>();
+
+            BuildDroneHUD(ret, mvHUDElementsRoot);
             ret.Validate();
         }
         public static void BuildVRHUD_OLD()
