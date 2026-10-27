@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Vozidlo",
   "VFEnterVehicle": "Vstúpiť do vozidla",
   "VFExitVehicle": "Vystúpiť z vozidla",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Začnite pilotovať",
   "VFNameLabel": "Názov",
 
-  "VFHeadlightsButtonLabel": "Tlačidlo svetlometu",
-  "VFHeadlightsButtonTooltip": "Kliknite pre zapnutie alebo vypnutie svetlometov",
-  "VFLeftClickHeadlightsLabel": "Zmeniť svetlomety (ľavé kliknutie)",
-  "VFLeftClickHeadlightsTooltip": "Ľavé kliknutie na zmenu svetlometov",
-  "VFRightClickHeadlightsLabel": "Zmeniť svetlomety (pravé kliknutie)",
-  "VFRightClickHeadlightsTooltip": "Pravé kliknutie na zmenu svetlometov",
   "VFHeadLightsHover": "Zmeniť svetlomety",
   "VFFloodLightsHover": "Povodňové svetlá",
   "VFNavLightsHover": "Navigačné svetlá",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Zmeniť vnútorné svetlá",
 
   "VFCameraHint": "Tipy na kameru:",
-  "VFPrevCameraLabel": "Predchádzajúca kamera",
-  "VFPrevCameraTooltip": "Prepnúť na predchádzajúcu kameru",
-  "VFNextCameraLabel": "Ďalšia kamera",
-  "VFNextCameraTooltip": "Prepnúť na ďalšiu kameru",
-  "VFExitCameraLabel": "Opustite režim kamery",
-  "VFExitCameraTooltip": "Opustite režim kamery",
 
   "VFConfigManagerLabel": "Prejdite do nastavení pre ďalšie možnosti",
   "VFConfigManagerTooltip": "Prejdite do nastavení pre ďalšie možnosti!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Aktivovaný autopilot (príde čoskoro)",
 
-  "VFMagBootsButtonLabel": "Zmeniť magnetické topánky",
-  "VFMagBootsButtonTooltip": "Zapnúť alebo vypnúť magnetické topánky",
 
   "VFDroneStationCheatLabel": "Aktivovať stanicu drónov",
   "VFDroneStationCheatTooltip": "Kliknite tu pre aktivovanie drónovej stanice v hre",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Varovanie! Dosiahnutá maximálna hĺbka! Môžu vzniknúť poruchy trupu!",
   "VFSubtitlePassingSafeDepth": "Varovanie! Prekročená bezpečná hĺbka!",
   "VFSubtitleLeviathanDetected": "Leviathan zistený!",
-  "VFSubtitleUhOh": "Oj!"
+  "VFSubtitleUhOh": "Oj!",
+    "OptionVFHeadlightsButton": "Tlačidlo svetlometu",
+    "OptionDesc_VFHeadlightsButton": "Kliknite pre zapnutie alebo vypnutie svetlometov",
+    "OptionVFPrevCameraButton": "Predchádzajúca kamera",
+    "OptionDesc_VFPrevCameraButton": "Prepnúť na predchádzajúcu kameru",
+    "OptionVFNextCameraButton": "Ďalšia kamera",
+    "OptionDesc_VFNextCameraButton": "Prepnúť na ďalšiu kameru",
+    "OptionVFExitCameraButton": "Opustite režim kamery",
+    "OptionDesc_VFExitCameraButton": "Opustite režim kamery",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Zmeniť magnetické topánky",
+    "OptionDesc_VFMagBootsButton": "Zapnúť alebo vypnúť magnetické topánky",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

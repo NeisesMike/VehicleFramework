@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Vehículo",
   "VFEnterVehicle": "Entrar al vehículo",
   "VFExitVehicle": "Salir del vehículo",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Comenzar a pilotar",
   "VFNameLabel": "Etiqueta de nombre",
 
-  "VFHeadlightsButtonLabel": "Interruptor de faros",
-  "VFHeadlightsButtonTooltip": "Presiona para alternar los faros mientras pilotas.",
-  "VFLeftClickHeadlightsLabel": "Interruptor de faros (clic izquierdo)",
-  "VFLeftClickHeadlightsTooltip": "Te permite alternar los faros con clic izquierdo o presión del joystick izquierdo.",
-  "VFRightClickHeadlightsLabel": "Interruptor de faros (clic derecho)",
-  "VFRightClickHeadlightsTooltip": "Te permite alternar los faros con clic derecho o presión del joystick derecho.",
   "VFHeadLightsHover": "Interruptor de faros",
   "VFFloodLightsHover": "Interruptor de luces de inundación",
   "VFNavLightsHover": "Interruptor de luces de navegación",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Interruptor de luces interiores",
 
   "VFCameraHint": "Controles de cámara:",
-  "VFPrevCameraLabel": "Cámara anterior",
-  "VFPrevCameraTooltip": "Cambia a la cámara anterior del vehículo.",
-  "VFNextCameraLabel": "Siguiente cámara",
-  "VFNextCameraTooltip": "Cambia a la siguiente cámara del vehículo.",
-  "VFExitCameraLabel": "Salir de la cámara",
-  "VFExitCameraTooltip": "Salir de la vista de la cámara.",
 
   "VFConfigManagerLabel": "Para más opciones, visita el administrador de configuración",
   "VFConfigManagerTooltip": "¡Descarga el administrador de configuración para más ajustes!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Activación de piloto automático (próximamente)",
 
-  "VFMagBootsButtonLabel": "Interruptor de botas magnéticas",
-  "VFMagBootsButtonTooltip": "Activa o desactiva las botas magnéticas.",
 
   "VFDroneStationCheatLabel": "Desbloquear estación de drones",
   "VFDroneStationCheatTooltip": "Haz clic aquí para desbloquear la estación de drones en la partida actual.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "¡Advertencia! ¡Se alcanzó la profundidad máxima! ¡Fuga en el casco inminente!",
   "VFSubtitlePassingSafeDepth": "¡Advertencia! ¡Profundidad segura superada!",
   "VFSubtitleLeviathanDetected": "¡Leviatán detectado!",
-  "VFSubtitleUhOh": "¡Vaya!"
+  "VFSubtitleUhOh": "¡Vaya!",
+    "OptionVFHeadlightsButton": "Interruptor de faros",
+    "OptionDesc_VFHeadlightsButton": "Presiona para alternar los faros mientras pilotas.",
+    "OptionVFPrevCameraButton": "Cámara anterior",
+    "OptionDesc_VFPrevCameraButton": "Cambia a la cámara anterior del vehículo.",
+    "OptionVFNextCameraButton": "Siguiente cámara",
+    "OptionDesc_VFNextCameraButton": "Cambia a la siguiente cámara del vehículo.",
+    "OptionVFExitCameraButton": "Salir de la cámara",
+    "OptionDesc_VFExitCameraButton": "Salir de la vista de la cámara.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Interruptor de botas magnéticas",
+    "OptionDesc_VFMagBootsButton": "Activa o desactiva las botas magnéticas.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

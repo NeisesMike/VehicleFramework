@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "载具",
   "VFEnterVehicle": "进入载具",
   "VFExitVehicle": "离开载具",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "启动驾驶",
   "VFNameLabel": "名称标签",
 
-  "VFHeadlightsButtonLabel": "车灯开关",
-  "VFHeadlightsButtonTooltip": "点击切换车灯",
-  "VFLeftClickHeadlightsLabel": "车灯开关（左键点击）",
-  "VFLeftClickHeadlightsTooltip": "左键点击切换车灯",
-  "VFRightClickHeadlightsLabel": "车灯开关（右键点击）",
-  "VFRightClickHeadlightsTooltip": "右键点击切换车灯",
   "VFHeadLightsHover": "车灯开关",
   "VFFloodLightsHover": "辅助灯",
   "VFNavLightsHover": "导航灯",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "内部灯光开关",
 
   "VFCameraHint": "摄像机提示：",
-  "VFPrevCameraLabel": "上一摄像机",
-  "VFPrevCameraTooltip": "切换到上一个摄像机",
-  "VFNextCameraLabel": "下一个摄像机",
-  "VFNextCameraTooltip": "切换到下一个摄像机",
-  "VFExitCameraLabel": "退出摄像机",
-  "VFExitCameraTooltip": "退出摄像机模式",
 
   "VFConfigManagerLabel": "访问管理设置以获得更多自定义选项",
   "VFConfigManagerTooltip": "打开管理设置以获得更多选项！",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "自动驾驶启用（即将推出）",
 
-  "VFMagBootsButtonLabel": "磁性靴开关",
-  "VFMagBootsButtonTooltip": "启用或禁用磁性靴",
 
   "VFDroneStationCheatLabel": "开启无人机站",
   "VFDroneStationCheatTooltip": "点击这里在当前游戏中开启无人机站。",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "警告！达到最大深度！船体即将损坏！",
   "VFSubtitlePassingSafeDepth": "警告！已超过安全深度！",
   "VFSubtitleLeviathanDetected": "发现 Leviathan！",
-  "VFSubtitleUhOh": "哎呀！"
+  "VFSubtitleUhOh": "哎呀！",
+    "OptionVFHeadlightsButton": "车灯开关",
+    "OptionDesc_VFHeadlightsButton": "点击切换车灯",
+    "OptionVFPrevCameraButton": "上一摄像机",
+    "OptionDesc_VFPrevCameraButton": "切换到上一个摄像机",
+    "OptionVFNextCameraButton": "下一个摄像机",
+    "OptionDesc_VFNextCameraButton": "切换到下一个摄像机",
+    "OptionVFExitCameraButton": "退出摄像机",
+    "OptionDesc_VFExitCameraButton": "退出摄像机模式",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "磁性靴开关",
+    "OptionDesc_VFMagBootsButton": "启用或禁用磁性靴",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

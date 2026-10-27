@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Превозно средство",
   "VFEnterVehicle": "Влизане в превозното средство",
   "VFExitVehicle": "Излизане от превозното средство",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Започване на управление",
   "VFNameLabel": "Етикет за име",
 
-  "VFHeadlightsButtonLabel": "Превключване на фаровете",
-  "VFHeadlightsButtonTooltip": "Натиснете този бутон, за да превключите фаровете по време на управление.",
-  "VFLeftClickHeadlightsLabel": "Превключване на фаровете (ляв бутон)",
-  "VFLeftClickHeadlightsTooltip": "Позволява активиране на фаровете с ляв клик или ляв тригер.",
-  "VFRightClickHeadlightsLabel": "Превключване на фаровете (десен бутон)",
-  "VFRightClickHeadlightsTooltip": "Позволява активиране на фаровете с десен клик или десен тригер.",
   "VFHeadLightsHover": "Превключване на фаровете",
   "VFFloodLightsHover": "Превключване на прожекторите",
   "VFNavLightsHover": "Превключване на навигационните светлини",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Превключване на вътрешното осветление",
 
   "VFCameraHint": "Управление на камерата:",
-  "VFPrevCameraLabel": "Предишна камера",
-  "VFPrevCameraTooltip": "Превключете към предишната камера на превозното средство.",
-  "VFNextCameraLabel": "Следваща камера",
-  "VFNextCameraTooltip": "Превключете към следващата камера на превозното средство.",
-  "VFExitCameraLabel": "Изход от камерата",
-  "VFExitCameraTooltip": "Изход от изгледа на камерата.",
 
   "VFConfigManagerLabel": "Вижте мениджъра на конфигурации за повече опции",
   "VFConfigManagerTooltip": "Изтеглете мода за мениджър на конфигурации за допълнителни настройки!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Отваряне на автопилот (Очаквайте скоро)",
 
-  "VFMagBootsButtonLabel": "Превключване на магнитни ботуши",
-  "VFMagBootsButtonTooltip": "Превключване на магнитните ботуши.",
 
   "VFDroneStationCheatLabel": "Отключване на станцията за дронове",
   "VFDroneStationCheatTooltip": "Натиснете, за да отключите станцията за дронове в текущата игра.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Предупреждение! Достигната е максималната дълбочина! Ще настъпи повреда на корпуса!",
   "VFSubtitlePassingSafeDepth": "Предупреждение! Максималната дълбочина е близо!",
   "VFSubtitleLeviathanDetected": "Обнаружен Левиатан!",
-  "VFSubtitleUhOh": "Опа!"
+  "VFSubtitleUhOh": "Опа!",
+    "OptionVFHeadlightsButton": "Превключване на фаровете",
+    "OptionDesc_VFHeadlightsButton": "Натиснете този бутон, за да превключите фаровете по време на управление.",
+    "OptionVFPrevCameraButton": "Предишна камера",
+    "OptionDesc_VFPrevCameraButton": "Превключете към предишната камера на превозното средство.",
+    "OptionVFNextCameraButton": "Следваща камера",
+    "OptionDesc_VFNextCameraButton": "Превключете към следващата камера на превозното средство.",
+    "OptionVFExitCameraButton": "Изход от камерата",
+    "OptionDesc_VFExitCameraButton": "Изход от изгледа на камерата.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Превключване на магнитни ботуши",
+    "OptionDesc_VFMagBootsButton": "Превключване на магнитните ботуши.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

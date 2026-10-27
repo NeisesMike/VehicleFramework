@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Transporto priemonė",
   "VFEnterVehicle": "Įeiti į transporto priemonę",
   "VFExitVehicle": "Išeiti iš transporto priemonės",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Pradėti pilotavimą",
   "VFNameLabel": "Pavadinimas",
 
-  "VFHeadlightsButtonLabel": "Priekiniai žibintai",
-  "VFHeadlightsButtonTooltip": "Spustelėkite, kad įjungtumėte arba išjungtumėte žibintus",
-  "VFLeftClickHeadlightsLabel": "Pakeisti žibintus (kairysis pelės mygtukas)",
-  "VFLeftClickHeadlightsTooltip": "Kairysis pelės mygtukas, kad pakeistumėte žibintus",
-  "VFRightClickHeadlightsLabel": "Pakeisti žibintus (dešinysis pelės mygtukas)",
-  "VFRightClickHeadlightsTooltip": "Dešinysis pelės mygtukas, kad pakeistumėte žibintus",
   "VFHeadLightsHover": "Pakeisti žibintus",
   "VFFloodLightsHover": "Potvynio žibintai",
   "VFNavLightsHover": "Navigacijos žibintai",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Pakeisti vidaus apšvietimą",
 
   "VFCameraHint": "Kameros patarimas:",
-  "VFPrevCameraLabel": "Pirmas kamera",
-  "VFPrevCameraTooltip": "Pereiti į pirmąją kamerą",
-  "VFNextCameraLabel": "Kita kamera",
-  "VFNextCameraTooltip": "Pereiti į kitą kamerą",
-  "VFExitCameraLabel": "Išeiti iš kameros",
-  "VFExitCameraTooltip": "Išeiti iš kameros",
 
   "VFConfigManagerLabel": "Prieiga prie papildomų nustatymų",
   "VFConfigManagerTooltip": "Atidarykite papildomų nustatymų langą!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilotas įjungtas (greitai bus prieinamas)",
 
-  "VFMagBootsButtonLabel": "Keisti magnetinius batus",
-  "VFMagBootsButtonTooltip": "Įjunkite arba išjunkite magnetinius batus",
 
   "VFDroneStationCheatLabel": "Įjungti dronų stotį",
   "VFDroneStationCheatTooltip": "Spustelėkite čia, kad įjungtumėte dronų stotį žaidime",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Įspėjimas! Pasiektas maksimalus gylis! Galimos skrovo pažeidimai!",
   "VFSubtitlePassingSafeDepth": "Įspėjimas! Jūs viršijote saugų gylį!",
   "VFSubtitleLeviathanDetected": "Leviatanas aptiktas!",
-  "VFSubtitleUhOh": "Oops!"
+  "VFSubtitleUhOh": "Oops!",
+    "OptionVFHeadlightsButton": "Priekiniai žibintai",
+    "OptionDesc_VFHeadlightsButton": "Spustelėkite, kad įjungtumėte arba išjungtumėte žibintus",
+    "OptionVFPrevCameraButton": "Pirmas kamera",
+    "OptionDesc_VFPrevCameraButton": "Pereiti į pirmąją kamerą",
+    "OptionVFNextCameraButton": "Kita kamera",
+    "OptionDesc_VFNextCameraButton": "Pereiti į kitą kamerą",
+    "OptionVFExitCameraButton": "Išeiti iš kameros",
+    "OptionDesc_VFExitCameraButton": "Išeiti iš kameros",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Keisti magnetinius batus",
+    "OptionDesc_VFMagBootsButton": "Įjunkite arba išjunkite magnetinius batus",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

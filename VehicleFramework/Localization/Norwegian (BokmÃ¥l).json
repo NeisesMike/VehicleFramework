@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Kjøretøy",
   "VFEnterVehicle": "Gå inn i kjøretøyet",
   "VFExitVehicle": "Gå ut av kjøretøyet",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Start piloting",
   "VFNameLabel": "Navn",
 
-  "VFHeadlightsButtonLabel": "Hovedlys knapp",
-  "VFHeadlightsButtonTooltip": "Klikk for å slå på eller av lysene",
-  "VFLeftClickHeadlightsLabel": "Bytt lys (venstreklikk)",
-  "VFLeftClickHeadlightsTooltip": "Venstreklikk for å bytte lys",
-  "VFRightClickHeadlightsLabel": "Bytt lys (høyreklikk)",
-  "VFRightClickHeadlightsTooltip": "Høyreklikk for å bytte lys",
   "VFHeadLightsHover": "Bytt lys",
   "VFFloodLightsHover": "Flomlys",
   "VFNavLightsHover": "Navigasjonslys",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Bytt interiørlys",
 
   "VFCameraHint": "Kameratips:",
-  "VFPrevCameraLabel": "Forrige kamera",
-  "VFPrevCameraTooltip": "Bytt til forrige kamera",
-  "VFNextCameraLabel": "Neste kamera",
-  "VFNextCameraTooltip": "Bytt til neste kamera",
-  "VFExitCameraLabel": "Forlat kamera",
-  "VFExitCameraTooltip": "Forlat kamera",
 
   "VFConfigManagerLabel": "Tilgang til innstillinger for ekstra alternativer",
   "VFConfigManagerTooltip": "Åpne innstillinger for ekstra alternativer!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilot aktivert (kommer snart)",
 
-  "VFMagBootsButtonLabel": "Bytt magnetstøvler",
-  "VFMagBootsButtonTooltip": "Slå på eller av magnetstøvlene",
 
   "VFDroneStationCheatLabel": "Slå på dronestasjon",
   "VFDroneStationCheatTooltip": "Klikk her for å aktivere dronestasjon i spillet",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Advarsel! Maksimal dybde nådd! Mulige skrogskader!",
   "VFSubtitlePassingSafeDepth": "Advarsel! Du har gått forbi sikker dybde!",
   "VFSubtitleLeviathanDetected": "Leviathan oppdaget!",
-  "VFSubtitleUhOh": "Oops!"
+  "VFSubtitleUhOh": "Oops!",
+    "OptionVFHeadlightsButton": "Hovedlys knapp",
+    "OptionDesc_VFHeadlightsButton": "Klikk for å slå på eller av lysene",
+    "OptionVFPrevCameraButton": "Forrige kamera",
+    "OptionDesc_VFPrevCameraButton": "Bytt til forrige kamera",
+    "OptionVFNextCameraButton": "Neste kamera",
+    "OptionDesc_VFNextCameraButton": "Bytt til neste kamera",
+    "OptionVFExitCameraButton": "Forlat kamera",
+    "OptionDesc_VFExitCameraButton": "Forlat kamera",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Bytt magnetstøvler",
+    "OptionDesc_VFMagBootsButton": "Slå på eller av magnetstøvlene",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

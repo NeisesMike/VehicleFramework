@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Vozidlo",
   "VFEnterVehicle": "Vstoupit do vozidla",
   "VFExitVehicle": "Opustit vozidlo",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Začít řídit",
   "VFNameLabel": "Štítek jména",
 
-  "VFHeadlightsButtonLabel": "Přepnout světlomety",
-  "VFHeadlightsButtonTooltip": "Stiskněte toto tlačítko pro zapnutí nebo vypnutí světlometů během řízení.",
-  "VFLeftClickHeadlightsLabel": "Přepnout světlomety (levé tlačítko)",
-  "VFLeftClickHeadlightsTooltip": "Umožňuje ovládání světlometů levým kliknutím nebo levým spouštěčem.",
-  "VFRightClickHeadlightsLabel": "Přepnout světlomety (pravé tlačítko)",
-  "VFRightClickHeadlightsTooltip": "Umožňuje ovládání světlometů pravým kliknutím nebo pravým spouštěčem.",
   "VFHeadLightsHover": "Přepnout světlomety",
   "VFFloodLightsHover": "Přepnout reflektory",
   "VFNavLightsHover": "Přepnout navigační světla",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Přepnout vnitřní osvětlení",
 
   "VFCameraHint": "Ovládání kamery:",
-  "VFPrevCameraLabel": "Předchozí kamera",
-  "VFPrevCameraTooltip": "Přepnout na předchozí kameru na vozidle.",
-  "VFNextCameraLabel": "Další kamera",
-  "VFNextCameraTooltip": "Přepnout na další kameru na vozidle.",
-  "VFExitCameraLabel": "Opustit kameru",
-  "VFExitCameraTooltip": "Opustit pohled kamery.",
 
   "VFConfigManagerLabel": "Pro více možností navštivte správce konfigurace",
   "VFConfigManagerTooltip": "Stáhněte si mod konfigurace pro další nastavení!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Otevřít autopilota (již brzy)",
 
-  "VFMagBootsButtonLabel": "Přepnout magnetické boty",
-  "VFMagBootsButtonTooltip": "Přepnout magnetické boty.",
 
   "VFDroneStationCheatLabel": "Odemknout stanici dronů",
   "VFDroneStationCheatTooltip": "Klikněte pro odemknutí stanice dronů v aktuální hře.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Pozor! Dosažena maximální hloubka! Poškození trupu nevyhnutelné!",
   "VFSubtitlePassingSafeDepth": "Pozor! Blížíte se k maximální hloubce!",
   "VFSubtitleLeviathanDetected": "Zjištěn leviatan!",
-  "VFSubtitleUhOh": "Ajaj!"
+  "VFSubtitleUhOh": "Ajaj!",
+    "OptionVFHeadlightsButton": "Přepnout světlomety",
+    "OptionDesc_VFHeadlightsButton": "Stiskněte toto tlačítko pro zapnutí nebo vypnutí světlometů během řízení.",
+    "OptionVFPrevCameraButton": "Předchozí kamera",
+    "OptionDesc_VFPrevCameraButton": "Přepnout na předchozí kameru na vozidle.",
+    "OptionVFNextCameraButton": "Další kamera",
+    "OptionDesc_VFNextCameraButton": "Přepnout na další kameru na vozidle.",
+    "OptionVFExitCameraButton": "Opustit kameru",
+    "OptionDesc_VFExitCameraButton": "Opustit pohled kamery.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Přepnout magnetické boty",
+    "OptionDesc_VFMagBootsButton": "Přepnout magnetické boty.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

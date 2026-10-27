@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Fordon",
   "VFEnterVehicle": "Gå in i fordonet",
   "VFExitVehicle": "Gå ut ur fordonet",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Starta körning",
   "VFNameLabel": "Namn",
 
-  "VFHeadlightsButtonLabel": "Strålkastarknapp",
-  "VFHeadlightsButtonTooltip": "Klicka för att slå på eller av strålkastarna",
-  "VFLeftClickHeadlightsLabel": "Byt strålkastare (vänsterklick)",
-  "VFLeftClickHeadlightsTooltip": "Vänsterklicka för att byta strålkastare",
-  "VFRightClickHeadlightsLabel": "Byt strålkastare (högerklick)",
-  "VFRightClickHeadlightsTooltip": "Högerklicka för att byta strålkastare",
   "VFHeadLightsHover": "Byt strålkastare",
   "VFFloodLightsHover": "Flodljus",
   "VFNavLightsHover": "Navigationsljus",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Byt inre ljus",
 
   "VFCameraHint": "Kameratips:",
-  "VFPrevCameraLabel": "Föregående kamera",
-  "VFPrevCameraTooltip": "Byt till föregående kamera",
-  "VFNextCameraLabel": "Nästa kamera",
-  "VFNextCameraTooltip": "Byt till nästa kamera",
-  "VFExitCameraLabel": "Gå ut ur kameraläget",
-  "VFExitCameraTooltip": "Gå ut ur kameraläget",
 
   "VFConfigManagerLabel": "Gå till konfigurationsinställningarna för fler alternativ",
   "VFConfigManagerTooltip": "Gå till inställningar för att se fler alternativ!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilotläge aktiverat (kommande)",
 
-  "VFMagBootsButtonLabel": "Byt magnetiska stövlar",
-  "VFMagBootsButtonTooltip": "Slå på eller av magnetiska stövlar",
 
   "VFDroneStationCheatLabel": "Aktivera drönstation",
   "VFDroneStationCheatTooltip": "Klicka här för att aktivera drönstation i spelet",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Varning! Maximal djup nått! Skrotskador kan uppstå!",
   "VFSubtitlePassingSafeDepth": "Varning! Överskridit säkert djup!",
   "VFSubtitleLeviathanDetected": "Leviathan upptäckt!",
-  "VFSubtitleUhOh": "Oj då!"
+  "VFSubtitleUhOh": "Oj då!",
+    "OptionVFHeadlightsButton": "Strålkastarknapp",
+    "OptionDesc_VFHeadlightsButton": "Klicka för att slå på eller av strålkastarna",
+    "OptionVFPrevCameraButton": "Föregående kamera",
+    "OptionDesc_VFPrevCameraButton": "Byt till föregående kamera",
+    "OptionVFNextCameraButton": "Nästa kamera",
+    "OptionDesc_VFNextCameraButton": "Byt till nästa kamera",
+    "OptionVFExitCameraButton": "Gå ut ur kameraläget",
+    "OptionDesc_VFExitCameraButton": "Gå ut ur kameraläget",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Byt magnetiska stövlar",
+    "OptionDesc_VFMagBootsButton": "Slå på eller av magnetiska stövlar",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

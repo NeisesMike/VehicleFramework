@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Transportlīdzeklis",
   "VFEnterVehicle": "Ienākt transportlīdzeklī",
   "VFExitVehicle": "Iziet no transportlīdzekļa",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Sākt pilotēšanu",
   "VFNameLabel": "Nosaukums",
 
-  "VFHeadlightsButtonLabel": "Priekšu lukturi",
-  "VFHeadlightsButtonTooltip": "Noklikšķiniet, lai ieslēgtu vai izslēgtu lukturus",
-  "VFLeftClickHeadlightsLabel": "Mainīt lukturus (kreisais peles pogas)",
-  "VFLeftClickHeadlightsTooltip": "Noklikšķiniet ar kreiso peles pogu, lai mainītu lukturus",
-  "VFRightClickHeadlightsLabel": "Mainīt lukturus (labais peles pogas)",
-  "VFRightClickHeadlightsTooltip": "Noklikšķiniet ar labo peles pogu, lai mainītu lukturus",
   "VFHeadLightsHover": "Mainīt lukturus",
   "VFFloodLightsHover": "Pārplūduma lukturi",
   "VFNavLightsHover": "Navigācijas lukturi",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Mainīt iekšējos apgaismojumus",
 
   "VFCameraHint": "Kameru padoms:",
-  "VFPrevCameraLabel": "Iepriekšējā kamera",
-  "VFPrevCameraTooltip": "Pāriet uz iepriekšējo kameru",
-  "VFNextCameraLabel": "Nākošā kamera",
-  "VFNextCameraTooltip": "Pāriet uz nākamo kameru",
-  "VFExitCameraLabel": "Iziet no kameras",
-  "VFExitCameraTooltip": "Iziet no kameras",
 
   "VFConfigManagerLabel": "Piekļuve papildu iestatījumiem",
   "VFConfigManagerTooltip": "Atveriet papildu iestatījumu logu!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilots ieslēgts (drīzumā pieejams)",
 
-  "VFMagBootsButtonLabel": "Mainīt magnētiskos zābakus",
-  "VFMagBootsButtonTooltip": "Ieslēdziet vai izslēdziet magnētiskos zābakus",
 
   "VFDroneStationCheatLabel": "Ieslēgt dronu staciju",
   "VFDroneStationCheatTooltip": "Noklikšķiniet šeit, lai spēlē ieslēgtu dronu staciju",
@@ -122,5 +108,26 @@
   "VFSubtitleMaximumDepthReached": "Brīdinājums! Sasniegts maksimālais dziļums! Kuģa bojājumi iespējami!",
   "VFSubtitlePassingSafeDepth": "Brīdinājums! Jūs pārsniedzāt drošo dziļumu!",
   "VFSubtitleLeviathanDetected": "Leviatāns atklāts!",
-  "VFSubtitleUhOh": "Ups!"
+  "VFSubtitleUhOh": "Ups!",
+    "OptionVFHeadlightsButton": "Priekšu lukturi",
+    "OptionDesc_VFHeadlightsButton": "Noklikšķiniet, lai ieslēgtu vai izslēgtu lukturus",
+    "OptionVFPrevCameraButton": "Iepriekšējā kamera",
+    "OptionDesc_VFPrevCameraButton": "Pāriet uz iepriekšējo kameru",
+    "OptionVFNextCameraButton": "Nākošā kamera",
+    "OptionDesc_VFNextCameraButton": "Pāriet uz nākamo kameru",
+    "OptionVFExitCameraButton": "Iziet no kameras",
+    "OptionDesc_VFExitCameraButton": "Iziet no kameras",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Mainīt magnētiskos zābakus",
+    "OptionDesc_VFMagBootsButton": "Ieslēdziet vai izslēdziet magnētiskos zābakus",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

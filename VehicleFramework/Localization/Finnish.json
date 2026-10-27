@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Ajoneuvo",
   "VFEnterVehicle": "Astu ajoneuvoon",
   "VFExitVehicle": "Poistu ajoneuvosta",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Aloita ohjaus",
   "VFNameLabel": "Nimi-teksti",
 
-  "VFHeadlightsButtonLabel": "Ajovalojen kytkin",
-  "VFHeadlightsButtonTooltip": "Napsauta ajovalojen vaihtamiseksi ajon aikana.",
-  "VFLeftClickHeadlightsLabel": "Ajovalojen kytkin (vasen klikkaus)",
-  "VFLeftClickHeadlightsTooltip": "Vaihda ajovalot vasemmalla hiiren painikkeella.",
-  "VFRightClickHeadlightsLabel": "Ajovalojen kytkin (oikea klikkaus)",
-  "VFRightClickHeadlightsTooltip": "Vaihda ajovalot oikealla hiiren painikkeella.",
   "VFHeadLightsHover": "Ajovalojen kytkin",
   "VFFloodLightsHover": "Tulvavalot",
   "VFNavLightsHover": "Liikennevalot",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Sisävalojen kytkin",
 
   "VFCameraHint": "Kameran ohjauksen vihjeet:",
-  "VFPrevCameraLabel": "Edellinen kamera",
-  "VFPrevCameraTooltip": "Vaihda edelliseen kameraan.",
-  "VFNextCameraLabel": "Seuraava kamera",
-  "VFNextCameraTooltip": "Vaihda seuraavaan kameraan.",
-  "VFExitCameraLabel": "Poistu kamerasta",
-  "VFExitCameraTooltip": "Poistu kameran näkymästä.",
 
   "VFConfigManagerLabel": "Mene asetusten hallintaan mukautettujen asetusten vuoksi",
   "VFConfigManagerTooltip": "Lataa asetusten hallinta, jossa on enemmän valintoja!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilotti käynnissä (päivitys pian)",
 
-  "VFMagBootsButtonLabel": "Magneettikenkien kytkin",
-  "VFMagBootsButtonTooltip": "Kytke magneettikengät päälle tai pois.",
 
   "VFDroneStationCheatLabel": "Avaa drone-asema",
   "VFDroneStationCheatTooltip": "Klikkaa tähän avataksesi drone-aseman nykyisessä pelissä.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Varoitus! Maksimisyvyys saavutettu! Runko vuotaa pian!",
   "VFSubtitlePassingSafeDepth": "Varoitus! Turvasyvyyden ylitys!",
   "VFSubtitleLeviathanDetected": "Leviathan havaittu!",
-  "VFSubtitleUhOh": "Ups!"
+  "VFSubtitleUhOh": "Ups!",
+    "OptionVFHeadlightsButton": "Ajovalojen kytkin",
+    "OptionDesc_VFHeadlightsButton": "Napsauta ajovalojen vaihtamiseksi ajon aikana.",
+    "OptionVFPrevCameraButton": "Edellinen kamera",
+    "OptionDesc_VFPrevCameraButton": "Vaihda edelliseen kameraan.",
+    "OptionVFNextCameraButton": "Seuraava kamera",
+    "OptionDesc_VFNextCameraButton": "Vaihda seuraavaan kameraan.",
+    "OptionVFExitCameraButton": "Poistu kamerasta",
+    "OptionDesc_VFExitCameraButton": "Poistu kameran näkymästä.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Magneettikenkien kytkin",
+    "OptionDesc_VFMagBootsButton": "Kytke magneettikengät päälle tai pois.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

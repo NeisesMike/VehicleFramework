@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Véhicule",
   "VFEnterVehicle": "Entrer dans le véhicule",
   "VFExitVehicle": "Sortir du véhicule",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Commencer à piloter",
   "VFNameLabel": "Nom-texte",
 
-  "VFHeadlightsButtonLabel": "Commutateur des phares",
-  "VFHeadlightsButtonTooltip": "Cliquez pour changer les phares pendant la conduite.",
-  "VFLeftClickHeadlightsLabel": "Commutateur des phares (clic gauche)",
-  "VFLeftClickHeadlightsTooltip": "Changez les phares avec le clic gauche.",
-  "VFRightClickHeadlightsLabel": "Commutateur des phares (clic droit)",
-  "VFRightClickHeadlightsTooltip": "Changez les phares avec le clic droit.",
   "VFHeadLightsHover": "Commutateur des phares",
   "VFFloodLightsHover": "Phares supplémentaires",
   "VFNavLightsHover": "Feux de navigation",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Commutateur des lumières intérieures",
 
   "VFCameraHint": "Astuce pour la caméra :",
-  "VFPrevCameraLabel": "Caméra précédente",
-  "VFPrevCameraTooltip": "Changez pour la caméra précédente.",
-  "VFNextCameraLabel": "Caméra suivante",
-  "VFNextCameraTooltip": "Changez pour la caméra suivante.",
-  "VFExitCameraLabel": "Quitter la caméra",
-  "VFExitCameraTooltip": "Quittez la vue caméra.",
 
   "VFConfigManagerLabel": "Accédez à la gestion des paramètres pour plus d'options personnalisées",
   "VFConfigManagerTooltip": "Ouvrez la gestion des paramètres pour plus de choix !",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilote activé (mise à jour bientôt)",
 
-  "VFMagBootsButtonLabel": "Commutateur des bottes magnétiques",
-  "VFMagBootsButtonTooltip": "Activez ou désactivez les bottes magnétiques.",
 
   "VFDroneStationCheatLabel": "Ouvrir la station de drones",
   "VFDroneStationCheatTooltip": "Cliquez ici pour ouvrir la station de drones dans le jeu actuel.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Alerte ! Profondeur maximale atteinte ! La coque va céder bientôt !",
   "VFSubtitlePassingSafeDepth": "Alerte ! Profondeur de sécurité dépassée !",
   "VFSubtitleLeviathanDetected": "Léviathan détecté !",
-  "VFSubtitleUhOh": "Oups !"
+  "VFSubtitleUhOh": "Oups !",
+    "OptionVFHeadlightsButton": "Commutateur des phares",
+    "OptionDesc_VFHeadlightsButton": "Cliquez pour changer les phares pendant la conduite.",
+    "OptionVFPrevCameraButton": "Caméra précédente",
+    "OptionDesc_VFPrevCameraButton": "Changez pour la caméra précédente.",
+    "OptionVFNextCameraButton": "Caméra suivante",
+    "OptionDesc_VFNextCameraButton": "Changez pour la caméra suivante.",
+    "OptionVFExitCameraButton": "Quitter la caméra",
+    "OptionDesc_VFExitCameraButton": "Quittez la vue caméra.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Commutateur des bottes magnétiques",
+    "OptionDesc_VFMagBootsButton": "Activez ou désactivez les bottes magnétiques.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

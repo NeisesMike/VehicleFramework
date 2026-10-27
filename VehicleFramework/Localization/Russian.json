@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Транспортное средство",
   "VFEnterVehicle": "Сесть в транспортное средство",
   "VFExitVehicle": "Выйти из транспортного средства",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Начать пилотирование",
   "VFNameLabel": "Название",
 
-  "VFHeadlightsButtonLabel": "Кнопка фар",
-  "VFHeadlightsButtonTooltip": "Нажмите, чтобы включить или выключить фары",
-  "VFLeftClickHeadlightsLabel": "Изменить фары (левая кнопка)",
-  "VFLeftClickHeadlightsTooltip": "Левая кнопка для смены фар",
-  "VFRightClickHeadlightsLabel": "Изменить фары (правая кнопка)",
-  "VFRightClickHeadlightsTooltip": "Правая кнопка для смены фар",
   "VFHeadLightsHover": "Изменить фары",
   "VFFloodLightsHover": "Прожекторы",
   "VFNavLightsHover": "Навигационные огни",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Изменить внутреннее освещение",
 
   "VFCameraHint": "Подсказки по камере:",
-  "VFPrevCameraLabel": "Предыдущая камера",
-  "VFPrevCameraTooltip": "Переключиться на предыдущую камеру",
-  "VFNextCameraLabel": "Следующая камера",
-  "VFNextCameraTooltip": "Переключиться на следующую камеру",
-  "VFExitCameraLabel": "Выход из режима камеры",
-  "VFExitCameraTooltip": "Выход из режима камеры",
 
   "VFConfigManagerLabel": "Перейдите в настройки для дополнительных опций",
   "VFConfigManagerTooltip": "Перейдите в настройки для дополнительных опций!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Автопилот включен (скоро будет доступно)",
 
-  "VFMagBootsButtonLabel": "Изменить магнитные ботинки",
-  "VFMagBootsButtonTooltip": "Включить или выключить магнитные ботинки",
 
   "VFDroneStationCheatLabel": "Активировать станцию дронов",
   "VFDroneStationCheatTooltip": "Нажмите здесь для активации станции дронов в игре",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Предупреждение! Достигнута максимальная глубина! Возможны повреждения корпуса!",
   "VFSubtitlePassingSafeDepth": "Предупреждение! Вы перешли безопасную глубину!",
   "VFSubtitleLeviathanDetected": "Левиафан обнаружен!",
-  "VFSubtitleUhOh": "Ой!"
+  "VFSubtitleUhOh": "Ой!",
+    "OptionVFHeadlightsButton": "Кнопка фар",
+    "OptionDesc_VFHeadlightsButton": "Нажмите, чтобы включить или выключить фары",
+    "OptionVFPrevCameraButton": "Предыдущая камера",
+    "OptionDesc_VFPrevCameraButton": "Переключиться на предыдущую камеру",
+    "OptionVFNextCameraButton": "Следующая камера",
+    "OptionDesc_VFNextCameraButton": "Переключиться на следующую камеру",
+    "OptionVFExitCameraButton": "Выход из режима камеры",
+    "OptionDesc_VFExitCameraButton": "Выход из режима камеры",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Изменить магнитные ботинки",
+    "OptionDesc_VFMagBootsButton": "Включить или выключить магнитные ботинки",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

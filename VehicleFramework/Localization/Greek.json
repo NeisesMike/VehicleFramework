@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Όχημα",
   "VFEnterVehicle": "Είσοδος στο όχημα",
   "VFExitVehicle": "Έξοδος από το όχημα",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Εκκίνηση πτήσης",
   "VFNameLabel": "Ετικέτα ονόματος",
 
-  "VFHeadlightsButtonLabel": "Εναλλαγή φώτων",
-  "VFHeadlightsButtonTooltip": "Πατήστε για να ενεργοποιήσετε ή να απενεργοποιήσετε τα φώτα κατά την πτήση.",
-  "VFLeftClickHeadlightsLabel": "Εναλλαγή φώτων (αριστερό κλικ)",
-  "VFLeftClickHeadlightsTooltip": "Επιτρέπει την εναλλαγή των φώτων με αριστερό κλικ ή αριστερό πάτημα του μοχλού.",
-  "VFRightClickHeadlightsLabel": "Εναλλαγή φώτων (δεξί κλικ)",
-  "VFRightClickHeadlightsTooltip": "Επιτρέπει την εναλλαγή των φώτων με δεξί κλικ ή δεξί πάτημα του μοχλού.",
   "VFHeadLightsHover": "Εναλλαγή φώτων",
   "VFFloodLightsHover": "Εναλλαγή προβολέων",
   "VFNavLightsHover": "Εναλλαγή φωτεινών σηματοδοτών",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Εναλλαγή εσωτερικού φωτισμού",
 
   "VFCameraHint": "Έλεγχος κάμερας:",
-  "VFPrevCameraLabel": "Προηγούμενη κάμερα",
-  "VFPrevCameraTooltip": "Αλλάξτε στην προηγούμενη κάμερα του οχήματος.",
-  "VFNextCameraLabel": "Επόμενη κάμερα",
-  "VFNextCameraTooltip": "Αλλάξτε στην επόμενη κάμερα του οχήματος.",
-  "VFExitCameraLabel": "Έξοδος από την κάμερα",
-  "VFExitCameraTooltip": "Βγείτε από την προεπισκόπηση κάμερας.",
 
   "VFConfigManagerLabel": "Για περισσότερες επιλογές, επισκεφθείτε το διαχειριστή διαμόρφωσης",
   "VFConfigManagerTooltip": "Κατεβάστε το διαχειριστή διαμόρφωσης για επιπλέον ρυθμίσεις!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Ενεργοποίηση αυτόματου πιλότου (έρχεται σύντομα)",
 
-  "VFMagBootsButtonLabel": "Εναλλαγή μαγνητικών μπότες",
-  "VFMagBootsButtonTooltip": "Ενεργοποιεί ή απενεργοποιεί τις μαγνητικές μπότες.",
 
   "VFDroneStationCheatLabel": "Ξεκλείδωμα σταθμού drone",
   "VFDroneStationCheatTooltip": "Κάντε κλικ εδώ για να ξεκλειδώσετε το σταθμό drone στο τρέχον παιχνίδι.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Προειδοποίηση! Επιτεύχθηκε το μέγιστο βάθος! Βλάβη θωράκισης αναπόφευκτη!",
   "VFSubtitlePassingSafeDepth": "Προειδοποίηση! Υπερβήκατε το ασφαλές βάθος!",
   "VFSubtitleLeviathanDetected": "Εντοπίστηκε Λεβιάθαν!",
-  "VFSubtitleUhOh": "Ωχ!"
+  "VFSubtitleUhOh": "Ωχ!",
+    "OptionVFHeadlightsButton": "Εναλλαγή φώτων",
+    "OptionDesc_VFHeadlightsButton": "Πατήστε για να ενεργοποιήσετε ή να απενεργοποιήσετε τα φώτα κατά την πτήση.",
+    "OptionVFPrevCameraButton": "Προηγούμενη κάμερα",
+    "OptionDesc_VFPrevCameraButton": "Αλλάξτε στην προηγούμενη κάμερα του οχήματος.",
+    "OptionVFNextCameraButton": "Επόμενη κάμερα",
+    "OptionDesc_VFNextCameraButton": "Αλλάξτε στην επόμενη κάμερα του οχήματος.",
+    "OptionVFExitCameraButton": "Έξοδος από την κάμερα",
+    "OptionDesc_VFExitCameraButton": "Βγείτε από την προεπισκόπηση κάμερας.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Εναλλαγή μαγνητικών μπότες",
+    "OptionDesc_VFMagBootsButton": "Ενεργοποιεί ή απενεργοποιεί τις μαγνητικές μπότες.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

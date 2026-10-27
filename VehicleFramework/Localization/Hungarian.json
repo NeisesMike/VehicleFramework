@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Jármű",
   "VFEnterVehicle": "Belépés a járműbe",
   "VFExitVehicle": "Kilépés a járműből",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Irányítás megkezdése",
   "VFNameLabel": "Név",
 
-  "VFHeadlightsButtonLabel": "Fényszórók",
-  "VFHeadlightsButtonTooltip": "Kattints a fényszórók be- vagy kikapcsolásához",
-  "VFLeftClickHeadlightsLabel": "Fényszórók váltása (bal klikk)",
-  "VFLeftClickHeadlightsTooltip": "Bal klikk a fényszórók váltásához",
-  "VFRightClickHeadlightsLabel": "Fényszórók váltása (jobb klikk)",
-  "VFRightClickHeadlightsTooltip": "Jobb klikk a fényszórók váltásához",
   "VFHeadLightsHover": "Fényszórók váltása",
   "VFFloodLightsHover": "Reflektorok",
   "VFNavLightsHover": "Navigációs fények",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Belső világítás váltása",
 
   "VFCameraHint": "Kamera tipp:",
-  "VFPrevCameraLabel": "Előző kamera",
-  "VFPrevCameraTooltip": "Váltás az előző kamerára",
-  "VFNextCameraLabel": "Következő kamera",
-  "VFNextCameraTooltip": "Váltás a következő kamerára",
-  "VFExitCameraLabel": "Kilépés a kamerából",
-  "VFExitCameraTooltip": "Kattints a kamera elhagyásához",
 
   "VFConfigManagerLabel": "További beállítások elérése",
   "VFConfigManagerTooltip": "További beállítások ablakának megnyitása",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilóta aktív (hamarosan elérhető)",
 
-  "VFMagBootsButtonLabel": "Mágneses csizmák váltása",
-  "VFMagBootsButtonTooltip": "Kattints a mágneses csizmák be- vagy kikapcsolásához",
 
   "VFDroneStationCheatLabel": "Drónállomás aktiválása",
   "VFDroneStationCheatTooltip": "Kattints a drónállomás aktiválásához játékban",
@@ -114,5 +100,34 @@
   "VFSubtitleGoodbye": "Viszlát",
   "VFSubtitleHullFailureImminent": "Figyelem! A hajótest hamarosan meghibásodik!",
   "VFSubtitleHullIntegrityCritical": "Figyelem! Kritikus hajótest integritás!",
-  "VFSubtitleHullIntegrityLow": "Figyelem! Alacsony hajótest integritás!"
+  "VFSubtitleHullIntegrityLow": "Figyelem! Alacsony hajótest integritás!",
+    "OptionVFHeadlightsButton": "Fényszórók",
+    "OptionDesc_VFHeadlightsButton": "Kattints a fényszórók be- vagy kikapcsolásához",
+    "OptionVFPrevCameraButton": "Előző kamera",
+    "OptionDesc_VFPrevCameraButton": "Váltás az előző kamerára",
+    "OptionVFNextCameraButton": "Következő kamera",
+    "OptionDesc_VFNextCameraButton": "Váltás a következő kamerára",
+    "OptionVFExitCameraButton": "Kilépés a kamerából",
+    "OptionDesc_VFExitCameraButton": "Kattints a kamera elhagyásához",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Mágneses csizmák váltása",
+    "OptionDesc_VFMagBootsButton": "Kattints a mágneses csizmák be- vagy kikapcsolásához",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required",
+    "VFSubtitleLeveling": "Leveling...",
+    "VFSubtitleWelcomeAboard": "Welcome aboard, captain.",
+    "VFSubtitleOxygenProductionOffline": "Emergency power only! Oxygen production offline!",
+    "VFSubtitleWelcomeAboardAllSystemsOnline": "Welcome aboard, captain. All systems online.",
+    "VFSubtitleMaximumDepthReached": "Warning! Maximum depth reached! Hull damage imminent!",
+    "VFSubtitlePassingSafeDepth": "Warning! Maximum depth is close!",
+    "VFSubtitleLeviathanDetected": "Leviathan detected!",
+    "VFSubtitleUhOh": "Uh oh!"
 }

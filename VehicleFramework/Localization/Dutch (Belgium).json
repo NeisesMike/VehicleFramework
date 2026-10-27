@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Voertuig",
   "VFEnterVehicle": "Voertuig betreden",
   "VFExitVehicle": "Voertuig verlaten",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Besturen starten",
   "VFNameLabel": "Naam",
 
-  "VFHeadlightsButtonLabel": "Koplampen",
-  "VFHeadlightsButtonTooltip": "Klik om de koplampen aan of uit te zetten",
-  "VFLeftClickHeadlightsLabel": "Koplampen wisselen (linkerklik)",
-  "VFLeftClickHeadlightsTooltip": "Linkerklik om koplampen te wisselen",
-  "VFRightClickHeadlightsLabel": "Koplampen wisselen (rechterklik)",
-  "VFRightClickHeadlightsTooltip": "Rechterklik om koplampen te wisselen",
   "VFHeadLightsHover": "Koplampen wisselen",
   "VFFloodLightsHover": "Schijnwerpers",
   "VFNavLightsHover": "Navigatielichten",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Interieurverlichting wisselen",
 
   "VFCameraHint": "Camera-tip:",
-  "VFPrevCameraLabel": "Vorige camera",
-  "VFPrevCameraTooltip": "Wissel naar vorige camera",
-  "VFNextCameraLabel": "Volgende camera",
-  "VFNextCameraTooltip": "Wissel naar volgende camera",
-  "VFExitCameraLabel": "Camera verlaten",
-  "VFExitCameraTooltip": "Klik om de camera te verlaten",
 
   "VFConfigManagerLabel": "Meer instellingen openen",
   "VFConfigManagerTooltip": "Open het venster voor extra instellingen",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopiloot actief (binnenkort beschikbaar)",
 
-  "VFMagBootsButtonLabel": "Magnetische laarzen wisselen",
-  "VFMagBootsButtonTooltip": "Klik om magnetische laarzen aan of uit te zetten",
 
   "VFDroneStationCheatLabel": "Dronestation activeren",
   "VFDroneStationCheatTooltip": "Klik om een dronestation in te schakelen in het spel",
@@ -114,5 +100,34 @@
   "VFSubtitleGoodbye": "Vaarwel",
   "VFSubtitleHullFailureImminent": "Waarschuwing! Rompdefect op komst!",
   "VFSubtitleHullIntegrityCritical": "Waarschuwing! Kritieke rompstructuur!",
-  "VFSubtitleHullIntegrityLow": "Waarschuwing! Lage rompstructuur!"
+  "VFSubtitleHullIntegrityLow": "Waarschuwing! Lage rompstructuur!",
+    "OptionVFHeadlightsButton": "Koplampen",
+    "OptionDesc_VFHeadlightsButton": "Klik om de koplampen aan of uit te zetten",
+    "OptionVFPrevCameraButton": "Vorige camera",
+    "OptionDesc_VFPrevCameraButton": "Wissel naar vorige camera",
+    "OptionVFNextCameraButton": "Volgende camera",
+    "OptionDesc_VFNextCameraButton": "Wissel naar volgende camera",
+    "OptionVFExitCameraButton": "Camera verlaten",
+    "OptionDesc_VFExitCameraButton": "Klik om de camera te verlaten",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Magnetische laarzen wisselen",
+    "OptionDesc_VFMagBootsButton": "Klik om magnetische laarzen aan of uit te zetten",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required",
+    "VFSubtitleLeveling": "Leveling...",
+    "VFSubtitleWelcomeAboard": "Welcome aboard, captain.",
+    "VFSubtitleOxygenProductionOffline": "Emergency power only! Oxygen production offline!",
+    "VFSubtitleWelcomeAboardAllSystemsOnline": "Welcome aboard, captain. All systems online.",
+    "VFSubtitleMaximumDepthReached": "Warning! Maximum depth reached! Hull damage imminent!",
+    "VFSubtitlePassingSafeDepth": "Warning! Maximum depth is close!",
+    "VFSubtitleLeviathanDetected": "Leviathan detected!",
+    "VFSubtitleUhOh": "Uh oh!"
 }

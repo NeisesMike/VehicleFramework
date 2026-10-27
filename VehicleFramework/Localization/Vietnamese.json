@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Phương tiện",
   "VFEnterVehicle": "Vào phương tiện",
   "VFExitVehicle": "Rời khỏi phương tiện",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Bắt đầu lái",
   "VFNameLabel": "Nhãn tên",
 
-  "VFHeadlightsButtonLabel": "Nút đèn pha",
-  "VFHeadlightsButtonTooltip": "Nhấn để chuyển đổi đèn pha",
-  "VFLeftClickHeadlightsLabel": "Chuyển đổi đèn pha (nhấp chuột trái)",
-  "VFLeftClickHeadlightsTooltip": "Nhấp chuột trái để chuyển đổi đèn pha",
-  "VFRightClickHeadlightsLabel": "Chuyển đổi đèn pha (nhấp chuột phải)",
-  "VFRightClickHeadlightsTooltip": "Nhấp chuột phải để chuyển đổi đèn pha",
   "VFHeadLightsHover": "Chuyển đổi đèn pha",
   "VFFloodLightsHover": "Đèn chiếu sáng phụ",
   "VFNavLightsHover": "Đèn định vị",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Chuyển đổi đèn nội thất",
 
   "VFCameraHint": "Gợi ý máy ảnh:",
-  "VFPrevCameraLabel": "Máy ảnh trước",
-  "VFPrevCameraTooltip": "Chuyển sang máy ảnh trước",
-  "VFNextCameraLabel": "Máy ảnh tiếp theo",
-  "VFNextCameraTooltip": "Chuyển sang máy ảnh tiếp theo",
-  "VFExitCameraLabel": "Thoát máy ảnh",
-  "VFExitCameraTooltip": "Thoát chế độ máy ảnh",
 
   "VFConfigManagerLabel": "Truy cập cài đặt quản lý để có thêm tùy chỉnh",
   "VFConfigManagerTooltip": "Mở cài đặt quản lý để có thêm tùy chọn!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Tự động lái bật (sắp ra mắt)",
 
-  "VFMagBootsButtonLabel": "Chuyển đổi giày từ tính",
-  "VFMagBootsButtonTooltip": "Bật hoặc tắt giày từ tính",
 
   "VFDroneStationCheatLabel": "Bật trạm drone",
   "VFDroneStationCheatTooltip": "Nhấn vào đây để bật trạm drone trong trò chơi hiện tại.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Cảnh báo! Đã đạt đến độ sâu tối đa! Vỏ tàu có thể bị hỏng!",
   "VFSubtitlePassingSafeDepth": "Cảnh báo! Vượt qua độ sâu an toàn!",
   "VFSubtitleLeviathanDetected": "Phát hiện Leviathan!",
-  "VFSubtitleUhOh": "Ôi không!"
+  "VFSubtitleUhOh": "Ôi không!",
+    "OptionVFHeadlightsButton": "Nút đèn pha",
+    "OptionDesc_VFHeadlightsButton": "Nhấn để chuyển đổi đèn pha",
+    "OptionVFPrevCameraButton": "Máy ảnh trước",
+    "OptionDesc_VFPrevCameraButton": "Chuyển sang máy ảnh trước",
+    "OptionVFNextCameraButton": "Máy ảnh tiếp theo",
+    "OptionDesc_VFNextCameraButton": "Chuyển sang máy ảnh tiếp theo",
+    "OptionVFExitCameraButton": "Thoát máy ảnh",
+    "OptionDesc_VFExitCameraButton": "Thoát chế độ máy ảnh",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Chuyển đổi giày từ tính",
+    "OptionDesc_VFMagBootsButton": "Bật hoặc tắt giày từ tính",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "ยานพาหนะ",
   "VFEnterVehicle": "เข้าไปในยานพาหนะ",
   "VFExitVehicle": "ออกจากยานพาหนะ",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "เริ่มขับ",
   "VFNameLabel": "ชื่อ",
 
-  "VFHeadlightsButtonLabel": "ปุ่มไฟหน้า",
-  "VFHeadlightsButtonTooltip": "คลิกเพื่อเปิดหรือปิดไฟหน้า",
-  "VFLeftClickHeadlightsLabel": "เปลี่ยนไฟหน้า (คลิกซ้าย)",
-  "VFLeftClickHeadlightsTooltip": "คลิกซ้ายเพื่อเปลี่ยนไฟหน้า",
-  "VFRightClickHeadlightsLabel": "เปลี่ยนไฟหน้า (คลิกขวา)",
-  "VFRightClickHeadlightsTooltip": "คลิกขวาเพื่อเปลี่ยนไฟหน้า",
   "VFHeadLightsHover": "เปลี่ยนไฟหน้า",
   "VFFloodLightsHover": "ไฟฉาย",
   "VFNavLightsHover": "ไฟนำทาง",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "เปลี่ยนไฟภายใน",
 
   "VFCameraHint": "คำแนะนำกล้อง:",
-  "VFPrevCameraLabel": "กล้องก่อนหน้า",
-  "VFPrevCameraTooltip": "สลับไปยังกล้องก่อนหน้า",
-  "VFNextCameraLabel": "กล้องถัดไป",
-  "VFNextCameraTooltip": "สลับไปยังกล้องถัดไป",
-  "VFExitCameraLabel": "ออกจากโหมดกล้อง",
-  "VFExitCameraTooltip": "ออกจากโหมดกล้อง",
 
   "VFConfigManagerLabel": "ไปที่การตั้งค่าคอนฟิกเพื่อดูตัวเลือกเพิ่มเติม",
   "VFConfigManagerTooltip": "ไปที่การตั้งค่าเพื่อดูตัวเลือกเพิ่มเติม!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "โหมดขับอัตโนมัติเปิดใช้งาน (ใช้ในอนาคต)",
 
-  "VFMagBootsButtonLabel": "เปลี่ยนรองเท้าแม่เหล็ก",
-  "VFMagBootsButtonTooltip": "เปิดหรือปิดรองเท้าแม่เหล็ก",
 
   "VFDroneStationCheatLabel": "เปิดใช้งานสถานีโดรน",
   "VFDroneStationCheatTooltip": "คลิกที่นี่เพื่อเปิดใช้งานสถานีโดรนในเกมนี้",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "ระวัง! ความลึกสูงสุดถึงแล้ว ตัวถังอาจเสียหาย!",
   "VFSubtitlePassingSafeDepth": "ระวัง! ความลึกที่ปลอดภัยถูกฝ่าฝืน!",
   "VFSubtitleLeviathanDetected": "ตรวจพบ Leviathan!",
-  "VFSubtitleUhOh": "โอ้ไม่!"
+  "VFSubtitleUhOh": "โอ้ไม่!",
+    "OptionVFHeadlightsButton": "ปุ่มไฟหน้า",
+    "OptionDesc_VFHeadlightsButton": "คลิกเพื่อเปิดหรือปิดไฟหน้า",
+    "OptionVFPrevCameraButton": "กล้องก่อนหน้า",
+    "OptionDesc_VFPrevCameraButton": "สลับไปยังกล้องก่อนหน้า",
+    "OptionVFNextCameraButton": "กล้องถัดไป",
+    "OptionDesc_VFNextCameraButton": "สลับไปยังกล้องถัดไป",
+    "OptionVFExitCameraButton": "ออกจากโหมดกล้อง",
+    "OptionDesc_VFExitCameraButton": "ออกจากโหมดกล้อง",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "เปลี่ยนรองเท้าแม่เหล็ก",
+    "OptionDesc_VFMagBootsButton": "เปิดหรือปิดรองเท้าแม่เหล็ก",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }

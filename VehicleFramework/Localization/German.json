@@ -1,4 +1,4 @@
-﻿{
+{
   "VFVehicle": "Fahrzeug",
   "VFEnterVehicle": "Fahrzeug betreten",
   "VFExitVehicle": "Fahrzeug verlassen",
@@ -6,12 +6,6 @@
   "VFStartPiloting": "Flug starten",
   "VFNameLabel": "Namensschild",
 
-  "VFHeadlightsButtonLabel": "Scheinwerfer umschalten",
-  "VFHeadlightsButtonTooltip": "Drücken Sie diese Schaltfläche, um die Scheinwerfer während des Flugs ein- oder auszuschalten.",
-  "VFLeftClickHeadlightsLabel": "Scheinwerfer umschalten (linksklick)",
-  "VFLeftClickHeadlightsTooltip": "Ermöglicht das Steuern der Scheinwerfer mit einem linken Klick oder dem linken Abzug.",
-  "VFRightClickHeadlightsLabel": "Scheinwerfer umschalten (rechter Klick)",
-  "VFRightClickHeadlightsTooltip": "Ermöglicht das Steuern der Scheinwerfer mit einem rechten Klick oder dem rechten Abzug.",
   "VFHeadLightsHover": "Scheinwerfer umschalten",
   "VFFloodLightsHover": "Flutlicht umschalten",
   "VFNavLightsHover": "Navigationslichter umschalten",
@@ -20,12 +14,6 @@
   "VFInteriorLightsHover": "Innenbeleuchtung umschalten",
 
   "VFCameraHint": "Kamera Steuerung:",
-  "VFPrevCameraLabel": "Vorherige Kamera",
-  "VFPrevCameraTooltip": "Wechselt zur vorherigen Kamera des Fahrzeugs.",
-  "VFNextCameraLabel": "Nächste Kamera",
-  "VFNextCameraTooltip": "Wechselt zur nächsten Kamera des Fahrzeugs.",
-  "VFExitCameraLabel": "Kamera verlassen",
-  "VFExitCameraTooltip": "Verlässt die Kameravorschau.",
 
   "VFConfigManagerLabel": "Für weitere Optionen besuchen Sie das Konfigurationsmanagement",
   "VFConfigManagerTooltip": "Laden Sie das Konfigurationsmodul für zusätzliche Einstellungen herunter!",
@@ -53,8 +41,6 @@
 
   "VFAutoPilotHover": "Autopilot aktivieren (kommt bald)",
 
-  "VFMagBootsButtonLabel": "Magnetstiefel umschalten",
-  "VFMagBootsButtonTooltip": "Schaltet die Magnetstiefel ein oder aus.",
 
   "VFDroneStationCheatLabel": "Drohnenstation freischalten",
   "VFDroneStationCheatTooltip": "Klicken Sie hier, um die Drohnenstation im aktuellen Spiel freizuschalten.",
@@ -123,5 +109,26 @@
   "VFSubtitleMaximumDepthReached": "Warnung! Maximale Tiefe erreicht! Schalenbeschädigung unvermeidlich!",
   "VFSubtitlePassingSafeDepth": "Warnung! Sichere Tiefe überschritten!",
   "VFSubtitleLeviathanDetected": "Leviathan entdeckt!",
-  "VFSubtitleUhOh": "Ups!"
+  "VFSubtitleUhOh": "Ups!",
+    "OptionVFHeadlightsButton": "Scheinwerfer umschalten",
+    "OptionDesc_VFHeadlightsButton": "Drücken Sie diese Schaltfläche, um die Scheinwerfer während des Flugs ein- oder auszuschalten.",
+    "OptionVFPrevCameraButton": "Vorherige Kamera",
+    "OptionDesc_VFPrevCameraButton": "Wechselt zur vorherigen Kamera des Fahrzeugs.",
+    "OptionVFNextCameraButton": "Nächste Kamera",
+    "OptionDesc_VFNextCameraButton": "Wechselt zur nächsten Kamera des Fahrzeugs.",
+    "OptionVFExitCameraButton": "Kamera verlassen",
+    "OptionDesc_VFExitCameraButton": "Verlässt die Kameravorschau.",
+    "VFFahrenheit": "Use Fahrenheit",
+    "VFFahrenheitTooltip": "Replace Celsius measurements in VF vehicles with their Fahrenheit equivalents.",
+    "VFCompatCheckToggleLabel": "Enable Compatibility Checks",
+    "VFCompatCheckToggleTooltip": "This mod can check for known incompatibilities with a few other mods and report the results to the main menu.",
+    "OptionVFMagBootsButton": "Magnetstiefel umschalten",
+    "OptionDesc_VFMagBootsButton": "Schaltet die Magnetstiefel ein oder aus.",
+    "VFMainExterior": "Main Exterior Color",
+    "VFFabricatorDisplayName": "VF Fabricator",
+    "VFFabricatorDesc": "This fabricator can craft upgrades for the Seamoth, Prawn, Cyclops, and all Vehicle Framework vehicles.",
+    "VFDroneStationDisplayName": "Drone Station",
+    "VFDroneStationDesc": "This terminal can be used to remotely control drones.",
+    "VFDroneStationEncy": "The drone station can be used to remotely connect to and pilot any nearby drone vehicle. The drone station enhances radio technology to keep users safe from distant threats.\n - Connection Range: ~600 meters\n - Designed for: Compartments and Submarines - Can automatically return drones to itself\n",
+    "VFDroneStationUnlockText": "Drone Required"
 }
