@@ -7,17 +7,20 @@ namespace VehicleFramework
     {
         internal static void CheckAll()
         {
-            try
+            if (MainPatcher.NautilusConfig.IsCompatChecking)
             {
-                CheckForFlareDurationIndicator();
-                CheckForBuildingTweaks();
-                CheckForVanillaExpanded();
-                //CheckForAutoSave();
-            }
-            catch(Exception e)
-            {
-                Logger.LogException("Failed to check compatibility notes.", e);
-                ShowError("Failed to check for compatibility notes. Something went wrong!");
+                try
+                {
+                    CheckForFlareDurationIndicator();
+                    CheckForBuildingTweaks();
+                    CheckForVanillaExpanded();
+                    CheckForAutoSave();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException("Failed to check compatibility notes.", e);
+                    ShowError("Failed to check for compatibility notes. Something went wrong!");
+                }
             }
         }
 

@@ -27,6 +27,9 @@ namespace VehicleFramework
 
         [Toggle(LabelLanguageId = "VFDebugLogLabel", TooltipLanguageId = "VFDebugLogTooltip")]
         public bool IsDebugLogging = false;
+
+        [Toggle(LabelLanguageId = "VFCompatCheckToggleLabel", TooltipLanguageId = "VFCompatCheckToggleTooltip")]
+        public bool IsCompatChecking = true;
         #endregion
 
         #region cheats
