@@ -120,6 +120,11 @@
 	<Target Name="CopyToBepInEx" AfterTargets="Build" Condition="Exists('$(SubnauticaDirTrimmed)')">
     <MakeDir Directories="$(BepInExPlugins)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExPlugins)" SkipUnchangedFiles="true" />
+	  <MakeDir Directories="$(BepInExPlugins)\Localization" />
+	<ItemGroup>
+	  <LocalizationFiles Include="$(MSBuildProjectDirectory)\Localization\**\*" />
+	</ItemGroup>
+	<Copy SourceFiles="@(LocalizationFiles)" DestinationFiles="@(LocalizationFiles->'$(BepInExPlugins)\Localization\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
 </Project>
 
