@@ -12,7 +12,7 @@ namespace VehicleFramework
                 CheckForFlareDurationIndicator();
                 CheckForBuildingTweaks();
                 CheckForVanillaExpanded();
-                CheckForAutoSave();
+                //CheckForAutoSave();
             }
             catch(Exception e)
             {
