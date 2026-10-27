@@ -128,7 +128,7 @@ namespace VehicleFramework.VehicleTypes
             base.StopPiloting();
             isPilotSeated = false;
             Player.main.SetScubaMaskActive(false);
-            Player.main.armsController.ikToggleTime = 0.5f;
+            //Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
             if (!IsDocked && IsPlayerControlling())
             {

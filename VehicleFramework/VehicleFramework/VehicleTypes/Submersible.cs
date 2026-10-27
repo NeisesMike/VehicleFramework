@@ -74,7 +74,7 @@ namespace VehicleFramework.VehicleTypes
                 return;
             }
             Admin.SessionManager.StartCoroutine(StandUpFromChair());
-            Player.main.armsController.ikToggleTime = 0.5f;
+            //Player.main.armsController.ikToggleTime = 0.5f;
             Player.main.armsController.SetWorldIKTarget(null, null);
             uGUI.main.quickSlots.SetTarget(null);
             PlayerExit();
