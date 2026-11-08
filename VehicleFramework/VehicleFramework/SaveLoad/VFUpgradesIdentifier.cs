@@ -32,6 +32,21 @@ namespace VehicleFramework.SaveLoad
             {
                 TaskResult<GameObject> result = new();
                 TechTypeExtensions.FromString(upgrade.Value, out TechType techType, true);
+                if(techType == default)
+                {
+                    // try to catch old techtype names to retain backward compatibility with user saves
+                    foreach (string legacySuffix in new[] { "Seamoth", "Exosuit", "Cyclops" })
+                    {
+                        if (!upgrade.Value.EndsWith(legacySuffix, StringComparison.Ordinal))
+                        {
+                            continue;
+                        }
+
+                        string techTypeName = upgrade.Value.Substring(0, upgrade.Value.Length - legacySuffix.Length);
+                        TechTypeExtensions.FromString(techTypeName, out techType, true);
+                        break;
+                    }
+                }
                 yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
                 try
                 {
