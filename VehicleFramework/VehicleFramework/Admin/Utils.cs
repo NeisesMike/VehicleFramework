@@ -88,15 +88,15 @@ namespace VehicleFramework.Admin
                 skipSeamoth = true,
                 skipExosuit = true
             };
-            UpgradeTechTypes depth1 = UpgradeRegistrar.RegisterUpgrade(new DepthModules.DepthModule1(), compat);
+            TechType depth1 = UpgradeRegistrar.RegisterVFUpgrade(new DepthModules.DepthModule1(), compat);
 
             var depthmodule2 = new DepthModules.DepthModule2();
             depthmodule2.ExtendRecipe(depth1);
-            UpgradeTechTypes depth2 = UpgradeRegistrar.RegisterUpgrade(depthmodule2, compat);
+            TechType depth2 = UpgradeRegistrar.RegisterVFUpgrade(depthmodule2, compat);
 
             var depthmodule3 = new DepthModules.DepthModule3();
             depthmodule3.ExtendRecipe(depth2);
-            UpgradeTechTypes _ = UpgradeRegistrar.RegisterUpgrade(depthmodule3, compat);
+            TechType _ = UpgradeRegistrar.RegisterVFUpgrade(depthmodule3, compat);
         }
         public static void EvaluateDepthModules(AddActionParams param)
         {

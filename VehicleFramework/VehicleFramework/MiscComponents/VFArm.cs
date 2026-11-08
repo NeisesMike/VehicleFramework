@@ -14,8 +14,8 @@ namespace VehicleFramework.MiscComponents
     // Its methods are mostly passed through to ModVehicleArm
     public class VFArm : MonoBehaviour, IExosuitArm
     {
-        internal static Dictionary<UpgradeTechTypes, GameObject> armPrefabs = new();
-        internal static Dictionary<UpgradeTechTypes, ModVehicleArm> armLogics = new();
+        internal static Dictionary<TechType, GameObject> armPrefabs = new();
+        internal static Dictionary<TechType, ModVehicleArm> armLogics = new();
         private ModVehicleArm? armDeclaration;
         public bool IsLeft { get; private set; }
         private Vehicle Vehicle => GetComponentInParent<Exosuit>();
@@ -157,49 +157,11 @@ namespace VehicleFramework.MiscComponents
 
         public static GameObject? GetArmPrefab(TechType techType)
         {
-            foreach (KeyValuePair<UpgradeTechTypes, GameObject> arms in armPrefabs)
-            {
-                if (arms.Key.forModVehicle == techType)
-                {
-                    return arms.Value;
-                }
-                else if (arms.Key.forSeamoth == techType)
-                {
-                    return arms.Value;
-                }
-                else if (arms.Key.forExosuit == techType)
-                {
-                    return arms.Value;
-                }
-                else if (arms.Key.forCyclops == techType)
-                {
-                    return arms.Value;
-                }
-            }
-            return null;
+            return armPrefabs.Where(x => x.Key == techType).FirstOrDefault().Value;
         }
         public static ModVehicleArm? GetModVehicleArm(TechType techType)
         {
-            foreach (KeyValuePair<UpgradeTechTypes, ModVehicleArm> arms in armLogics)
-            {
-                if (arms.Key.forModVehicle == techType)
-                {
-                    return arms.Value;
-                }
-                else if (arms.Key.forSeamoth == techType)
-                {
-                    return arms.Value;
-                }
-                else if (arms.Key.forExosuit == techType)
-                {
-                    return arms.Value;
-                }
-                else if (arms.Key.forCyclops == techType)
-                {
-                    return arms.Value;
-                }
-            }
-            return null;
+            return armLogics.Where(x => x.Key == techType).FirstOrDefault().Value;
         }
     }
 }

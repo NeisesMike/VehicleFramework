@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlTypes;
 using HarmonyLib;
 using VehicleFramework.Admin;
 
@@ -61,10 +62,12 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.GetCompatibleSlotDefault))]
         public static void GetCompatibleSlotDefaultPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
+            /*
             if (itemType != Admin.EnumHelper.GetModuleType() && itemType != Admin.EnumHelper.GetArmType())
             {
                 return;
             }
+            */
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if(mv == null)
             {
@@ -78,10 +81,12 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.GetFreeSlot))]
         public static void GetFreeSlotPrefix(Equipment __instance, EquipmentType type, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
+            /*
             if (type != Admin.EnumHelper.GetModuleType() && type != Admin.EnumHelper.GetArmType())
             {
                 return;
             }
+            */
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
@@ -95,10 +100,12 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.GetSlots))]
         public static void GetSlotsPrefix(Equipment __instance, EquipmentType itemType, ref Dictionary<EquipmentType, List<string>> ___typeToSlots)
         {
+            /*
             if (itemType != Admin.EnumHelper.GetModuleType() && itemType != Admin.EnumHelper.GetArmType())
             {
                 return;
             }
+            */
             ModVehicle mv = __instance.owner.GetComponentInParent<ModVehicle>();
             if (mv == null)
             {
@@ -149,9 +156,9 @@ namespace VehicleFramework.Patches
         [HarmonyPatch(nameof(Equipment.IsCompatible))]
         public static bool IsCompatiblePrefix(EquipmentType itemType, EquipmentType slotType, ref bool __result)
         {
-            __result = itemType == slotType || (itemType == EquipmentType.VehicleModule && (slotType == EquipmentType.SeamothModule || slotType == EquipmentType.ExosuitModule || slotType == Admin.EnumHelper.GetModuleType()));
-            if (__result)
+            if(UpgradeRegistrar.CheckEquipmentCompatibility(slotType, itemType))
             {
+                __result = true;
                 return false;
             }
             return true;

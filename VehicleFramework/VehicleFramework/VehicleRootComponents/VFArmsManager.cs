@@ -25,7 +25,7 @@ namespace VehicleFramework.VehicleRootComponents
             if (thisSlotName.Contains(ModuleBuilder.LeftArmSlotName))
             {
                 DestroyArm(true);
-                if(arm.HasTechType(techTypeInSlot))
+                if(arm.TechType == techTypeInSlot)
                 {
                     SpawnArm(mv, arm, true);
                     leftArmSlotID = slotId;
@@ -34,7 +34,7 @@ namespace VehicleFramework.VehicleRootComponents
             else if (thisSlotName.Contains(ModuleBuilder.RightArmSlotName))
             {
                 DestroyArm(false);
-                if (arm.HasTechType(techTypeInSlot))
+                if (arm.TechType == techTypeInSlot)
                 {
                     SpawnArm(mv, arm, false);
                     rightArmSlotID = slotId;

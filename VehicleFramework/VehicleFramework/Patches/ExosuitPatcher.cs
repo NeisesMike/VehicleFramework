@@ -2,6 +2,7 @@
 using UnityEngine;
 using VehicleFramework.UpgradeTypes;
 using VehicleFramework.MiscComponents;
+using System.Linq;
 
 // PURPOSE: allow VF upgrades for the Prawn to be used as expected
 // VALUE: High.
@@ -82,6 +83,11 @@ namespace VehicleFramework.Patches
                 // which means there was no active slot.
                 return;
             }
+            if(slotID >= exo.quickSlotCooldown.Length)
+            {
+                // We shouldn't accept inputs outside the typical bounds of the array
+                return;
+            }
             if (exo.GetQuickSlotCooldown(slotID) != 1f)
             {
                 // cooldown isn't finished!
@@ -90,7 +96,7 @@ namespace VehicleFramework.Patches
             int slotIDToTest = isJank ? slotID - 2 : slotID;
             bool GetQuickSlotKeyDown(int inputSlotID)
             {
-                return inputSlotID >= 0 && inputSlotID < uGUI_QuickSlots.quickSlotButtons.Length && GameInput.GetButtonDown(uGUI_QuickSlots.quickSlotButtons[slotID]);
+                return inputSlotID >= 0 && inputSlotID < uGUI_QuickSlots.quickSlotButtons.Length && GameInput.GetButtonDown(uGUI_QuickSlots.quickSlotButtons[inputSlotID]);
             }
             if (!GetQuickSlotKeyDown(slotIDToTest) && !GameInput.GetButtonDown(GameInput.Button.LeftHand))
             {

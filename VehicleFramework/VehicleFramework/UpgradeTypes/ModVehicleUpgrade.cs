@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using VehicleFramework.Admin;
 using VehicleFramework.Assets;
@@ -12,7 +9,7 @@ namespace VehicleFramework.UpgradeTypes
 {
     public abstract class ModVehicleUpgrade
     {
-        public UpgradeTechTypes TechTypes { get; internal set; }
+        public TechType TechType { get; internal set; }
         public abstract string ClassId { get; }
         public abstract string DisplayName { get; }
         public abstract string Description { get; }
@@ -43,50 +40,29 @@ namespace VehicleFramework.UpgradeTypes
         {
             Logger.DebugLog("Bumping " + ClassId + " In Cyclops: '" + param.cyclops.subName + "' in slotID: " + param.slotID.ToString());
         }
-        private readonly List<UpgradeTechTypes> RecipeExtensions = new();
+        private readonly List<TechType> RecipeExtensions = new();
         private readonly List<Ingredient> SimpleRecipeExtensions = new();
         public List<Ingredient> GetRecipe(VehicleType type)
         {
-            List<Ingredient> ret = new();
-            ret.AddRange(Recipe);
-            ret.AddRange(SimpleRecipeExtensions);
-            switch (type)
-            {
-                case VehicleType.ModVehicle:
-                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forModVehicle, 1)));
-                    break;
-                case VehicleType.Seamoth:
-                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forSeamoth, 1)));
-                    break;
-                case VehicleType.Prawn:
-                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forExosuit, 1)));
-                    break;
-                case VehicleType.Cyclops:
-                    RecipeExtensions.ForEach(x => ret.Add(new Ingredient(x.forCyclops, 1)));
-                    break;
-                default:
-                    break;
-            }
-            return ret;
+            List<Ingredient> resultRecipe = new();
+            resultRecipe.AddRange(Recipe);
+            resultRecipe.AddRange(SimpleRecipeExtensions);
+            RecipeExtensions.ForEach(x => resultRecipe.Add(new Ingredient(x, 1)));
+            return resultRecipe;
+        }
+        public void ExtendRecipe(TechType techType)
+        {
+            RecipeExtensions.Add(techType);
         }
         public void ExtendRecipe(UpgradeTechTypes techTypes)
         {
-            RecipeExtensions.Add(techTypes);
+            // This method just here for backward compatibility.
+            // The UpgradeTechTypes struct is populated with a single value (i.e., all values are the same)
+            RecipeExtensions.Add(techTypes.forModVehicle);
         }
         public void ExtendRecipeSimple(Ingredient ingredient)
         {
             SimpleRecipeExtensions.Add(ingredient);
-        }
-        public bool HasTechType(TechType tt)
-        {
-            if(tt == TechType.None)
-            {
-                return false;
-            }
-            return TechTypes.forModVehicle == tt
-                || TechTypes.forSeamoth == tt
-                || TechTypes.forExosuit == tt
-                || TechTypes.forCyclops == tt;
         }
         public int GetNumberInstalled(Vehicle vehicle)
         {

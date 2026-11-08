@@ -152,6 +152,8 @@ namespace VehicleFramework
         public override void OnUpgradeModuleChange(int slotID, TechType techType, bool added)
         {
             upgradeOnAddedActions.ForEach(x => x(slotID, techType, added));
+            base.OnUpgradeModuleChange(slotID, techType, added);
+            /*
             UpgradeTypes.AddActionParams addedParams = new()
             {
                 vehicle = this,
@@ -160,6 +162,7 @@ namespace VehicleFramework
                 isAdded = added
             };
             UpgradeRegistrar.OnAddActions.ForEach(x => x(addedParams));
+            */
         }
         public override InventoryItem? GetSlotItem(int slotID)
         {

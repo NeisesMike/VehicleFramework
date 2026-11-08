@@ -31,22 +31,16 @@ namespace VehicleFramework.MiscComponents
             //unlock upgrades that should be unlocked
             foreach (var uppy in Admin.UpgradeRegistrar.RegisteredUpgrades)
             {
-                if (KnownTech.Contains(uppy.Key.TechTypes.forSeamoth)
-                    || KnownTech.Contains(uppy.Key.TechTypes.forExosuit)
-                    || KnownTech.Contains(uppy.Key.TechTypes.forCyclops)
-                    || KnownTech.Contains(uppy.Key.TechTypes.forModVehicle))
+                if (KnownTech.Contains(uppy.TechType))
                 {
                     // don't trigger on already-known technologies
                     continue;
                 }
-                if (uppy.Key.UnlockAtStart || KnownTech.Contains(uppy.Key.UnlockWith))
+                if (uppy.UnlockAtStart || KnownTech.Contains(uppy.UnlockWith))
                 {
                     // These should be TechType.None if nothing was registered, but adding None to KnownTech is harmless, so we can just add them all.
-                    KnownTech.Add(uppy.Value.forSeamoth, true);
-                    KnownTech.Add(uppy.Value.forExosuit, true);
-                    KnownTech.Add(uppy.Value.forCyclops, true);
-                    KnownTech.Add(uppy.Value.forModVehicle, true);
-                    unlockedTechs.Add(uppy.Key.TechTypes.forModVehicle.AsString());
+                    KnownTech.Add(uppy.TechType, true);
+                    unlockedTechs.Add(uppy.TechType.AsString());
                 }
             }
 

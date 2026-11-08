@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using VehicleFramework.Assets;
 using VehicleFramework.UpgradeTypes;
-//using VehicleFramework.Localization;
 using UnityEngine;
 
 namespace VehicleFramework.Admin
@@ -19,9 +18,6 @@ namespace VehicleFramework.Admin
             return path switch
             {
                 VehicleType.ModVehicle => new string[] { "VFUniversal" },
-                VehicleType.Seamoth => new string[] { "VFSeamoth" },
-                VehicleType.Prawn => new string[] { "VFPrawn" },
-                VehicleType.Cyclops => new string[] { "VFCyclops" },
                 VehicleType.Custom => new string[] { "VFCustom" },
                 _ => new string[] { "error" },
             };
@@ -30,9 +26,6 @@ namespace VehicleFramework.Admin
         {
             var vfIcon = SpriteHelper.GetSpriteInternal("VFUpgradesIcon.png") ?? StaticAssets.ModVehicleIcon;
             var mvIcon = StaticAssets.UpgradeIcon;
-            var seamothIcon = SpriteManager.Get(TechType.Seamoth) ?? StaticAssets.ModVehicleIcon;
-            var prawnIcon = SpriteManager.Get(TechType.Exosuit) ?? StaticAssets.ModVehicleIcon;
-            var cyclopsIcon = SpriteManager.Get(TechType.Cyclops) ?? StaticAssets.ModVehicleIcon;
 
             // add MV-universal tab
             AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.ModVehicle).Last(), Language.main.Get("VFMVModules"), vfIcon);
@@ -40,15 +33,6 @@ namespace VehicleFramework.Admin
             // add MV-specific tab
             AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Custom).Last(), Language.main.Get("VFSpecificModules"), vfIcon);
             AddCraftingTab(UpgradeTypeToPath(VehicleType.Custom), $"{GeneralTabName}{VehicleType.Custom}", Language.main.Get("VFGeneralTab"), mvIcon);
-            // add seamoth tab
-            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Seamoth).Last(), Language.main.Get("VFSeamothTab"), seamothIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Seamoth), $"{GeneralTabName}{VehicleType.Seamoth}", Language.main.Get("VFGeneralTab"), mvIcon);
-            // add prawn tab
-            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Prawn).Last(), Language.main.Get("VFPrawnTab"), prawnIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Prawn), $"{GeneralTabName}{VehicleType.Prawn}", Language.main.Get("VFGeneralTab"), mvIcon);
-            // add cyclops tab
-            AddCraftingTab(Array.Empty<string>(), UpgradeTypeToPath(VehicleType.Cyclops).Last(), Language.main.Get("VFCyclopsTab"), cyclopsIcon);
-            AddCraftingTab(UpgradeTypeToPath(VehicleType.Cyclops), $"{GeneralTabName}{VehicleType.Cyclops}", Language.main.Get("VFGeneralTab"), mvIcon);
         }
         internal static void EnsureCraftingTabsAvailable(ModVehicleUpgrade upgrade, UpgradeCompat compat)
         {
@@ -57,21 +41,9 @@ namespace VehicleFramework.Admin
                 EnsureCraftingTabAvailable(upgrade, VehicleType.Custom);
                 return;
             }
-            if (!compat.skipCyclops)
-            {
-                EnsureCraftingTabAvailable(upgrade, VehicleType.Cyclops);
-            }
-            if (!compat.skipExosuit)
-            {
-                EnsureCraftingTabAvailable(upgrade, VehicleType.Prawn);
-            }
             if (!compat.skipModVehicle)
             {
                 EnsureCraftingTabAvailable(upgrade, VehicleType.ModVehicle);
-            }
-            if (!compat.skipSeamoth)
-            {
-                EnsureCraftingTabAvailable(upgrade, VehicleType.Seamoth);
             }
         }
         private static void EnsureCraftingTabAvailable(ModVehicleUpgrade upgrade, VehicleType vType)
@@ -80,7 +52,7 @@ namespace VehicleFramework.Admin
             {
                 if (upgrade.TabName.Equals(string.Empty))
                 {
-                    // it goes in general, so we're good
+                    // it goes in the general tab, so we're good
                     return;
                 }
                 else
